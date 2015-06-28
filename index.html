@@ -12,17 +12,21 @@
 
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
+        <!--
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+        -->
     </head>
     <body>
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+        <!--
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.3.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
+        -->
 
 
 
@@ -42,20 +46,23 @@
         }
         </style>
 
+<pre>
         <p class="mono" id="LARN">fail</p>
 
         <script src="larn.js"></script>
         <script src="player.js"></script>
         <script src="map.js"></script>
+        <script src="mazes.js"></script>
+        <script src="level.js"></script>
 
         <script>
           "use strict";
           var larn = Object.create(Larn);
           var player = Object.create(Player);
-          var map = Object.create(Map);
+          var map = Object.create(LarnMap);
           larn.run();
         </script>
-
+</pre>
 
 
 
