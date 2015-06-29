@@ -4,23 +4,28 @@ const MAXX = 67;
 const MAXY = 17;
 
 var Level = {
+
+  depth: -1,
   items: [],
 
-  create: function(grid) {
-    var mazeTemplate = getRandomMaze();
+  create: function(depth) {
+    var mazeTemplate = createRandomMaze(depth);
 
     this.items = initGrid();
+
+    this.depth = depth;
 
     for (var x = 0; x < MAXX; x++) {
       for (var y = 0; y < MAXY; y++) {
         if (mazeTemplate[x][y] == "#") {
-          this.items[x][y] = "#";
+          this.items[x][y] = createObject(OWALL);
         } else {
-          this.items[x][y] = ".";
+          this.items[x][y] = createObject(OEMPTY);
         }
       }
-    } // create
-  },
+    }
+
+  }, // create
 
 
   paint: function() {
@@ -32,10 +37,9 @@ var Level = {
         // HACK
         // HACK
         if (x != player.x || y != player.y) {
-          output += this.items[x][y];
-        }
-        else {
-          output += "\u2588";
+          output += this.items[x][y].char;
+        } else {
+          output += "\u2593"; // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
         }
         // HACK
         // HACK
@@ -43,6 +47,14 @@ var Level = {
       } // inner for
       output += "\n";
     } // outer for
+    output += this.depth;
+    output += "\n";
+
+    for (var i = 0; i < LOG_SIZE; i++) {
+      output += LOG[i] + "\n";
+    }
+    output += "\n";
+
     document.getElementById("LARN").innerHTML = output;
   }
 
