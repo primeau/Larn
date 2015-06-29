@@ -9,11 +9,11 @@ function fillroom(item, what, arg) {
   var x, y;
 
   var safe = 100;
-  x = Math.floor(Math.random() * (MAXX - 2));
-  y = Math.floor(Math.random() * (MAXY - 2));
+  x = rnd(MAXX - 2);
+  y = rnd(MAXY - 2);
   while (isItem(x, y, OWALL)) {
-    x += Math.floor(Math.random() * 3) - 2;
-    y += Math.floor(Math.random() * 3) - 2;
+    x += rnd(3) - 2;
+    y += rnd(3) - 2;
     if (x > MAXX - 2) x = 1;
     if (x < 1) x = MAXX - 2;
     if (y > MAXY - 2) y = 1;
@@ -43,9 +43,13 @@ function filllevel(level) {
   }
   if (level.depth == 0) {
     fillroom(level.items, createObject(OENTRANCE), 0);
+    fillroom(level.items, createObject(OVOLDOWN), 0);
   }
   if (level.depth == 1) {
     level.items[Math.floor(MAXX/2)][MAXY-1] = createObject(OHOMEENTRANCE);
+  }
+  if (level.depth == 11) {
+    fillroom(level.items, createObject(OVOLUP), 0);
   }
 
 
@@ -116,8 +120,5 @@ function newcavelevel(depth) {
     player.level = LEVELS[depth];
     filllevel(newLevel);
   }
-
-
-
   player.level.paint();
 }

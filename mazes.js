@@ -7,7 +7,8 @@ function createRandomMaze(depth) {
 
   if (depth != 0) {
     do {
-      randomMaze = Math.floor(Math.random() * MAZES.length - 1) + 1;
+      randomMaze = rnd(MAZES.length - 1) + 1;
+      debug("maze: " + USED_MAZES);
     } while (USED_MAZES.indexOf(randomMaze) > -1);
   }
   USED_MAZES.push(randomMaze);

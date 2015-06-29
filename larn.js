@@ -7,23 +7,62 @@ var LOG_SIZE = 15;
 var LOG = null;
 var LAST_LOG = 0;
 
+var DEBUG_OUTPUT = false;
 var DEBUG_WALK_THROUGH_WALLS = false;
 var DEBUG_STAIRS_EVERYWHERE = false;
 
-function updateLog(text) {
-  if (LOG == null) {
-    LOG = [LOG_SIZE];
-    for (var i = 0; i < LOG_SIZE; i++) {
-      LOG[i] = "";
-    }
-  }
-  LOG.pop();
-  LOG.unshift(text);
-  if (player != null && player.level != null) {
+function positionplayer(x, y, exact) {
+  // try 20 times to be 1 step away, then 2 steps, etc...
+
+  // short circuit for moving to exact location
+  if (exact && canMove(x,y)){
+    player.x = newx;
+    player.y = newy;
     player.level.paint();
+    return;
   }
 
+  var distance = 1;
+  var maxTries = 20;
+  while (distance < 10) {
+    while (maxTries-- > 0) {
+      var newx = x + (rnd(3) - 1) * distance;
+      var newy = y + (rnd(3) - 1) * distance;
+      debug(newx + "," + newy);
+      if ((newx != x || newy != y)) {
+        if (canMove(newx, newy)) {
+          player.x = newx;
+          player.y = newy;
+          player.level.paint();
+          return;
+        }
+      }
+    }
+    maxTries = 20;
+    distance++;
+  }
 }
+
+// move near an item, but not on top of it
+function moveNear(item) {
+  var x, y;
+  var itemx = -1;
+  var itemy = -1;
+  // find the item
+  for (x = 0; x < MAXX; x++) {
+    if (itemx >= 0) break;
+    for (y = 0; y < MAXY; y++) {
+      if (itemx >= 0) break;
+      if (isItem(x, y, item)) {
+        debug("movenear: found: " + item.id + " at " + x + "," + y);
+        itemx = x;
+        itemy = y;
+        break;
+      }
+    }
+  }
+  positionplayer(itemx, itemy, false);
+} // movenear
 
 function canMove(x, y) {
   if (x < 0) return false;
@@ -41,14 +80,6 @@ function canMove(x, y) {
   }
 }
 
-function isItem(x, y, compareItem) {
-  var levelItem = player.level.items[x][y];
-  if (levelItem.char == compareItem.char) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
 var Larn = {
   run: function() {
@@ -58,15 +89,9 @@ var Larn = {
     player.x = 1;
     player.y = 1;
 
-    updateLog("1"); // need to initialize the log
-    updateLog("2");
-    updateLog("3");
-    updateLog("4");
+    updateLog("Welcome to Larn"); // need to initialize the log
 
     newcavelevel(0);
-
-
-
   },
 
 
@@ -142,7 +167,18 @@ var Larn = {
       }
       if (player.level.depth != 0) {
         updateLog("Going Up");
-        newcavelevel(player.level.depth - 1);
+        if (player.level.depth != 11) {
+          newcavelevel(player.level.depth - 1);
+          positionplayer(newx, newy, true);
+          if (player.level.depth == 0) {
+            moveNear(OENTRANCE);
+            newx = player.x; // HACK
+            newy = player.y;
+          }
+        } else {
+          newcavelevel(0); // go home from V1 (for testing)
+          moveNear(OVOLDOWN);
+        }
       }
     } else if (String.fromCharCode(e.which) == '>') { // DOWN STAIRS
       if (isItem(newx, newy, OSTAIRSUP) && !DEBUG_STAIRS_EVERYWHERE) {
@@ -156,11 +192,12 @@ var Larn = {
       if (player.level.depth != 10 && player.level.depth != 13) {
         updateLog("Going Down");
         newcavelevel(player.level.depth + 1);
+        positionplayer(newx, newy, true);
       }
     } else if (String.fromCharCode(e.which) == 'g') { // GO INSIDE DUNGEON
       if (!isItem(newx, newy, OENTRANCE) && !DEBUG_STAIRS_EVERYWHERE) {
-         //updateLog("");
-         return;
+        //updateLog("");
+        return;
       }
       if (player.level.depth == 0) {
         updateLog("Entering Dungeon");
@@ -168,7 +205,24 @@ var Larn = {
         newy = MAXY - 2;
         newcavelevel(1);
       }
+    } else if (String.fromCharCode(e.which) == 'C') { // CLIMB IN/OUT OF VOLCANO
+      if (isItem(newx, newy, OVOLUP) || DEBUG_STAIRS_EVERYWHERE && player.level.depth == 11) {
+        updateLog("Climbing Up Volcanic Shaft");
+        newcavelevel(0);
+        moveNear(OVOLDOWN);
+        return;
+      }
+      if (isItem(newx, newy, OVOLDOWN) || DEBUG_STAIRS_EVERYWHERE && player.level.depth == 0) {
+        updateLog("Climbing Down Volcanic Shaft");
+        newcavelevel(11);
+        moveNear(OVOLUP);
+        debug("REMOVE THIS FEATURE LATER");
+        return;
+      }
     }
+
+
+
 
     if (canMove(newx, newy)) {
       player.x = newx;
@@ -177,28 +231,28 @@ var Larn = {
       if (isItem(player.x, player.y, OHOMEENTRANCE)) {
         updateLog("Going to Home Level");
         newcavelevel(0);
-        player.level.paint();
+        moveNear(OENTRANCE);
       }
-
     }
 
     player.level.paint();
 
   }, // KEYPRESS
 
+}; // LARN OBJCT
 
 
 
-};
-
-
-var DEBUG = true;
-
-function debug(text) {
-
-  if (DEBUG) {
-    console.log("DEBUG: " + text);
-    updateLog("DEBUG: " + text);
+function updateLog(text) {
+  if (LOG == null) {
+    LOG = [LOG_SIZE];
+    for (var i = 0; i < LOG_SIZE; i++) {
+      LOG[i] = "";
+    }
   }
-
+  LOG.pop();
+  LOG.unshift(text);
+  if (player != null && player.level != null) {
+    player.level.paint();
+  }
 }
