@@ -26,8 +26,8 @@ function positionplayer(x, y, exact) {
   var maxTries = 20;
   while (distance < 10) {
     while (maxTries-- > 0) {
-      var newx = x + (rnd(3) - 1) * distance;
-      var newy = y + (rnd(3) - 1) * distance;
+      var newx = x + (rnd(3) - 2) * distance;
+      var newy = y + (rnd(3) - 2) * distance;
       if ((newx != x || newy != y)) {
         if (canMove(newx, newy)) {
           player.x = newx;
@@ -86,8 +86,8 @@ var Larn = {
     document.onkeypress = this.keyPress;
     //document.onkeydown = this.keyPress;
 
-    player.x = rnd(MAXX);
-    player.y = rnd(MAXY);
+    player.x = rnd(MAXX-2);
+    player.y = rnd(MAXY-2);
 
     updateLog("Welcome to Larn"); // need to initialize the log
 

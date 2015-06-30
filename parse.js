@@ -157,10 +157,20 @@ function parseEvent(e) {
       updateLog("I see no way to go down here!");
     }
 
-
   } else if (String.fromCharCode(e.which) == 'g') { // GO INSIDE DUNGEON
   } else if (String.fromCharCode(e.which) == 'C') { // CLIMB IN/OUT OF VOLCANO
+
+  } else if (String.fromCharCode(e.which) == '!') {
+    DEBUG_OUTPUT = !DEBUG_OUTPUT;
+    updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
+  } else if (String.fromCharCode(e.which) == '@') {
+    DEBUG_WALK_THROUGH_WALLS = !DEBUG_WALK_THROUGH_WALLS;
+    updateLog("DEBUG_WALK_THROUGH_WALLS: " + DEBUG_WALK_THROUGH_WALLS);
+  } else if (String.fromCharCode(e.which) == '#') {
+    DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
+    updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
   }
+
 
 
   if (isItem(player.x, player.y, OHOMEENTRANCE)) {
