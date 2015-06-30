@@ -1,3 +1,18 @@
+function movePlayer(currentx, currenty, xdir, ydir, run) {
+  while (canMove(currentx + xdir, currenty + ydir)) {
+    currentx += xdir;
+    currenty += ydir;
+    if (!run || !isItem(currentx, currenty, OEMPTY)) {
+      break;
+    }
+    //debug("moveplayer: " + currentx + "," + currenty);
+  }
+  player.x = currentx;
+  player.y = currenty;
+  player.level.paint();
+}
+
+
 function parseEvent(e) {
 
   var newx = player.x;
@@ -37,168 +52,121 @@ function parseEvent(e) {
     newy++;
 */
   if (String.fromCharCode(e.which) == 'q') { // UP,LEFT
-    newx--;
-    newy--;
+    movePlayer(newx, newy, -1, -1, false);
   } else if (String.fromCharCode(e.which) == 'Q') { // RUN UP,LEFT
-    do {
-      newx--;
-      newy--;
-    } while (canMove(newx - 1, newy - 1));
+    movePlayer(newx, newy, -1, -1, true);
   } else if (String.fromCharCode(e.which) == 'w') { // UP
-    newy--;
+    movePlayer(newx, newy, 0, -1, false);
   } else if (String.fromCharCode(e.which) == 'W') { // RUN UP
-    do {
-      newy--;
-    } while (canMove(newx, newy - 1));
+    movePlayer(newx, newy, 0, -1, true);
   } else if (String.fromCharCode(e.which) == 'e') { // UP,RIGHT
-    newx++;
-    newy--;
+    movePlayer(newx, newy, 1, -1, false);
   } else if (String.fromCharCode(e.which) == 'E') { // RUN UP,RIGHT
-    do {
-      newx++;
-      newy--;
-    } while (canMove(newx + 1, newy - 1));
+    movePlayer(newx, newy, 1, -1, true);
   } else if (String.fromCharCode(e.which) == 'a') { // LEFT
-    newx--;
+    movePlayer(newx, newy, -1, 0, false);
   } else if (String.fromCharCode(e.which) == 'A') { // RUN LEFT
-    do {
-      newx--;
-    } while (canMove(newx - 1, newy));
+    movePlayer(newx, newy, -1, 0, true);
   } else if (String.fromCharCode(e.which) == 'd') { // RIGHT
-    newx++;
+    movePlayer(newx, newy, 1, 0, false);
   } else if (String.fromCharCode(e.which) == 'D') { // RUN RIGHT
-    do {
-      newx++;
-    } while (canMove(newx + 1, newy));
+    movePlayer(newx, newy, 1, 0, true);
   } else if (String.fromCharCode(e.which) == 'z') { // DOWN,LEFT
-    newx--;
-    newy++;
+    movePlayer(newx, newy, -1, 1, false);
   } else if (String.fromCharCode(e.which) == 'Z') { // RUN DOWN,LEFT
-    do {
-      newx--;
-      newy++;
-    } while (canMove(newx - 1, newy + 1));
+    movePlayer(newx, newy, -1, 1, true);
   } else if (String.fromCharCode(e.which) == 'x') { // DOWN
-    newy++;
+    movePlayer(newx, newy, 0, 1, false);
   } else if (String.fromCharCode(e.which) == 'X') { // RUN DOWN
-    do {
-      newy++;
-    } while (canMove(newx, newy + 1));
+    movePlayer(newx, newy, 0, 1, true);
   } else if (String.fromCharCode(e.which) == 'c') { // DOWN, RIGHT
-    newx++;
-    newy++;
+    movePlayer(newx, newy, 1, 1, false);
   } else if (String.fromCharCode(e.which) == 'C') { // RUN DOWN, RIGHT
-    do {
-      newx++;
-      newy++;
-    } while (canMove(newx + 1, newy + 1));
+    movePlayer(newx, newy, 1, 1, true);
   }
 
+  //
   // UP
+  //
   else if (String.fromCharCode(e.which) == '<') { // UP STAIRS
     if (isItem(newx, newy, OSTAIRSUP)) {
+      updateLog("Climbing Up Stairs");
       newcavelevel(player.level.depth - 1);
       positionplayer(newx, newy, true);
-      return;
     } else if (isItem(newx, newy, OVOLUP)) {
       updateLog("Climbing Up Volcanic Shaft");
       newcavelevel(0);
       moveNear(OVOLDOWN, false);
-      return;
     } else if (DEBUG_STAIRS_EVERYWHERE) {
       if (player.level.depth == 0) {
         // do nothing
       } else if (player.level.depth == 1) {
-        moveNear(OHOMEENTRANCE, true);
-        newx = player.x;
-        newy = player.y;
+        debug("STAIRS_EVERYWHERE: going to home level");
+        newcavelevel(0);
+        moveNear(OENTRANCE, false);
       } else if (player.level.depth == 11) {
+        debug("STAIRS_EVERYWHERE: climbing up volcanic shaft");
         moveNear(OVOLUP, true);
         parseEvent(e);
-        return;
       } else {
+        debug("STAIRS_EVERYWHERE: climbing up stairs");
         moveNear(OSTAIRSUP, true);
         parseEvent(e);
-        return;
       }
     } else if (isItem(newx, newy, OSTAIRSDOWN)) {
       updateLog("The stairs don't go up!");
-      return;
     } else if (!isItem(newx, newy, OSTAIRSUP) || !isItem(newx, newy, OVOLUP)) {
       // we can only go up stairs, or volcanic shaft leading upward
       updateLog("I see no way to go up here!");
-      return;
     }
   }
 
+  //
   // DOWN
+  //
   else if (String.fromCharCode(e.which) == '>') { // DOWN STAIRS
     if (isItem(newx, newy, OSTAIRSDOWN)) {
+      updateLog("Climbing Down Stairs");
       newcavelevel(player.level.depth + 1);
       positionplayer(newx, newy, true);
-      return;
     } else if (isItem(newx, newy, OVOLDOWN)) {
       updateLog("Climbing Down Volcanic Shaft");
       newcavelevel(11);
       //positionplayer(newx, newy, true);
       moveNear(OVOLUP, false);
       debug("Moving near V -- REMOVE THIS FEATURE LATER");
-      return;
     } else if (isItem(newx, newy, OENTRANCE)) {
       updateLog("Entering Dungeon");
-      newx = Math.floor(MAXX / 2);
-      newy = MAXY - 2;
+      player.x = Math.floor(MAXX / 2);
+      player.y = MAXY - 2;
       newcavelevel(1);
-      return;
     } else if (DEBUG_STAIRS_EVERYWHERE) {
       if (player.level.depth == 0) {
+        debug("STAIRS_EVERYWHERE: entering dungeon");
         moveNear(OENTRANCE, true);
         parseEvent(e);
-        return;
       } else if (player.level.depth != 10 && player.level.depth != 13) {
+        debug("STAIRS_EVERYWHERE: climbing down stairs");
         moveNear(OSTAIRSDOWN, true);
         parseEvent(e);
-        return;
       }
-
-
-    }
-
-
-    if (isItem(newx, newy, OSTAIRSUP) && !DEBUG_STAIRS_EVERYWHERE) {
+    } else if (isItem(newx, newy, OSTAIRSUP)) {
       updateLog("The stairs don't go down!");
-      return;
     }
-    if (!isItem(newx, newy, OSTAIRSDOWN) && !DEBUG_STAIRS_EVERYWHERE) {
+    if (!isItem(newx, newy, OSTAIRSDOWN) || !isItem(newx, newy, OVOLDOWN)) {
       updateLog("I see no way to go down here!");
-      return;
     }
 
-    // if (isItem(newx, newy, OENTRANCE) || DEBUG_STAIRS_EVERYWHERE && player.level.depth == 0) {
-    //   updateLog("Entering Dungeon");
-    //   newx = Math.floor(MAXX / 2);
-    //   newy = MAXY - 2;
-    //   newcavelevel(1);
-    // }
 
   } else if (String.fromCharCode(e.which) == 'g') { // GO INSIDE DUNGEON
   } else if (String.fromCharCode(e.which) == 'C') { // CLIMB IN/OUT OF VOLCANO
   }
 
 
-
-
-  if (canMove(newx, newy)) {
-    player.x = newx;
-    player.y = newy;
-
-    if (isItem(player.x, player.y, OHOMEENTRANCE)) {
-      updateLog("Going to Home Level");
-      newcavelevel(0);
-      moveNear(OENTRANCE, false);
-    }
+  if (isItem(player.x, player.y, OHOMEENTRANCE)) {
+    updateLog("Going to Home Level");
+    newcavelevel(0);
+    moveNear(OENTRANCE, false);
   }
-
-  player.level.paint();
 
 } // KEYPRESS

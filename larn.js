@@ -28,7 +28,6 @@ function positionplayer(x, y, exact) {
     while (maxTries-- > 0) {
       var newx = x + (rnd(3) - 1) * distance;
       var newy = y + (rnd(3) - 1) * distance;
-      debug(newx + "," + newy);
       if ((newx != x || newy != y)) {
         if (canMove(newx, newy)) {
           player.x = newx;
