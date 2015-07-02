@@ -11,6 +11,7 @@ const OVOLDOWN = new Item("OVOLDOWN", "V", "a volcanic shaft leaning downward");
 const OGOLDPILE = new Item("OGOLDPILE", "*", "some gold", 0);
 const OPIT = new Item("OPIT", "P", "a pit");
 const OMIRROR = new Item("MIRROR", "M", "a mirror");
+const OSTATUE = new Item("OSTATUE", "&", "a great marble statue");
 
 // TODO Item types?
 // characters (player, monster) 1 per square
@@ -81,6 +82,13 @@ function lookforobject(do_ident, do_pickup, do_action) {
       return;
     if (do_ident)
       updateLog("There is a mirror here");
+  }
+
+  if (isItem(player.x, player.y, OSTATUE)) {
+    if (nearbymonst())
+      return;
+    if (do_ident)
+      updateLog("You are standing in front of a statue");
   }
 
 } // lookforobject

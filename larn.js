@@ -18,7 +18,7 @@ function positionplayer(x, y, exact) {
     player.x = x;
     player.y = y;
     player.level.paint();
-    debug("positionplayer: (" + distance + ") try " + xy(x, y));
+    debug("positionplayer: (" + distance + ") got " + xy(x, y));
     return true;
   }
 
@@ -36,7 +36,7 @@ function positionplayer(x, y, exact) {
           player.x = newx;
           player.y = newy;
           player.level.paint();
-          debug("positionplayer: (" + distance + ") try " + xy(newx, newy));
+          debug("positionplayer: (" + distance + ") got " + xy(newx, newy));
           return true;
         }
       }
