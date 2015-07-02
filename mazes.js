@@ -7,11 +7,12 @@ function createRandomMaze(depth) {
 
   if (depth != 0) {
     do {
-      randomMaze = rnd(MAZES.length - 1) + 1;
-      debug("maze: " + USED_MAZES);
+      randomMaze = rund(MAZES.length - 1) + 1;
     } while (USED_MAZES.indexOf(randomMaze) > -1);
   }
   USED_MAZES.push(randomMaze);
+
+  debug("createRandomMaze: used: " + USED_MAZES);
 
   var grid = initGrid();
 

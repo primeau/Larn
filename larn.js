@@ -17,7 +17,7 @@ function positionplayer(x, y, exact) {
     player.x = x;
     player.y = y;
     player.level.paint();
-    debug("positionplayer: (0): " + x + "," + y);
+    //debug("positionplayer: (0): " + x + "," + y);
     return;
   }
 
@@ -29,11 +29,12 @@ function positionplayer(x, y, exact) {
       var newx = x + (rnd(3) - 2) * distance;
       var newy = y + (rnd(3) - 2) * distance;
       if ((newx != x || newy != y)) {
+        //debug("positionplayer: (" + distance + ") try " + newx + "," + newy);
         if (canMove(newx, newy)) {
           player.x = newx;
           player.y = newy;
           player.level.paint();
-          debug("positionplayer: (" + distance + ") " + newx + "," + newy);
+          //debug("positionplayer: (" + distance + ") " + newx + "," + newy);
           return;
         }
       }
@@ -45,26 +46,22 @@ function positionplayer(x, y, exact) {
 
 // move near an item, or on top of it if possible
 function moveNear(item, exact) {
-  var x, y;
-  var itemx = -1;
-  var itemy = -1;
   // find the item
-  for (x = 0; x < MAXX; x++) {
-    if (itemx >= 0) break;
-    for (y = 0; y < MAXY; y++) {
-      if (itemx >= 0) break;
+  for (var x = 0; x < MAXX; x++) {
+    for (var y = 0; y < MAXY; y++) {
       if (isItem(x, y, item)) {
-        debug("movenear: found: " + item.id + " at " + x + "," + y);
-        itemx = x;
-        itemy = y;
-        break;
+        debug("movenear: found: " + item.id + " at " + xy(x,y));
+        positionplayer(x, y, exact);
+        return true;
       }
     }
   }
-  positionplayer(itemx, itemy, exact);
+  debug("movenear: NOT FOUND: " + item.id);
+  return false;
 } // movenear
 
 function canMove(x, y) {
+  //debug("canMove: testing: (" + x + "," + y + ")");
   if (x < 0) return false;
   if (x >= MAXX) return false;
   if (y < 0) return false;

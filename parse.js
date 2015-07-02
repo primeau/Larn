@@ -140,7 +140,7 @@ function parseEvent(e) {
     } else if (isItem(newx, newy, OVOLDOWN)) {
       updateLog("Climbing Down Volcanic Shaft");
       newcavelevel(11);
-      //positionplayer(newx, newy, true);
+      //positionplayer(newx, newy, true); // should do this to make it more difficult
       moveNear(OVOLUP, false);
       debug("Moving near V -- REMOVE THIS FEATURE LATER");
     } else if (isItem(newx, newy, OENTRANCE)) {

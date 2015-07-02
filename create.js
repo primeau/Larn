@@ -13,7 +13,7 @@ function fillroom(what, arg) {
   var safe = 100;
   x = rnd(MAXX - 2);
   y = rnd(MAXY - 2);
-  while (isItem(x, y, OWALL)) {
+  while (!isItem(x, y, OEMPTY)) {
     x += rnd(3) - 2;
     y += rnd(3) - 2;
     if (x > MAXX - 2) x = 1;
@@ -50,7 +50,7 @@ function fillmroom(n, what, arg) {
  */
 function makeobject(level) {
 
-  debug("makeobject: level " + level.depth);
+  debug("makeobject: making objects for level " + level.depth);
 
   if (level.depth == 0) {
     fillroom(OENTRANCE, 0);
