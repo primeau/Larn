@@ -45,7 +45,7 @@ function initGrid() {
 
 
 
-var MAZES = [
+const MAZES = [
   "\
                                                                    \
                                                                    \
