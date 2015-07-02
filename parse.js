@@ -9,9 +9,10 @@ function movePlayer(currentx, currenty, xdir, ydir, run) {
   }
   player.x = currentx;
   player.y = currenty;
-  player.level.paint();
 
   lookforobject(true, false, true);
+
+  player.level.paint();
 
 }
 
@@ -111,10 +112,12 @@ function parseEvent(e) {
         debug("STAIRS_EVERYWHERE: climbing up volcanic shaft");
         moveNear(OVOLUP, true);
         parseEvent(e);
+        return;
       } else {
         debug("STAIRS_EVERYWHERE: climbing up stairs");
         moveNear(OSTAIRSUP, true);
         parseEvent(e);
+        return;
       }
     } else if (isItem(newx, newy, OSTAIRSDOWN)) {
       updateLog("The stairs don't go up!");
@@ -148,15 +151,16 @@ function parseEvent(e) {
         debug("STAIRS_EVERYWHERE: entering dungeon");
         moveNear(OENTRANCE, true);
         parseEvent(e);
+        return;
       } else if (player.level.depth != 10 && player.level.depth != 13) {
         debug("STAIRS_EVERYWHERE: climbing down stairs");
         moveNear(OSTAIRSDOWN, true);
         parseEvent(e);
+        return;
       }
     } else if (isItem(newx, newy, OSTAIRSUP)) {
       updateLog("The stairs don't go down!");
-    }
-    if (!isItem(newx, newy, OSTAIRSDOWN) || !isItem(newx, newy, OVOLDOWN)) {
+    } else if (!isItem(newx, newy, OSTAIRSDOWN) || !isItem(newx, newy, OVOLDOWN)) {
       updateLog("I see no way to go down here!");
     }
 

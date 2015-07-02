@@ -3,7 +3,7 @@
 // home = 0
 // volcanic 1 = 11
 var LEVELS = [14];
-var LOG_SIZE = 15;
+var LOG_SIZE = 14;
 var LOG = null;
 var LAST_LOG = 0;
 
@@ -111,8 +111,8 @@ function updateLog(text) {
       LOG[i] = "";
     }
   }
-  LOG.pop();
-  LOG.unshift(text);
+  LOG.push(text);
+  LOG.shift();
   if (player != null && player.level != null) {
     player.level.paint();
   }

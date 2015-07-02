@@ -66,23 +66,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
        updateLog("You have found some gold!");
        updateLog("It is worth " + i.arg + "!");
        player.GOLD += i.arg;
-       i = null;
+       player.level.items[player.x][player.y] = createObject(OEMPTY);
      }
-//
-//     i = item[playerx][playery];
-//     if (i == 0)
-//         return;
-//     j = iarg[playerx][playery];
-//     showcell(playerx, playery);
-//     cursors();
-//     yrepcount = 0;
-//     switch (i)
-//     {
-//     case OGOLDPILE:
-//     case OMAXGOLD:
-//     case OKGOLD:
-//     case ODGOLD:
-//         lprcat("\n\nYou have found some gold!");
-//         ogold(i);
-//         break;
+
 }
