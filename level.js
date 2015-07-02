@@ -47,7 +47,9 @@ var Level = {
       } // inner for
       output += "\n";
     } // outer for
-    output += this.depth <= 10 ? this.depth : "V"+(this.depth-10);
+
+    output += player.getStatString();
+
     output += "\n";
 
     for (var i = 0; i < LOG_SIZE; i++) {
@@ -56,6 +58,8 @@ var Level = {
     output += "\n";
 
     document.getElementById("LARN").innerHTML = output;
-  }
+  },
+
+
 
 }; // Level
