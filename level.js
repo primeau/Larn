@@ -59,3 +59,34 @@ var Level = {
   }
 
 }; // Level
+
+
+
+
+/*
+    newcavelevel(level)
+    int level;
+
+    function to enter a new level.  This routine must be called anytime the
+    player changes levels.  If that level is unknown it will be created.
+TODO    A new set of monsters will be created for a new level, and existing
+    levels will get a few more monsters.
+TODO    Note that it is here we remove genocided monsters from the present level.
+ */
+
+function newcavelevel(depth) {
+  debug("going to: " + depth);
+
+  if (LEVELS[depth] instanceof Level.constructor) {
+    debug("level exists: " + depth);
+    player.level = LEVELS[depth];
+  } else {
+    debug("level does not exist: " + depth);
+    var newLevel = Object.create(Level);
+    newLevel.create(depth);
+    LEVELS[depth] = newLevel;
+    player.level = LEVELS[depth];
+    makeobject(newLevel);
+  }
+  player.level.paint();
+}

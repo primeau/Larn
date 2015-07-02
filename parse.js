@@ -10,6 +10,9 @@ function movePlayer(currentx, currenty, xdir, ydir, run) {
   player.x = currentx;
   player.y = currenty;
   player.level.paint();
+
+  lookforobject(true, false, true);
+
 }
 
 
