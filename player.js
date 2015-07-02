@@ -34,7 +34,9 @@ var Player = {
   // DEXCOUNT:
   // STRCOUNT:
   // BLINDCOUNT:
-  CAVELEVEL: function() {return this.level.depth;},
+  CAVELEVEL: function() {
+    return this.level.depth;
+  },
   // CONFUSE:
   // ALTPRO:
   // HERO:
@@ -90,22 +92,111 @@ var Player = {
   },
 
 
-  getStatString: function() {
+  /*
+      losehp(x)
+      losemhp(x)
+
+      subroutine to remove hit points from the player
+      warning -- will kill player if hp goes to zero
+   */
+  losehp: function(damage) {
+    debug("losehp: damage: " + damage);
+    this.HP -= damage;
+    if (this.HP <= 0) {
+      debug("losehp: DEATH!: " + damage);
+      beep();
+      nap(3000);
+      died(lastnum);
+    }
+  },
+
+
+  /*
+      function to calculate the pack weight of the player
+      returns the number of pounds the player is carrying
+   */
+  packweight: function() {
+    var weight = 50;
+    debug("TODO: packweight (returning " + weight + ")");
+    return weight;
+    // register int i, j=25, k;
+    //
+    // k=c[GOLD]/1000;
+    // while ((iven[j]==0) && (j>0))
+    // --j;
+    // for (i=0; i<=j; i++)
+    //     switch(iven[i])
+    //         {
+    //     case 0:
+    //     break;
+    //     case OSSPLATE:
+    //     case OPLATEARMOR:
+    //     k += 40;
+    //     break;
+    //     case OPLATE:
+    //     k += 35;
+    //     break;
+    //     case OHAMMER:
+    //     k += 30;
+    //     break;
+    //     case OSPLINT:
+    //     k += 26;
+    //     break;
+    //     case OSWORDofSLASHING:
+    //     case OCHAIN:
+    //     case OBATTLEAXE:
+    //     case O2SWORD:
+    //     k += 23;
+    //     break;
+    //     case OLONGSWORD:
+    //     case OSWORD:
+    //     case ORING:
+    //     case OFLAIL:
+    //     k += 20;
+    //     break;
+    //     case OLANCE:
+    //     case OSTUDLEATHER:
+    //     k += 15;
+    //     break;
+    //     case OLEATHER:
+    //     case OSPEAR:
+    //     k += 8;
+    //     break;
+    //     case OORBOFDRAGON:
+    //     case OBELT:
+    //     k += 4;
+    //     break;
+    //     case OSHIELD:
+    //     k += 7;
+    //     break;
+    //     case OCHEST:
+    //     k += 30 + ivenarg[i];
+    //     break;
+    //     default:
+    //     k++;
+    //     break;
+    //         };
+    // return(k);
+  }, // packweight
+
+
+
+    getStatString: function() {
     var output = "";
     output += "Spells: " + this.SPELLS + "(" + this.SPELLMAX + ")  " +
-    "AC: " + this.AC + "  " +
-    "WC: " + this.WCLASS + "  " +
-    "Level " + this.LEVEL + " " +
-    "Exp: " + this.EXPERIENCE + "  " + this.CLASS() + "\n" +
-    "HP: " + this.HP + "(" + this.HPMAX + ") " +
-    "STR=" + this.STRENGTH + " " +
-    "INT=" + this.INTELLIGENCE + " " +
-    "WIS=" + this.WISDOM + " " +
-    "CON=" + this.CONSTITUTION + " " +
-    "DEX=" + this.DEXTERITY + " " +
-    "CHA=" + this.CHARISMA + " " +
-    "LV: " + (this.CAVELEVEL() <= 10 ? (this.CAVELEVEL() == 0 ? "H" : this.CAVELEVEL()) : "V"+(this.CAVELEVEL()-10)) + " " +
-    "Gold: " + this.GOLD;
+      "AC: " + this.AC + "  " +
+      "WC: " + this.WCLASS + "  " +
+      "Level " + this.LEVEL + " " +
+      "Exp: " + this.EXPERIENCE + "  " + this.CLASS() + "\n" +
+      "HP: " + this.HP + "(" + this.HPMAX + ") " +
+      "STR=" + this.STRENGTH + " " +
+      "INT=" + this.INTELLIGENCE + " " +
+      "WIS=" + this.WISDOM + " " +
+      "CON=" + this.CONSTITUTION + " " +
+      "DEX=" + this.DEXTERITY + " " +
+      "CHA=" + this.CHARISMA + " " +
+      "LV: " + (this.CAVELEVEL() <= 10 ? (this.CAVELEVEL() == 0 ? "H" : this.CAVELEVEL()) : "V" + (this.CAVELEVEL() - 10)) + " " +
+      "Gold: " + this.GOLD;
     return output;
   }, //
 

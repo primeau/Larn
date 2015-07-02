@@ -5,8 +5,10 @@
     subroutine to put an object into an empty room
  *  uses a random walk
 */
-function fillroom(item, what, arg) {
+function fillroom(what, arg) {
   var x, y;
+
+  var newItem = createObject(what);
 
   var safe = 100;
   x = rnd(MAXX - 2);
@@ -18,17 +20,26 @@ function fillroom(item, what, arg) {
     if (x < 1) x = MAXX - 2;
     if (y > MAXY - 2) y = 1;
     if (y < 1) y = MAXY - 2;
-    debug("fillroom(): safe=" + safe + ": " + x + "," + y + "=" + item.char);
+    //debug("fillroom(): safe=" + safe + ": " + x + "," + y + "=" + newItem.char);
     if (safe-- == 0) {
       debug("fillroom: SAFETY!");
       break;
     }
   }
-  item[x][y] = what;
-  what.arg = arg;
-  debug("fillroom(): safe=" + safe + " " + x + "," + y + " " + item[x][y].char + " -> " + what.char + "(" + what.arg + ")");
+  player.level.items[x][y] = newItem;
+  newItem.arg = arg;
+  //debug("fillroom(): safe=" + safe + " " + x + "," + y + " " + player.level.items[x][y].char + " -> " + newItem.char + "(" + newItem.arg + ")");
 }
 
+
+/*
+    subroutine to fill in a number of objects of the same kind
+ */
+function fillmroom(n, what, arg) {
+  for (var i = 0; i < n; i++) {
+    fillroom(what, arg);
+  }
+}
 
 
 /*
@@ -42,26 +53,29 @@ function makeobject(level) {
   debug("makeobject: level " + level.depth);
 
   if (level.depth == 0) {
-    fillroom(level.items, createObject(OENTRANCE), 0);
-    fillroom(level.items, createObject(OVOLDOWN), 0);
+    fillroom(OENTRANCE, 0);
+    fillroom(OVOLDOWN, 0);
     return;
   }
 
   if (level.depth == 1) {
-    level.items[Math.floor(MAXX / 2)][MAXY - 1] = createObject(OHOMEENTRANCE);
+    level.items[Math.floor(MAXX / 2)][MAXY - 1] = OHOMEENTRANCE;
   }
   if (level.depth >= 1 && level.depth < 10 || level.depth == 11 || level.depth == 12) {
-    fillroom(level.items, createObject(OSTAIRSDOWN), 0);
+    fillroom(OSTAIRSDOWN, 0);
   }
   if (level.depth > 1 && level.depth <= 10 || level.depth == 12 || level.depth == 13) {
-    fillroom(level.items, createObject(OSTAIRSUP), 0);
+    fillroom(OSTAIRSUP, 0);
   }
   if (level.depth == 11) {
-    fillroom(level.items, createObject(OVOLUP), 0);
+    fillroom(OVOLUP, 0);
   }
 
+  fillmroom(rund(3), OPIT, 0);
+
   var numgold = rnd(12) + 11;
-  while(numgold-- >= 0)
-    fillroom(level.items, createObject(OGOLDPILE), 12 * rnd(level.depth + 1) + (level.depth << 3) + 10); /* make GOLD */
+  while (numgold-- >= 0)
+    fillroom(OGOLDPILE, 12 * rnd(level.depth + 1) + (level.depth << 3) + 10); /* make GOLD */
+
 
 }

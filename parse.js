@@ -1,3 +1,5 @@
+"use strict";
+
 function movePlayer(currentx, currenty, xdir, ydir, run) {
   while (canMove(currentx + xdir, currenty + ydir)) {
     currentx += xdir;

@@ -16,6 +16,11 @@ function rund(value) {
 }
 
 
+function beep() {
+  debug("TODO: BEEP");
+}
+
+
 function debug(text) {
   if (DEBUG_OUTPUT) {
     console.log("DEBUG: " + text);
