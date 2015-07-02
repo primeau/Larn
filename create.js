@@ -71,7 +71,8 @@ function makeobject(level) {
     fillroom(OVOLUP, 0);
   }
 
-  fillmroom(rund(3), OPIT, 0);
+  fillmroom(rund(3),OPIT, 0);
+  fillmroom(rund(2),OMIRROR, 0);
 
   var numgold = rnd(12) + 11;
   while (numgold-- >= 0)

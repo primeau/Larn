@@ -98,7 +98,7 @@ function parseEvent(e) {
     if (isItem(newx, newy, OSTAIRSUP)) {
       updateLog("Climbing Up Stairs");
       newcavelevel(player.level.depth - 1);
-      positionplayer(newx, newy, true);
+      //positionplayer(newx, newy, true);
     } else if (isItem(newx, newy, OVOLUP)) {
       updateLog("Climbing Up Volcanic Shaft");
       newcavelevel(0);
@@ -136,7 +136,7 @@ function parseEvent(e) {
     if (isItem(newx, newy, OSTAIRSDOWN)) {
       updateLog("Climbing Down Stairs");
       newcavelevel(player.level.depth + 1);
-      positionplayer(newx, newy, true);
+      //positionplayer(newx, newy, true);
     } else if (isItem(newx, newy, OVOLDOWN)) {
       updateLog("Climbing Down Volcanic Shaft");
       newcavelevel(11);

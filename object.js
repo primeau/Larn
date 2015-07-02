@@ -10,6 +10,7 @@ const OVOLUP = new Item("OVOLUP", "V", "the base of a volcanic shaft");
 const OVOLDOWN = new Item("OVOLDOWN", "V", "a volcanic shaft leaning downward");
 const OGOLDPILE = new Item("OGOLDPILE", "*", "some gold", 0);
 const OPIT = new Item("OPIT", "P", "a pit");
+const OMIRROR = new Item("MIRROR", "M", "a mirror");
 
 // TODO Item types?
 // characters (player, monster) 1 per square
@@ -71,9 +72,15 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
 
   if (isItem(player.x, player.y, OPIT)) {
-    /* always perform these actions. */
-    updateLog("You're standing at the top of a pit.");
+    updateLog("You're standing at the top of a pit");
     opit();
+  }
+
+  if (isItem(player.x, player.y, OMIRROR)) {
+    if (nearbymonst())
+      return;
+    if (do_ident)
+      updateLog("There is a mirror here");
   }
 
 } // lookforobject
@@ -108,4 +115,9 @@ function obottomless() {
   beep();
   nap(3000);
   died(262);
+}
+
+function nearbymonst() {
+  debug("TODO: NEARBYMONST");
+  return false;
 }

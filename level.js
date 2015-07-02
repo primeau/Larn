@@ -92,5 +92,8 @@ function newcavelevel(depth) {
     player.level = LEVELS[depth];
     makeobject(newLevel);
   }
+  if (!positionplayer(player.x, player.y, true)) {
+    debug("newcavelevel(): adjusted to " + xy(player.x, player.y));
+  }
   player.level.paint();
 }

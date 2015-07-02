@@ -13,35 +13,38 @@ var DEBUG_STAIRS_EVERYWHERE = false;
 
 function positionplayer(x, y, exact) {
   // short circuit for moving to exact location
+  var distance = 0;
   if (exact && canMove(x, y)) {
     player.x = x;
     player.y = y;
     player.level.paint();
-    //debug("positionplayer: (0): " + x + "," + y);
-    return;
+    debug("positionplayer: (" + distance + ") try " + xy(x, y));
+    return true;
   }
 
   // try 20 times to be 1 step away, then 2 steps, etc...
-  var distance = 1;
+  distance = 1;
   var maxTries = 20;
+  var numTries = maxTries;
   while (distance < 10) {
-    while (maxTries-- > 0) {
+    while (numTries-- > 0) {
       var newx = x + (rnd(3) - 2) * distance;
       var newy = y + (rnd(3) - 2) * distance;
+      debug("positionplayer: (" + distance + ") try " + xy(newx, newy));
       if ((newx != x || newy != y)) {
-        //debug("positionplayer: (" + distance + ") try " + newx + "," + newy);
         if (canMove(newx, newy)) {
           player.x = newx;
           player.y = newy;
           player.level.paint();
-          //debug("positionplayer: (" + distance + ") " + newx + "," + newy);
-          return;
+          debug("positionplayer: (" + distance + ") try " + xy(newx, newy));
+          return true;
         }
       }
     }
-    maxTries = 20;
+    numTries = maxTries;
     distance++;
   }
+  return false;
 }
 
 // move near an item, or on top of it if possible
@@ -50,7 +53,7 @@ function moveNear(item, exact) {
   for (var x = 0; x < MAXX; x++) {
     for (var y = 0; y < MAXY; y++) {
       if (isItem(x, y, item)) {
-        debug("movenear: found: " + item.id + " at " + xy(x,y));
+        debug("movenear: found: " + item.id + " at " + xy(x, y));
         positionplayer(x, y, exact);
         return true;
       }
@@ -83,8 +86,8 @@ var Larn = {
     document.onkeypress = this.keyPress;
     //document.onkeydown = this.keyPress;
 
-    player.x = rnd(MAXX-2);
-    player.y = rnd(MAXY-2);
+    player.x = rnd(MAXX - 2);
+    player.y = rnd(MAXY - 2);
 
     updateLog("Welcome to Larn"); // need to initialize the log
 
