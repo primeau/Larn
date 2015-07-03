@@ -89,7 +89,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   if (item.matches(OPOTION)) {
     if (do_ident) {
       updateLog("You have found a magic potion");
-      if (isKnown(item) || DEBUG_KNOW_ALL) {
+      if (isKnownPotion(item) || DEBUG_KNOW_ALL) {
         appendLog(" of " + potionname[item.arg]);
       }
     }
@@ -156,7 +156,7 @@ function obottomless() {
 }
 
 function nearbymonst() {
-  debug("TODO: NEARBYMONST");
+  debug("TODO: nearbymonst()");
   return false;
 }
 

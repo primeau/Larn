@@ -203,7 +203,7 @@ var Player = {
       uses c[EXPERIENCE]  c[LEVEL]
    */
   raiselevel() {
-    debug("TODO: player.raiselevel()")
+    updateLog("TODO: player.raiselevel()")
     //if (c[LEVEL] < MAXPLEVEL) raiseexperience((long)(skill[c[LEVEL]] - c[EXPERIENCE]));
   },
 

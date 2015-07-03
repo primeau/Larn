@@ -30,20 +30,24 @@ var potionname = [
 ];
 
 
-var knownPotions = [potionname[21]]; // always know cure dianthroritis
+var knownPotions = [21]; // always know cure dianthroritis
 
-function isKnown(item) {
+function isKnownPotion(item) {
+  // debug("isKnownPotion(): " + item.arg);
+  // debug("isKnownPotion(): " + knownPotions);
   if (item.matches(OPOTION)) {
-    if (knownPotions.indexOf(item.atr) >= 0) {
+    if (knownPotions.indexOf(item.arg) >= 0) {
       return true;
     }
   }
   return false;
 }
 
-function learnItem(item) {
+function learnPotion(item) {
+  // debug("learnPotion(): " + item.arg);
+  // debug("learnPotion(): " + knownPotions);
   if (item.matches(OPOTION)) {
-    knownPotions.push(item.atr);
+    knownPotions.push(item.arg);
   }
 }
 
@@ -55,9 +59,19 @@ function newpotion() {
 
 
 /*
- * function to process a potion
+ * function to process a potion. or a keypress related
  */
-function opotion(pot) {
+function opotion(potion_or_key) {
+  var potion;
+  var key;
+  if (potion_or_key instanceof Item.constructor) {
+    potion = potion_or_key;
+    //debug("opotion(): got potion: " + potion);
+  }
+  else {
+    key = potion_or_key;
+    //debug("opotion(): got key: " + key);
+  }
   if (drink_take_ignore_potion == false) {
     updateLog("Do you (d) drink it, (t) take it, or (i) ignore it?");
     drink_take_ignore_potion = true; // signal to parse function
@@ -69,8 +83,8 @@ function opotion(pot) {
       drink_take_ignore_potion = false;
       return;
     }
-    switch (pot) {
-      case '\33':
+    switch (key) {
+      //case '\33': TODO capture ESC key too
       case 'i':
         updateLog("ignore");
         drink_take_ignore_potion = false;
@@ -112,7 +126,7 @@ function quaffpotion(potion, set_known) {
    * known
    */
   if (set_known) {
-    learnItem(potion);
+    learnPotion(potion);
   }
 
   switch (potion.arg) {
@@ -191,7 +205,7 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 9:
-    debug("TODO: quaffpotion(): object detection");
+    updateLog("TODO: quaffpotion(): object detection");
       // updateLog("You sense the presence of objects!");
       // nap(1000);
       // if (c[BLINDCOUNT])
@@ -246,7 +260,7 @@ function quaffpotion(potion, set_known) {
 
     case 10:
       /* monster detection */
-      debug("TODO: quaffpotion(): monster detection");
+      updateLog("TODO: quaffpotion(): monster detection");
       // updateLog("You detect the presence of monsters!");
       // nap(1000);
       // if (c[BLINDCOUNT])
@@ -260,7 +274,7 @@ function quaffpotion(potion, set_known) {
       return;
 
     case 11:
-      debug("TODO: quaffpotion(): forgetfulness");
+      updateLog("TODO: quaffpotion(): forgetfulness");
       // lprcat("\nYou stagger for a moment . .");
       // for (i = 0; i < MAXY; i++)
       //   for (j = 0; j < MAXX; j++)
@@ -274,19 +288,19 @@ function quaffpotion(potion, set_known) {
       return;
 
     case 13:
-      debug("TODO: quaffpotion(): blindness");
+      updateLog("TODO: quaffpotion(): blindness");
       // lprcat("\nYou can't see anything!"); /* blindness */
       // c[BLINDCOUNT] += 500;
       return;
 
     case 14:
-      debug("TODO: quaffpotion(): confusion");
+      updateLog("TODO: quaffpotion(): confusion");
       // lprcat("\nYou feel confused");
       // c[CONFUSE] += 20 + rnd(9);
       return;
 
     case 15:
-      debug("TODO: quaffpotion(): heroism");
+      updateLog("TODO: quaffpotion(): heroism");
       // lprcat("\nWOW!!!  You feel Super-fantastic!!!");
       // if (c[HERO] == 0)
       //   for (i = 0; i < 6; i++)
@@ -295,12 +309,12 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 16:
-      debug("You have a greater intestinal constitude!");
+      updateLog("You have a greater intestinal constitude!");
       player.CONSTITUTION++;
       break;
 
     case 17:
-      debug("TODO: quaffpotion(): giant strength");
+      updateLog("TODO: quaffpotion(): giant strength");
       // lprcat("\nYou now have incredibly bulging muscles!!!");
       // if (c[GIANTSTR] == 0)
       //   c[STREXTRA] += 21;
@@ -308,13 +322,13 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 18:
-      debug("TODO: quaffpotion(): fire resistance");
+      updateLog("TODO: quaffpotion(): fire resistance");
       // lprcat("\nYou feel a chill run up your spine!");
       // c[FIRERESISTANCE] += 1000;
       break;
 
     case 19:
-      debug("TODO: quaffpotion(): treasure finding");
+      updateLog("TODO: quaffpotion(): treasure finding");
       // lprcat("\nYou feel greedy . . .");
       // nap(1000);
       // if (c[BLINDCOUNT])
@@ -345,13 +359,13 @@ function quaffpotion(potion, set_known) {
       return;
 
     case 22:
-      debug("TODO: quaffpotion(): poison");
+      updateLog("TODO: quaffpotion(): poison");
       // lprcat("\nYou feel a sickness engulf you"); /* poison */
       // c[HALFDAM] += 200 + rnd(200);
       return;
 
     case 23:
-      debug("TODO: quaffpotion(): see invisible");
+      updateLog("TODO: quaffpotion(): see invisible");
       // lprcat("\nYou feel your vision sharpen"); /* see invisible */
       // c[SEEINVISIBLE] += rnd(1000) + 400;
       // monstnamelist[INVISIBLESTALKER] = 'I';
