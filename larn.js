@@ -104,6 +104,16 @@ var Larn = {
 }; // LARN OBJCT
 
 
+function parse2() {
+  debug("TODO: larn.parse2()");
+  // if (c[HASTEMONST]) {
+  //   movemonst();
+  // }
+  // movemonst(); /* move the monsters       */
+  // randmonst();
+  // regen();
+}
+
 
 function updateLog(text) {
   LOG.push(text);

@@ -41,5 +41,5 @@
  *      300     quick quit -- don't put on scoreboard
  */
 function died(reason) {
-  debug("TODO: DIED: " + reason);
+  debug("TODO: scores.died(reason): " + reason);
 }

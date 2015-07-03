@@ -187,6 +187,13 @@ function parseEvent(e) {
     updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
   } else if (String.fromCharCode(e.which) == '$') {
     DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
+    for (var potioni = 0; potioni < potionname.length; potioni++) {
+      if (DEBUG_KNOW_ALL) {
+        var potion = createObject(OPOTION);
+        potion.arg = potioni;
+        player.level.items[potioni][0] = potion;
+      }
+    }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
   }
 

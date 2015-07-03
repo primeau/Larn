@@ -17,7 +17,7 @@ function rund(value) {
 
 
 function beep() {
-  debug("TODO: BEEP");
+  debug("TODO: util.beep()");
 }
 
 

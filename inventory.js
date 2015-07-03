@@ -5,7 +5,8 @@
     returns 0 if success, 1 if a failure
 */
 function take(itm, arg) {
-    var i,limit;
+    debug("TODO: inventory.take()");
+    // var i,limit;
     // if ((limit = 15+(c[LEVEL]>>1)) > MAXINVEN)
     //     limit=MAXINVEN;
     // for (i=0; i<limit; i++)
@@ -30,6 +31,6 @@ function take(itm, arg) {
     //         lprcat("\nYou pick up:"); show3(i);
     //         if (limit) bottomline();  return(0);
     //         }
-    updateLog("You can't carry anything else");
+    // updateLog("You can't carry anything else");
     return false;
     }

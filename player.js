@@ -117,7 +117,7 @@ var Player = {
    */
   packweight: function() {
     var weight = 50;
-    debug("TODO: packweight (returning " + weight + ")");
+    debug("TODO: player.packweight() (returning " + weight + ")");
     return weight;
     // register int i, j=25, k;
     //
@@ -179,9 +179,36 @@ var Player = {
     // return(k);
   }, // packweight
 
+  /*
+      raisehp(x)
+      raisemhp(x)
+
+      subroutine to gain maximum hit points
+   */
+  raisehp: function(x) {
+    this.hp = Math.min(this.HP + x, this.HPMAX);
+  },
+
+  raisemhp: function(x) {
+    this.HP += x;
+    this.HPMAX += x;
+  },
 
 
-    getStatString: function() {
+  /*
+      raiselevel()
+
+      subroutine to raise the player one level
+      uses the skill[] array to find level boundarys
+      uses c[EXPERIENCE]  c[LEVEL]
+   */
+  raiselevel() {
+    debug("TODO: player.raiselevel()")
+    //if (c[LEVEL] < MAXPLEVEL) raiseexperience((long)(skill[c[LEVEL]] - c[EXPERIENCE]));
+  },
+
+
+  getStatString: function() {
     var output = "";
     output += "Spells: " + this.SPELLS + "(" + this.SPELLMAX + ")  " +
       "AC: " + this.AC + "  " +

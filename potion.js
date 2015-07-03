@@ -63,6 +63,12 @@ function opotion(pot) {
     drink_take_ignore_potion = true; // signal to parse function
     return;
   } else {
+    var potion = itemAt(player.x, player.y);
+    if (potion == null) {
+      debug("opotion: couldn't find it!");
+      drink_take_ignore_potion = false;
+      return;
+    }
     switch (pot) {
       case '\33':
       case 'i':
@@ -73,14 +79,14 @@ function opotion(pot) {
       case 'd':
         updateLog("drink");
         forget(); /* destroy potion  */
-        //quaffpotion(pot, TRUE);
+        quaffpotion(potion, true);
         drink_take_ignore_potion = false;
         return;
 
       case 't':
         updateLog("take");
         if (take(OPOTION, pot)) {
-          forget();
+          forget(); // remove from board
         }
         drink_take_ignore_potion = false;
         return;
@@ -94,237 +100,263 @@ function opotion(pot) {
  * Also used to perform the action of a potion without quaffing a potion (see
  * invisible capability when drinking from a fountain).
  */
-function quaffpotion(pot, set_known) {
+function quaffpotion(potion, set_known) {
   var i, j, k;
 
   /* check for within bounds */
-  if (pot < 0 || pot >= MAXPOTION)
+  if (potion == null)
     return;
 
   /*
    * if player is to know this potion (really quaffing one), make it
    * known
    */
-  if (set_known)
-    potionname[pot][0] = ' ';
+  if (set_known) {
+    learnItem(potion);
+  }
 
-  switch (pot) {
-    case 0:
-      lprcat("\nYou fall asleep. . .");
-      i = rnd(11) - (c[CONSTITUTION] >> 2) + 2;
+  switch (potion.arg) {
+    case 0: // sleep
+      updateLog("You fall asleep. . .");
+      i = rnd(11) - (player.CONSTITUTION >> 2) + 2;
       while (--i > 0) {
         parse2();
         nap(1000);
       }
-      cursors();
-      lprcat("\nYou woke up!");
+      updateLog("You woke up!");
       return;
 
-    case 1:
-      lprcat("\nYou feel better");
-      if (c[HP] == c[HPMAX])
-        raisemhp(1);
-      else
-      if ((c[HP] += rnd(20) + 20 + c[LEVEL]) > c[HPMAX])
-        c[HP] = c[HPMAX];
+    case 1: // healing
+      updateLog("You feel better");
+      if (player.HP == player.HPMAX) {
+        player.raisemhp(1);
+      } else {
+        player.raisehp(rnd(20) + 20 + player.level);
+      }
       break;
 
-    case 2:
-      lprcat("\nSuddenly, you feel much more skillful!");
-      raiselevel();
-      raisemhp(1);
+    case 2: // raise level
+      updateLog("Suddenly, you feel much more skillful!");
+      player.raiselevel();
+      player.raisemhp(1);
       return;
 
-    case 3:
-      lprcat("\nYou feel strange for a moment");
-      c[rund(6)]++;
+    case 3: // increase ability
+      updateLog("You feel strange for a moment");
+      switch (rund(6)) {
+        case 0:
+          player.STRENGTH++;
+          break;
+        case 1:
+          player.INTELLIGENCE++;
+          break;
+        case 2:
+          player.WISDOM++;
+          break;
+        case 3:
+          player.CONSTITUTION++;
+          break;
+        case 4:
+          player.DEXTERITY++;
+          break;
+        case 5:
+          player.CHARISMA++;
+          break;
+      };
       break;
 
-    case 4:
-      lprcat("\nYou feel more self confident!");
-      c[WISDOM] += rnd(2);
+    case 4: // wisdom
+      updateLog("You feel more self confident!");
+      player.WISDOM += rnd(2);
       break;
 
-    case 5:
-      lprcat("\nWow!  You feel great!");
-      if (c[STRENGTH] < 12)
-        c[STRENGTH] = 12;
-      else
-        c[STRENGTH]++;
+    case 5: // strength
+      updateLog("Wow!  You feel great!");
+      player.STRENGTH = Math.max(12, player.STRENGTH + 1);
       break;
 
-    case 6:
-      lprcat("\nYour charm went up by one!");
-      c[CHARISMA]++;
+    case 6: // charisma
+      updateLog("Your charm went up by one!");
+      player.CHARISMA++;
       break;
 
-    case 7:
-      lprcat("\nYou become dizzy!");
-      if (--c[STRENGTH] < 3)
-        c[STRENGTH] = 3;
+    case 7: // dizziness
+      updateLog("You become dizzy!");
+      player.STRENGTH = Math.max(3, player.STRENGTH - 1);
       break;
 
-    case 8:
-      lprcat("\nYour intelligence went up by one!");
-      c[INTELLIGENCE]++;
+    case 8: // intelligence
+      updateLog("Your intelligence went up by one!");
+      player.INTELLIGENCE++;
       break;
 
     case 9:
-      lprcat("\nYou sense the presence of objects!");
-      nap(1000);
-      if (c[BLINDCOUNT])
-        return;
-      for (i = 0; i < MAXY; i++)
-        for (j = 0; j < MAXX; j++)
-          switch (item[j][i]) {
-            case OPLATE:
-            case OCHAIN:
-            case OLEATHER:
-            case ORING:
-            case OSTUDLEATHER:
-            case OSPLINT:
-            case OPLATEARMOR:
-            case OSSPLATE:
-            case OSHIELD:
-            case OSWORDofSLASHING:
-            case OHAMMER:
-            case OSWORD:
-            case O2SWORD:
-            case OSPEAR:
-            case ODAGGER:
-            case OBATTLEAXE:
-            case OLONGSWORD:
-            case OFLAIL:
-            case OLANCE:
-            case ORINGOFEXTRA:
-            case OREGENRING:
-            case OPROTRING:
-            case OENERGYRING:
-            case ODEXRING:
-            case OSTRRING:
-            case OCLEVERRING:
-            case ODAMRING:
-            case OBELT:
-            case OSCROLL:
-            case OPOTION:
-            case OBOOK:
-            case OCHEST:
-            case OAMULET:
-            case OORBOFDRAGON:
-            case OSPIRITSCARAB:
-            case OCUBEofUNDEAD:
-            case ONOTHEFT:
-            case OCOOKIE:
-              know[j][i] = HAVESEEN;
-              show1cell(j, i);
-              break;
-          }
-      showplayer();
+    debug("TODO: quaffpotion(): object detection");
+      // updateLog("You sense the presence of objects!");
+      // nap(1000);
+      // if (c[BLINDCOUNT])
+      //   return;
+      // for (i = 0; i < MAXY; i++)
+      //   for (j = 0; j < MAXX; j++)
+      //     switch (item[j][i]) {
+      //       case OPLATE:
+      //       case OCHAIN:
+      //       case OLEATHER:
+      //       case ORING:
+      //       case OSTUDLEATHER:
+      //       case OSPLINT:
+      //       case OPLATEARMOR:
+      //       case OSSPLATE:
+      //       case OSHIELD:
+      //       case OSWORDofSLASHING:
+      //       case OHAMMER:
+      //       case OSWORD:
+      //       case O2SWORD:
+      //       case OSPEAR:
+      //       case ODAGGER:
+      //       case OBATTLEAXE:
+      //       case OLONGSWORD:
+      //       case OFLAIL:
+      //       case OLANCE:
+      //       case ORINGOFEXTRA:
+      //       case OREGENRING:
+      //       case OPROTRING:
+      //       case OENERGYRING:
+      //       case ODEXRING:
+      //       case OSTRRING:
+      //       case OCLEVERRING:
+      //       case ODAMRING:
+      //       case OBELT:
+      //       case OSCROLL:
+      //       case OPOTION:
+      //       case OBOOK:
+      //       case OCHEST:
+      //       case OAMULET:
+      //       case OORBOFDRAGON:
+      //       case OSPIRITSCARAB:
+      //       case OCUBEofUNDEAD:
+      //       case ONOTHEFT:
+      //       case OCOOKIE:
+      //         know[j][i] = HAVESEEN;
+      //         show1cell(j, i);
+      //         break;
+      //     }
+      // showplayer();
       return;
 
     case 10:
       /* monster detection */
-      lprcat("\nYou detect the presence of monsters!");
-      nap(1000);
-      if (c[BLINDCOUNT])
-        return;
-      for (i = 0; i < MAXY; i++)
-        for (j = 0; j < MAXX; j++)
-          if (mitem[j][i] && (monstnamelist[mitem[j][i]] != floorc)) {
-            know[j][i] = HAVESEEN;
-            show1cell(j, i);
-          }
+      debug("TODO: quaffpotion(): monster detection");
+      // updateLog("You detect the presence of monsters!");
+      // nap(1000);
+      // if (c[BLINDCOUNT])
+      //   return;
+      // for (i = 0; i < MAXY; i++)
+      //   for (j = 0; j < MAXX; j++)
+      //     if (mitem[j][i] && (monstnamelist[mitem[j][i]] != floorc)) {
+      //       know[j][i] = HAVESEEN;
+      //       show1cell(j, i);
+      //     }
       return;
 
     case 11:
-      lprcat("\nYou stagger for a moment . .");
-      for (i = 0; i < MAXY; i++)
-        for (j = 0; j < MAXX; j++)
-          know[j][i] = 0;
-      nap(1000);
-      draws(0, MAXX, 0, MAXY); /* potion of forgetfulness */
+      debug("TODO: quaffpotion(): forgetfulness");
+      // lprcat("\nYou stagger for a moment . .");
+      // for (i = 0; i < MAXY; i++)
+      //   for (j = 0; j < MAXX; j++)
+      //     know[j][i] = 0;
+      // nap(1000);
+      // draws(0, MAXX, 0, MAXY); /* potion of forgetfulness */
       return;
 
-    case 12:
-      lprcat("\nThis potion has no taste to it");
+    case 12: // water
+      updateLog("This potion has no taste to it");
       return;
 
     case 13:
-      lprcat("\nYou can't see anything!"); /* blindness */
-      c[BLINDCOUNT] += 500;
+      debug("TODO: quaffpotion(): blindness");
+      // lprcat("\nYou can't see anything!"); /* blindness */
+      // c[BLINDCOUNT] += 500;
       return;
 
     case 14:
-      lprcat("\nYou feel confused");
-      c[CONFUSE] += 20 + rnd(9);
+      debug("TODO: quaffpotion(): confusion");
+      // lprcat("\nYou feel confused");
+      // c[CONFUSE] += 20 + rnd(9);
       return;
 
     case 15:
-      lprcat("\nWOW!!!  You feel Super-fantastic!!!");
-      if (c[HERO] == 0)
-        for (i = 0; i < 6; i++)
-          c[i] += 11;
-      c[HERO] += 250;
+      debug("TODO: quaffpotion(): heroism");
+      // lprcat("\nWOW!!!  You feel Super-fantastic!!!");
+      // if (c[HERO] == 0)
+      //   for (i = 0; i < 6; i++)
+      //     c[i] += 11;
+      // c[HERO] += 250;
       break;
 
     case 16:
-      lprcat("\nYou have a greater intestinal constitude!");
-      c[CONSTITUTION]++;
+      debug("You have a greater intestinal constitude!");
+      player.CONSTITUTION++;
       break;
 
     case 17:
-      lprcat("\nYou now have incredibly bulging muscles!!!");
-      if (c[GIANTSTR] == 0)
-        c[STREXTRA] += 21;
-      c[GIANTSTR] += 700;
+      debug("TODO: quaffpotion(): giant strength");
+      // lprcat("\nYou now have incredibly bulging muscles!!!");
+      // if (c[GIANTSTR] == 0)
+      //   c[STREXTRA] += 21;
+      // c[GIANTSTR] += 700;
       break;
 
     case 18:
-      lprcat("\nYou feel a chill run up your spine!");
-      c[FIRERESISTANCE] += 1000;
+      debug("TODO: quaffpotion(): fire resistance");
+      // lprcat("\nYou feel a chill run up your spine!");
+      // c[FIRERESISTANCE] += 1000;
       break;
 
     case 19:
-      lprcat("\nYou feel greedy . . .");
-      nap(1000);
-      if (c[BLINDCOUNT])
-        return;
-      for (i = 0; i < MAXY; i++)
-        for (j = 0; j < MAXX; j++) {
-          k = item[j][i];
-          if ((k == ODIAMOND) ||
-            (k == ORUBY) ||
-            (k == OEMERALD) ||
-            (k == OMAXGOLD) ||
-            (k == OSAPPHIRE) ||
-            (k == OLARNEYE) ||
-            (k == OGOLDPILE)) {
-            know[j][i] = HAVESEEN;
-            show1cell(j, i);
-          }
-        }
-      showplayer();
+      debug("TODO: quaffpotion(): treasure finding");
+      // lprcat("\nYou feel greedy . . .");
+      // nap(1000);
+      // if (c[BLINDCOUNT])
+      //   return;
+      // for (i = 0; i < MAXY; i++)
+      //   for (j = 0; j < MAXX; j++) {
+      //     k = item[j][i];
+      //     if ((k == ODIAMOND) ||
+      //       (k == ORUBY) ||
+      //       (k == OEMERALD) ||
+      //       (k == OMAXGOLD) ||
+      //       (k == OSAPPHIRE) ||
+      //       (k == OLARNEYE) ||
+      //       (k == OGOLDPILE)) {
+      //       know[j][i] = HAVESEEN;
+      //       show1cell(j, i);
+      //     }
+      //   }
+      // showplayer();
       return;
 
-    case 20:
-      c[HP] = c[HPMAX];
-      break; /* instant healing */
+    case 20: // instant healing
+      player.HP = player.HPMAX;
+      break;
 
-    case 21:
-      lprcat("\nYou don't seem to be affected");
-      return; /* cure dianthroritis */
+    case 21: // cure dianthroritis
+      updateLog("You don't seem to be affected");
+      return;
 
     case 22:
-      lprcat("\nYou feel a sickness engulf you"); /* poison */
-      c[HALFDAM] += 200 + rnd(200);
+      debug("TODO: quaffpotion(): poison");
+      // lprcat("\nYou feel a sickness engulf you"); /* poison */
+      // c[HALFDAM] += 200 + rnd(200);
       return;
 
     case 23:
-      lprcat("\nYou feel your vision sharpen"); /* see invisible */
-      c[SEEINVISIBLE] += rnd(1000) + 400;
-      monstnamelist[INVISIBLESTALKER] = 'I';
+      debug("TODO: quaffpotion(): see invisible");
+      // lprcat("\nYou feel your vision sharpen"); /* see invisible */
+      // c[SEEINVISIBLE] += rnd(1000) + 400;
+      // monstnamelist[INVISIBLESTALKER] = 'I';
       return;
   };
-  bottomline(); /* show new stats      */
+  player.level.paint(); /* show new stats      */
   return;
 }

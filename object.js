@@ -44,6 +44,14 @@ function isItem(x, y, compareItem) {
   }
 }
 
+function itemAt(x, y) {
+  var item = player.level.items[x][y];
+  if (item.id == OPOTION.id) {
+    return item;
+  }
+  else return null;
+}
+
 var Item = {
   id: null,
   char: "💩",
