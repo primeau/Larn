@@ -85,7 +85,7 @@ var Player = {
   // WTW:        /* walk through walls */
   // STREXTRA:   /* character strength due to objects or enchantments */
   // TMP:        /* misc scratch space */
-  // LIFEPRT:     /* life protection counter */
+  LIFEPROT: 0,     /* life protection counter */
 
   CLASS: function() {
     return CLASSES[this.LEVEL - 1];

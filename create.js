@@ -75,11 +75,11 @@ function makeobject(level) {
   fillmroom(rund(2), OMIRROR, 0);
   fillmroom(rund(3), OSTATUE, 0);
 
-  var numgold = rnd(12) + 11;
-  while (numgold-- > 0)
-    fillroom(OGOLDPILE, 12 * rnd(level.depth + 1) + (level.depth << 3) + 10); /* make GOLD */
-  var numpotions = rnd(4) + 3;
-  while (numpotions-- > 0)
-    fillroom(OPOTION, newpotion()); /*  make a POTION   */
+  for (var numgold = rnd(12) + 11; numgold > 0; numgold--)
+    fillroom(OGOLDPILE, 12 * rnd(level.depth + 1) + (level.depth << 3) + 10);
+  for (var numpotions = rnd(4) + 3; numpotions > 0; numpotions--)
+    fillroom(OPOTION, newpotion());
+  for (var numscrolls = rnd(5) + 3; numscrolls > 0; numscrolls--)
+    fillroom(OSCROLL, newscroll());
 
 }

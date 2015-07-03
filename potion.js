@@ -99,7 +99,7 @@ function opotion(potion_or_key) {
 
       case 't':
         updateLog("take");
-        if (take(OPOTION, pot)) {
+        if (take(potion)) {
           forget(); // remove from board
         }
         drink_take_ignore_potion = false;
@@ -115,8 +115,6 @@ function opotion(potion_or_key) {
  * invisible capability when drinking from a fountain).
  */
 function quaffpotion(potion, set_known) {
-  var i, j, k;
-
   /* check for within bounds */
   if (potion == null)
     return;
@@ -132,8 +130,8 @@ function quaffpotion(potion, set_known) {
   switch (potion.arg) {
     case 0: // sleep
       updateLog("You fall asleep. . .");
-      i = rnd(11) - (player.CONSTITUTION >> 2) + 2;
-      while (--i > 0) {
+      var sleeplen = rnd(11) - (player.CONSTITUTION >> 2) + 2;
+      while (--sleeplen > 0) {
         parse2();
         nap(1000);
       }

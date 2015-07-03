@@ -1,6 +1,8 @@
 "use strict";
 
 var drink_take_ignore_potion = false;
+var read_take_ignore_scroll = false;
+
 
 function movePlayer(currentx, currenty, xdir, ydir, run) {
   while (canMove(currentx + xdir, currenty + ydir)) {
@@ -28,6 +30,10 @@ function parseEvent(e) {
 
   if (drink_take_ignore_potion) {
     opotion(String.fromCharCode(e.which));
+    return;
+  }
+  if (read_take_ignore_scroll) {
+    oscroll(String.fromCharCode(e.which));
     return;
   }
 
@@ -187,11 +193,16 @@ function parseEvent(e) {
     updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
   } else if (String.fromCharCode(e.which) == '$') {
     DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
-    for (var potioni = 0; potioni < potionname.length; potioni++) {
       if (DEBUG_KNOW_ALL) {
+      for (var potioni = 0; potioni < potionname.length; potioni++) {
         var potion = createObject(OPOTION);
         potion.arg = potioni;
         player.level.items[potioni][0] = potion;
+      }
+      for (var scrolli = 0; scrolli < scrollname.length; scrolli++) {
+        var scroll = createObject(OSCROLL);
+        scroll.arg = scrolli;
+        player.level.items[potioni + scrolli][0] = scroll;
       }
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);

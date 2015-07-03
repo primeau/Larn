@@ -13,6 +13,7 @@ const OPIT = new Item("OPIT", "P", "a pit");
 const OMIRROR = new Item("MIRROR", "M", "a mirror");
 const OSTATUE = new Item("OSTATUE", "&", "a great marble statue");
 const OPOTION = new Item("OPOTION", "!", "a magic potion");
+const OSCROLL = new Item("OSCROLL", "?", "a magic scroll");
 
 // TODO Item types?
 // characters (player, monster) 1 per square
@@ -48,8 +49,10 @@ function itemAt(x, y) {
   var item = player.level.items[x][y];
   if (item.id == OPOTION.id) {
     return item;
+  } else if (item.id == OSCROLL.id) {
+    return item;
   }
-  else return null;
+  return null;
 }
 
 var Item = {
@@ -93,12 +96,30 @@ function lookforobject(do_ident, do_pickup, do_action) {
         appendLog(" of " + potionname[item.arg]);
       }
     }
-    // if (do_pickup) {
-    //   if (take(OPOTION, j) == 0)
-    //     forget();
-    // }
+    if (do_pickup) {
+      updateLog("TODO: object.lookforobject(): take potion");
+      //   if (take(OPOTION, j) == 0)
+      //     forget();
+    }
     if (do_action) {
       opotion(item);
+    }
+  }
+
+  if (item.matches(OSCROLL)) {
+    if (do_ident) {
+      updateLog("You have found a magic scroll");
+      if (isKnownScroll(item) || DEBUG_KNOW_ALL) {
+        appendLog(" of " + scrollname[item.arg]);
+      }
+    }
+    if (do_pickup) {
+      updateLog("TODO: object.lookforobject(): take scroll");
+      //         if (take(OSCROLL, j) == 0)
+      //                 forget();
+    }
+    if (do_action) {
+      oscroll(item);
     }
   }
 

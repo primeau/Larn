@@ -4,7 +4,7 @@
     function to put something in the players inventory
     returns 0 if success, 1 if a failure
 */
-function take(itm, arg) {
+function take(item) {
     debug("TODO: inventory.take()");
     // var i,limit;
     // if ((limit = 15+(c[LEVEL]>>1)) > MAXINVEN)
