@@ -1,6 +1,6 @@
 "use strict";
 
-const OWALL = new Item("OWALL", "\u2592", "a wall");
+const OWALL = new Item("OWALL", "▒", "a wall");
 const OEMPTY = new Item("OEMPTY", ".", "empty space");
 const OSTAIRSDOWN = new Item("OSTAIRSDOWN", ">", "a staircase going down");
 const OSTAIRSUP = new Item("OSTAIRSUP", "<", "a staircase going up");
@@ -95,26 +95,26 @@ function lookforobject(do_ident, do_pickup, do_action) {
 
 
 function opit() {
-  var damage;
-  if (rnd(101) < 81)
-    if (rnd(70) > 9 * player.DEXTERITY - player.packweight() || rnd(101) < 5)
-      if (player.level.depth == 10) {
+  if (rnd(101) < 81) {
+    if (rnd(70) > 9 * player.DEXTERITY - player.packweight() || rnd(101) < 5) {
+      if (player.level.depth == 10 || player.level.depth >= 13) {
         obottomless();
-      } else if (player.level.depth == 13) {
-    obottomless();
-  } else {
-    if (rnd(101) < 20) {
-      damage = 0;
-      updateLog("You fell into a pit!  Your fall is cushioned by an unknown force");
-    } else {
-      damage = rnd(player.level.depth * 3 + 3);
-      updateLog("You fell into a pit!  You suffer " + damage + " hit points damage");
-      lastnum = 261;
-      /* if he dies scoreboard will say so */
+      } else {
+        var damage;
+        if (rnd(101) < 20) {
+          damage = 0;
+          updateLog("You fell into a pit!  Your fall is cushioned by an unknown force");
+        } else {
+          damage = rnd(player.level.depth * 3 + 3);
+          updateLog("You fell into a pit!  You suffer " + damage + " hit points damage");
+          lastnum = 261;
+          /* if hero dies scoreboard will say so */
+        }
+        player.losehp(damage);
+        nap(2000);
+        newcavelevel(player.level.depth + 1);
+      }
     }
-    player.losehp(damage);
-    nap(2000);
-    newcavelevel(player.level.depth + 1);
   }
 }
 

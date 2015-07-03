@@ -39,7 +39,7 @@ var Level = {
         if (x != player.x || y != player.y) {
           output += this.items[x][y].char;
         } else {
-          output += "\u2593"; // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
+          output += "▓"; // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
         }
         // HACK
         // HACK

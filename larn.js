@@ -3,7 +3,7 @@
 // home = 0
 // volcanic 1 = 11
 var LEVELS = [14];
-var LOG_SIZE = 14;
+var LOG_SIZE = 6;
 var LOG = null;
 var LAST_LOG = 0;
 

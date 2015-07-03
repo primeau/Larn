@@ -61,10 +61,10 @@ function makeobject(level) {
   if (level.depth == 1) {
     level.items[Math.floor(MAXX / 2)][MAXY - 1] = OHOMEENTRANCE;
   }
-  if (level.depth >= 1 && level.depth < 10 || level.depth == 11 || level.depth == 12) {
+  if (level.depth != 0 && level.depth != 13) {
     fillroom(OSTAIRSDOWN, 0);
   }
-  if (level.depth > 1 && level.depth <= 10 || level.depth == 12 || level.depth == 13) {
+  if (level.depth != 0 && level.depth != 11) {
     fillroom(OSTAIRSUP, 0);
   }
   if (level.depth == 11) {
