@@ -1,5 +1,7 @@
 "use strict";
 
+var drink_take_ignore_potion = false;
+
 function movePlayer(currentx, currenty, xdir, ydir, run) {
   while (canMove(currentx + xdir, currenty + ydir)) {
     currentx += xdir;
@@ -23,6 +25,11 @@ function parseEvent(e) {
 
   var newx = player.x;
   var newy = player.y;
+
+  if (drink_take_ignore_potion) {
+    opotion(String.fromCharCode(e.which));
+    return;
+  }
 
   /*
                  ARROW KEYS           NUMPAD               KEYBOARD
@@ -178,6 +185,9 @@ function parseEvent(e) {
   } else if (String.fromCharCode(e.which) == '#') {
     DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
     updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
+  } else if (String.fromCharCode(e.which) == '$') {
+    DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
+    updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
   }
 
 

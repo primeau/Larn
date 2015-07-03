@@ -76,8 +76,10 @@ function makeobject(level) {
   fillmroom(rund(3), OSTATUE, 0);
 
   var numgold = rnd(12) + 11;
-  while (numgold-- >= 0)
+  while (numgold-- > 0)
     fillroom(OGOLDPILE, 12 * rnd(level.depth + 1) + (level.depth << 3) + 10); /* make GOLD */
-
+  var numpotions = rnd(4) + 3;
+  while (numpotions-- > 0)
+    fillroom(OPOTION, newpotion()); /*  make a POTION   */
 
 }

@@ -4,12 +4,13 @@
 // volcanic 1 = 11
 var LEVELS = [14];
 var LOG_SIZE = 6;
-var LOG = null;
+var LOG = [""];
 var LAST_LOG = 0;
 
 var DEBUG_OUTPUT = false;
 var DEBUG_WALK_THROUGH_WALLS = false;
 var DEBUG_STAIRS_EVERYWHERE = false;
+var DEBUG_KNOW_ALL = false;
 
 function positionplayer(x, y, exact) {
   // short circuit for moving to exact location
@@ -105,15 +106,17 @@ var Larn = {
 
 
 function updateLog(text) {
-  if (LOG == null) {
-    LOG = [LOG_SIZE];
-    for (var i = 0; i < LOG_SIZE; i++) {
-      LOG[i] = "";
-    }
-  }
   LOG.push(text);
-  LOG.shift();
+  if (LOG.length > LOG_SIZE) {
+    LOG.shift();
+  }
   if (player != null && player.level != null) {
     player.level.paint();
   }
+}
+
+
+function appendLog(text) {
+  var newText = LOG.pop() + text;
+  updateLog(newText);
 }

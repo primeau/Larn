@@ -52,7 +52,7 @@ var Level = {
 
     output += "\n";
 
-    for (var i = 0; i < LOG_SIZE; i++) {
+    for (var i = 0; i < LOG.length; i++) {
       output += LOG[i] + "\n";
     }
     output += "\n";

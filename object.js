@@ -12,6 +12,7 @@ const OGOLDPILE = new Item("OGOLDPILE", "*", "some gold", 0);
 const OPIT = new Item("OPIT", "P", "a pit");
 const OMIRROR = new Item("MIRROR", "M", "a mirror");
 const OSTATUE = new Item("OSTATUE", "&", "a great marble statue");
+const OPOTION = new Item("OPOTION", "!", "a magic potion");
 
 // TODO Item types?
 // characters (player, monster) 1 per square
@@ -48,6 +49,11 @@ var Item = {
   char: "💩",
   name: null,
   arg: null,
+
+  matches: function(item) {
+    return (this.id == item.id);
+  },
+
 }
 
 
@@ -61,15 +67,31 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //     // if (c[TIMESTOP])
   //     //     return;
   //
-  var i = player.level.items[player.x][player.y];
+  var item = player.level.items[player.x][player.y];
 
   if (isItem(player.x, player.y, OEMPTY)) return;
 
   if (isItem(player.x, player.y, OGOLDPILE)) {
     updateLog("You have found some gold!");
-    updateLog("It is worth " + i.arg + "!");
-    player.GOLD += i.arg;
-    player.level.items[player.x][player.y] = createObject(OEMPTY);
+    updateLog("It is worth " + item.arg + "!");
+    player.GOLD += item.arg;
+    forget();
+  }
+
+  if (item.matches(OPOTION)) {
+    if (do_ident) {
+      updateLog("You have found a magic potion");
+      if (isKnown(item) || DEBUG_KNOW_ALL) {
+        appendLog(" of " + potionname[item.arg]);
+      }
+    }
+    // if (do_pickup) {
+    //   if (take(OPOTION, j) == 0)
+    //     forget();
+    // }
+    if (do_action) {
+      opotion(item);
+    }
   }
 
   if (isItem(player.x, player.y, OPIT)) {
@@ -128,4 +150,8 @@ function obottomless() {
 function nearbymonst() {
   debug("TODO: NEARBYMONST");
   return false;
+}
+
+function forget() {
+  player.level.items[player.x][player.y] = createObject(OEMPTY);
 }
