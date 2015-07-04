@@ -155,8 +155,7 @@ function read_scroll(scroll) {
       return;
 
     case 6:
-      updateLog("TODO: read_scroll(): aggravate monsters");
-      // c[AGGRAVATE] += 800;
+      player.AGGRAVATE += 800;
       return; /* aggravate monsters */
 
     case 7:
@@ -175,13 +174,11 @@ function read_scroll(scroll) {
       return; /* teleportation */
 
     case 9:
-      updateLog("TODO: read_scroll(): expanded awareness");
-      // c[AWARENESS] += 1800;
+      player.AWARENESS += 1800;
       return; /* expanded awareness   */
 
     case 10:
-      updateLog("TODO: read_scroll(): haste monsters");
-      // c[HASTEMONST] += rnd(55) + 12;
+      player.HASTEMONST += rnd(55) + 12;
       return; /* haste monster */
 
     case 11:
@@ -193,21 +190,15 @@ function read_scroll(scroll) {
       return; /* monster healing */
 
     case 12:
-      updateLog("TODO: read_scroll(): spirit protection");
-      // c[SPIRITPRO] += 300 + rnd(200);
-      // bottomline();
+      player.SPIRITPRO += 300 + rnd(200);
       return; /* spirit protection */
 
     case 13:
-      updateLog("TODO: read_scroll(): undead protection");
-      // c[UNDEADPRO] += 300 + rnd(200);
-      // bottomline();
+      player.UNDEADPRO += 300 + rnd(200);
       return; /* undead protection */
 
     case 14:
-      updateLog("TODO: read_scroll(): stealth");
-      // c[STEALTH] += 250 + rnd(250);
-      // bottomline();
+      player.STEALTH += 250 + rnd(250);
       return; /* stealth */
 
     case 15:
@@ -220,9 +211,7 @@ function read_scroll(scroll) {
       return;
 
     case 16:
-      updateLog("TODO: read_scroll(): hold monsters");
-      // c[HOLDMONST] += 30;
-      // bottomline();
+      player.HOLDMONST += 30;
       return; /* hold monster */
 
     case 17:

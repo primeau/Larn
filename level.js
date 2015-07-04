@@ -63,17 +63,12 @@ var Level = {
     }
     output += "\n";
 
-    var c = "a";
-    for (var inven = 0; inven < player.inventory.length; inven++) {
-      var item =  player.inventory[inven];
-      if (item != null) {
-        output += c + ") " + item + "\n";
-      }
-      c = c.nextChar();
-    }
-    output += "\n";
-
     document.getElementById("LARN").innerHTML = output;
+
+    var doc = document.getElementById("STATS");
+    if (doc != null)
+      document.getElementById("STATS").innerHTML = game_stats();
+
   },
 
 

@@ -94,6 +94,7 @@ var Larn = {
     updateLog("Welcome to Larn"); // need to initialize the log
 
     newcavelevel(0);
+
   },
 
   // http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes

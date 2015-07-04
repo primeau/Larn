@@ -64,21 +64,21 @@ var Player = {
   // CHARMCOUNT:
   // INVISIBILITY:
   // CANCELLATION:
-  // HASTESELF:
+  // HASTESELF: 0,
   // EYEOFLARN:
-  // AGGRAVATE:
+  AGGRAVATE: 0,
   // GLOBE:
   // TELEFLAG:
   // SLAYING:
   // NEGATESPIRIT:
   // SCAREMONST:
-  // AWARENESS:
-  // HOLDMONST:
+  AWARENESS: 0,
+  HOLDMONST: 0,
   TIMESTOP: 0,
-  // HASTEMONST:
+  HASTEMONST: 0,
   // CUBEofUNDEAD:
   // GIANTSTR:
-  // FIRERESISTANCE:
+  FIRERESISTANCE: 0,
   // BESSMANN:
   // NOTHEFT:
   HARDGAME: 0,
@@ -89,10 +89,10 @@ var Player = {
   MONSTKILLED: 0,
   // SPELLSCAST:
   LANCEDEATH: 0,
-  // SPIRITPRO:
-  // UNDEADPRO:
+  SPIRITPRO: 0,
+  UNDEADPRO: 0,
   // SHIELD:
-  // STEALTH:
+  STEALTH: 0,
   // ITCHING:
   // LAUGHING:
   // DRAINSTRENGTH:
@@ -349,3 +349,113 @@ const CLASSES = [
   "  water guardian   ", "  time guardian    ", " ethereal guardian ", /* -99*/
   "    The Creator    ", "    The Creator    ", "    The Creator    ", /* -102*/
 ];
+
+function game_stats() {
+  var s = "";
+  s += "X:     " + player.x + "\n";
+  s += "Y:     " + player.y + "\n";
+
+  // s += "LV:    " + player.level.depth + "\n";
+  // s += "STR:   " + player.STRENGTH + "\n";
+  // s += "INT:   " + player.INTELLIGENCE + "\n";
+  // s += "WIS:   " + player.WISDOM + "\n";
+  // s += "CON:   " + player.CONSTITUTION + "\n";
+  // s += "DEX:   " + player.DEXTERITY + "\n";
+  // s += "CHA:   " + player.CHARISMA + "\n";
+  // s += "HPMAX: " + player.HPMAX + "\n";
+  // s += "HP:    " + player.HP + "\n";
+  // s += "SPMAX: " + player.SPELLMAX + "\n";
+  // s += "SPELL: " + player.SPELLS + "\n";
+  // s += "GOLD:  " + player.GOLD + "\n";
+  // s += "EXP:   " + player.EXPERIENCE + "\n";
+  // s += "LEVEL: " + player.LEVEL + "\n";
+  // s += "WC:    " + player.WCLASS + "\n";
+  // s += "AC:    " + player.AC + "\n";
+
+  s += "AGGR:  " + player.AGGRAVATE + "\n";
+  s += "HSTM:  " + player.HASTEMONST + "\n";
+  s += "POIS:  " + player.HALFDAM + "\n";
+
+  s += "AWARE: " + player.AWARENESS + "\n";
+
+  s += "SPRO:  " + player.SPIRITPRO + "\n";
+  s += "UPRO:  " + player.UNDEADPRO + "\n";
+  s += "FIRE:  " + player.FIRERESISTANCE + "\n";
+
+  s += "HOLD:  " + player.HOLDMONST + "\n";
+  s += "STEL:  " + player.STEALTH + "\n";
+//  s += "HASTE: " + player.HASTESELF + "\n";
+
+  s += "KILL:  " + player.MONSTKILLED + "\n";
+  s += "LIFE:  " + player.LIFEPROT + "\n";
+
+
+
+  // // REGEN:
+  // // BANKACCOUNT:
+  // // ENERGY:
+  // // ECOUNTER:
+  // // MOREDEFENSES:
+  // // WEAR:
+  // // PROTECTIONTIME:
+  // // WIELD:
+  // // AMULET:
+  // // REGENCOUNTER:
+  // MOREDAM: 0,
+  // // DEXCOUNT:
+  // // STRCOUNT:
+  // // BLINDCOUNT:
+  // // CONFUSE:
+  // // ALTPRO:
+  // // HERO:
+  // // CHARMCOUNT:
+  // // INVISIBILITY:
+  // // CANCELLATION:
+  // // HASTESELF:
+  // // EYEOFLARN:
+  // // GLOBE:
+  // // TELEFLAG:
+  // // SLAYING:
+  // // NEGATESPIRIT:
+  // // SCAREMONST:
+  // TIMESTOP: 0,
+  // // CUBEofUNDEAD:
+  // // GIANTSTR:
+  // // BESSMANN:
+  // // NOTHEFT:
+  // HARDGAME: 0,
+  // // CPUTIME:
+  // // BYTESIN:
+  // // BYTESOUT:
+  // // MOVESMADE:
+  // // SPELLSCAST:
+  // LANCEDEATH: 0,
+  // // SHIELD:
+  // // ITCHING:
+  // // LAUGHING:
+  // // DRAINSTRENGTH:
+  // // CLUMSINESS:
+  // // INFEEBLEMENT:
+  // HALFDAM: 0,
+  // // SEEINVISIBLE:
+  // // FILLROOM:
+  // // RANDOMWALK:
+  // // SPHCAST:    /* nz if an active sphere of annihilation */
+  // // WTW:        /* walk through walls */
+  // STREXTRA: 0,
+  // /* character strength due to objects or enchantments */
+  // // TMP:        /* misc scratch space */
+  // /* life protection counter */
+
+  s += "\n";
+  var c = "a";
+  for (var inven = 0; inven < player.inventory.length; inven++) {
+    var item = player.inventory[inven];
+    if (item != null) {
+      s += c + ") " + item + "\n";
+    }
+    c = c.nextChar();
+  }
+
+  return s;
+}

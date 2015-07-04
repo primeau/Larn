@@ -140,22 +140,21 @@ function quaffpotion(potion, set_known) {
       return;
 
     case 1: // healing
-      updateLog("You feel better");
       if (player.HP == player.HPMAX) {
         player.raisemhp(1);
       } else {
         player.raisehp(rnd(20) + 20 + player.level);
       }
+      updateLog("You feel better");
       break;
 
     case 2: // raise level
-      updateLog("Suddenly, you feel much more skillful!");
       player.raiselevel();
       player.raisemhp(1);
+      updateLog("Suddenly, you feel much more skillful!");
       return;
 
     case 3: // increase ability
-      updateLog("You feel strange for a moment");
       switch (rund(6)) {
         case 0:
           player.STRENGTH++;
@@ -176,31 +175,32 @@ function quaffpotion(potion, set_known) {
           player.CHARISMA++;
           break;
       };
+      updateLog("You feel strange for a moment");
       break;
 
     case 4: // wisdom
-      updateLog("You feel more self confident!");
       player.WISDOM += rnd(2);
+      updateLog("You feel more self confident!");
       break;
 
     case 5: // strength
-      updateLog("Wow!  You feel great!");
       player.STRENGTH = Math.max(12, player.STRENGTH + 1);
+      updateLog("Wow!  You feel great!");
       break;
 
     case 6: // charisma
-      updateLog("Your charm went up by one!");
       player.CHARISMA++;
+      updateLog("Your charm went up by one!");
       break;
 
     case 7: // dizziness
-      updateLog("You become dizzy!");
       player.STRENGTH = Math.max(3, player.STRENGTH - 1);
+      updateLog("You become dizzy!");
       break;
 
     case 8: // intelligence
-      updateLog("Your intelligence went up by one!");
       player.INTELLIGENCE++;
+      updateLog("Your intelligence went up by one!");
       break;
 
     case 9:
@@ -308,8 +308,8 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 16:
-      updateLog("You have a greater intestinal constitude!");
       player.CONSTITUTION++;
+      updateLog("You have a greater intestinal constitude!");
       break;
 
     case 17:
@@ -321,9 +321,8 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 18:
-      updateLog("TODO: quaffpotion(): fire resistance");
-      // lprcat("\nYou feel a chill run up your spine!");
-      // c[FIRERESISTANCE] += 1000;
+      player.FIRERESISTANCE += 1000;
+      updateLog("You feel a chill run up your spine!");
       break;
 
     case 19:
@@ -358,9 +357,8 @@ function quaffpotion(potion, set_known) {
       return;
 
     case 22:
-      updateLog("TODO: quaffpotion(): poison");
-      // lprcat("\nYou feel a sickness engulf you"); /* poison */
-      // c[HALFDAM] += 200 + rnd(200);
+      player.HALFDAM += 200 + rnd(200);
+      updateLog("You feel a sickness engulf you"); /* poison */
       return;
 
     case 23:
