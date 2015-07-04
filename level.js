@@ -7,11 +7,13 @@ var Level = {
 
   depth: -1,
   items: [],
+  monsters: [],
 
   create: function(depth) {
     var mazeTemplate = createRandomMaze(depth);
 
     this.items = initGrid();
+    this.monsters = initGrid();
 
     this.depth = depth;
 
@@ -37,7 +39,11 @@ var Level = {
         // HACK
         // HACK
         if (x != player.x || y != player.y) {
-          output += this.items[x][y].char;
+          if (this.monsters[x][y] != null) {
+            output += this.monsters[x][y].char;
+          } else {
+            output += this.items[x][y].char;
+          }
         } else {
           output += "▓"; // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
         }
@@ -84,12 +90,14 @@ function newcavelevel(depth) {
   if (LEVELS[depth] instanceof Level.constructor) {
     debug("level exists: " + depth);
     player.level = LEVELS[depth];
+    sethp(false);
   } else {
     debug("level does not exist: " + depth);
     var newLevel = Object.create(Level);
     newLevel.create(depth);
     LEVELS[depth] = newLevel;
     player.level = LEVELS[depth];
+    sethp(true);
     makeobject(newLevel);
   }
   if (!positionplayer(player.x, player.y, true)) {

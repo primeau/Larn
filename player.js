@@ -1,5 +1,25 @@
 "use strict";
 
+
+const MAXPLEVEL = 100; /* maximum player level allowed        */
+
+const MEG = 1000000;
+var skill = [
+  0, 10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120, /*  1-11 */
+  10240, 20480, 40960, 100000, 200000, 400000, 700000, 1 * MEG, /* 12-19 */
+  2 * MEG, 3 * MEG, 4 * MEG, 5 * MEG, 6 * MEG, 8 * MEG, 10 * MEG, /* 20-26 */
+  12 * MEG, 14 * MEG, 16 * MEG, 18 * MEG, 20 * MEG, 22 * MEG, 24 * MEG, 26 * MEG, 28 * MEG, /* 27-35 */
+  30 * MEG, 32 * MEG, 34 * MEG, 36 * MEG, 38 * MEG, 40 * MEG, 42 * MEG, 44 * MEG, 46 * MEG, /* 36-44 */
+  48 * MEG, 50 * MEG, 52 * MEG, 54 * MEG, 56 * MEG, 58 * MEG, 60 * MEG, 62 * MEG, 64 * MEG, /* 45-53 */
+  66 * MEG, 68 * MEG, 70 * MEG, 72 * MEG, 74 * MEG, 76 * MEG, 78 * MEG, 80 * MEG, 82 * MEG, /* 54-62 */
+  84 * MEG, 86 * MEG, 88 * MEG, 90 * MEG, 92 * MEG, 94 * MEG, 96 * MEG, 98 * MEG, 100 * MEG, /* 63-71 */
+  105 * MEG, 110 * MEG, 115 * MEG, 120 * MEG, 125 * MEG, 130 * MEG, 135 * MEG, 140 * MEG, /* 72-79 */
+  145 * MEG, 150 * MEG, 155 * MEG, 160 * MEG, 165 * MEG, 170 * MEG, 175 * MEG, 180 * MEG, /* 80-87 */
+  185 * MEG, 190 * MEG, 195 * MEG, 200 * MEG, 210 * MEG, 220 * MEG, 230 * MEG, 240 * MEG, /* 88-95 */
+  250 * MEG, 260 * MEG, 270 * MEG, 280 * MEG, 290 * MEG, 300 * MEG /* 96-101*/
+];
+
+
 var Player = {
   x: 0,
   y: 0,
@@ -30,7 +50,7 @@ var Player = {
   // WIELD:
   // AMULET:
   // REGENCOUNTER:
-  // MOREDAM:
+  MOREDAM: 0,
   // DEXCOUNT:
   // STRCOUNT:
   // BLINDCOUNT:
@@ -53,21 +73,21 @@ var Player = {
   // SCAREMONST:
   // AWARENESS:
   // HOLDMONST:
-  // TIMESTOP:
+  TIMESTOP: 0,
   // HASTEMONST:
   // CUBEofUNDEAD:
   // GIANTSTR:
   // FIRERESISTANCE:
   // BESSMANN:
   // NOTHEFT:
-  // HARDGAME:
+  HARDGAME: 0,
   // CPUTIME:
   // BYTESIN:
   // BYTESOUT:
   // MOVESMADE:
-  // MONSTKILLED:
+  MONSTKILLED: 0,
   // SPELLSCAST:
-  // LANCEDEATH:
+  LANCEDEATH: 0,
   // SPIRITPRO:
   // UNDEADPRO:
   // SHIELD:
@@ -77,15 +97,17 @@ var Player = {
   // DRAINSTRENGTH:
   // CLUMSINESS:
   // INFEEBLEMENT:
-  // HALFDAM:
+  HALFDAM: 0,
   // SEEINVISIBLE:
   // FILLROOM:
   // RANDOMWALK:
   // SPHCAST:    /* nz if an active sphere of annihilation */
   // WTW:        /* walk through walls */
-  // STREXTRA:   /* character strength due to objects or enchantments */
+  STREXTRA: 0,
+  /* character strength due to objects or enchantments */
   // TMP:        /* misc scratch space */
-  LIFEPROT: 0,     /* life protection counter */
+  LIFEPROT: 0,
+  /* life protection counter */
 
   CLASS: function() {
     return CLASSES[this.LEVEL - 1];
@@ -196,6 +218,17 @@ var Player = {
 
 
   /*
+      raisemspells(x)
+
+      subroutine to gain maximum spells
+  */
+  raisemspells: function(x) {
+    this.SPELLMAX += x;
+    player.SPELLS += x;
+  },
+
+
+  /*
       raiselevel()
 
       subroutine to raise the player one level
@@ -204,7 +237,36 @@ var Player = {
    */
   raiselevel() {
     updateLog("TODO: player.raiselevel()")
-    //if (c[LEVEL] < MAXPLEVEL) raiseexperience((long)(skill[c[LEVEL]] - c[EXPERIENCE]));
+      //if (c[LEVEL] < MAXPLEVEL) raiseexperience((long)(skill[c[LEVEL]] - c[EXPERIENCE]));
+  },
+
+
+  /*
+      table of experience needed to be a certain level of player
+      skill[c[LEVEL]] is the experience required to attain the next level
+   */
+
+  /*
+      raiseexperience(x)
+      subroutine to increase experience points
+   */
+  raiseexperience(x) {
+    var i = player.LEVEL;
+    player.EXPERIENCE += x;
+    while (player.EXPERIENCE >= skill[player.LEVEL] && (player.LEVEL < MAXPLEVEL)) {
+      var tmp = (player.CONSTITUTION - player.HARDGAME) >> 1;
+      player.LEVEL++;
+      player.raisemhp((rnd(3) + rnd((tmp > 0) ? tmp : 1)));
+      player.raisemspells(rund(3));
+      if (player.LEVEL < 7 - player.HARDGAME) {
+        player.raisemhp((player.CONSTITUTION >> 2));
+      }
+    }
+    if (player.LEVEL != i) {
+      beep();
+      updateLog("Welcome to level " + player.LEVEL); /* if we changed levels */
+    }
+    player.level.paint();
   },
 
 
@@ -229,7 +291,25 @@ var Player = {
 
 };
 
-
+/*
+ *  ifblind(x,y)    Routine to put "monster" or the monster name into lastmosnt
+ *      int x,y;
+ *
+ *  Subroutine to copy the word "monster" into lastmonst if the player is blind
+ *  Enter with the coordinates (x,y) of the monster
+ *  Returns true or false.
+ */
+function ifblind(x, y) {
+  if (player.BLINDCOUNT > 0) {
+    lastnum = 279;
+    lastmonst = "monster";
+    return true;
+  } else {
+    lastnum = player.level.monsters[x][y];
+    lastmonst = player.level.monsters[x][y].name;
+    return false;
+  }
+}
 
 
 const CLASSES = [

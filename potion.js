@@ -1,3 +1,4 @@
+"use strict";
 /*
  *  function to return a potion number created with appropriate probability
  *  of occurrence

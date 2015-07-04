@@ -1,3 +1,4 @@
+"use strict";
 /*
  *  function to create scroll numbers with appropriate probability of
  *  occurrence
@@ -62,10 +63,10 @@ function oscroll(scroll_or_key) {
   var key;
   if (scroll_or_key instanceof Item.constructor) {
     scroll = scroll_or_key;
-    debug("oscroll(): got scroll: " + scroll);
+    //debug("oscroll(): got scroll: " + scroll.name);
   } else {
     key = scroll_or_key;
-    debug("oscroll(): got key: " + key);
+    //debug("oscroll(): got key: " + key);
   }
   if (read_take_ignore_scroll == false) {
     updateLog("Do you (r) read it, (t) take it, or (i) ignore it?");

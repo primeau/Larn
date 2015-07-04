@@ -13,9 +13,14 @@ function movePlayer(currentx, currenty, xdir, ydir, run) {
     }
     //debug("moveplayer: " + currentx + "," + currenty);
   }
-  player.x = currentx;
-  player.y = currenty;
 
+  if (player.level.monsters[currentx][currenty]) {
+    hitmonster(currentx,currenty);
+  }
+  else {
+    player.x = currentx;
+    player.y = currenty;
+  }
   lookforobject(true, false, true);
 
   player.level.paint();

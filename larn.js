@@ -48,6 +48,7 @@ function positionplayer(x, y, exact) {
   return false;
 }
 
+
 // move near an item, or on top of it if possible
 function moveNear(item, exact) {
   // find the item
@@ -74,7 +75,7 @@ function canMove(x, y) {
   if (DEBUG_WALK_THROUGH_WALLS) return true;
 
   var item = player.level.items[x][y];
-  if (isItem(x, y, OWALL)) {
+  if (isItem(x, y, OWALL) /*|| player.level.monsters[x][y] != null*/) {
     return false;
   } else {
     return true;
