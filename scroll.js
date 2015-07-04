@@ -63,7 +63,7 @@ function oscroll(scroll_or_key) {
   var key;
   if (scroll_or_key instanceof Item.constructor) {
     scroll = scroll_or_key;
-    //debug("oscroll(): got scroll: " + scroll.name);
+    //debug("oscroll(): got scroll: " + scroll.desc);
   } else {
     key = scroll_or_key;
     //debug("oscroll(): got key: " + key);
@@ -81,7 +81,7 @@ function oscroll(scroll_or_key) {
     }
     switch (key) {
       // TODO don't allow reading scrolls if blind!
-      //case '\33': TODO capture ESC key too
+      case ESC:
       case 'i':
         updateLog("ignore");
         read_take_ignore_scroll = false;

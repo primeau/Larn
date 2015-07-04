@@ -86,7 +86,7 @@ function canMove(x, y) {
 var Larn = {
   run: function() {
     document.onkeypress = this.keyPress;
-    //document.onkeydown = this.keyPress;
+    document.onkeydown = this.keyDown;
 
     player.x = rnd(MAXX - 2);
     player.y = rnd(MAXY - 2);
@@ -99,8 +99,13 @@ var Larn = {
   // http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
   keyPress: function(e) {
     e = e || window.event;
-    parseEvent(e);
+    preParseEvent(e, false);
   }, // KEYPRESS
+
+  keyDown: function(e) {
+    e = e || window.event;
+    preParseEvent(e, true);
+  }, // KEYDOWN
 
 }; // LARN OBJCT
 

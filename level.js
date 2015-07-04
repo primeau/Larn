@@ -58,8 +58,18 @@ var Level = {
 
     output += "\n";
 
-    for (var i = 0; i < LOG.length; i++) {
-      output += LOG[i] + "\n";
+    for (var logindex = 0; logindex < LOG.length; logindex++) {
+      output += LOG[logindex] + "\n";
+    }
+    output += "\n";
+
+    var c = "a";
+    for (var inven = 0; inven < player.inventory.length; inven++) {
+      var item =  player.inventory[inven];
+      if (item != null) {
+        output += c + ") " + item + "\n";
+      }
+      c = c.nextChar();
     }
     output += "\n";
 

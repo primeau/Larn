@@ -257,7 +257,7 @@ function hitmonster(x, y) {
     //     }
   if (hitflag) hitm(x, y, damage);
   if (monster.id == "VAMPIRE")
-    if (monster.hp < 25) {
+    if (monster.hitpoints < 25) {
       player.level.monster[x][y] = new Monster(BAT);
       // know[x][y] = 0; // TODO?
     }
@@ -274,11 +274,11 @@ function hitmonster(x, y) {
 function hitm(x, y, damage) {
   //vxy( & x, & y); /* verify coordinates are within range */
   var monster = player.level.monsters[x][y];
-  var amt2 = damage; /* save initial damage so we can return it */
+  var fulldamage = damage; /* save initial damage so we can return it */
   if (player.HALFDAM > 0) damage >>= 1; /* if half damage curse adjust damage points */
   if (damage <= 0) {
     damage = 1;
-    amt2 = 1;
+    fulldamage = 1;
   }
   // lasthx = x; // TODO what is this for?
   // lasthy = y; // TODO what is this for?
@@ -311,10 +311,10 @@ function hitm(x, y, damage) {
     //disappear(x, y);
     player.level.monsters[x][y] = null;
     //player.level.paint();
-    return;
+    return fulldamage;
     //return (hpoints); // TODO do i need this?
   }
-  return (amt2);
+  return (fulldamage);
 }
 
 /*

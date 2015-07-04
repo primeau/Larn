@@ -20,18 +20,46 @@ const OSCROLL = new Item("OSCROLL", "?", "a magic scroll");
 // items (scrolls potions gold) 1 per square
 // fundamental (doors, walls) no charaters/items
 
-function Item(id, char, name, arg) {
+var Item = {
+  id: null,
+  char: "💩",
+  desc: "",
+  arg: null,
+
+  matches: function(item) {
+    return (this.id == item.id);
+  },
+
+  toString: function() {
+    var description = this.desc;
+    if (this.matches(OPOTION) && (isKnownPotion(this) || DEBUG_KNOW_ALL)) {
+      description += " of " + potionname[this.arg];
+    }
+    if (this.matches(OSCROLL) && (isKnownScroll(this) || DEBUG_KNOW_ALL)) {
+      description += " of " + scrollname[this.arg];
+    }
+    return description;
+  },
+
+}
+
+function Item(id, char, desc, arg) {
   this.id = id;
   this.char = char;
-  this.name = name;
+  this.desc = desc;
   this.arg = arg;
 }
+
+// Item.prototype.toString = function itemToString() {
+//   return this.desc;
+// }
+
 
 function createObject(item) {
   var newItem = Object.create(Item);
   newItem.id = item.id;
   newItem.char = item.char;
-  newItem.name = item.name;
+  newItem.desc = item.desc;
   newItem.arg = item.arg;
   return newItem;
 }
@@ -47,26 +75,18 @@ function isItem(x, y, compareItem) {
 
 function itemAt(x, y) {
   var item = player.level.items[x][y];
-  if (item.id == OPOTION.id) {
-    return item;
-  } else if (item.id == OSCROLL.id) {
-    return item;
-  }
-  return null;
+  // if (item.id == OPOTION.id) {
+  //   return item;
+  // } else if (item.id == OSCROLL.id) {
+  //   return item;
+  // }
+  return item;
 }
 
-var Item = {
-  id: null,
-  char: "💩",
-  name: null,
-  arg: null,
-
-  matches: function(item) {
-    return (this.id == item.id);
-  },
-
+function isItemAt(x,y) {
+  var item = player.level.items[x][y];
+  return (item.id != OEMPTY.id);
 }
-
 
 function lookforobject(do_ident, do_pickup, do_action) {
   // do_ident;   /* identify item: T/F */
@@ -91,15 +111,12 @@ function lookforobject(do_ident, do_pickup, do_action) {
 
   if (item.matches(OPOTION)) {
     if (do_ident) {
-      updateLog("You have found a magic potion");
-      if (isKnownPotion(item) || DEBUG_KNOW_ALL) {
-        appendLog(" of " + potionname[item.arg]);
-      }
+      updateLog("You have found " + item);
     }
     if (do_pickup) {
-      updateLog("TODO: object.lookforobject(): take potion");
-      //   if (take(OPOTION, j) == 0)
-      //     forget();
+      if (take(item)) {
+        forget();
+      }
     }
     if (do_action) {
       opotion(item);
@@ -108,15 +125,12 @@ function lookforobject(do_ident, do_pickup, do_action) {
 
   if (item.matches(OSCROLL)) {
     if (do_ident) {
-      updateLog("You have found a magic scroll");
-      if (isKnownScroll(item) || DEBUG_KNOW_ALL) {
-        appendLog(" of " + scrollname[item.arg]);
-      }
+      updateLog("You have found " + item);
     }
     if (do_pickup) {
-      updateLog("TODO: object.lookforobject(): take scroll");
-      //         if (take(OSCROLL, j) == 0)
-      //                 forget();
+      if (take(item)) {
+        forget();
+      }
     }
     if (do_action) {
       oscroll(item);

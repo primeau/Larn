@@ -21,6 +21,7 @@ var skill = [
 
 
 var Player = {
+  inventory: [],
   x: 0,
   y: 0,
   level: null,

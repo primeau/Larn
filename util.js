@@ -32,3 +32,15 @@ function debug(text) {
     updateLog("DEBUG: " + text);
   }
 }
+
+
+String.prototype.nextChar = function(i) {
+    var n = i | 1;
+    return String.fromCharCode(this.charCodeAt(0) + n);
+}
+
+
+String.prototype.prevChar = function(i) {
+    var n = i | 1;
+    return String.fromCharCode(this.charCodeAt(0) - n);
+}

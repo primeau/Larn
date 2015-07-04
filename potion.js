@@ -85,7 +85,7 @@ function opotion(potion_or_key) {
       return;
     }
     switch (key) {
-      //case '\33': TODO capture ESC key too
+      case ESC:
       case 'i':
         updateLog("ignore");
         drink_take_ignore_potion = false;

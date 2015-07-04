@@ -2,7 +2,9 @@
 
 var drink_take_ignore_potion = false;
 var read_take_ignore_scroll = false;
+var wait_for_drop_input = false;
 
+const ESC = 27;
 
 function movePlayer(currentx, currenty, xdir, ydir, run) {
   while (canMove(currentx + xdir, currenty + ydir)) {
@@ -28,17 +30,41 @@ function movePlayer(currentx, currenty, xdir, ydir, run) {
 }
 
 
+function preParseEvent(e, keyDown) {
+  if (keyDown) { // to capture ESC key etc
+    if (e.which == 27) {
+      parseEvent(e);
+    }
+    else {
+      //debug("preParseEvent(): ignoring: " + e.which);
+    }
+  }
+  else {
+    parseEvent(e);
+  }
+}
+
+
 function parseEvent(e) {
 
   var newx = player.x;
   var newy = player.y;
 
   if (drink_take_ignore_potion) {
-    opotion(String.fromCharCode(e.which));
+    opotion(e.which == ESC ? ESC : String.fromCharCode(e.which));
     return;
   }
   if (read_take_ignore_scroll) {
-    oscroll(String.fromCharCode(e.which));
+    oscroll(e.which == ESC ? ESC : String.fromCharCode(e.which));
+    return;
+  }
+
+  if (String.fromCharCode(e.which) == 'D') { // DROP
+    drop_object(null);
+    return;
+  }
+  else if (wait_for_drop_input) {
+    drop_object(e.which == ESC ? ESC : String.fromCharCode(e.which));
     return;
   }
 
