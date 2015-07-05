@@ -3,6 +3,7 @@
 var drink_take_ignore_potion = false;
 var read_take_ignore_scroll = false;
 var wait_for_drop_input = false;
+var take_ignore_item = false;
 
 const ESC = 27;
 
@@ -56,6 +57,10 @@ function parseEvent(e) {
   }
   if (read_take_ignore_scroll) {
     oscroll(e.which == ESC ? ESC : String.fromCharCode(e.which));
+    return;
+  }
+  if (take_ignore_item) {
+    oitem(e.which == ESC ? ESC : String.fromCharCode(e.which));
     return;
   }
 

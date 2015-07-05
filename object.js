@@ -15,6 +15,20 @@ const OSTATUE = new Item("OSTATUE", "&", "a great marble statue");
 const OPOTION = new Item("OPOTION", "!", "a magic potion");
 const OSCROLL = new Item("OSCROLL", "?", "a magic scroll");
 
+const ODAGGER = new Item("ODAGGER", "(", "a dagger");
+const OBELT = new Item("OBELT", "(", "a belt of striking");
+const OSHIELD = new Item("OSHIELD", "(", "a shield");
+const OSPEAR = new Item("OSPEAR", "(", "a spear");
+const OFLAIL = new Item("OFLAIL", "(", "a flail");
+const OBATTLEAXE = new Item("OBATTLEAXE", ")", "a battle axe");
+const OLANCE = new Item("OLANCE", ")", "a lance of death");
+const OLONGSWORD = new Item("OLONGSWORD", ")", "a longsword");
+const O2SWORD = new Item("O2SWORD", "(", "a two handed sword");
+const OSWORD = new Item("OSWORD", ")", "a sunsword");
+const OSWORDofSLASHING = new Item("OSWORDofSLASHING", ")", "a sword of slashing");
+const OHAMMER = new Item("OHAMMER", ")", "Bessman's flailing hammer");
+
+
 // TODO Item types?
 // characters (player, monster) 1 per square
 // items (scrolls potions gold) 1 per square
@@ -32,11 +46,24 @@ var Item = {
 
   toString: function() {
     var description = this.desc;
-    if (this.matches(OPOTION) && (isKnownPotion(this) || DEBUG_KNOW_ALL)) {
-      description += " of " + potionname[this.arg];
+    if (this.matches(OPOTION)) {
+      if (isKnownPotion(this) || DEBUG_KNOW_ALL) {
+        description += " of " + potionname[this.arg];
+      }
     }
-    if (this.matches(OSCROLL) && (isKnownScroll(this) || DEBUG_KNOW_ALL)) {
-      description += " of " + scrollname[this.arg];
+    //
+    else if (this.matches(OSCROLL)) {
+      if (isKnownScroll(this) || DEBUG_KNOW_ALL) {
+        description += " of " + scrollname[this.arg];
+      }
+    }
+    //
+    else {
+      if (this.arg > 0) {
+        description += " +" + this.arg;
+      } else if (this.arg < 0) {
+        description += " " + this.arg;
+      }
     }
     return description;
   },
@@ -83,7 +110,7 @@ function itemAt(x, y) {
   return item;
 }
 
-function isItemAt(x,y) {
+function isItemAt(x, y) {
   var item = player.level.items[x][y];
   return (item.id != OEMPTY.id);
 }
@@ -100,16 +127,19 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   var item = player.level.items[player.x][player.y];
 
-  if (isItem(player.x, player.y, OEMPTY)) return;
-
-  if (isItem(player.x, player.y, OGOLDPILE)) {
+  if (isItem(player.x, player.y, OEMPTY)) {
+    return;
+  }
+  //
+  else if (isItem(player.x, player.y, OGOLDPILE)) {
     updateLog("You have found some gold!");
     updateLog("It is worth " + item.arg + "!");
     player.GOLD += item.arg;
     forget();
+    return;
   }
-
-  if (item.matches(OPOTION)) {
+  //
+  else if (item.matches(OPOTION)) {
     if (do_ident) {
       updateLog("You have found " + item);
     }
@@ -121,9 +151,10 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       opotion(item);
     }
+    return;
   }
-
-  if (item.matches(OSCROLL)) {
+  //
+  else if (item.matches(OSCROLL)) {
     if (do_ident) {
       updateLog("You have found " + item);
     }
@@ -135,28 +166,99 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       oscroll(item);
     }
+    return;
   }
-
-  if (isItem(player.x, player.y, OPIT)) {
+  //
+  else if (isItem(player.x, player.y, OPIT)) {
     updateLog("You're standing at the top of a pit");
     opit();
+    return;
   }
-
-  if (isItem(player.x, player.y, OMIRROR)) {
+  //
+  else if (isItem(player.x, player.y, OMIRROR)) {
     if (nearbymonst())
       return;
     if (do_ident)
       updateLog("There is a mirror here");
+    return;
   }
-
-  if (isItem(player.x, player.y, OSTATUE)) {
+  //
+  else if (isItem(player.x, player.y, OSTATUE)) {
     if (nearbymonst())
       return;
     if (do_ident)
       updateLog("You are standing in front of a statue");
+    return;
   }
-
+  // base case
+  else if ( // this is a bit hacky, but we don't want to pick these up!
+    !isItem(player.x, player.y, OWALL) && //
+    !isItem(player.x, player.y, OENTRANCE) && //
+    !isItem(player.x, player.y, OHOMEENTRANCE) && //
+    !isItem(player.x, player.y, OVOLUP) && //
+    !isItem(player.x, player.y, OVOLDOWN) && //
+    !isItem(player.x, player.y, OSTAIRSUP) && //
+    !isItem(player.x, player.y, OSTAIRSDOWN) //
+  ) //
+  {
+    if (do_ident) {
+      updateLog("You have found " + item);
+    }
+    if (do_pickup) {
+      if (take(item)) {
+        forget();
+      }
+    }
+    if (do_action) {
+      oitem(item);
+    }
+  }
 } // lookforobject
+
+
+/*
+ * function to process an item. or a keypress related
+ */
+function oitem(item_or_key) {
+  var item;
+  var key;
+  if (item_or_key instanceof Item.constructor) {
+    item = item_or_key;
+    //debug("oitem(): got item: " + item);
+  } else {
+    key = item_or_key;
+    //debug("oitem(): got key: " + key);
+  }
+  if (take_ignore_item == false) {
+    updateLog("Do you want to (t) take it, or (i) ignore it?");
+    take_ignore_item = true; // signal to parse function
+    return;
+  } else {
+    var item = itemAt(player.x, player.y);
+    if (item == null) {
+      debug("oitem(): couldn't find it!");
+      take_ignore_item = false;
+      return;
+    }
+    switch (key) {
+      case ESC:
+      case 'i':
+        updateLog("ignore");
+        take_ignore_item = false;
+        return;
+
+      case 't':
+        updateLog("take");
+        if (take(item)) {
+          forget(); // remove from board
+        }
+        take_ignore_item = false;
+        return;
+    };
+  }
+}
+
+
 
 
 function opit() {

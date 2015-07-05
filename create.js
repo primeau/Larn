@@ -41,6 +41,14 @@ function fillmroom(n, what, arg) {
   }
 }
 
+function froom(n, itm, arg) {
+  if (rnd(151) < n) {
+    fillroom(itm, arg);
+    updateLog("froom: " + itm.id + ", " + arg);
+  }
+}
+
+
 
 /*
  ***********
@@ -82,7 +90,40 @@ function makeobject(level) {
   for (var numscrolls = rnd(5) + 3; numscrolls > 0; numscrolls--)
     fillroom(OSCROLL, newscroll());
 
-}
+  //froom(2, ORING, 0); /* a ring mail          */
+  //froom(1, OSTUDLEATHER, 0); /* a studded leather    */
+  //froom(3, OSPLINT, 0); /* a splint mail        */
+  froom(5, OSHIELD, rund(3)); /* a shield             */
+  froom(2, OBATTLEAXE, rund(3)); /* a battle axe         */
+  froom(5, OLONGSWORD, rund(3)); /* a long sword         */
+  froom(5, OFLAIL, rund(3)); /* a flail              */
+  // froom(4, OREGENRING, rund(3)); /* ring of regeneration */
+  // froom(1, OPROTRING, rund(3)); /* ring of protection   */
+  // froom(2, OSTRRING, 1 + rnd(3)); /* ring of strength     */
+  froom(7, OSPEAR, rnd(5)); /* a spear              */
+  // froom(3, OORBOFDRAGON, 0); /* orb of dragon slaying*/
+  // froom(4, OSPIRITSCARAB, 0); /* scarab of negate spirit*/
+  // froom(4, OCUBEofUNDEAD, 0); /* cube of undead control   */
+  // froom(2, ORINGOFEXTRA, 0); /* ring of extra regen      */
+  // froom(3, ONOTHEFT, 0); /* device of antitheft      */
+  froom(2, OSWORDofSLASHING, 0); /* sword of slashing */
+  if (player.BESSMANN == 0) {
+    froom(4, OHAMMER, 0); /*Bessman's flailing hammer*/
+    player.BESSMANN = 1;
+  }
+  if (player.HARDGAME < 3 || (rnd(4) == 3)) {
+    if (level.depth > 3) {
+      froom(3, OSWORD, 3); /* sunsword + 3         */
+      froom(5, O2SWORD, rnd(4)); /* a two handed sword */
+      froom(3, OBELT, 4); /* belt of striking     */
+      // froom(3, OENERGYRING, 3); /* energy ring          */
+      // froom(4, OPLATE, 5); /* platemail + 5        */
+      // froom(3, OCLEVERRING, 1 + rnd(2)); /* ring of cleverness */
+    }
+  }
+
+
+} // makeobject()
 
 
 /*
@@ -93,8 +134,7 @@ function fillmonst(monster) {
   for (var trys = 5; trys > 0; --trys) /* max # of creation attempts */ {
     var x = rnd(MAXX - 2);
     var y = rnd(MAXY - 2);
-    if ((player.level.items[x][y].matches(OEMPTY))
-     && (player.level.monsters[x][y] == null) && ((player.x != x) || (player.y != y))) {
+    if ((player.level.items[x][y].matches(OEMPTY)) && (player.level.monsters[x][y] == null) && ((player.x != x) || (player.y != y))) {
       player.level.monsters[x][y] = monster;
       // know[x][y] &= ~KNOWHERE; //TODO what is this for?
       // hitp[x][y] = monster[what].hitpoints;
