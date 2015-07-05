@@ -13,21 +13,7 @@ function take(item) {
       player.inventory[i] = item;
       debug("inventory.take(): " + item);
       limit = 0;
-      // switch(itm)
-      //     {
-      //     case OPROTRING: case ODAMRING: case OBELT: limit=1;  break;
-      //     case ODEXRING:      c[DEXTERITY] += ivenarg[i]+1; limit=1;  break;
-      //     case OSTRRING:      c[STREXTRA]  += ivenarg[i]+1;   limit=1; break;
-      //     case OCLEVERRING:   c[INTELLIGENCE] += ivenarg[i]+1;  limit=1; break;
-      //     case OHAMMER:       c[DEXTERITY] += 10; c[STREXTRA]+=10;
-      //                         c[INTELLIGENCE]-=10;    limit=1;     break;
-      //
-      //     case OORBOFDRAGON:  c[SLAYING]++;       break;
-      //     case OSPIRITSCARAB: c[NEGATESPIRIT]++;  break;
-      //     case OCUBEofUNDEAD: c[CUBEofUNDEAD]++;  break;
-      //     case ONOTHEFT:      c[NOTHEFT]++;       break;
-      //     case OSWORDofSLASHING:  c[DEXTERITY] +=5;   limit=1; break;
-      //     };
+      player.adjustcvalues(item, true);
       updateLog("You pick up: " + item);
       if (limit) {
         //bottomline(); player.level.paint();
@@ -89,10 +75,16 @@ function drop_object(index) {
   // show3(k); /* show what item you dropped*/
   // know[playerx][playery] = 0;
   player.inventory[dropIndex] = null;
-  // if (c[WIELD] == k) c[WIELD] = -1;
-  // if (c[WEAR] == k) c[WEAR] = -1;
-  // if (c[SHIELD] == k) c[SHIELD] = -1;
-  // adjustcvalues(itm, ivenarg[k]);
+  if (player.WIELD === item) {
+    player.WIELD = null;
+  }
+  if (player.WEAR === item) {
+    player.WEAR = null;
+  }
+  if (player.SHIELD === item) {
+    player.SHIELD = null;
+  }
+  player.adjustcvalues(item, false);
   // dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
   player.level.paint();

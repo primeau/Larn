@@ -4,6 +4,7 @@ var drink_take_ignore_potion = false;
 var read_take_ignore_scroll = false;
 var wait_for_drop_input = false;
 var take_ignore_item = false;
+var wait_for_wield_input = false;
 
 const ESC = 27;
 
@@ -18,9 +19,8 @@ function movePlayer(currentx, currenty, xdir, ydir, run) {
   }
 
   if (player.level.monsters[currentx][currenty]) {
-    hitmonster(currentx,currenty);
-  }
-  else {
+    hitmonster(currentx, currenty);
+  } else {
     player.x = currentx;
     player.y = currenty;
   }
@@ -32,15 +32,14 @@ function movePlayer(currentx, currenty, xdir, ydir, run) {
 
 
 function preParseEvent(e, keyDown) {
+  var code = e.which;
   if (keyDown) { // to capture ESC key etc
-    if (e.which == 27) {
+    if (code == 27 || code >= 37 && code <= 40) {
       parseEvent(e);
+    } else {
+      //debug("preParseEvent(): ignoring: " + code);
     }
-    else {
-      //debug("preParseEvent(): ignoring: " + e.which);
-    }
-  }
-  else {
+  } else {
     parseEvent(e);
   }
 }
@@ -48,102 +47,97 @@ function preParseEvent(e, keyDown) {
 
 function parseEvent(e) {
 
+  var code = e.which;
+  var key = String.fromCharCode(code);
+
   var newx = player.x;
   var newy = player.y;
 
   if (drink_take_ignore_potion) {
-    opotion(e.which == ESC ? ESC : String.fromCharCode(e.which));
+    opotion(code == ESC ? ESC : key);
     return;
   }
   if (read_take_ignore_scroll) {
-    oscroll(e.which == ESC ? ESC : String.fromCharCode(e.which));
+    oscroll(code == ESC ? ESC : key);
     return;
   }
   if (take_ignore_item) {
-    oitem(e.which == ESC ? ESC : String.fromCharCode(e.which));
+    oitem(code == ESC ? ESC : key);
     return;
   }
 
-  if (String.fromCharCode(e.which) == 'D') { // DROP
+  //
+  // DROP
+  //
+  if (key == 'd') {
     drop_object(null);
     return;
+  } else if (wait_for_drop_input) {
+    drop_object(code == ESC ? ESC : key);
+    return;
   }
-  else if (wait_for_drop_input) {
-    drop_object(e.which == ESC ? ESC : String.fromCharCode(e.which));
+
+  //
+  // WIELD
+  //
+  if (key == 'w') {
+    wield(null);
+    return;
+  } else if (wait_for_wield_input) {
+    wield(code == ESC ? ESC : key);
     return;
   }
 
   /*
                  ARROW KEYS           NUMPAD               KEYBOARD
-               HOME  ↑  PgUp         7  8  9               q  w  e
+               HOME  ↑  PgUp         7  8  9               y  k  u
                    \ | /              \ | /                 \ | /
-                  ← -5- →            4 -5- 6               a -s- d
+                  ← -.- →            4 -.- 6               h -.- l
                    / | \              / | \                 / | \
-                END  ↓  PgDn         1  2  3               z  x  c
+                END  ↓  PgDn         1  2  3               b  j  n
   */
 
-  //debug(e.keyCode);
-
-  /*
-  if (e.keyCode == '36' || e.keyCode == '103' || e.keyCode == '81') { // UP,LEFT
-    newx--;
-    newy--;
-  } else if (e.keyCode == '38' || e.keyCode == '104' || e.keyCode == '87') { // UP
-    newy--;
-  } else if (e.keyCode == '33' || e.keyCode == '105' || e.keyCode == '69') { // UP,RIGHT
-    newx++;
-    newy--;
-  } else if (e.keyCode == '37' || e.keyCode == '100' || e.keyCode == "65") { // LEFT
-    newx--;
-  } else if (e.keyCode == '39' || e.keyCode == '102' || e.keyCode == "68") { // RIGHT
-    newx++;
-  } else if (e.keyCode == '35' || e.keyCode == '97' || e.keyCode == '90') { // DOWN,LEFT
-    newx--;
-    newy++;
-  } else if (e.keyCode == '40' || e.keyCode == '98' || e.keyCode == '88') { // DOWN
-    newy++;
-  } else if (e.keyCode == '34' || e.keyCode == '99' || e.keyCode == "67") { // GO DOWN
-    newx++;
-    newy++;
-*/
-  if (String.fromCharCode(e.which) == 'q') { // UP,LEFT
+  //
+  // MOVE PLAYER
+  //
+  if (key == 'y') { // UP,LEFT
     movePlayer(newx, newy, -1, -1, false);
-  } else if (String.fromCharCode(e.which) == 'Q') { // RUN UP,LEFT
+  } else if (key == 'Y') { // RUN UP,LEFT
     movePlayer(newx, newy, -1, -1, true);
-  } else if (String.fromCharCode(e.which) == 'w') { // UP
+  } else if (key == 'k' || code == 38) { // UP
     movePlayer(newx, newy, 0, -1, false);
-  } else if (String.fromCharCode(e.which) == 'W') { // RUN UP
+  } else if (key == 'K') { // RUN UP
     movePlayer(newx, newy, 0, -1, true);
-  } else if (String.fromCharCode(e.which) == 'e') { // UP,RIGHT
+  } else if (key == 'u') { // UP,RIGHT
     movePlayer(newx, newy, 1, -1, false);
-  } else if (String.fromCharCode(e.which) == 'E') { // RUN UP,RIGHT
+  } else if (key == 'U') { // RUN UP,RIGHT
     movePlayer(newx, newy, 1, -1, true);
-  } else if (String.fromCharCode(e.which) == 'a') { // LEFT
+  } else if (key == 'h' || code == 37) { // LEFT
     movePlayer(newx, newy, -1, 0, false);
-  } else if (String.fromCharCode(e.which) == 'A') { // RUN LEFT
+  } else if (key == 'H') { // RUN LEFT
     movePlayer(newx, newy, -1, 0, true);
-  } else if (String.fromCharCode(e.which) == 'd') { // RIGHT
+  } else if (key == 'l' || code == 39) { // RIGHT
     movePlayer(newx, newy, 1, 0, false);
-  } else if (String.fromCharCode(e.which) == 'D') { // RUN RIGHT
+  } else if (key == 'L') { // RUN RIGHT
     movePlayer(newx, newy, 1, 0, true);
-  } else if (String.fromCharCode(e.which) == 'z') { // DOWN,LEFT
+  } else if (key == 'b') { // DOWN,LEFT
     movePlayer(newx, newy, -1, 1, false);
-  } else if (String.fromCharCode(e.which) == 'Z') { // RUN DOWN,LEFT
+  } else if (key == 'B') { // RUN DOWN,LEFT
     movePlayer(newx, newy, -1, 1, true);
-  } else if (String.fromCharCode(e.which) == 'x') { // DOWN
+  } else if (key == 'j' || code == 40) { // DOWN
     movePlayer(newx, newy, 0, 1, false);
-  } else if (String.fromCharCode(e.which) == 'X') { // RUN DOWN
+  } else if (key == 'J') { // RUN DOWN
     movePlayer(newx, newy, 0, 1, true);
-  } else if (String.fromCharCode(e.which) == 'c') { // DOWN, RIGHT
+  } else if (key == 'n') { // DOWN, RIGHT
     movePlayer(newx, newy, 1, 1, false);
-  } else if (String.fromCharCode(e.which) == 'C') { // RUN DOWN, RIGHT
+  } else if (key == 'N') { // RUN DOWN, RIGHT
     movePlayer(newx, newy, 1, 1, true);
   }
 
   //
-  // UP
+  // UP LEVEL
   //
-  else if (String.fromCharCode(e.which) == '<') { // UP STAIRS
+  else if (key == '<') { // UP STAIRS
     if (isItem(newx, newy, OSTAIRSUP)) {
       updateLog("Climbing Up Stairs");
       newcavelevel(player.level.depth - 1);
@@ -179,9 +173,9 @@ function parseEvent(e) {
   }
 
   //
-  // DOWN
+  // DOWN LEVEL
   //
-  else if (String.fromCharCode(e.which) == '>') { // DOWN STAIRS
+  else if (key == '>') { // DOWN STAIRS
     if (isItem(newx, newy, OSTAIRSDOWN)) {
       updateLog("Climbing Down Stairs");
       newcavelevel(player.level.depth + 1);
@@ -215,31 +209,45 @@ function parseEvent(e) {
       updateLog("I see no way to go down here!");
     }
 
-  } else if (String.fromCharCode(e.which) == 'g') { // GO INSIDE DUNGEON
-  } else if (String.fromCharCode(e.which) == 'C') { // CLIMB IN/OUT OF VOLCANO
+  } else if (key == 'g') { // GO INSIDE DUNGEON
+  } else if (key == 'C') { // CLIMB IN/OUT OF VOLCANO
 
-  } else if (String.fromCharCode(e.which) == '!') {
+    //
+    // DEBUGGING SHORTCUTS
+    //
+  } else if (key == '!') {
     DEBUG_OUTPUT = !DEBUG_OUTPUT;
     updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
-  } else if (String.fromCharCode(e.which) == '@') {
+  } else if (key == '@') {
     DEBUG_WALK_THROUGH_WALLS = !DEBUG_WALK_THROUGH_WALLS;
     updateLog("DEBUG_WALK_THROUGH_WALLS: " + DEBUG_WALK_THROUGH_WALLS);
-  } else if (String.fromCharCode(e.which) == '#') {
+  } else if (key == '#') {
     DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
     updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
-  } else if (String.fromCharCode(e.which) == '$') {
+  } else if (key == '$') {
     DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
-      if (DEBUG_KNOW_ALL) {
+    if (DEBUG_KNOW_ALL) {
       for (var potioni = 0; potioni < potionname.length; potioni++) {
-        var potion = createObject(OPOTION);
-        potion.arg = potioni;
+        var potion = createObject(OPOTION, potioni);
         player.level.items[potioni][0] = potion;
       }
       for (var scrolli = 0; scrolli < scrollname.length; scrolli++) {
-        var scroll = createObject(OSCROLL);
-        scroll.arg = scrolli;
+        var scroll = createObject(OSCROLL, scrolli);
         player.level.items[potioni + scrolli][0] = scroll;
       }
+      var weaponi = potioni + scrolli;
+      player.level.items[weaponi++][0] = createObject(ODAGGER);
+      player.level.items[weaponi++][0] = createObject(OBELT);
+      player.level.items[weaponi++][0] = createObject(OSHIELD);
+      player.level.items[weaponi++][0] = createObject(OSPEAR);
+      player.level.items[weaponi++][0] = createObject(OFLAIL);
+      player.level.items[weaponi++][0] = createObject(OBATTLEAXE);
+      player.level.items[weaponi++][0] = createObject(OLANCE);
+      player.level.items[weaponi++][0] = createObject(OLONGSWORD);
+      player.level.items[weaponi++][0] = createObject(O2SWORD);
+      player.level.items[weaponi++][0] = createObject(OSWORD);
+      player.level.items[weaponi++][0] = createObject(OSWORDofSLASHING);
+      player.level.items[weaponi++][0] = createObject(OHAMMER);
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
   }

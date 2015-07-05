@@ -16,7 +16,7 @@ const OPOTION = new Item("OPOTION", "!", "a magic potion");
 const OSCROLL = new Item("OSCROLL", "?", "a magic scroll");
 
 const ODAGGER = new Item("ODAGGER", "(", "a dagger");
-const OBELT = new Item("OBELT", "(", "a belt of striking");
+const OBELT = new Item("OBELT", "{", "a belt of striking");
 const OSHIELD = new Item("OSHIELD", "(", "a shield");
 const OSPEAR = new Item("OSPEAR", "(", "a spear");
 const OFLAIL = new Item("OFLAIL", "(", "a flail");
@@ -64,6 +64,12 @@ var Item = {
       } else if (this.arg < 0) {
         description += " " + this.arg;
       }
+      if (this === player.WIELD) {
+        description += " (weapon in hand) "
+      }
+      if (this === player.WEAR) {
+        description += " (being worn) "
+      }
     }
     return description;
   },
@@ -82,12 +88,14 @@ function Item(id, char, desc, arg) {
 // }
 
 
-function createObject(item) {
+function createObject(item, arg) {
   var newItem = Object.create(Item);
   newItem.id = item.id;
   newItem.char = item.char;
   newItem.desc = item.desc;
-  newItem.arg = item.arg;
+  if (arg != null) {
+    newItem.arg = arg;
+  }
   return newItem;
 }
 

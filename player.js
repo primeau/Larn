@@ -3,23 +3,6 @@
 
 const MAXPLEVEL = 100; /* maximum player level allowed        */
 
-const MEG = 1000000;
-var skill = [
-  0, 10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120, /*  1-11 */
-  10240, 20480, 40960, 100000, 200000, 400000, 700000, 1 * MEG, /* 12-19 */
-  2 * MEG, 3 * MEG, 4 * MEG, 5 * MEG, 6 * MEG, 8 * MEG, 10 * MEG, /* 20-26 */
-  12 * MEG, 14 * MEG, 16 * MEG, 18 * MEG, 20 * MEG, 22 * MEG, 24 * MEG, 26 * MEG, 28 * MEG, /* 27-35 */
-  30 * MEG, 32 * MEG, 34 * MEG, 36 * MEG, 38 * MEG, 40 * MEG, 42 * MEG, 44 * MEG, 46 * MEG, /* 36-44 */
-  48 * MEG, 50 * MEG, 52 * MEG, 54 * MEG, 56 * MEG, 58 * MEG, 60 * MEG, 62 * MEG, 64 * MEG, /* 45-53 */
-  66 * MEG, 68 * MEG, 70 * MEG, 72 * MEG, 74 * MEG, 76 * MEG, 78 * MEG, 80 * MEG, 82 * MEG, /* 54-62 */
-  84 * MEG, 86 * MEG, 88 * MEG, 90 * MEG, 92 * MEG, 94 * MEG, 96 * MEG, 98 * MEG, 100 * MEG, /* 63-71 */
-  105 * MEG, 110 * MEG, 115 * MEG, 120 * MEG, 125 * MEG, 130 * MEG, 135 * MEG, 140 * MEG, /* 72-79 */
-  145 * MEG, 150 * MEG, 155 * MEG, 160 * MEG, 165 * MEG, 170 * MEG, 175 * MEG, 180 * MEG, /* 80-87 */
-  185 * MEG, 190 * MEG, 195 * MEG, 200 * MEG, 210 * MEG, 220 * MEG, 230 * MEG, 240 * MEG, /* 88-95 */
-  250 * MEG, 260 * MEG, 270 * MEG, 280 * MEG, 290 * MEG, 300 * MEG /* 96-101*/
-];
-
-
 var Player = {
   inventory: [],
   x: 0,
@@ -46,9 +29,9 @@ var Player = {
   // ENERGY:
   // ECOUNTER:
   // MOREDEFENSES:
-  // WEAR:
+  WEAR: null,
   // PROTECTIONTIME:
-  // WIELD:
+  WIELD: null,
   // AMULET:
   // REGENCOUNTER:
   MOREDAM: 0,
@@ -79,7 +62,7 @@ var Player = {
   // CUBEofUNDEAD:
   // GIANTSTR:
   FIRERESISTANCE: 0,
-  // BESSMANN:
+  BESSMANN: 0,
   // NOTHEFT:
   HARDGAME: 0,
   // CPUTIME:
@@ -91,7 +74,7 @@ var Player = {
   LANCEDEATH: 0,
   SPIRITPRO: 0,
   UNDEADPRO: 0,
-  // SHIELD:
+  SHIELD: null,
   STEALTH: 0,
   // ITCHING:
   // LAUGHING:
@@ -104,8 +87,7 @@ var Player = {
   // RANDOMWALK:
   // SPHCAST:    /* nz if an active sphere of annihilation */
   // WTW:        /* walk through walls */
-  STREXTRA: 0,
-  /* character strength due to objects or enchantments */
+  STREXTRA: 0,   /* character strength due to objects or enchantments */
   // TMP:        /* misc scratch space */
   LIFEPROT: 0,
   /* life protection counter */
@@ -236,22 +218,18 @@ var Player = {
       uses the skill[] array to find level boundarys
       uses c[EXPERIENCE]  c[LEVEL]
    */
-  raiselevel() {
-    updateLog("TODO: player.raiselevel()")
-      //if (c[LEVEL] < MAXPLEVEL) raiseexperience((long)(skill[c[LEVEL]] - c[EXPERIENCE]));
+  raiselevel: function() {
+    if (player.LEVEL < MAXPLEVEL) {
+      player.raiseexperience(skill[player.LEVEL] - player.EXPERIENCE);
+    }
   },
 
-
-  /*
-      table of experience needed to be a certain level of player
-      skill[c[LEVEL]] is the experience required to attain the next level
-   */
 
   /*
       raiseexperience(x)
       subroutine to increase experience points
    */
-  raiseexperience(x) {
+  raiseexperience: function(x) {
     var i = player.LEVEL;
     player.EXPERIENCE += x;
     while (player.EXPERIENCE >= skill[player.LEVEL] && (player.LEVEL < MAXPLEVEL)) {
@@ -271,6 +249,101 @@ var Player = {
   },
 
 
+  /*
+      function to change character levels as needed when taking/dropping an object
+      that affects these characteristics
+   */
+  adjustcvalues: function(item, pickup) {
+    // TODO: WHAT ABOUT OTHER RINGS???
+    // case ODEXRING:
+    //   c[DEXTERITY] -= arg + 1;
+    // case OSTRRING:
+    //   c[STREXTRA] -= arg + 1;
+    // case OCLEVERRING:
+    //   c[INTELLIGENCE] -= arg + 1;
+    if (item.matches(OHAMMER)) {
+      player.DEXTERITY = pickup ? player.DEXTERITY + 10 : player.DEXTERITY - 10;
+      player.STREXTRA = pickup ? player.STREXTRA + 10 : player.STREXTRA - 10;
+      player.INTELLIGENCE = pickup ? player.INTELLIGENCE - 10 : player.INTELLIGENCE + 10;
+    }
+    if (item.matches(OSWORDofSLASHING)) {
+      player.DEXTERITY = pickup ? player.DEXTERITY + 5 : player.DEXTERITY - 5;
+    }
+    // case OORBOFDRAGON:
+    //   --c[SLAYING];
+    // case OSPIRITSCARAB:
+    //   --c[NEGATESPIRIT];
+    // case OCUBEofUNDEAD:
+    //   --c[CUBEofUNDEAD];
+    // case ONOTHEFT:
+    //   --c[NOTHEFT];
+    if (item.matches(OLANCE)) {
+      player.LANCEDEATH = pickup ? item : null;
+    }
+  },
+
+
+  /*
+      recalc()    function to recalculate the weapon and armor class of the player
+   */
+  recalc: function() {
+    player.WCLASS = 0;
+
+    // player.AC = player.MOREDEFENSES;
+    // if (player.WEAR != null)
+    //     switch(iven[c[WEAR]])
+    //         {
+    //         case OSHIELD:       c[AC] += 2 + ivenarg[c[WEAR]]; break;
+    //         case OLEATHER:      c[AC] += 2 + ivenarg[c[WEAR]]; break;
+    //         case OSTUDLEATHER:  c[AC] += 3 + ivenarg[c[WEAR]]; break;
+    //         case ORING:         c[AC] += 5 + ivenarg[c[WEAR]]; break;
+    //         case OCHAIN:        c[AC] += 6 + ivenarg[c[WEAR]]; break;
+    //         case OSPLINT:       c[AC] += 7 + ivenarg[c[WEAR]]; break;
+    //         case OPLATE:        c[AC] += 9 + ivenarg[c[WEAR]]; break;
+    //         case OPLATEARMOR:   c[AC] += 10 + ivenarg[c[WEAR]]; break;
+    //         case OSSPLATE:      c[AC] += 12 + ivenarg[c[WEAR]]; break;
+    //         }
+
+    // if (c[SHIELD] >= 0) if (iven[c[SHIELD]] == OSHIELD) c[AC] += 2 + ivenarg[c[SHIELD]];
+
+    if (player.WIELD != null) {
+      var weapon = player.WIELD;
+      var extra = weapon.arg;
+      if (weapon.matches(ODAGGER)) player.WCLASS = 3 + extra;
+      if (weapon.matches(OBELT)) player.WCLASS = 7 + extra;
+      if (weapon.matches(OSHIELD)) player.WCLASS = 8 + extra;
+      if (weapon.matches(OSPEAR)) player.WCLASS = 10 + extra;
+      if (weapon.matches(OFLAIL)) player.WCLASS = 14 + extra;
+      if (weapon.matches(OBATTLEAXE)) player.WCLASS = 17 + extra;
+      if (weapon.matches(OLANCE)) player.WCLASS = 19 + extra;
+      if (weapon.matches(OLONGSWORD)) player.WCLASS = 22 + extra;
+      if (weapon.matches(O2SWORD)) player.WCLASS = 26 + extra;
+      if (weapon.matches(OSWORD)) player.WCLASS = 32 + extra;
+      if (weapon.matches(OSWORDofSLASHING)) player.WCLASS = 30 + extra;
+      if (weapon.matches(OHAMMER)) player.WCLASS = 35 + extra;
+    }
+    player.WCLASS += player.MOREDAM;
+
+    // /*  now for regeneration abilities based on rings   */
+    //     c[REGEN]=1;     c[ENERGY]=0;
+    //     j=0;  for (k=25; k>0; k--)  if (iven[k]) {j=k; k=0; }
+    //     for (i=0; i<=j; i++)
+    //         {
+    //         switch(iven[i])
+    //             {
+    //             case OPROTRING: c[AC]     += ivenarg[i] + 1;    break;
+    //             case ODAMRING:  c[WCLASS] += ivenarg[i] + 1;    break;
+    //             case OBELT:     c[WCLASS] += ((ivenarg[i]<<1)) + 2; break;
+    //
+    //             case OREGENRING:    c[REGEN]  += ivenarg[i] + 1;    break;
+    //             case ORINGOFEXTRA:  c[REGEN]  += 5 * (ivenarg[i]+1); break;
+    //             case OENERGYRING:   c[ENERGY] += ivenarg[i] + 1;    break;
+    //             }
+    //         }
+  },
+
+
+
   getStatString: function() {
     var output = "";
     output += "Spells: " + this.SPELLS + "(" + this.SPELLMAX + ")  " +
@@ -279,7 +352,7 @@ var Player = {
       "Level " + this.LEVEL + " " +
       "Exp: " + this.EXPERIENCE + "  " + this.CLASS() + "\n" +
       "HP: " + this.HP + "(" + this.HPMAX + ") " +
-      "STR=" + this.STRENGTH + " " +
+      "STR=" + (this.STRENGTH + this.STREXTRA) + " " +
       "INT=" + this.INTELLIGENCE + " " +
       "WIS=" + this.WISDOM + " " +
       "CON=" + this.CONSTITUTION + " " +
@@ -312,43 +385,82 @@ function ifblind(x, y) {
   }
 }
 
+/*
+    function to wield a weapon
+ */
+function wield(index) {
 
-const CLASSES = [
-  "  novice explorer  ", "apprentice explorer", " practiced explorer", /*  -3*/
-  "   expert explorer ", "  novice adventurer", "     adventurer    ", /*  -6*/
-  "apprentice conjurer", "     conjurer      ", "  master conjurer  ", /*  -9*/
-  "  apprentice mage  ", "        mage       ", "  experienced mage ", /* -12*/
-  "     master mage   ", " apprentice warlord", "   novice warlord  ", /* -15*/
-  "   expert warlord  ", "   master warlord  ", " apprentice gorgon ", /* -18*/
-  "       gorgon      ", "  practiced gorgon ", "   master gorgon   ", /* -21*/
-  "    demi-gorgon    ", "    evil master    ", " great evil master ", /* -24*/
-  " mighty evil master", " mighty evil master", " mighty evil master", /* -27*/
-  " mighty evil master", " mighty evil master", " mighty evil master", /* -30*/
-  " mighty evil master", " mighty evil master", " mighty evil master", /* -33*/
-  " mighty evil master", " mighty evil master", " mighty evil master", /* -36*/
-  " mighty evil master", " mighty evil master", " mighty evil master", /* -39*/
-  "apprentice demi-god", "apprentice demi-god", "apprentice demi-god", /* -42*/
-  "apprentice demi-god", "apprentice demi-god", "apprentice demi-god", /* -45*/
-  "apprentice demi-god", "apprentice demi-god", "apprentice demi-god", /* -48*/
-  "  minor demi-god   ", "  minor demi-god   ", "  minor demi-god   ", /* -51*/
-  "  minor demi-god   ", "  minor demi-god   ", "  minor demi-god   ", /* -54*/
-  "  minor demi-god   ", "  minor demi-god   ", "  minor demi-god   ", /* -57*/
-  "  major demi-god   ", "  major demi-god   ", "  major demi-god   ", /* -60*/
-  "  major demi-god   ", "  major demi-god   ", "  major demi-god   ", /* -63*/
-  "  major demi-god   ", "  major demi-god   ", "  major demi-god   ", /* -66*/
-  "    minor deity    ", "    minor deity    ", "    minor deity    ", /* -69*/
-  "    minor deity    ", "    minor deity    ", "    minor deity    ", /* -72*/
-  "    minor deity    ", "    minor deity    ", "    minor deity    ", /* -75*/
-  "    major deity    ", "    major deity    ", "    major deity    ", /* -78*/
-  "    major deity    ", "    major deity    ", "    major deity    ", /* -81*/
-  "    major deity    ", "    major deity    ", "    major deity    ", /* -84*/
-  "  novice guardian  ", "  novice guardian  ", "  novice guardian  ", /* -87*/
-  "apprentice guardian", "apprentice guardian", "apprentice guardian", /* -90*/
-  "apprentice guardian", "apprentice guardian", "apprentice guardian", /* -93*/
-  "  earth guardian   ", "   air guardian    ", "   fire guardian   ", /* -96*/
-  "  water guardian   ", "  time guardian    ", " ethereal guardian ", /* -99*/
-  "    The Creator    ", "    The Creator    ", "    The Creator    ", /* -102*/
-];
+  if (index == null) {
+    updateLog("What do you want to wield (- for nothing) [* for all] ?");
+    wait_for_wield_input = true;
+    return;
+  } else {
+    //debug("wield(): " + index);
+  }
+
+  if (index == ESC) {
+    updateLog("");
+    wait_for_wield_input = false;
+    return false;
+  }
+
+  if (index == '*') {
+    // TODO
+    // i = showwield();
+    // cursors();
+  }
+
+  var startcode = "a".charCodeAt(0);
+  var code = index.charCodeAt(0);
+  var wieldIndex = code - startcode;
+
+  debug("wield: " + wieldIndex);
+
+  var item = player.inventory[wieldIndex];
+
+  debug("wield(): trying to wield " + item);
+
+  if (item == null) {
+    if (wieldIndex >= 0 && wieldIndex < 26) {
+      updateLog("You don't have item " + index + "!");
+    }
+    wait_for_wield_input = false;
+    return;
+  }
+
+  if (item.matches(OPOTION) || item.matches(OSCROLL)) {
+    updateLog("You can't wield that!");
+    wait_for_wield_input = false;
+    return;
+  }
+  if (player.SHIELD != null && item.matches(O2SWORD)) {
+    updateLog("But one arm is busy with your shield!");
+    wait_for_wield_input = false;
+    return;
+  }
+
+  if (index == '-') {
+    // TODO
+    // player.WIELD = null;
+    // bottomline();
+    // wait_for_wield_input = false;
+    // recalc(); // JRP added
+    // return;
+  }
+
+  player.WIELD = item;
+  if (item.matches(OLANCE)) {
+    player.LANCEDEATH = item;
+  } else {
+    player.LANCEDEATH = 0;
+  }
+
+  player.level.bottomline();
+  player.level.paint();
+  wait_for_wield_input = false;
+  return;
+}
+
 
 function game_stats() {
   var s = "";
@@ -372,6 +484,12 @@ function game_stats() {
   // s += "WC:    " + player.WCLASS + "\n";
   // s += "AC:    " + player.AC + "\n";
 
+  s += "WIELD: " + player.WIELD + "\n";
+  s += "WEAR:  " + player.WEAR + "\n";
+  s += "SHLD:  " + player.SHIELD + "\n";
+
+  s += "STREX: " + player.STREXTRA + "\n";
+
   s += "AGGR:  " + player.AGGRAVATE + "\n";
   s += "HSTM:  " + player.HASTEMONST + "\n";
   s += "POIS:  " + player.HALFDAM + "\n";
@@ -384,68 +502,11 @@ function game_stats() {
 
   s += "HOLD:  " + player.HOLDMONST + "\n";
   s += "STEL:  " + player.STEALTH + "\n";
-//  s += "HASTE: " + player.HASTESELF + "\n";
+  //  s += "HASTE: " + player.HASTESELF + "\n";
 
   s += "KILL:  " + player.MONSTKILLED + "\n";
+  s += "LANCE: " + player.LANCEDEATH + "\n";
   s += "LIFE:  " + player.LIFEPROT + "\n";
-
-
-
-  // // REGEN:
-  // // BANKACCOUNT:
-  // // ENERGY:
-  // // ECOUNTER:
-  // // MOREDEFENSES:
-  // // WEAR:
-  // // PROTECTIONTIME:
-  // // WIELD:
-  // // AMULET:
-  // // REGENCOUNTER:
-  // MOREDAM: 0,
-  // // DEXCOUNT:
-  // // STRCOUNT:
-  // // BLINDCOUNT:
-  // // CONFUSE:
-  // // ALTPRO:
-  // // HERO:
-  // // CHARMCOUNT:
-  // // INVISIBILITY:
-  // // CANCELLATION:
-  // // HASTESELF:
-  // // EYEOFLARN:
-  // // GLOBE:
-  // // TELEFLAG:
-  // // SLAYING:
-  // // NEGATESPIRIT:
-  // // SCAREMONST:
-  // TIMESTOP: 0,
-  // // CUBEofUNDEAD:
-  // // GIANTSTR:
-  // // BESSMANN:
-  // // NOTHEFT:
-  // HARDGAME: 0,
-  // // CPUTIME:
-  // // BYTESIN:
-  // // BYTESOUT:
-  // // MOVESMADE:
-  // // SPELLSCAST:
-  // LANCEDEATH: 0,
-  // // SHIELD:
-  // // ITCHING:
-  // // LAUGHING:
-  // // DRAINSTRENGTH:
-  // // CLUMSINESS:
-  // // INFEEBLEMENT:
-  // HALFDAM: 0,
-  // // SEEINVISIBLE:
-  // // FILLROOM:
-  // // RANDOMWALK:
-  // // SPHCAST:    /* nz if an active sphere of annihilation */
-  // // WTW:        /* walk through walls */
-  // STREXTRA: 0,
-  // /* character strength due to objects or enchantments */
-  // // TMP:        /* misc scratch space */
-  // /* life protection counter */
 
   s += "\n";
   var c = "a";

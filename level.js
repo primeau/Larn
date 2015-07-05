@@ -54,8 +54,11 @@ var Level = {
       output += "\n";
     } // outer for
 
-    output += player.getStatString();
 
+    this.bottomline();
+
+    // TODO: move to bottomline()?
+    output += player.getStatString();
     output += "\n";
 
     for (var logindex = 0; logindex < LOG.length; logindex++) {
@@ -72,9 +75,18 @@ var Level = {
   },
 
 
+  /*
+      bottomline()
+
+      now for the bottom line of the display
+   */
+  bottomline: function() {
+    player.recalc();
+    // TODO: lots
+  },
+
 
 }; // Level
-
 
 
 
