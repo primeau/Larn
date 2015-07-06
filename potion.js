@@ -313,11 +313,10 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 17:
-      updateLog("TODO: quaffpotion(): giant strength");
-      // lprcat("\nYou now have incredibly bulging muscles!!!");
-      // if (c[GIANTSTR] == 0)
-      //   c[STREXTRA] += 21;
-      // c[GIANTSTR] += 700;
+      updateLog("You now have incredibly bulging muscles!!!");
+      if (player.GIANTSTR == 0)
+        player.STREXTRA += 21;
+      player.GIANTSTR += 700;
       break;
 
     case 18:

@@ -47,7 +47,7 @@ var Player = {
   // CHARMCOUNT:
   // INVISIBILITY:
   // CANCELLATION:
-  // HASTESELF: 0,
+  HASTESELF: 0,
   // EYEOFLARN:
   AGGRAVATE: 0,
   // GLOBE:
@@ -60,7 +60,7 @@ var Player = {
   TIMESTOP: 0,
   HASTEMONST: 0,
   // CUBEofUNDEAD:
-  // GIANTSTR:
+  GIANTSTR: 0,
   FIRERESISTANCE: 0,
   BESSMANN: 0,
   // NOTHEFT:
@@ -87,7 +87,8 @@ var Player = {
   // RANDOMWALK:
   // SPHCAST:    /* nz if an active sphere of annihilation */
   // WTW:        /* walk through walls */
-  STREXTRA: 0,   /* character strength due to objects or enchantments */
+  STREXTRA: 0,
+  /* character strength due to objects or enchantments */
   // TMP:        /* misc scratch space */
   LIFEPROT: 0,
   /* life protection counter */
@@ -278,7 +279,11 @@ var Player = {
     // case ONOTHEFT:
     //   --c[NOTHEFT];
     if (item.matches(OLANCE)) {
-      player.LANCEDEATH = pickup ? item : null;
+      if (!pickup) {
+        player.LANCEDEATH = null;
+      } else if (player.WIELD != null && player.WIELD.matches(OLANCE)) {
+        player.LANCEDEATH = item;
+      }
     }
   },
 
@@ -452,7 +457,7 @@ function wield(index) {
   if (item.matches(OLANCE)) {
     player.LANCEDEATH = item;
   } else {
-    player.LANCEDEATH = 0;
+    player.LANCEDEATH = null;
   }
 
   player.level.bottomline();
@@ -489,6 +494,7 @@ function game_stats() {
   s += "SHLD:  " + player.SHIELD + "\n";
 
   s += "STREX: " + player.STREXTRA + "\n";
+  s += "GIAST: " + player.GIANTSTR + "\n";
 
   s += "AGGR:  " + player.AGGRAVATE + "\n";
   s += "HSTM:  " + player.HASTEMONST + "\n";
@@ -502,7 +508,7 @@ function game_stats() {
 
   s += "HOLD:  " + player.HOLDMONST + "\n";
   s += "STEL:  " + player.STEALTH + "\n";
-  //  s += "HASTE: " + player.HASTESELF + "\n";
+  s += "HASTE: " + player.HASTESELF + "\n";
 
   s += "KILL:  " + player.MONSTKILLED + "\n";
   s += "LANCE: " + player.LANCEDEATH + "\n";
