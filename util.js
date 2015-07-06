@@ -21,26 +21,26 @@ function beep() {
 }
 
 
-function xy(x,y) {
-    return "(" + x + "," + y + ")";
+function xy(x, y) {
+  return `(${x},${y})`;
 }
 
 
 function debug(text) {
   if (DEBUG_OUTPUT) {
-    console.log("DEBUG: " + text);
-    updateLog("DEBUG: " + text);
+    console.log(`DEBUG: ${text}`);
+    updateLog(`DEBUG: ${text}`);
   }
 }
 
 
 String.prototype.nextChar = function(i) {
-    var n = i | 1;
-    return String.fromCharCode(this.charCodeAt(0) + n);
+  var n = i | 1;
+  return String.fromCharCode(this.charCodeAt(0) + n);
 }
 
 
 String.prototype.prevChar = function(i) {
-    var n = i | 1;
-    return String.fromCharCode(this.charCodeAt(0) - n);
+  var n = i | 1;
+  return String.fromCharCode(this.charCodeAt(0) - n);
 }

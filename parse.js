@@ -5,6 +5,7 @@ var read_take_ignore_scroll = false;
 var wait_for_drop_input = false;
 var take_ignore_item = false;
 var wait_for_wield_input = false;
+var wait_for_wear_input = false;
 
 const ESC = 27;
 
@@ -65,15 +66,24 @@ function parseEvent(e) {
     oitem(code == ESC ? ESC : key);
     return;
   }
+  if (wait_for_drop_input) {
+    drop_object(code == ESC ? ESC : key);
+    return;
+  }
+  if (wait_for_wield_input) {
+    wield(code == ESC ? ESC : key);
+    return;
+  }
+  if (wait_for_wear_input) {
+    wear(code == ESC ? ESC : key);
+    return;
+  }
 
   //
   // DROP
   //
   if (key == 'd') {
     drop_object(null);
-    return;
-  } else if (wait_for_drop_input) {
-    drop_object(code == ESC ? ESC : key);
     return;
   }
 
@@ -83,10 +93,16 @@ function parseEvent(e) {
   if (key == 'w') {
     wield(null);
     return;
-  } else if (wait_for_wield_input) {
-    wield(code == ESC ? ESC : key);
+  }
+
+  //
+  // WEAR
+  //
+  if (key == 'W') {
+    wear(null);
     return;
   }
+
 
   /*
                  ARROW KEYS           NUMPAD               KEYBOARD
@@ -235,19 +251,29 @@ function parseEvent(e) {
         var scroll = createObject(OSCROLL, scrolli);
         player.level.items[potioni + scrolli][0] = scroll;
       }
-      var weaponi = potioni + scrolli;
-      player.level.items[weaponi++][0] = createObject(ODAGGER);
-      player.level.items[weaponi++][0] = createObject(OBELT);
-      player.level.items[weaponi++][0] = createObject(OSHIELD);
-      player.level.items[weaponi++][0] = createObject(OSPEAR);
-      player.level.items[weaponi++][0] = createObject(OFLAIL);
-      player.level.items[weaponi++][0] = createObject(OBATTLEAXE);
-      player.level.items[weaponi++][0] = createObject(OLANCE);
-      player.level.items[weaponi++][0] = createObject(OLONGSWORD);
-      player.level.items[weaponi++][0] = createObject(O2SWORD);
-      player.level.items[weaponi++][0] = createObject(OSWORD);
-      player.level.items[weaponi++][0] = createObject(OSWORDofSLASHING);
-      player.level.items[weaponi++][0] = createObject(OHAMMER);
+      var weaponi = 0;
+      player.level.items[weaponi++][MAXY-1] = createObject(ODAGGER);
+      player.level.items[weaponi++][MAXY-1] = createObject(OBELT);
+      player.level.items[weaponi++][MAXY-1] = createObject(OSPEAR);
+      player.level.items[weaponi++][MAXY-1] = createObject(OFLAIL);
+      player.level.items[weaponi++][MAXY-1] = createObject(OBATTLEAXE);
+      player.level.items[weaponi++][MAXY-1] = createObject(OLANCE);
+      player.level.items[weaponi++][MAXY-1] = createObject(OLONGSWORD);
+      player.level.items[weaponi++][MAXY-1] = createObject(O2SWORD);
+      player.level.items[weaponi++][MAXY-1] = createObject(OSWORD);
+      player.level.items[weaponi++][MAXY-1] = createObject(OSWORDofSLASHING);
+      player.level.items[weaponi++][MAXY-1] = createObject(OHAMMER);
+      var armori = weaponi;
+      player.level.items[armori++][MAXY-1] = createObject(OSHIELD);
+      player.level.items[armori++][MAXY-1] = createObject(OLEATHER);
+      player.level.items[armori++][MAXY-1] = createObject(OSTUDLEATHER);
+      player.level.items[armori++][MAXY-1] = createObject(ORING);
+      player.level.items[armori++][MAXY-1] = createObject(OCHAIN);
+      player.level.items[armori++][MAXY-1] = createObject(OSPLINT);
+      player.level.items[armori++][MAXY-1] = createObject(OPLATE);
+      player.level.items[armori++][MAXY-1] = createObject(OPLATEARMOR);
+      player.level.items[armori++][MAXY-1] = createObject(OSSPLATE);
+
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
   }

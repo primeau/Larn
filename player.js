@@ -28,7 +28,7 @@ var Player = {
   SPELLS: 1,
   // ENERGY:
   // ECOUNTER:
-  // MOREDEFENSES:
+  MOREDEFENSES: 0,
   WEAR: null,
   // PROTECTIONTIME:
   WIELD: null,
@@ -71,7 +71,7 @@ var Player = {
   // MOVESMADE:
   MONSTKILLED: 0,
   // SPELLSCAST:
-  LANCEDEATH: 0,
+  LANCEDEATH: null,
   SPIRITPRO: 0,
   UNDEADPRO: 0,
   SHIELD: null,
@@ -293,27 +293,29 @@ var Player = {
    */
   recalc: function() {
     player.WCLASS = 0;
+    player.AC = 0;
 
-    // player.AC = player.MOREDEFENSES;
-    // if (player.WEAR != null)
-    //     switch(iven[c[WEAR]])
-    //         {
-    //         case OSHIELD:       c[AC] += 2 + ivenarg[c[WEAR]]; break;
-    //         case OLEATHER:      c[AC] += 2 + ivenarg[c[WEAR]]; break;
-    //         case OSTUDLEATHER:  c[AC] += 3 + ivenarg[c[WEAR]]; break;
-    //         case ORING:         c[AC] += 5 + ivenarg[c[WEAR]]; break;
-    //         case OCHAIN:        c[AC] += 6 + ivenarg[c[WEAR]]; break;
-    //         case OSPLINT:       c[AC] += 7 + ivenarg[c[WEAR]]; break;
-    //         case OPLATE:        c[AC] += 9 + ivenarg[c[WEAR]]; break;
-    //         case OPLATEARMOR:   c[AC] += 10 + ivenarg[c[WEAR]]; break;
-    //         case OSSPLATE:      c[AC] += 12 + ivenarg[c[WEAR]]; break;
-    //         }
-
-    // if (c[SHIELD] >= 0) if (iven[c[SHIELD]] == OSHIELD) c[AC] += 2 + ivenarg[c[SHIELD]];
+    if (player.WEAR != null) {
+      let armor = player.WEAR;
+      let extra = armor.arg;
+      if (armor.matches(OSHIELD)) player.AC = 2 + extra;
+      if (armor.matches(OLEATHER)) player.AC = 2 + extra;
+      if (armor.matches(OSTUDLEATHER)) player.AC = 3 + extra;
+      if (armor.matches(ORING)) player.AC = 5 + extra;
+      if (armor.matches(OCHAIN)) player.AC = 6 + extra;
+      if (armor.matches(OSPLINT)) player.AC = 7 + extra;
+      if (armor.matches(OPLATE)) player.AC = 9 + extra;
+      if (armor.matches(OPLATEARMOR)) player.AC = 10 + extra;
+      if (armor.matches(OSSPLATE)) player.AC = 12 + extra;
+    }
+    if (player.SHIELD != null && player.SHIELD.matches(OSHIELD)) {
+      player.AC += 2 + player.SHIELD.arg;
+    }
+    player.AC += player.MOREDEFENSES;
 
     if (player.WIELD != null) {
-      var weapon = player.WIELD;
-      var extra = weapon.arg;
+      let weapon = player.WIELD;
+      let extra = weapon.arg;
       if (weapon.matches(ODAGGER)) player.WCLASS = 3 + extra;
       if (weapon.matches(OBELT)) player.WCLASS = 7 + extra;
       if (weapon.matches(OSHIELD)) player.WCLASS = 8 + extra;
@@ -329,22 +331,23 @@ var Player = {
     }
     player.WCLASS += player.MOREDAM;
 
-    // /*  now for regeneration abilities based on rings   */
-    //     c[REGEN]=1;     c[ENERGY]=0;
-    //     j=0;  for (k=25; k>0; k--)  if (iven[k]) {j=k; k=0; }
-    //     for (i=0; i<=j; i++)
-    //         {
-    //         switch(iven[i])
-    //             {
-    //             case OPROTRING: c[AC]     += ivenarg[i] + 1;    break;
-    //             case ODAMRING:  c[WCLASS] += ivenarg[i] + 1;    break;
-    //             case OBELT:     c[WCLASS] += ((ivenarg[i]<<1)) + 2; break;
-    //
-    //             case OREGENRING:    c[REGEN]  += ivenarg[i] + 1;    break;
-    //             case ORINGOFEXTRA:  c[REGEN]  += 5 * (ivenarg[i]+1); break;
-    //             case OENERGYRING:   c[ENERGY] += ivenarg[i] + 1;    break;
-    //             }
-    //         }
+    for (var i = 0; i < player.inventory.length; i++) {
+      let item = player.inventory[i];
+      if (item == null)
+        continue;
+      // /*  now for regeneration abilities based on rings   */
+      //     c[REGEN]=1;     c[ENERGY]=0;
+      //     j=0;  for (k=25; k>0; k--)  if (iven[k]) {j=k; k=0; }
+      //     for (i=0; i<=j; i++)
+      //         switch(iven[i])
+      //             case OPROTRING: c[AC]     += ivenarg[i] + 1;    break;
+      //             case ODAMRING:  c[WCLASS] += ivenarg[i] + 1;    break;
+      if (item.matches(OBELT)) player.WCLASS += ((item.arg << 1)) + 2;
+      //
+      //             case OREGENRING:    c[REGEN]  += ivenarg[i] + 1;    break;
+      //             case ORINGOFEXTRA:  c[REGEN]  += 5 * (ivenarg[i]+1); break;
+      //             case OENERGYRING:   c[ENERGY] += ivenarg[i] + 1;    break;
+    }
   },
 
 
@@ -394,14 +397,13 @@ function ifblind(x, y) {
     function to wield a weapon
  */
 function wield(index) {
-
   if (index == null) {
     updateLog("What do you want to wield (- for nothing) [* for all] ?");
     wait_for_wield_input = true;
     return;
-  } else {
-    //debug("wield(): " + index);
   }
+
+  //debug("wield(): " + index);
 
   if (index == ESC) {
     updateLog("");
@@ -460,9 +462,80 @@ function wield(index) {
     player.LANCEDEATH = null;
   }
 
-  player.level.bottomline();
   player.level.paint();
   wait_for_wield_input = false;
+  return;
+}
+
+
+/*
+    function to wear armor
+ */
+function wear(index) {
+  if (index == null) {
+    updateLog("What do you want to wear (- for nothing) [* for all] ?");
+    wait_for_wear_input = true;
+    return;
+  }
+
+  debug("wear(): " + index);
+
+  if (index == ESC) {
+    updateLog("");
+    wait_for_wear_input = false;
+    return false;
+  }
+
+  if (index == '*') {
+    // TODO
+    // i = showwear();
+    // cursors();
+  }
+
+  var startcode = "a".charCodeAt(0);
+  var code = index.charCodeAt(0);
+  var wearIndex = code - startcode;
+
+  debug("wear: " + wearIndex);
+
+  var item = player.inventory[wearIndex];
+
+  debug("wear(): trying to wear " + item);
+
+  if (item == null) {
+    if (wearIndex >= 0 && wearIndex < 26) {
+      updateLog("You don't have item " + index + "!");
+    }
+    wait_for_wear_input = false;
+    return;
+  }
+
+  if (
+    item.matches(OLEATHER) ||
+    item.matches(OCHAIN) ||
+    item.matches(OPLATE) ||
+    item.matches(ORING) ||
+    item.matches(OSPLINT) ||
+    item.matches(OPLATEARMOR) ||
+    item.matches(OSTUDLEATHER) ||
+    item.matches(OSSPLATE)) {
+    player.WEAR = item;
+  } else if (item.matches(OSHIELD)) {
+    if (player.WIELD != null && player.WIELD.matches(O2SWORD)) {
+      updateLog("Your hands are busy with the two handed sword!");
+      wait_for_wear_input = false;
+      return;
+    } else {
+      player.SHIELD = item;
+    }
+  } else {
+    updateLog("You can't wear that!");
+    wait_for_wear_input = false;
+    return;
+  }
+
+  player.level.paint();
+  wait_for_wear_input = false;
   return;
 }
 
@@ -492,6 +565,8 @@ function game_stats() {
   s += "WIELD: " + player.WIELD + "\n";
   s += "WEAR:  " + player.WEAR + "\n";
   s += "SHLD:  " + player.SHIELD + "\n";
+
+  s += "MORED: " + player.MOREDEFENSES + "\n";
 
   s += "STREX: " + player.STREXTRA + "\n";
   s += "GIAST: " + player.GIANTSTR + "\n";

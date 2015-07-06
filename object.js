@@ -17,7 +17,6 @@ const OSCROLL = new Item("OSCROLL", "?", "a magic scroll");
 
 const ODAGGER = new Item("ODAGGER", "(", "a dagger");
 const OBELT = new Item("OBELT", "{", "a belt of striking");
-const OSHIELD = new Item("OSHIELD", "(", "a shield");
 const OSPEAR = new Item("OSPEAR", "(", "a spear");
 const OFLAIL = new Item("OFLAIL", "(", "a flail");
 const OBATTLEAXE = new Item("OBATTLEAXE", ")", "a battle axe");
@@ -27,6 +26,16 @@ const O2SWORD = new Item("O2SWORD", "(", "a two handed sword");
 const OSWORD = new Item("OSWORD", ")", "a sunsword");
 const OSWORDofSLASHING = new Item("OSWORDofSLASHING", ")", "a sword of slashing");
 const OHAMMER = new Item("OHAMMER", ")", "Bessman's flailing hammer");
+
+const OSHIELD = new Item("OSHIELD", "[", "a shield");
+const OLEATHER = new Item("OLEATHER", "[", "leather armor");
+const OSTUDLEATHER = new Item("OSTUDLEATHER", "[", "studded leather armor");
+const ORING = new Item("ORING", "[", "ring mail");
+const OCHAIN = new Item("OCHAIN", "[", "chain mail");
+const OSPLINT = new Item("OSPLINT", "]", "splint mail");
+const OPLATE = new Item("OPLATE", "]", "plate mail");
+const OPLATEARMOR = new Item("OPLATEARMOR", "]", "plate armor");
+const OSSPLATE = new Item("OSSPLATE", "]", "stainless plate armor");
 
 
 // TODO Item types?
@@ -40,11 +49,11 @@ var Item = {
   desc: "",
   arg: null,
 
-  matches: function(item) {
+  matches(item) {
     return (this.id == item.id);
   },
 
-  toString: function() {
+  toString() {
     var description = this.desc;
     if (this.matches(OPOTION)) {
       if (isKnownPotion(this) || DEBUG_KNOW_ALL) {
@@ -65,10 +74,10 @@ var Item = {
         description += " " + this.arg;
       }
       if (this === player.WIELD) {
-        description += " (weapon in hand) "
+        description += " (weapon in hand)"
       }
-      if (this === player.WEAR) {
-        description += " (being worn) "
+      if (this === player.WEAR || this === player.SHIELD) {
+        description += " (being worn)"
       }
     }
     return description;

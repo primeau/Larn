@@ -90,9 +90,9 @@ function makeobject(level) {
   for (var numscrolls = rnd(5) + 3; numscrolls > 0; numscrolls--)
     fillroom(OSCROLL, newscroll());
 
-  //froom(2, ORING, 0); /* a ring mail          */
-  //froom(1, OSTUDLEATHER, 0); /* a studded leather    */
-  //froom(3, OSPLINT, 0); /* a splint mail        */
+  froom(2, ORING, 0); /* a ring mail          */
+  froom(1, OSTUDLEATHER, 0); /* a studded leather    */
+  froom(3, OSPLINT, 0); /* a splint mail        */
   froom(5, OSHIELD, rund(3)); /* a shield             */
   froom(2, OBATTLEAXE, rund(3)); /* a battle axe         */
   froom(5, OLONGSWORD, rund(3)); /* a long sword         */
@@ -117,7 +117,7 @@ function makeobject(level) {
       froom(5, O2SWORD, rnd(4)); /* a two handed sword */
       froom(3, OBELT, 4); /* belt of striking     */
       // froom(3, OENERGYRING, 3); /* energy ring          */
-      // froom(4, OPLATE, 5); /* platemail + 5        */
+      froom(4, OPLATE, 5); /* platemail + 5        */
       // froom(3, OCLEVERRING, 1 + rnd(2)); /* ring of cleverness */
     }
   }
