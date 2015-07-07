@@ -255,7 +255,15 @@ nomove = 0;
   }
 
   hitflag = 0;
-  lookforobject(true, false, true);
+
+  if (prompt_mode)
+    lookforobject(true, false, true);
+  //else
+      //lookforobject( true, ( auto_pickup && !move_no_pickup ), false);
+  //else
+      //dropflag=0; /* don't show it just dropped an item */
+
+
   if (nomove == 0) {
     movemonst();
   }
