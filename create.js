@@ -134,7 +134,9 @@ function fillmonst(monster) {
   for (var trys = 5; trys > 0; --trys) /* max # of creation attempts */ {
     var x = rnd(MAXX - 2);
     var y = rnd(MAXY - 2);
-    if ((player.level.items[x][y].matches(OEMPTY)) && (player.level.monsters[x][y] == null) && ((player.x != x) || (player.y != y))) {
+    if ((player.level.items[x][y].matches(OEMPTY)) && //
+      (player.level.monsters[x][y] == null) && //
+      ((player.x != x) || (player.y != y))) {
       player.level.monsters[x][y] = monster;
       // know[x][y] &= ~KNOWHERE; //TODO what is this for?
       // hitp[x][y] = monster[what].hitpoints;
@@ -198,7 +200,7 @@ function makemonst(lev) {
   else
     arg = rnd(monstlevel[lev - 1] - monstlevel[lev - 4]) + monstlevel[lev - 4];
 
-  var monster = createMonster(arg);
+  var monster = createmonster(arg);
   debug("create.makemonst(" + lev + "): " + monster.name);
 
   // tmp=rnd((x=monstlevel[lev-1])?x:1);

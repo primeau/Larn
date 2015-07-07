@@ -3,6 +3,8 @@
 var lastnum = 0;        /* the number of the monster last hitting player    */
 var lastmonst = "";
 
+var lasthx = 0;
+var lasthy = 0;
 
 /*
     table of experience needed to be a certain level of player

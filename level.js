@@ -17,12 +17,19 @@ var Level = {
 
     this.depth = depth;
 
+    let wall = createObject(OWALL); // TODO THIS IS BECAUSE I AM DUMB AND DON'T UNDERSTAND OBJECTS
+    let empty = createObject(OEMPTY); // TODO THIS IS BECAUSE I AM DUMB AND DON'T UNDERSTAND OBJECTS
+
     for (var x = 0; x < MAXX; x++) {
       for (var y = 0; y < MAXY; y++) {
         if (mazeTemplate[x][y] == "#") {
-          this.items[x][y] = createObject(OWALL);
+          // this.items[x][y] = createObject(OWALL); //
+          // this.items[x][y] = OWALL; // TODO: this is what I should do
+          this.items[x][y] = wall; // TODO
         } else {
-          this.items[x][y] = createObject(OEMPTY);
+          // this.items[x][y] = createObject(OEMPTY);
+          // this.items[x][y] = OEMPTY; // TODO
+          this.items[x][y] = empty; // TODO
         }
       }
     }
@@ -64,13 +71,12 @@ var Level = {
     for (var logindex = 0; logindex < LOG.length; logindex++) {
       output += LOG[logindex] + "\n";
     }
-    output += "\n";
 
     document.getElementById("LARN").innerHTML = output;
 
     var doc = document.getElementById("STATS");
     if (doc != null)
-      document.getElementById("STATS").innerHTML = game_stats();
+      document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
 
   },
 

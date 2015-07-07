@@ -16,7 +16,7 @@ var Monster = function Monster(id, char, name, level, armorclass, damage, attack
   this.experience = experience;
 }
 
-function createMonster(arg) {
+function createmonster(arg) {
   var tmp = monsterlist[arg];
   var monster = new Monster(tmp.id, tmp.char, tmp.name, tmp.level,
     tmp.armorclass, tmp.damage, tmp.attack, tmp.defence, tmp.genocided,
@@ -40,6 +40,16 @@ Monster.prototype = {
     gold: 0,
     hitpoints: 0,
     experience: 0,
+    awake: false,
+    /*  false=sleeping true=awake monst*/
+
+    matches: function(monster) {
+      return this.id == monster.id;
+    },
+
+    toString: function() {
+      return this.name;
+    },
 
     /*
      *  dropsomething(monst)    Function to create an object when a monster dies
@@ -113,9 +123,9 @@ function createitem(it, arg) {
  *
  *  array to do rnd() to create monsters <= a given level
  */
-var monstlevel = [5, 11, 17, 22, 27, 33, 39, 42, 46, 50, 53, 56, 59];
+const monstlevel = [5, 11, 17, 22, 27, 33, 39, 42, 46, 50, 53, 56, 59];
 
-var monsterlist = [
+const monsterlist = [
   /*  NAME   ID CHAR NAME  LV  AC  DAM ATT DEF GEN INT GOLD    HP  EXP
   --------------------------------------------------------------------- */
   new Monster("", ".", "", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0),
@@ -195,6 +205,87 @@ var monsterlist = [
   new Monster("DEMONPRINCE", ".", "demon prince", 25, -127, 30, 6, 0, 0, 28, 0, 345, 300000)
 
 ];
+
+const VAMPIRE = monsterlist[38];
+const BAT = monsterlist[1];
+
+var yrepcount = 0;
+var hitflag = 0;
+var hit2flag = 0;
+var hit3flag = 0;
+
+
+/*
+ *  hitplayer(x,y)      Function for the monster to hit the player from (x,y)
+ *      int x,y;
+ *
+ *  Function for the monster to hit the player with monster at location x,y
+ *  Returns nothing of value.
+ */
+function hitplayer(x, y) {
+
+  var monster = player.level.monsters[x][y];
+  if ((monster) == null) {
+    debug("monster.hitplayer(): no monster at: " + xy(x, y));
+    return;
+  }
+
+  var dam, tmp, bias;
+
+  lastnum = monster;
+
+  // TODO
+  // /*  spirit naga's and poltergeist's do nothing if scarab of negate spirit   */
+  //     if (c[NEGATESPIRIT] || c[SPIRITPRO])  if ((mster ==POLTERGEIST) || (mster ==SPIRITNAGA))  return;
+
+  // TODO
+  // /*  if undead and cube of undead control    */
+  //     if (c[CUBEofUNDEAD] || c[UNDEADPRO]) if ((mster ==VAMPIRE) || (mster ==WRAITH) || (mster ==ZOMBIE)) return;
+
+  bias = (player.HARDGAME) + 1;
+  hitflag = hit2flag = hit3flag = 1;
+  yrepcount = 0;
+
+  ifblind(x, y);
+  if (player.INVISIBILITY > 0)
+    if (rnd(33) < 20) {
+      updateLog(`The ${monster} misses wildly`);
+      return;
+    }
+  if (player.CHARMCOUNT > 0)
+    if (rnd(30) + 5 * monster.level - player.CHARISMA < 30) {
+      updateLog(`The ${monster} is awestruck at your magnificence!`);
+      return;
+    }
+  if (monster.matches(BAT)) {
+    dam = 1;
+  }
+  else {
+    dam = monster.damage;
+    dam += rnd((dam < 1 ? 1 : dam)) + monster.level;
+  }
+  tmp = 0;
+  // if (monster.attack > 0)
+  //   if (((dam + bias + 8) > c[AC]) || (rnd((int)((c[AC] > 0) ? c[AC] : 1)) == 1)) {
+  //     if (spattack(monster[mster].attack, x, y)) {
+  //       lflushall();
+  //       return;
+  //     }
+  //     tmp = 1;
+  //     bias -= 2;
+  //     cursors();
+  //   }
+  if (((dam + bias) > player.AC) || (rnd(((player.AC > 0) ? player.AC : 1)) == 1)) {
+    updateLog(`  The ${monster} hit you `);
+    tmp = 1;
+    if ((dam -= player.AC) < 0) dam = 0;
+    if (dam > 0) {
+      player.losehp(dam);
+      player.level.paint();
+    }
+  }
+  if (tmp == 0) updateLog(`  The ${monster} missed `);
+}
 
 
 /*
@@ -280,9 +371,9 @@ function hitm(x, y, damage) {
     damage = 1;
     fulldamage = 1;
   }
-  // lasthx = x; // TODO what is this for?
-  // lasthy = y; // TODO what is this for?
-  //stealth[x][y] = 1; /* make sure hitting monst breaks stealth condition */ TODO STEALTH
+  lasthx = x;
+  lasthy = y;
+  player.level.monsters[x][y].awake = true; /* make sure hitting monst breaks stealth condition */
   player.HOLDMONST = 0; /* hit a monster breaks hold monster spell  */
   // TODO ORB OF DRAGON SLAYING
   // switch (monst) /* if a dragon and orb(s) of dragon slaying   */ {

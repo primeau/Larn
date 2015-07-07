@@ -7,6 +7,8 @@ var take_ignore_item = false;
 var wait_for_wield_input = false;
 var wait_for_wear_input = false;
 
+var SHIFT = false;
+
 const ESC = 27;
 
 function movePlayer(currentx, currenty, xdir, ydir, run) {
@@ -25,22 +27,44 @@ function movePlayer(currentx, currenty, xdir, ydir, run) {
     player.x = currentx;
     player.y = currenty;
   }
+
   lookforobject(true, false, true);
+
+  movemonst();
 
   player.level.paint();
 
 }
 
 
-function preParseEvent(e, keyDown) {
+function preParseEvent(e, keyDown, keyUp) {
   var code = e.which;
+  //debug(`preParseEvent(): got: ${code}: ${keyDown} ${keyUp}`);
   if (keyDown) { // to capture ESC key etc
-    if (code == 27 || code >= 37 && code <= 40) {
+    if (code == 27 || code >= 37 && code <= 40
+      // || code >= 97 && code <= 105
+      ) {
       parseEvent(e);
-    } else {
+    }
+    else if (code == 16) { // SHIFT
+      SHIFT = true;
+      //debug("SHIFT=="+SHIFT);
+    }
+    else {
       //debug("preParseEvent(): ignoring: " + code);
     }
-  } else {
+  }
+  else if (keyUp) {
+    if (code == 16) {
+      SHIFT = false;
+      //debug("SHIFT=="+SHIFT);
+      parseEvent(e);
+    }
+    else {
+      //debug("preParseEvent(): ignoring: " + code);
+    }
+  }
+  else {
     parseEvent(e);
   }
 }
@@ -116,35 +140,36 @@ function parseEvent(e) {
   //
   // MOVE PLAYER
   //
-  if (key == 'y') { // UP,LEFT
+
+  if (key == 'y' /*|| code == 103*/) { // UP,LEFT
     movePlayer(newx, newy, -1, -1, false);
   } else if (key == 'Y') { // RUN UP,LEFT
     movePlayer(newx, newy, -1, -1, true);
-  } else if (key == 'k' || code == 38) { // UP
-    movePlayer(newx, newy, 0, -1, false);
+  } else if (key == 'k' || code == 38 /*|| code == 104*/) { // UP
+    movePlayer(newx, newy, 0, -1, SHIFT);
   } else if (key == 'K') { // RUN UP
     movePlayer(newx, newy, 0, -1, true);
-  } else if (key == 'u') { // UP,RIGHT
+  } else if (key == 'u' /*|| code == 105*/) { // UP,RIGHT
     movePlayer(newx, newy, 1, -1, false);
   } else if (key == 'U') { // RUN UP,RIGHT
     movePlayer(newx, newy, 1, -1, true);
-  } else if (key == 'h' || code == 37) { // LEFT
-    movePlayer(newx, newy, -1, 0, false);
+  } else if (key == 'h' || code == 37 /*|| code == 100*/) { // LEFT
+    movePlayer(newx, newy, -1, 0, SHIFT);
   } else if (key == 'H') { // RUN LEFT
     movePlayer(newx, newy, -1, 0, true);
-  } else if (key == 'l' || code == 39) { // RIGHT
-    movePlayer(newx, newy, 1, 0, false);
+  } else if (key == 'l' || code == 39 /*|| code == 102*/) { // RIGHT
+    movePlayer(newx, newy, 1, 0, SHIFT);
   } else if (key == 'L') { // RUN RIGHT
     movePlayer(newx, newy, 1, 0, true);
-  } else if (key == 'b') { // DOWN,LEFT
+  } else if (key == 'b' /*|| code == 97*/) { // DOWN,LEFT
     movePlayer(newx, newy, -1, 1, false);
   } else if (key == 'B') { // RUN DOWN,LEFT
     movePlayer(newx, newy, -1, 1, true);
-  } else if (key == 'j' || code == 40) { // DOWN
-    movePlayer(newx, newy, 0, 1, false);
+  } else if (key == 'j' || code == 40 /*|| code == 98*/) { // DOWN
+    movePlayer(newx, newy, 0, 1, SHIFT);
   } else if (key == 'J') { // RUN DOWN
     movePlayer(newx, newy, 0, 1, true);
-  } else if (key == 'n') { // DOWN, RIGHT
+  } else if (key == 'n' /*|| code == 99*/) { // DOWN, RIGHT
     movePlayer(newx, newy, 1, 1, false);
   } else if (key == 'N') { // RUN DOWN, RIGHT
     movePlayer(newx, newy, 1, 1, true);
@@ -231,10 +256,13 @@ function parseEvent(e) {
     //
     // DEBUGGING SHORTCUTS
     //
+  } else if (key == '~') {
+    DEBUG_STATS = !DEBUG_STATS;
+    updateLog("DEBUG_STATS: " + DEBUG_STATS);
   } else if (key == '!') {
     DEBUG_OUTPUT = !DEBUG_OUTPUT;
     updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
-  } else if (key == '@') {
+} else if (key == '@') {
     DEBUG_WALK_THROUGH_WALLS = !DEBUG_WALK_THROUGH_WALLS;
     updateLog("DEBUG_WALK_THROUGH_WALLS: " + DEBUG_WALK_THROUGH_WALLS);
   } else if (key == '#') {

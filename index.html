@@ -10,21 +10,26 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
 
-        <!--
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
-        -->
-<style>
-section {
-    width: 65%;
-    float:left;
-}
-aside {
-    width:35%;
-    float:right;
-}
-</style>
+  <style>
+    section {
+      width: 65%;
+      float:left;
+    }
+    aside {
+      width:35%;
+      float:right;
+    }
+    footer {
+      clear:both;
+    }
+  </style>
+
+  <style>
+    p.mono {
+      font-family: "Courier New", Courier, monospace;
+      line-height: 18px;
+    }
+  </style>
 
     </head>
     <body>
@@ -32,57 +37,62 @@ aside {
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.3.min.js"><\/script>')</script>
-        <script src="js/plugins.js"></script>
-        <script src="js/main.js"></script>
-        -->
-
-        <style>
-        p.mono {
-          font-family: "Courier New", Courier, monospace;
-          line-height: 18px;
-        }
-        </style>
-
 <section>
-<pre>
-        <p class="mono" id="LARN">fail</p>
-
-        <script src="larn.js"></script>
-        <script src="player.js"></script>
-        <script src="mazes.js"></script>
-        <script src="level.js"></script>
-        <script src="create.js"></script>
-        <script src="data.js"></script>
-        <script src="object.js"></script>
-        <script src="util.js"></script>
-        <script src="parse.js"></script>
-        <script src="nap.js"></script>
-        <script src="scores.js"></script>
-        <script src="potion.js"></script>
-        <script src="inventory.js"></script>
-        <script src="scroll.js"></script>
-        <script src="monster.js"></script>
-
-        <script>
-          "use strict";
-          var larn = Object.create(Larn);
-          var player = Object.create(Player);
-          larn.run();
-        </script>
-</pre>
+  <script src="larn.js"></script>
+  <script src="player.js"></script>
+  <script src="mazes.js"></script>
+  <script src="level.js"></script>
+  <script src="create.js"></script>
+  <script src="data.js"></script>
+  <script src="object.js"></script>
+  <script src="util.js"></script>
+  <script src="parse.js"></script>
+  <script src="nap.js"></script>
+  <script src="scores.js"></script>
+  <script src="potion.js"></script>
+  <script src="inventory.js"></script>
+  <script src="scroll.js"></script>
+  <script src="monster.js"></script>
+  <script src="movem.js"></script>
+  <pre>
+    <p class="mono" id="LARN">Error Loading. (JS Larn currently only works on modern version of Chrome. Sorry...)</p>
+      <script>
+      "use strict";
+      var larn = Object.create(Larn);
+      var player = Object.create(Player);
+      larn.run();
+    </script>
+  </pre>
 </section>
 
-
 <aside>
-<pre>
-  <p class="mono" id="STATS"></p>
-</pre>
+  <pre>
+    <p class="mono" id="STATS"></p>
+  </pre>
 </aside>
 
+<footer><pre><p class="mono" id="FOOTER">
+     y  k  u
+      \ | /
+     h -.- l    (or L/R/U/D arrows -- no diagonals yet!)
+      / | \
+     b  j  n
 
+    < - climb up stairs or volcanic shaft
+    > - climb down stairs or volcanic shaft
+
+    w - wield
+    W - wear
+    d - drop
+
+    ~ - toggle debug stats
+    ! - toggle debug to console
+    @ - toggle walk through walls
+    # - toggle stairs everywhere (< and > works anywhere)
+    $ - toggle identify (and create 1 of everything)
+    </p>
+  </pre>
+</footer>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>

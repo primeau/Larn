@@ -37,6 +37,7 @@ const OPLATE = new Item("OPLATE", "]", "plate mail");
 const OPLATEARMOR = new Item("OPLATEARMOR", "]", "plate armor");
 const OSSPLATE = new Item("OSSPLATE", "]", "stainless plate armor");
 
+const OCLOSEDDOOR = new Item("OCLOSEDDOOR", "D", "a closed door");
 
 // TODO Item types?
 // characters (player, monster) 1 per square
@@ -49,11 +50,11 @@ var Item = {
   desc: "",
   arg: null,
 
-  matches(item) {
+  matches: function(item) {
     return (this.id == item.id);
   },
 
-  toString() {
+  toString: function() {
     var description = this.desc;
     if (this.matches(OPOTION)) {
       if (isKnownPotion(this) || DEBUG_KNOW_ALL) {
@@ -129,7 +130,7 @@ function itemAt(x, y) {
 
 function isItemAt(x, y) {
   var item = player.level.items[x][y];
-  return (item.id != OEMPTY.id);
+  return (item != null && !item.matches(OEMPTY));
 }
 
 function lookforobject(do_ident, do_pickup, do_action) {

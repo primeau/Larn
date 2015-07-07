@@ -7,6 +7,7 @@ var LOG_SIZE = 4;
 var LOG = [""];
 var LAST_LOG = 0;
 
+var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
 var DEBUG_WALK_THROUGH_WALLS = false;
 var DEBUG_STAIRS_EVERYWHERE = false;
@@ -87,11 +88,18 @@ var Larn = {
   run: function() {
     document.onkeypress = this.keyPress;
     document.onkeydown = this.keyDown;
+    document.onkeyup = this.keyUp;
 
     player.x = rnd(MAXX - 2);
     player.y = rnd(MAXY - 2);
 
     updateLog("Welcome to Larn"); // need to initialize the log
+
+
+    player.inventory[0] = createObject(ODAGGER);
+    player.inventory[1] = createObject(OLEATHER);
+    player.WIELD = player.inventory[0];
+    player.WEAR = player.inventory[1];
 
     newcavelevel(0);
 
@@ -100,13 +108,18 @@ var Larn = {
   // http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
   keyPress: function(e) {
     e = e || window.event;
-    preParseEvent(e, false);
+    preParseEvent(e, false, false);
   }, // KEYPRESS
 
   keyDown: function(e) {
     e = e || window.event;
-    preParseEvent(e, true);
+    preParseEvent(e, true, false);
   }, // KEYDOWN
+
+  keyUp: function(e) {
+    e = e || window.event;
+    preParseEvent(e, false, true);
+  }, // KEYUP
 
 }; // LARN OBJCT
 
