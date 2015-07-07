@@ -7,8 +7,6 @@ var take_ignore_item = false;
 var wait_for_wield_input = false;
 var wait_for_wear_input = false;
 
-var SHIFT = false;
-
 const ESC = 27;
 
 function movePlayer(currentx, currenty, xdir, ydir, run) {
@@ -39,33 +37,22 @@ function movePlayer(currentx, currenty, xdir, ydir, run) {
 
 function preParseEvent(e, keyDown, keyUp) {
   var code = e.which;
-  //debug(`preParseEvent(): got: ${code}: ${keyDown} ${keyUp}`);
+  //debug(`preParseEvent(): got: ${code}: ${keyDown} ${keyUp} ${e.key}`);
   if (keyDown) { // to capture ESC key etc
-    if (code == 27 || code >= 37 && code <= 40
-      // || code >= 97 && code <= 105
-      ) {
+    if (code == 27 || code >= 37 && code <= 40) {
+      e.preventDefault(); // prevent scrolling on page
       parseEvent(e);
+    } else {
+      //debug("preParseEvent.keydown(): ignoring: " + code);
     }
-    else if (code == 16) { // SHIFT
-      SHIFT = true;
-      //debug("SHIFT=="+SHIFT);
-    }
-    else {
-      //debug("preParseEvent(): ignoring: " + code);
-    }
-  }
-  else if (keyUp) {
-    if (code == 16) {
-      SHIFT = false;
-      //debug("SHIFT=="+SHIFT);
+  } else if (keyUp) {
+    //debug("preParseEvent.keyup(): ignoring: " + code);
+  } else {
+    if (code < 37 || code > 40) {
       parseEvent(e);
+    } else {
+      debug("preParseEvent.keypress(): ignoring: " + code);
     }
-    else {
-      //debug("preParseEvent(): ignoring: " + code);
-    }
-  }
-  else {
-    parseEvent(e);
   }
 }
 
@@ -129,50 +116,34 @@ function parseEvent(e) {
 
 
   /*
-                 ARROW KEYS           NUMPAD               KEYBOARD
-               HOME  ↑  PgUp         7  8  9               y  k  u
-                   \ | /              \ | /                 \ | /
-                  ← -.- →            4 -.- 6               h -.- l
-                   / | \              / | \                 / | \
-                END  ↓  PgDn         1  2  3               b  j  n
+           ARROW KEYS           NUMPAD               KEYBOARD
+               ↑               7  8  9               y  k  u
+               |                \ | /                 \ | /
+            ←- . -→            4 -.- 6               h -.- l
+               |                / | \                 / | \
+               ↓               1  2  3               b  j  n
   */
 
   //
   // MOVE PLAYER
   //
 
-  if (key == 'y' /*|| code == 103*/) { // UP,LEFT
-    movePlayer(newx, newy, -1, -1, false);
-  } else if (key == 'Y') { // RUN UP,LEFT
-    movePlayer(newx, newy, -1, -1, true);
-  } else if (key == 'k' || code == 38 /*|| code == 104*/) { // UP
-    movePlayer(newx, newy, 0, -1, SHIFT);
-  } else if (key == 'K') { // RUN UP
-    movePlayer(newx, newy, 0, -1, true);
-  } else if (key == 'u' /*|| code == 105*/) { // UP,RIGHT
-    movePlayer(newx, newy, 1, -1, false);
-  } else if (key == 'U') { // RUN UP,RIGHT
-    movePlayer(newx, newy, 1, -1, true);
-  } else if (key == 'h' || code == 37 /*|| code == 100*/) { // LEFT
-    movePlayer(newx, newy, -1, 0, SHIFT);
-  } else if (key == 'H') { // RUN LEFT
-    movePlayer(newx, newy, -1, 0, true);
-  } else if (key == 'l' || code == 39 /*|| code == 102*/) { // RIGHT
-    movePlayer(newx, newy, 1, 0, SHIFT);
-  } else if (key == 'L') { // RUN RIGHT
-    movePlayer(newx, newy, 1, 0, true);
-  } else if (key == 'b' /*|| code == 97*/) { // DOWN,LEFT
-    movePlayer(newx, newy, -1, 1, false);
-  } else if (key == 'B') { // RUN DOWN,LEFT
-    movePlayer(newx, newy, -1, 1, true);
-  } else if (key == 'j' || code == 40 /*|| code == 98*/) { // DOWN
-    movePlayer(newx, newy, 0, 1, SHIFT);
-  } else if (key == 'J') { // RUN DOWN
-    movePlayer(newx, newy, 0, 1, true);
-  } else if (key == 'n' /*|| code == 99*/) { // DOWN, RIGHT
-    movePlayer(newx, newy, 1, 1, false);
-  } else if (key == 'N') { // RUN DOWN, RIGHT
-    movePlayer(newx, newy, 1, 1, true);
+  if (key == 'y' || key == 'Y' || code == 55) { // UP,LEFT
+    movePlayer(newx, newy, -1, -1, e.shiftKey);
+  } else if (key == 'k' || key == 'K' || code == 56 || code == 38) { // UP
+    movePlayer(newx, newy, 0, -1, e.shiftKey);
+  } else if (key == 'u' || key == 'U' || code == 57) { // UP,RIGHT
+    movePlayer(newx, newy, 1, -1, e.shiftKey);
+  } else if (key == 'h' || key == 'H' || code == 52 || code == 37) { // LEFT
+    movePlayer(newx, newy, -1, 0, e.shiftKey);
+  } else if (key == 'l' || key == 'L' || code == 54 || code == 39) { // RIGHT
+    movePlayer(newx, newy, 1, 0, e.shiftKey);
+  } else if (key == 'b' || key == 'B' || code == 49) { // DOWN,LEFT
+    movePlayer(newx, newy, -1, 1, e.shiftKey);
+  } else if (key == 'j' || key == 'J' || code == 50 || code == 40) { // DOWN
+    movePlayer(newx, newy, 0, 1, e.shiftKey);
+  } else if (key == 'n' || key == 'N' || code == 51) { // DOWN, RIGHT
+    movePlayer(newx, newy, 1, 1, e.shiftKey);
   }
 
   //
@@ -262,7 +233,7 @@ function parseEvent(e) {
   } else if (key == '!') {
     DEBUG_OUTPUT = !DEBUG_OUTPUT;
     updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
-} else if (key == '@') {
+  } else if (key == '@') {
     DEBUG_WALK_THROUGH_WALLS = !DEBUG_WALK_THROUGH_WALLS;
     updateLog("DEBUG_WALK_THROUGH_WALLS: " + DEBUG_WALK_THROUGH_WALLS);
   } else if (key == '#') {
@@ -280,27 +251,27 @@ function parseEvent(e) {
         player.level.items[potioni + scrolli][0] = scroll;
       }
       var weaponi = 0;
-      player.level.items[weaponi++][MAXY-1] = createObject(ODAGGER);
-      player.level.items[weaponi++][MAXY-1] = createObject(OBELT);
-      player.level.items[weaponi++][MAXY-1] = createObject(OSPEAR);
-      player.level.items[weaponi++][MAXY-1] = createObject(OFLAIL);
-      player.level.items[weaponi++][MAXY-1] = createObject(OBATTLEAXE);
-      player.level.items[weaponi++][MAXY-1] = createObject(OLANCE);
-      player.level.items[weaponi++][MAXY-1] = createObject(OLONGSWORD);
-      player.level.items[weaponi++][MAXY-1] = createObject(O2SWORD);
-      player.level.items[weaponi++][MAXY-1] = createObject(OSWORD);
-      player.level.items[weaponi++][MAXY-1] = createObject(OSWORDofSLASHING);
-      player.level.items[weaponi++][MAXY-1] = createObject(OHAMMER);
+      player.level.items[weaponi++][MAXY - 1] = createObject(ODAGGER);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OBELT);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OSPEAR);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OFLAIL);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OBATTLEAXE);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OLANCE);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OLONGSWORD);
+      player.level.items[weaponi++][MAXY - 1] = createObject(O2SWORD);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OSWORD);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OSWORDofSLASHING);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OHAMMER);
       var armori = weaponi;
-      player.level.items[armori++][MAXY-1] = createObject(OSHIELD);
-      player.level.items[armori++][MAXY-1] = createObject(OLEATHER);
-      player.level.items[armori++][MAXY-1] = createObject(OSTUDLEATHER);
-      player.level.items[armori++][MAXY-1] = createObject(ORING);
-      player.level.items[armori++][MAXY-1] = createObject(OCHAIN);
-      player.level.items[armori++][MAXY-1] = createObject(OSPLINT);
-      player.level.items[armori++][MAXY-1] = createObject(OPLATE);
-      player.level.items[armori++][MAXY-1] = createObject(OPLATEARMOR);
-      player.level.items[armori++][MAXY-1] = createObject(OSSPLATE);
+      player.level.items[armori++][MAXY - 1] = createObject(OSHIELD);
+      player.level.items[armori++][MAXY - 1] = createObject(OLEATHER);
+      player.level.items[armori++][MAXY - 1] = createObject(OSTUDLEATHER);
+      player.level.items[armori++][MAXY - 1] = createObject(ORING);
+      player.level.items[armori++][MAXY - 1] = createObject(OCHAIN);
+      player.level.items[armori++][MAXY - 1] = createObject(OSPLINT);
+      player.level.items[armori++][MAXY - 1] = createObject(OPLATE);
+      player.level.items[armori++][MAXY - 1] = createObject(OPLATEARMOR);
+      player.level.items[armori++][MAXY - 1] = createObject(OSSPLATE);
 
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);

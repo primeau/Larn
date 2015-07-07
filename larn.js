@@ -88,7 +88,7 @@ var Larn = {
   run: function() {
     document.onkeypress = this.keyPress;
     document.onkeydown = this.keyDown;
-    document.onkeyup = this.keyUp;
+  //  document.onkeyup = this.keyUp;
 
     player.x = rnd(MAXX - 2);
     player.y = rnd(MAXY - 2);
