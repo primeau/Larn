@@ -3,8 +3,22 @@
 var lastnum = 0;        /* the number of the monster last hitting player    */
 var lastmonst = "";
 
+var prompt_mode = true;
+
+var lastpx = 0;
+var lastpy = 0;
+
 var lasthx = 0;
 var lasthy = 0;
+
+var yrepcount = 0;
+var hitflag = 0;
+var hit2flag = 0;
+var hit3flag = 0;
+
+var nomove = 0;
+var dropflag = 0;
+
 
 /*
     table of experience needed to be a certain level of player

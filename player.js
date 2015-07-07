@@ -41,7 +41,7 @@ var Player = {
   CAVELEVEL: function() {
     return this.level.depth;
   },
-  // CONFUSE:
+  CONFUSE: 0,
   // ALTPRO:
   // HERO:
   // CHARMCOUNT:
@@ -86,7 +86,7 @@ var Player = {
   // FILLROOM:
   // RANDOMWALK:
   // SPHCAST:    /* nz if an active sphere of annihilation */
-  // WTW:        /* walk through walls */
+  WTW: 0,        /* walk through walls */
   STREXTRA: 0,
   /* character strength due to objects or enchantments */
   // TMP:        /* misc scratch space */
@@ -574,6 +574,7 @@ function game_stats() {
   s += "AGGR:  " + player.AGGRAVATE + "\n";
   s += "HSTM:  " + player.HASTEMONST + "\n";
   s += "POIS:  " + player.HALFDAM + "\n";
+  s += "CONF:  " + player.CONFUSE + "\n";
 
   s += "AWARE: " + player.AWARENESS + "\n";
 
@@ -584,6 +585,7 @@ function game_stats() {
   s += "HOLD:  " + player.HOLDMONST + "\n";
   s += "STEL:  " + player.STEALTH + "\n";
   s += "HASTE: " + player.HASTESELF + "\n";
+  s += "WTW:   " + player.WTW + "\n";
 
   s += "KILL:  " + player.MONSTKILLED + "\n";
   s += "LANCE: " + player.LANCEDEATH + "\n";

@@ -38,6 +38,12 @@ const OPLATEARMOR = new Item("OPLATEARMOR", "]", "plate armor");
 const OSSPLATE = new Item("OSSPLATE", "]", "stainless plate armor");
 
 const OCLOSEDDOOR = new Item("OCLOSEDDOOR", "D", "a closed door");
+const OALTAR = new Item("OALTAR", "A", "a holy altar");
+const OTRAPARROWIV = new Item("OTRAPARROWIV", ".", "an arrow trap");
+const OIVTELETRAP = new Item("OIVTELETRAP", ".", "a teleport trap");
+const OIVDARTRAP = new Item("OIVDARTRAP", ".", "a dart trap");
+const OIVTRAPDOOR = new Item("OIVTRAPDOOR", ".", "a trap door");
+
 
 // TODO Item types?
 // characters (player, monster) 1 per square

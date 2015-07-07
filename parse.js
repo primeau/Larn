@@ -9,31 +9,6 @@ var wait_for_wear_input = false;
 
 const ESC = 27;
 
-function movePlayer(currentx, currenty, xdir, ydir, run) {
-  while (canMove(currentx + xdir, currenty + ydir)) {
-    currentx += xdir;
-    currenty += ydir;
-    if (!run || !isItem(currentx, currenty, OEMPTY)) {
-      break;
-    }
-    //debug("moveplayer: " + currentx + "," + currenty);
-  }
-
-  if (player.level.monsters[currentx][currenty]) {
-    hitmonster(currentx, currenty);
-  } else {
-    player.x = currentx;
-    player.y = currenty;
-  }
-
-  lookforobject(true, false, true);
-
-  movemonst();
-
-  player.level.paint();
-
-}
-
 
 function preParseEvent(e, keyDown, keyUp) {
   var code = e.which;
@@ -58,6 +33,8 @@ function preParseEvent(e, keyDown, keyUp) {
 
 
 function parseEvent(e) {
+
+nomove = 0;
 
   var code = e.which;
   var key = String.fromCharCode(code);
@@ -129,21 +106,21 @@ function parseEvent(e) {
   //
 
   if (key == 'y' || key == 'Y' || code == 55) { // UP,LEFT
-    movePlayer(newx, newy, -1, -1, e.shiftKey);
+    e.shiftKey ? run(-1, -1) : moveplayer(-1, -1);
   } else if (key == 'k' || key == 'K' || code == 56 || code == 38) { // UP
-    movePlayer(newx, newy, 0, -1, e.shiftKey);
+    e.shiftKey ? run(0, -1) : moveplayer(0, -1);
   } else if (key == 'u' || key == 'U' || code == 57) { // UP,RIGHT
-    movePlayer(newx, newy, 1, -1, e.shiftKey);
+    e.shiftKey ? run(1, -1) : moveplayer(1, -1);
   } else if (key == 'h' || key == 'H' || code == 52 || code == 37) { // LEFT
-    movePlayer(newx, newy, -1, 0, e.shiftKey);
+    e.shiftKey ? run(-1, 0) : moveplayer(-1, 0);
   } else if (key == 'l' || key == 'L' || code == 54 || code == 39) { // RIGHT
-    movePlayer(newx, newy, 1, 0, e.shiftKey);
+    e.shiftKey ? run(1, 0) : moveplayer(1, 0);
   } else if (key == 'b' || key == 'B' || code == 49) { // DOWN,LEFT
-    movePlayer(newx, newy, -1, 1, e.shiftKey);
+    e.shiftKey ? run(-1, 1) : moveplayer(-1, 1);
   } else if (key == 'j' || key == 'J' || code == 50 || code == 40) { // DOWN
-    movePlayer(newx, newy, 0, 1, e.shiftKey);
+    e.shiftKey ? run(0, 1) : moveplayer(0, 1);
   } else if (key == 'n' || key == 'N' || code == 51) { // DOWN, RIGHT
-    movePlayer(newx, newy, 1, 1, e.shiftKey);
+    e.shiftKey ? run(1, 1) : moveplayer(1, 1);
   }
 
   //
@@ -234,8 +211,8 @@ function parseEvent(e) {
     DEBUG_OUTPUT = !DEBUG_OUTPUT;
     updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
   } else if (key == '@') {
-    DEBUG_WALK_THROUGH_WALLS = !DEBUG_WALK_THROUGH_WALLS;
-    updateLog("DEBUG_WALK_THROUGH_WALLS: " + DEBUG_WALK_THROUGH_WALLS);
+    player.WTW = player.WTW == 0 ? 100000 : 0;
+    updateLog("DEBUG_WALK_THROUGH_WALLS: " + (player.WTW > 0));
   } else if (key == '#') {
     DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
     updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
@@ -277,12 +254,11 @@ function parseEvent(e) {
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
   }
 
-
-
-  if (isItem(player.x, player.y, OHOMEENTRANCE)) {
-    updateLog("Going to Home Level");
-    newcavelevel(0);
-    moveNear(OENTRANCE, false);
+  hitflag = 0;
+  lookforobject(true, false, true);
+  if (nomove == 0) {
+    movemonst();
   }
+  player.level.paint();
 
 } // KEYPRESS

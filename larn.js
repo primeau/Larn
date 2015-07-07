@@ -9,7 +9,6 @@ var LAST_LOG = 0;
 
 var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
-var DEBUG_WALK_THROUGH_WALLS = false;
 var DEBUG_STAIRS_EVERYWHERE = false;
 var DEBUG_KNOW_ALL = false;
 
@@ -50,6 +49,121 @@ function positionplayer(x, y, exact) {
 }
 
 
+/*
+    moveplayer(dir)
+
+    subroutine to move the player from one room to another
+    returns 0 if can't move in that direction or hit a monster or on an object
+    else returns 1
+    nomove is set to 1 to stop the next move (inadvertent monsters hitting
+    players when walking into walls) if player walks off screen or into wall
+ */
+function moveplayer(xdir, ydir) {
+  var prayed;
+
+  if (player.CONFUSE > 0) {
+    if (plater.level.depth < rnd(30)) {
+      xdir = rnd(3) - 2; /*if confused any dir*/
+      ydir = rnd(3) - 2;
+    }
+  }
+
+  var k = player.x + xdir;
+  var m = player.y + ydir;
+  if (k < 0 || k >= MAXX || m < 0 || m >= MAXY) {
+    nomove = 1;
+    yrepcount = 0;
+    return (0);
+  }
+  var item = player.level.items[k][m];
+  var monster = player.level.monsters[k][m];
+
+  /* prevent the player from moving onto a wall, or a closed door when
+     in command mode, unless the character has Walk-Through-Walls.
+   */
+  if ((item.matches(OCLOSEDDOOR) && !prompt_mode) || (item.matches(OWALL)) && player.WTW <= 0) {
+    nomove = 1;
+    yrepcount = 0;
+    return (0);
+  }
+
+  if (item.matches(OHOMEENTRANCE)) {
+    updateLog("Going to Home Level");
+    newcavelevel(0);
+    moveNear(OENTRANCE, false);
+    return 0;
+  }
+
+  /* hit a monster
+   */
+  if (monster != null) {
+    hitmonster(k, m);
+    yrepcount = 0;
+    return (0);
+  }
+
+  /* check for the player ignoring an altar when in command mode.
+   */
+  if ((!prompt_mode) &&
+    (itemAt(player.x, player.y).matches(OALTAR)) &&
+    (!prayed)) {
+    updateLog("You have ignored the altar!");
+    act_ignore_altar();
+  }
+  prayed = 0;
+
+  lastpx = player.x;
+  lastpy = player.y;
+  player.x = k;
+  player.y = m;
+
+  // TODO: JRP NOT IN ORIGINAL CODE
+  // stop running when hitting an object
+  if (!itemAt(k,m).matches(OEMPTY)) {
+    yrepcount = 0;
+    return (0);
+  }
+
+  if (!item.matches(OTRAPARROWIV) && !item.matches(OIVTELETRAP) && //
+    !item.matches(OIVDARTRAP) && !item.matches(OIVTRAPDOOR)) {
+    yrepcount = 0;
+    return (1);
+  } else {
+    return (1);
+  }
+}
+
+function run(xdir, ydir) {
+  var i = 1;
+  while (i == 1) {
+    i = moveplayer(xdir, ydir);
+    if (i > 0) {
+      if (player.HASTEMONST > 0) {
+        movemonst();
+      }
+      movemonst();
+      randmonst();
+      regen();
+    }
+    if (hitflag == 1) {
+      i = 0;
+    }
+    if (i != 0) {
+      //showcell(playerx, playery); // TODO?
+    }
+  }
+}
+
+
+function randmonst() {
+  //debug("TODO: larn.randmonst()");
+};
+
+function regen() {
+  //debug("TODO: larn.regen()");
+}
+
+
 // move near an item, or on top of it if possible
 function moveNear(item, exact) {
   // find the item
@@ -73,10 +187,8 @@ function canMove(x, y) {
   if (y < 0) return false;
   if (y >= MAXY) return false;
 
-  if (DEBUG_WALK_THROUGH_WALLS) return true;
-
   var item = player.level.items[x][y];
-  if (isItem(x, y, OWALL) /*|| player.level.monsters[x][y] != null*/) {
+  if (isItem(x, y, OWALL) /*|| player.level.monsters[x][y] != null*/ ) {
     return false;
   } else {
     return true;
@@ -88,13 +200,12 @@ var Larn = {
   run: function() {
     document.onkeypress = this.keyPress;
     document.onkeydown = this.keyDown;
-  //  document.onkeyup = this.keyUp;
+    //document.onkeyup = this.keyUp;
 
     player.x = rnd(MAXX - 2);
     player.y = rnd(MAXY - 2);
 
     updateLog("Welcome to Larn"); // need to initialize the log
-
 
     player.inventory[0] = createObject(ODAGGER);
     player.inventory[1] = createObject(OLEATHER);

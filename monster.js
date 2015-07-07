@@ -209,11 +209,6 @@ const monsterlist = [
 const VAMPIRE = monsterlist[38];
 const BAT = monsterlist[1];
 
-var yrepcount = 0;
-var hitflag = 0;
-var hit2flag = 0;
-var hit3flag = 0;
-
 
 /*
  *  hitplayer(x,y)      Function for the monster to hit the player from (x,y)
@@ -298,7 +293,7 @@ function hitplayer(x, y) {
  */
 function hitmonster(x, y) {
   var monster = player.level.monsters[x][y];
-  var hitflag = false;
+  hitflag = 0;
   var damage = 0;
 
   //extern char lastmonst[];
@@ -314,7 +309,7 @@ function hitmonster(x, y) {
   var tmp = monster.armorclass + player.LEVEL + player.DEXTERITY + player.WCLASS / 4 - 12;
   if ((rnd(20) < tmp - player.HARDGAME) || (rnd(71) < 5)) /* need at least random chance to hit */ {
     updateLog("You hit");
-    hitflag = true;
+    hitflag = 1;
     damage = fullhit(1);
     if (damage < 9999) damage = rnd(damage) + 1;
   } else {
@@ -322,7 +317,7 @@ function hitmonster(x, y) {
     hitflag = 0;
   }
   appendLog(" the " + (blind ? "monster" : monster.name));
-  if (hitflag) /* if the monster was hit */
+  if (hitflag == 1) /* if the monster was hit */
     if ((monster.id == "RUSTMONSTER") || (monster.id == "DISENCHANTRESS") || (monster.id == "CUBE"))
       debug("TODO: monster.hitmonster(): dull weapon: " + monster.id);
     //   if (player.WIELD >= 0)
@@ -346,7 +341,7 @@ function hitmonster(x, y) {
     //           break;
     //       }
     //     }
-  if (hitflag) hitm(x, y, damage);
+  if (hitflag == 1) hitm(x, y, damage);
   if (monster.id == "VAMPIRE")
     if (monster.hitpoints < 25) {
       player.level.monster[x][y] = new Monster(BAT);
