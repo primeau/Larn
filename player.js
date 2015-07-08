@@ -192,7 +192,7 @@ var Player = {
       subroutine to gain maximum hit points
    */
   raisehp: function(x) {
-    this.hp = Math.min(this.HP + x, this.HPMAX);
+    this.HP = Math.min(this.HP + x, this.HPMAX);
   },
 
   raisemhp: function(x) {

@@ -143,7 +143,7 @@ function quaffpotion(potion, set_known) {
       if (player.HP == player.HPMAX) {
         player.raisemhp(1);
       } else {
-        player.raisehp(rnd(20) + 20 + player.level);
+        player.raisehp(rnd(20) + 20 + player.LEVEL);
       }
       updateLog("You feel better");
       break;
