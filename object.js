@@ -38,6 +38,7 @@ const OPLATEARMOR = new Item("OPLATEARMOR", "]", "plate armor");
 const OSSPLATE = new Item("OSSPLATE", "]", "stainless plate armor");
 
 const OCLOSEDDOOR = new Item("OCLOSEDDOOR", "D", "a closed door");
+const OOPENDOOR = new Item("OOPENDOOR", "0", "an open door");
 const OALTAR = new Item("OALTAR", "A", "a holy altar");
 const OTRAPARROWIV = new Item("OTRAPARROWIV", ".", "an arrow trap");
 const OIVTELETRAP = new Item("OIVTELETRAP", ".", "a teleport trap");
@@ -111,6 +112,9 @@ function createObject(item, arg) {
   newItem.desc = item.desc;
   if (arg != null) {
     newItem.arg = arg;
+  } else {
+    if (item.arg != null)
+      newItem.arg = item.arg;
   }
   return newItem;
 }
@@ -125,6 +129,16 @@ function isItem(x, y, compareItem) {
 }
 
 function itemAt(x, y) {
+  //console.log(xy(x,y));
+  if (x == null || y == null) {
+    return null;
+  }
+  if (x < 0 || x > MAXX - 1) {
+    return null;
+  }
+  if (y < 0 || y > MAXX - 1) {
+    return null;
+  }
   var item = player.level.items[x][y];
   // if (item.id == OPOTION.id) {
   //   return item;

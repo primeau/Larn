@@ -26,6 +26,8 @@ var Level = {
           // this.items[x][y] = createObject(OWALL); //
           // this.items[x][y] = OWALL; // TODO: this is what I should do
           this.items[x][y] = wall; // TODO
+        } else if (mazeTemplate[x][y] == "D") {
+          this.items[x][y] = createObject(OCLOSEDDOOR, rnd(30));
         } else {
           // this.items[x][y] = createObject(OEMPTY);
           // this.items[x][y] = OEMPTY; // TODO

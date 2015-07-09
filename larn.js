@@ -58,7 +58,15 @@ function positionplayer(x, y, exact) {
     nomove is set to 1 to stop the next move (inadvertent monsters hitting
     players when walking into walls) if player walks off screen or into wall
  */
-function moveplayer(xdir, ydir) {
+
+ const diroffx = [ 0,  0, 1,  0, -1,  1, -1, 1, -1 ];
+ const diroffy = [ 0,  1, 0, -1,  0, -1, -1, 1,  1 ];
+
+/*  from = present room #  direction =
+        [1-north] [2-east] [3-south] [4-west]
+        [5-northeast] [6-northwest] [7-southeast] [8-southwest]
+        if direction=0, don't move--just show where he is */
+function moveplayer(dir) {
   var prayed;
 
   if (player.CONFUSE > 0) {
@@ -68,8 +76,8 @@ function moveplayer(xdir, ydir) {
     }
   }
 
-  var k = player.x + xdir;
-  var m = player.y + ydir;
+  var k = player.x + diroffx[dir];
+  var m = player.y + diroffy[dir];
   if (k < 0 || k >= MAXX || m < 0 || m >= MAXY) {
     nomove = 1;
     yrepcount = 0;
@@ -133,10 +141,10 @@ function moveplayer(xdir, ydir) {
   }
 }
 
-function run(xdir, ydir) {
+function run(dir) {
   var i = 1;
   while (i == 1) {
-    i = moveplayer(xdir, ydir);
+    i = moveplayer(dir);
     if (i > 0) {
       if (player.HASTEMONST > 0) {
         movemonst();

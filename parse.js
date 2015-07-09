@@ -6,6 +6,7 @@ var wait_for_drop_input = false;
 var take_ignore_item = false;
 var wait_for_wield_input = false;
 var wait_for_wear_input = false;
+var wait_for_open_input = false;
 
 const ESC = 27;
 
@@ -34,7 +35,7 @@ function preParseEvent(e, keyDown, keyUp) {
 
 function parseEvent(e) {
 
-nomove = 0;
+  nomove = 0;
 
   var code = e.which;
   var key = String.fromCharCode(code);
@@ -66,6 +67,10 @@ nomove = 0;
     wear(code == ESC ? ESC : key);
     return;
   }
+  if (wait_for_open_input) {
+    open_something(parseDirectionKeys(key, code));
+    return;
+  }
 
   //
   // DROP
@@ -91,6 +96,18 @@ nomove = 0;
     return;
   }
 
+  //
+  // OPEN
+  //
+  if (key == 'O') {
+    yrepcount = 0;
+    //    if (!prompt_mode)
+    open_something(null);
+    // else
+    //   nomove = 1;
+    return;
+  }
+
 
   /*
            ARROW KEYS           NUMPAD               KEYBOARD
@@ -104,24 +121,15 @@ nomove = 0;
   //
   // MOVE PLAYER
   //
-
-  if (key == 'y' || key == 'Y' || code == 55) { // UP,LEFT
-    e.shiftKey ? run(-1, -1) : moveplayer(-1, -1);
-  } else if (key == 'k' || key == 'K' || code == 56 || code == 38) { // UP
-    e.shiftKey ? run(0, -1) : moveplayer(0, -1);
-  } else if (key == 'u' || key == 'U' || code == 57) { // UP,RIGHT
-    e.shiftKey ? run(1, -1) : moveplayer(1, -1);
-  } else if (key == 'h' || key == 'H' || code == 52 || code == 37) { // LEFT
-    e.shiftKey ? run(-1, 0) : moveplayer(-1, 0);
-  } else if (key == 'l' || key == 'L' || code == 54 || code == 39) { // RIGHT
-    e.shiftKey ? run(1, 0) : moveplayer(1, 0);
-  } else if (key == 'b' || key == 'B' || code == 49) { // DOWN,LEFT
-    e.shiftKey ? run(-1, 1) : moveplayer(-1, 1);
-  } else if (key == 'j' || key == 'J' || code == 50 || code == 40) { // DOWN
-    e.shiftKey ? run(0, 1) : moveplayer(0, 1);
-  } else if (key == 'n' || key == 'N' || code == 51) { // DOWN, RIGHT
-    e.shiftKey ? run(1, 1) : moveplayer(1, 1);
+  var dir = parseDirectionKeys(key, code);
+  if (dir > 0) {
+    if (e.shiftKey) {
+      run(dir);
+    } else {
+      moveplayer(dir);
+    }
   }
+
 
   //
   // UP LEVEL
@@ -201,6 +209,7 @@ nomove = 0;
   } else if (key == 'g') { // GO INSIDE DUNGEON
   } else if (key == 'C') { // CLIMB IN/OUT OF VOLCANO
 
+
     //
     // DEBUGGING SHORTCUTS
     //
@@ -259,9 +268,9 @@ nomove = 0;
   if (prompt_mode)
     lookforobject(true, false, true);
   //else
-      //lookforobject( true, ( auto_pickup && !move_no_pickup ), false);
+  //lookforobject( true, ( auto_pickup && !move_no_pickup ), false);
   //else
-      //dropflag=0; /* don't show it just dropped an item */
+  //dropflag=0; /* don't show it just dropped an item */
 
 
   if (nomove == 0) {
@@ -270,3 +279,63 @@ nomove = 0;
   player.level.paint();
 
 } // KEYPRESS
+
+
+// /*
+//  *  dirsub(x,y)      Routine to ask for direction, then modify playerx,
+//  *                   playery for it
+//  *      int *x,*y;
+//  *
+//  *  Function to ask for a direction and modify an x,y for that direction
+//  *  Enter with the coordinate destination (x,y).
+//  *  Returns index into diroffx[] (0-8).
+//  */
+// function dirsub(direction) {
+//
+//   if (direction == null || direction < 0) {
+//     updateLog("In What Direction? ");
+//     wait_for_direction = true;
+//     return;
+//   }
+//
+//   var x = player.x + diroffx[direction];
+//   var y = player.y + diroffy[direction];
+//   var item = itemAt(x, y);
+//
+//   if (item != null) {
+//     wait_for_direction = false;
+//     return direction;
+//   }
+//
+//   updateLog("TODO: parse.dirsub()");
+//   // * x = playerx + diroffx[i]; * y = playery + diroffy[i];
+//   // vxy(x, y);
+//   // return (i);
+// }
+
+
+//const diroffx = { 0,  0, 1,  0, -1,  1, -1, 1, -1 };
+//const diroffy = { 0,  1, 0, -1,  0, -1, -1, 1,  1 };
+
+function parseDirectionKeys(key, code) {
+  var dir = 0;
+  if (key == 'y' || key == 'Y' || code == 55) { // UP,LEFT
+    dir = 6;
+  } else if (key == 'k' || key == 'K' || code == 56 || code == 38) { // NORTH
+    dir = 3;
+  } else if (key == 'u' || key == 'U' || code == 57) { // UP,RIGHT
+    dir = 5;
+  } else if (key == 'h' || key == 'H' || code == 52 || code == 37) { // LEFT
+    dir = 4;
+  } else if (key == 'l' || key == 'L' || code == 54 || code == 39) { // RIGHT
+    dir = 2;
+  } else if (key == 'b' || key == 'B' || code == 49) { // DOWN,LEFT
+    dir = 8;
+  } else if (key == 'j' || key == 'J' || code == 50 || code == 40) { // DOWN
+    dir = 1;
+  } else if (key == 'n' || key == 'N' || code == 51) { // DOWN, RIGHT
+    dir = 7;
+  }
+  return dir;
+
+}
