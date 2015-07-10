@@ -255,6 +255,9 @@ function parse2() {
 
 
 function updateLog(text) {
+  if (DEBUG_OUTPUT) {
+    console.log(`LARN: ${text}`);
+  }
   LOG.push(text);
   if (LOG.length > LOG_SIZE) {
     LOG.shift();

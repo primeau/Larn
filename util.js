@@ -29,7 +29,7 @@ function xy(x, y) {
 function debug(text) {
   if (DEBUG_OUTPUT) {
     console.log(`DEBUG: ${text}`);
-    updateLog(`DEBUG: ${text}`);
+    //updateLog(`DEBUG: ${text}`);
   }
 }
 

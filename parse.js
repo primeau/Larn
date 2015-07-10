@@ -7,6 +7,7 @@ var take_ignore_item = false;
 var wait_for_wield_input = false;
 var wait_for_wear_input = false;
 var wait_for_open_input = false;
+var wait_for_open_direction = false;
 
 const ESC = 27;
 
@@ -68,6 +69,10 @@ function parseEvent(e) {
     return;
   }
   if (wait_for_open_input) {
+    o_closed_door(code == ESC ? ESC : key);
+    return;
+  }
+  if (wait_for_open_direction) {
     open_something(parseDirectionKeys(key, code));
     return;
   }
@@ -97,12 +102,24 @@ function parseEvent(e) {
   }
 
   //
-  // OPEN
+  // OPEN (in a direction)
   //
   if (key == 'O') {
     yrepcount = 0;
     //    if (!prompt_mode)
     open_something(null);
+    // else
+    //   nomove = 1;
+    return;
+  }
+
+  //
+  // OPEN (in a direction)
+  //
+  if (key == 'o') {
+    yrepcount = 0;
+    //    if (!prompt_mode)
+    o_closed_door(null);
     // else
     //   nomove = 1;
     return;

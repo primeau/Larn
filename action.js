@@ -9,7 +9,6 @@
 */
 function act_open_door(x, y) {
   if (rnd(11) < 7) {
-    console.log("foo!" + itemAt(x, y).arg);
     switch (itemAt(x, y).arg) {
       case 6:
         player.AGGRAVATE += rnd(400);

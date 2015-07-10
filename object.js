@@ -73,6 +73,8 @@ var Item = {
       if (isKnownScroll(this) || DEBUG_KNOW_ALL) {
         description += " of " + scrollname[this.arg];
       }
+    } else if (this.matches(OOPENDOOR) || this.matches(OCLOSEDDOOR)) {
+      // do nothing
     }
     //
     else {
@@ -129,14 +131,13 @@ function isItem(x, y, compareItem) {
 }
 
 function itemAt(x, y) {
-  //console.log(xy(x,y));
   if (x == null || y == null) {
     return null;
   }
-  if (x < 0 || x > MAXX - 1) {
+  if (x < 0 || x >= MAXX) {
     return null;
   }
-  if (y < 0 || y > MAXX - 1) {
+  if (y < 0 || y >= MAXY) {
     return null;
   }
   var item = player.level.items[x][y];
@@ -227,6 +228,16 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_ident)
       updateLog("You are standing in front of a statue");
     return;
+  } else if (isItem(player.x, player.y, OOPENDOOR)) {
+    if (do_ident)
+      updateLog("\nYou have found " + item);
+    if (do_action)
+      o_open_door();
+  } else if (isItem(player.x, player.y, OCLOSEDDOOR)) {
+    if (do_ident)
+      updateLog("\nYou have found " + item);
+    if (do_action)
+      o_closed_door();
   }
   // base case
   else if ( // this is a bit hacky, but we don't want to pick these up!
@@ -297,8 +308,6 @@ function oitem(item_or_key) {
 }
 
 
-
-
 function opit() {
   if (rnd(101) < 81) {
     if (rnd(70) > 9 * player.DEXTERITY - player.packweight() || rnd(101) < 5) {
@@ -323,6 +332,7 @@ function opit() {
   }
 }
 
+
 function obottomless() {
   updateLog("You fell into a bottomless pit!");
   beep();
@@ -330,11 +340,51 @@ function obottomless() {
   died(262);
 }
 
+
 function nearbymonst() {
   debug("TODO: nearbymonst()");
   return false;
 }
 
+
 function forget() {
   player.level.items[player.x][player.y] = createObject(OEMPTY);
+}
+
+
+function o_closed_door(key) {
+  if (wait_for_open_input == false) {
+    updateLog("Do you (o) try to open it, or (i) ignore it?");
+    wait_for_open_input = true; // signal to parse function
+    return;
+  }
+  var item = itemAt(player.x, player.y);
+  if (item == null) {
+    debug("o_closed_door(): couldn't find it!");
+    player.x = lastpx;
+    player.y = lastpy;
+    wait_for_open_input = false;
+    player.level.paint();
+    return;
+  }
+  switch (key) {
+    case ESC:
+    case 'i':
+      updateLog("ignore");
+      player.x = lastpx;
+      player.y = lastpy;
+      wait_for_open_input = false;
+      player.level.paint();
+      return;
+
+    case 'o':
+      updateLog("open");
+      if (act_open_door(player.x, player.y) == 0) {
+        player.x = lastpx;
+        player.y = lastpy;
+      }
+      wait_for_open_input = false;
+      player.level.paint();
+      return;
+  }
 }

@@ -31,13 +31,13 @@ function open_something(direction) {
 
   if (direction == null) {
     updateLog("In What Direction? ");
-    wait_for_open_input = true;
+    wait_for_open_direction = true;
     return;
   }
 
   if (direction == 0) {
     updateLog("");
-    wait_for_open_input = false;
+    wait_for_open_direction = false;
     return false;
   }
 
@@ -48,14 +48,14 @@ function open_something(direction) {
 
   if (item == null) {
     updateLog("There is nothing to open!");
-    wait_for_open_input = false;
+    wait_for_open_direction = false;
     return;
   }
 
   if (item.matches(OOPENDOOR)) {
     updateLog("The door is already open!");
     beep();
-    wait_for_open_input = false;
+    wait_for_open_direction = false;
     return false;
   }
   // case OCHEST:
@@ -63,13 +63,13 @@ function open_something(direction) {
   //   break;
   else if (item.matches(OCLOSEDDOOR)) {
     act_open_door(x, y);
-    wait_for_open_input = false;
+    wait_for_open_direction = false;
     return true;
 
   } else {
     updateLog("You can't open that!");
     beep();
-    wait_for_open_input = false;
+    wait_for_open_direction = false;
     return false;
   }
 
