@@ -12,6 +12,47 @@ var DEBUG_OUTPUT = false;
 var DEBUG_STAIRS_EVERYWHERE = false;
 var DEBUG_KNOW_ALL = false;
 
+
+var Larn = {
+  run: function() {
+    document.onkeypress = this.keyPress;
+    document.onkeydown = this.keyDown;
+    //document.onkeyup = this.keyUp;
+
+    player.x = rnd(MAXX - 2);
+    player.y = rnd(MAXY - 2);
+
+    updateLog("Welcome to Larn"); // need to initialize the log
+
+    player.inventory[0] = createObject(ODAGGER);
+    player.inventory[1] = createObject(OLEATHER);
+    player.WIELD = player.inventory[0];
+    player.WEAR = player.inventory[1];
+
+    newcavelevel(0);
+
+  },
+
+  // http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
+  keyPress: function(e) {
+    e = e || window.event;
+    preParseEvent(e, false, false);
+  }, // KEYPRESS
+
+  keyDown: function(e) {
+    e = e || window.event;
+    preParseEvent(e, true, false);
+  }, // KEYDOWN
+
+  keyUp: function(e) {
+    e = e || window.event;
+    preParseEvent(e, false, true);
+  }, // KEYUP
+
+}; // LARN OBJECT
+
+
+
 function positionplayer(x, y, exact) {
   // short circuit for moving to exact location
   var distance = 0;
@@ -202,45 +243,6 @@ function canMove(x, y) {
     return true;
   }
 }
-
-
-var Larn = {
-  run: function() {
-    document.onkeypress = this.keyPress;
-    document.onkeydown = this.keyDown;
-    //document.onkeyup = this.keyUp;
-
-    player.x = rnd(MAXX - 2);
-    player.y = rnd(MAXY - 2);
-
-    updateLog("Welcome to Larn"); // need to initialize the log
-
-    player.inventory[0] = createObject(ODAGGER);
-    player.inventory[1] = createObject(OLEATHER);
-    player.WIELD = player.inventory[0];
-    player.WEAR = player.inventory[1];
-
-    newcavelevel(0);
-
-  },
-
-  // http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
-  keyPress: function(e) {
-    e = e || window.event;
-    preParseEvent(e, false, false);
-  }, // KEYPRESS
-
-  keyDown: function(e) {
-    e = e || window.event;
-    preParseEvent(e, true, false);
-  }, // KEYDOWN
-
-  keyUp: function(e) {
-    e = e || window.event;
-    preParseEvent(e, false, true);
-  }, // KEYUP
-
-}; // LARN OBJCT
 
 
 function parse2() {

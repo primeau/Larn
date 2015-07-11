@@ -58,51 +58,30 @@ function newscroll() {
 /*
  * function to process a potion. or a keypress related
  */
-function oscroll(scroll_or_key) {
-  var scroll;
-  var key;
-  if (scroll_or_key instanceof Item.constructor) {
-    scroll = scroll_or_key;
-    //debug("oscroll(): got scroll: " + scroll.desc);
-  } else {
-    key = scroll_or_key;
-    //debug("oscroll(): got key: " + key);
-  }
-  if (read_take_ignore_scroll == false) {
-    updateLog("Do you (r) read it, (t) take it, or (i) ignore it?");
-    read_take_ignore_scroll = true; // signal to parse function
+function oscroll(key) {
+  var scroll = itemAt(player.x, player.y);
+  if (scroll == null) {
+    debug("oscroll: couldn't find it!");
     return;
-  } else {
-    var scroll = itemAt(player.x, player.y);
-    if (scroll == null) {
-      debug("oscroll: couldn't find it!");
-      read_take_ignore_scroll = false;
-      return;
-    }
-    switch (key) {
-      // TODO don't allow reading scrolls if blind!
-      case ESC:
-      case 'i':
-        updateLog("ignore");
-        read_take_ignore_scroll = false;
-        return;
-
-      case 'r':
-        updateLog("read");
-        forget(); /* destroy scroll  */
-        read_scroll(scroll);
-        read_take_ignore_scroll = false;
-        return;
-
-      case 't':
-        updateLog("take");
-        if (take(scroll)) {
-          forget(); // remove from board
-        }
-        read_take_ignore_scroll = false;
-        return;
-    };
   }
+  switch (key) {
+    // TODO don't allow reading scrolls if blind!
+    case ESC:
+    case 'i':
+      updateLog("ignore");
+      return;
+    case 'r':
+      updateLog("read");
+      forget(); /* destroy scroll  */
+      read_scroll(scroll);
+      return;
+    case 't':
+      updateLog("take");
+      if (take(scroll)) {
+        forget(); // remove from board
+      }
+      return;
+  };
 }
 
 /*

@@ -6,7 +6,6 @@ var wait_for_drop_input = false;
 var take_ignore_item = false;
 var wait_for_wield_input = false;
 var wait_for_wear_input = false;
-var wait_for_open_input = false;
 var wait_for_open_direction = false;
 
 const ESC = 27;
@@ -33,6 +32,8 @@ function preParseEvent(e, keyDown, keyUp) {
   }
 }
 
+var blocking_callback;
+var non_blocking_callback;
 
 function parseEvent(e) {
 
@@ -43,6 +44,23 @@ function parseEvent(e) {
 
   var newx = player.x;
   var newy = player.y;
+
+  if (blocking_callback != null) {
+    let done = blocking_callback(code == ESC ? ESC : key);
+    player.level.paint();
+    if (done) {
+      blocking_callback = null;
+    }
+    return;
+  }
+
+  if (non_blocking_callback != null) {
+    non_blocking_callback(code == ESC ? ESC : key);
+    non_blocking_callback = null;
+    player.level.paint();
+  }
+
+
 
   if (drink_take_ignore_potion) {
     opotion(code == ESC ? ESC : key);
@@ -66,10 +84,6 @@ function parseEvent(e) {
   }
   if (wait_for_wear_input) {
     wear(code == ESC ? ESC : key);
-    return;
-  }
-  if (wait_for_open_input) {
-    o_closed_door(code == ESC ? ESC : key);
     return;
   }
   if (wait_for_open_direction) {

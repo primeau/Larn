@@ -195,15 +195,10 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OSCROLL)) {
     if (do_ident) {
-      updateLog("You have found " + item);
-    }
-    if (do_pickup) {
-      if (take(item)) {
-        forget();
-      }
+      updateLog(`You have found ${item}: (r) read or (t) take`);
     }
     if (do_action) {
-      oscroll(item);
+      non_blocking_callback = oscroll;
     }
     return;
   }
@@ -229,15 +224,22 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog("You are standing in front of a statue");
     return;
   } else if (isItem(player.x, player.y, OOPENDOOR)) {
-    if (do_ident)
-      updateLog("\nYou have found " + item);
-    if (do_action)
-      o_open_door();
+    if (do_ident) {
+      updateLog(`You have found ${item} (c) close`);
+    }
+    if (do_action) {
+      non_blocking_callback = o_open_door;
+    }
+    return;
   } else if (isItem(player.x, player.y, OCLOSEDDOOR)) {
-    if (do_ident)
-      updateLog("\nYou have found " + item);
-    if (do_action)
-      o_closed_door();
+    if (do_ident) {
+      updateLog("You have found " + item);
+      updateLog("Do you (o) try to open it, or (i) ignore it?");
+    }
+    if (do_action) {
+      blocking_callback = o_closed_door;
+    }
+    return;
   }
   // base case
   else if ( // this is a bit hacky, but we don't want to pick these up!
@@ -352,20 +354,34 @@ function forget() {
 }
 
 
-function o_closed_door(key) {
-  if (wait_for_open_input == false) {
-    updateLog("Do you (o) try to open it, or (i) ignore it?");
-    wait_for_open_input = true; // signal to parse function
-    return;
+function o_open_door(key) {
+  var item = itemAt(player.x, player.y);
+  if (item == null) {
+    debug("o_open_door(): couldn't find it!");
+    return true;
   }
+  switch (key) {
+    case ESC:
+    case 'i':
+      updateLog("ignore");
+      return true;
+    case 'c':
+      updateLog("close");
+      player.level.items[player.x][player.y] = createObject(OCLOSEDDOOR, 0);
+      player.x = lastpx;
+      player.y = lastpy;
+      player.level.paint();
+      return true;
+  }
+}
+
+function o_closed_door(key) {
   var item = itemAt(player.x, player.y);
   if (item == null) {
     debug("o_closed_door(): couldn't find it!");
     player.x = lastpx;
     player.y = lastpy;
-    wait_for_open_input = false;
-    player.level.paint();
-    return;
+    return true;
   }
   switch (key) {
     case ESC:
@@ -373,18 +389,14 @@ function o_closed_door(key) {
       updateLog("ignore");
       player.x = lastpx;
       player.y = lastpy;
-      wait_for_open_input = false;
-      player.level.paint();
-      return;
-
+      return true;
     case 'o':
       updateLog("open");
-      if (act_open_door(player.x, player.y) == 0) {
+      let success = act_open_door(player.x, player.y) == 1;
+      if (!success) {
         player.x = lastpx;
         player.y = lastpy;
       }
-      wait_for_open_input = false;
-      player.level.paint();
-      return;
+      return true;
   }
 }
