@@ -86,7 +86,8 @@ var Player = {
   // FILLROOM:
   // RANDOMWALK:
   // SPHCAST:    /* nz if an active sphere of annihilation */
-  WTW: 0,        /* walk through walls */
+  WTW: 0,
+  /* walk through walls */
   STREXTRA: 0,
   /* character strength due to objects or enchantments */
   // TMP:        /* misc scratch space */
@@ -397,52 +398,72 @@ function ifblind(x, y) {
     function to wield a weapon
  */
 function wield(index) {
-  if (index == null) {
-    updateLog("What do you want to wield (- for nothing) [* for all] ?");
-    wait_for_wield_input = true;
-    return;
+
+  var item = itemAt(player.x, player.y);
+
+  // player is over a weapon
+  if (item.isWeapon()) {
+    switch (index) {
+      case ESC:
+      case 'i':
+        updateLog("ignore");
+        return;
+      case 'w':
+        updateLog("wield");
+        if (take(item)) {
+          forget(); // remove from board
+        }
+        break; // code lower down will do the rest
+      case 't':
+        updateLog("take");
+        if (take(item)) {
+          forget(); // remove from board
+        }
+        return;
+    };
   }
+  // player hit 'w'
+  else {
+    //debug("wield(): " + index);
 
-  //debug("wield(): " + index);
-
-  if (index == ESC) {
-    updateLog("");
-    wait_for_wield_input = false;
-    return false;
-  }
-
-  if (index == '*') {
-    // TODO
-    // i = showwield();
-    // cursors();
-  }
-
-  var startcode = "a".charCodeAt(0);
-  var code = index.charCodeAt(0);
-  var wieldIndex = code - startcode;
-
-  debug("wield: " + wieldIndex);
-
-  var item = player.inventory[wieldIndex];
-
-  debug("wield(): trying to wield " + item);
-
-  if (item == null) {
-    if (wieldIndex >= 0 && wieldIndex < 26) {
-      updateLog("You don't have item " + index + "!");
+    if (index == ESC) {
+      updateLog("");
+      return false;
     }
-    wait_for_wield_input = false;
-    return;
+
+    if (index == '*') {
+      // TODO
+      // i = showwield();
+      // cursors();
+    }
+
+    var startcode = "a".charCodeAt(0);
+    var code = index.charCodeAt(0);
+    var wieldIndex = code - startcode;
+
+    debug("wield: " + wieldIndex);
+
+    item = player.inventory[wieldIndex];
+
+    debug("wield(): trying to wield " + item);
+
+    if (item == null) {
+      if (wieldIndex >= 0 && wieldIndex < 26) {
+        updateLog("You don't have item " + index + "!");
+      }
+      return;
+    }
+
+    if (item.matches(OPOTION) || item.matches(OSCROLL)) {
+      updateLog("You can't wield that!");
+      return;
+    }
+
   }
 
-  if (item.matches(OPOTION) || item.matches(OSCROLL)) {
-    updateLog("You can't wield that!");
-    wait_for_wield_input = false;
-    return;
-  }
+  // common cases for both
   if (player.SHIELD != null && item.matches(O2SWORD)) {
     updateLog("But one arm is busy with your shield!");
-    wait_for_wield_input = false;
     return;
   }
 
@@ -450,7 +471,6 @@ function wield(index) {
     // TODO
     // player.WIELD = null;
     // bottomline();
-    // wait_for_wield_input = false;
     // recalc(); // JRP added
     // return;
   }
@@ -463,7 +483,6 @@ function wield(index) {
   }
 
   player.level.paint();
-  wait_for_wield_input = false;
   return;
 }
 

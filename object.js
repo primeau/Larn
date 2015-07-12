@@ -93,6 +93,23 @@ var Item = {
     return description;
   },
 
+  isWeapon: function() {
+    var weapon = false;
+    weapon |= this.matches(ODAGGER);
+    weapon |= this.matches(OBELT);
+    weapon |= this.matches(OSHIELD);
+    weapon |= this.matches(OSPEAR);
+    weapon |= this.matches(OFLAIL);
+    weapon |= this.matches(OBATTLEAXE);
+    weapon |= this.matches(OLANCE);
+    weapon |= this.matches(OLONGSWORD);
+    weapon |= this.matches(O2SWORD);
+    weapon |= this.matches(OSWORD);
+    weapon |= this.matches(OSWORDofSLASHING);
+    weapon |= this.matches(OHAMMER);
+    return weapon;
+  },
+
 }
 
 function Item(id, char, desc, arg) {
@@ -166,11 +183,11 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   var item = player.level.items[player.x][player.y];
 
-  if (isItem(player.x, player.y, OEMPTY)) {
+  if (item.matches(OEMPTY)) {
     return;
   }
   //
-  else if (isItem(player.x, player.y, OGOLDPILE)) {
+  else if (item.matches(OGOLDPILE)) {
     updateLog("You have found some gold!");
     updateLog("It is worth " + item.arg + "!");
     player.GOLD += item.arg;
@@ -180,15 +197,10 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OPOTION)) {
     if (do_ident) {
-      updateLog("You have found " + item);
-    }
-    if (do_pickup) {
-      if (take(item)) {
-        forget();
-      }
+      updateLog(`You have found ${item}: (q) quaff or (t) take`);
     }
     if (do_action) {
-      opotion(item);
+      non_blocking_callback = opotion;
     }
     return;
   }
@@ -203,13 +215,13 @@ function lookforobject(do_ident, do_pickup, do_action) {
     return;
   }
   //
-  else if (isItem(player.x, player.y, OPIT)) {
+  else if (item.matches(OPIT)) {
     updateLog("You're standing at the top of a pit");
     opit();
     return;
   }
   //
-  else if (isItem(player.x, player.y, OMIRROR)) {
+  else if (item.matches(OMIRROR)) {
     if (nearbymonst())
       return;
     if (do_ident)
@@ -217,13 +229,13 @@ function lookforobject(do_ident, do_pickup, do_action) {
     return;
   }
   //
-  else if (isItem(player.x, player.y, OSTATUE)) {
+  else if (item.matches(OSTATUE)) {
     if (nearbymonst())
       return;
     if (do_ident)
       updateLog("You are standing in front of a statue");
     return;
-  } else if (isItem(player.x, player.y, OOPENDOOR)) {
+  } else if (item.matches(OOPENDOOR)) {
     if (do_ident) {
       updateLog(`You have found ${item} (c) close`);
     }
@@ -231,7 +243,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
       non_blocking_callback = o_open_door;
     }
     return;
-  } else if (isItem(player.x, player.y, OCLOSEDDOOR)) {
+  } else if (item.matches(OCLOSEDDOOR)) {
     if (do_ident) {
       updateLog("You have found " + item);
       updateLog("Do you (o) try to open it, or (i) ignore it?");
@@ -240,7 +252,16 @@ function lookforobject(do_ident, do_pickup, do_action) {
       blocking_callback = o_closed_door;
     }
     return;
+  } else if (item.isWeapon()) {
+    if (do_ident) {
+      updateLog(`You have found ${item}: (w) wield or (t) take`);
+    }
+    if (do_action) {
+      non_blocking_callback = wield;
+    }
+    return;
   }
+
   // base case
   else if ( // this is a bit hacky, but we don't want to pick these up!
     !isItem(player.x, player.y, OWALL) && //

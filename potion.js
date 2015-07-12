@@ -62,51 +62,31 @@ function newpotion() {
 /*
  * function to process a potion. or a keypress related
  */
-function opotion(potion_or_key) {
-  var potion;
-  var key;
-  if (potion_or_key instanceof Item.constructor) {
-    potion = potion_or_key;
-    //debug("opotion(): got potion: " + potion);
-  }
-  else {
-    key = potion_or_key;
-    //debug("opotion(): got key: " + key);
-  }
-  if (drink_take_ignore_potion == false) {
-    updateLog("Do you (d) drink it, (t) take it, or (i) ignore it?");
-    drink_take_ignore_potion = true; // signal to parse function
+function opotion(key) {
+  var potion = itemAt(player.x, player.y);
+  if (potion == null) {
+    debug("opotion: couldn't find it!");
     return;
-  } else {
-    var potion = itemAt(player.x, player.y);
-    if (potion == null) {
-      debug("opotion: couldn't find it!");
-      drink_take_ignore_potion = false;
-      return;
-    }
-    switch (key) {
-      case ESC:
-      case 'i':
-        updateLog("ignore");
-        drink_take_ignore_potion = false;
-        return;
-
-      case 'd':
-        updateLog("drink");
-        forget(); /* destroy potion  */
-        quaffpotion(potion, true);
-        drink_take_ignore_potion = false;
-        return;
-
-      case 't':
-        updateLog("take");
-        if (take(potion)) {
-          forget(); // remove from board
-        }
-        drink_take_ignore_potion = false;
-        return;
-    };
   }
+  switch (key) {
+    case ESC:
+    case 'i':
+      updateLog("ignore");
+      return;
+
+    case 'q':
+      updateLog("quaff");
+      forget(); /* destroy potion  */
+      quaffpotion(potion, true);
+      return;
+
+    case 't':
+      updateLog("take");
+      if (take(potion)) {
+        forget(); // remove from board
+      }
+      return;
+  };
 }
 
 /*
@@ -204,7 +184,7 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 9:
-    updateLog("TODO: quaffpotion(): object detection");
+      updateLog("TODO: quaffpotion(): object detection");
       // updateLog("You sense the presence of objects!");
       // nap(1000);
       // if (c[BLINDCOUNT])

@@ -1,10 +1,8 @@
 "use strict";
 
 var drink_take_ignore_potion = false;
-var read_take_ignore_scroll = false;
 var wait_for_drop_input = false;
 var take_ignore_item = false;
-var wait_for_wield_input = false;
 var wait_for_wear_input = false;
 var wait_for_open_direction = false;
 
@@ -62,24 +60,12 @@ function parseEvent(e) {
 
 
 
-  if (drink_take_ignore_potion) {
-    opotion(code == ESC ? ESC : key);
-    return;
-  }
-  if (read_take_ignore_scroll) {
-    oscroll(code == ESC ? ESC : key);
-    return;
-  }
   if (take_ignore_item) {
     oitem(code == ESC ? ESC : key);
     return;
   }
   if (wait_for_drop_input) {
     drop_object(code == ESC ? ESC : key);
-    return;
-  }
-  if (wait_for_wield_input) {
-    wield(code == ESC ? ESC : key);
     return;
   }
   if (wait_for_wear_input) {
@@ -103,7 +89,8 @@ function parseEvent(e) {
   // WIELD
   //
   if (key == 'w') {
-    wield(null);
+    updateLog("What do you want to wield (- for nothing) [* for all] ?");
+    non_blocking_callback = wield;
     return;
   }
 
@@ -289,9 +276,19 @@ function parseEvent(e) {
       player.level.items[armori++][MAXY - 1] = createObject(OPLATE);
       player.level.items[armori++][MAXY - 1] = createObject(OPLATEARMOR);
       player.level.items[armori++][MAXY - 1] = createObject(OSSPLATE);
-
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
+  } else if (key == '^') {
+    if (player.STEALTH <= 0) {
+      updateLog("DEBUG: FREEZING MONSTERS");
+      player.HOLDMONST = 100000;
+      player.STEALTH = 100000;
+    }
+    else {
+      updateLog("DEBUG: UNFREEZING MONSTERS");
+      player.HOLDMONST = 0;
+      player.STEALTH = 0;
+    }
   }
 
   hitflag = 0;
