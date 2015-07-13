@@ -3,7 +3,6 @@
 var drink_take_ignore_potion = false;
 var wait_for_drop_input = false;
 var take_ignore_item = false;
-var wait_for_wear_input = false;
 var wait_for_open_direction = false;
 
 const ESC = 27;
@@ -52,10 +51,12 @@ function parseEvent(e) {
     return;
   }
 
+  var SKIP_HACK = false;
   if (non_blocking_callback != null) {
     non_blocking_callback(code == ESC ? ESC : key);
     non_blocking_callback = null;
     player.level.paint();
+    SKIP_HACK = true;
   }
 
 
@@ -66,10 +67,6 @@ function parseEvent(e) {
   }
   if (wait_for_drop_input) {
     drop_object(code == ESC ? ESC : key);
-    return;
-  }
-  if (wait_for_wear_input) {
-    wear(code == ESC ? ESC : key);
     return;
   }
   if (wait_for_open_direction) {
@@ -89,7 +86,9 @@ function parseEvent(e) {
   // WIELD
   //
   if (key == 'w') {
-    updateLog("What do you want to wield (- for nothing) [* for all] ?");
+    if (SKIP_HACK == false) {
+      updateLog("What do you want to wield (- for nothing) [* for all] ?");
+    }
     non_blocking_callback = wield;
     return;
   }
@@ -98,7 +97,10 @@ function parseEvent(e) {
   // WEAR
   //
   if (key == 'W') {
-    wear(null);
+    if (SKIP_HACK == false) {
+      updateLog("What do you want to wear (- for nothing) [* for all] ?");
+    }
+    non_blocking_callback = wear;
     return;
   }
 
@@ -226,24 +228,28 @@ function parseEvent(e) {
 
   } else if (key == 'g') { // GO INSIDE DUNGEON
   } else if (key == 'C') { // CLIMB IN/OUT OF VOLCANO
+  }
 
-
-    //
-    // DEBUGGING SHORTCUTS
-    //
-  } else if (key == '~') {
+  //
+  // DEBUGGING SHORTCUTS
+  //
+  if (key == 'Z' || key == '~') {
     DEBUG_STATS = !DEBUG_STATS;
     updateLog("DEBUG_STATS: " + DEBUG_STATS);
-  } else if (key == '!') {
+  }
+  if (key == 'Z' || key == '!') {
     DEBUG_OUTPUT = !DEBUG_OUTPUT;
     updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
-  } else if (key == '@') {
+  }
+  if (key == 'Z' || key == '@') {
     player.WTW = player.WTW == 0 ? 100000 : 0;
     updateLog("DEBUG_WALK_THROUGH_WALLS: " + (player.WTW > 0));
-  } else if (key == '#') {
+  }
+  if (key == 'Z' || key == '#') {
     DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
     updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
-  } else if (key == '$') {
+  }
+  if (key == 'Z' || key == '$') {
     DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
     if (DEBUG_KNOW_ALL) {
       for (var potioni = 0; potioni < potionname.length; potioni++) {
@@ -278,17 +284,24 @@ function parseEvent(e) {
       player.level.items[armori++][MAXY - 1] = createObject(OSSPLATE);
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
-  } else if (key == '^') {
+  }
+  if (key == 'Z' || key == '^') {
     if (player.STEALTH <= 0) {
       updateLog("DEBUG: FREEZING MONSTERS");
       player.HOLDMONST = 100000;
       player.STEALTH = 100000;
-    }
-    else {
+    } else {
       updateLog("DEBUG: UNFREEZING MONSTERS");
       player.HOLDMONST = 0;
       player.STEALTH = 0;
     }
+  }
+  if (key == 'Z') {
+    player.level.items[player.x][player.y] = createObject(OLANCE);
+    wield('w');
+    player.level.items[player.x][player.y] = createObject(OSSPLATE, 50);
+    wear('W');
+    player.STEALTH = 0;
   }
 
   hitflag = 0;

@@ -52,65 +52,80 @@ const OIVTRAPDOOR = new Item("OIVTRAPDOOR", ".", "a trap door");
 // fundamental (doors, walls) no charaters/items
 
 var Item = {
-  id: null,
-  char: "💩",
-  desc: "",
-  arg: null,
+    id: null,
+    char: "💩",
+    desc: "",
+    arg: null,
 
-  matches: function(item) {
-    return (this.id == item.id);
-  },
+    matches: function(item) {
+      return (this.id == item.id);
+    },
 
-  toString: function() {
-    var description = this.desc;
-    if (this.matches(OPOTION)) {
-      if (isKnownPotion(this) || DEBUG_KNOW_ALL) {
-        description += " of " + potionname[this.arg];
+    toString: function() {
+      var description = this.desc;
+      if (this.matches(OPOTION)) {
+        if (isKnownPotion(this) || DEBUG_KNOW_ALL) {
+          description += " of " + potionname[this.arg];
+        }
       }
-    }
-    //
-    else if (this.matches(OSCROLL)) {
-      if (isKnownScroll(this) || DEBUG_KNOW_ALL) {
-        description += " of " + scrollname[this.arg];
+      //
+      else if (this.matches(OSCROLL)) {
+        if (isKnownScroll(this) || DEBUG_KNOW_ALL) {
+          description += " of " + scrollname[this.arg];
+        }
+      } else if (this.matches(OOPENDOOR) || this.matches(OCLOSEDDOOR)) {
+        // do nothing
       }
-    } else if (this.matches(OOPENDOOR) || this.matches(OCLOSEDDOOR)) {
-      // do nothing
-    }
-    //
-    else {
-      if (this.arg > 0) {
-        description += " +" + this.arg;
-      } else if (this.arg < 0) {
-        description += " " + this.arg;
+      //
+      else {
+        if (this.arg > 0) {
+          description += " +" + this.arg;
+        } else if (this.arg < 0) {
+          description += " " + this.arg;
+        }
+        if (this === player.WIELD) {
+          description += " (weapon in hand)"
+        }
+        if (this === player.WEAR || this === player.SHIELD) {
+          description += " (being worn)"
+        }
       }
-      if (this === player.WIELD) {
-        description += " (weapon in hand)"
-      }
-      if (this === player.WEAR || this === player.SHIELD) {
-        description += " (being worn)"
-      }
-    }
-    return description;
-  },
+      return description;
+    },
 
-  isWeapon: function() {
-    var weapon = false;
-    weapon |= this.matches(ODAGGER);
-    weapon |= this.matches(OBELT);
-    weapon |= this.matches(OSHIELD);
-    weapon |= this.matches(OSPEAR);
-    weapon |= this.matches(OFLAIL);
-    weapon |= this.matches(OBATTLEAXE);
-    weapon |= this.matches(OLANCE);
-    weapon |= this.matches(OLONGSWORD);
-    weapon |= this.matches(O2SWORD);
-    weapon |= this.matches(OSWORD);
-    weapon |= this.matches(OSWORDofSLASHING);
-    weapon |= this.matches(OHAMMER);
-    return weapon;
-  },
+    isWeapon: function() {
+      var weapon = false;
+      weapon |= this.matches(ODAGGER);
+      weapon |= this.matches(OBELT);
+      weapon |= this.matches(OSHIELD);
+      weapon |= this.matches(OSPEAR);
+      weapon |= this.matches(OFLAIL);
+      weapon |= this.matches(OBATTLEAXE);
+      weapon |= this.matches(OLANCE);
+      weapon |= this.matches(OLONGSWORD);
+      weapon |= this.matches(O2SWORD);
+      weapon |= this.matches(OSWORD);
+      weapon |= this.matches(OSWORDofSLASHING);
+      weapon |= this.matches(OHAMMER);
+      return weapon;
+    },
 
-}
+    isArmor: function() {
+      var armor = false;
+      armor |= this.matches(OSHIELD);
+      armor |= this.matches(OLEATHER);
+      armor |= this.matches(OSTUDLEATHER);
+      armor |= this.matches(ORING);
+      armor |= this.matches(OCHAIN);
+      armor |= this.matches(OSPLINT);
+      armor |= this.matches(OPLATE);
+      armor |= this.matches(OPLATEARMOR);
+      armor |= this.matches(OSSPLATE);
+      return armor;
+    },
+
+
+  } // ITEM OBJECT
 
 function Item(id, char, desc, arg) {
   this.id = id;
@@ -235,7 +250,9 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_ident)
       updateLog("You are standing in front of a statue");
     return;
-  } else if (item.matches(OOPENDOOR)) {
+  }
+  //
+  else if (item.matches(OOPENDOOR)) {
     if (do_ident) {
       updateLog(`You have found ${item} (c) close`);
     }
@@ -243,7 +260,9 @@ function lookforobject(do_ident, do_pickup, do_action) {
       non_blocking_callback = o_open_door;
     }
     return;
-  } else if (item.matches(OCLOSEDDOOR)) {
+  }
+  //
+  else if (item.matches(OCLOSEDDOOR)) {
     if (do_ident) {
       updateLog("You have found " + item);
       updateLog("Do you (o) try to open it, or (i) ignore it?");
@@ -252,7 +271,19 @@ function lookforobject(do_ident, do_pickup, do_action) {
       blocking_callback = o_closed_door;
     }
     return;
-  } else if (item.isWeapon()) {
+  }
+  // put this before wield to make wear be default for shields
+  else if (item.isArmor()) {
+    if (do_ident) {
+      updateLog(`You have found ${item}: (W) wear or (t) take`);
+    }
+    if (do_action) {
+      non_blocking_callback = wear;
+    }
+    return;
+  }
+  //
+  else if (item.isWeapon()) {
     if (do_ident) {
       updateLog(`You have found ${item}: (w) wield or (t) take`);
     }

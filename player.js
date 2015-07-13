@@ -412,6 +412,8 @@ function wield(index) {
         updateLog("wield");
         if (take(item)) {
           forget(); // remove from board
+        } else {
+          return;
         }
         break; // code lower down will do the rest
       case 't':
@@ -419,6 +421,8 @@ function wield(index) {
         if (take(item)) {
           forget(); // remove from board
         }
+        return;
+      default:
         return;
     };
   }
@@ -439,16 +443,11 @@ function wield(index) {
 
     var startcode = "a".charCodeAt(0);
     var code = index.charCodeAt(0);
-    var wieldIndex = code - startcode;
-
-    debug("wield: " + wieldIndex);
-
-    item = player.inventory[wieldIndex];
-
-    debug("wield(): trying to wield " + item);
+    var useindex = code - startcode;
+    item = player.inventory[useindex];
 
     if (item == null) {
-      if (wieldIndex >= 0 && wieldIndex < 26) {
+      if (useindex >= 0 && useindex < 26) {
         updateLog("You don't have item " + index + "!");
       }
       return;
@@ -491,44 +490,58 @@ function wield(index) {
     function to wear armor
  */
 function wear(index) {
-  if (index == null) {
-    updateLog("What do you want to wear (- for nothing) [* for all] ?");
-    wait_for_wear_input = true;
-    return;
-  }
+  var item = itemAt(player.x, player.y);
 
-  debug("wear(): " + index);
-
-  if (index == ESC) {
-    updateLog("");
-    wait_for_wear_input = false;
-    return false;
-  }
-
-  if (index == '*') {
-    // TODO
-    // i = showwear();
-    // cursors();
-  }
-
-  var startcode = "a".charCodeAt(0);
-  var code = index.charCodeAt(0);
-  var wearIndex = code - startcode;
-
-  debug("wear: " + wearIndex);
-
-  var item = player.inventory[wearIndex];
-
-  debug("wear(): trying to wear " + item);
-
-  if (item == null) {
-    if (wearIndex >= 0 && wearIndex < 26) {
-      updateLog("You don't have item " + index + "!");
+  // player is over some armor
+  if (item.isArmor()) {
+    switch (index) {
+      case ESC:
+      case 'i':
+        updateLog("ignore");
+        return;
+      case 'W':
+        updateLog("wear");
+        if (take(item)) {
+          forget(); // remove from board
+        } else {
+          return;
+        }
+        break; // code lower down will do the rest
+      case 't':
+        updateLog("take");
+        if (take(item)) {
+          forget(); // remove from board
+        }
+        return;
+      default:
+        return;
+    };
+  } // else player hit 'W'
+  else {
+    if (index == ESC) {
+      updateLog("");
+      return false;
     }
-    wait_for_wear_input = false;
-    return;
-  }
 
+    if (index == '*') {
+      // TODO
+      // i = showwear();
+      // cursors();
+    }
+
+    var startcode = "a".charCodeAt(0);
+    var code = index.charCodeAt(0);
+    var useindex = code - startcode;
+    item = player.inventory[useindex];
+
+    if (item == null) {
+      if (useindex >= 0 && useindex < 26) {
+        updateLog("You don't have item " + index + "!");
+      }
+      return;
+    }
+  }
+  // common cases for both
   if (
     item.matches(OLEATHER) ||
     item.matches(OCHAIN) ||
@@ -542,19 +555,16 @@ function wear(index) {
   } else if (item.matches(OSHIELD)) {
     if (player.WIELD != null && player.WIELD.matches(O2SWORD)) {
       updateLog("Your hands are busy with the two handed sword!");
-      wait_for_wear_input = false;
       return;
     } else {
       player.SHIELD = item;
     }
   } else {
     updateLog("You can't wear that!");
-    wait_for_wear_input = false;
     return;
   }
 
   player.level.paint();
-  wait_for_wear_input = false;
   return;
 }
 
