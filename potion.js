@@ -279,12 +279,16 @@ function quaffpotion(potion, set_known) {
       return;
 
     case 15:
-      updateLog("TODO: quaffpotion(): heroism");
-      // lprcat("\nWOW!!!  You feel Super-fantastic!!!");
-      // if (c[HERO] == 0)
-      //   for (i = 0; i < 6; i++)
-      //     c[i] += 11;
-      // c[HERO] += 250;
+      updateLog("WOW!!!  You feel Super-fantastic!!!");
+      if (player.HERO == 0) {
+        player.STRENGTH += 11;
+        player.INTELLIGENCE += 11;
+        player.WISDOM += 11;
+        player.CONSTITUTION += 11;
+        player.DEXTERITY += 11;
+        player.CHARISMA += 11;
+      }
+      player.HERO += 250;
       break;
 
     case 16:

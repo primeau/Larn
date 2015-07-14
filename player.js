@@ -43,7 +43,7 @@ var Player = {
   },
   CONFUSE: 0,
   // ALTPRO:
-  // HERO:
+  HERO: 0,
   // CHARMCOUNT:
   // INVISIBILITY:
   // CANCELLATION:
@@ -599,6 +599,7 @@ function game_stats() {
 
   s += "STREX: " + player.STREXTRA + "\n";
   s += "GIAST: " + player.GIANTSTR + "\n";
+  s += "HERO:  " + player.HERO + "\n";
 
   s += "AGGR:  " + player.AGGRAVATE + "\n";
   s += "HSTM:  " + player.HASTEMONST + "\n";
