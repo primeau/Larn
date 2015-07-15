@@ -1,8 +1,6 @@
 "use strict";
 
-var drink_take_ignore_potion = false;
 var wait_for_drop_input = false;
-var take_ignore_item = false;
 var wait_for_open_direction = false;
 
 const ESC = 27;
@@ -60,11 +58,6 @@ function parseEvent(e) {
   }
 
 
-
-  if (take_ignore_item) {
-    oitem(code == ESC ? ESC : key);
-    return;
-  }
   if (wait_for_drop_input) {
     drop_object(code == ESC ? ESC : key);
     return;

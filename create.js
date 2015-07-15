@@ -122,6 +122,15 @@ function makeobject(level) {
     }
   }
 
+  if (level.depth <= 10) {
+    let j = level.depth;
+    fillmroom(rund(2), ODIAMOND, rnd(10 * j + 1) + 10);
+    fillmroom(rund(2), ORUBY, rnd(6 * j + 1) + 6);
+    fillmroom(rund(2), OEMERALD, rnd(4 * j + 1) + 4);
+    fillmroom(rund(2), OSAPPHIRE, rnd(3 * j + 1) + 2);
+  }
+
+
 
 } // makeobject()
 

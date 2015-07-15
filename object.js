@@ -45,6 +45,10 @@ const OIVTELETRAP = new Item("OIVTELETRAP", ".", "a teleport trap");
 const OIVDARTRAP = new Item("OIVDARTRAP", ".", "a dart trap");
 const OIVTRAPDOOR = new Item("OIVTRAPDOOR", ".", "a trap door");
 
+const ODIAMOND = new Item("ODIAMOND", "@", "a brilliant diamond");
+const ORUBY = new Item("ORUBY", "@", "a ruby");
+const OEMERALD = new Item("OEMERALD", "@", "an enchanting emerald");
+const OSAPPHIRE = new Item("OSAPPHIRE", "@", "a sparkling sapphire");
 
 // TODO Item types?
 // characters (player, monster) 1 per square
@@ -73,7 +77,13 @@ var Item = {
         if (isKnownScroll(this) || DEBUG_KNOW_ALL) {
           description += " of " + scrollname[this.arg];
         }
-      } else if (this.matches(OOPENDOOR) || this.matches(OCLOSEDDOOR)) {
+      }
+      //
+      else if (this.matches(OOPENDOOR) || this.matches(OCLOSEDDOOR)) {
+        // do nothing
+      }
+      //
+      else if (this.isGem()) {
         // do nothing
       }
       //
@@ -124,6 +134,14 @@ var Item = {
       return armor;
     },
 
+    isGem: function() {
+      var gem = false;
+      gem |= this.matches(ODIAMOND);
+      gem |= this.matches(ORUBY);
+      gem |= this.matches(OEMERALD);
+      gem |= this.matches(OSAPPHIRE);
+      return gem;
+    },
 
   } // ITEM OBJECT
 
@@ -305,15 +323,15 @@ function lookforobject(do_ident, do_pickup, do_action) {
   ) //
   {
     if (do_ident) {
-      updateLog("You have found " + item);
+      updateLog(`You have found ${item}: (t) take`);
     }
-    if (do_pickup) {
-      if (take(item)) {
-        forget();
-      }
-    }
+    // if (do_pickup) {
+    //   if (take(item)) {
+    //     forget();
+    //   }
+    // }
     if (do_action) {
-      oitem(item);
+      non_blocking_callback = oitem;
     }
   }
 } // lookforobject
@@ -322,43 +340,24 @@ function lookforobject(do_ident, do_pickup, do_action) {
 /*
  * function to process an item. or a keypress related
  */
-function oitem(item_or_key) {
-  var item;
-  var key;
-  if (item_or_key instanceof Item.constructor) {
-    item = item_or_key;
-    //debug("oitem(): got item: " + item);
-  } else {
-    key = item_or_key;
-    //debug("oitem(): got key: " + key);
-  }
-  if (take_ignore_item == false) {
-    updateLog("Do you want to (t) take it, or (i) ignore it?");
-    take_ignore_item = true; // signal to parse function
+function oitem(key) {
+  var item = itemAt(player.x, player.y);
+  if (item == null) {
+    debug("oitem(): couldn't find it!");
     return;
-  } else {
-    var item = itemAt(player.x, player.y);
-    if (item == null) {
-      debug("oitem(): couldn't find it!");
-      take_ignore_item = false;
-      return;
-    }
-    switch (key) {
-      case ESC:
-      case 'i':
-        updateLog("ignore");
-        take_ignore_item = false;
-        return;
-
-      case 't':
-        updateLog("take");
-        if (take(item)) {
-          forget(); // remove from board
-        }
-        take_ignore_item = false;
-        return;
-    };
   }
+  switch (key) {
+    case ESC:
+    case 'i':
+      updateLog("ignore");
+      return;
+    case 't':
+      updateLog("take");
+      if (take(item)) {
+        forget(); // remove from board
+      }
+      return;
+  };
 }
 
 
@@ -444,7 +443,7 @@ function o_closed_door(key) {
       return true;
     case 'o':
       updateLog("open");
-      let success = act_open_door(player.x, player.y) == 1;
+      var success = act_open_door(player.x, player.y) == 1;
       if (!success) {
         player.x = lastpx;
         player.y = lastpy;
