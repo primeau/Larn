@@ -81,6 +81,8 @@ function makeobject(level) {
 
   fillmroom(rund(3), OPIT, 0);
   fillmroom(rund(2), OMIRROR, 0);
+  //fillmroom(rund(2), OTHRONE, 1);
+  fillmroom(1 , OTHRONE, 0);
   fillmroom(rund(3), OSTATUE, 0);
 
   for (var numgold = rnd(12) + 11; numgold > 0; numgold--)
@@ -209,7 +211,7 @@ function makemonst(lev) {
   else
     arg = rnd(monstlevel[lev - 1] - monstlevel[lev - 4]) + monstlevel[lev - 4];
 
-  var monster = createmonster(arg);
+  var monster = createNewMonster(arg);
   debug("create.makemonst(" + lev + "): " + monster.name);
 
   // tmp=rnd((x=monstlevel[lev-1])?x:1);

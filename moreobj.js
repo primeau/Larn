@@ -2,6 +2,33 @@
 
 
 /*
+    subroutine to process a throne object
+*/
+function othrone(key) {
+  var item = itemAt(player.x, player.y);
+  var isdead = item.matches(ODEADTHRONE);
+  switch (key) {
+    case ESC:
+    case 'i':
+      appendLog(" ignore");
+      return;
+    case 'p':
+      if (!isdead) {
+        appendLog(" pry off");
+        act_remove_gems(item.arg);
+      }
+      return;
+    case 's':
+      appendLog(" sit down");
+      act_sit_throne(item.arg);
+      return;
+
+  };
+}
+
+
+
+/*
     For command mode.  Perform opening an object (door, chest).
 */
 function open_something(direction) {
@@ -44,7 +71,7 @@ function open_something(direction) {
   var x = player.x + diroffx[direction];
   var y = player.y + diroffy[direction];
 
-  var item = itemAt(x,y);
+  var item = itemAt(x, y);
 
   if (item == null) {
     updateLog("There is nothing to open!");

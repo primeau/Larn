@@ -16,7 +16,7 @@ var Monster = function Monster(id, char, name, level, armorclass, damage, attack
   this.experience = experience;
 }
 
-function createmonster(arg) {
+function createNewMonster(arg) {
   var tmp = monsterlist[arg];
   var monster = new Monster(tmp.id, tmp.char, tmp.name, tmp.level,
     tmp.armorclass, tmp.damage, tmp.attack, tmp.defence, tmp.genocided,
@@ -94,6 +94,119 @@ Monster.prototype = {
   } // monster class
 
 
+function monsterAt(x, y) {
+  if (x == null || y == null) {
+    return null;
+  }
+  if (x < 0 || x >= MAXX) {
+    return null;
+  }
+  if (y < 0 || y >= MAXY) {
+    return null;
+  }
+  var monster = player.level.monsters[x][y];
+  return monster;
+}
+
+
+
+
+/*
+ *  createmonster(monstno)      Function to create a monster next to the player
+ *      int monstno;
+ *
+ *  Enter with the monster number (1 to MAXMONST+8)
+ *  Returns no value.
+ */
+function createmonster(mon) {
+  updateLog("CREATING: " + mon);
+  var x, y, k, i;
+  if (mon < 1 || mon > monsterlist.length - 1) /* check for monster number out of bounds */ {
+    beep();
+    updateLog(`can't createmonst ${mon}\n`);
+    nap(3000);
+    return;
+  }
+  while (monsterlist[mon].genocided && mon < monsterlist.length - 1) mon++; /* genocided? */
+  for (k = rnd(8), i = -8; i < 0; i++, k++) /* choose direction, then try all */ {
+    if (k > 8) k = 1; /* wraparound the diroff arrays */
+    x = player.x + diroffx[k];
+    y = player.y + diroffy[k];
+    if (cgood(x, y, 0, 1)) /* if we can create here */ {
+      player.level.monsters[x][y] = createNewMonster(mon);
+      //hitp[x][y] = monster[mon].hitpoints;
+      //stealth[x][y]=0;
+      //know[x][y] &= ~KNOWHERE;
+      switch (mon) {
+        // TODO
+        //case ROTHE: case POLTERGEIST: case VAMPIRE: stealth[x][y]=1;
+      };
+      return;
+    }
+  }
+}
+
+
+
+/*
+ *  int cgood(x,y,itm,monst)      Function to check location for emptiness
+ *      int x,y,itm,monst;
+ *
+ *  Routine to return TRUE if a location does not have itm or monst there
+ *  returns FALSE (0) otherwise
+ *  Enter with itm or monst TRUE or FALSE if checking it
+ *  Example:  if itm==TRUE check for no item at this location
+ *            if monst==TRUE check for no monster at this location
+ *  This routine will return FALSE if at a wall,door or the dungeon exit
+ *  on level 1
+ */
+function cgood(x, y, itm, monst) {
+  var item = itemAt(x, y);
+  var monster = monsterAt(x, y);
+
+  /* cannot create either monster or item if:
+     - out of bounds
+     - wall
+     - closed door
+     - dungeon entrance
+  */
+  if (((y < 0) || (y > MAXY - 1) || (x < 0) || (x > MAXX - 1)) ||
+    (item.matches(OWALL)) ||
+    (item.matches(OCLOSEDDOOR)) ||
+    (item.matches(OENTRANCE))) return (false);
+
+  /* if checking for an item, return False if one there already
+   */
+  if (itm && !item.matches(OEMPTY))
+    return (false);
+
+  /* if checking for a monster, return False if one there already _or_
+     there is a pit/trap there.
+  */
+  if (monst) {
+    if (monsterAt(x, y) != null) {
+      return (false);
+    }
+    switch (itemAt(x,y).id) {
+      /* note: not invisible traps, since monsters are not affected
+         by them.
+      */
+      case OPIT.id:
+        // case OANNIHILATION.id:
+        // case OTELEPORTER.id:
+        // case OTRAPARROW.id:
+        // case ODARTRAP.id:
+        // case OTRAPDOOR.id:          return (false);
+        break;
+      default:
+        break;
+    };
+  }
+  return (true);
+}
+
+
+
 /*
  *  createitem(it,arg)      Routine to place an item next to the player
  *      int it,arg;
@@ -102,21 +215,20 @@ Monster.prototype = {
  *  Returns no value, thus we don't know about createitem() failures.
  */
 function createitem(it, arg) {
-  debug("TODO: monster.createitem()");
-  // int it,arg;
-  // {
-  // register int x,y,k,i;
-  // if (it >= MAXOBJ) return;   /* no such object */
-  // for (k=rnd(8), i= -8; i<0; i++,k++) /* choose direction, then try all */
-  //     {
-  //     if (k>8) k=1;   /* wraparound the diroff arrays */
-  //     x = playerx + diroffx[k];       y = playery + diroffy[k];
-  //     if (cgood(x,y,1,0)) /* if we can create here */
-  //         {
-  //         item[x][y] = it;  know[x][y]=0;  iarg[x][y]=arg;  return;
-  //         }
-  //     }
+  var x, y, k, i;
+  //if (it >= MAXOBJ) return; /* no such object */
+  for (k = rnd(8), i = -8; i < 0; i++, k++) /* choose direction, then try all */ {
+    if (k > 8) k = 1; /* wraparound the diroff arrays */
+    x = player.x + diroffx[k];
+    y = player.y + diroffy[k];
+    if (cgood(x, y, 1, 0)) /* if we can create here */ {
+      player.level.items[x][y] = createObject(it, arg);
+      //know[x][y] = 0;
+      return;
+    }
+  }
 }
+
 
 /*
  *  for the monster data
@@ -208,7 +320,7 @@ const monsterlist = [
 
 const VAMPIRE = monsterlist[38];
 const BAT = monsterlist[1];
-
+const GNOMEKING = monsterlist[45];
 
 /*
  *  hitplayer(x,y)      Function for the monster to hit the player from (x,y)
@@ -254,8 +366,7 @@ function hitplayer(x, y) {
     }
   if (monster.matches(BAT)) {
     dam = 1;
-  }
-  else {
+  } else {
     dam = monster.damage;
     dam += rnd((dam < 1 ? 1 : dam)) + monster.level;
   }

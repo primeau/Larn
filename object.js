@@ -3,7 +3,7 @@
 const OWALL = new Item("OWALL", "▒", "a wall");
 const OEMPTY = new Item("OEMPTY", ".", "empty space");
 const OSTAIRSDOWN = new Item("OSTAIRSDOWN", ">", "a staircase going down");
-const OSTAIRSUP = new Item("OSTAIRSUP", "<", "a staircase going up");
+const OSTAIRSUP = new Item("OSTAIRSUP", "&lt", "a staircase going up"); // use &lt to prevent bugginess when dropping a ! or ? to the right
 const OENTRANCE = new Item("OENTRANCE", "E", "the dungeon entrance");
 const OHOMEENTRANCE = new Item("OHOMEENTRANCE", ".", "exit to home level");
 const OVOLUP = new Item("OVOLUP", "V", "the base of a volcanic shaft");
@@ -50,6 +50,11 @@ const ORUBY = new Item("ORUBY", "@", "a ruby");
 const OEMERALD = new Item("OEMERALD", "@", "an enchanting emerald");
 const OSAPPHIRE = new Item("OSAPPHIRE", "@", "a sparkling sapphire");
 
+const OTHRONE = new Item("OTHRONE", "T", "a handsome jewel encrusted throne");
+const ODEADTHRONE = new Item("ODEADTHRONE", "t", "a massive throne");
+
+
+
 // TODO Item types?
 // characters (player, monster) 1 per square
 // items (scrolls potions gold) 1 per square
@@ -79,11 +84,11 @@ var Item = {
         }
       }
       //
-      else if (this.matches(OOPENDOOR) || this.matches(OCLOSEDDOOR)) {
-        // do nothing
-      }
-      //
-      else if (this.isGem()) {
+      else if (this.matches(OOPENDOOR) ||
+              this.matches(OCLOSEDDOOR) ||
+              this.matches(OTHRONE) ||
+              this.matches(ODEADTHRONE) ||
+              this.isGem()) {
         // do nothing
       }
       //
@@ -191,11 +196,6 @@ function itemAt(x, y) {
     return null;
   }
   var item = player.level.items[x][y];
-  // if (item.id == OPOTION.id) {
-  //   return item;
-  // } else if (item.id == OSCROLL.id) {
-  //   return item;
-  // }
   return item;
 }
 
@@ -203,6 +203,8 @@ function isItemAt(x, y) {
   var item = player.level.items[x][y];
   return (item != null && !item.matches(OEMPTY));
 }
+
+
 
 function lookforobject(do_ident, do_pickup, do_action) {
   // do_ident;   /* identify item: T/F */
@@ -246,6 +248,29 @@ function lookforobject(do_ident, do_pickup, do_action) {
       non_blocking_callback = oscroll;
     }
     return;
+  }
+  //
+  else if (item.matches(OTHRONE)) {
+    if (nearbymonst())
+      return;
+    if (do_ident) {
+      updateLog(`There is ${item} here!\nDo you (p) pry off jewels, (s) sit down`);
+    }
+    if (do_action) {
+      non_blocking_callback = othrone;
+    }
+    return;
+  }
+  //
+  else if (item.matches(ODEADTHRONE)) {
+    if (nearbymonst())
+      return;
+    if (do_ident) {
+      updateLog(`There is ${item} here!\nDo you (s) sit down`);
+    }
+    if (do_action) {
+      non_blocking_callback = othrone;
+    }
   }
   //
   else if (item.matches(OPIT)) {
@@ -391,12 +416,6 @@ function obottomless() {
   beep();
   nap(3000);
   died(262);
-}
-
-
-function nearbymonst() {
-  debug("TODO: nearbymonst()");
-  return false;
 }
 
 
