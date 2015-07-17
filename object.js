@@ -53,6 +53,8 @@ const OSAPPHIRE = new Item("OSAPPHIRE", "@", "a sparkling sapphire");
 const OTHRONE = new Item("OTHRONE", "T", "a handsome jewel encrusted throne");
 const ODEADTHRONE = new Item("ODEADTHRONE", "t", "a massive throne");
 
+const OFOUNTAIN = new Item("OFOUNTAIN", "F", "a bubbling fountain");
+const ODEADFOUNTAIN = new Item("ODEADFOUNTAIN", "f", "a dead fountain");
 
 
 // TODO Item types?
@@ -85,10 +87,10 @@ var Item = {
       }
       //
       else if (this.matches(OOPENDOOR) ||
-              this.matches(OCLOSEDDOOR) ||
-              this.matches(OTHRONE) ||
-              this.matches(ODEADTHRONE) ||
-              this.isGem()) {
+        this.matches(OCLOSEDDOOR) ||
+        this.matches(OTHRONE) ||
+        this.matches(ODEADTHRONE) ||
+        this.isGem()) {
         // do nothing
       }
       //
@@ -185,7 +187,7 @@ function isItem(x, y, compareItem) {
   }
 }
 
-function itemAt(x, y) {
+function getItem(x, y) {
   if (x == null || y == null) {
     return null;
   }
@@ -198,6 +200,22 @@ function itemAt(x, y) {
   var item = player.level.items[x][y];
   return item;
 }
+
+
+function setItem(x, y, item) {
+  if (x == null || y == null) {
+    return null;
+  }
+  if (x < 0 || x >= MAXX) {
+    return null;
+  }
+  if (y < 0 || y >= MAXY) {
+    return null;
+  }
+  player.level.items[x][y] = item;
+  return item;
+}
+
 
 function isItemAt(x, y) {
   var item = player.level.items[x][y];
@@ -287,6 +305,25 @@ function lookforobject(do_ident, do_pickup, do_action) {
     return;
   }
   //
+  else if (item.matches(OFOUNTAIN)) {
+    if (nearbymonst())
+      return;
+    if (do_ident) {
+      lprcat("There is a fountain here");
+      lprcat("Do you (D) drink, (T) tidy up");
+    }
+    if (do_action) {
+      non_blocking_callback = ofountain;
+    }
+  }
+  //
+  else if (item.matches(ODEADFOUNTAIN)) {
+    if (nearbymonst())
+      return;
+    if (do_ident)
+      lprcat("There is a dead fountain here");
+  }
+  //
   else if (item.matches(OSTATUE)) {
     if (nearbymonst())
       return;
@@ -366,7 +403,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
  * function to process an item. or a keypress related
  */
 function oitem(key) {
-  var item = itemAt(player.x, player.y);
+  var item = getItem(player.x, player.y);
   if (item == null) {
     debug("oitem(): couldn't find it!");
     return;
@@ -425,7 +462,7 @@ function forget() {
 
 
 function o_open_door(key) {
-  var item = itemAt(player.x, player.y);
+  var item = getItem(player.x, player.y);
   if (item == null) {
     debug("o_open_door(): couldn't find it!");
     return true;
@@ -446,7 +483,7 @@ function o_open_door(key) {
 }
 
 function o_closed_door(key) {
-  var item = itemAt(player.x, player.y);
+  var item = getItem(player.x, player.y);
   if (item == null) {
     debug("o_closed_door(): couldn't find it!");
     player.x = lastpx;

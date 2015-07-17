@@ -1,6 +1,5 @@
 "use strict";
 
-
 /*
     act_remove_gems
 
@@ -17,10 +16,10 @@ function act_remove_gems(arg) {
     for (var i = 0; i < rnd(4); i++) {
       creategem(); /* gems pop off the throne */
     }
-    player.level.items[player.x][player.y] = createObject(ODEADTHRONE, itemAt(player.x, player.y).arg);
+    player.level.items[player.x][player.y] = createObject(ODEADTHRONE, getItem(player.x, player.y).arg);
     //know[player.x][player.y] = 0;
   } else if (k < 40 && arg == 0) {
-    createmonster(45); // GNOMEKING
+    createmonster(GNOMEKING);
     player.level.items[player.x][player.y].arg = 1;
     //know[player.x][player.y] = 0;
   } else {
@@ -28,6 +27,7 @@ function act_remove_gems(arg) {
   }
   return;
 }
+
 
 /*
     act_sit_throne
@@ -41,7 +41,7 @@ function act_remove_gems(arg) {
 function act_sit_throne(arg) {
   var k = rnd(101);
   if (k < 30 && arg == 0) {
-    createmonster(45); // GNOMEKING
+    createmonster(GNOMEKING);
     player.level.items[player.x][player.y].arg = 1;
     //know[player.x][player.y] = 0;
   } else if (k < 35) {
@@ -55,7 +55,6 @@ function act_sit_throne(arg) {
 }
 
 
-
 /*
     Perform the actions common to command and prompt mode when opening a
     door.  Assumes cursors().
@@ -65,7 +64,7 @@ function act_sit_throne(arg) {
 */
 function act_open_door(x, y) {
   if (rnd(11) < 7) {
-    switch (itemAt(x, y).arg) {
+    switch (getItem(x, y).arg) {
       case 6:
         player.AGGRAVATE += rnd(400);
         break;
@@ -97,4 +96,70 @@ function act_open_door(x, y) {
   }
   player.level.paint();
   return (0);
+}
+
+
+/*
+    Code to perform the action of drinking at a fountian.  Assumes that
+    cursors() has already been called, and that a check has been made that
+    the player is actually standing at a live fountain.
+*/
+function act_drink_fountain() {
+  if (rnd(1501) < 2) {
+    lprcat("Oops!  You seem to have caught the dreadful sleep!");
+    beep();
+    lflush();
+    sleep(3);
+    died(280);
+    return;
+  }
+
+  var x = rnd(100);
+  if (x < 7) {
+    player.HALFDAM += 200 + rnd(200);
+    lprcat("You feel a sickness coming on");
+  } else if (x < 13)
+    quaffpotion(23, false); /* see invisible,but don't know the potion */
+
+  else if (x < 45)
+    lprcat("nothing seems to have happened");
+
+  else if (rnd(3) != 2)
+    fntchange(1); /*  change char levels upward   */
+
+  else
+    fntchange(-1); /*  change char levels downward */
+
+  if (rnd(12) < 3) {
+    lprcat("The fountains bubbling slowly quiets");
+    setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
+    //know[playerx][playery]=0;
+  }
+  return;
+}
+
+/*
+    Code to perform the action of washing at a fountain.  Assumes that
+    cursors() has already been called and that a check has been made that
+    the player is actually standing at a live fountain.
+*/
+function act_wash_fountain() {
+  if (rnd(100) < 11) {
+    var x = rnd((player.level.depth << 2) + 2);
+    lprcat(`Oh no!  The water was foul!  You suffer ${x} hit points!`);
+    lastnum = 273;
+    player.losehp(x);
+    // bottomline();
+    // cursors();
+  } else if (rnd(100) < 29) {
+    lprcat("You got the dirt off!");
+  } else if (rnd(100) < 31) {
+    lprcat("This water seems to be hard water!  The dirt didn't come off!");
+  } else if (rnd(100) < 34) {
+    createmonster(WATERLORD); /*    make water lord     */
+  } else {
+    lprcat("nothing seems to have happened");
+  }
+  player.level.paint();
+  return;
 }

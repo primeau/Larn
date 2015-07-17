@@ -76,6 +76,22 @@ function parseEvent(e) {
   }
 
   //
+  // DRINK FROM FOUNTAIN
+  //
+  if (key == 'D') {
+    drink_fountain(null);
+    return;
+  }
+
+  //
+  // WASH AT FOUNTAIN
+  //
+  if (key == 'T') {
+    wash_fountain(null);
+    return;
+  }
+
+  //
   // WIELD
   //
   if (key == 'w') {
@@ -334,7 +350,7 @@ function parseEvent(e) {
 //
 //   var x = player.x + diroffx[direction];
 //   var y = player.y + diroffy[direction];
-//   var item = itemAt(x, y);
+//   var item = getItem(x, y);
 //
 //   if (item != null) {
 //     wait_for_direction = false;

@@ -161,7 +161,7 @@ function createmonster(mon) {
  *  on level 1
  */
 function cgood(x, y, itm, monst) {
-  var item = itemAt(x, y);
+  var item = getItem(x, y);
   var monster = monsterAt(x, y);
 
   /* cannot create either monster or item if:
@@ -187,7 +187,7 @@ function cgood(x, y, itm, monst) {
     if (monsterAt(x, y) != null) {
       return (false);
     }
-    switch (itemAt(x,y).id) {
+    switch (getItem(x,y).id) {
       /* note: not invisible traps, since monsters are not affected
          by them.
       */
@@ -269,7 +269,7 @@ const monsterlist = [
 
   new Monster("TROLL", "T", "troll", 5, 4, 5, 0, 0, 0, 9, 80, 50, 300),
   new Monster("YETI", "Y", "yeti", 5, 6, 4, 0, 0, 0, 5, 50, 35, 100),
-  new Monster("WHITEDRAGON", "w", "white dragon", 5, 2, 4, 5, 0, 0, 16, 500, 55, 1000),
+  new Monster("WHITEDRAGON", "d", "white dragon", 5, 2, 4, 5, 0, 0, 16, 500, 55, 1000),
   new Monster("ELF", "e", "elf", 5, 8, 1, 0, 0, 0, 15, 50, 22, 35),
   new Monster("CUBE", "g", "gelatinous cube", 5, 9, 1, 0, 0, 0, 3, 0, 22, 45),
 
@@ -320,7 +320,8 @@ const monsterlist = [
 
 const VAMPIRE = monsterlist[38];
 const BAT = monsterlist[1];
-const GNOMEKING = monsterlist[45];
+const GNOMEKING = 45;
+const WATERLORD = 47;
 
 /*
  *  hitplayer(x,y)      Function for the monster to hit the player from (x,y)

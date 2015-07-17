@@ -59,7 +59,7 @@ function newscroll() {
  * function to process a potion. or a keypress related
  */
 function oscroll(key) {
-  var scroll = itemAt(player.x, player.y);
+  var scroll = getItem(player.x, player.y);
   if (scroll == null) {
     debug("oscroll: couldn't find it!");
     return;

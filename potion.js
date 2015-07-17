@@ -63,7 +63,7 @@ function newpotion() {
  * function to process a potion. or a keypress related
  */
 function opotion(key) {
-  var potion = itemAt(player.x, player.y);
+  var potion = getItem(player.x, player.y);
   if (potion == null) {
     debug("opotion: couldn't find it!");
     return;

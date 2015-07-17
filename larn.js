@@ -154,7 +154,7 @@ function moveplayer(dir) {
   /* check for the player ignoring an altar when in command mode.
    */
   if ((!prompt_mode) &&
-    (itemAt(player.x, player.y).matches(OALTAR)) &&
+    (getItem(player.x, player.y).matches(OALTAR)) &&
     (!prayed)) {
     updateLog("You have ignored the altar!");
     act_ignore_altar();
@@ -168,7 +168,7 @@ function moveplayer(dir) {
 
   // TODO: JRP NOT IN ORIGINAL CODE
   // stop running when hitting an object
-  if (!itemAt(k,m).matches(OEMPTY)) {
+  if (!getItem(k,m).matches(OEMPTY)) {
     yrepcount = 0;
     return (0);
   }
@@ -269,6 +269,10 @@ function updateLog(text) {
   }
 }
 
+
+function lprcat(text) {
+  updateLog(text);
+}
 
 function appendLog(text) {
   var newText = LOG.pop() + text;

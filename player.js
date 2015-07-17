@@ -117,12 +117,17 @@ var Player = {
     }
   },
 
+  losemhp: function(x) {
+    this.HP = Math.max(1, this.HP - x);
+    this.HPMAX = Math.max(1, this.HPMAX - x);
+  },
+
 
   /*
       function to calculate the pack weight of the player
       returns the number of pounds the player is carrying
    */
-  packweight: function() {
+    packweight: function() {
     var weight = 50;
     debug("TODO: player.packweight() (returning " + weight + ")");
     return weight;
@@ -399,7 +404,7 @@ function ifblind(x, y) {
  */
 function wield(index) {
 
-  var item = itemAt(player.x, player.y);
+  var item = getItem(player.x, player.y);
 
   // player is over a weapon
   if (item.isWeapon()) {
@@ -490,7 +495,7 @@ function wield(index) {
     function to wear armor
  */
 function wear(index) {
-  var item = itemAt(player.x, player.y);
+  var item = getItem(player.x, player.y);
 
   // player is over some armor
   if (item.isArmor()) {
