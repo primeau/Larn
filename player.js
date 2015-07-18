@@ -42,7 +42,7 @@ var Player = {
     return this.level.depth;
   },
   CONFUSE: 0,
-  // ALTPRO:
+  ALTPRO: 0,
   HERO: 0,
   // CHARMCOUNT:
   // INVISIBILITY:
@@ -601,6 +601,7 @@ function game_stats() {
   s += "SHLD:  " + player.SHIELD + "\n";
 
   s += "MORED: " + player.MOREDEFENSES + "\n";
+  s += "ALTPR: " + player.ALTPRO + "\n";
 
   s += "STREX: " + player.STREXTRA + "\n";
   s += "GIAST: " + player.GIANTSTR + "\n";

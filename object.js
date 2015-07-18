@@ -38,7 +38,7 @@ const OPLATEARMOR = new Item("OPLATEARMOR", "]", "plate armor");
 const OSSPLATE = new Item("OSSPLATE", "]", "stainless plate armor");
 
 const OCLOSEDDOOR = new Item("OCLOSEDDOOR", "D", "a closed door");
-const OOPENDOOR = new Item("OOPENDOOR", "0", "an open door");
+const OOPENDOOR = new Item("OOPENDOOR", "O", "an open door");
 const OALTAR = new Item("OALTAR", "A", "a holy altar");
 const OTRAPARROWIV = new Item("OTRAPARROWIV", ".", "an arrow trap");
 const OIVTELETRAP = new Item("OIVTELETRAP", ".", "a teleport trap");
@@ -56,11 +56,6 @@ const ODEADTHRONE = new Item("ODEADTHRONE", "t", "a massive throne");
 const OFOUNTAIN = new Item("OFOUNTAIN", "F", "a bubbling fountain");
 const ODEADFOUNTAIN = new Item("ODEADFOUNTAIN", "f", "a dead fountain");
 
-
-// TODO Item types?
-// characters (player, monster) 1 per square
-// items (scrolls potions gold) 1 per square
-// fundamental (doors, walls) no charaters/items
 
 var Item = {
     id: null,
@@ -264,6 +259,19 @@ function lookforobject(do_ident, do_pickup, do_action) {
     }
     if (do_action) {
       non_blocking_callback = oscroll;
+    }
+    return;
+  }
+  //
+  else if (item.matches(OALTAR)) {
+    if (nearbymonst())
+      return;
+    if (do_ident) {
+      lprcat("There is a Holy Altar here!");
+      lprcat("Do you (p) pray (d) desecrate, or (i) ignore it?");
+    }
+    if (do_action) {
+      blocking_callback = oaltar;
     }
     return;
   }

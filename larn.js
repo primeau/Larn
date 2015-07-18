@@ -100,8 +100,8 @@ function positionplayer(x, y, exact) {
     players when walking into walls) if player walks off screen or into wall
  */
 
- const diroffx = [ 0,  0, 1,  0, -1,  1, -1, 1, -1 ];
- const diroffy = [ 0,  1, 0, -1,  0, -1, -1, 1,  1 ];
+const diroffx = [0, 0, 1, 0, -1, 1, -1, 1, -1];
+const diroffy = [0, 1, 0, -1, 0, -1, -1, 1, 1];
 
 /*  from = present room #  direction =
         [1-north] [2-east] [3-south] [4-west]
@@ -168,7 +168,7 @@ function moveplayer(dir) {
 
   // TODO: JRP NOT IN ORIGINAL CODE
   // stop running when hitting an object
-  if (!getItem(k,m).matches(OEMPTY)) {
+  if (!getItem(k, m).matches(OEMPTY)) {
     yrepcount = 0;
     return (0);
   }
@@ -275,6 +275,12 @@ function lprcat(text) {
 }
 
 function appendLog(text) {
-  var newText = LOG.pop() + text;
+  var newText;
+  if (text == DEL) {
+    newText = LOG.pop();
+    newText = newText.substring(0, newText.length - 1);
+  } else {
+    newText = LOG.pop() + text;
+  }
   updateLog(newText);
 }

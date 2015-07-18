@@ -4,13 +4,16 @@ var wait_for_drop_input = false;
 var wait_for_open_direction = false;
 
 const ESC = 27;
+const ENTER = 13;
+const DEL_CODE = 8;
+const DEL = "___DELETE___";
 
 
 function preParseEvent(e, keyDown, keyUp) {
   var code = e.which;
   //debug(`preParseEvent(): got: ${code}: ${keyDown} ${keyUp} ${e.key}`);
   if (keyDown) { // to capture ESC key etc
-    if (code == 27 || code >= 37 && code <= 40) {
+    if (code == ESC || code == ENTER || code == DEL_CODE || code >= 37 && code <= 40) {
       e.preventDefault(); // prevent scrolling on page
       parseEvent(e);
     } else {
@@ -29,20 +32,45 @@ function preParseEvent(e, keyDown, keyUp) {
 
 var blocking_callback;
 var non_blocking_callback;
+var keyboard_input_callback;
+
 
 function parseEvent(e) {
-
-  nomove = 0;
 
   var code = e.which;
   var key = String.fromCharCode(code);
 
+  if (e.which == undefined) {
+      key = e;
+  }
+
+  nomove = 0;
+
+  // if (blocking_callback != null)
+  // debug("blocking: " + blocking_callback.name);
+  // if (non_blocking_callback != null)
+  // debug("non_blocking: " + non_blocking_callback.name);
+  // if (keyboard_input_callback != null)
+  // debug("keyboard_input_callback: " + keyboard_input_callback.name);
+
+  // debug(`parseEvent(): got: ${code}: ${key}`);
+
+  if (code == ENTER) {
+    key = ENTER;
+  }
+  if (code == DEL_CODE) {
+    key = DEL;
+  }
+
   var newx = player.x;
   var newy = player.y;
+
+
 
   if (blocking_callback != null) {
     let done = blocking_callback(code == ESC ? ESC : key);
     player.level.paint();
+    //debug(blocking_callback.name + ": " + done)
     if (done) {
       blocking_callback = null;
     }
@@ -75,21 +103,23 @@ function parseEvent(e) {
     return;
   }
 
-  //
-  // DRINK FROM FOUNTAIN
-  //
-  if (key == 'D') {
-    drink_fountain(null);
-    return;
-  }
+  /*
+    //
+    // DRINK FROM FOUNTAIN
+    //
+    if (key == 'D') {
+      drink_fountain(null);
+      return;
+    }
 
-  //
-  // WASH AT FOUNTAIN
-  //
-  if (key == 'T') {
-    wash_fountain(null);
-    return;
-  }
+    //
+    // WASH AT FOUNTAIN
+    //
+    if (key == 'T') {
+      wash_fountain(null);
+      return;
+    }
+  */
 
   //
   // WIELD
@@ -291,6 +321,11 @@ function parseEvent(e) {
       player.level.items[armori++][MAXY - 1] = createObject(OPLATE);
       player.level.items[armori++][MAXY - 1] = createObject(OPLATEARMOR);
       player.level.items[armori++][MAXY - 1] = createObject(OSSPLATE);
+
+      player.level.items[armori++][MAXY - 1] = createObject(OALTAR);
+      player.level.items[armori++][MAXY - 1] = createObject(OTHRONE);
+      player.level.items[armori++][MAXY - 1] = createObject(OFOUNTAIN);
+
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
   }
@@ -311,6 +346,7 @@ function parseEvent(e) {
     player.level.items[player.x][player.y] = createObject(OSSPLATE, 50);
     wear('W');
     player.STEALTH = 0;
+    player.GOLD = 250000;
   }
 
   hitflag = 0;

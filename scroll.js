@@ -95,15 +95,13 @@ function read_scroll(scroll) {
 
   switch (scroll.arg) {
     case 0:
-      updateLog("TODO: read_scroll(): enchant armor");
-      // lprcat("\nYour armor glows for a moment");
-      // enchantarmor();
+      lprcat("Your armor glows for a moment");
+      enchantarmor();
       return;
 
     case 1:
-      updateLog("TODO: read_scroll(): enchant weapon");
-      // lprcat("\nYour weapon glows for a moment");
-      // enchweapon();
+      lprcat("Your weapon glows for a moment");
+      enchweapon();
       return; /* enchant weapon */
 
     case 2:
@@ -124,8 +122,7 @@ function read_scroll(scroll) {
       return;
 
     case 4:
-      updateLog("TODO: read_scroll(): create monster");
-      // createmonster(makemonst(level + 1));
+      createmonster(makemonst(player.level.depth + 1));
       return; /* this one creates a monster  */
 
     case 5:

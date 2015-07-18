@@ -64,7 +64,7 @@ var Level = {
     } // outer for
 
 
-    this.bottomline();
+    bottomline();
 
     // TODO: move to bottomline()?
     output += player.getStatString();
@@ -80,17 +80,6 @@ var Level = {
     if (doc != null)
       document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
 
-  },
-
-
-  /*
-      bottomline()
-
-      now for the bottom line of the display
-   */
-  bottomline: function() {
-    player.recalc();
-    // TODO: lots
   },
 
 

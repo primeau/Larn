@@ -83,6 +83,7 @@ function makeobject(level) {
   fillmroom(rund(3), OFOUNTAIN, 0);
   fillmroom(rund(2), OMIRROR, 0);
   fillmroom(rund(2), OTHRONE, 0);
+  fillmroom(rund(3), OALTAR, 0);
   fillmroom(rund(3), OSTATUE, 0);
 
   for (var numgold = rnd(12) + 11; numgold > 0; numgold--)
@@ -141,7 +142,8 @@ function makeobject(level) {
     subroutine to put monsters into an empty room without walls or other
     monsters
  */
-function fillmonst(monster) {
+function fillmonst(what) {
+  var monster = createNewMonster(what);
   for (var trys = 5; trys > 0; --trys) /* max # of creation attempts */ {
     var x = rnd(MAXX - 2);
     var y = rnd(MAXY - 2);
@@ -187,40 +189,4 @@ function sethp(flg) {
   for (var i = 0; i < nummonsters; i++) {
     fillmonst(makemonst(player.level.depth));
   }
-}
-
-/*
-    makemonst(lev)
-        int lev;
-
-    function to return monster number for a randomly selected monster
-        for the given cave level
- */
-
-// var monstlevel = [5, 11, 17, 22, 27, 33, 39, 42, 46, 50, 53, 56, 59];
-
-function makemonst(lev) {
-  var arg;
-  var x;
-  if (lev < 1)
-    lev = 1;
-  if (lev > 12)
-    lev = 12;
-  if (lev < 5)
-    arg = rnd(monstlevel[lev - 1]);
-  else
-    arg = rnd(monstlevel[lev - 1] - monstlevel[lev - 4]) + monstlevel[lev - 4];
-
-  var monster = createNewMonster(arg);
-  debug("create.makemonst(" + lev + "): " + monster.name);
-
-  // tmp=rnd((x=monstlevel[lev-1])?x:1);
-  // else
-  // tmp=rnd((x=monstlevel[lev-1]-monstlevel[lev-4])?x:1)+monstlevel[lev-4];
-
-  // TODO
-  // while (monster[tmp].genocided && tmp < MAXMONST)
-  //   tmp++; /* genocided? */
-  // return (tmp);
-  return monster;
 }

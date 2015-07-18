@@ -119,7 +119,6 @@ function monsterAt(x, y) {
  *  Returns no value.
  */
 function createmonster(mon) {
-  updateLog("CREATING: " + mon);
   var x, y, k, i;
   if (mon < 1 || mon > monsterlist.length - 1) /* check for monster number out of bounds */ {
     beep();
@@ -133,13 +132,17 @@ function createmonster(mon) {
     x = player.x + diroffx[k];
     y = player.y + diroffy[k];
     if (cgood(x, y, 0, 1)) /* if we can create here */ {
-      player.level.monsters[x][y] = createNewMonster(mon);
+      var monster = createNewMonster(mon);
+      player.level.monsters[x][y] = monster;
+      debug("createmonster: " + mon + " " + monsterlist[mon]);
       //hitp[x][y] = monster[mon].hitpoints;
-      //stealth[x][y]=0;
       //know[x][y] &= ~KNOWHERE;
+      monster.stealth = 0;
       switch (mon) {
-        // TODO
-        //case ROTHE: case POLTERGEIST: case VAMPIRE: stealth[x][y]=1;
+        case ROTHE:
+        case POLTERGEIST:
+        case VAMPIRE:
+          monster.stealth = 1;
       };
       return;
     }
@@ -187,7 +190,7 @@ function cgood(x, y, itm, monst) {
     if (monsterAt(x, y) != null) {
       return (false);
     }
-    switch (getItem(x,y).id) {
+    switch (getItem(x, y).id) {
       /* note: not invisible traps, since monsters are not affected
          by them.
       */
@@ -240,59 +243,60 @@ const monstlevel = [5, 11, 17, 22, 27, 33, 39, 42, 46, 50, 53, 56, 59];
 const monsterlist = [
   /*  NAME   ID CHAR NAME  LV  AC  DAM ATT DEF GEN INT GOLD    HP  EXP
   --------------------------------------------------------------------- */
+  // 0
   new Monster("", ".", "", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0),
   new Monster("BAT, ", "B", "bat", 1, 0, 1, 0, 0, 0, 3, 0, 1, 1),
   new Monster("GNOME, ", "G", "gnome", 1, 10, 1, 0, 0, 0, 8, 30, 2, 2),
   new Monster("HOBGOBLIN", "H", "hobgoblin", 1, 14, 2, 0, 0, 0, 5, 25, 3, 2),
   new Monster("JACKAL", "J", "jackal", 1, 17, 1, 0, 0, 0, 4, 0, 1, 1),
   new Monster("KOBOLD", "K", "kobold", 1, 20, 1, 0, 0, 0, 7, 10, 1, 1),
-
+  // 6
   new Monster("ORC", "O", "orc", 2, 12, 1, 0, 0, 0, 9, 40, 4, 2),
   new Monster("SNAKE", "S", "snake", 2, 15, 1, 0, 0, 0, 3, 0, 3, 1),
   new Monster("CENTIPEDE", "c", "giant centipede", 2, 14, 0, 4, 0, 0, 3, 0, 1, 2),
   new Monster("JACULI", "j", "jaculi", 2, 20, 1, 0, 0, 0, 3, 0, 2, 1),
   new Monster("TROGLODYTE", "t", "troglodyte", 2, 10, 2, 0, 0, 0, 5, 80, 4, 3),
   new Monster("ANT", "A", "giant ant", 2, 8, 1, 4, 0, 0, 4, 0, 5, 5),
-
+  // 12
   new Monster("EYE", "E", "floating eye", 3, 8, 1, 0, 0, 0, 3, 0, 5, 2),
   new Monster("LEPRECHAUN", "L", "leprechaun", 3, 3, 0, 8, 0, 0, 3, 1500, 13, 45),
   new Monster("NYMPH", "N", "nymph", 3, 3, 0, 14, 0, 0, 9, 0, 18, 45),
   new Monster("QUASIT", "Q", "quasit", 3, 5, 3, 0, 0, 0, 3, 0, 10, 15),
   new Monster("RUSTMONSTER", "R", "rust monster", 3, 4, 0, 1, 0, 0, 3, 0, 18, 25),
   new Monster("ZOMBIE", "Z", "zombie", 3, 12, 2, 0, 0, 0, 3, 0, 6, 7),
-
+  // 18
   new Monster("ASSASSINBUG", "a", "assassin bug", 4, 9, 3, 0, 0, 0, 3, 0, 20, 15),
   new Monster("BUGBEAR", "b", "bugbear", 4, 5, 4, 15, 0, 0, 5, 40, 20, 35),
   new Monster("HELLHOUND", "h", "hell hound", 4, 5, 2, 2, 0, 0, 6, 0, 16, 35),
   new Monster("ICELIZARD", "i", "ice lizard", 4, 11, 2, 10, 0, 0, 6, 50, 16, 25),
   new Monster("CENTAUR", "C", "centaur", 4, 6, 4, 0, 0, 0, 10, 40, 24, 45),
-
+  // 23
   new Monster("TROLL", "T", "troll", 5, 4, 5, 0, 0, 0, 9, 80, 50, 300),
   new Monster("YETI", "Y", "yeti", 5, 6, 4, 0, 0, 0, 5, 50, 35, 100),
   new Monster("WHITEDRAGON", "d", "white dragon", 5, 2, 4, 5, 0, 0, 16, 500, 55, 1000),
   new Monster("ELF", "e", "elf", 5, 8, 1, 0, 0, 0, 15, 50, 22, 35),
   new Monster("CUBE", "g", "gelatinous cube", 5, 9, 1, 0, 0, 0, 3, 0, 22, 45),
-
+  // 28
   new Monster("METAMORPH", "m", "metamorph", 6, 7, 3, 0, 0, 0, 3, 0, 30, 40),
   new Monster("VORTEX", "v", "vortex", 6, 4, 3, 0, 0, 0, 3, 0, 30, 55),
   new Monster("ZILLER", "z", "ziller", 6, 15, 3, 0, 0, 0, 3, 0, 30, 35),
   new Monster("VIOLETFUNGI", "F", "violet fungi", 6, 12, 3, 0, 0, 0, 3, 0, 38, 100),
   new Monster("WRAITH", "W", "wraith", 6, 3, 1, 6, 0, 0, 3, 0, 30, 325),
   new Monster("FORVALAKA", "f", "forvalaka", 6, 2, 5, 0, 0, 0, 7, 0, 50, 280),
-
+  // 34
   new Monster("LAMANOBE", "l", "lama nobe", 7, 7, 3, 0, 0, 0, 6, 0, 35, 80),
   new Monster("OSEQUIP", "o", "osequip", 7, 4, 3, 16, 0, 0, 4, 0, 35, 100),
   new Monster("ROTHE", "r", "rothe", 7, 15, 5, 0, 0, 0, 3, 100, 50, 250),
   new Monster("XORN", "X", "xorn", 7, 0, 6, 0, 0, 0, 13, 0, 60, 300),
   new Monster("VAMPIRE", "V", "vampire", 7, 3, 4, 6, 0, 0, 17, 0, 50, 1000),
   new Monster("INVISIBLESTALKER", ".", "invisible stalker", 7, 3, 6, 0, 0, 0, 5, 0, 50, 350),
-
+  // 40
   new Monster("POLTERGEIST", "p", "poltergeist", 8, 1, 4, 0, 0, 0, 3, 0, 50, 450),
   new Monster("DISENCHANTRESS", "q", "disenchantress", 8, 3, 0, 9, 0, 0, 3, 0, 50, 500),
   new Monster("SHAMBLINGMOUND", "s", "shambling mound", 8, 2, 5, 0, 0, 0, 6, 0, 45, 400),
   new Monster("YELLOWMOLD", "y", "yellow mold", 8, 12, 4, 0, 0, 0, 3, 0, 35, 250),
   new Monster("UMBERHULK", "U", "umber hulk", 8, 3, 7, 11, 0, 0, 14, 0, 65, 600),
-
+  // 45
   new Monster("GNOMEKING", "k", "gnome king", 9, -1, 10, 0, 0, 0, 18, 2000, 100, 3000),
   new Monster("MIMIC", "M", "mimic", 9, 5, 6, 0, 0, 0, 8, 0, 55, 99),
   new Monster("WATERLORD", "w", "water lord", 9, -10, 15, 7, 0, 0, 20, 0, 150, 15000),
@@ -300,13 +304,13 @@ const monsterlist = [
   new Monster("GREENDRAGON", "D", "green dragon", 9, 3, 8, 10, 0, 0, 15, 200, 70, 2500),
   new Monster("PURPLEWORM", "P", "purple worm", 9, -1, 11, 0, 0, 0, 3, 100, 120, 15000),
   new Monster("XVART", "x", "xvart", 9, -2, 12, 0, 0, 0, 13, 0, 90, 1000),
-
+  // 52
   new Monster("SPIRITNAGA", "n", "spirit naga", 10, -20, 12, 12, 0, 0, 23, 0, 95, 20000),
   new Monster("SILVERDRAGON", "D", "silver dragon", 10, -1, 12, 3, 0, 0, 20, 700, 100, 10000),
   new Monster("PLATINUMDRAGON", "D", "platinum dragon", 10, -5, 15, 13, 0, 0, 22, 1000, 130, 24000),
   new Monster("GREENURCHIN", "u", "green urchin", 10, -3, 12, 0, 0, 0, 3, 0, 85, 5000),
   new Monster("REDDRAGON", "D", "red dragon", 10, -2, 13, 3, 0, 0, 19, 800, 110, 14000),
-
+  // 57
   new Monster("DEMONLORD", ".", "type I demon lord", 12, -30, 18, 0, 0, 0, 20, 0, 140, 50000),
   new Monster("DEMONLORD", ".", "type II demon lord", 13, -30, 18, 0, 0, 0, 21, 0, 160, 75000),
   new Monster("DEMONLORD", ".", "type III demon lord", 14, -30, 18, 0, 0, 0, 22, 0, 180, 100000),
@@ -318,8 +322,10 @@ const monsterlist = [
 
 ];
 
-const VAMPIRE = monsterlist[38];
-const BAT = monsterlist[1];
+const BAT = 1;
+const ROTHE = 36;
+const VAMPIRE = 38;
+const POLTERGEIST = 40;
 const GNOMEKING = 45;
 const WATERLORD = 47;
 
@@ -456,7 +462,7 @@ function hitmonster(x, y) {
   if (hitflag == 1) hitm(x, y, damage);
   if (monster.id == "VAMPIRE")
     if (monster.hitpoints < 25) {
-      player.level.monster[x][y] = new Monster(BAT);
+      player.level.monsters[x][y] = createNewMonster(BAT);
       // know[x][y] = 0; // TODO?
     }
 }
