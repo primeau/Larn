@@ -127,7 +127,7 @@ var Player = {
       function to calculate the pack weight of the player
       returns the number of pounds the player is carrying
    */
-    packweight: function() {
+  packweight: function() {
     var weight = 50;
     debug("TODO: player.packweight() (returning " + weight + ")");
     return weight;
@@ -219,6 +219,17 @@ var Player = {
 
 
   /*
+      losemspells(x)
+
+      subroutine to lose maximum spells
+  */
+  losemspells: function(x) {
+    player.SPELLMAX = Math.max(0, player.SPELLMAX - x);
+    player.SPELLS = Math.max(0, player.SPELLS - x);
+  },
+
+
+  /*
       raiselevel()
 
       subroutine to raise the player one level
@@ -229,6 +240,16 @@ var Player = {
     if (player.LEVEL < MAXPLEVEL) {
       player.raiseexperience(skill[player.LEVEL] - player.EXPERIENCE);
     }
+  },
+
+
+  /*
+      loselevel()
+
+      subroutine to lower the players character level by one
+   */
+  loselevel: function() {
+    if (player.LEVEL > 1) loseexperience((player.EXPERIENCE - skill[player.LEVEL - 1] + 1));
   },
 
 
@@ -253,6 +274,34 @@ var Player = {
       updateLog("Welcome to level " + player.LEVEL); /* if we changed levels */
     }
     player.level.paint();
+  },
+
+
+  /*
+      loseexperience(x)
+
+      subroutine to lose experience points
+   */
+  loseexperience: function(x) {
+    var i = player.LEVEL;
+    player.EXPERIENCE = Math.max(0, player.EXPERIENCE - x);
+    while (player.EXPERIENCE < skill[player.LEVEL - 1]) {
+      if (--player.LEVEL <= 1) {
+        player.LEVEL = 1; /*  down one level      */
+      }
+      var tmp = (player.CONSTITUTION - player.HARDGAME) >> 1; /* lose hpoints */
+      player.losemhp(rnd((tmp > 0) ? tmp : 1)); /* lose hpoints */
+      if (player.LEVEL < 7 - player.HARDGAME) {
+        player.losemhp((player.CONSTITUTION >> 2));
+      }
+      player.losemspells(rund(3)); /*  lose spells     */
+    }
+    if (i != player.LEVEL) {
+      cursors();
+      beep();
+      updateLog(`You went down to level ${player.LEVEL}!`);
+    }
+    bottomline();
   },
 
 

@@ -139,11 +139,10 @@ function act_open_door(x, y) {
       case 7:
         updateLog("You are jolted by an electric shock ");
         player.lastnum = 274;
-        losehp(rnd(20));
+        player.losehp(rnd(20));
         break;
 
       case 8:
-        updateLog("TODO: player.loselevel()");
         player.loselevel();
         break;
 
