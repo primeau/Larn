@@ -145,8 +145,7 @@ function read_scroll(scroll) {
       return;
 
     case 8:
-      updateLog("TODO: read_scroll(): teleport");
-      // oteleport(0);
+      oteleport(0);
       return; /* teleportation */
 
     case 9:

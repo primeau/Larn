@@ -515,3 +515,38 @@ function o_closed_door(key) {
       return true;
   }
 }
+
+
+/*
+ * subroutine to handle a teleport trap +/- 1 level maximum
+ */
+function oteleport(err) {
+  var tmp;
+  if (err)
+    if (rnd(151) < 3)
+      died(264); /* stuck in a rock */
+  player.TELEFLAG = 1; /* show ?? on bottomline if been teleported    */
+  if (player.level.depth == 0)
+    tmp = 0;
+  else
+  if (player.level.depth < MAXLEVEL) {
+    tmp = rnd(5) + player.level.depth - 3;
+    if (tmp >= MAXLEVEL)
+      tmp = MAXLEVEL - 1;
+    if (tmp < 1)
+      tmp = 1;
+  } else {
+    tmp = rnd(3) + player.level.depth - 2;
+    if (tmp >= MAXLEVEL + MAXVLEVEL)
+      tmp = MAXLEVEL + MAXVLEVEL - 1;
+    if (tmp < MAXLEVEL)
+      tmp = MAXLEVEL;
+  }
+  player.x = rnd(MAXX - 2);
+  player.y = rnd(MAXY - 2);
+  if (player.level.depth != tmp)
+    newcavelevel(tmp);
+  positionplayer();
+  //draws(0, MAXX, 0, MAXY);
+  bot_linex();
+}

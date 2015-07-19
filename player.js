@@ -592,7 +592,7 @@ function game_stats() {
   // s += "SPELL: " + player.SPELLS + "\n";
   // s += "GOLD:  " + player.GOLD + "\n";
   // s += "EXP:   " + player.EXPERIENCE + "\n";
-  // s += "LEVEL: " + player.LEVEL + "\n";
+  s += "LEVEL: " + player.LEVEL + "\n";
   // s += "WC:    " + player.WCLASS + "\n";
   // s += "AC:    " + player.AC + "\n";
 

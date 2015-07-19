@@ -41,7 +41,7 @@ function parseEvent(e) {
   var key = String.fromCharCode(code);
 
   if (e.which == undefined) {
-      key = e;
+    key = e;
   }
 
   nomove = 0;
@@ -139,6 +139,17 @@ function parseEvent(e) {
     }
     non_blocking_callback = wear;
     return;
+  }
+
+  if (key == 'Z') {
+    yrepcount = 0;
+    if (player.LEVEL > 9) {
+      oteleport(1);
+      return;
+    }
+    cursors();
+    lprcat("As yet, you don't have enough experience to use teleportation");
+    return; /*  teleport yourself   */
   }
 
   //
@@ -270,23 +281,23 @@ function parseEvent(e) {
   //
   // DEBUGGING SHORTCUTS
   //
-  if (key == 'Z' || key == '~') {
+  if (key == 'X' || key == '~') {
     DEBUG_STATS = !DEBUG_STATS;
     updateLog("DEBUG_STATS: " + DEBUG_STATS);
   }
-  if (key == 'Z' || key == '!') {
+  if (key == 'X' || key == '!') {
     DEBUG_OUTPUT = !DEBUG_OUTPUT;
     updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
   }
-  if (key == 'Z' || key == '@') {
+  if (key == 'X' || key == '@') {
     player.WTW = player.WTW == 0 ? 100000 : 0;
     updateLog("DEBUG_WALK_THROUGH_WALLS: " + (player.WTW > 0));
   }
-  if (key == 'Z' || key == '#') {
+  if (key == 'X' || key == '#') {
     DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
     updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
   }
-  if (key == 'Z' || key == '$') {
+  if (key == 'X' || key == '$') {
     DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
     if (DEBUG_KNOW_ALL) {
       for (var potioni = 0; potioni < potionname.length; potioni++) {
@@ -327,7 +338,7 @@ function parseEvent(e) {
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
   }
-  if (key == 'Z' || key == '^') {
+  if (key == 'X' || key == '^') {
     if (player.STEALTH <= 0) {
       updateLog("DEBUG: FREEZING MONSTERS");
       player.HOLDMONST = 100000;
@@ -338,7 +349,7 @@ function parseEvent(e) {
       player.STEALTH = 0;
     }
   }
-  if (key == 'Z') {
+  if (key == 'X') {
     player.level.items[player.x][player.y] = createObject(OLANCE);
     wield('w');
     player.level.items[player.x][player.y] = createObject(OSSPLATE, 50);

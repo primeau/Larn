@@ -86,6 +86,10 @@ var Level = {
 }; // Level
 
 
+// TODO!
+function bot_linex() {
+}
+
 
 /*
     newcavelevel(level)

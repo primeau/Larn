@@ -1,5 +1,8 @@
 "use strict";
 
+const MAXLEVEL = 11;    /*  max # levels in the dungeon         */
+const MAXVLEVEL = 3;    /*  max # of levels in the temple of the luran  */
+
 // home = 0
 // volcanic 1 = 11
 var LEVELS = [14];
@@ -54,6 +57,10 @@ var Larn = {
 
 
 function positionplayer(x, y, exact) {
+  if (x == null) x = player.x;
+  if (y == null) y = player.y;
+  if (exact == null) exact = false;
+
   // short circuit for moving to exact location
   var distance = 0;
   if (exact && canMove(x, y)) {
