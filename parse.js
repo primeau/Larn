@@ -65,8 +65,6 @@ function parseEvent(e) {
   var newx = player.x;
   var newy = player.y;
 
-
-
   if (blocking_callback != null) {
     let done = blocking_callback(code == ESC ? ESC : key);
     player.level.paint();

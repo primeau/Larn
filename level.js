@@ -49,7 +49,7 @@ var Level = {
         // HACK
         if (x != player.x || y != player.y) {
           if (this.monsters[x][y] != null) {
-            output += this.monsters[x][y].char;
+            output += monsterlist[this.monsters[x][y].arg].char;
           } else {
             output += this.items[x][y].char;
           }

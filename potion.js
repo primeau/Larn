@@ -345,10 +345,9 @@ function quaffpotion(potion, set_known) {
       return;
 
     case 23:
-      updateLog("TODO: quaffpotion(): see invisible");
-      // lprcat("\nYou feel your vision sharpen"); /* see invisible */
-      // c[SEEINVISIBLE] += rnd(1000) + 400;
-      // monstnamelist[INVISIBLESTALKER] = 'I';
+      lprcat("\nYou feel your vision sharpen"); /* see invisible */
+      player.SEEINVISIBLE += rnd(1000) + 400;
+      monsterlist[INVISIBLESTALKER].char = 'I';
       return;
   };
   player.level.paint(); /* show new stats      */

@@ -325,6 +325,7 @@ const monsterlist = [
 const BAT = 1;
 const ROTHE = 36;
 const VAMPIRE = 38;
+const INVISIBLESTALKER = 39;
 const POLTERGEIST = 40;
 const GNOMEKING = 45;
 const WATERLORD = 47;

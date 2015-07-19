@@ -82,7 +82,7 @@ var Player = {
   // CLUMSINESS:
   // INFEEBLEMENT:
   HALFDAM: 0,
-  // SEEINVISIBLE:
+  SEEINVISIBLE: 0,
   // FILLROOM:
   // RANDOMWALK:
   // SPHCAST:    /* nz if an active sphere of annihilation */
@@ -613,6 +613,7 @@ function game_stats() {
   s += "CONF:  " + player.CONFUSE + "\n";
 
   s += "AWARE: " + player.AWARENESS + "\n";
+  s += "SEEIN: " + player.SEEINVISIBLE + "\n";
 
   s += "SPRO:  " + player.SPIRITPRO + "\n";
   s += "UPRO:  " + player.UNDEADPRO + "\n";
