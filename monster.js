@@ -284,7 +284,7 @@ const monsterlist = [
   new Monster("WRAITH", "W", "wraith", 6, 3, 1, 6, 0, 0, 3, 0, 30, 325),
   new Monster("FORVALAKA", "f", "forvalaka", 6, 2, 5, 0, 0, 0, 7, 0, 50, 280),
   // 34
-  new Monster("LAMANOBE", "l", "lama nobe", 7, 7, 3, 0, 0, 0, 6, 0, 35, 80),
+  new Monster("LAMANOBE", "l", "lawless", 7, 7, 3, 0, 0, 0, 6, 0, 35, 80),
   new Monster("OSEQUIP", "o", "osequip", 7, 4, 3, 16, 0, 0, 4, 0, 35, 100),
   new Monster("ROTHE", "r", "rothe", 7, 15, 5, 0, 0, 0, 3, 100, 50, 250),
   new Monster("XORN", "X", "xorn", 7, 0, 6, 0, 0, 0, 13, 0, 60, 300),
