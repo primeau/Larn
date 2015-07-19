@@ -40,45 +40,13 @@ var Level = {
 
 
   paint: function() {
-    var output = "";
 
-    for (var y = 0; y < MAXY; y++) {
-      for (var x = 0; x < MAXX; x++) {
-        // HACK
-        // HACK
-        // HACK
-        if (x != player.x || y != player.y) {
-          if (this.monsters[x][y] != null) {
-            output += monsterlist[this.monsters[x][y].arg].char;
-          } else {
-            output += this.items[x][y].char;
-          }
-        } else {
-          output += "▓"; // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
-        }
-        // HACK
-        // HACK
-        // HACK
-      } // inner for
-      output += "\n";
-    } // outer for
-
-
-    bottomline();
-
-    // TODO: move to bottomline()?
-    output += player.getStatString();
-    output += "\n";
-
-    for (var logindex = 0; logindex < LOG.length; logindex++) {
-      output += LOG[logindex] + "\n";
+    if (IN_STORE) {
+      drawstore();
     }
-
-    document.getElementById("LARN").innerHTML = output;
-
-    var doc = document.getElementById("STATS");
-    if (doc != null)
-      document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
+    else {
+      drawmaze();
+    }
 
   },
 
@@ -88,6 +56,57 @@ var Level = {
 
 // TODO!
 function bot_linex() {
+}
+
+
+function drawstore() {
+
+
+
+}
+
+
+
+function drawmaze() {
+  var level = player.level;
+  var output = "";
+
+  for (var y = 0; y < MAXY; y++) {
+    for (var x = 0; x < MAXX; x++) {
+      // HACK
+      // HACK
+      // HACK
+      if (x != player.x || y != player.y) {
+        if (level.monsters[x][y] != null) {
+          output += monsterlist[level.monsters[x][y].arg].char;
+        } else {
+          output += level.items[x][y].char;
+        }
+      } else {
+        output += "▓"; // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
+      }
+      // HACK
+      // HACK
+      // HACK
+    } // inner for
+    output += "\n";
+  } // outer for
+
+  bottomline();
+
+  // TODO: move to bottomline()?
+  output += player.getStatString();
+  output += "\n";
+
+  for (var logindex = 0; logindex < LOG.length; logindex++) {
+    output += LOG[logindex] + "\n";
+  }
+
+  document.getElementById("LARN").innerHTML = output;
+
+  var doc = document.getElementById("STATS");
+  if (doc != null)
+    document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
 }
 
 

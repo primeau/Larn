@@ -177,6 +177,19 @@ function parseEvent(e) {
   }
 
 
+  //
+  // ENTER A BUILDING
+  //
+  if (key == 'E') {
+    yrepcount = 0;
+    // if (!prompt_mode)
+      enter();
+    // else
+    //   nomove = 1;
+    return;
+  }
+
+
   /*
            ARROW KEYS           NUMPAD               KEYBOARD
                ↑               7  8  9               y  k  u
@@ -252,10 +265,10 @@ function parseEvent(e) {
       moveNear(OVOLUP, false);
       debug("Moving near V -- REMOVE THIS FEATURE LATER");
     } else if (isItem(newx, newy, OENTRANCE)) {
-      updateLog("Entering Dungeon");
-      player.x = Math.floor(MAXX / 2);
-      player.y = MAXY - 2;
-      newcavelevel(1);
+      // updateLog("Entering Dungeon");
+      // player.x = Math.floor(MAXX / 2);
+      // player.y = MAXY - 2;
+      // newcavelevel(1);
     } else if (DEBUG_STAIRS_EVERYWHERE) {
       if (player.level.depth == 0) {
         debug("STAIRS_EVERYWHERE: entering dungeon");

@@ -84,9 +84,9 @@ Monster.prototype = {
      *  Returns nothing of value.
      */
     dropgold: function(amount) {
-      // if (amount > 250)
-      //   createitem(OMAXGOLD, amount / 100);
-      // else
+      if (amount > 250) {
+        amount = (amount / 100).toFixed() * 100;
+      }
       createitem(OGOLDPILE, amount);
     },
 
@@ -137,12 +137,12 @@ function createmonster(mon) {
       debug("createmonster: " + mon + " " + monsterlist[mon]);
       //hitp[x][y] = monster[mon].hitpoints;
       //know[x][y] &= ~KNOWHERE;
-      monster.stealth = 0;
+      monster.awake = false;
       switch (mon) {
         case ROTHE:
         case POLTERGEIST:
         case VAMPIRE:
-          monster.stealth = 1;
+          monster.awake = true;
       };
       return;
     }

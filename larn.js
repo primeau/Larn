@@ -2,9 +2,6 @@
 
 const MAXLEVEL = 11;    /*  max # levels in the dungeon         */
 const MAXVLEVEL = 3;    /*  max # of levels in the temple of the luran  */
-
-// home = 0
-// volcanic 1 = 11
 var LEVELS = [14];
 var LOG_SIZE = 4;
 var LOG = [""];
@@ -15,6 +12,7 @@ var DEBUG_OUTPUT = false;
 var DEBUG_STAIRS_EVERYWHERE = false;
 var DEBUG_KNOW_ALL = false;
 
+var IN_STORE = false;
 
 var Larn = {
   run: function() {

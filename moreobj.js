@@ -270,3 +270,57 @@ function wash_fountain() {
     act_wash_fountain();
   return;
 }
+
+
+/*
+    For command mode.  Perform entering a building.
+*/
+function enter() {
+  // cursors() ;
+  var building = getItem(player.x, player.y);
+  if (building.matches(OSCHOOL)) {
+    oschool();
+    return;
+  }
+  if (building.matches(OBANK)) {
+    obank();
+    return;
+  }
+  if (building.matches(OBANK2)) {
+    obank2();
+    return;
+  }
+  if (building.matches(ODNDSTORE)) {
+    dndstore();
+    return;
+  }
+  if (building.matches(OENTRANCE)) {
+    /* place player in front of entrance on level 1.  newcavelevel()
+       prevents player from landing on a monster/object.
+    */
+    player.x = 33;
+    player.y = MAXY - 2;
+    newcavelevel(1);
+    //know[33][MAXY - 1] = KNOWALL ; // TODO
+    player.level.monsters[33][MAXY - 1] = null;
+    //draws( 0, MAXX, 0, MAXY );
+    //showcell(playerx, playery);         /* to show around player */
+    bot_linex();
+    return;
+  }
+  if (building.matches(OTRADEPOST)) {
+    otradepost();
+    return;
+  }
+  if (building.matches(OLRS)) {
+    olrs();
+    return;
+  }
+  if (building.matches(OHOME)) {
+    ohome();
+    return;
+  }
+
+  lprcat("There is no place to enter here!\n");
+
+}

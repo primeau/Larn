@@ -56,6 +56,14 @@ const ODEADTHRONE = new Item("ODEADTHRONE", "t", "a massive throne");
 const OFOUNTAIN = new Item("OFOUNTAIN", "F", "a bubbling fountain");
 const ODEADFOUNTAIN = new Item("ODEADFOUNTAIN", "f", "a dead fountain");
 
+const OSCHOOL = new Item("OSCHOOL", "+", "the college of Larn");
+const ODNDSTORE = new Item("ODNDSTORE", "=", "the DND store");
+const OBANK2 = new Item("OBANK2", "$", "the 5th branch of the Bank of Larn");
+const OBANK = new Item("OBANK", "$", "the bank of Larn");
+const OHOME = new Item("OHOME", "H", "your home");
+const OLRS = new Item("OLRS", "L", "the Larn Revenue Service");
+const OTRADEPOST = new Item("OTRADEPOST", "S", "the local trading post");
+
 
 var Item = {
     id: null,
@@ -330,6 +338,15 @@ function lookforobject(do_ident, do_pickup, do_action) {
       return;
     if (do_ident)
       lprcat("There is a dead fountain here");
+  }
+  //
+  else if (item.matches(ODNDSTORE)) {
+    if (nearbymonst())
+      return;
+    if (do_ident)
+      lprcat("There is a DND store here.");
+    if (do_action)
+      prompt_enter();
   }
   //
   else if (item.matches(OSTATUE)) {
