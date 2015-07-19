@@ -273,9 +273,8 @@ function quaffpotion(potion, set_known) {
       return;
 
     case 14:
-      updateLog("TODO: quaffpotion(): confusion");
-      // lprcat("\nYou feel confused");
-      // c[CONFUSE] += 20 + rnd(9);
+      lprcat("You feel confused");
+      player.CONFUSE += 20 + rnd(9);
       return;
 
     case 15:

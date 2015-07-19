@@ -111,9 +111,8 @@ function moveplayer(dir) {
   var prayed;
 
   if (player.CONFUSE > 0) {
-    if (plater.level.depth < rnd(30)) {
-      xdir = rnd(3) - 2; /*if confused any dir*/
-      ydir = rnd(3) - 2;
+    if (player.level.depth < rnd(30)) {
+      dir = rund(9); /*if confused any dir*/
     }
   }
 
