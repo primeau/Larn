@@ -153,6 +153,15 @@ function dndstore() {
       dnditem(i);
     }
 
+    updategold();
+    player.level.paint();
+
+    blocking_callback = dnd_buy;
+  }
+
+
+
+  function updategold() {
     cursor(50, 19);
     lprcat(`You have ${player.GOLD} gold pieces`);
     cltoeoln();
@@ -162,14 +171,7 @@ function dndstore() {
     lprcat(" for more, ");
     standout("escape");
     lprcat(" to leave]? ");
-
-    blocking_callback = dnd_buy;
-
-    player.level.paint();
-
   }
-
-
 
 
 
@@ -181,73 +183,63 @@ function dndstore() {
       clear();
       drawscreen();
       dndindex = 0;
-      debug(`dnd_buyESC: dndindex=${dndindex} key=${key} i=${i} `);
       return 1;
     }
+
     if (key == ' ') {
-      //cl_dn(1, 4);
       if ((dndindex += 26) >= MAXITM) {
         dndindex = 0;
       }
       dndstore();
-      debug(`dnd_buySPACE: dndindex=${dndindex} key=${key} i=${i} `);
       return 0;
     }
 
     i = getIndexFromChar(key);
 
     if (i >= 0 && i <= 26) {
-      lprc(key); /* echo the byte */
       i += dndindex;
       if (i >= MAXITM) {
-        outofstock();
+        storemessage("Sorry, but we are out of that item.");
       } else if (dnd_item[i].qty <= 0) {
-        outofstock();
+        storemessage("Sorry, but we are out of that item.");
       } else if (pocketfull()) {
-        handsfull();
+        storemessage("You can't carry anything more!");
       } else if (player.GOLD < dnd_item[i].price) {
-        nogold();
+        storemessage("You don't have enough gold to pay for that!");
       } else {
         //if (itm[i].mem != 0) * itm[i].mem[itm[i].arg] = ' ';
         player.GOLD -= dnd_item[i].price;
         dnd_item[i].qty--;
         var boughtItem = createObject(dnd_item[i].item);
-        take(boughtItem); // TODO???
+        take(boughtItem);
         if (boughtItem.matches(OSCROLL)) learnScroll(boughtItem);
         if (boughtItem.matches(OPOTION)) learnPotion(boughtItem);
         if (dnd_item[i].qty == 0) dnditem(i);
+        updategold();
+        lprc(key); /* echo the byte */
         nap(1001);
-        debug(`dnd_buyBUY: dndindex=${dndindex} key=${key} i=${i} `);
         return 0;
       }
-
     } else {
-      debug(`dnd_buy???: dndindex=${dndindex} key=${key} i=${i} `);
       return 0;
     }
   }
 
 
+
 /*
     function for the players hands are full
  */
-function handsfull() {
-  lprcat("You can't carry anything more!");
-  lflush();
-  nap(2200);
-}
+  function storemessage(str) {
+    //lflush();
+    //dndstore();
+    cursors();
+    cltoeoln();
+    lprcat(str);
+    cursor(59, 21);
+    nap(2200);
+  }
 
-function outofstock() {
-  lprcat("Sorry, but we are out of that item.");
-  lflush();
-  nap(2200);
-}
-
-function nogold() {
-  lprcat("You don't have enough gold to pay for that!");
-  lflush();
-  nap(2200);
-}
 
 
 /*
@@ -256,29 +248,26 @@ function nogold() {
     to print the item list;  used in dndstore() enter with the index into itm
  */
  function dnditem(i) {
-   var j, k, price;
-   if (i < 0 || i >= MAXITM) return;
+  var j, k, price;
+  if (i < 0 || i >= MAXITM) return;
 
-   cursor((j = (i & 1) * 40 + 1), (k = ((i % 26) >> 1) + 5));
+  cursor((j = (i & 1) * 40 + 1), (k = ((i % 26) >> 1) + 5));
 
-   if (dnd_item[i].qty == 0) {
-     cltoeoln();
-     return;
-   }
+  if (dnd_item[i].qty == 0) {
+    lprintf("", 39);
+    return;
+  }
 
-   var item = dnd_item[i].item;
-   lprintf(`${'a'.nextChar(i%26)}) `);
+  var item = dnd_item[i].item;
+  lprintf(`${'a'.nextChar(i%26)}) `);
 
-        if (item.matches(OPOTION)) lprintf(`${item.toString().substring(8)}`);
-   else if (item.matches(OSCROLL)) lprintf(`${item.toString().substring(8)}`);
-   else lprintf(`${dnd_item[i].item}`);
+  if (item.matches(OPOTION)) lprintf(`${item.toString(true).substring(8)}`);
+  else if (item.matches(OSCROLL)) lprintf(`${item.toString(true).substring(8)}`);
+  else lprintf(`${dnd_item[i].item.toString(true)}`);
 
-   cursor(j + 31, k);
+  cursor(j + 31, k);
 
-   price = dnd_item[i].price;
+  price = dnd_item[i].price;
 
-   // TODO: turn into a function
-   var spaces = 6 - price.toString().length;
-   while(--spaces >= 0) lprc(" ");
-   lprintf(`${price}`);
- }
+  lprintf(price.toString(), 6);
+}

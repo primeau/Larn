@@ -8,9 +8,16 @@ var current_attr = null;
 
 var display = initGrid(80, 24);
 
-function lprintf(str) {
+function lprintf(str, width) {
+  if (width != null) {
+    //str = str.toString(); // TODO
+    var spaces = width - str.length;
+    while (--spaces >= 0) lprc(" ");
+  }
   lprcat(str);
 }
+
+
 
 function lprcat(str) {
   // if (messages_on && cursory == 24) play_message_sound(str);
@@ -37,14 +44,14 @@ function cursors() {
 }
 
 
-
+var messages_on = false;
 function lprc(ch) {
   if (ch == '\b') {
     cursorx--;
     os_put_font(' ', current_attr, cursorx - 1, cursory - 1);
   } else if (ch == '\n') {
     cursorx = 1;
-    if (cursory == 24 && messages_on) os_scroll_down(20 - 1, 24 - 1);
+    if (cursory == 24 && messages_on) os_scroll_down(20 - 1, 24 - 1); //TODO
     else cursory++;
   } else {
     var n = 1;
@@ -62,6 +69,11 @@ function lprc(ch) {
 }
 
 
+function os_scroll_down(x1, x2) {
+
+}
+
+
 
 function os_put_font(ch, attr, x, y) {
   if (x >= 0 && x < 80 && y >= 0 && y < 24)
@@ -69,6 +81,7 @@ function os_put_font(ch, attr, x, y) {
   // display[80 * y + x] = ch;
     display[x][y] = ch;
 }
+
 
 
 function clear() {
@@ -95,6 +108,7 @@ function cltoeoln() {
   cursorx = x;
 }
 
+
 function cl_up(x, y) {
   for (var i = 1; i <= y; i++) {
     var n = 80;
@@ -104,6 +118,8 @@ function cl_up(x, y) {
   cursor(x, y);
 }
 
+
+
 function cl_dn(x, y) {
   for (var i = y; i <= 24; i++) {
     var n = 80;
@@ -112,6 +128,7 @@ function cl_dn(x, y) {
   }
   cursor(x, y);
 }
+
 
 
 /*

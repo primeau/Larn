@@ -94,16 +94,16 @@ var Item = {
       return (this.id == item.id);
     },
 
-    toString: function() {
+    toString: function(force_known) {
       var description = this.desc;
       if (this.matches(OPOTION)) {
-        if (isKnownPotion(this) || DEBUG_KNOW_ALL) {
+        if (isKnownPotion(this) || force_known || DEBUG_KNOW_ALL) {
           description += " of " + potionname[this.arg];
         }
       }
       //
       else if (this.matches(OSCROLL)) {
-        if (isKnownScroll(this) || DEBUG_KNOW_ALL) {
+        if (isKnownScroll(this) || force_known ||  DEBUG_KNOW_ALL) {
           description += " of " + scrollname[this.arg];
         }
       }
@@ -112,6 +112,9 @@ var Item = {
         this.matches(OCLOSEDDOOR) ||
         this.matches(OTHRONE) ||
         this.matches(ODEADTHRONE) ||
+        this.matches(OBOOK) ||
+        this.matches(OCHEST) ||
+        (this.isRing() && force_known) ||
         this.isGem()) {
         // do nothing
       }
@@ -170,6 +173,19 @@ var Item = {
       gem |= this.matches(OEMERALD);
       gem |= this.matches(OSAPPHIRE);
       return gem;
+    },
+
+    isRing: function() {
+      var ring = false;
+      ring |= this.matches(ORINGOFEXTRA);
+      ring |= this.matches(ODEXRING);
+      ring |= this.matches(ODAMRING);
+      ring |= this.matches(OREGENRING);
+      ring |= this.matches(OSTRRING);
+      ring |= this.matches(OPROTRING);
+      ring |= this.matches(OCLEVERRING);
+      ring |= this.matches(OENERGYRING);
+      return ring;
     },
 
   } // ITEM OBJECT

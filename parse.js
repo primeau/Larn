@@ -5,6 +5,7 @@ var wait_for_open_direction = false;
 
 const ESC = 27;
 const ENTER = 13;
+const SPACE = 32;
 const DEL_CODE = 8;
 const DEL = "___DELETE___";
 
@@ -13,7 +14,7 @@ function preParseEvent(e, keyDown, keyUp) {
   var code = e.which;
   //debug(`preParseEvent(): got: ${code}: ${keyDown} ${keyUp} ${e.key}`);
   if (keyDown) { // to capture ESC key etc
-    if (code == ESC || code == ENTER || code == DEL_CODE || code >= 37 && code <= 40) {
+    if (code == ESC || code == ENTER || code == DEL_CODE || code == SPACE || code >= 37 && code <= 40) {
       e.preventDefault(); // prevent scrolling on page
       parseEvent(e);
     } else {
@@ -196,10 +197,8 @@ function parseEvent(e) {
   if (key == 'E') {
     yrepcount = 0;
 
-    debug("toggle store: " + IN_STORE);
-    IN_STORE = !IN_STORE;
     // if (!prompt_mode)
-      enter();
+    enter();
     // else
     //   nomove = 1;
     return;

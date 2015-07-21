@@ -277,6 +277,10 @@ function wash_fountain() {
 */
 function enter() {
   // cursors() ;
+
+  debug("enter(): entering a building");
+  IN_STORE = true;
+
   var building = getItem(player.x, player.y);
   if (building.matches(OSCHOOL)) {
     oschool();
@@ -295,6 +299,7 @@ function enter() {
     return;
   }
   if (building.matches(OENTRANCE)) {
+    IN_STORE = false;
     /* place player in front of entrance on level 1.  newcavelevel()
        prevents player from landing on a monster/object.
     */
@@ -320,6 +325,9 @@ function enter() {
     ohome();
     return;
   }
+
+  debug("enter(): no building here");
+  IN_STORE = false;
 
   updateLog("There is no place to enter here!\n");
 
