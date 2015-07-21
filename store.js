@@ -1,9 +1,5 @@
 "use strict";
 
-
-var dndcount = 0;
-var dnditm = 0;
-
 /* number of items in the dnd inventory table   */
 const MAXITM = 83;
 
@@ -20,7 +16,9 @@ DND_Item.prototype = {
     qty: 0,
   }
 
+
 var dnd_item = null;
+
 
 var _itm = [
 /* cost      iven name    iven arg   how
@@ -116,6 +114,8 @@ var _itm = [
     function for the dnd store
  */
 
+var dndindex = 0;
+
 function dndstore() {
 
   if (dnd_item == null) {
@@ -125,12 +125,12 @@ function dndstore() {
       }
   }
 
-
-  dnditm = 0;
   clear();
+
   lprcat("Welcome to the Larn Thrift Shoppe.  We stock many items explorers find useful\n");
-  lprcat(" in their adventures.  Feel free to browse to your hearts content.\n");
+  lprcat("in their adventures.  Feel free to browse to your hearts content.\n");
   lprcat("Also be advised, if you break 'em, you pay for 'em.");
+
   // TODO
   // if (outstanding_taxes > 0) {
   //   lprcat("\n\nThe Larn Revenue Service has ordered us to not do business with tax evaders.\n");
@@ -149,14 +149,11 @@ function dndstore() {
   //   return;
   // }
 
-
-  // while (1) {
-
-    for (var i = dnditm; i < 26 + dnditm; i++) {
+    for (var i = dndindex; i < 26 + dndindex; i++) {
       dnditem(i);
     }
 
-    cursor(50, 18);
+    cursor(50, 19);
     lprcat(`You have ${player.GOLD} gold pieces`);
     cltoeoln();
     cl_dn(1, 20); /* erase to eod */
@@ -165,47 +162,70 @@ function dndstore() {
     lprcat(" for more, ");
     standout("escape");
     lprcat(" to leave]? ");
-    i = 0;
-    // while ((i < 'a' || i > 'z') && (i != ' ') && (i != ESC) && (i != 12)) i = ttgetch();
-    // // if (i == 12) {
-    // //   clear();
-    // //   dnd_2hed();
-    // //   dnd_hed();
-    // // } else
-    // if (i == ESC) {
-    //   drawscreen();
-    //   return;
-    // } else if (i == ' ') {
-    //   cl_dn(1, 4);
-    //   if ((dnditm += 26) >= MAXITM) {
-    //     dnditm = 0;
-    //   }
-    // } else { /* buy something */
-    //   lprc(i); /* echo the byte */
-    //   i += dnditm - 'a';
-    //   if (i >= MAXITM) {
-    //     outofstock();
-    //   } else if (itm[i].qty <= 0) {
-    //     outofstock();
-    //   } else if (pocketfull()) {
-    //     handsfull();
-    //   } else if (player.GOLD < itm[i].price) {
-    //     nogold();
-    //   } else {
-    //     //if (itm[i].mem != 0) * itm[i].mem[itm[i].arg] = ' ';
-    //     player.GOLD -= itm[i].price;
-    //     itm[i].qty--;
-    //     var boughtItem = createObject(itm[i].obj, itm[i].arg);
-    //     take(boughtItem); // TODO???
-    //     if (boughtItem.matches(OSCROLL)) learnScroll(boughtItem);
-    //     if (boughtItem.matches(OPOTION)) learnPotion(boughtItem);
-    //     if (itm[i].qty == 0) dnditem(i);
-    //     nap(1001);
-    //   }
-    // }
 
-  // }
-}
+    blocking_callback = dnd_buy;
+
+    player.level.paint();
+
+  }
+
+
+
+
+
+  function dnd_buy(key) {
+    var i;
+
+    if (key == ESC) {
+      IN_STORE = false;
+      clear();
+      drawscreen();
+      dndindex = 0;
+      debug(`dnd_buyESC: dndindex=${dndindex} key=${key} i=${i} `);
+      return 1;
+    }
+    if (key == ' ') {
+      //cl_dn(1, 4);
+      if ((dndindex += 26) >= MAXITM) {
+        dndindex = 0;
+      }
+      dndstore();
+      debug(`dnd_buySPACE: dndindex=${dndindex} key=${key} i=${i} `);
+      return 0;
+    }
+
+    i = getIndexFromChar(key);
+
+    if (i >= 0 && i <= 26) {
+      lprc(key); /* echo the byte */
+      i += dndindex;
+      if (i >= MAXITM) {
+        outofstock();
+      } else if (dnd_item[i].qty <= 0) {
+        outofstock();
+      } else if (pocketfull()) {
+        handsfull();
+      } else if (player.GOLD < dnd_item[i].price) {
+        nogold();
+      } else {
+        //if (itm[i].mem != 0) * itm[i].mem[itm[i].arg] = ' ';
+        player.GOLD -= dnd_item[i].price;
+        dnd_item[i].qty--;
+        var boughtItem = createObject(dnd_item[i].item);
+        take(boughtItem); // TODO???
+        if (boughtItem.matches(OSCROLL)) learnScroll(boughtItem);
+        if (boughtItem.matches(OPOTION)) learnPotion(boughtItem);
+        if (dnd_item[i].qty == 0) dnditem(i);
+        nap(1001);
+        debug(`dnd_buyBUY: dndindex=${dndindex} key=${key} i=${i} `);
+        return 0;
+      }
+
+    } else {
+      debug(`dnd_buy???: dndindex=${dndindex} key=${key} i=${i} `);
+      return 0;
+    }
+  }
 
 
 /*
@@ -235,25 +255,30 @@ function nogold() {
 
     to print the item list;  used in dndstore() enter with the index into itm
  */
- function dnditem(i)
- {
+ function dnditem(i) {
    var j, k, price;
+   if (i < 0 || i >= MAXITM) return;
 
-   if (i >= MAXITM) return;
+   cursor((j = (i & 1) * 40 + 1), (k = ((i % 26) >> 1) + 5));
 
-   cursor((j = (i & 1) * 40 + 1) , (k = ((i % 26) >> 1) + 5));
+   if (dnd_item[i].qty == 0) {
+     cltoeoln();
+     return;
+   }
 
-   //TODOif (dnd_item_qty[i] == 0) {lprintf("%39s", ""); return;}
+   var item = dnd_item[i].item;
+   lprintf(`${'a'.nextChar(i%26)}) `);
 
-   lprintf(`${(i % 26) + 'a'})`);
-
-        if (dnd_item[i].obj == OPOTION) lprintf(`potion of ${dnd_item[i].arg}`);
-   else if (dnd_item[i].obj == OSCROLL) lprintf(`scroll of ${dnd_item[i].arg}`);
+        if (item.matches(OPOTION)) lprintf(`${item.toString().substring(8)}`);
+   else if (item.matches(OSCROLL)) lprintf(`${item.toString().substring(8)}`);
    else lprintf(`${dnd_item[i].item}`);
 
    cursor(j + 31, k);
 
    price = dnd_item[i].price;
 
+   // TODO: turn into a function
+   var spaces = 6 - price.toString().length;
+   while(--spaces >= 0) lprc(" ");
    lprintf(`${price}`);
  }

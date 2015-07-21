@@ -56,6 +56,10 @@ var Level = {
 // TODO!
 function bot_linex() {}
 
+//TODO!
+function drawscreen() {
+player.level.paint();
+}
 
 function drawstore() {
 
@@ -69,6 +73,10 @@ function drawstore() {
   } // outer for
 
   document.getElementById("LARN").innerHTML = output;
+
+  var doc = document.getElementById("STATS");
+  if (doc != null)
+    document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
 
 
 }
@@ -108,6 +116,7 @@ function drawmaze() {
   lprc("\n");
 
   for (var logindex = 0; logindex < LOG.length; logindex++) {
+    cltoeoln();
     lprcat(LOG[logindex] + "\n");
   }
 

@@ -72,12 +72,20 @@ function getnumberinput(key) {
 
 
 String.prototype.nextChar = function(i) {
-  var n = i | 1;
+  var n = (i == null) ? 1 : i;
   return String.fromCharCode(this.charCodeAt(0) + n);
 }
 
 
 String.prototype.prevChar = function(i) {
-  var n = i | 1;
+  var n = (i == null) ? 1 : i;
   return String.fromCharCode(this.charCodeAt(0) - n);
+}
+
+
+function getIndexFromChar(char){
+  var acode = "a".charCodeAt(0);
+  var dropcode = char.charCodeAt(0);
+  var dropIndex = dropcode - acode;
+  return dropIndex;
 }

@@ -45,10 +45,7 @@ function drop_object(index) {
     return false;
   }
 
-  var acode = "a".charCodeAt(0);
-  var dropcode = index.charCodeAt(0);
-  var dropIndex = dropcode - acode;
-
+  var dropIndex = getIndexFromChar(index);
   debug("drop: " + dropIndex);
 
   var item = player.inventory[dropIndex];
@@ -90,4 +87,19 @@ function drop_object(index) {
   player.level.paint();
   wait_for_drop_input = false;
   return true;
+}
+
+
+/*
+    routine to tell if player can carry one more thing
+    returns 1 if pockets are full, else 0
+*/
+function pocketfull() {
+  var limit = Math.min(15 + (player.LEVEL >> 1), MAXINVEN); //TODO externalize
+  for (var i = 0; i < limit; i++) {
+    if (player.inventory[i] == null) {
+      return (false);
+    }
+  }
+  return (true);
 }

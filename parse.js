@@ -88,7 +88,6 @@ function parseEvent(e) {
 
   if (IN_STORE) {
     debug("IN STORE");
-    drawstore();
     return;
   }
 

@@ -495,9 +495,7 @@ function wield(index) {
       // cursors();
     }
 
-    var startcode = "a".charCodeAt(0);
-    var code = index.charCodeAt(0);
-    var useindex = code - startcode;
+    var useindex = getIndexFromChar(index);
     item = player.inventory[useindex];
 
     if (item == null) {
@@ -583,9 +581,7 @@ function wear(index) {
       // cursors();
     }
 
-    var startcode = "a".charCodeAt(0);
-    var code = index.charCodeAt(0);
-    var useindex = code - startcode;
+    var useindex = getIndexFromChar(index);
     item = player.inventory[useindex];
 
     if (item == null) {
@@ -682,9 +678,8 @@ function game_stats() {
   for (var inven = 0; inven < player.inventory.length; inven++) {
     var item = player.inventory[inven];
     if (item != null) {
-      s += c + ") " + item + "\n";
+      s += c.nextChar(inven) + ") " + item + "\n";
     }
-    c = c.nextChar();
   }
 
   return s;
