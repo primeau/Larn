@@ -84,6 +84,20 @@ function parseEvent(e) {
   }
 
 
+
+
+  if (IN_STORE) {
+    debug("IN STORE");
+    drawstore();
+    return;
+  }
+
+
+
+
+
+
+
   if (wait_for_drop_input) {
     drop_object(code == ESC ? ESC : key);
     return;
@@ -182,6 +196,9 @@ function parseEvent(e) {
   //
   if (key == 'E') {
     yrepcount = 0;
+
+    debug("toggle store: " + IN_STORE);
+    IN_STORE = !IN_STORE;
     // if (!prompt_mode)
       enter();
     // else

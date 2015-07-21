@@ -14,7 +14,7 @@ function createRandomMaze(depth) {
 
   debug("createRandomMaze: used: " + USED_MAZES);
 
-  var grid = initGrid();
+  var grid = initGrid(MAXX, MAXY);
 
   // TODO: pretty sure there is a more efficient way to do this
   for (var y = 0; y < MAXY; y++) {
@@ -29,11 +29,12 @@ function createRandomMaze(depth) {
   return grid;
 }; // getRandomMaze
 
-function initGrid() {
+function initGrid(width, height) {
   // initialize the grid[][] Array
-  var grid = new Array(MAXX);
-  for (var x = 0; x < MAXX; x++) {
-    grid[x] = new Array(MAXY);
+  var grid = new Array(width);
+  for (var x = 0; x < width; x++) {
+    grid[x] = new Array(height);
+    grid[x] = new Array(height);
   }
   // // initialize each element in the array
   // for (var x = 0 ; x < MAXX ; x++) {

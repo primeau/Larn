@@ -12,8 +12,8 @@ var Level = {
   create: function(depth) {
     var mazeTemplate = createRandomMaze(depth);
 
-    this.items = initGrid();
-    this.monsters = initGrid();
+    this.items = initGrid(MAXX, MAXY);
+    this.monsters = initGrid(MAXX, MAXY);
 
     this.depth = depth;
 
@@ -43,8 +43,7 @@ var Level = {
 
     if (IN_STORE) {
       drawstore();
-    }
-    else {
+    } else {
       drawmaze();
     }
 
@@ -55,12 +54,21 @@ var Level = {
 
 
 // TODO!
-function bot_linex() {
-}
+function bot_linex() {}
 
 
 function drawstore() {
 
+  var output = "";
+
+  for (var y = 0; y < 24; y++) {
+    for (var x = 0; x < 80; x++) {
+      output += display[x][y] != null ? display[x][y] : ' ';
+    } // inner for
+    output += "\n";
+  } // outer for
+
+  document.getElementById("LARN").innerHTML = output;
 
 
 }
@@ -71,6 +79,7 @@ function drawmaze() {
   var level = player.level;
   var output = "";
 
+  cursor(1,1);
   for (var y = 0; y < MAXY; y++) {
     for (var x = 0; x < MAXX; x++) {
       // HACK
@@ -78,31 +87,33 @@ function drawmaze() {
       // HACK
       if (x != player.x || y != player.y) {
         if (level.monsters[x][y] != null) {
-          output += monsterlist[level.monsters[x][y].arg].char;
+          lprc(monsterlist[level.monsters[x][y].arg].char);
         } else {
-          output += level.items[x][y].char;
+          lprc(level.items[x][y].char);
         }
       } else {
-        output += "▓"; // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
+        lprc(`▓`); // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
       }
       // HACK
       // HACK
       // HACK
     } // inner for
-    output += "\n";
+    lprc("\n");
   } // outer for
 
   bottomline();
 
   // TODO: move to bottomline()?
-  output += player.getStatString();
-  output += "\n";
+  lprcat(player.getStatString());
+  lprc("\n");
 
   for (var logindex = 0; logindex < LOG.length; logindex++) {
-    output += LOG[logindex] + "\n";
+    lprcat(LOG[logindex] + "\n");
   }
 
-  document.getElementById("LARN").innerHTML = output;
+  drawstore();
+
+  //document.getElementById("LARN").innerHTML = output;
 
   var doc = document.getElementById("STATS");
   if (doc != null)

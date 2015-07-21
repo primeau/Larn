@@ -321,6 +321,6 @@ function enter() {
     return;
   }
 
-  lprcat("There is no place to enter here!\n");
+  updateLog("There is no place to enter here!\n");
 
 }

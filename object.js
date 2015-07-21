@@ -64,6 +64,25 @@ const OHOME = new Item("OHOME", "H", "your home");
 const OLRS = new Item("OLRS", "L", "the Larn Revenue Service");
 const OTRADEPOST = new Item("OTRADEPOST", "S", "the local trading post");
 
+const OPROTRING = new Item("OPROTRING", "+", "a ring of protection");
+const OSTRRING = new Item("OSTRRING", "+", "a ring of strength");
+const ODEXRING = new Item("ODEXRING", "+", "a ring of dexterity");
+const OCLEVERRING = new Item("OCLEVERRING", "+", "a ring of cleverness");
+const OENERGYRING = new Item("OENERGYRING", "+", "an energy ring");
+const ODAMRING = new Item("ODAMRING", "+", "a ring of increase damage");
+const OREGENRING = new Item("OREGENRING", "+", "a ring of regeneration");
+const ORINGOFEXTRA = new Item("ORINGOFEXTRA", "+", "ring of extra regeneration");
+const OAMULET = new Item("OAMULET", "}", "an amulet of invisibility");
+const OORBOFDRAGON = new Item("OORBOFDRAGON", "0", "an orb of dragon slaying");
+const OSPIRITSCARAB = new Item("OSPIRITSCARAB", ":", "a scarab of negate spirit");
+const OCUBEofUNDEAD = new Item("OCUBEofUNDEAD", ";", "a cube of undead control");
+const ONOTHEFT = new Item("ONOTHEFT", ",", "device of theft prevention");
+const OCHEST = new Item("OCHEST", "C", "a chest");
+const OBOOK = new Item("OBOOK", "B", "a book");
+const OCOOKIE = new Item("OCOOKIE", "c", "a fortune cookie");
+
+
+
 
 var Item = {
     id: null,
@@ -345,8 +364,8 @@ function lookforobject(do_ident, do_pickup, do_action) {
       return;
     if (do_ident)
       lprcat("There is a DND store here.");
-    if (do_action)
-      prompt_enter();
+    // if (do_action)
+    //   prompt_enter();
   }
   //
   else if (item.matches(OSTATUE)) {
