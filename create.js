@@ -106,15 +106,15 @@ function makeobject(level) {
   froom(2, OBATTLEAXE, rund(3)); /* a battle axe         */
   froom(5, OLONGSWORD, rund(3)); /* a long sword         */
   froom(5, OFLAIL, rund(3)); /* a flail              */
-  // froom(4, OREGENRING, rund(3)); /* ring of regeneration */
-  // froom(1, OPROTRING, rund(3)); /* ring of protection   */
-  // froom(2, OSTRRING, 1 + rnd(3)); /* ring of strength     */
+  froom(4, OREGENRING, rund(3)); /* ring of regeneration */
+  froom(1, OPROTRING, rund(3)); /* ring of protection   */
+  froom(2, OSTRRING, 1 + rnd(3)); /* ring of strength     */
   froom(7, OSPEAR, rnd(5)); /* a spear              */
-  // froom(3, OORBOFDRAGON, 0); /* orb of dragon slaying*/
-  // froom(4, OSPIRITSCARAB, 0); /* scarab of negate spirit*/
-  // froom(4, OCUBEofUNDEAD, 0); /* cube of undead control   */
-  // froom(2, ORINGOFEXTRA, 0); /* ring of extra regen      */
-  // froom(3, ONOTHEFT, 0); /* device of antitheft      */
+  froom(3, OORBOFDRAGON, 0); /* orb of dragon slaying*/
+  froom(4, OSPIRITSCARAB, 0); /* scarab of negate spirit*/
+  froom(4, OCUBEofUNDEAD, 0); /* cube of undead control   */
+  froom(2, ORINGOFEXTRA, 0); /* ring of extra regen      */
+  froom(3, ONOTHEFT, 0); /* device of antitheft      */
   froom(2, OSWORDofSLASHING, 0); /* sword of slashing */
   if (player.BESSMANN == 0) {
     froom(4, OHAMMER, 0); /*Bessman's flailing hammer*/
@@ -125,9 +125,9 @@ function makeobject(level) {
       froom(3, OSWORD, 3); /* sunsword + 3         */
       froom(5, O2SWORD, rnd(4)); /* a two handed sword */
       froom(3, OBELT, 4); /* belt of striking     */
-      // froom(3, OENERGYRING, 3); /* energy ring          */
+      froom(3, OENERGYRING, 3); /* energy ring          */
       froom(4, OPLATE, 5); /* platemail + 5        */
-      // froom(3, OCLEVERRING, 1 + rnd(2)); /* ring of cleverness */
+      froom(3, OCLEVERRING, 1 + rnd(2)); /* ring of cleverness */
     }
   }
 
@@ -139,9 +139,8 @@ function makeobject(level) {
     fillmroom(rund(2), OSAPPHIRE, rnd(3 * j + 1) + 2);
   }
 
-
-
 } // makeobject()
+
 
 
 /*

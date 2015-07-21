@@ -359,6 +359,20 @@ function parseEvent(e) {
       player.level.items[armori++][MAXY - 1] = createObject(OPLATEARMOR);
       player.level.items[armori++][MAXY - 1] = createObject(OSSPLATE);
 
+      player.level.items[armori++][MAXY - 1] = createObject(ODAMRING);
+      player.level.items[armori++][MAXY - 1] = createObject(ODEXRING);
+      player.level.items[armori++][MAXY - 1] = createObject(OSTRRING);
+      player.level.items[armori++][MAXY - 1] = createObject(OENERGYRING);
+      player.level.items[armori++][MAXY - 1] = createObject(OCLEVERRING);
+      player.level.items[armori++][MAXY - 1] = createObject(OPROTRING);
+      player.level.items[armori++][MAXY - 1] = createObject(OREGENRING);
+      player.level.items[armori++][MAXY - 1] = createObject(ORINGOFEXTRA);
+
+      player.level.items[armori++][MAXY - 1] = createObject(OSPIRITSCARAB);
+      player.level.items[armori++][MAXY - 1] = createObject(OCUBEofUNDEAD);
+      player.level.items[armori++][MAXY - 1] = createObject(ONOTHEFT);
+      player.level.items[armori++][MAXY - 1] = createObject(OORBOFDRAGON);
+
       player.level.items[armori++][MAXY - 1] = createObject(OALTAR);
       player.level.items[armori++][MAXY - 1] = createObject(OTHRONE);
       player.level.items[armori++][MAXY - 1] = createObject(OFOUNTAIN);
@@ -384,6 +398,7 @@ function parseEvent(e) {
     wear('W');
     player.STEALTH = 0;
     player.GOLD = 250000;
+    player.raiseexperience(1000000);
   }
 
   hitflag = 0;

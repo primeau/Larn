@@ -20,19 +20,19 @@ var Player = {
   GOLD: 0,
   EXPERIENCE: 0,
   LEVEL: 1,
-  // REGEN:
+  REGEN: 1,
   WCLASS: 0,
   AC: 0,
   // BANKACCOUNT:
   SPELLMAX: 1,
   SPELLS: 1,
-  // ENERGY:
+  ENERGY: 0,
   // ECOUNTER:
   MOREDEFENSES: 0,
   WEAR: null,
   // PROTECTIONTIME:
   WIELD: null,
-  // AMULET:
+  // AMULET:           // UNUSED
   // REGENCOUNTER:
   MOREDAM: 0,
   // DEXCOUNT:
@@ -47,23 +47,23 @@ var Player = {
   // CHARMCOUNT:
   // INVISIBILITY:
   // CANCELLATION:
-  HASTESELF: 0,
-  // EYEOFLARN:
+  //HASTESELF: 0,
+  // EYEOFLARN:        // UNUSED
   AGGRAVATE: 0,
   // GLOBE:
   // TELEFLAG:
-  // SLAYING:
-  // NEGATESPIRIT:
+  SLAYING: 0,
+  NEGATESPIRIT: 0,
   // SCAREMONST:
   AWARENESS: 0,
   HOLDMONST: 0,
   TIMESTOP: 0,
   HASTEMONST: 0,
-  // CUBEofUNDEAD:
+  CUBEofUNDEAD: 0,
   GIANTSTR: 0,
   FIRERESISTANCE: 0,
   BESSMANN: 0,
-  // NOTHEFT:
+  NOTHEFT: 0,
   HARDGAME: 0,
   // CPUTIME:
   // BYTESIN:
@@ -77,22 +77,19 @@ var Player = {
   SHIELD: null,
   STEALTH: 0,
   // ITCHING:
-  // LAUGHING:
-  // DRAINSTRENGTH:
+  // LAUGHING:         // UNUSED
+  // DRAINSTRENGTH:    // UNUSED
   // CLUMSINESS:
-  // INFEEBLEMENT:
+  // INFEEBLEMENT:     // UNUSED
   HALFDAM: 0,
   SEEINVISIBLE: 0,
   // FILLROOM:
   // RANDOMWALK:
   // SPHCAST:    /* nz if an active sphere of annihilation */
-  WTW: 0,
-  /* walk through walls */
-  STREXTRA: 0,
-  /* character strength due to objects or enchantments */
+  WTW: 0,        /* walk through walls */
+  STREXTRA: 0,   /* character strength due to objects or enchantments */
   // TMP:        /* misc scratch space */
-  LIFEPROT: 0,
-  /* life protection counter */
+  LIFEPROT: 0,   /* life protection counter */
 
   CLASS: function() {
     return CLASSES[this.LEVEL - 1];
@@ -310,29 +307,28 @@ var Player = {
       that affects these characteristics
    */
   adjustcvalues: function(item, pickup) {
-    // TODO: WHAT ABOUT OTHER RINGS???
-    // case ODEXRING:
-    //   c[DEXTERITY] -= arg + 1;
-    // case OSTRRING:
-    //   c[STREXTRA] -= arg + 1;
-    // case OCLEVERRING:
-    //   c[INTELLIGENCE] -= arg + 1;
+    if (item.matches(ODEXRING))
+      player.DEXTERITY += pickup ? item.arg + 1 : (item.arg + 1) * -1;
+    if (item.matches(OSTRRING))
+      player.STREXTRA += pickup ? item.arg + 1 : (item.arg + 1) * -1;
+    if (item.matches(OCLEVERRING))
+      player.INTELLIGENCE += pickup ? item.arg + 1 : (item.arg + 1) * -1;
     if (item.matches(OHAMMER)) {
-      player.DEXTERITY = pickup ? player.DEXTERITY + 10 : player.DEXTERITY - 10;
-      player.STREXTRA = pickup ? player.STREXTRA + 10 : player.STREXTRA - 10;
-      player.INTELLIGENCE = pickup ? player.INTELLIGENCE - 10 : player.INTELLIGENCE + 10;
+      player.DEXTERITY += pickup ? player.DEXTERITY + 10 : player.DEXTERITY - 10;
+      player.STREXTRA += pickup ? player.STREXTRA + 10 : player.STREXTRA - 10;
+      player.INTELLIGENCE += pickup ? player.INTELLIGENCE - 10 : player.INTELLIGENCE + 10;
     }
     if (item.matches(OSWORDofSLASHING)) {
-      player.DEXTERITY = pickup ? player.DEXTERITY + 5 : player.DEXTERITY - 5;
+      player.DEXTERITY += pickup ? 5 : - 5;
     }
-    // case OORBOFDRAGON:
-    //   --c[SLAYING];
-    // case OSPIRITSCARAB:
-    //   --c[NEGATESPIRIT];
-    // case OCUBEofUNDEAD:
-    //   --c[CUBEofUNDEAD];
-    // case ONOTHEFT:
-    //   --c[NOTHEFT];
+    if (item.matches(OORBOFDRAGON))
+      player.SLAYING = pickup;
+    if (item.matches(OSPIRITSCARAB))
+      player.NEGATESPIRIT = pickup;
+    if (item.matches(OCUBEofUNDEAD))
+      player.CUBEofUNDEAD = pickup;
+    if (item.matches(ONOTHEFT))
+      player.NOTHEFT = pickup;
     if (item.matches(OLANCE)) {
       if (!pickup) {
         player.LANCEDEATH = null;
@@ -386,22 +382,22 @@ var Player = {
     }
     player.WCLASS += player.MOREDAM;
 
+    player.REGEN = 1;
+    player.ENERGY = 0;
+
     for (var i = 0; i < player.inventory.length; i++) {
       let item = player.inventory[i];
       if (item == null)
         continue;
-      // /*  now for regeneration abilities based on rings   */
-      //     c[REGEN]=1;     c[ENERGY]=0;
-      //     j=0;  for (k=25; k>0; k--)  if (iven[k]) {j=k; k=0; }
-      //     for (i=0; i<=j; i++)
-      //         switch(iven[i])
-      //             case OPROTRING: c[AC]     += ivenarg[i] + 1;    break;
-      //             case ODAMRING:  c[WCLASS] += ivenarg[i] + 1;    break;
+
       if (item.matches(OBELT)) player.WCLASS += ((item.arg << 1)) + 2;
-      //
-      //             case OREGENRING:    c[REGEN]  += ivenarg[i] + 1;    break;
-      //             case ORINGOFEXTRA:  c[REGEN]  += 5 * (ivenarg[i]+1); break;
-      //             case OENERGYRING:   c[ENERGY] += ivenarg[i] + 1;    break;
+
+      /*  now for regeneration abilities based on rings   */
+      if (item.matches(OPROTRING)) player.AC += item.arg + 1;
+      if (item.matches(ODAMRING)) player.WCLASS += item.arg + 1;
+      if (item.matches(OREGENRING)) player.REGEN += item.arg + 1;
+      if (item.matches(ORINGOFEXTRA)) player.REGEN += 5 * (item.arg + 1);
+      if (item.matches(OENERGYRING)) player.ENERGY += item.arg + 1;
     }
   },
 
@@ -641,11 +637,14 @@ function game_stats() {
   // s += "WC:    " + player.WCLASS + "\n";
   // s += "AC:    " + player.AC + "\n";
 
+  s += "ENERG: " + player.ENERGY + "\n";
+  s += "REGEN: " + player.REGEN + "\n";
+
   s += "WIELD: " + player.WIELD + "\n";
   s += "WEAR:  " + player.WEAR + "\n";
   s += "SHLD:  " + player.SHIELD + "\n";
 
-  s += "MORED: " + player.MOREDEFENSES + "\n";
+  s += "PRO3: " + player.MOREDEFENSES + "\n";
   s += "ALTPR: " + player.ALTPRO + "\n";
 
   s += "STREX: " + player.STREXTRA + "\n";
@@ -666,8 +665,13 @@ function game_stats() {
 
   s += "HOLD:  " + player.HOLDMONST + "\n";
   s += "STEL:  " + player.STEALTH + "\n";
-  s += "HASTE: " + player.HASTESELF + "\n";
+  //s += "HASTE: " + player.HASTESELF + "\n";
   s += "WTW:   " + player.WTW + "\n";
+
+  s += "THEFT: " + player.NOTHEFT + "\n";
+  s += "CUBE:  " + player.CUBEofUNDEAD + "\n";
+  s += "ORB:   " + player.SLAYING + "\n";
+  s += "NEGAT: " + player.NEGATESPIRIT + "\n";
 
   s += "KILL:  " + player.MONSTKILLED + "\n";
   s += "LANCE: " + player.LANCEDEATH + "\n";
