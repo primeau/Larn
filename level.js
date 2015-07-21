@@ -58,7 +58,7 @@ function bot_linex() {}
 
 //TODO!
 function drawscreen() {
-player.level.paint();
+  player.level.paint();
 }
 
 function drawstore() {
@@ -87,7 +87,7 @@ function drawmaze() {
   var level = player.level;
   var output = "";
 
-  cursor(1,1);
+  cursor(1, 1);
   for (var y = 0; y < MAXY; y++) {
     for (var x = 0; x < MAXX; x++) {
       // HACK
@@ -141,24 +141,53 @@ TODO    A new set of monsters will be created for a new level, and existing
 TODO    Note that it is here we remove genocided monsters from the present level.
  */
 
-function newcavelevel(depth) {
-  debug("going to: " + depth);
 
-  if (LEVELS[depth] instanceof Level.constructor) {
-    debug("level exists: " + depth);
-    player.level = LEVELS[depth];
+function newcavelevel(depth) {
+
+  let beenhere = LEVELS[depth] instanceof Level.constructor;
+
+  if (beenhere) {
+    savelevel(); /* put the level back into storage  */
+  }
+  //level = depth; /* get the new level and put in working storage */
+  if (beenhere) {
+    getlevel(depth);
     sethp(false);
-  } else {
-    debug("level does not exist: " + depth);
-    var newLevel = Object.create(Level);
-    newLevel.create(depth);
-    LEVELS[depth] = newLevel;
-    player.level = LEVELS[depth];
-    sethp(true);
-    makeobject(newLevel);
+    // positionplayer();
+    positionplayer(player.x, player.y, true);
+    //checkgen(); TODO
+    player.level.paint();
+    return;
   }
-  if (!positionplayer(player.x, player.y, true)) {
-    debug("newcavelevel(): adjusted to " + xy(player.x, player.y));
-  }
+
+  // TODO
+  // /* fill in new level
+  //  */
+  // for (i = 0; i < MAXY; i++)
+  //   for (j = 0; j < MAXX; j++)
+  //     know[j][i] = mitem[j][i] = 0;
+
+  // TODO
+  // makemaze(x);
+  // makeobject(x);
+  // beenhere[x] = 1;
+  // sethp(1);
+  // positionplayer();
+  // checkgen(); /* wipe out any genocided monsters */
+
+  // TODO
+  // if (wizard || x == 0)
+  //   for (j = 0; j < MAXY; j++)
+  //     for (i = 0; i < MAXX; i++)
+  //       know[i][j] = KNOWALL;
+
+  var newLevel = Object.create(Level);
+  newLevel.create(depth);
+  LEVELS[depth] = newLevel;
+  player.level = LEVELS[depth];
+  sethp(true);
+  makeobject(newLevel);
+  positionplayer(player.x, player.y, true);
+
   player.level.paint();
 }

@@ -51,7 +51,7 @@ var Player = {
   // EYEOFLARN:        // UNUSED
   AGGRAVATE: 0,
   // GLOBE:
-  // TELEFLAG:
+  TELEFLAG: 0,
   SLAYING: 0,
   NEGATESPIRIT: 0,
   // SCAREMONST:
@@ -86,10 +86,13 @@ var Player = {
   // FILLROOM:
   // RANDOMWALK:
   // SPHCAST:    /* nz if an active sphere of annihilation */
-  WTW: 0,        /* walk through walls */
-  STREXTRA: 0,   /* character strength due to objects or enchantments */
+  WTW: 0,
+  /* walk through walls */
+  STREXTRA: 0,
+  /* character strength due to objects or enchantments */
   // TMP:        /* misc scratch space */
-  LIFEPROT: 0,   /* life protection counter */
+  LIFEPROT: 0,
+  /* life protection counter */
 
   CLASS: function() {
     return CLASSES[this.LEVEL - 1];
@@ -319,7 +322,7 @@ var Player = {
       player.INTELLIGENCE += pickup ? player.INTELLIGENCE - 10 : player.INTELLIGENCE + 10;
     }
     if (item.matches(OSWORDofSLASHING)) {
-      player.DEXTERITY += pickup ? 5 : - 5;
+      player.DEXTERITY += pickup ? 5 : -5;
     }
     if (item.matches(OORBOFDRAGON))
       player.SLAYING = pickup;
@@ -404,6 +407,7 @@ var Player = {
 
 
   getStatString: function() {
+    if (player.level.depth == 0) player.TELEFLAG = 0;
     var output = "";
     output += "Spells: " + this.SPELLS + "(" + this.SPELLMAX + ")  " +
       "AC: " + this.AC + "  " +
@@ -417,12 +421,17 @@ var Player = {
       "CON=" + this.CONSTITUTION + " " +
       "DEX=" + this.DEXTERITY + " " +
       "CHA=" + this.CHARISMA + " " +
-      "LV: " + (this.CAVELEVEL() <= 10 ? (this.CAVELEVEL() == 0 ? "H" : this.CAVELEVEL()) : "V" + (this.CAVELEVEL() - 10)) + " " +
+      "LV: " + (player.TELEFLAG ? "?" : levelnames[player.level.depth]) + " " + 
       "Gold: " + this.GOLD;
     return output;
   }, //
 
 };
+
+
+const levelnames = ["H", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "V1", "V2", "V3"];
+
+
 
 /*
  *  ifblind(x,y)    Routine to put "monster" or the monster name into lastmosnt
@@ -644,7 +653,7 @@ function game_stats() {
   s += "WEAR:  " + player.WEAR + "\n";
   s += "SHLD:  " + player.SHIELD + "\n";
 
-  s += "PRO3: " + player.MOREDEFENSES + "\n";
+  s += "PRO3:  " + player.MOREDEFENSES + "\n";
   s += "ALTPR: " + player.ALTPRO + "\n";
 
   s += "STREX: " + player.STREXTRA + "\n";

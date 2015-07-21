@@ -180,11 +180,10 @@ function sethp(flg) {
   //   }
   // }
 
-  // TODO
-  // if (level == 0) {
-  //   c[TELEFLAG] = 0;
-  //   return;
-  // } /* if teleported and found level 1 then know level we are on */
+  if (player.level.depth == 0) {
+    player.TELEFLAG = 0;
+    return;
+  } /* if teleported and found level 1 then know level we are on */
   var nummonsters;
   if (flg) {
     nummonsters = rnd(12) + 2 + (player.level.depth >> 1);
