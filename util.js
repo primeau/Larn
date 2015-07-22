@@ -38,17 +38,7 @@ var KEYBOARD_INPUT = "";
 
 function getnumberinput(key) {
   if (key == ENTER) {
-    if (keyboard_input_callback != null) {
-      var done = keyboard_input_callback(KEYBOARD_INPUT);
-      if (done == 1) {
-        keyboard_input_callback = null;
-        KEYBOARD_INPUT = "";
-        return 1;
-      } else {
-        KEYBOARD_INPUT = "";
-        return 0;
-      }
-    }
+    return getnumberinput_done();
   } else if (key == DEL) {
     appendLog(key);
     var num = KEYBOARD_INPUT + "";
@@ -63,11 +53,28 @@ function getnumberinput(key) {
     if (new_string != KEYBOARD_INPUT.toString()) { // prevent NaN etc
       KEYBOARD_INPUT = original_number;
     } else {
-      appendLog(key);
+      //appendLog(key);
+      lprc(key);
     }
     // debug("getnumberinput(): " + KEYBOARD_INPUT);
     return 0;
+  } else if (key == '*') {
+    KEYBOARD_INPUT = key;
+    lprc(key);
+    return getnumberinput_done();
   }
+}
+
+function getnumberinput_done() {
+  var done = 0;
+  if (keyboard_input_callback != null) {
+    done = keyboard_input_callback(KEYBOARD_INPUT);
+    if (done == 1) {
+      keyboard_input_callback = null;
+    }
+  }
+  KEYBOARD_INPUT = "";
+  return done;
 }
 
 
@@ -83,7 +90,7 @@ String.prototype.prevChar = function(i) {
 }
 
 
-function getIndexFromChar(char){
+function getIndexFromChar(char) {
   var acode = "a".charCodeAt(0);
   var dropcode = char.charCodeAt(0);
   var dropIndex = dropcode - acode;

@@ -1,7 +1,9 @@
 "use strict";
 
-var lastnum = 0;        /* the number of the monster last hitting player    */
+var lastnum = 0; /* the number of the monster last hitting player    */
 var lastmonst = "";
+
+var gtime = 0; /*  the clock for the game                      */
 
 var prompt_mode = true;
 

@@ -12,14 +12,14 @@
  *  18 - fire resistance    19 - treasure finding       20 - instant healing
  *  21 - cure dianthroritis 22 - poison                 23 - see invisible
  */
-var potprob = [
+const potprob = [
   0, 0, 1, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 9, 9, 9,
   10, 10, 10, 11, 11, 12, 12, 13, 14, 15, 16, 17, 18, 19, 19, 19,
   20, 20, 22, 22, 23, 23
 ];
 
 /*  name array for magic potions    */
-var potionname = [
+const potionname = [
   "sleep", "healing", "raise level",
   "increase ability", "wisdom", "strength",
   "raise charisma", "dizziness", "learning",

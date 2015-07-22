@@ -60,20 +60,25 @@ Monster.prototype = {
      *  Returns nothing of value.
      */
     dropsomething: function() {
-      debug("TODO: monster.dropsomething()");
-      // int monst;
-      // {
-      // switch(monst)
-      //     {
-      //     case ORC:             case NYMPH:      case ELF:      case TROGLODYTE:
-      //     case TROLL:           case ROTHE:      case VIOLETFUNGI:
-      //     case PLATINUMDRAGON:  case GNOMEKING:  case REDDRAGON:
-      //         something(level); return;
-      //
-      //     case LEPRECHAUN: if (rnd(101)>=75) creategem();
-      //                      if (rnd(5)==1) dropsomething(LEPRECHAUN);   return;
-      //     }
-      // }
+      switch (this.arg) {
+        case ORC:
+        case NYMPH:
+        case ELF:
+        case TROGLODYTE:
+        case TROLL:
+        case ROTHE:
+        case VIOLETFUNGI:
+        case PLATINUMDRAGON:
+        case GNOMEKING:
+        case REDDRAGON:
+          something(player.level.depth);
+          return;
+
+        case LEPRECHAUN:
+          if (rnd(101) >= 75) creategem();
+          if (rnd(5) == 1) this.dropsomething(LEPRECHAUN);
+          return;
+      }
     },
 
     /*
@@ -85,13 +90,139 @@ Monster.prototype = {
      */
     dropgold: function(amount) {
       if (amount > 250) {
-        amount = (amount / 100).toFixed() * 100;
+        amount = Math.round(amount / 100) * 100;
       }
       createitem(OGOLDPILE, amount);
     },
 
 
   } // monster class
+
+
+
+  /*
+  *  Function to create a random item around player
+  *
+  *  Function to create an item from a designed probability around player
+  *  Enter with the cave level on which something is to be dropped
+  *  Returns nothing of value.
+  */
+  function something(lv) {
+    if (lv < 0 || lv > MAXLEVEL + MAXVLEVEL) return; /* correct level? */
+    if (rnd(101) < 8) something(lv); /* possibly more than one item */
+    createitem(newobject(lv));
+  }
+
+
+
+  /*
+  *  Routine to return a randomly selected new object
+  *
+  *  Routine to return a randomly selected object to be created
+  *  Returns the object number created, and sets *i for its argument
+  *  Enter with the cave level and a pointer to the items arg
+  */
+  function newobject(lev) {
+    var tmp;
+         if (lev > 6) tmp = rnd(41);
+    else if (lev > 4) tmp = rnd(39);
+    else              tmp = rnd(33);
+
+    var j = nobjtab[tmp]; /* the object type */
+    var i = 0;
+
+    switch (tmp) {
+      case 1: case 2: case 3: case 4: i = newscroll(); break; /* scroll */
+      case 5: case 6: case 7: case 8: i = newpotion(); break; /* potion */
+      case 9: case 10: case 11: case 12: i = rnd((lev+1)*10)+lev*10+10; break; /* gold */
+      case 13: case 14: case 15: case 16: i = lev; break; /* book */
+      case 17: case 18: case 19: i = newdagger(); break; /* dagger */
+      case 20: case 21: case 22: i = newleather(); break; /* leather armor */
+      case 23: case 32: case 38: i = rund(lev/3+1); break; /* regen ring, shield, 2-hand sword */
+      case 24: case 26: i = rnd(lev/4+1); break; /* prot ring, dexterity ring */
+      case 25: i = rund(lev/4+1); break; /* energy ring */
+      case 27: case 39: i = rnd(lev/2+1); break; /* strength ring, cleverness ring */
+      case 30: case 34: i = rund(lev/2+1); break; /* ring mail, flail */
+      case 28: case 36: i = rund(lev/3+1); break; /* spear, battleaxe */
+      case 29: case 31: case 37: i = rund(lev/2+1); break; /* belt, studded leather, splint */
+      case 33: i = 0; break; /* fortune cookie */
+      case 35: i = newchain(); break; /* chain mail */
+      case 40: i = newplate(); break; /* plate mail */
+      case 41: i = newsword(); break; /* longsword */
+    }
+    return createObject(j, i);
+  }
+
+
+
+  const nobjtab =
+  [
+    0,
+    OSCROLL, OSCROLL, OSCROLL, OSCROLL, /* 1 - 4 */
+    OPOTION, OPOTION, OPOTION, OPOTION, /* 5 - 8 */
+    OGOLDPILE, OGOLDPILE, OGOLDPILE, OGOLDPILE, /* 9 - 12 */
+    OBOOK, OBOOK, OBOOK, OBOOK, /* 13 - 16 */
+    ODAGGER, ODAGGER, ODAGGER, /* 17 - 19 */
+    OLEATHER, OLEATHER, OLEATHER, /* 20 - 22 */
+    OREGENRING, /* 23 */
+    OPROTRING, /* 24 */
+    OENERGYRING, /* 25 */
+    ODEXRING, /* 26 */
+    OSTRRING, /* 27 */
+    OSPEAR, /* 28 */
+    OBELT, /* 29 */
+    ORING, /* 30 */
+    OSTUDLEATHER, /* 31 */
+    OSHIELD, /* 32 */
+    OCOOKIE, /* 33 */
+    OFLAIL, /* 34 */
+    OCHAIN, /* 35 */
+    OBATTLEAXE, /* 36 */
+    OSPLINT, /* 37 */
+    O2SWORD, /* 38 */
+    OCLEVERRING, /* 39 */
+    OPLATE, /* 40 */
+    OLONGSWORD /* 41 */
+  ];
+
+
+const nlpts = [0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7];
+const nch = [0, 0, 0, 1, 1, 1, 2, 2, 3, 4];
+const nplt = [0, 0, 0, 0, 1, 1, 2, 2, 3, 4];
+const ndgg = [0, 0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 4, 5];
+const nsw = [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 3];
+
+
+
+/* macro to create scroll #'s with probability of occurrence */
+function newscroll() {
+  return (scprob[rund(81)]);
+}
+/* macro to return a potion # created with probability of occurrence */
+function newpotion() {
+  return (potprob[rund(41)]);
+}
+/* macro to return the + points on created leather armor */
+function newleather() {
+  return (nlpts[rund(player.HARDGAME ? 13 : 15)]);
+}
+/* macro to return the + points on chain armor */
+function newchain() {
+  return (nch[rund(10)]);
+}
+/* macro to return + points on plate armor */
+function newplate() {
+  return (nplt[rund(player.HARDGAME ? 4 : 12)]);
+}
+/* macro to return + points on new daggers */
+function newdagger() {
+  return (ndgg[rund(13)]);
+}
+/* macro to return + points on new swords */
+function newsword() {
+  return (nsw[rund(player.HARDGAME ? 6 : 13)]);
+}
+
 
 
 function monsterAt(x, y) {
@@ -107,7 +238,6 @@ function monsterAt(x, y) {
   var monster = player.level.monsters[x][y];
   return monster;
 }
-
 
 
 
@@ -322,13 +452,68 @@ const monsterlist = [
 
 ];
 
-const BAT = 1;
-const ROTHE = 36;
-const VAMPIRE = 38;
+/* defines for the monsters as objects */
+const BAT               = 1;
+const GNOME             = 2;
+const HOBGOBLIN         = 3;
+const JACKAL            = 4;
+const KOBOLD            = 5;
+const ORC               = 6;
+const SNAKE             = 7;
+const CENTIPEDE         = 8;
+const JACULI            = 9;
+const TROGLODYTE       = 10;
+const ANT              = 11;
+const EYE              = 12;
+const LEPRECHAUN       = 13;
+const NYMPH            = 14;
+const QUASIT           = 15;
+const RUSTMONSTER      = 16;
+const ZOMBIE           = 17;
+const ASSASSINBUG      = 18;
+const BUGBEAR          = 19;
+const HELLHOUND        = 20;
+const ICELIZARD        = 21;
+const CENTAUR          = 22;
+const TROLL            = 23;
+const YETI             = 24;
+const WHITEDRAGON      = 25;
+const ELF              = 26;
+const CUBE             = 27;
+const METAMORPH        = 28;
+const VORTEX           = 29;
+const ZILLER           = 30;
+const VIOLETFUNGI      = 31;
+const WRAITH           = 32;
+const FORVALAKA        = 33;
+const LAMANOBE         = 34;
+const OSEQUIP          = 35;
+const ROTHE            = 36;
+const XORN             = 37;
+const VAMPIRE          = 38;
 const INVISIBLESTALKER = 39;
-const POLTERGEIST = 40;
-const GNOMEKING = 45;
-const WATERLORD = 47;
+const POLTERGEIST      = 40;
+const DISENCHANTRESS   = 41;
+const SHAMBLINGMOUND   = 42;
+const YELLOWMOLD       = 43;
+const UMBERHULK        = 44;
+const GNOMEKING        = 45;
+const MIMIC            = 46;
+const WATERLORD        = 47;
+const BRONZEDRAGON     = 48;
+const GREENDRAGON      = 49;
+const PURPLEWORM       = 50;
+const XVART            = 51;
+const SPIRITNAGA       = 52;
+const SILVERDRAGON     = 53;
+const PLATINUMDRAGON   = 54;
+const GREENURCHIN      = 55;
+const REDDRAGON        = 56;
+const DEMONLORD        = 57;
+
+const DEMONPRINCE      = 64;
+
+
 
 /*
  *  hitplayer(x,y)      Function for the monster to hit the player from (x,y)
@@ -402,6 +587,7 @@ function hitplayer(x, y) {
 }
 
 
+
 /*
  *  hitmonster(x,y)     Function to hit a monster at the designated coordinates
  *      int x,y;
@@ -468,6 +654,8 @@ function hitmonster(x, y) {
     }
 }
 
+
+
 /*
  *  hitm(x,y,amt)       Function to just hit a monster at a given coordinates
  *      int x,y,amt;
@@ -522,6 +710,8 @@ function hitm(x, y, damage) {
   return (fulldamage);
 }
 
+
+
 /*
  *  fullhit(xx)     Function to return full damage against a monster (aka web)
  *      int xx;
@@ -531,7 +721,7 @@ function hitm(x, y, damage) {
  */
 function fullhit(xx) {
   if (xx < 0 || xx > 20) return (0); /* fullhits are out of range */
-  if (player.LANCEDEATH) return (10000); /* lance of death */
+  if (player.WIELD.matches(OLANCE)) return (10000); /* lance of death */
   var i = xx * ((player.WCLASS >> 1) + player.STRENGTH + player.STREXTRA - player.HARDGAME - 12 + player.MOREDAM);
   return ((i >= 1) ? i : xx);
 }

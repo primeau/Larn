@@ -373,6 +373,12 @@ function parseEvent(e) {
       player.level.items[armori++][MAXY - 1] = createObject(ONOTHEFT);
       player.level.items[armori++][MAXY - 1] = createObject(OORBOFDRAGON);
 
+      player.level.items[armori++][MAXY - 1] = createObject(OLARNEYE);
+      player.level.items[armori++][MAXY - 1] = createObject(OEMERALD, 20);
+      player.level.items[armori++][MAXY - 1] = createObject(OSAPPHIRE, 15);
+      player.level.items[armori++][MAXY - 1] = createObject(ODIAMOND, 10);
+      player.level.items[armori++][MAXY - 1] = createObject(ORUBY, 5);
+
       player.level.items[armori++][MAXY - 1] = createObject(OALTAR);
       player.level.items[armori++][MAXY - 1] = createObject(OTHRONE);
       player.level.items[armori++][MAXY - 1] = createObject(OFOUNTAIN);
@@ -392,13 +398,19 @@ function parseEvent(e) {
     }
   }
   if (key == 'X') {
-    player.level.items[player.x][player.y] = createObject(OLANCE);
-    wield('w');
-    player.level.items[player.x][player.y] = createObject(OSSPLATE, 50);
-    wear('W');
+    player.WEAR = null;
+    player.inventory[0] = createObject(OLANCE, 25);
+    player.WIELD = player.inventory[0];
+    player.inventory[1] = createObject(OPROTRING, 50);
     player.STEALTH = 0;
     player.GOLD = 250000;
-    player.raiseexperience(1000000);
+    player.STRENGTH = 70;
+    player.INTELLIGENCE = 70;
+    player.WISDOM = 70;
+    player.CONSTITUTION = 70;
+    player.DEXTERITY = 70;
+    player.CHARISMA = 70;
+    player.raiseexperience(6000000-player.EXPERIENCE);
   }
 
   hitflag = 0;
@@ -414,6 +426,8 @@ function parseEvent(e) {
   if (nomove == 0) {
     movemonst();
   }
+  gtime++; // TODO
+
   player.level.paint();
 
 } // KEYPRESS

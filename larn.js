@@ -3,7 +3,7 @@
 const MAXLEVEL = 11;    /*  max # levels in the dungeon         */
 const MAXVLEVEL = 3;    /*  max # of levels in the temple of the luran  */
 var LEVELS = [14];
-var LOG_SIZE = 4;
+var LOG_SIZE = 5;
 var LOG = [""];
 var LAST_LOG = 0;
 
@@ -197,6 +197,7 @@ function run(dir) {
       movemonst();
       randmonst();
       regen();
+      gtime++; // TODO
     }
     if (hitflag == 1) {
       i = 0;

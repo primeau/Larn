@@ -97,7 +97,7 @@ function read_scroll(scroll) {
     case 0:
       lprcat("Your armor glows for a moment");
       enchantarmor();
-      return;
+      return; /* enchant armor */
 
     case 1:
       lprcat("Your weapon glows for a moment");
@@ -126,8 +126,7 @@ function read_scroll(scroll) {
       return; /* this one creates a monster  */
 
     case 5:
-      updateLog("TODO: read_scroll(): create artifact");
-      // something(level); /* create artifact     */
+      something(player.level.depth); /* create artifact     */
       return;
 
     case 6:
@@ -178,72 +177,64 @@ function read_scroll(scroll) {
 
     case 15:
       updateLog("TODO: read_scroll(): magic mapping");
-      // lprcat("\nYou have been granted enlightenment!"); /* magic mapping */
+      // lprcat("\nYou have been granted enlightenment!");
       // for (i = 0; i < MAXY; i++)
       //         for (j = 0; j < MAXX; j++)
       //                 know[j][i] = KNOWALL;
       // draws(0, MAXX, 0, MAXY);
-      return;
+      return; /* magic mapping */
 
     case 16:
       player.HOLDMONST += 30;
       return; /* hold monster */
 
     case 17:
-      updateLog("TODO: read_scroll(): gem perfection");
-      // for (i = 0; i < 26; i++) /* gem perfection */
-      //         switch (iven[i])
-      //         {
-      //         case ODIAMOND:
-      //         case ORUBY:
-      //         case OEMERALD:
-      //         case OSAPPHIRE:
-      //                 j = ivenarg[i];
-      //                 j &= 255;
-      //                 j <<= 1;
-      //                 if (j > 255)
-      //                         j = 255; /* double value */
-      //                 ivenarg[i] = j;
-      //                 break;
-      //         }
-      break;
+      for (var i = 0; i < 26; i++) {
+        var item = player.inventory[i];
+        if (item != null && item.isGem()) {
+          item.arg &= 255;
+          item.arg <<= 1;
+          item.arg = Math.min(255, item.arg);
+        }
+      }
+      return; /* gem perfection */
 
     case 18:
       updateLog("TODO: read_scroll(): spell extension");
       // for (i = 0; i < 11; i++)
-      //         c[exten[i]] <<= 1; /* spell extension */
-      break;
+      //         c[exten[i]] <<= 1;
+      return; /* spell extension */
 
     case 19:
       updateLog("TODO: read_scroll(): identify");
-      // for (i = 0; i < 26; i++) /* identify */
+      // for (i = 0; i < 26; i++)
       // {
       //         if (iven[i] == OPOTION)
       //                 potionname[ivenarg[i]][0] = ' ';
       //         if (iven[i] == OSCROLL)
       //                 scrollname[ivenarg[i]][0] = ' ';
       // }
-      break;
+      return; /* identify */
 
     case 20:
       updateLog("TODO: read_scroll(): remove curse");
-      // for (i = 0; i < 10; i++) /* remove curse */
+      // for (i = 0; i < 10; i++)
       //         if (c[curse[i]])
       //                 c[curse[i]] = 1;
-      break;
+      return; /* remove curse */
 
     case 21:
       updateLog("TODO: read_scroll(): annihilation");
       // annihilate();
-      break; /* scroll of annihilation */
+      return; /* scroll of annihilation */
 
     case 22:
       updateLog("TODO: read_scroll(): pulverization");
-      // godirect(22, 150, "The ray hits the %s", 0, ' '); /* pulverization */
-      break;
+      // godirect(22, 150, "The ray hits the %s", 0, ' ');
+      return; /* pulverization */
 
     case 23:
       player.LIFEPROT++;
-      break; /* life protection */
+      return; /* life protection */
   };
 }

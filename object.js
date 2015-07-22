@@ -45,6 +45,7 @@ const OIVTELETRAP = new Item("OIVTELETRAP", ".", "a teleport trap");
 const OIVDARTRAP = new Item("OIVDARTRAP", ".", "a dart trap");
 const OIVTRAPDOOR = new Item("OIVTRAPDOOR", ".", "a trap door");
 
+const OLARNEYE = new Item("OLARNEYE", "~", "The Eye of Larn");
 const ODIAMOND = new Item("ODIAMOND", "@", "a brilliant diamond");
 const ORUBY = new Item("ORUBY", "@", "a ruby");
 const OEMERALD = new Item("OEMERALD", "@", "an enchanting emerald");
@@ -103,7 +104,7 @@ var Item = {
       }
       //
       else if (this.matches(OSCROLL)) {
-        if (isKnownScroll(this) || force_known ||  DEBUG_KNOW_ALL) {
+        if (isKnownScroll(this) || force_known || DEBUG_KNOW_ALL) {
           description += " of " + scrollname[this.arg];
         }
       }
@@ -379,7 +380,16 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (nearbymonst())
       return;
     if (do_ident)
-      lprcat("There is a DND store here.");
+      lprcat("There is a DND store here");
+    // if (do_action)
+    //   prompt_enter();
+  }
+  //
+  else if (item.matches(OBANK) || item.matches(OBANK2)) {
+    if (nearbymonst())
+      return;
+    if (do_ident)
+      updateLog(`You have found ${item}`);
     // if (do_action)
     //   prompt_enter();
   }

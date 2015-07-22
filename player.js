@@ -23,7 +23,7 @@ var Player = {
   REGEN: 1,
   WCLASS: 0,
   AC: 0,
-  // BANKACCOUNT:
+  BANKACCOUNT: 0,
   SPELLMAX: 1,
   SPELLS: 1,
   ENERGY: 0,
@@ -71,7 +71,7 @@ var Player = {
   // MOVESMADE:
   MONSTKILLED: 0,
   // SPELLSCAST:
-  LANCEDEATH: null,
+  // LANCEDEATH: null, // NOT USING
   SPIRITPRO: 0,
   UNDEADPRO: 0,
   SHIELD: null,
@@ -332,13 +332,6 @@ var Player = {
       player.CUBEofUNDEAD = pickup;
     if (item.matches(ONOTHEFT))
       player.NOTHEFT = pickup;
-    if (item.matches(OLANCE)) {
-      if (!pickup) {
-        player.LANCEDEATH = null;
-      } else if (player.WIELD != null && player.WIELD.matches(OLANCE)) {
-        player.LANCEDEATH = item;
-      }
-    }
   },
 
 
@@ -421,7 +414,7 @@ var Player = {
       "CON=" + this.CONSTITUTION + " " +
       "DEX=" + this.DEXTERITY + " " +
       "CHA=" + this.CHARISMA + " " +
-      "LV: " + (player.TELEFLAG ? "?" : levelnames[player.level.depth]) + " " + 
+      "LV: " + (player.TELEFLAG ? "?" : levelnames[player.level.depth]) + " " +
       "Gold: " + this.GOLD;
     return output;
   }, //
@@ -532,11 +525,6 @@ function wield(index) {
   }
 
   player.WIELD = item;
-  if (item.matches(OLANCE)) {
-    player.LANCEDEATH = item;
-  } else {
-    player.LANCEDEATH = null;
-  }
 
   player.level.paint();
   return;
@@ -648,6 +636,7 @@ function game_stats() {
 
   s += "ENERG: " + player.ENERGY + "\n";
   s += "REGEN: " + player.REGEN + "\n";
+  s += "TIME:  " + gtime + "\n";
 
   s += "WIELD: " + player.WIELD + "\n";
   s += "WEAR:  " + player.WEAR + "\n";
@@ -683,7 +672,6 @@ function game_stats() {
   s += "NEGAT: " + player.NEGATESPIRIT + "\n";
 
   s += "KILL:  " + player.MONSTKILLED + "\n";
-  s += "LANCE: " + player.LANCEDEATH + "\n";
   s += "LIFE:  " + player.LIFEPROT + "\n";
 
   s += "\n";
