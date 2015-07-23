@@ -325,13 +325,13 @@ var Player = {
       player.DEXTERITY += pickup ? 5 : -5;
     }
     if (item.matches(OORBOFDRAGON))
-      player.SLAYING = pickup;
+      pickup ? player.SLAYING++ : player.SLAYING--;
     if (item.matches(OSPIRITSCARAB))
-      player.NEGATESPIRIT = pickup;
+      pickup ? player.NEGATESPIRIT++ : player.NEGATESPIRIT--;
     if (item.matches(OCUBEofUNDEAD))
-      player.CUBEofUNDEAD = pickup;
+      pickup ? player.CUBEofUNDEAD++ : player.CUBEofUNDEAD--;
     if (item.matches(ONOTHEFT))
-      player.NOTHEFT = pickup;
+      pickup ? player.NOTHEFT++ : player.NOTHEFT--;
   },
 
 
@@ -441,7 +441,7 @@ function ifblind(x, y) {
     return true;
   } else {
     lastnum = player.level.monsters[x][y];
-    lastmonst = player.level.monsters[x][y].name;
+    lastmonst = player.level.monsters[x][y].toString();
     return false;
   }
 }

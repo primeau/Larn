@@ -11,7 +11,7 @@ function take(item) {
   for (var i = 0; i < limit; i++) {
     if (player.inventory[i] == null) {
       player.inventory[i] = item;
-      debug("inventory.take(): " + item);
+      debug("take(): " + item);
       limit = 0;
       player.adjustcvalues(item, true);
       updateLog("You pick up: " + item);

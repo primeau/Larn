@@ -136,7 +136,9 @@ function cl_dn(x, y) {
  */
 function standout(str) {
   //    setbold(); // TODO
+  //lprcat(`<b>`)
   lprcat(str);
+  //lprcat(`</b>`)
   //    resetbold(); // TODO
 }
 

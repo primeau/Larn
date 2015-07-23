@@ -432,7 +432,6 @@ function parseEvent(e) {
     movemonst();
   }
   gtime++; // TODO
-
   player.level.paint();
 
 } // KEYPRESS

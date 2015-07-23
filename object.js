@@ -1,7 +1,7 @@
 "use strict";
 
 const OWALL = new Item("OWALL", "▒", "a wall");
-const OEMPTY = new Item("OEMPTY", ".", "empty space");
+const OEMPTY = new Item("OEMPTY", "·", "empty space"); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
 const OSTAIRSDOWN = new Item("OSTAIRSDOWN", ">", "a staircase going down");
 const OSTAIRSUP = new Item("OSTAIRSUP", "&lt", "a staircase going up"); // use &lt to prevent bugginess when dropping a ! or ? to the right
 const OENTRANCE = new Item("OENTRANCE", "E", "the dungeon entrance");
@@ -9,11 +9,11 @@ const OHOMEENTRANCE = new Item("OHOMEENTRANCE", ".", "exit to home level");
 const OVOLUP = new Item("OVOLUP", "V", "the base of a volcanic shaft");
 const OVOLDOWN = new Item("OVOLDOWN", "V", "a volcanic shaft leaning downward");
 const OGOLDPILE = new Item("OGOLDPILE", "*", "some gold", 0);
-const OPIT = new Item("OPIT", "P", "a pit");
-const OMIRROR = new Item("MIRROR", "M", "a mirror");
+const OPIT = new Item("OPIT", "<b>P</b>", "a pit");
+const OMIRROR = new Item("MIRROR", "<b>M</b>", "a mirror");
 const OSTATUE = new Item("OSTATUE", "&", "a great marble statue");
-const OPOTION = new Item("OPOTION", "!", "a magic potion");
-const OSCROLL = new Item("OSCROLL", "?", "a magic scroll");
+const OPOTION = new Item("OPOTION", "<b>!</b>", "a magic potion");
+const OSCROLL = new Item("OSCROLL", "<b>?</b>", "a magic scroll");
 
 const ODAGGER = new Item("ODAGGER", "(", "a dagger");
 const OBELT = new Item("OBELT", "{", "a belt of striking");
@@ -39,7 +39,7 @@ const OSSPLATE = new Item("OSSPLATE", "]", "stainless plate armor");
 
 const OCLOSEDDOOR = new Item("OCLOSEDDOOR", "D", "a closed door");
 const OOPENDOOR = new Item("OOPENDOOR", "O", "an open door");
-const OALTAR = new Item("OALTAR", "A", "a holy altar");
+const OALTAR = new Item("OALTAR", "<b>A</b>", "a holy altar");
 const OTRAPARROWIV = new Item("OTRAPARROWIV", ".", "an arrow trap");
 const OIVTELETRAP = new Item("OIVTELETRAP", ".", "a teleport trap");
 const OIVDARTRAP = new Item("OIVDARTRAP", ".", "a dart trap");
@@ -51,11 +51,11 @@ const ORUBY = new Item("ORUBY", "@", "a ruby");
 const OEMERALD = new Item("OEMERALD", "@", "an enchanting emerald");
 const OSAPPHIRE = new Item("OSAPPHIRE", "@", "a sparkling sapphire");
 
-const OTHRONE = new Item("OTHRONE", "T", "a handsome jewel encrusted throne");
-const ODEADTHRONE = new Item("ODEADTHRONE", "t", "a massive throne");
+const OTHRONE = new Item("OTHRONE", "<b>T</b>", "a handsome jewel encrusted throne");
+const ODEADTHRONE = new Item("ODEADTHRONE", "<b>t</b>", "a massive throne");
 
-const OFOUNTAIN = new Item("OFOUNTAIN", "F", "a bubbling fountain");
-const ODEADFOUNTAIN = new Item("ODEADFOUNTAIN", "f", "a dead fountain");
+const OFOUNTAIN = new Item("OFOUNTAIN", "<b>F</b>", "a bubbling fountain");
+const ODEADFOUNTAIN = new Item("ODEADFOUNTAIN", "<b>f</b>", "a dead fountain");
 
 const OSCHOOL = new Item("OSCHOOL", "+", "the college of Larn");
 const ODNDSTORE = new Item("ODNDSTORE", "=", "the DND store");
@@ -74,13 +74,13 @@ const ODAMRING = new Item("ODAMRING", "=", "a ring of increase damage");
 const OREGENRING = new Item("OREGENRING", "=", "a ring of regeneration");
 const ORINGOFEXTRA = new Item("ORINGOFEXTRA", "=", "ring of extra regeneration");
 const OAMULET = new Item("OAMULET", "}", "an amulet of invisibility");
-const OORBOFDRAGON = new Item("OORBOFDRAGON", "o", "an orb of dragon slaying");
+const OORBOFDRAGON = new Item("OORBOFDRAGON", "<b>o</b>", "an orb of dragon slaying");
 const OSPIRITSCARAB = new Item("OSPIRITSCARAB", ":", "a scarab of negate spirit");
 const OCUBEofUNDEAD = new Item("OCUBEofUNDEAD", ";", "a cube of undead control");
 const ONOTHEFT = new Item("ONOTHEFT", ",", "device of theft prevention");
-const OCHEST = new Item("OCHEST", "C", "a chest");
-const OBOOK = new Item("OBOOK", "B", "a book");
-const OCOOKIE = new Item("OCOOKIE", "c", "a fortune cookie");
+const OCHEST = new Item("OCHEST", "<b>C</b>", "a chest");
+const OBOOK = new Item("OBOOK", "<b>B</b>", "a book");
+const OCOOKIE = new Item("OCOOKIE", "<b>c</b>", "a fortune cookie");
 
 
 
