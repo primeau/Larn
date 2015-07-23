@@ -311,8 +311,8 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (nearbymonst())
       return;
     if (do_ident) {
-      lprcat("There is a Holy Altar here!");
-      lprcat("Do you (p) pray (d) desecrate, or (i) ignore it?");
+      updateLog("There is a Holy Altar here!");
+      updateLog("Do you (p) pray (d) desecrate, or (i) ignore it?");
     }
     if (do_action) {
       blocking_callback = oaltar;
@@ -361,8 +361,8 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (nearbymonst())
       return;
     if (do_ident) {
-      lprcat("There is a fountain here");
-      lprcat("Do you (D) drink, (T) tidy up");
+      updateLog("There is a fountain here");
+      updateLog("Do you (D) drink, (T) tidy up");
     }
     if (do_action) {
       non_blocking_callback = ofountain;
@@ -373,14 +373,14 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (nearbymonst())
       return;
     if (do_ident)
-      lprcat("There is a dead fountain here");
+      updateLog("There is a dead fountain here");
   }
   //
   else if (item.matches(ODNDSTORE)) {
     if (nearbymonst())
       return;
     if (do_ident)
-      lprcat("There is a DND store here");
+      updateLog("There is a DND store here");
     // if (do_action)
     //   prompt_enter();
   }

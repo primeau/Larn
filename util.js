@@ -39,6 +39,10 @@ var KEYBOARD_INPUT = "";
 function getnumberinput(key) {
   if (key == ENTER) {
     return getnumberinput_done();
+  } else if (key == '*') {
+    KEYBOARD_INPUT = key;
+    lprc(key);
+    return getnumberinput_done();
   } else if (key == DEL) {
     appendLog(key);
     var num = KEYBOARD_INPUT + "";
@@ -58,10 +62,6 @@ function getnumberinput(key) {
     }
     // debug("getnumberinput(): " + KEYBOARD_INPUT);
     return 0;
-  } else if (key == '*') {
-    KEYBOARD_INPUT = key;
-    lprc(key);
-    return getnumberinput_done();
   }
 }
 

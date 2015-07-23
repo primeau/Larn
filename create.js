@@ -6,13 +6,10 @@
  *  uses a random walk
 */
 function fillroom(what, arg) {
-  var x, y;
-
-  var newItem = createObject(what);
-
   var safe = 100;
-  x = rnd(MAXX - 2);
-  y = rnd(MAXY - 2);
+  var x = rnd(MAXX - 2);
+  var y = rnd(MAXY - 2);
+  //debug(`fillroom: ${x},${y} ${player.level.items[x][y]}`);
   while (!isItem(x, y, OEMPTY)) {
     x += rnd(3) - 2;
     y += rnd(3) - 2;
@@ -26,8 +23,9 @@ function fillroom(what, arg) {
       break;
     }
   }
+  var newItem = createObject(what, arg);
   player.level.items[x][y] = newItem;
-  newItem.arg = arg;
+  //debug(`fillroom(): ${newItem}`);
   //debug("fillroom(): safe=" + safe + " " + x + "," + y + " " + player.level.items[x][y].char + " -> " + newItem.char + "(" + newItem.arg + ")");
 }
 
@@ -44,7 +42,6 @@ function fillmroom(n, what, arg) {
 function froom(n, itm, arg) {
   if (rnd(151) < n) {
     fillroom(itm, arg);
-    updateLog("froom: " + itm.id + ", " + arg);
   }
 }
 
@@ -152,6 +149,7 @@ function fillmonst(what) {
   for (var trys = 5; trys > 0; --trys) /* max # of creation attempts */ {
     var x = rnd(MAXX - 2);
     var y = rnd(MAXY - 2);
+    //debug(`fillmonst: ${x},${y} ${player.level.items[x][y]}`);
     if ((player.level.items[x][y].matches(OEMPTY)) && //
       (player.level.monsters[x][y] == null) && //
       ((player.x != x) || (player.y != y))) {

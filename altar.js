@@ -63,10 +63,11 @@ function act_donation_pray(k) {
     // cltoeoln();
     // cursor(1, 23);
     // cltoeoln();
-    //var k = readnum(player.GOLD);
 
-    // TODO: accept "*" to donate all gold
-    
+    if (k == '*') {
+      debug(k = player.GOLD);
+    }
+
     /* make giving zero gold equivalent to 'just pray'ing.  Allows player to
        'just pray' in command mode, without having to add yet another command.
     */
@@ -112,16 +113,12 @@ function act_donation_pray(k) {
        player can't escape the altar for free.
     */
     lprcat("  You don't have that much!");
-    //lookforobject(true, false, true);
 
     lprcat("how much do you donate? ");
     blocking_callback = getnumberinput;
     keyboard_input_callback = act_donation_pray;
     return 0;
 
-    // blocking_callback = oaltar_pray_helper;
-    // parseEvent("m");
-    // return 0;
 }
 
 

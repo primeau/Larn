@@ -22,20 +22,45 @@ var Level = {
 
     for (var x = 0; x < MAXX; x++) {
       for (var y = 0; y < MAXY; y++) {
-        if (mazeTemplate[x][y] == "#") {
-          // this.items[x][y] = createObject(OWALL); //
-          // this.items[x][y] = OWALL; // TODO: this is what I should do
-          this.items[x][y] = wall; // TODO
-        } else if (mazeTemplate[x][y] == "D") {
-          this.items[x][y] = createObject(OCLOSEDDOOR, rnd(30));
-        } else {
-          // this.items[x][y] = createObject(OEMPTY);
-          // this.items[x][y] = OEMPTY; // TODO
+        switch (mazeTemplate[x][y]) {
+          case '#':
+            // this.items[x][y] = createObject(OWALL); //
+            // this.items[x][y] = OWALL; // TODO: this is what I should do
+            this.items[x][y] = wall; // TODO
+            break;
+          case 'D':
+            this.items[x][y] = createObject(OCLOSEDDOOR, rnd(30));
+            break;
+          case '-':
+            this.items[x][y] = newobject(depth + 1);
+            debug(`- ${this.items[x][y]}`);
+            break;
+          case '.':
+            if (depth < MAXLEVEL) break;
+            this.monsters[x][y] = createNewMonster(makemonst(depth + 1));
+            debug(`. ${this.monsters[x][y]}`);
+            break;
+          case '~':
+            if (depth != MAXLEVEL - 1) break;
+            this.items[x][y] = createObject(OLARNEYE);
+            this.monsters[x][y] = createNewMonster(rund(8) + DEMONLORD);
+            debug(`~ ${this.items[x][y]}`);
+            debug(`~ ${this.monsters[x][y]}`);
+            break;
+          case '!':
+            if (depth != MAXLEVEL + MAXVLEVEL - 1) break;
+            this.items[x][y] = createObject(OPOTION, 21);
+            this.monsters[x][y] = createNewMonster(DEMONPRINCE);
+            debug(`! ${this.items[x][y]}`);
+            debug(`! ${this.monsters[x][y]}`);
+            break;
+        } // switch
+        if (this.items[x][y] == null)
+        // this.items[x][y] = createObject(OEMPTY);
+        // this.items[x][y] = OEMPTY; // TODO
           this.items[x][y] = empty; // TODO
-        }
-      }
-    }
-
+      } // for
+    } // for
   }, // create
 
 
@@ -97,6 +122,7 @@ function drawmaze() {
         if (level.monsters[x][y] != null) {
           lprc(monsterlist[level.monsters[x][y].arg].char);
         } else {
+          //debug(`drawmaze: ${x},${y} ${player.level.items[x][y]}`);
           lprc(level.items[x][y].char);
         }
       } else {

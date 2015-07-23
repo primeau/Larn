@@ -288,7 +288,7 @@ function parseEvent(e) {
       if (player.level.depth == 0) {
         debug("STAIRS_EVERYWHERE: entering dungeon");
         moveNear(OENTRANCE, true);
-        parseEvent(e);
+        parseEvent('E');
         return;
       } else if (player.level.depth != 10 && player.level.depth != 13) {
         debug("STAIRS_EVERYWHERE: climbing down stairs");
@@ -303,9 +303,14 @@ function parseEvent(e) {
     }
 
   } else if (key == 'g') { // GO INSIDE DUNGEON
-  } else if (key == 'C') { // CLIMB IN/OUT OF VOLCANO
+  } else if (key == 'C' || key == 'V') { // CLIMB IN/OUT OF VOLCANO
+    if (player.level.depth == 0 && DEBUG_STAIRS_EVERYWHERE) {
+      debug("STAIRS_EVERYWHERE: entering volcano");
+      moveNear(OVOLDOWN, true);
+      parseEvent('>');
+      return;
+    }
   }
-
   //
   // DEBUGGING SHORTCUTS
   //
@@ -410,7 +415,7 @@ function parseEvent(e) {
     player.CONSTITUTION = 70;
     player.DEXTERITY = 70;
     player.CHARISMA = 70;
-    player.raiseexperience(6000000-player.EXPERIENCE);
+    player.raiseexperience(6000000 - player.EXPERIENCE);
   }
 
   hitflag = 0;
