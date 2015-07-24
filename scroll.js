@@ -156,11 +156,10 @@ function read_scroll(scroll) {
       return; /* haste monster */
 
     case 11:
-      updateLog("TODO: read_scroll(): monster healing");
-      // for (i = 0; i < MAXY; i++)
-      //         for (j = 0; j < MAXX; j++)
-      //                 if (mitem[j][i])
-      //                         hitp[j][i] = monster[mitem[j][i]].hitpoints;
+      for (var i = 0; i < MAXY; i++)
+        for (var j = 0; j < MAXX; j++)
+          if (player.level.monsters[j][i] != null)
+            player.level.monsters[j][i].hitpoints = monsterlist[player.level.monsters[j][i].arg].hitpoints;
       return; /* monster healing */
 
     case 12:
