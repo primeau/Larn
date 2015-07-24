@@ -206,14 +206,15 @@ function read_scroll(scroll) {
       return; /* spell extension */
 
     case 19:
-      updateLog("TODO: read_scroll(): identify");
-      // for (i = 0; i < 26; i++)
-      // {
-      //         if (iven[i] == OPOTION)
-      //                 potionname[ivenarg[i]][0] = ' ';
-      //         if (iven[i] == OSCROLL)
-      //                 scrollname[ivenarg[i]][0] = ' ';
-      // }
+      for (var i = 0; i < player.inventory.length; i++) {
+        var item = player.inventory[i];
+        if (item != null) {
+          if (item.matches(OPOTION))
+            learnPotion(item);
+          if (item.matches(OSCROLL))
+            learnScroll(item);
+        }
+      }
       return; /* identify */
 
     case 20:
