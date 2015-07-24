@@ -184,8 +184,11 @@ function movemonst() {
         if (smart_count == 0)
           build_proximity_ripple();
         move_smart(lasthx, lasthy);
-      } else
-        move_dumb(lasthx, lasthy);
+      } else {
+        // TODO: THERE IS A BUG HERE WITH DOUBLE MONSTER MOVEMENT AFTER THEY HAVE BEEN HIT
+        //move_dumb(lasthx, lasthy); 
+        // TODO: THERE IS A BUG HERE WITH DOUBLE MONSTER MOVEMENT AFTER THEY HAVE BEEN HIT
+      }
       lasthx = w1x[0]; /* make sure the monster gets moved again */
       lasthy = w1y[0];
     }
@@ -460,7 +463,7 @@ function move_dumb(i, j) {
         break; /* exitloop */
       } //
       else {
-        if (k<0 || k >= MAXX || m<0 || m >= MAXY) continue; // JRP fix for edge of home level
+        if (k < 0 || k >= MAXX || m < 0 || m >= MAXY) continue; // JRP fix for edge of home level
         if (!player.level.items[k][m].matches(OWALL) && //
           !player.level.items[k][m].matches(OCLOSEDDOOR) && //
           (player.level.monsters[k][m] == null || (k == i) && (m == j)) &&

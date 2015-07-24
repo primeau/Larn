@@ -579,7 +579,7 @@ const DEMONPRINCE = 64;
  *  Returns nothing of value.
  */
 function hitplayer(x, y) {
-
+  //console.trace();
   var monster = player.level.monsters[x][y];
   if ((monster) == null) {
     debug("monster.hitplayer(): no monster at: " + xy(x, y));
