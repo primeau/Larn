@@ -435,6 +435,7 @@ const levelnames = ["H", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "V1"
  *  Returns true or false.
  */
 function ifblind(x, y) {
+  // TODO: make this work for when monster hit/miss the player, and die
   if (player.BLINDCOUNT > 0) {
     lastnum = 279;
     lastmonst = "monster";
@@ -445,6 +446,8 @@ function ifblind(x, y) {
     return false;
   }
 }
+
+
 
 /*
     function to wield a weapon

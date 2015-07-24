@@ -299,7 +299,11 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OSCROLL)) {
     if (do_ident) {
-      updateLog(`You have found ${item}: (r) read or (t) take`);
+      if (player.BLINDCOUNT == 0)
+        updateLog(`You have found ${item}: (r) read or (t) take`);
+      else
+        updateLog(`You have found ${item}: (t) take`);
+
     }
     if (do_action) {
       non_blocking_callback = oscroll;

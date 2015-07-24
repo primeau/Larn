@@ -46,7 +46,10 @@ Monster.prototype = {
     },
 
     toString: function() {
-      return this.desc;
+      if (player.BLINDCOUNT == 0)
+        return this.desc;
+      else
+        return "monster";
     },
 
     /*
