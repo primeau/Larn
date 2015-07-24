@@ -71,17 +71,17 @@ function opotion(key) {
   switch (key) {
     case ESC:
     case 'i':
-      updateLog("ignore");
+      appendLog(" ignore");
       return;
 
     case 'q':
-      updateLog("quaff");
+      appendLog(" quaff");
       forget(); /* destroy potion  */
       quaffpotion(potion, true);
       return;
 
     case 't':
-      updateLog("take");
+      appendLog(" take");
       if (take(potion)) {
         forget(); // remove from board
       }
@@ -267,9 +267,8 @@ function quaffpotion(potion, set_known) {
       return;
 
     case 13:
-      updateLog("TODO: quaffpotion(): blindness");
-      // lprcat("\nYou can't see anything!"); /* blindness */
-      // c[BLINDCOUNT] += 500;
+      updateLog("You can't see anything!"); /* blindness */
+      player.BLINDCOUNT += 500;
       return;
 
     case 14:

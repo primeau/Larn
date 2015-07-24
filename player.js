@@ -37,7 +37,7 @@ var Player = {
   MOREDAM: 0,
   // DEXCOUNT:
   // STRCOUNT:
-  // BLINDCOUNT:
+  BLINDCOUNT: 0,
   CAVELEVEL: function() {
     return this.level.depth;
   },
@@ -653,6 +653,7 @@ function game_stats() {
   s += "HSTM:  " + player.HASTEMONST + "\n";
   s += "POIS:  " + player.HALFDAM + "\n";
   s += "CONF:  " + player.CONFUSE + "\n";
+  s += "BLIND: " + player.BLINDCOUNT + "\n";
 
   s += "AWARE: " + player.AWARENESS + "\n";
   s += "SEEIN: " + player.SEEINVISIBLE + "\n";

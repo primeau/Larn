@@ -68,15 +68,20 @@ function oscroll(key) {
     // TODO don't allow reading scrolls if blind!
     case ESC:
     case 'i':
-      updateLog("ignore");
+      appendLog(" ignore");
       return;
     case 'r':
-      updateLog("read");
+      appendLog(" read");
+      if (player.BLINDCOUNT > 0) {
+        cursors();
+        updateLog("You can't read anything when you're blind!");
+        return;
+      }
       forget(); /* destroy scroll  */
       read_scroll(scroll);
       return;
     case 't':
-      updateLog("take");
+      appendLog(" take");
       if (take(scroll)) {
         forget(); // remove from board
       }
