@@ -30,13 +30,13 @@ var Player = {
   // ECOUNTER:
   MOREDEFENSES: 0,
   WEAR: null,
-  // PROTECTIONTIME:
+  PROTECTIONTIME: 0,
   WIELD: null,
   // AMULET:           // UNUSED
   // REGENCOUNTER:
   MOREDAM: 0,
-  // DEXCOUNT:
-  // STRCOUNT:
+  DEXCOUNT: 0,
+  STRCOUNT: 0,
   BLINDCOUNT: 0,
   CAVELEVEL: function() {
     return this.level.depth;
@@ -44,17 +44,17 @@ var Player = {
   CONFUSE: 0,
   ALTPRO: 0,
   HERO: 0,
-  // CHARMCOUNT:
-  // INVISIBILITY:
-  // CANCELLATION:
-  //HASTESELF: 0,
+  CHARMCOUNT: 0,
+  INVISIBILITY: 0,
+  CANCELLATION: 0,
+  HASTESELF: 0,
   // EYEOFLARN:        // UNUSED
   AGGRAVATE: 0,
-  // GLOBE:
+  GLOBE: 0,
   TELEFLAG: 0,
   SLAYING: 0,
   NEGATESPIRIT: 0,
-  // SCAREMONST:
+  SCAREMONST: 0,
   AWARENESS: 0,
   HOLDMONST: 0,
   TIMESTOP: 0,
@@ -86,13 +86,10 @@ var Player = {
   // FILLROOM:
   // RANDOMWALK:
   // SPHCAST:    /* nz if an active sphere of annihilation */
-  WTW: 0,
-  /* walk through walls */
-  STREXTRA: 0,
-  /* character strength due to objects or enchantments */
+  WTW: 0,        /* walk through walls */
+  STREXTRA: 0,   /* character strength due to objects or enchantments */
   // TMP:        /* misc scratch space */
-  LIFEPROT: 0,
-  /* life protection counter */
+  LIFEPROT: 0,   /* life protection counter */
 
   CLASS: function() {
     return CLASSES[this.LEVEL - 1];
@@ -415,7 +412,7 @@ var Player = {
       "DEX=" + this.DEXTERITY + " " +
       "CHA=" + this.CHARISMA + " " +
       "LV: " + (player.TELEFLAG ? "?" : levelnames[player.level.depth]) + " " +
-      "Gold: " + this.GOLD;
+      "Gold: " + this.GOLD + "        ";
     return output;
   }, //
 
@@ -644,9 +641,22 @@ function game_stats() {
   s += "WIELD: " + player.WIELD + "\n";
   s += "WEAR:  " + player.WEAR + "\n";
   s += "SHLD:  " + player.SHIELD + "\n";
+  s += "+AC:   " + player.MOREDEFENSES + "\n";
 
-  s += "PRO3:  " + player.MOREDEFENSES + "\n";
-  s += "ALTPR: " + player.ALTPRO + "\n";
+  s += "PRO2:  " + player.PROTECTIONTIME + "\n";
+  s += "DEX:   " + player.DEXCOUNT + "\n";
+  s += "CHM:   " + player.CHARMCOUNT + "\n";
+  s += "STR:   " + player.STRCOUNT + "\n";
+  s += "INV:   " + player.INVISIBILITY + "\n";
+  s += "CAN:   " + player.CANCELLATION + "\n";
+  s += "HAS:   " + player.HASTESELF + "\n";
+  s += "GLO:   " + player.GLOBE + "\n";
+  s += "SCA:   " + player.SCAREMONST + "\n";
+  s += "HLD:   " + player.HOLDMONST + "\n";
+  s += "STP:   " + player.TIMESTOP + "\n";
+  s += "WTW:   " + player.WTW + "\n";
+  s += "PRO3:  " + player.ALTPRO + "\n";
+
 
   s += "STREX: " + player.STREXTRA + "\n";
   s += "GIAST: " + player.GIANTSTR + "\n";
@@ -667,8 +677,6 @@ function game_stats() {
 
   s += "HOLD:  " + player.HOLDMONST + "\n";
   s += "STEL:  " + player.STEALTH + "\n";
-  //s += "HASTE: " + player.HASTESELF + "\n";
-  s += "WTW:   " + player.WTW + "\n";
 
   s += "THEFT: " + player.NOTHEFT + "\n";
   s += "CUBE:  " + player.CUBEofUNDEAD + "\n";

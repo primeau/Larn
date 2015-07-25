@@ -133,6 +133,17 @@ function parseEvent(e) {
     }
   */
 
+
+  //
+  // CAST A SPELL
+  //
+  if (key == 'c') {
+    pre_cast();
+    return;
+  }
+
+
+
   //
   // WIELD
   //
@@ -416,6 +427,10 @@ function parseEvent(e) {
     player.DEXTERITY = 70;
     player.CHARISMA = 70;
     player.raiseexperience(6000000 - player.EXPERIENCE);
+
+    for (var i = 0; i < spelcode.length; i++) {
+      learnSpell(spelcode[i]);
+    }
   }
 
   hitflag = 0;
