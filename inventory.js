@@ -14,7 +14,7 @@ function take(item) {
       debug("take(): " + item);
       limit = 0;
       player.adjustcvalues(item, true);
-      updateLog("You pick up: " + item);
+      updateLog(`You pick up: ${'a'.nextChar(i)}) ${item}`);
       if (limit) {
         //bottomline(); player.level.paint();
       }

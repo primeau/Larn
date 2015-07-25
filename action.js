@@ -62,7 +62,7 @@ function act_sit_throne(arg) {
 */
 function act_drink_fountain() {
   if (rnd(1501) < 2) {
-    lprcat("Oops!  You seem to have caught the dreadful sleep!");
+    updateLog("Oops!  You seem to have caught the dreadful sleep!");
     beep();
     lflush();
     sleep(3);
@@ -73,12 +73,12 @@ function act_drink_fountain() {
   var x = rnd(100);
   if (x < 7) {
     player.HALFDAM += 200 + rnd(200);
-    lprcat("You feel a sickness coming on");
+    updateLog("You feel a sickness coming on");
   } else if (x < 13)
     quaffpotion(23, false); /* see invisible,but don't know the potion */
 
   else if (x < 45)
-    lprcat("nothing seems to have happened");
+    updateLog("nothing seems to have happened");
 
   else if (rnd(3) != 2)
     fntchange(1); /*  change char levels upward   */
@@ -87,7 +87,7 @@ function act_drink_fountain() {
     fntchange(-1); /*  change char levels downward */
 
   if (rnd(12) < 3) {
-    lprcat("The fountains bubbling slowly quiets");
+    updateLog("The fountains bubbling slowly quiets");
     setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
     //know[playerx][playery]=0;
   }
@@ -103,19 +103,19 @@ function act_drink_fountain() {
 function act_wash_fountain() {
   if (rnd(100) < 11) {
     var x = rnd((player.level.depth << 2) + 2);
-    lprcat(`Oh no!  The water was foul!  You suffer ${x} hit points!`);
+    updateLog(`Oh no!  The water was foul!  You suffer ${x} hit points!`);
     lastnum = 273;
     player.losehp(x);
     // bottomline();
     // cursors();
   } else if (rnd(100) < 29) {
-    lprcat("You got the dirt off!");
+    updateLog("You got the dirt off!");
   } else if (rnd(100) < 31) {
-    lprcat("This water seems to be hard water!  The dirt didn't come off!");
+    updateLog("This water seems to be hard water!  The dirt didn't come off!");
   } else if (rnd(100) < 34) {
     createmonster(WATERLORD); /*    make water lord     */
   } else {
-    lprcat("nothing seems to have happened");
+    updateLog("nothing seems to have happened");
   }
   player.level.paint();
   return;

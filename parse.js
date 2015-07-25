@@ -76,12 +76,10 @@ function parseEvent(e) {
     return;
   }
 
-  var SKIP_HACK = false;
   if (non_blocking_callback != null) {
     non_blocking_callback(code == ESC ? ESC : key);
     non_blocking_callback = null;
     player.level.paint();
-    SKIP_HACK = true;
   }
 
 
@@ -94,6 +92,7 @@ function parseEvent(e) {
 
 
 
+  var item = getItem(player.x, player.y);
 
 
 
@@ -115,23 +114,38 @@ function parseEvent(e) {
     return;
   }
 
-  /*
-    //
-    // DRINK FROM FOUNTAIN
-    //
-    if (key == 'D') {
-      drink_fountain(null);
-      return;
-    }
 
-    //
-    // WASH AT FOUNTAIN
-    //
-    if (key == 'T') {
-      wash_fountain(null);
-      return;
+
+  //
+  // DRINK FROM FOUNTAIN
+  //
+  if (key == 'D') {
+    drink_fountain(null);
+    return;
+  }
+
+
+
+  //
+  // WASH AT FOUNTAIN
+  //
+  if (key == 'T') {
+    wash_fountain(null);
+    return;
+  }
+
+
+
+  //
+  // PICK UP
+  //
+  if (key == 't') {
+    if (take(item)) {
+      forget(); // remove from board
     }
-  */
+    return;
+  }
+
 
 
   //
@@ -145,27 +159,56 @@ function parseEvent(e) {
 
 
   //
+  // read
+  //
+  if (key == 'r') {
+    if (item.matches(OBOOK)) {
+      readbook(item);
+      forget();
+    } else if (item.matches(OSCROLL)) {
+      read_scroll(item);
+      forget();
+    } else {
+      updateLog("What do you want to read [* for all] ?");
+      // TODO read from inventory
+    }
+    //return;
+  }
+
+
+
+  //
   // WIELD
   //
   if (key == 'w') {
-    if (SKIP_HACK == false) {
+    if (item.isWeapon()) {
+      wield(item);
+    } else {
       updateLog("What do you want to wield (- for nothing) [* for all] ?");
+      blocking_callback = wield;
     }
-    non_blocking_callback = wield;
-    return;
+    //return;
   }
+
+
 
   //
   // WEAR
   //
   if (key == 'W') {
-    if (SKIP_HACK == false) {
+    if (item.isArmor()) {
+      wear(item);
+    } else {
       updateLog("What do you want to wear (- for nothing) [* for all] ?");
+      blocking_callback = wear;
     }
-    non_blocking_callback = wear;
-    return;
+    //return;
   }
 
+
+  //
+  // TELEPORT
+  //
   if (key == 'Z') {
     yrepcount = 0;
     if (player.LEVEL > 9) {
@@ -174,7 +217,7 @@ function parseEvent(e) {
     }
     cursors();
     lprcat("As yet, you don't have enough experience to use teleportation");
-    return; /*  teleport yourself   */
+    return; 
   }
 
   //
@@ -431,6 +474,7 @@ function parseEvent(e) {
     for (var i = 0; i < spelcode.length; i++) {
       learnSpell(spelcode[i]);
     }
+
   }
 
   hitflag = 0;

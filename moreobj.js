@@ -44,7 +44,7 @@ function open_something(direction) {
   // */
   // if (item[playerx][playery] == OCHEST) {
   //   var tempc; /* result of prompting to open a chest */
-  //   lprcat("There is a chest here.  Open it?");
+  //   updateLog("There is a chest here.  Open it?");
   //   if ((tempc = getyn()) == 'y') {
   //     act_open_chest(playerx, playery);
   //     dropflag = 1; /* prevent player from picking back up if fail */
@@ -132,32 +132,32 @@ function fntchange(how) {
   how = how / Math.abs(how);
   switch (rnd(9)) {
     case 1:
-      lprcat("Your strength");
+      updateLog("Your strength");
       player.STRENGTH = Math.max(3, player.STRENGTH + how);
       fch(how);
       break;
     case 2:
-      lprcat("Your intelligence");
+      updateLog("Your intelligence");
       player.INTELLIGENCE = Math.max(3, player.INTELLIGENCE + how);
       fch(how);
       break;
     case 3:
-      lprcat("Your wisdom");
+      updateLog("Your wisdom");
       player.WISDOM = Math.max(3, player.WISDOM + how);
       fch(how);
       break;
     case 4:
-      lprcat("Your constitution");
+      updateLog("Your constitution");
       player.CONSTITUTION = Math.max(3, player.CONSTITUTION + how);
       fch(how);
       break;
     case 5:
-      lprcat("Your dexterity");
+      updateLog("Your dexterity");
       player.DEXTERITY = Math.max(3, player.DEXTERITY + how);
       fch(how);
       break;
     case 6:
-      lprcat("Your charm");
+      updateLog("Your charm");
       player.CHARISMA = Math.max(3, player.CHARISMA + how);
       fch(how);
       break;
@@ -248,9 +248,9 @@ function drink_fountain() {
   //cursors();
   var item = getItem(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
-    lprcat("There is no water to drink!");
+    updateLog("There is no water to drink!");
   } else if (!item.matches(OFOUNTAIN)) {
-    lprcat("I see no fountain to drink from here!");
+    updateLog("I see no fountain to drink from here!");
   } else
     act_drink_fountain();
   return;
@@ -263,9 +263,9 @@ function wash_fountain() {
   //cursors();
   var item = getItem(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
-    lprcat("There is no water to wash in!");
+    updateLog("There is no water to wash in!");
   } else if (!item.matches(OFOUNTAIN)) {
-    lprcat("I see no fountain to wash at here!");
+    updateLog("I see no fountain to wash at here!");
   } else
     act_wash_fountain();
   return;

@@ -86,10 +86,13 @@ var Player = {
   // FILLROOM:
   // RANDOMWALK:
   // SPHCAST:    /* nz if an active sphere of annihilation */
-  WTW: 0,        /* walk through walls */
-  STREXTRA: 0,   /* character strength due to objects or enchantments */
+  WTW: 0,
+  /* walk through walls */
+  STREXTRA: 0,
+  /* character strength due to objects or enchantments */
   // TMP:        /* misc scratch space */
-  LIFEPROT: 0,   /* life protection counter */
+  LIFEPROT: 0,
+  /* life protection counter */
 
   CLASS: function() {
     return CLASSES[this.LEVEL - 1];
@@ -314,9 +317,9 @@ var Player = {
     if (item.matches(OCLEVERRING))
       player.INTELLIGENCE += pickup ? item.arg + 1 : (item.arg + 1) * -1;
     if (item.matches(OHAMMER)) {
-      player.DEXTERITY += pickup ? player.DEXTERITY + 10 : player.DEXTERITY - 10;
-      player.STREXTRA += pickup ? player.STREXTRA + 10 : player.STREXTRA - 10;
-      player.INTELLIGENCE += pickup ? player.INTELLIGENCE - 10 : player.INTELLIGENCE + 10;
+      player.DEXTERITY += pickup ? 10 : -10;
+      player.STREXTRA += pickup ? 10 : -10;
+      player.INTELLIGENCE += pickup ? -10 : 10;
     }
     if (item.matches(OSWORDofSLASHING)) {
       player.DEXTERITY += pickup ? 5 : -5;
@@ -450,41 +453,24 @@ function ifblind(x, y) {
     function to wield a weapon
  */
 function wield(index) {
-
   var item = getItem(player.x, player.y);
 
   // player is over a weapon
   if (item.isWeapon()) {
-    switch (index) {
-      case ESC:
-      case 'i':
-        updateLog("ignore");
-        return;
-      case 'w':
-        updateLog("wield");
-        if (take(item)) {
-          forget(); // remove from board
-        } else {
-          return;
-        }
-        break; // code lower down will do the rest
-      case 't':
-        updateLog("take");
-        if (take(item)) {
-          forget(); // remove from board
-        }
-        return;
-      default:
-        return;
-    };
+    updateLog("wield");
+    if (take(item)) {
+      forget(); // remove from board
+    } else {
+      return 1;
+    }
   }
-  // player hit 'w'
+  // wield from inventory
   else {
     //debug("wield(): " + index);
 
     if (index == ESC) {
       updateLog("");
-      return false;
+      return 1;
     }
 
     if (index == '*') {
@@ -500,12 +486,12 @@ function wield(index) {
       if (useindex >= 0 && useindex < 26) {
         updateLog("You don't have item " + index + "!");
       }
-      return;
+      return 1;
     }
 
     if (item.matches(OPOTION) || item.matches(OSCROLL)) {
       updateLog("You can't wield that!");
-      return;
+      return 1;
     }
 
   }
@@ -513,7 +499,7 @@ function wield(index) {
   // common cases for both
   if (player.SHIELD != null && item.matches(O2SWORD)) {
     updateLog("But one arm is busy with your shield!");
-    return;
+    return 1;
   }
 
   if (index == '-') {
@@ -521,13 +507,13 @@ function wield(index) {
     // player.WIELD = null;
     // bottomline();
     // recalc(); // JRP added
-    // return;
+    // return 1;
   }
 
   player.WIELD = item;
 
   player.level.paint();
-  return;
+  return 1;
 }
 
 
@@ -539,33 +525,17 @@ function wear(index) {
 
   // player is over some armor
   if (item.isArmor()) {
-    switch (index) {
-      case ESC:
-      case 'i':
-        updateLog("ignore");
-        return;
-      case 'W':
-        updateLog("wear");
-        if (take(item)) {
-          forget(); // remove from board
-        } else {
-          return;
-        }
-        break; // code lower down will do the rest
-      case 't':
-        updateLog("take");
-        if (take(item)) {
-          forget(); // remove from board
-        }
-        return;
-      default:
-        return;
-    };
+    updateLog("wear");
+    if (take(item)) {
+      forget(); // remove from board
+    } else {
+      return 1;
+    }
   } // else player hit 'W'
   else {
     if (index == ESC) {
       updateLog("");
-      return false;
+      return 1;
     }
 
     if (index == '*') {
@@ -581,7 +551,7 @@ function wear(index) {
       if (useindex >= 0 && useindex < 26) {
         updateLog("You don't have item " + index + "!");
       }
-      return;
+      return 1;
     }
   }
   // common cases for both
@@ -598,17 +568,17 @@ function wear(index) {
   } else if (item.matches(OSHIELD)) {
     if (player.WIELD != null && player.WIELD.matches(O2SWORD)) {
       updateLog("Your hands are busy with the two handed sword!");
-      return;
+      return 1;
     } else {
       player.SHIELD = item;
     }
   } else {
     updateLog("You can't wear that!");
-    return;
+    return 1;
   }
 
   player.level.paint();
-  return;
+  return 1;
 }
 
 
@@ -692,6 +662,11 @@ function game_stats() {
     if (item != null) {
       s += c.nextChar(inven) + ") " + item + "\n";
     }
+  }
+  s += "\n";
+  for (var spell = 0; spell < knownSpells.length; spell++) {
+    if (knownSpells[spell] != null)
+      s += knownSpells[spell] + "\n";
   }
 
   return s;

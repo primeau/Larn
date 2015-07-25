@@ -8,10 +8,11 @@ const OENTRANCE = new Item("OENTRANCE", "E", "the dungeon entrance");
 const OHOMEENTRANCE = new Item("OHOMEENTRANCE", ".", "exit to home level");
 const OVOLUP = new Item("OVOLUP", "V", "the base of a volcanic shaft");
 const OVOLDOWN = new Item("OVOLDOWN", "V", "a volcanic shaft leaning downward");
-const OGOLDPILE = new Item("OGOLDPILE", "*", "some gold", 0);
 const OPIT = new Item("OPIT", "<b>P</b>", "a pit");
 const OMIRROR = new Item("MIRROR", "<b>M</b>", "a mirror");
 const OSTATUE = new Item("OSTATUE", "&", "a great marble statue");
+
+const OGOLDPILE = new Item("OGOLDPILE", "*", "some gold", 0);
 const OPOTION = new Item("OPOTION", "<b>!</b>", "a magic potion");
 const OSCROLL = new Item("OSCROLL", "<b>?</b>", "a magic scroll");
 
@@ -268,11 +269,11 @@ function lookforobject(do_ident, do_pickup, do_action) {
   // do_pickup;  /* pickup item:   T/F */
   // do_action;  /* prompt for actions on object: T/F */
 
-  //
-  //     // /* can't find objects if time is stopped    */
-  //     // if (c[TIMESTOP])
-  //     //     return;
-  //
+
+  /* can't find objects if time is stopped    */
+  if (player.TIMESTOP)
+    return;
+
   var item = player.level.items[player.x][player.y];
 
   if (item.matches(OEMPTY)) {
@@ -292,7 +293,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog(`You have found ${item}: (q) quaff or (t) take`);
     }
     if (do_action) {
-      non_blocking_callback = opotion;
+      //non_blocking_callback = opotion;
     }
     return;
   }
@@ -303,10 +304,22 @@ function lookforobject(do_ident, do_pickup, do_action) {
         updateLog(`You have found ${item}: (r) read or (t) take`);
       else
         updateLog(`You have found ${item}: (t) take`);
-
     }
     if (do_action) {
-      non_blocking_callback = oscroll;
+      //non_blocking_callback = oscroll;
+    }
+    return;
+  }
+  //
+  else if (item.matches(OBOOK)) {
+    if (do_ident) {
+      if (player.BLINDCOUNT == 0)
+        updateLog(`You have found ${item}: (r) read or (t) take`);
+      else
+        updateLog(`You have found ${item}: (t) take`);
+    }
+    if (do_action) {
+      //non_blocking_callback = obook;
     }
     return;
   }
@@ -328,7 +341,8 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (nearbymonst())
       return;
     if (do_ident) {
-      updateLog(`There is ${item} here!\nDo you (p) pry off jewels, (s) sit down`);
+      updateLog(`There is ${item} here!`);
+      updateLog(`Do you (p) pry off jewels, (s) sit down`);
     }
     if (do_action) {
       non_blocking_callback = othrone;
@@ -340,7 +354,8 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (nearbymonst())
       return;
     if (do_ident) {
-      updateLog(`There is ${item} here!\nDo you (s) sit down`);
+      updateLog(`There is ${item} here!`);
+      updateLog(`Do you (s) sit down`);
     }
     if (do_action) {
       non_blocking_callback = othrone;
@@ -369,7 +384,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog("Do you (D) drink, (T) tidy up");
     }
     if (do_action) {
-      non_blocking_callback = ofountain;
+      //non_blocking_callback = ofountain;
     }
   }
   //
@@ -432,7 +447,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog(`You have found ${item}: (W) wear or (t) take`);
     }
     if (do_action) {
-      non_blocking_callback = wear;
+      //non_blocking_callback = wear;
     }
     return;
   }
@@ -442,7 +457,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog(`You have found ${item}: (w) wield or (t) take`);
     }
     if (do_action) {
-      non_blocking_callback = wield;
+      //non_blocking_callback = wield;
     }
     return;
   }
@@ -467,7 +482,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
     //   }
     // }
     if (do_action) {
-      non_blocking_callback = oitem;
+      //non_blocking_callback = oitem;
     }
   }
 } // lookforobject
@@ -522,6 +537,7 @@ function opit() {
 }
 
 
+
 function obottomless() {
   updateLog("You fell into a bottomless pit!");
   beep();
@@ -530,9 +546,11 @@ function obottomless() {
 }
 
 
+
 function forget() {
   player.level.items[player.x][player.y] = createObject(OEMPTY);
 }
+
 
 
 function o_open_door(key) {
@@ -555,6 +573,8 @@ function o_open_door(key) {
       return true;
   }
 }
+
+
 
 function o_closed_door(key) {
   var item = getItem(player.x, player.y);
@@ -581,6 +601,7 @@ function o_closed_door(key) {
       return true;
   }
 }
+
 
 
 /*
@@ -615,4 +636,26 @@ function oteleport(err) {
   positionplayer();
   //draws(0, MAXX, 0, MAXY);
   bot_linex();
+}
+
+
+
+/*
+ * function to read a book
+ */
+function readbook(book) {
+  var lev = book.arg;
+  var i, tmp;
+  if (lev <= 3)
+    i = rund((tmp = splev[lev]) ? tmp : 1);
+  else
+    i = rnd((tmp = splev[lev] - 9) ? tmp : 1) + 9;
+  learnSpell(spelcode[i]);
+  updateLog(`Spell \"${spelcode[i]}\":  ${spelname[i]}`);
+  updateLog(`${speldescript[i]}`);
+  if (rnd(10) == 4) {
+    updateLog("Your int went up by one!");
+    player.INTELLIGENCE++;
+    bottomline();
+  }
 }
