@@ -70,6 +70,7 @@ var Level = {
       drawstore();
     } else {
       drawmaze();
+      botside();
     }
 
   },
