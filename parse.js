@@ -178,6 +178,22 @@ function parseEvent(e) {
 
 
   //
+  // quaff
+  //
+  if (key == 'q') {
+    if (item.matches(OPOTION)) {
+      quaffpotion(item);
+      forget();
+    } else {
+      updateLog("What do you want to quaff [* for all] ?");
+      // TODO read from inventory
+    }
+    //return;
+  }
+
+
+
+  //
   // WIELD
   //
   if (key == 'w') {
@@ -217,7 +233,7 @@ function parseEvent(e) {
     }
     cursors();
     lprcat("As yet, you don't have enough experience to use teleportation");
-    return; 
+    return;
   }
 
   //

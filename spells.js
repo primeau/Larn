@@ -136,6 +136,7 @@ function cast(key) {
     bottomline();
   }
 
+  player.level.paint();
   return 1;
 }
 

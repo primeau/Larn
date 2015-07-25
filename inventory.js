@@ -7,6 +7,9 @@ const MAXINVEN = 26;
     returns true if success, false if a failure
 */
 function take(item) {
+  if (item.carry == false) {
+    return false;
+  }
   var limit = Math.min(15 + (player.LEVEL >> 1), MAXINVEN);
   for (var i = 0; i < limit; i++) {
     if (player.inventory[i] == null) {

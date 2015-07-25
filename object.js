@@ -1,87 +1,87 @@
 "use strict";
 
-const OWALL = new Item("OWALL", "▒", "a wall");
-const OEMPTY = new Item("OEMPTY", "·", "empty space"); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
-const OSTAIRSDOWN = new Item("OSTAIRSDOWN", ">", "a staircase going down");
-const OSTAIRSUP = new Item("OSTAIRSUP", "&lt", "a staircase going up"); // use &lt to prevent bugginess when dropping a ! or ? to the right
-const OENTRANCE = new Item("OENTRANCE", "E", "the dungeon entrance");
-const OHOMEENTRANCE = new Item("OHOMEENTRANCE", ".", "exit to home level");
-const OVOLUP = new Item("OVOLUP", "V", "the base of a volcanic shaft");
-const OVOLDOWN = new Item("OVOLDOWN", "V", "a volcanic shaft leaning downward");
-const OPIT = new Item("OPIT", "<b>P</b>", "a pit");
-const OMIRROR = new Item("MIRROR", "<b>M</b>", "a mirror");
-const OSTATUE = new Item("OSTATUE", "&", "a great marble statue");
+const OWALL = new Item("OWALL", "▒", "a wall", false);
+const OEMPTY = new Item("OEMPTY", "·", "empty space", false); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
+const OSTAIRSDOWN = new Item("OSTAIRSDOWN", ">", "a staircase going down", false);
+const OSTAIRSUP = new Item("OSTAIRSUP", "&lt", "a staircase going up", false); // use &lt to prevent bugginess when dropping a ! or ? to the right
+const OENTRANCE = new Item("OENTRANCE", "E", "the dungeon entrance", false);
+const OHOMEENTRANCE = new Item("OHOMEENTRANCE", ".", "exit to home level", false);
+const OVOLUP = new Item("OVOLUP", "V", "the base of a volcanic shaft", false);
+const OVOLDOWN = new Item("OVOLDOWN", "V", "a volcanic shaft leaning downward", false);
+const OPIT = new Item("OPIT", "<b>P</b>", "a pit", false);
+const OMIRROR = new Item("MIRROR", "<b>M</b>", "a mirror", false);
+const OSTATUE = new Item("OSTATUE", "&", "a great marble statue", false);
 
-const OGOLDPILE = new Item("OGOLDPILE", "*", "some gold", 0);
-const OPOTION = new Item("OPOTION", "<b>!</b>", "a magic potion");
-const OSCROLL = new Item("OSCROLL", "<b>?</b>", "a magic scroll");
+const OGOLDPILE = new Item("OGOLDPILE", "*", "some gold", true, 0);
+const OPOTION = new Item("OPOTION", "<b>!</b>", "a magic potion", true);
+const OSCROLL = new Item("OSCROLL", "<b>?</b>", "a magic scroll", true);
 
-const ODAGGER = new Item("ODAGGER", "(", "a dagger");
-const OBELT = new Item("OBELT", "{", "a belt of striking");
-const OSPEAR = new Item("OSPEAR", "(", "a spear");
-const OFLAIL = new Item("OFLAIL", "(", "a flail");
-const OBATTLEAXE = new Item("OBATTLEAXE", ")", "a battle axe");
-const OLANCE = new Item("OLANCE", ")", "a lance of death");
-const OLONGSWORD = new Item("OLONGSWORD", ")", "a longsword");
-const O2SWORD = new Item("O2SWORD", "(", "a two handed sword");
-const OSWORD = new Item("OSWORD", ")", "a sunsword");
-const OSWORDofSLASHING = new Item("OSWORDofSLASHING", ")", "a sword of slashing");
-const OHAMMER = new Item("OHAMMER", ")", "Bessman's flailing hammer");
+const ODAGGER = new Item("ODAGGER", "(", "a dagger", true);
+const OBELT = new Item("OBELT", "{", "a belt of striking", true);
+const OSPEAR = new Item("OSPEAR", "(", "a spear", true);
+const OFLAIL = new Item("OFLAIL", "(", "a flail", true);
+const OBATTLEAXE = new Item("OBATTLEAXE", ")", "a battle axe", true);
+const OLANCE = new Item("OLANCE", ")", "a lance of death", true);
+const OLONGSWORD = new Item("OLONGSWORD", ")", "a longsword", true);
+const O2SWORD = new Item("O2SWORD", "(", "a two handed sword", true);
+const OSWORD = new Item("OSWORD", ")", "a sunsword", true);
+const OSWORDofSLASHING = new Item("OSWORDofSLASHING", ")", "a sword of slashing", true);
+const OHAMMER = new Item("OHAMMER", ")", "Bessman's flailing hammer", true);
 
-const OSHIELD = new Item("OSHIELD", "[", "a shield");
-const OLEATHER = new Item("OLEATHER", "[", "leather armor");
-const OSTUDLEATHER = new Item("OSTUDLEATHER", "[", "studded leather armor");
-const ORING = new Item("ORING", "[", "ring mail");
-const OCHAIN = new Item("OCHAIN", "[", "chain mail");
-const OSPLINT = new Item("OSPLINT", "]", "splint mail");
-const OPLATE = new Item("OPLATE", "]", "plate mail");
-const OPLATEARMOR = new Item("OPLATEARMOR", "]", "plate armor");
-const OSSPLATE = new Item("OSSPLATE", "]", "stainless plate armor");
+const OSHIELD = new Item("OSHIELD", "[", "a shield", true);
+const OLEATHER = new Item("OLEATHER", "[", "leather armor", true);
+const OSTUDLEATHER = new Item("OSTUDLEATHER", "[", "studded leather armor", true);
+const ORING = new Item("ORING", "[", "ring mail", true);
+const OCHAIN = new Item("OCHAIN", "[", "chain mail", true);
+const OSPLINT = new Item("OSPLINT", "]", "splint mail", true);
+const OPLATE = new Item("OPLATE", "]", "plate mail", true);
+const OPLATEARMOR = new Item("OPLATEARMOR", "]", "plate armor", true);
+const OSSPLATE = new Item("OSSPLATE", "]", "stainless plate armor", true);
 
-const OCLOSEDDOOR = new Item("OCLOSEDDOOR", "D", "a closed door");
-const OOPENDOOR = new Item("OOPENDOOR", "O", "an open door");
-const OALTAR = new Item("OALTAR", "<b>A</b>", "a holy altar");
-const OTRAPARROWIV = new Item("OTRAPARROWIV", ".", "an arrow trap");
-const OIVTELETRAP = new Item("OIVTELETRAP", ".", "a teleport trap");
-const OIVDARTRAP = new Item("OIVDARTRAP", ".", "a dart trap");
-const OIVTRAPDOOR = new Item("OIVTRAPDOOR", ".", "a trap door");
+const OCLOSEDDOOR = new Item("OCLOSEDDOOR", "D", "a closed door", false);
+const OOPENDOOR = new Item("OOPENDOOR", "O", "an open door", false);
+const OALTAR = new Item("OALTAR", "<b>A</b>", "a holy altar", false);
+const OTRAPARROWIV = new Item("OTRAPARROWIV", ".", "an arrow trap", false);
+const OIVTELETRAP = new Item("OIVTELETRAP", ".", "a teleport trap", false);
+const OIVDARTRAP = new Item("OIVDARTRAP", ".", "a dart trap", false);
+const OIVTRAPDOOR = new Item("OIVTRAPDOOR", ".", "a trap door", false);
 
-const OLARNEYE = new Item("OLARNEYE", "~", "The Eye of Larn");
-const ODIAMOND = new Item("ODIAMOND", "@", "a brilliant diamond");
-const ORUBY = new Item("ORUBY", "@", "a ruby");
-const OEMERALD = new Item("OEMERALD", "@", "an enchanting emerald");
-const OSAPPHIRE = new Item("OSAPPHIRE", "@", "a sparkling sapphire");
+const OLARNEYE = new Item("OLARNEYE", "~", "The Eye of Larn", true);
+const ODIAMOND = new Item("ODIAMOND", "@", "a brilliant diamond", true);
+const ORUBY = new Item("ORUBY", "@", "a ruby", true);
+const OEMERALD = new Item("OEMERALD", "@", "an enchanting emerald", true);
+const OSAPPHIRE = new Item("OSAPPHIRE", "@", "a sparkling sapphire", true);
 
-const OTHRONE = new Item("OTHRONE", "<b>T</b>", "a handsome jewel encrusted throne");
-const ODEADTHRONE = new Item("ODEADTHRONE", "<b>t</b>", "a massive throne");
+const OTHRONE = new Item("OTHRONE", "<b>T</b>", "a handsome jewel encrusted throne", false);
+const ODEADTHRONE = new Item("ODEADTHRONE", "<b>t</b>", "a massive throne", false);
 
-const OFOUNTAIN = new Item("OFOUNTAIN", "<b>F</b>", "a bubbling fountain");
-const ODEADFOUNTAIN = new Item("ODEADFOUNTAIN", "<b>f</b>", "a dead fountain");
+const OFOUNTAIN = new Item("OFOUNTAIN", "<b>F</b>", "a bubbling fountain", false);
+const ODEADFOUNTAIN = new Item("ODEADFOUNTAIN", "<b>f</b>", "a dead fountain", false);
 
-const OSCHOOL = new Item("OSCHOOL", "+", "the college of Larn");
-const ODNDSTORE = new Item("ODNDSTORE", "=", "the DND store");
-const OBANK2 = new Item("OBANK2", "$", "the 5th branch of the Bank of Larn");
-const OBANK = new Item("OBANK", "$", "the bank of Larn");
-const OHOME = new Item("OHOME", "H", "your home");
-const OLRS = new Item("OLRS", "L", "the Larn Revenue Service");
-const OTRADEPOST = new Item("OTRADEPOST", "S", "the local trading post");
+const OSCHOOL = new Item("OSCHOOL", "+", "the college of Larn", false);
+const ODNDSTORE = new Item("ODNDSTORE", "=", "the DND store", false);
+const OBANK2 = new Item("OBANK2", "$", "the 5th branch of the Bank of Larn", false);
+const OBANK = new Item("OBANK", "$", "the bank of Larn", false);
+const OHOME = new Item("OHOME", "H", "your home", false);
+const OLRS = new Item("OLRS", "L", "the Larn Revenue Service", false);
+const OTRADEPOST = new Item("OTRADEPOST", "S", "the local trading post", false);
 
-const OPROTRING = new Item("OPROTRING", "=", "a ring of protection");
-const OSTRRING = new Item("OSTRRING", "=", "a ring of strength");
-const ODEXRING = new Item("ODEXRING", "=", "a ring of dexterity");
-const OCLEVERRING = new Item("OCLEVERRING", "=", "a ring of cleverness");
-const OENERGYRING = new Item("OENERGYRING", "=", "an energy ring");
-const ODAMRING = new Item("ODAMRING", "=", "a ring of increase damage");
-const OREGENRING = new Item("OREGENRING", "=", "a ring of regeneration");
-const ORINGOFEXTRA = new Item("ORINGOFEXTRA", "=", "ring of extra regeneration");
-const OAMULET = new Item("OAMULET", "}", "an amulet of invisibility");
-const OORBOFDRAGON = new Item("OORBOFDRAGON", "<b>o</b>", "an orb of dragon slaying");
-const OSPIRITSCARAB = new Item("OSPIRITSCARAB", ":", "a scarab of negate spirit");
-const OCUBEofUNDEAD = new Item("OCUBEofUNDEAD", ";", "a cube of undead control");
-const ONOTHEFT = new Item("ONOTHEFT", ",", "device of theft prevention");
-const OCHEST = new Item("OCHEST", "<b>C</b>", "a chest");
-const OBOOK = new Item("OBOOK", "<b>B</b>", "a book");
-const OCOOKIE = new Item("OCOOKIE", "<b>c</b>", "a fortune cookie");
+const OPROTRING = new Item("OPROTRING", "=", "a ring of protection", true);
+const OSTRRING = new Item("OSTRRING", "=", "a ring of strength", true);
+const ODEXRING = new Item("ODEXRING", "=", "a ring of dexterity", true);
+const OCLEVERRING = new Item("OCLEVERRING", "=", "a ring of cleverness", true);
+const OENERGYRING = new Item("OENERGYRING", "=", "an energy ring", true);
+const ODAMRING = new Item("ODAMRING", "=", "a ring of increase damage", true);
+const OREGENRING = new Item("OREGENRING", "=", "a ring of regeneration", true);
+const ORINGOFEXTRA = new Item("ORINGOFEXTRA", "=", "ring of extra regeneration", true);
+const OAMULET = new Item("OAMULET", "}", "an amulet of invisibility", true);
+const OORBOFDRAGON = new Item("OORBOFDRAGON", "<b>o</b>", "an orb of dragon slaying", true);
+const OSPIRITSCARAB = new Item("OSPIRITSCARAB", ":", "a scarab of negate spirit", true);
+const OCUBEofUNDEAD = new Item("OCUBEofUNDEAD", ";", "a cube of undead control", true);
+const ONOTHEFT = new Item("ONOTHEFT", ",", "device of theft prevention", true);
+const OCHEST = new Item("OCHEST", "<b>C</b>", "a chest", true);
+const OBOOK = new Item("OBOOK", "<b>B</b>", "a book", true);
+const OCOOKIE = new Item("OCOOKIE", "<b>c</b>", "a fortune cookie", true);
 
 
 
@@ -90,7 +90,8 @@ var Item = {
     id: null,
     char: "💩",
     desc: "",
-    arg: null,
+    carry: false,
+    arg: 0,
 
     matches: function(item) {
       return (this.id == item.id);
@@ -192,10 +193,11 @@ var Item = {
 
   } // ITEM OBJECT
 
-function Item(id, char, desc, arg) {
+function Item(id, char, desc, carry, arg) {
   this.id = id;
   this.char = char;
   this.desc = desc;
+  this.carry = carry;
   this.arg = arg;
 }
 
@@ -209,6 +211,9 @@ function createObject(item, arg) {
   newItem.id = item.id;
   newItem.char = item.char;
   newItem.desc = item.desc;
+  newItem.carry = item.carry;
+  if (item.carry == null)
+    console.log(`undefined carry: ${item.id} ${item.carry}`);
   if (arg != null) {
     newItem.arg = arg;
   } else {
@@ -277,7 +282,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   var item = player.level.items[player.x][player.y];
 
   if (item.matches(OEMPTY)) {
-    return;
+    // do nothing
   }
   //
   else if (item.matches(OGOLDPILE)) {
@@ -285,7 +290,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     updateLog("It is worth " + item.arg + "!");
     player.GOLD += item.arg;
     forget();
-    return;
   }
   //
   else if (item.matches(OPOTION)) {
@@ -295,7 +299,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       //non_blocking_callback = opotion;
     }
-    return;
   }
   //
   else if (item.matches(OSCROLL)) {
@@ -308,7 +311,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       //non_blocking_callback = oscroll;
     }
-    return;
   }
   //
   else if (item.matches(OBOOK)) {
@@ -321,7 +323,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       //non_blocking_callback = obook;
     }
-    return;
   }
   //
   else if (item.matches(OALTAR)) {
@@ -334,7 +335,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       blocking_callback = oaltar;
     }
-    return;
   }
   //
   else if (item.matches(OTHRONE)) {
@@ -347,7 +347,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       non_blocking_callback = othrone;
     }
-    return;
   }
   //
   else if (item.matches(ODEADTHRONE)) {
@@ -365,7 +364,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
   else if (item.matches(OPIT)) {
     updateLog("You're standing at the top of a pit");
     opit();
-    return;
   }
   //
   else if (item.matches(OMIRROR)) {
@@ -373,7 +371,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
       return;
     if (do_ident)
       updateLog("There is a mirror here");
-    return;
   }
   //
   else if (item.matches(OFOUNTAIN)) {
@@ -418,7 +415,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
       return;
     if (do_ident)
       updateLog("You are standing in front of a statue");
-    return;
   }
   //
   else if (item.matches(OOPENDOOR)) {
@@ -428,7 +424,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       non_blocking_callback = o_open_door;
     }
-    return;
   }
   //
   else if (item.matches(OCLOSEDDOOR)) {
@@ -439,7 +434,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       blocking_callback = o_closed_door;
     }
-    return;
   }
   // put this before wield to make wear be default for shields
   else if (item.isArmor()) {
@@ -449,7 +443,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       //non_blocking_callback = wear;
     }
-    return;
   }
   //
   else if (item.isWeapon()) {
@@ -459,32 +452,19 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_action) {
       //non_blocking_callback = wield;
     }
-    return;
   }
 
   // base case
-  else if ( // this is a bit hacky, but we don't want to pick these up!
-    !isItem(player.x, player.y, OWALL) && //
-    !isItem(player.x, player.y, OENTRANCE) && //
-    !isItem(player.x, player.y, OHOMEENTRANCE) && //
-    !isItem(player.x, player.y, OVOLUP) && //
-    !isItem(player.x, player.y, OVOLDOWN) && //
-    !isItem(player.x, player.y, OSTAIRSUP) && //
-    !isItem(player.x, player.y, OSTAIRSDOWN) //
-  ) //
-  {
+  else {
     if (do_ident) {
-      updateLog(`You have found ${item}: (t) take`);
-    }
-    // if (do_pickup) {
-    //   if (take(item)) {
-    //     forget();
-    //   }
-    // }
-    if (do_action) {
-      //non_blocking_callback = oitem;
+      if (item.carry) {
+        updateLog(`You have found ${item}: (t) take`);
+      } else {
+        updateLog(`You have found ${item}`);
+      }
     }
   }
+
 } // lookforobject
 
 

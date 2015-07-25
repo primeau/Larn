@@ -117,7 +117,7 @@ function quaffpotion(potion, set_known) {
         nap(1000);
       }
       updateLog("You woke up!");
-      return;
+      break;
 
     case 1: // healing
       if (player.HP == player.HPMAX) {
@@ -132,7 +132,7 @@ function quaffpotion(potion, set_known) {
       player.raiselevel();
       player.raisemhp(1);
       updateLog("Suddenly, you feel much more skillful!");
-      return;
+      break;
 
     case 3: // increase ability
       switch (rund(6)) {
@@ -235,7 +235,7 @@ function quaffpotion(potion, set_known) {
       //         break;
       //     }
       // showplayer();
-      return;
+      break;
 
     case 10:
       /* monster detection */
@@ -250,7 +250,7 @@ function quaffpotion(potion, set_known) {
       //       know[j][i] = HAVESEEN;
       //       show1cell(j, i);
       //     }
-      return;
+      break;
 
     case 11:
       updateLog("TODO: quaffpotion(): forgetfulness");
@@ -260,24 +260,23 @@ function quaffpotion(potion, set_known) {
       //     know[j][i] = 0;
       // nap(1000);
       // draws(0, MAXX, 0, MAXY); /* potion of forgetfulness */
-      return;
+      break;
 
     case 12: // water
       updateLog("This potion has no taste to it");
-      return;
+      break;
 
     case 13:
-      updateLog("You can't see anything!"); /* blindness */
       player.BLINDCOUNT += 500;
-      return;
+      updateLog("You can't see anything!"); /* blindness */
+      break;
 
     case 14:
-      lprcat("You feel confused");
       player.CONFUSE += 20 + rnd(9);
-      return;
+      updateLog("You feel confused");
+      break;
 
     case 15:
-      updateLog("WOW!!!  You feel Super-fantastic!!!");
       if (player.HERO == 0) {
         player.STRENGTH += 11;
         player.INTELLIGENCE += 11;
@@ -287,6 +286,7 @@ function quaffpotion(potion, set_known) {
         player.CHARISMA += 11;
       }
       player.HERO += 250;
+      updateLog("WOW!!!  You feel Super-fantastic!!!");
       break;
 
     case 16:
@@ -295,10 +295,10 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 17:
-      updateLog("You now have incredibly bulging muscles!!!");
       if (player.GIANTSTR == 0)
         player.STREXTRA += 21;
       player.GIANTSTR += 700;
+      updateLog("You now have incredibly bulging muscles!!!");
       break;
 
     case 18:
@@ -327,7 +327,7 @@ function quaffpotion(potion, set_known) {
       //     }
       //   }
       // showplayer();
-      return;
+      break;
 
     case 20: // instant healing
       player.HP = player.HPMAX;
@@ -335,19 +335,18 @@ function quaffpotion(potion, set_known) {
 
     case 21: // cure dianthroritis
       updateLog("You don't seem to be affected");
-      return;
+      break;
 
     case 22:
       player.HALFDAM += 200 + rnd(200);
       updateLog("You feel a sickness engulf you"); /* poison */
-      return;
+      break;
 
     case 23:
-      lprcat("\nYou feel your vision sharpen"); /* see invisible */
       player.SEEINVISIBLE += rnd(1000) + 400;
       monsterlist[INVISIBLESTALKER].char = 'I';
-      return;
+      updateLog("You feel your vision sharpen"); /* see invisible */
+      break;
   };
-  player.level.paint(); /* show new stats      */
-  return;
+  // player.level.paint(); /* show new stats      */
 }

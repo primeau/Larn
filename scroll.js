@@ -100,14 +100,14 @@ function read_scroll(scroll) {
 
   switch (scroll.arg) {
     case 0:
-      lprcat("Your armor glows for a moment");
       enchantarmor();
-      return; /* enchant armor */
+      updateLog("Your armor glows for a moment");
+      break; /* enchant armor */
 
     case 1:
-      lprcat("Your weapon glows for a moment");
       enchweapon();
-      return; /* enchant weapon */
+      updateLog("Your weapon glows for a moment");
+      break; /* enchant weapon */
 
     case 2:
       updateLog("TODO: read_scroll(): enlightenment");
@@ -120,23 +120,23 @@ function read_scroll(scroll) {
       //         for (j = xl; j < xh; j++)
       //                 know[j][i] = KNOWALL;
       // draws(xl, xh, yl, yh);
-      return;
+      break;
 
     case 3:
       updateLog("This scroll seems to be blank");
-      return;
+      break;
 
     case 4:
       createmonster(makemonst(player.level.depth + 1));
-      return; /* this one creates a monster  */
+      break; /* this one creates a monster  */
 
     case 5:
       something(player.level.depth); /* create artifact     */
-      return;
+      break;
 
     case 6:
       player.AGGRAVATE += 800;
-      return; /* aggravate monsters */
+      break; /* aggravate monsters */
 
     case 7:
       updateLog("TODO: read_scroll(): time warp");
@@ -146,38 +146,38 @@ function read_scroll(scroll) {
       // else
       //         lprintf("\nYou went backward in time by %d mobuls", (long) (-(i + 99) / 100));
       // adjtime((long) i); /* adjust time for time warping */
-      return;
+      break;
 
     case 8:
       oteleport(0);
-      return; /* teleportation */
+      break; /* teleportation */
 
     case 9:
       player.AWARENESS += 1800;
-      return; /* expanded awareness   */
+      break; /* expanded awareness   */
 
     case 10:
       player.HASTEMONST += rnd(55) + 12;
-      return; /* haste monster */
+      break; /* haste monster */
 
     case 11:
       for (var i = 0; i < MAXY; i++)
         for (var j = 0; j < MAXX; j++)
           if (player.level.monsters[j][i] != null)
             player.level.monsters[j][i].hitpoints = monsterlist[player.level.monsters[j][i].arg].hitpoints;
-      return; /* monster healing */
+      break; /* monster healing */
 
     case 12:
       player.SPIRITPRO += 300 + rnd(200);
-      return; /* spirit protection */
+      break; /* spirit protection */
 
     case 13:
       player.UNDEADPRO += 300 + rnd(200);
-      return; /* undead protection */
+      break; /* undead protection */
 
     case 14:
       player.STEALTH += 250 + rnd(250);
-      return; /* stealth */
+      break; /* stealth */
 
     case 15:
       updateLog("TODO: read_scroll(): magic mapping");
@@ -186,11 +186,11 @@ function read_scroll(scroll) {
       //         for (j = 0; j < MAXX; j++)
       //                 know[j][i] = KNOWALL;
       // draws(0, MAXX, 0, MAXY);
-      return; /* magic mapping */
+      break; /* magic mapping */
 
     case 16:
       player.HOLDMONST += 30;
-      return; /* hold monster */
+      break; /* hold monster */
 
     case 17:
       for (var i = 0; i < 26; i++) {
@@ -201,13 +201,13 @@ function read_scroll(scroll) {
           item.arg = Math.min(255, item.arg);
         }
       }
-      return; /* gem perfection */
+      break; /* gem perfection */
 
     case 18:
       updateLog("TODO: read_scroll(): spell extension");
       // for (i = 0; i < 11; i++)
       //         c[exten[i]] <<= 1;
-      return; /* spell extension */
+      break; /* spell extension */
 
     case 19:
       for (var i = 0; i < player.inventory.length; i++) {
@@ -219,27 +219,28 @@ function read_scroll(scroll) {
             learnScroll(item);
         }
       }
-      return; /* identify */
+      break; /* identify */
 
     case 20:
       updateLog("TODO: read_scroll(): remove curse");
       // for (i = 0; i < 10; i++)
       //         if (c[curse[i]])
       //                 c[curse[i]] = 1;
-      return; /* remove curse */
+      break; /* remove curse */
 
     case 21:
       updateLog("TODO: read_scroll(): annihilation");
       // annihilate();
-      return; /* scroll of annihilation */
+      break; /* scroll of annihilation */
 
     case 22:
       updateLog("TODO: read_scroll(): pulverization");
       // godirect(22, 150, "The ray hits the %s", 0, ' ');
-      return; /* pulverization */
+      break; /* pulverization */
 
     case 23:
       player.LIFEPROT++;
-      return; /* life protection */
+      break; /* life protection */
   };
+  // player.level.paint(); /* show new stats      */
 }
