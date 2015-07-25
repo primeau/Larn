@@ -29,6 +29,7 @@ var Larn = {
     player.inventory[1] = createObject(OLEATHER);
     player.WIELD = player.inventory[0];
     player.WEAR = player.inventory[1];
+
     learnSpell("pro");
     learnSpell("mle");
     newcavelevel(0);

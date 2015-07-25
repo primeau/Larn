@@ -307,8 +307,7 @@ function monsterAt(x, y) {
  *  Enter with the monster number (1 to MAXMONST+8)
  *  Returns no value.
  */
-function createmonster(mon) {
-  var x, y, k, i;
+function createmonster(mon, x, y) {
   if (mon < 1 || mon > monsterlist.length - 1) /* check for monster number out of bounds */ {
     beep();
     updateLog(`can't createmonst ${mon}\n`);
@@ -316,25 +315,34 @@ function createmonster(mon) {
     return;
   }
   while (monsterlist[mon].genocided && mon < monsterlist.length - 1) mon++; /* genocided? */
-  for (k = rnd(8), i = -8; i < 0; i++, k++) /* choose direction, then try all */ {
+
+  // JRP force creation and use exact co-ordinates if they are given
+  var oktocreate = (x != null && y != null && cgood(x, y, 0, 1));
+  var i = oktocreate ? 0 : -8;
+
+  for (var k = rnd(8); i < 0; i++, k++) { /* choose direction, then try all */
     if (k > 8) k = 1; /* wraparound the diroff arrays */
     x = player.x + diroffx[k];
     y = player.y + diroffy[k];
     if (cgood(x, y, 0, 1)) /* if we can create here */ {
-      var monster = createNewMonster(mon);
-      player.level.monsters[x][y] = monster;
-      debug("createmonster: " + mon + " " + monsterlist[mon]);
-      //hitp[x][y] = monster[mon].hitpoints;
-      //know[x][y] &= ~KNOWHERE;
-      monster.awake = false;
-      switch (mon) {
-        case ROTHE:
-        case POLTERGEIST:
-        case VAMPIRE:
-          monster.awake = true;
-      };
-      return;
+      oktocreate = true;
+      i = 0;
     }
+  }
+
+  if (oktocreate) {
+    var monster = createNewMonster(mon);
+    player.level.monsters[x][y] = monster;
+    debug("createmonster: " + mon + " " + monsterlist[mon]);
+    //hitp[x][y] = monster[mon].hitpoints;
+    //know[x][y] &= ~KNOWHERE;
+    monster.awake = false;
+    switch (mon) {
+      case ROTHE:
+      case POLTERGEIST:
+      case VAMPIRE:
+        monster.awake = true;
+    };
   }
 }
 

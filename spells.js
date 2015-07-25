@@ -76,11 +76,11 @@ const speldescript = [
 ];
 
 
-
 var knownSpells = [];
 
 function learnSpell(spell) {
-  knownSpells.push(spell);
+  debug(`learning ${spell} ${spelcode.indexOf(spell)}`)
+  knownSpells[spelcode.indexOf(spell)] = spell;
 }
 
 
@@ -91,13 +91,12 @@ var spell_cast = null;
 
 function pre_cast() {
   cursors();
-  if (player.SPELLS <= 0) {
-    updateLog("You don't have any spells!");
-    return;
-  } else {
+  if (player.SPELLS > 0) {
     updateLog(eys);
     spell_cast = "";
     blocking_callback = cast;
+  } else {
+    updateLog("You don't have any spells!");
   }
 }
 
@@ -106,9 +105,10 @@ function pre_cast() {
 function cast(key) {
 
   if (key == 'I' || key == " ") {
-    seemagic(-1);
-    cursors();
-    lprcat(eys);
+    // TODO
+    // seemagic(-1);
+    // cursors();
+    if (spell_cast == null) updateLog(eys);
     return 0;
   }
 
@@ -124,7 +124,7 @@ function cast(key) {
     return 0;
   }
 
-  //updateLog("");
+  updateLog("");
 
   --player.SPELLS;
 
@@ -152,14 +152,15 @@ function cast(key) {
  *  Please insure that there are 2 spaces before all messages here
  */
 function speldamage(x) {
-  var xl, xh, yl, yh;
-  var p, kn, pm;
+  /* no such spell */
+  //if (x >= SPNUM) return;
 
-  //if (x >= SPNUM) return; /* no such spell */
+  /* not if time stopped */
   if (player.TIMESTOP) {
     appendLog("  It didn't seem to work");
     return;
-  } /* not if time stopped */
+  }
+
   var clev = player.LEVEL;
   if ((rnd(23) == 7) || (rnd(18) > player.INTELLIGENCE)) {
     appendLog("  It didn't work!");
@@ -243,6 +244,7 @@ function speldamage(x) {
       return;
 
     case 11:
+      /* create monster   */
       createmonster(makemonst(player.level.depth + 1) + 8);
       return;
 
@@ -290,50 +292,43 @@ function speldamage(x) {
       // case 19:
       //   omnidirect(x, 30 + rnd(10), "  The %s gasps for air"); /* cloud kill */
       //   return;
-      //
-      // case 20:
-      //   xh = min(playerx + 1, MAXX - 2);
-      //   yh = min(playery + 1, MAXY - 2);
-      //   for (i = max(playerx - 1, 1); i <= xh; i++) /* vaporize rock */
-      //     for (j = max(playery - 1, 1); j <= yh; j++) {
-      //       kn = & know[i][j];
-      //       pm = & mitem[i][j];
-      //       switch ( * (p = & item[i][j])) {
-      //         case OWALL:
-      //           if (level < MAXLEVEL + MAXVLEVEL - 1)
-      //             * p = * kn = 0;
-      //           break;
-      //
-      //         case OSTATUE:
-      //           if (c[HARDGAME] < 3) { * p = OBOOK;
-      //             iarg[i][j] = level; * kn = 0;
-      //           }
-      //           break;
-      //
-      //         case OTHRONE:
-      //           * p = OTHRONE2;
-      //           create_guardian(GNOMEKING, i, j);
-      //           break;
-      //
-      //         case OALTAR:
-      //           create_guardian(DEMONPRINCE, i, j);
-      //           break;
-      //
-      //         case OFOUNTAIN:
-      //           create_guardian(WATERLORD, i, j);
-      //           break;
-      //       };
-      //       switch ( * pm) {
-      //         case XORN:
-      //           ifblind(i, j);
-      //           hitm(i, j, 200);
-      //           break; /* Xorn takes damage from vpr */
-      //       }
-      //     }
-      //   return;
-      //
-      //   /* ----- LEVEL 4 SPELLS ----- */
-      //
+
+    case 20:
+      /* vaporize rock */
+      var xh = Math.min(player.x + 1, MAXX - 2);
+      var yh = Math.min(player.y + 1, MAXY - 2);
+      for (let i = Math.max(player.x - 1, 1); i <= xh; i++) {
+        for (let j = Math.max(player.y - 1, 1); j <= yh; j++) {
+          // kn = & know[i][j];
+          var item = getItem(i, j);
+          if (item.matches(OWALL)) {
+            if (player.level.depth < MAXLEVEL + MAXVLEVEL - 1)
+            //* p = * kn = 0;
+              setItem(i, j, createObject(OEMPTY));
+          } else if (item.matches(OSTATUE)) {
+            if (player.HARDGAME < 3) {
+              setItem(i, j, createObject(OBOOK, player.level.depth));
+              //* kn = 0;
+            }
+          } else if (item.matches(OTHRONE)) {
+            if (item.arg == 0) {
+              create_guardian(GNOMEKING, i, j);
+              item.arg = 1; // nullify the throne
+            }
+          } else if (item.matches(OALTAR)) {
+            create_guardian(DEMONPRINCE, i, j);
+          } else if (item.matches(OFOUNTAIN)) {
+            create_guardian(WATERLORD, i, j);
+          } else if (monsterAt(i, j) != null && monsterAt(i, j).matches(XORN)) {
+            ifblind(i, j);
+            hitm(i, j, 200);
+          }
+        }
+      }
+      return;
+
+      /* ----- LEVEL 4 SPELLS ----- */
+
       // case 21:
       //   direct(x, 100 + clev, "  The %s shrivels up", 0); /* dehydration */
       //   return;
@@ -515,10 +510,45 @@ function speldamage(x) {
 
 
 /*
+    Create a guardian for a throne/altar/fountain, as a result of the player
+    using a VPR spell or pulverization scroll on it.
+*/
+function create_guardian(monst, x, y) {
+  /* prevent the guardian from being created on top of the player */
+  if ((x == player.x) && (y == player.y)) {
+    k = rnd(8);
+    x += diroffx[k];
+    y += diroffy[k];
+  }
+  // know[x][y] = 0;
+  // mitem[x][y] = monst;
+  // hitp[x][y] = monster[monst].hitpoints;
+  createmonster(monst, x, y);
+}
+
+
+
+/*
  *  Routine to subtract 1 from your int (intelligence) if > 3
  *
  *  No arguments and no return value
  */
 function loseint() {
   player.INTELLIGENCE = Math.max(player.INTELLIGENCE - 1, 3);
+}
+
+
+
+/*
+ *  isconfuse()         Routine to check to see if player is confused
+ *
+ *  This routine prints out a message saying "You can't aim your magic!"
+ *  returns 0 if not confused, non-zero (time remaining confused) if confused
+ */
+function isconfuse() {
+  if (player.CONFUSE) {
+    updateLog(" You can't aim your magic!");
+    beep();
+  }
+  return (player.CONFUSE > 0);
 }

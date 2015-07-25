@@ -657,7 +657,6 @@ function game_stats() {
   s += "WTW:   " + player.WTW + "\n";
   s += "PRO3:  " + player.ALTPRO + "\n";
 
-
   s += "STREX: " + player.STREXTRA + "\n";
   s += "GIAST: " + player.GIANTSTR + "\n";
   s += "HERO:  " + player.HERO + "\n";
