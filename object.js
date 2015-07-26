@@ -232,6 +232,16 @@ function isItem(x, y, compareItem) {
   }
 }
 
+
+
+function getItemDir(direction) {
+    var x = player.x + diroffx[direction];
+    var y = player.y + diroffy[direction];
+    return getItem(x, y);
+}
+
+
+
 function getItem(x, y) {
   if (x == null || y == null) {
     return null;

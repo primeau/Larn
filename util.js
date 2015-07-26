@@ -36,13 +36,33 @@ function debug(text) {
 
 var KEYBOARD_INPUT = "";
 
+
+function getdirectioninput(key, code) {
+  //debug(`getdirectioninput: ${key} ${code}`);
+  if (key == ESC) {
+    // TODO anything else?
+    keyboard_input_callback = null;
+    return 1;
+  }
+  var direction = parseDirectionKeys(key, code);
+  //debug(`getdirectioninput: ${direction}`);
+  if (keyboard_input_callback != null) {
+    //debug(`getdirectioninput: ${keyboard_input_callback.name}`);
+    keyboard_input_callback(direction);
+  }
+  keyboard_input_callback = null;
+  return 1;
+}
+
+
+
 function getnumberinput(key) {
   if (key == ENTER) {
-    return getnumberinput_done();
+    return getinput_done();
   } else if (key == '*') {
     KEYBOARD_INPUT = key;
     lprc(key);
-    return getnumberinput_done();
+    return getinput_done();
   } else if (key == DEL) {
     appendLog(key);
     var num = KEYBOARD_INPUT + "";
@@ -65,7 +85,7 @@ function getnumberinput(key) {
   }
 }
 
-function getnumberinput_done() {
+function getinput_done() {
   var done = 0;
   if (keyboard_input_callback != null) {
     done = keyboard_input_callback(KEYBOARD_INPUT);

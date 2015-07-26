@@ -67,17 +67,23 @@ function parseEvent(e) {
   var newy = player.y;
 
   if (blocking_callback != null) {
-    let done = blocking_callback(code == ESC ? ESC : key);
+    //debug(blocking_callback.name + ": ");
+    var before = blocking_callback.name;
+    let done = blocking_callback(code == ESC ? ESC : key, code);
+    var after = blocking_callback.name;
     player.level.paint();
-    //debug(blocking_callback.name + ": " + done)
-    if (done) {
+    //debug(blocking_callback.name + ": " + done);
+
+    // if a blocking callback assigns a new one, we're not done yet
+    // i think i have created my own special callback hell
+    if (before == after && done) {
       blocking_callback = null;
     }
     return;
   }
 
   if (non_blocking_callback != null) {
-    non_blocking_callback(code == ESC ? ESC : key);
+    non_blocking_callback(code == ESC ? ESC : key, code);
     non_blocking_callback = null;
     player.level.paint();
   }

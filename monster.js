@@ -300,6 +300,14 @@ function monsterAt(x, y) {
 
 
 
+function getMonster(direction) {
+  var x = player.x + diroffx[direction];
+  var y = player.y + diroffy[direction];
+  return monsterAt(x, y);
+}
+
+
+
 /*
  *  createmonster(monstno)      Function to create a monster next to the player
  *      int monstno;
@@ -788,20 +796,4 @@ function hitm(x, y, damage) {
     //return (hpoints); // TODO do i need this?
   }
   return (fulldamage);
-}
-
-
-
-/*
- *  fullhit(xx)     Function to return full damage against a monster (aka web)
- *      int xx;
- *
- *  Function to return hp damage to monster due to a number of full hits
- *  Enter with the number of full hits being done
- */
-function fullhit(xx) {
-  if (xx < 0 || xx > 20) return (0); /* fullhits are out of range */
-  if (player.WIELD != null && player.WIELD.matches(OLANCE)) return (10000); /* lance of death */
-  var i = xx * ((player.WCLASS >> 1) + player.STRENGTH + player.STREXTRA - player.HARDGAME - 12 + player.MOREDAM);
-  return ((i >= 1) ? i : xx);
 }

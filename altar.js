@@ -11,7 +11,7 @@ function oaltar(key) {
   switch (key) {
     case 'p':
       appendLog(" pray");
-      lprcat("  Do you (m) give money or (j) just pray?");
+      updateLog("  Do you (m) give money or (j) just pray?");
       blocking_callback = oaltar_pray_helper;
       return 0;
 
@@ -33,14 +33,14 @@ function oaltar(key) {
 function oaltar_pray_helper(key) {
   switch (key) {
     case 'j':
-      //lprcat("\n");
+      //updateLog("\n");
       appendLog(" just pray");
       act_just_pray();
       return 1;
 
     case 'm':
       appendLog(" give money");
-      lprcat("how much do you donate? ");
+      updateLog("how much do you donate? ");
       blocking_callback = getnumberinput;
       keyboard_input_callback = act_donation_pray;
       return 0;
@@ -58,7 +58,7 @@ function oaltar_pray_helper(key) {
     donation.
 */
 function act_donation_pray(k) {
-    // lprcat("\n");
+    // updateLog("\n");
     // cursor(1, 24);
     // cltoeoln();
     // cursor(1, 23);
@@ -94,27 +94,27 @@ function act_donation_pray(k) {
       }
       if (rnd(43) == 5) {
         if (player.WEAR != null)
-          lprcat("You feel your armor vibrate for a moment");
+          updateLog("You feel your armor vibrate for a moment");
         enchantarmor();
         return 1;
       }
       if (rnd(43) == 8) {
         if (player.WIELD != null)
-          lprcat("You feel your weapon vibrate for a moment");
+          updateLog("You feel your weapon vibrate for a moment");
         enchweapon();
         return 1;
       }
 
-      lprcat("Thank You.");
+      updateLog("Thank You.");
       return 1;
     }
 
     /* Player donates more gold than they have.  Loop back around so
        player can't escape the altar for free.
     */
-    lprcat("  You don't have that much!");
+    updateLog("  You don't have that much!");
 
-    lprcat("how much do you donate? ");
+    updateLog("how much do you donate? ");
     blocking_callback = getnumberinput;
     keyboard_input_callback = act_donation_pray;
     return 0;
@@ -132,15 +132,15 @@ function act_donation_pray(k) {
 */
 function act_just_pray() {
   if (rnd(100) < 75)
-    lprcat("nothing happens");
+    updateLog("nothing happens");
   else if (rnd(43) == 10) {
     if (player.WEAR != null)
-      lprcat("You feel your armor vibrate for a moment");
+      updateLog("You feel your armor vibrate for a moment");
     enchantarmor();
     return;
   } else if (rnd(43) == 10) {
     if (player.WIELD != null)
-      lprcat("You feel your weapon vibrate for a moment");
+      updateLog("You feel your weapon vibrate for a moment");
     enchweapon();
     return;
   } else
@@ -157,10 +157,10 @@ function act_desecrate_altar() {
     createmonster(makemonst(player.level.depth + 2) + 8);
     player.AGGRAVATE += 2500;
   } else if (rnd(101) < 30) {
-    lprcat("The altar crumbles into a pile of dust before your eyes");
+    updateLog("The altar crumbles into a pile of dust before your eyes");
     forget(); /*  remember to destroy the altar   */
   } else
-    lprcat("nothing happens");
+    updateLog("nothing happens");
   return;
 }
 
@@ -175,7 +175,7 @@ function act_ignore_altar() {
     createmonster(makemonst(player.level.depth + 1));
     player.AGGRAVATE += rnd(450);
   } else
-    lprcat("Nothing happens");
+    updateLog("Nothing happens");
   return;
 }
 
@@ -184,7 +184,7 @@ function act_ignore_altar() {
     function to cast a +3 protection on the player
  */
 function act_prayer_heard() {
-  lprcat("You have been heard!");
+  updateLog("You have been heard!");
   if (player.ALTPRO == 0)
     player.MOREDEFENSES += 3;
   player.ALTPRO += 500; /* protection field */
