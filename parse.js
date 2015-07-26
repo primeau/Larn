@@ -166,11 +166,11 @@ function parseEvent(e) {
       readbook(item);
       forget();
     } else if (item.matches(OSCROLL)) {
-      read_scroll(item);
       forget();
+      read_scroll(item);
     } else {
       updateLog("What do you want to read [* for all] ?");
-      // TODO read from inventory
+      blocking_callback = act_read_something; // TODO this should fall through
     }
     //return;
   }
@@ -182,11 +182,11 @@ function parseEvent(e) {
   //
   if (key == 'q') {
     if (item.matches(OPOTION)) {
-      quaffpotion(item);
       forget();
+      quaffpotion(item);
     } else {
       updateLog("What do you want to quaff [* for all] ?");
-      // TODO read from inventory
+      blocking_callback = act_quaffpotion; // TODO this should fall through
     }
     //return;
   }
@@ -201,7 +201,7 @@ function parseEvent(e) {
       wield(item);
     } else {
       updateLog("What do you want to wield (- for nothing) [* for all] ?");
-      blocking_callback = wield;
+      blocking_callback = wield; // TODO this should fall through
     }
     //return;
   }
@@ -216,7 +216,7 @@ function parseEvent(e) {
       wear(item);
     } else {
       updateLog("What do you want to wear (- for nothing) [* for all] ?");
-      blocking_callback = wear;
+      blocking_callback = wear; // TODO this should fall through
     }
     //return;
   }

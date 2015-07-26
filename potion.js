@@ -89,6 +89,26 @@ function opotion(key) {
   };
 }
 
+
+
+function act_quaffpotion(index) {
+  var useindex = getIndexFromChar(index);
+  var item = player.inventory[useindex];
+  if (item != null && item.matches(OPOTION)) {
+    player.inventory[useindex] = null;
+    quaffpotion(item);
+  } else {
+    if (item == null) {
+      updateLog(`You don't have item ${index}`);
+    } else {
+      updateLog(`You can't quaff that!`);
+    }
+  }
+  return 1;
+}
+
+
+
 /*
  * function to drink a potion
  *

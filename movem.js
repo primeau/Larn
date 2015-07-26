@@ -119,7 +119,7 @@ function movemonst() {
   */
   if (movecnt > 0) {
     if (player.SCAREMONST)
-      for (i = 0; i < movecnt; i++)
+      for (let i = 0; i < movecnt; i++)
         move_scared(movelist[i].x, movelist[i].y);
     else {
       if (smart_count > 0) {
@@ -186,7 +186,7 @@ function movemonst() {
         move_smart(lasthx, lasthy);
       } else {
         // TODO: THERE IS A BUG HERE WITH DOUBLE MONSTER MOVEMENT AFTER THEY HAVE BEEN HIT
-        //move_dumb(lasthx, lasthy); 
+        //move_dumb(lasthx, lasthy);
         // TODO: THERE IS A BUG HERE WITH DOUBLE MONSTER MOVEMENT AFTER THEY HAVE BEEN HIT
       }
       lasthx = w1x[0]; /* make sure the monster gets moved again */

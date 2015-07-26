@@ -75,7 +75,7 @@ function act_drink_fountain() {
     player.HALFDAM += 200 + rnd(200);
     updateLog("You feel a sickness coming on");
   } else if (x < 13)
-    quaffpotion(23, false); /* see invisible,but don't know the potion */
+    quaffpotion(createObject(OPOTION, 23), false); /* see invisible,but don't know the potion */
 
   else if (x < 45)
     updateLog("nothing seems to have happened");

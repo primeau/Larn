@@ -40,26 +40,28 @@ function enchantarmor() {
   } else {
     cursors();
     beep();
-    lprcat("You feel a sense of loss");
-    return;
+    updateLog("You feel a sense of loss");
+    return false;
   }
   if (!tmp.matches(OSCROLL) && !tmp.matches(OPOTION)) {
     tmp.arg++;
     bottomline();
+    return true;
   }
+  return false;
 }
 
 /*
     function to enchant a weapon presently being wielded
  */
 function enchweapon() {
-  if (player.WIELD == null) {
+  var tmp = player.WIELD;
+  if (tmp == null) {
     cursors();
     beep();
-    lprcat("You feel a sense of loss");
-    return;
+    updateLog("You feel a sense of loss");
+    return false;
   }
-  var tmp = player.WIELD;
   if (!tmp.matches(OSCROLL) && !tmp.matches(OPOTION)) {
     tmp.arg++;
     // TODO
@@ -69,7 +71,9 @@ function enchweapon() {
     // else
     // if (tmp.matches(ODEXRING)) player.DEXTERITY++;
     bottomline();
+    return true;
   }
+  return false;
 }
 
 

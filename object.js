@@ -459,7 +459,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_ident) {
       if (item.carry) {
         updateLog(`You have found ${item}: (t) take`);
-      } else {
+      } else if (!item.matches(OWALL)) {
         updateLog(`You have found ${item}`);
       }
     }

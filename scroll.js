@@ -89,6 +89,29 @@ function oscroll(key) {
   };
 }
 
+
+
+function act_read_something(index) {
+  var useindex = getIndexFromChar(index);
+  var item = player.inventory[useindex];
+  if (item != null && item.matches(OSCROLL)) {
+    player.inventory[useindex] = null;
+    read_scroll(item);
+  } else if (item != null && item.matches(OBOOK)) {
+    player.inventory[useindex] = null;
+    readbook(item);
+  } else {
+    if (item == null) {
+      updateLog(`You don't have item ${index}`);
+    } else {
+      updateLog(`You can't read that!`);
+    }
+  }
+  return 1;
+}
+
+
+
 /*
  * function to read a scroll
  */
@@ -100,13 +123,13 @@ function read_scroll(scroll) {
 
   switch (scroll.arg) {
     case 0:
-      enchantarmor();
-      updateLog("Your armor glows for a moment");
+      if (enchantarmor())
+        updateLog("Your armor glows for a moment");
       break; /* enchant armor */
 
     case 1:
-      enchweapon();
-      updateLog("Your weapon glows for a moment");
+      if (enchweapon())
+        updateLog("Your weapon glows for a moment");
       break; /* enchant weapon */
 
     case 2:
