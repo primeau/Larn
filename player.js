@@ -76,11 +76,11 @@ var Player = {
   UNDEADPRO: 0,
   SHIELD: null,
   STEALTH: 0,
-  // ITCHING:
-  // LAUGHING:         // UNUSED
-  // DRAINSTRENGTH:    // UNUSED
-  // CLUMSINESS:
-  // INFEEBLEMENT:     // UNUSED
+  ITCHING: 0,
+  LAUGHING: 0, // UNUSED
+  DRAINSTRENGTH: 0, // UNUSED
+  CLUMSINESS: 0,
+  INFEEBLEMENT: 0, // UNUSED
   HALFDAM: 0,
   SEEINVISIBLE: 0,
   // FILLROOM:
@@ -631,29 +631,31 @@ function game_stats() {
   s += "GIAST: " + player.GIANTSTR + "\n";
   s += "HERO:  " + player.HERO + "\n";
 
+  s += "AWARE: " + player.AWARENESS + "\n";
+  s += "SEEIN: " + player.SEEINVISIBLE + "\n";
+  s += "SPRO:  " + player.SPIRITPRO + "\n";
+  s += "UPRO:  " + player.UNDEADPRO + "\n";
+  s += "FIRE:  " + player.FIRERESISTANCE + "\n";
+  s += "STEL:  " + player.STEALTH + "\n";
+
   s += "AGGR:  " + player.AGGRAVATE + "\n";
   s += "HSTM:  " + player.HASTEMONST + "\n";
   s += "POIS:  " + player.HALFDAM + "\n";
   s += "CONF:  " + player.CONFUSE + "\n";
   s += "BLIND: " + player.BLINDCOUNT + "\n";
-
-  s += "AWARE: " + player.AWARENESS + "\n";
-  s += "SEEIN: " + player.SEEINVISIBLE + "\n";
-
-  s += "SPRO:  " + player.SPIRITPRO + "\n";
-  s += "UPRO:  " + player.UNDEADPRO + "\n";
-  s += "FIRE:  " + player.FIRERESISTANCE + "\n";
-
-  s += "HOLD:  " + player.HOLDMONST + "\n";
-  s += "STEL:  " + player.STEALTH + "\n";
+  s += "ITCH:  " + player.ITCHING + "\n";
+  s += "CLMSY: " + player.CLUMSINESS + "\n";
 
   s += "THEFT: " + player.NOTHEFT + "\n";
   s += "CUBE:  " + player.CUBEofUNDEAD + "\n";
   s += "ORB:   " + player.SLAYING + "\n";
   s += "NEGAT: " + player.NEGATESPIRIT + "\n";
+  s += "LIFE:  " + player.LIFEPROT + "\n";
 
   s += "KILL:  " + player.MONSTKILLED + "\n";
-  s += "LIFE:  " + player.LIFEPROT + "\n";
+  s += "PAINT: " + DEBUG_PAINT + "\n";
+  s += "LPR:   " + DEBUG_LPRCAT + "\n";
+  s += "LPRC:  " + DEBUG_LPRC + "\n";
 
   s += "\n";
   var c = "a";

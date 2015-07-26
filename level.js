@@ -66,6 +66,8 @@ var Level = {
 
   paint: function() {
 
+    DEBUG_PAINT++;
+    
     if (IN_STORE) {
       drawstore();
     } else {

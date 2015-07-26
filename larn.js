@@ -11,6 +11,9 @@ var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
 var DEBUG_STAIRS_EVERYWHERE = false;
 var DEBUG_KNOW_ALL = false;
+var DEBUG_PAINT = 0;
+var DEBUG_LPRCAT = 0;
+var DEBUG_LPRC = 0;
 
 var IN_STORE = false;
 

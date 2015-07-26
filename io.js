@@ -20,6 +20,9 @@ function lprintf(str, width) {
 
 
 function lprcat(str) {
+
+  DEBUG_LPRCAT++;
+
   // if (messages_on && cursory == 24) play_message_sound(str);
   // int save_attr = current_attr;
   // if (messages_on && cursory >= 20 && cursory <= 24) current_attr = MESSAGE_ATTR;
@@ -46,6 +49,9 @@ function cursors() {
 
 var messages_on = false;
 function lprc(ch) {
+
+  DEBUG_LPRC++;
+
   if (ch == '\b') {
     cursorx--;
     os_put_font(' ', current_attr, cursorx - 1, cursory - 1);

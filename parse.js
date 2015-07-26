@@ -162,6 +162,11 @@ function parseEvent(e) {
   // read
   //
   if (key == 'r') {
+    if (player.BLINDCOUNT > 0) {
+      cursors();
+      updateLog("You can't read anything when you're blind!");
+      return;
+    }
     if (item.matches(OBOOK)) {
       readbook(item);
       forget();

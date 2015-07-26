@@ -123,14 +123,16 @@ function read_scroll(scroll) {
 
   switch (scroll.arg) {
     case 0:
+      /* enchant armor */
       if (enchantarmor())
         updateLog("Your armor glows for a moment");
-      break; /* enchant armor */
+      break;
 
     case 1:
+      /* enchant weapon */
       if (enchweapon())
         updateLog("Your weapon glows for a moment");
-      break; /* enchant weapon */
+      break;
 
     case 2:
       updateLog("TODO: read_scroll(): enlightenment");
@@ -150,16 +152,19 @@ function read_scroll(scroll) {
       break;
 
     case 4:
+      /* this one creates a monster  */
       createmonster(makemonst(player.level.depth + 1));
-      break; /* this one creates a monster  */
+      break;
 
     case 5:
-      something(player.level.depth); /* create artifact     */
+      /* create artifact     */
+      something(player.level.depth);
       break;
 
     case 6:
+      /* aggravate monsters */
       player.AGGRAVATE += 800;
-      break; /* aggravate monsters */
+      break;
 
     case 7:
       updateLog("TODO: read_scroll(): time warp");
@@ -172,50 +177,60 @@ function read_scroll(scroll) {
       break;
 
     case 8:
+      /* teleportation */
       oteleport(0);
-      break; /* teleportation */
+      break;
 
     case 9:
+      /* expanded awareness   */
       player.AWARENESS += 1800;
-      break; /* expanded awareness   */
+      break;
 
     case 10:
+      /* haste monster */
       player.HASTEMONST += rnd(55) + 12;
-      break; /* haste monster */
+      break;
 
     case 11:
+      /* monster healing */
       for (var i = 0; i < MAXY; i++)
         for (var j = 0; j < MAXX; j++)
           if (player.level.monsters[j][i] != null)
             player.level.monsters[j][i].hitpoints = monsterlist[player.level.monsters[j][i].arg].hitpoints;
-      break; /* monster healing */
+      break;
 
     case 12:
+      /* spirit protection */
       player.SPIRITPRO += 300 + rnd(200);
-      break; /* spirit protection */
+      break;
 
     case 13:
+      /* undead protection */
       player.UNDEADPRO += 300 + rnd(200);
-      break; /* undead protection */
+      break;
 
     case 14:
+      /* stealth */
       player.STEALTH += 250 + rnd(250);
-      break; /* stealth */
+      break;
 
     case 15:
+      /* magic mapping */
       updateLog("TODO: read_scroll(): magic mapping");
       // lprcat("\nYou have been granted enlightenment!");
       // for (i = 0; i < MAXY; i++)
       //         for (j = 0; j < MAXX; j++)
       //                 know[j][i] = KNOWALL;
       // draws(0, MAXX, 0, MAXY);
-      break; /* magic mapping */
+      break;
 
     case 16:
+      /* hold monster */
       player.HOLDMONST += 30;
-      break; /* hold monster */
+      break;
 
     case 17:
+      /* gem perfection */
       for (var i = 0; i < 26; i++) {
         var item = player.inventory[i];
         if (item != null && item.isGem()) {
@@ -224,15 +239,25 @@ function read_scroll(scroll) {
           item.arg = Math.min(255, item.arg);
         }
       }
-      break; /* gem perfection */
+      break;
 
     case 18:
-      updateLog("TODO: read_scroll(): spell extension");
-      // for (i = 0; i < 11; i++)
-      //         c[exten[i]] <<= 1;
-      break; /* spell extension */
+      /* spell extension */
+      player.PROTECTIONTIME <<= 1;
+      player.DEXCOUNT <<= 1;
+      player.STRCOUNT <<= 1;
+      player.CHARMCOUNT <<= 1;
+      player.INVISIBILITY <<= 1;
+      player.CANCELLATION <<= 1;
+      player.HASTESELF <<= 1;
+      player.GLOBE <<= 1;
+      player.SCAREMONST <<= 1;
+      player.HOLDMONST <<= 1;
+      player.TIMESTOP <<= 1;
+      break;
 
     case 19:
+      /* identify */
       for (var i = 0; i < player.inventory.length; i++) {
         var item = player.inventory[i];
         if (item != null) {
@@ -242,28 +267,38 @@ function read_scroll(scroll) {
             learnScroll(item);
         }
       }
-      break; /* identify */
+      break;
 
     case 20:
-      updateLog("TODO: read_scroll(): remove curse");
-      // for (i = 0; i < 10; i++)
-      //         if (c[curse[i]])
-      //                 c[curse[i]] = 1;
-      break; /* remove curse */
+      /* remove curse */
+      player.BLINDCOUNT = 1;
+      player.CONFUSE = 1;
+      player.AGGRAVATE = 1;
+      player.HASTEMONST = 1;
+      player.ITCHING = 1;
+      player.LAUGHING = 1;
+      player.DRAINSTRENGTH = 1;
+      player.CLUMSINESS = 1;
+      player.INFEEBLEMENT = 1;
+      player.HALFDAM = 1;
+      break;
 
     case 21:
+      /* scroll of annihilation */
       updateLog("TODO: read_scroll(): annihilation");
       // annihilate();
-      break; /* scroll of annihilation */
+      break;
 
     case 22:
+      /* pulverization */
       updateLog("TODO: read_scroll(): pulverization");
       // godirect(22, 150, "The ray hits the %s", 0, ' ');
-      break; /* pulverization */
+      break;
 
     case 23:
+      /* life protection */
       player.LIFEPROT++;
-      break; /* life protection */
+      break;
   };
   // player.level.paint(); /* show new stats      */
 }
