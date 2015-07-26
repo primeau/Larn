@@ -75,7 +75,7 @@ function makeobject(level) {
   if (level.depth != 0 && level.depth != 13) {
     fillroom(OSTAIRSDOWN, 0);
   }
-  if (level.depth != 0 && level.depth != 11) {
+  if (level.depth > 1 && level.depth != 11) {
     fillroom(OSTAIRSUP, 0);
   }
   if (level.depth == 11) {
