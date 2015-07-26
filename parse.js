@@ -472,6 +472,7 @@ function parseEvent(e) {
       player.level.items[armori++][MAXY - 1] = createObject(OALTAR);
       player.level.items[armori++][MAXY - 1] = createObject(OTHRONE);
       player.level.items[armori++][MAXY - 1] = createObject(OFOUNTAIN);
+      player.level.items[armori++][MAXY - 1] = createObject(OMIRROR);
 
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);

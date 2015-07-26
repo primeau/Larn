@@ -178,11 +178,12 @@ function speldamage(x) {
       player.PROTECTIONTIME += 250;
       return;
 
-      // case 1:
+    case 1:
+      updateLog("TODO: magic missile");
       //   i = rnd(((clev + 1) << 1)) + clev + 3;
       //   godirect(x, i, (clev >= 2) ? "  Your missiles hit the %s" : "  Your missile hit the %s", 100, '+'); /* magic missile */
       //
-      //   return;
+      return;
 
     case 2:
       /* dexterity   */
@@ -200,9 +201,10 @@ function speldamage(x) {
       player.CHARMCOUNT += player.CHARISMA << 1;
       return;
 
-      // case 5:
+    case 5:
+      updateLog("TODO: sonic spear");
       //   godirect(x, rnd(10) + 15 + clev, "  The sound damages the %s", 70, '@'); /* sonic spear */
-      //   return;
+      return;
 
       /* ----- LEVEL 2 SPELLS ----- */
 
@@ -217,7 +219,8 @@ function speldamage(x) {
       player.STRCOUNT += 150 + rnd(100);
       return;
 
-      // case 8:
+    case 8:
+      updateLog("TODO: enlightenment");
       //   yl = playery - 5; /* enlightenment */
       //   yh = playery + 6;
       //   xl = playerx - 15;
@@ -228,7 +231,7 @@ function speldamage(x) {
       //     for (j = xl; j <= xh; j++)
       //       know[j][i] = KNOWALL;
       //   draws(xl, xh + 1, yl, yh + 1);
-      //   return;
+      return;
 
     case 9:
       /* healing */
@@ -264,13 +267,15 @@ function speldamage(x) {
 
       /* ----- LEVEL 3 SPELLS ----- */
 
-      // case 14:
+    case 14:
+      updateLog("TODO: fireball");
       //   godirect(x, rnd(25 + clev) + 25 + clev, "  The fireball hits the %s", 40, '*');
-      //   return; /*    fireball */
-      //
-      // case 15:
+      return; /*    fireball */
+
+    case 15:
+      updateLog("TODO: cone of cold");
       //   godirect(x, rnd(25) + 20 + clev, "  Your cone of cold strikes the %s", 60, 'O'); /*  cold */
-      //   return;
+      return;
 
     case 16:
       /*  polymorph */
@@ -333,9 +338,10 @@ function speldamage(x) {
       prepare_direction_spell(spell_dry);
       return;
 
-      // case 22:
+    case 22:
+      updateLog("TODO: lightning");
       //   godirect(x, rnd(25) + 20 + (clev << 1), "  A lightning bolt hits the %s", 1, '~'); /*  lightning */
-      //   return;
+      return;
 
     case 23:
       /* drain life */
@@ -395,7 +401,8 @@ function speldamage(x) {
 
       /* ----- LEVEL 6 SPELLS ----- */
 
-      // case 32:
+    case 32:
+      updateLog("TODO: sphere of annihilation");
       //   if ((rnd(23) == 5) && (wizard == 0)) /* sphere of annihilation */ {
       //     beep();
       //     lprcat("\nYou have been enveloped by the zone of nothingness!\n");
@@ -408,13 +415,14 @@ function speldamage(x) {
       //   loseint();
       //   i = dirsub( & xl, & yl); /* get direction of sphere */
       //   newsphere(xl, yl, i, rnd(20) + 11); /* make a sphere */
-      //   return;
+      return;
       //
-      // case 33:
+    case 33:
+      updateLog("TODO: genocide");
       //   genmonst();
       //   spelknow[33] = 0; /* genocide */
       //   loseint();
-      //   return;
+      return;
 
     case 34:
       /* summon demon */
@@ -436,7 +444,8 @@ function speldamage(x) {
       player.WTW += rnd(10) + 5;
       return;
 
-      // case 36:
+    case 36:
+      updateLog("TODO: alter reality");
       //   /* alter reality */ {
       //     struct isave * save; /* pointer to item save structure */
       //     int sc;
@@ -492,14 +501,16 @@ function speldamage(x) {
       //     if (wizard == 0) spelknow[36] = 0;
       //     free((char * ) save);
       //     positionplayer();
-      //     return;
+      return;
       //   }
       //
-      // case 37:
+
+    case 37:
+      updateLog("TODO: permanence");
       //   /* permanence */ adjtime(-99999 L);
       //   spelknow[37] = 0; /* forget */
       //   loseint();
-      //   return;
+      return;
 
     default:
       appendLog(`  spell ${x} not available!`);
@@ -519,19 +530,21 @@ function prepare_direction_spell(spell_function) {
 
 
 function spell_sleep(direction) {
-  var monster = getMonster(direction);
   var i = rnd(3) + 1;
-  var str = `  While the ${monster} slept, you smashed it ${i} times`;
-  direct(3 /*sleep*/ , direction, fullhit(i), str);
+  var str = function(monster, i) {
+    return `  While the ${monster} slept, you smashed it ${i} times`;
+  };
+  direct(3 /*sleep*/ , direction, fullhit(i), str, i);
 }
 
 
 
 function spell_web(direction) {
-  var monster = getMonster(direction);
   var i = rnd(3) + 2;
-  var str = `  While the ${monster} is entangled, you hit ${i} times`;
-  direct(6 /*web*/ , direction, fullhit(i), str);
+  var str = function(monster, i) {
+    return `  While the ${monster} is entangled, you hit ${i} times`;
+  };
+  direct(6 /*web*/ , direction, fullhit(i), str, i);
 }
 
 
@@ -539,8 +552,10 @@ function spell_web(direction) {
 function spell_phantasmal(direction) {
   var monster = getMonster(direction);
   if (rnd(11) + 7 <= player.WISDOM) {
-    var str = `  The ${monster} believed!`;
-    direct(12 /*phantasmal*/ , direction, rnd(20) + 20 + player.LEVEL, str)
+    var str = function(monster, i) {
+      return `  The ${monster} believed!`;
+    };
+    direct(12 /*phantasmal*/ , direction, rnd(20) + 20 + player.LEVEL, str, 0)
   } else {
     updateLog("  It didn't believe the illusions!");
   }
@@ -588,17 +603,20 @@ function spell_polymorph(direction) {
 
 
 function spell_dry(direction) {
-  var monster = getMonster(direction);
-  var str = `  The ${monster} shrivels up`;
-  direct(21 /*dehydration*/ , direction, 100 + player.LEVEL, str);
+  var str = function(monster) {
+    return `  The ${monster} shrivels up`;
+  };
+  direct(21 /*dehydration*/ , direction, 100 + player.LEVEL, str, 0);
 }
 
 
 
 function spell_drain(direction) {
-  var monster = getMonster(direction);
   var dam = Math.min(player.HP - 1, player.HPMAX / 2);
-  direct(23 /*drainlife*/ , direction, dam + dam, ``);
+  var str = function(monster) {
+    return ``;
+  };
+  direct(23 /*drainlife*/ , direction, dam + dam, str, 0);
   player.HP -= Math.round(dam);
 }
 
@@ -607,7 +625,10 @@ function spell_drain(direction) {
 function spell_finger(direction) {
   var monster = getMonster(direction);
   if (player.WISDOM > rnd(10) + 10) {
-    direct(26 /*fingerofdeath*/ , direction, 2000, `  The ${monster}'s heart stopped`);
+    var str = function(monster) {
+      return `  The ${monster}'s heart stopped`;
+    };
+    direct(26 /*fingerofdeath*/ , direction, 2000, str, 0);
   } else {
     updateLog("  It didn't work");
   }
@@ -649,8 +670,11 @@ function spell_teleport(direction) {
 
 
 function spell_summon(direction) {
-  var monster = getMonster(direction);
-  direct(34 /*summondemon*/ , direction, 150, `  The demon strikes at the ${monster}`);
+  var str = function(monster) {
+    return `  The demon strikes at the ${monster}`;
+  };
+
+  direct(34 /*summondemon*/ , direction, 150, str, 0);
 }
 
 
@@ -669,7 +693,8 @@ function create_guardian(monst, x, y) {
   // know[x][y] = 0;
   // mitem[x][y] = monst;
   // hitp[x][y] = monster[monst].hitpoints;
-  createmonster(monst, x, y);
+  if (!monster.genocided)
+    createmonster(monst, x, y);
 }
 
 
@@ -754,41 +779,47 @@ function direct(spnum, direction, dam, str, arg) {
     return;
   }
   //dirsub( & x, & y);
-  var monster = getMonster(direction);
+  var x = player.x + diroffx[direction];
+  var y = player.y + diroffy[direction];
 
-  if (monster == null) {
+  var monster = getMonster(direction);
+  var item = getItemDir(direction);
+
+  if (monster == null && !item.matches(OMIRROR)) {
     updateLog("  There wasn't anything there!");
     return;
   }
 
-  ifblind(x, y);
-
-  if (getItemDir(direction).matches(OMIRROR)) {
-    // TODO attack mirror
-    // if (spnum == 3) /* sleep */ {
-    //   lprcat("You fall asleep! ");
-    //   beep();
-    //   fool:
-    //     arg += 2;
-    //   while (arg-- > 0) {
-    //     parse2();
-    //     nap(1000);
-    //   }
-    //   return;
-    // } else if (spnum == 6) /* web */ {
-    //   lprcat("You get stuck in your own web! ");
-    //   beep();
-    //   goto fool;
-    // } else {
-    //   lastnum = 278;
-    //   lprintf(str, "spell caster (thats you)", (long) arg);
-    //   beep();
-    //   losehp(dam);
-    //   return;
-    // }
+  if (item.matches(OMIRROR) && monster == null) {
+    if (spnum == 3) /* sleep */ {
+      updateLog("You fall asleep! ");
+      beep();
+      arg += 2;
+      while (arg-- > 0) {
+        parse2();
+        nap(1000);
+      }
+      return;
+    } else if (spnum == 6) /* web */ {
+      updateLog("You get stuck in your own web! ");
+      beep();
+      arg += 2;
+      while (arg-- > 0) {
+        parse2();
+        nap(1000);
+      }
+      return;
+    } else {
+      lastnum = 278;
+      updateLog(str("spell caster (that's you)"));
+      beep();
+      player.losehp(dam);
+      return;
+    }
   }
+  ifblind(x, y);
   if (nospell(spnum, monster) == 0) {
-    updateLog(str);
+    updateLog(str(monster, arg));
     hitm(x, y, dam);
   } else {
     lasthx = x;
