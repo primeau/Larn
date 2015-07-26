@@ -256,9 +256,9 @@ function speldamage(x) {
 
     case 13:
       /* invisibility */
-      /* if he has the amulet of invisibility then add more time */
       let j = 0;
       for (let i = 0; i < 26; i++) {
+        /* if he has the amulet of invisibility then add more time */
         if (player.inventory[i] != null && player.inventory[i].matches(OAMULET)) {
           j += 1 + player.inventory[i].arg;
         }
@@ -290,9 +290,10 @@ function speldamage(x) {
       player.HASTESELF += 7 + clev;
       return;
 
-      // case 19:
-      //   omnidirect(x, 30 + rnd(10), "  The %s gasps for air"); /* cloud kill */
-      //   return;
+    case 19:
+      /* cloud kill */
+      omnidirect(x, 30 + rnd(10), "gasps for air");
+      return;
 
     case 20:
       /* vaporize rock */
@@ -351,10 +352,11 @@ function speldamage(x) {
       loseint();
       return;
 
-      // case 25:
-      //   omnidirect(x, 32 + clev, "  The %s struggles for air in your flood!"); /* flood */
-      //   return;
-      //
+    case 25:
+      /* flood */
+      omnidirect(x, 32 + clev, "struggles for air in your flood!");
+      return;
+
       // case 26:
       //   if (rnd(151) == 63) {
       //     beep();
@@ -386,13 +388,14 @@ function speldamage(x) {
       // case 30:
       //   tdirect(x);
       //   return; /* teleport away */
-      //
-      // case 31:
-      //   omnidirect(x, 35 + rnd(10) + clev, "  The %s cringes from the flame"); /* magic fire */
-      //   return;
-      //
-      //   /* ----- LEVEL 6 SPELLS ----- */
-      //
+
+    case 31:
+      /* magic fire */
+      omnidirect(x, 35 + rnd(10) + clev, "cringes from the flame");
+      return;
+
+      /* ----- LEVEL 6 SPELLS ----- */
+
       // case 32:
       //   if ((rnd(23) == 5) && (wizard == 0)) /* sphere of annihilation */ {
       //     beep();
@@ -557,6 +560,42 @@ function isconfuse() {
 
 
 /*
+ *  omnidirect(sp,dam,str)   Routine to damage all monsters 1 square from player
+ *      int sp,dam;
+ *      char *str;
+ *
+ *  Routine to cast a spell and then hit the monster in all directions
+ *  Enter with the spell number in sp, the damage done to wach square in dam,
+ *    and the lprintf string to identify the spell in str.
+ *  Returns no value.
+ */
+function omnidirect(spnum, dam, str) {
+  //if (spnum < 0 || spnum >= SPNUM || str == 0) return; /* bad args */
+  for (var x = player.x - 1; x <= player.x + 1; x++) {
+    for (var y = player.y - 1; y <= player.y + 1; y++) {
+      var monster = monsterAt(x, y);
+      if (monster != null) {
+        if (nospell(spnum, monster) == 0) {
+          ifblind(x, y);
+          cursors();
+          lprc('\n');
+          updateLog(`  The ${monster} ${str}`);
+          hitm(x, y, dam);
+          nap(800);
+        } else {
+          lasthx = x;
+          lasthy = y;
+        }
+      }
+    }
+  }
+}
+
+function nospell(spnum, m) {
+  return 0;
+}
+
+/*
  *  annihilate()    Routine to annihilate all monsters around player (playerx,playery)
  *
  *  Gives player experience, but no dropped objects
@@ -565,8 +604,8 @@ function isconfuse() {
 function annihilate() {
   var i, j;
   var k = 0;
-  for (i = player.x - 1; i <= player.x + 1 ; i++) {
-    for (j = player.y - 1 ; j <= player.y + 1 ; j++) {
+  for (i = player.x - 1; i <= player.x + 1; i++) {
+    for (j = player.y - 1; j <= player.y + 1; j++) {
       var monster = monsterAt(i, j);
       if (monster != null) { /* if a monster there */
         if (monster.arg < DEMONLORD + 2) {

@@ -241,6 +241,8 @@ function parseEvent(e) {
     return;
   }
 
+
+
   //
   // OPEN (in a direction)
   //
@@ -252,6 +254,8 @@ function parseEvent(e) {
     //   nomove = 1;
     return;
   }
+
+
 
   //
   // OPEN (in a direction)
@@ -516,38 +520,6 @@ function parseEvent(e) {
 
 } // KEYPRESS
 
-
-// /*
-//  *  dirsub(x,y)      Routine to ask for direction, then modify playerx,
-//  *                   playery for it
-//  *      int *x,*y;
-//  *
-//  *  Function to ask for a direction and modify an x,y for that direction
-//  *  Enter with the coordinate destination (x,y).
-//  *  Returns index into diroffx[] (0-8).
-//  */
-// function dirsub(direction) {
-//
-//   if (direction == null || direction < 0) {
-//     updateLog("In What Direction? ");
-//     wait_for_direction = true;
-//     return;
-//   }
-//
-//   var x = player.x + diroffx[direction];
-//   var y = player.y + diroffy[direction];
-//   var item = getItem(x, y);
-//
-//   if (item != null) {
-//     wait_for_direction = false;
-//     return direction;
-//   }
-//
-//   updateLog("TODO: parse.dirsub()");
-//   // * x = playerx + diroffx[i]; * y = playery + diroffy[i];
-//   // vxy(x, y);
-//   // return (i);
-// }
 
 
 //const diroffx = { 0,  0, 1,  0, -1,  1, -1, 1, -1 };
