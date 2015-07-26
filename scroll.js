@@ -285,8 +285,7 @@ function read_scroll(scroll) {
 
     case 21:
       /* scroll of annihilation */
-      updateLog("TODO: read_scroll(): annihilation");
-      // annihilate();
+      annihilate();
       break;
 
     case 22:

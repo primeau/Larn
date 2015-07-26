@@ -553,3 +553,36 @@ function isconfuse() {
   }
   return (player.CONFUSE > 0);
 }
+
+
+
+/*
+ *  annihilate()    Routine to annihilate all monsters around player (playerx,playery)
+ *
+ *  Gives player experience, but no dropped objects
+ *  Returns the experience gained from all monsters killed
+ */
+function annihilate() {
+  var i, j;
+  var k = 0;
+  for (i = player.x - 1; i <= player.x + 1 ; i++) {
+    for (j = player.y - 1 ; j <= player.y + 1 ; j++) {
+      var monster = monsterAt(i, j);
+      if (monster != null) { /* if a monster there */
+        if (monster.arg < DEMONLORD + 2) {
+          k += monster.experience;
+          player.level.monsters[i][j] = null;
+          //*p = know[i][j] &= ~KNOWHERE;
+        } else {
+          updateLog(`The ${monster} barely escapes being annihilated!`);
+          monster.hitpoints = (monster.hitpoints >> 1) + 1; /* lose half hit points*/
+        }
+      }
+    }
+  }
+  if (k > 0) {
+    updateLog("You hear loud screams of agony!");
+    player.raiseexperience(k);
+  }
+  return k;
+}
