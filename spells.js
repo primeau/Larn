@@ -1,87 +1,12 @@
 "use strict";
 
-const splev = [1, 4, 9, 14, 18, 22, 26, 29, 32, 35, 37, 37, 37, 37, 37];
-
-const spelcode = [
-  "pro", "mle", "dex", "sle", "chm", "ssp",
-  "web", "str", "enl", "hel", "cbl", "cre", "pha", "inv",
-  "bal", "cld", "ply", "can", "has", "ckl", "vpr",
-  "dry", "lit", "drl", "glo", "flo", "fgr",
-  "sca", "hld", "stp", "tel", "mfi", /* 31 */
-  "sph", "gen", "sum", "wtw", "alt", "per"
-];
-
-const spelname = [
-  "protection", "magic missile", "dexterity",
-  "sleep", "charm monster", "sonic spear",
-  "web", "strength", "enlightenment",
-  "healing", "cure blindness", "create monster",
-  "phantasmal forces", "invisibility",
-  "fireball", "cold", "polymorph",
-  "cancellation", "haste self", "cloud kill",
-  "vaporize rock",
-  "dehydration", "lightning", "drain life",
-  "invulnerability", "flood", "finger of death",
-  "scare monster", "hold monster", "time stop",
-  "teleport away", "magic fire",
-  "sphere of annihilation", "genocide", "summon demon",
-  "walk through walls", "alter reality", "permanence",
-];
-
-const speldescript = [
-  /* 1 */
-  "generates a +2 protection field",
-  "creates and hurls a magic missile equivalent to a + 1 magic arrow",
-  "adds +2 to the casters dexterity",
-  "causes some monsters to go to sleep",
-  "some monsters may be awed at your magnificence",
-  "causes your hands to emit a screeching sound toward what they point",
-  /* 7 */
-  "causes strands of sticky thread to entangle an enemy",
-  "adds +2 to the casters strength for a short term",
-  "the caster becomes aware of things around him",
-  "restores some hp to the caster",
-  "restores sight to one so unfortunate as to be blinded",
-  "creates a monster near the caster appropriate for the location",
-  "creates illusions, and if believed, monsters die",
-  "the caster becomes invisible",
-  /* 15 */
-  "makes a ball of fire that burns on what it hits",
-  "sends forth a cone of cold which freezes what it touches",
-  "you can find out what this does for yourself",
-  "negates the ability of a monster to use his special abilities",
-  "speeds up the casters movements",
-  "creates a fog of poisonous gas which kills all that is within it",
-  "this changes rock to air",
-  /* 22 */
-  "dries up water in the immediate vicinity",
-  "you finger will emit a lightning bolt when this spell is cast",
-  "subtracts hit points from both you and a monster",
-  "this globe helps to protect the player from physical attack",
-  "this creates an avalanche of H2O to flood the immediate chamber",
-  "this is a holy spell and calls upon your god to back you up",
-  /* 28 */
-  "terrifies the monster so that hopefully he wont hit the magic user",
-  "the monster is frozen in his tracks if this is successful",
-  "all movement in the caverns ceases for a limited duration",
-  "moves a particular monster around in the dungeon (hopefully away from you)",
-  "this causes a curtain of fire to appear all around you",
-  /* 33 */
-  "anything caught in this sphere is instantly killed.  Warning -- dangerous",
-  "eliminates a species of monster from the game -- use sparingly",
-  "summons a demon who hopefully helps you out",
-  "allows the player to walk through walls for a short period of time",
-  "god only knows what this will do",
-  "makes a character spell permanent, i. e. protection, strength, etc.",
-];
-
-
 var knownSpells = [];
 
 function learnSpell(spell) {
   debug(`learning ${spell} ${spelcode.indexOf(spell)}`)
   knownSpells[spelcode.indexOf(spell)] = spell;
 }
+
 
 
 var eys = "Enter your spell: ";
@@ -435,7 +360,7 @@ function speldamage(x) {
         beep();
         var i = rnd(40) + 30;
         lastnum = 277;
-        losehp(i); /* must say killed by a demon */
+        player.losehp(i); /* must say killed by a demon */
       }
       return;
 
@@ -693,7 +618,7 @@ function create_guardian(monst, x, y) {
   // know[x][y] = 0;
   // mitem[x][y] = monst;
   // hitp[x][y] = monster[monst].hitpoints;
-  if (!monster.genocided)
+  if (!monsterlist[monst].genocided)
     createmonster(monst, x, y);
 }
 
@@ -735,14 +660,16 @@ function isconfuse() {
  *  Enter with the spell number in x, and the monster number in monst.
  */
 function nospell(x, monst) {
-  return 0;
-  // register int tmp;
-  // if (x >= SPNUM || monst >= MAXMONST + 8 || monst < 0 || x < 0) return (0); /* bad spell or monst */
-  // if ((tmp = spelweird[monst - 1][x]) == 0) return (0);
-  // cursors();
-  // lprc('\n');
-  // lprintf(spelmes[tmp], monster[monst].name);
-  // return (1);
+  var tmp = spelweird[monst.arg - 1][x];
+  //if (x >= SPNUM || monst >= MAXMONST + 8 || monst < 0 || x < 0) return (0); /* bad spell or monst */
+  if (tmp == 0) {
+    return (0);
+  }
+  cursors();
+  // updateLog('\n');
+  // updateLog(spelmes[tmp], monster[monst].name);
+  updateLog(spelmes[tmp](monst));
+  return (1);
 }
 
 
