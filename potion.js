@@ -368,5 +368,5 @@ function quaffpotion(potion, set_known) {
       updateLog("You feel your vision sharpen"); /* see invisible */
       break;
   };
-  // player.level.paint(); /* show new stats      */
+  // //player.level.paint(); /* show new stats      */
 }

@@ -37,22 +37,24 @@ var Larn = {
     learnSpell("mle");
     newcavelevel(0);
 
+    player.level.paint();
+
   },
 
   // http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
   keyPress: function(e) {
     e = e || window.event;
-    preParseEvent(e, false, false);
+    parseEvent(e, false, false);
   }, // KEYPRESS
 
   keyDown: function(e) {
     e = e || window.event;
-    preParseEvent(e, true, false);
+    parseEvent(e, true, false);
   }, // KEYDOWN
 
   keyUp: function(e) {
     e = e || window.event;
-    preParseEvent(e, false, true);
+    parseEvent(e, false, true);
   }, // KEYUP
 
 }; // LARN OBJECT
@@ -69,7 +71,7 @@ function positionplayer(x, y, exact) {
   if (exact && canMove(x, y)) {
     player.x = x;
     player.y = y;
-    player.level.paint();
+    //player.level.paint();
     debug("positionplayer: (" + distance + ") got " + xy(x, y));
     return true;
   }
@@ -87,7 +89,7 @@ function positionplayer(x, y, exact) {
         if (canMove(newx, newy)) {
           player.x = newx;
           player.y = newy;
-          player.level.paint();
+          //player.level.paint();
           debug("positionplayer: (" + distance + ") got " + xy(newx, newy));
           return true;
         }
@@ -191,33 +193,6 @@ function moveplayer(dir) {
   }
 }
 
-function run(dir) {
-  var i = 1;
-  while (i == 1) {
-    i = moveplayer(dir);
-    if (i > 0) {
-      if (player.HASTEMONST > 0) {
-        movemonst();
-      }
-      movemonst();
-      randmonst();
-      regen();
-      gtime++; // TODO
-    }
-    if (hitflag == 1) {
-      i = 0;
-    }
-    if (i != 0) {
-      //showcell(playerx, playery); // TODO?
-    }
-  }
-}
-
-
-function randmonst() {
-  //debug("TODO: larn.randmonst()");
-};
-
 
 
 // move near an item, or on top of it if possible
@@ -253,16 +228,6 @@ function canMove(x, y) {
 
 
 
-function parse2() {
-  if (player.HASTEMONST > 0) {
-    movemonst();
-  }
-  movemonst(); /* move the monsters       */
-  randmonst();
-  regen();
-}
-
-
 function updateLog(text) {
   if (DEBUG_OUTPUT) {
     //console.log(`LARN: ${text}`);
@@ -272,7 +237,7 @@ function updateLog(text) {
     LOG.shift();
   }
   if (player != null && player.level != null) {
-    player.level.paint();
+    //player.level.paint();
   }
 }
 

@@ -164,7 +164,7 @@ function dndstore() {
   }
 
   updategold();
-  player.level.paint();
+  //player.level.paint();
 
   blocking_callback = dnd_parse;
 }

@@ -1,25 +1,24 @@
 "use strict";
 
-var lastnum = 0; /* the number of the monster last hitting player    */
-var lastmonst = "";
 
 var gtime = 0; /*  the clock for the game                      */
 
-var prompt_mode = true;
+var prompt_mode = false;
 
+
+var lastmonst = "";
+
+// TODO! var level = 0; /*  cavelevel player is on = c[CAVELEVEL]           */
+
+var lastnum = 0; /* the number of the monster last hitting player    */
+var hitflag = 0; /*  flag for if player has been hit when running    */
+var hit2flag = 0; /*  flag for if player has been hit when running    */
+var hit3flag = 0; /*  flag for if player has been hit flush input     */
 var lastpx = 0;
 var lastpy = 0;
+var lasthx = 0; /* location of monster last hit by player       */
+var lasthy = 0; /* location of monster last hit by player       */
 
-var lasthx = 0;
-var lasthy = 0;
-
-var yrepcount = 0;
-var hitflag = 0;
-var hit2flag = 0;
-var hit3flag = 0;
-
-var nomove = 0;
-var dropflag = 0;
 
 
 /*

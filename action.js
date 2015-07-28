@@ -117,7 +117,7 @@ function act_wash_fountain() {
   } else {
     updateLog("nothing seems to have happened");
   }
-  player.level.paint();
+  //player.level.paint();
   return;
 }
 
@@ -154,12 +154,12 @@ function act_open_door(x, y) {
       default:
         break;
     }
-    player.level.paint();
+    //player.level.paint();
     return (0);
   } else {
     //know[x][y] = 0;
     player.level.items[x][y] = createObject(OOPENDOOR);
-    player.level.paint();
+    //player.level.paint();
     return (1);
   }
 }

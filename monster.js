@@ -667,7 +667,7 @@ function hitplayer(x, y) {
       player.losehp(dam);
       //bottomhp();
       //lflushall();
-      //player.level.paint();
+      ////player.level.paint();
     }
   }
   if (tmp == 0) updateLog(`  The ${monster} missed `);
@@ -791,7 +791,7 @@ function hitm(x, y, damage) {
     //disappear(x, y);
     player.level.monsters[x][y] = null;
     //monster = null;
-    //player.level.paint();
+    ////player.level.paint();
     return fulldamage;
     //return (hpoints); // TODO do i need this?
   }

@@ -19,7 +19,7 @@ function take(item) {
       player.adjustcvalues(item, true);
       updateLog(`You pick up: ${'a'.nextChar(i)}) ${item}`);
       if (limit) {
-        //bottomline(); player.level.paint();
+        //bottomline(); //player.level.paint();
       }
       return (true);
     }
@@ -87,7 +87,7 @@ function drop_object(index) {
   player.adjustcvalues(item, false);
   // dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
-  player.level.paint();
+  //player.level.paint();
   wait_for_drop_input = false;
   return true;
 }

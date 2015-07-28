@@ -299,5 +299,5 @@ function read_scroll(scroll) {
       player.LIFEPROT++;
       break;
   };
-  // player.level.paint(); /* show new stats      */
+  // //player.level.paint(); /* show new stats      */
 }

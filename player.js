@@ -273,7 +273,7 @@ var Player = {
       beep();
       updateLog("Welcome to level " + player.LEVEL); /* if we changed levels */
     }
-    player.level.paint();
+    //player.level.paint();
   },
 
 
@@ -448,7 +448,7 @@ function wield(index) {
 
   player.WIELD = item;
 
-  player.level.paint();
+  //player.level.paint();
   return 1;
 }
 
@@ -513,7 +513,7 @@ function wear(index) {
     return 1;
   }
 
-  player.level.paint();
+  //player.level.paint();
   return 1;
 }
 
@@ -591,6 +591,8 @@ function game_stats() {
   s += "LIFE:  " + player.LIFEPROT + "\n";
 
   s += "KILL:  " + player.MONSTKILLED + "\n";
+  s += "RMST:  " + rmst + "\n";
+
   s += "PAINT: " + DEBUG_PAINT + "\n";
   s += "LPR:   " + DEBUG_LPRCAT + "\n";
   s += "LPRC:  " + DEBUG_LPRC + "\n";

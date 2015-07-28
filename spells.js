@@ -19,7 +19,7 @@ function pre_cast() {
   if (player.SPELLS > 0) {
     updateLog(eys);
     spell_cast = "";
-    blocking_callback = cast;
+    setupInputCallback(cast, true);
   } else {
     updateLog("You don't have any spells!");
   }
@@ -61,7 +61,7 @@ function cast(key) {
     bottomline();
   }
 
-  player.level.paint();
+  //player.level.paint();
   return 1;
 }
 
@@ -447,7 +447,7 @@ function speldamage(x) {
 
 
 function prepare_direction_spell(spell_function) {
-  blocking_callback = getdirectioninput;
+  setupInputCallback(getdirectioninput, true);
   keyboard_input_callback = spell_function;
   updateLog("In what direction? ");
 }

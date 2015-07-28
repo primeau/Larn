@@ -86,7 +86,7 @@ function bot_linex() {}
 
 //TODO!
 function drawscreen() {
-  player.level.paint();
+  //player.level.paint();
 }
 
 function drawstore() {
@@ -185,7 +185,7 @@ function newcavelevel(depth) {
     // positionplayer();
     positionplayer(player.x, player.y, true);
     //checkgen(); TODO
-    player.level.paint();
+    //player.level.paint();
     return;
   }
 
@@ -218,5 +218,5 @@ function newcavelevel(depth) {
   makeobject(newLevel);
   positionplayer(player.x, player.y, true);
 
-  player.level.paint();
+  //player.level.paint();
 }
