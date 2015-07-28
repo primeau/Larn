@@ -420,17 +420,16 @@ function move_dumb(i, j) {
   /* check for a half-speed monster, and check if not to move.  Could be
      done in the monster list build.
   */
-  // TODO
-  // TODO
-  // TODO
-  // switch(mitem[i][j])
-  //     {
-  //     case TROGLODYTE:  case HOBGOBLIN:  case METAMORPH:  case XVART:
-  //     case INVISIBLESTALKER:  case ICELIZARD: if ((gtime & 1) == 1) return;
-  //     };
-  // TODO
-  // TODO
-  // TODO
+  switch (player.level.monsters[i][j].arg) {
+    case TROGLODYTE:
+    case HOBGOBLIN:
+    case METAMORPH:
+    case XVART:
+    case INVISIBLESTALKER:
+    case ICELIZARD:
+      if ((gtime & 1) == 1) return;
+  };
+
 
   /* dumb monsters move here */
   /* set up range of spots to check.  instead of checking all points
@@ -502,34 +501,39 @@ function move_dumb(i, j) {
  *  in (xd,yd).
  */
 function mmove(aa, bb, cc, dd) {
-  let tmp, i, flag;
-  //char *who,*p;
-  flag = 0; /* set to 1 if monster hit by arrow trap */
   if ((cc == player.x) && (dd == player.y)) {
     hitplayer(aa, bb);
     return;
   }
 
-  // TODO
-  // TODO
-  // i=player.level.items[cc][dd];
-  // if (i.matches(OPIT) || i.matches(OTRAPDOOR))
-  //   switch(mitem[aa][bb])
-  //     {
-  // case BAT:           case EYE:
-  // case SPIRITNAGA:    case PLATINUMDRAGON:    case WRAITH:
-  //     case VAMPIRE:       case SILVERDRAGON:      case POLTERGEIST:
-  //     case DEMONLORD:     case DEMONLORD+1:       case DEMONLORD+2:
-  //     case DEMONLORD+3:   case DEMONLORD+4:       case DEMONLORD+5:
-  //     case DEMONLORD+6:   case DEMONPRINCE:   break;
-  //
-  //     default:    mitem[aa][bb]=0; /* fell in a pit or trapdoor */
-  //     };
-  // TODO
-  // TODO
+  var item = getItem(cc, dd);
 
-  tmp = player.level.monsters[aa][bb];
+  var tmp = player.level.monsters[aa][bb];
   player.level.monsters[cc][dd] = tmp;
+
+  if (item.matches(OPIT) || item.matches(OTRAPDOOR))
+    switch (tmp.arg) {
+      case BAT:
+      case EYE:
+      case SPIRITNAGA:
+      case PLATINUMDRAGON:
+      case WRAITH:
+      case VAMPIRE:
+      case SILVERDRAGON:
+      case POLTERGEIST:
+      case DEMONLORD:
+      case DEMONLORD + 1:
+      case DEMONLORD + 2:
+      case DEMONLORD + 3:
+      case DEMONLORD + 4:
+      case DEMONLORD + 5:
+      case DEMONLORD + 6:
+      case DEMONPRINCE:
+        break;
+
+      default:
+        player.level.monsters[cc][dd] = null; /* fell in a pit or trapdoor */
+    };
 
   // TODO
   // TODO
@@ -546,27 +550,24 @@ function mmove(aa, bb, cc, dd) {
   // TODO
   // TODO
 
-  player.level.monsters[cc][dd].awake = true;
+  tmp.awake = true;
   //if ((hitp[cc][dd] = hitp[aa][bb]) < 0) hitp[cc][dd]=1; // TODO: do we need this?
   player.level.monsters[aa][bb] = null;
 
 
-  // TODO
-  // TODO
-  // if (tmp == LEPRECHAUN)
-  //     switch(i)
-  //         {
-  //         case OGOLDPILE:  case OMAXGOLD:  case OKGOLD:  case ODGOLD:
-  //         case ODIAMOND:   case ORUBY:     case OEMERALD: case OSAPPHIRE:
-  //                 item[cc][dd] = 0; /* leprechaun takes gold */
-  //         };
-  // TODO
-  // TODO
+  if (tmp.matches(LEPRECHAUN) && (item.matches(OGOLDPILE) || item.isGem())) {
+    player.level.items[cc][dd] = createObject(OEMPTY); /* leprechaun takes gold */
+  }
 
+
+  // TODO
   // if (tmp == TROLL)  /* if a troll regenerate him */
   //     if ((gtime & 1) == 0)
   //         if (monster[tmp].hitpoints > hitp[cc][dd])  hitp[cc][dd]++;
+  // TODO
 
+  // TODO
+  // var flag = 0; /* set to 1 if monster hit by arrow trap */
   //     if (i==OTRAPARROW)  /* arrow hits monster */
   //         { who = "An arrow";  if ((hitp[cc][dd] -= rnd(10)+level) <= 0)
   //             { mitem[cc][dd]=0;  flag=2; } else flag=1; }
@@ -590,4 +591,6 @@ function mmove(aa, bb, cc, dd) {
   //         }
   //     if (know[aa][bb] & HAVESEEN)   show1cell(aa,bb);
   //     if (know[cc][dd] & HAVESEEN)   show1cell(cc,dd);
+  // TODO
+
 }

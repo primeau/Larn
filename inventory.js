@@ -85,9 +85,8 @@ function drop_object(index) {
     player.SHIELD = null;
   }
   player.adjustcvalues(item, false);
-  // dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
+  dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
-  //player.level.paint();
   wait_for_drop_input = false;
   return true;
 }

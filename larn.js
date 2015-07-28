@@ -37,7 +37,8 @@ var Larn = {
     learnSpell("mle");
     newcavelevel(0);
 
-    player.level.paint();
+    regen();
+    paint();
 
   },
 
@@ -235,9 +236,6 @@ function updateLog(text) {
   LOG.push(text);
   if (LOG.length > LOG_SIZE) {
     LOG.shift();
-  }
-  if (player != null && player.level != null) {
-    //player.level.paint();
   }
 }
 

@@ -37,7 +37,7 @@ function mainloop(e) {
   parse(e);
 
   if (nomove == 1) {
-    player.level.paint();
+    paint();
     return;
   }
 
@@ -93,7 +93,7 @@ function mainloop(e) {
   hit3flag = 0;
   bot_linex(); /* update bottom line */
 
-  player.level.paint();
+  paint();
 }
 /*****************************************************************************/
 /*****************************************************************************/
@@ -147,6 +147,9 @@ function parse(e) {
     // i think i have created my own special callback hell
     if (before == after && done) {
       blocking_callback = null;
+    }
+    if (!done) {
+      nomove = 1;
     }
     return;
   }
@@ -270,9 +273,10 @@ function parse(e) {
   //
   // TIDY UP AT FOUNTAIN
   //
-  if (key == 't') {
+  if (key == 'T') {
     yrepcount = 0;
     wash_fountain(null);
+    dropflag = 1;
     return;
   }
 
@@ -301,6 +305,7 @@ function parse(e) {
   if (key == 'D') {
     yrepcount = 0;
     drink_fountain(null);
+    dropflag = 1;
     return;
   }
 
@@ -376,7 +381,7 @@ function parse(e) {
   //
   // PICK UP
   //
-  if (key == ',') {
+  if (key == ',' || key == 't') {
     yrepcount = 0;
     /* pickup, don't identify or prompt for action */
     // lookforobject( false, true, false ); // TODO???
@@ -412,6 +417,7 @@ function parse(e) {
       newcavelevel(0);
       moveNear(OVOLDOWN, false);
     } else if (DEBUG_STAIRS_EVERYWHERE) {
+      nomove = 1;
       if (player.level.depth == 0) {
         // do nothing
       } else if (player.level.depth == 1) {
@@ -457,6 +463,7 @@ function parse(e) {
       // player.y = MAXY - 2;
       // newcavelevel(1);
     } else if (DEBUG_STAIRS_EVERYWHERE) {
+      nomove = 1;
       if (player.level.depth == 0) {
         debug("STAIRS_EVERYWHERE: entering dungeon");
         moveNear(OENTRANCE, true);
@@ -481,6 +488,7 @@ function parse(e) {
   //
   if (key == 'C' || key == 'V') { // CLIMB IN/OUT OF VOLCANO
     if (player.level.depth == 0 && DEBUG_STAIRS_EVERYWHERE) {
+      nomove = 1;
       debug("STAIRS_EVERYWHERE: entering volcano");
       moveNear(OVOLDOWN, true);
       parse('>');
@@ -489,21 +497,26 @@ function parse(e) {
   }
   if (key == 'X' || key == '~') {
     DEBUG_STATS = !DEBUG_STATS;
+    nomove = 1;
     updateLog("DEBUG_STATS: " + DEBUG_STATS);
   }
   if (key == 'X' || key == '!') {
     DEBUG_OUTPUT = !DEBUG_OUTPUT;
+    nomove = 1;
     updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
   }
   if (key == 'X' || key == '@') {
+    nomove = 1;
     player.WTW = player.WTW == 0 ? 100000 : 0;
     updateLog("DEBUG_WALK_THROUGH_WALLS: " + (player.WTW > 0));
   }
   if (key == 'X' || key == '#') {
+    nomove = 1;
     DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
     updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
   }
   if (key == 'X' || key == '$') {
+    nomove = 1;
     DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
     if (DEBUG_KNOW_ALL) {
       for (var potioni = 0; potioni < potionname.length; potioni++) {
@@ -566,6 +579,7 @@ function parse(e) {
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
   }
   if (key == 'X' || key == '^') {
+    nomove = 1;
     if (player.STEALTH <= 0) {
       updateLog("DEBUG: FREEZING MONSTERS");
       player.HOLDMONST = 100000;
@@ -577,6 +591,7 @@ function parse(e) {
     }
   }
   if (key == 'X') {
+    nomove = 1;
     player.WEAR = null;
     player.inventory[0] = createObject(OLANCE, 25);
     player.WIELD = player.inventory[0];

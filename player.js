@@ -27,13 +27,13 @@ var Player = {
   SPELLMAX: 1,
   SPELLS: 1,
   ENERGY: 0,
-  ECOUNTER: 0,
+  ECOUNTER: 100,
   MOREDEFENSES: 0,
   WEAR: null,
   PROTECTIONTIME: 0,
   WIELD: null,
   // AMULET:           // UNUSED
-  REGENCOUNTER: 0,
+  REGENCOUNTER: 20,
   MOREDAM: 0,
   DEXCOUNT: 0,
   STRCOUNT: 0,
@@ -249,7 +249,7 @@ var Player = {
       subroutine to lower the players character level by one
    */
   loselevel: function() {
-    if (player.LEVEL > 1) loseexperience((player.EXPERIENCE - skill[player.LEVEL - 1] + 1));
+    if (player.LEVEL > 1) player.loseexperience((player.EXPERIENCE - skill[player.LEVEL - 1] + 1));
   },
 
 

@@ -45,6 +45,7 @@ const OTRAPARROWIV = new Item("OTRAPARROWIV", ".", "an arrow trap", false);
 const OIVTELETRAP = new Item("OIVTELETRAP", ".", "a teleport trap", false);
 const OIVDARTRAP = new Item("OIVDARTRAP", ".", "a dart trap", false);
 const OIVTRAPDOOR = new Item("OIVTRAPDOOR", ".", "a trap door", false);
+const OTRAPDOOR = new Item("OIVTRAPDOOR", "^", "a trap door", false);
 
 const OLARNEYE = new Item("OLARNEYE", "~", "The Eye of Larn", true);
 const ODIAMOND = new Item("ODIAMOND", "@", "a brilliant diamond", true);
@@ -235,9 +236,9 @@ function isItem(x, y, compareItem) {
 
 
 function getItemDir(direction) {
-    var x = player.x + diroffx[direction];
-    var y = player.y + diroffy[direction];
-    return getItem(x, y);
+  var x = player.x + diroffx[direction];
+  var y = player.y + diroffy[direction];
+  return getItem(x, y);
 }
 
 
@@ -304,7 +305,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OPOTION)) {
     if (do_ident) {
-      updateLog(`You have found ${item}: (q) quaff or (,) take`);
+      updateLog(`You have found ${item}`);
     }
     if (do_action) {
       //non_blocking_callback = opotion;
@@ -313,10 +314,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OSCROLL)) {
     if (do_ident) {
-      if (player.BLINDCOUNT == 0)
-        updateLog(`You have found ${item}: (r) read or (,) take`);
-      else
-        updateLog(`You have found ${item}: (,) take`);
+      updateLog(`You have found ${item}`);
     }
     if (do_action) {
       //non_blocking_callback = oscroll;
@@ -325,10 +323,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OBOOK)) {
     if (do_ident) {
-      if (player.BLINDCOUNT == 0)
-        updateLog(`You have found ${item}: (r) read or (,) take`);
-      else
-        updateLog(`You have found ${item}: (,) take`);
+      updateLog(`You have found ${item}`);
     }
     if (do_action) {
       //non_blocking_callback = obook;
@@ -352,7 +347,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
       return;
     if (do_ident) {
       updateLog(`There is ${item} here!`);
-      updateLog(`Do you (p) pry off jewels, (s) sit down`);
     }
     if (do_action) {
       non_blocking_callback = othrone;
@@ -364,7 +358,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
       return;
     if (do_ident) {
       updateLog(`There is ${item} here!`);
-      updateLog(`Do you (s) sit down`);
     }
     if (do_action) {
       non_blocking_callback = othrone;
@@ -388,7 +381,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
       return;
     if (do_ident) {
       updateLog("There is a fountain here");
-      updateLog("Do you (D) drink, (t) tidy up");
     }
     if (do_action) {
       //non_blocking_callback = ofountain;
@@ -429,7 +421,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OOPENDOOR)) {
     if (do_ident) {
-      updateLog(`You have found ${item} (c) close`);
+      updateLog(`You have found ${item}`);
     }
     if (do_action) {
       non_blocking_callback = o_open_door;
@@ -438,8 +430,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OCLOSEDDOOR)) {
     if (do_ident) {
-      updateLog("You have found " + item);
-      updateLog("Do you (o) try to open it, or (i) ignore it?");
+      updateLog(`You have found ${item}`);
     }
     if (do_action) {
       blocking_callback = o_closed_door;
@@ -448,7 +439,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   // put this before wield to make wear be default for shields
   else if (item.isArmor()) {
     if (do_ident) {
-      updateLog(`You have found ${item}: (W) wear or (,) take`);
+      updateLog(`You have found ${item}`);
     }
     if (do_action) {
       //non_blocking_callback = wear;
@@ -457,7 +448,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.isWeapon()) {
     if (do_ident) {
-      updateLog(`You have found ${item}: (w) wield or (,) take`);
+      updateLog(`You have found ${item}`);
     }
     if (do_action) {
       //non_blocking_callback = wield;
@@ -468,7 +459,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   else {
     if (do_ident) {
       if (item.carry) {
-        updateLog(`You have found ${item}: (,) take`);
+        updateLog(`You have found ${item}`);
       } else if (!item.matches(OWALL)) {
         updateLog(`You have found ${item}`);
       }

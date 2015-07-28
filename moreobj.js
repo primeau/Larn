@@ -251,8 +251,9 @@ function drink_fountain() {
     updateLog("There is no water to drink!");
   } else if (!item.matches(OFOUNTAIN)) {
     updateLog("I see no fountain to drink from here!");
-  } else
+  } else {
     act_drink_fountain();
+  }
   return;
 }
 
@@ -266,8 +267,9 @@ function wash_fountain() {
     updateLog("There is no water to wash in!");
   } else if (!item.matches(OFOUNTAIN)) {
     updateLog("I see no fountain to wash at here!");
-  } else
+  } else {
     act_wash_fountain();
+  }
   return;
 }
 

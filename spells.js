@@ -21,6 +21,7 @@ function pre_cast() {
     spell_cast = "";
     setupInputCallback(cast, true);
   } else {
+    nomove = 1;
     updateLog("You don't have any spells!");
   }
 }

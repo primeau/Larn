@@ -64,21 +64,36 @@ var Level = {
   }, // create
 
 
-  paint: function() {
-
-    DEBUG_PAINT++;
-    
-    if (IN_STORE) {
-      drawstore();
-    } else {
-      drawmaze();
-      botside();
-    }
-
-  },
-
-
 }; // Level
+
+
+
+function paint() {
+
+  DEBUG_PAINT++;
+
+  if (IN_STORE) {
+    drawstore();
+  } else {
+    drawmaze();
+    botside();
+  }
+
+  blt();
+
+}
+
+
+function blt() {
+  var output = "";
+  for (var y = 0; y < 24; y++) {
+    for (var x = 0; x < 80; x++) {
+      output += display[x][y] != null ? display[x][y] : ' ';
+    } // inner for
+    output += "\n";
+  } // outer for
+  document.getElementById("LARN").innerHTML = output;
+}
 
 
 // TODO!
@@ -90,23 +105,9 @@ function drawscreen() {
 }
 
 function drawstore() {
-
-  var output = "";
-
-  for (var y = 0; y < 24; y++) {
-    for (var x = 0; x < 80; x++) {
-      output += display[x][y] != null ? display[x][y] : ' ';
-    } // inner for
-    output += "\n";
-  } // outer for
-
-  document.getElementById("LARN").innerHTML = output;
-
   var doc = document.getElementById("STATS");
   if (doc != null)
     document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
-
-
 }
 
 
@@ -148,10 +149,6 @@ function drawmaze() {
     cltoeoln();
     lprcat(LOG[logindex] + "\n");
   }
-
-  drawstore();
-
-  //document.getElementById("LARN").innerHTML = output;
 
   var doc = document.getElementById("STATS");
   if (doc != null)
@@ -217,6 +214,4 @@ function newcavelevel(depth) {
   sethp(true);
   makeobject(newLevel);
   positionplayer(player.x, player.y, true);
-
-  //player.level.paint();
 }
