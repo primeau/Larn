@@ -519,6 +519,8 @@ function parseEvent(e) {
   //dropflag=0; /* don't show it just dropped an item */
 
 
+  regen();
+
   if (nomove == 0) {
     movemonst();
   }

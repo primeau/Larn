@@ -7,7 +7,7 @@
     now for the bottom line of the display
  */
 function bottomline() {
-  player.recalc();
+  recalc();
   // TODO: lots
 }
 

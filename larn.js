@@ -1,7 +1,7 @@
 "use strict";
 
-const MAXLEVEL = 11;    /*  max # levels in the dungeon         */
-const MAXVLEVEL = 3;    /*  max # of levels in the temple of the luran  */
+const MAXLEVEL = 11; /*  max # levels in the dungeon         */
+const MAXVLEVEL = 3; /*  max # of levels in the temple of the luran  */
 var LEVELS = [14];
 var LOG_SIZE = 5;
 var LOG = [""];
@@ -218,9 +218,6 @@ function randmonst() {
   //debug("TODO: larn.randmonst()");
 };
 
-function regen() {
-  //debug("TODO: larn.regen()");
-}
 
 
 // move near an item, or on top of it if possible
@@ -255,14 +252,14 @@ function canMove(x, y) {
 }
 
 
+
 function parse2() {
-  debug("TODO: larn.parse2()");
-  // if (c[HASTEMONST]) {
-  //   movemonst();
-  // }
-  // movemonst(); /* move the monsters       */
-  // randmonst();
-  // regen();
+  if (player.HASTEMONST > 0) {
+    movemonst();
+  }
+  movemonst(); /* move the monsters       */
+  randmonst();
+  regen();
 }
 
 

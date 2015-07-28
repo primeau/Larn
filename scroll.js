@@ -271,16 +271,16 @@ function read_scroll(scroll) {
 
     case 20:
       /* remove curse */
-      player.BLINDCOUNT = 1;
-      player.CONFUSE = 1;
-      player.AGGRAVATE = 1;
-      player.HASTEMONST = 1;
-      player.ITCHING = 1;
-      player.LAUGHING = 1;
-      player.DRAINSTRENGTH = 1;
-      player.CLUMSINESS = 1;
-      player.INFEEBLEMENT = 1;
-      player.HALFDAM = 1;
+      if (player.BLINDCOUNT > 0) player.BLINDCOUNT = 1;
+      if (player.CONFUSE > 0) player.CONFUSE = 1;
+      if (player.AGGRAVATE > 0) player.AGGRAVATE = 1;
+      if (player.HASTEMONST > 0) player.HASTEMONST = 1;
+      if (player.ITCHING > 0) player.ITCHING = 1;
+      if (player.LAUGHING > 0) player.LAUGHING = 1;
+      if (player.DRAINSTRENGTH > 0) player.DRAINSTRENGTH = 1;
+      if (player.CLUMSINESS > 0) player.CLUMSINESS = 1;
+      if (player.INFEEBLEMENT > 0) player.INFEEBLEMENT = 1;
+      if (player.HALFDAM > 0) player.HALFDAM = 1;
       break;
 
     case 21:

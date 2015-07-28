@@ -1,5 +1,73 @@
 "use strict";
 
+
+
+
+
+/*
+    recalc()    function to recalculate the weapon and armor class of the player
+ */
+function recalc() {
+  player.WCLASS = 0;
+  player.AC = 0;
+
+  if (player.WEAR != null) {
+    let armor = player.WEAR;
+    let extra = armor.arg;
+    if (armor.matches(OSHIELD)) player.AC = 2 + extra;
+    if (armor.matches(OLEATHER)) player.AC = 2 + extra;
+    if (armor.matches(OSTUDLEATHER)) player.AC = 3 + extra;
+    if (armor.matches(ORING)) player.AC = 5 + extra;
+    if (armor.matches(OCHAIN)) player.AC = 6 + extra;
+    if (armor.matches(OSPLINT)) player.AC = 7 + extra;
+    if (armor.matches(OPLATE)) player.AC = 9 + extra;
+    if (armor.matches(OPLATEARMOR)) player.AC = 10 + extra;
+    if (armor.matches(OSSPLATE)) player.AC = 12 + extra;
+  }
+  if (player.SHIELD != null && player.SHIELD.matches(OSHIELD)) {
+    player.AC += 2 + player.SHIELD.arg;
+  }
+  player.AC += player.MOREDEFENSES;
+
+  if (player.WIELD != null) {
+    let weapon = player.WIELD;
+    let extra = weapon.arg;
+    if (weapon.matches(ODAGGER)) player.WCLASS = 3 + extra;
+    if (weapon.matches(OBELT)) player.WCLASS = 7 + extra;
+    if (weapon.matches(OSHIELD)) player.WCLASS = 8 + extra;
+    if (weapon.matches(OSPEAR)) player.WCLASS = 10 + extra;
+    if (weapon.matches(OFLAIL)) player.WCLASS = 14 + extra;
+    if (weapon.matches(OBATTLEAXE)) player.WCLASS = 17 + extra;
+    if (weapon.matches(OLANCE)) player.WCLASS = 19 + extra;
+    if (weapon.matches(OLONGSWORD)) player.WCLASS = 22 + extra;
+    if (weapon.matches(O2SWORD)) player.WCLASS = 26 + extra;
+    if (weapon.matches(OSWORD)) player.WCLASS = 32 + extra;
+    if (weapon.matches(OSWORDofSLASHING)) player.WCLASS = 30 + extra;
+    if (weapon.matches(OHAMMER)) player.WCLASS = 35 + extra;
+  }
+  player.WCLASS += player.MOREDAM;
+
+  player.REGEN = 1;
+  player.ENERGY = 0;
+
+  for (var i = 0; i < player.inventory.length; i++) {
+    let item = player.inventory[i];
+    if (item == null)
+      continue;
+
+    if (item.matches(OBELT)) player.WCLASS += ((item.arg << 1)) + 2;
+
+    /*  now for regeneration abilities based on rings   */
+    if (item.matches(OPROTRING)) player.AC += item.arg + 1;
+    if (item.matches(ODAMRING)) player.WCLASS += item.arg + 1;
+    if (item.matches(OREGENRING)) player.REGEN += item.arg + 1;
+    if (item.matches(ORINGOFEXTRA)) player.REGEN += 5 * (item.arg + 1);
+    if (item.matches(OENERGYRING)) player.ENERGY += item.arg + 1;
+  }
+}
+
+
+
 /*
     function to create a gem on a square near the player
  */
