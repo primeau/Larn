@@ -29,6 +29,7 @@ function act_remove_gems(arg) {
 }
 
 
+
 /*
     act_sit_throne
 
@@ -45,7 +46,7 @@ function act_sit_throne(arg) {
     player.level.items[player.x][player.y].arg = 1;
     //know[player.x][player.y] = 0;
   } else if (k < 35) {
-    updateLog("Zaaaappp!  You've been teleported!\n");
+    updateLog("Zaaaappp!  You've been teleported!");
     beep();
     oteleport(0);
   } else {

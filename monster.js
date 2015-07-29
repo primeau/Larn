@@ -321,7 +321,7 @@ function getMonster(direction) {
 function createmonster(mon, x, y) {
   if (mon < 1 || mon > monsterlist.length - 1) /* check for monster number out of bounds */ {
     beep();
-    updateLog(`can't createmonst ${mon}\n`);
+    updateLog(`can't createmonst ${mon}`);
     nap(3000);
     return;
   }

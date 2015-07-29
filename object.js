@@ -348,7 +348,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog(`There is ${item} here!`);
     }
     if (do_action) {
-      non_blocking_callback = othrone;
+      //non_blocking_callback = othrone;
     }
   }
   //
@@ -359,7 +359,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog(`There is ${item} here!`);
     }
     if (do_action) {
-      non_blocking_callback = othrone;
+      //non_blocking_callback = othrone;
     }
   }
   //

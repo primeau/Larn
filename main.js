@@ -273,7 +273,15 @@ function parse(e) {
     return;
   }
 
-  // TODO sit on throne
+  //
+  // sit on throne
+  //
+  if (key == 's') {
+    yrepcount = 0;
+    sit_on_throne();
+    dropflag = 1;
+    return;
+  }
 
   //
   // TIDY UP AT FOUNTAIN
@@ -380,7 +388,17 @@ function parse(e) {
 
   // TODO P - outstanding taxes
   // TODO? Q - quit
-  // TODO R - remove gems
+
+  //
+  // REMOVE GEMS
+  //
+  if (key == 'R') {
+    yrepcount = 0;
+    remove_gems();
+    dropflag = 1;
+    return;
+  }
+
   // TODO S - save game
   // TODO T - take off armor
 

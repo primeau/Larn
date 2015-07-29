@@ -1,30 +1,5 @@
 "use strict";
 
-/*
-    subroutine to process a throne object
-*/
-function othrone(key) {
-  var item = getItem(player.x, player.y);
-  var isdead = item.matches(ODEADTHRONE);
-  switch (key) {
-    case ESC:
-    case 'i':
-      appendLog(" ignore");
-      return;
-    case 'p':
-      if (!isdead) {
-        appendLog(" pry off");
-        act_remove_gems(item.arg);
-      }
-      return;
-    case 's':
-      appendLog(" sit down");
-      act_sit_throne(item.arg);
-      return;
-  };
-}
-
-
 
 /*
     For command mode.  Perform the action of closing something (door).
@@ -321,6 +296,36 @@ function enter() {
   debug("enter(): no building here");
   IN_STORE = false;
 
-  updateLog("There is no place to enter here!\n");
+  updateLog("There is no place to enter here!");
 
+}
+
+
+
+/* For command mode. Perform removal of gems from a jeweled throne */
+function remove_gems() {
+  cursors();
+  var item = getItem(player.x, player.y);
+  if (item.matches(ODEADTHRONE)) {
+    updateLog("There are no gems to remove!");
+  } else if (item.matches(OTHRONE)) {
+    act_remove_gems(item.arg);
+  } else {
+    updateLog("I see no throne here to remove gems from!");
+  }
+}
+
+
+
+/*
+    For command mode.  Perform sitting on a throne.
+*/
+function sit_on_throne() {
+  cursors();
+  var item = getItem(player.x, player.y);
+  if (item.matches(OTHRONE) || item.matches(ODEADTHRONE)) {
+    act_sit_throne(item.arg);
+  } else {
+    updateLog("I see no throne to sit on here!");
+  }
 }
