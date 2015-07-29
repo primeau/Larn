@@ -31,6 +31,7 @@ function close_something(direction) {
   } else if (item.matches(OOPENDOOR)) {
     if (monsterAt(x, y) != null) {
       appendLog("Theres a monster in the way!");
+      return;
     }
     player.level.items[x][y] = createObject(OCLOSEDDOOR, 0);
     // know[x][y] = 0;
