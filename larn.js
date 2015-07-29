@@ -142,7 +142,8 @@ function moveplayer(dir) {
   /* prevent the player from moving onto a wall, or a closed door when
      in command mode, unless the character has Walk-Through-Walls.
    */
-  if ((item.matches(OCLOSEDDOOR) && !prompt_mode) || (item.matches(OWALL)) && player.WTW <= 0) {
+  //if ((item.matches(OCLOSEDDOOR) && !prompt_mode) || (item.matches(OWALL)) && player.WTW <= 0) {
+  if ((item.matches(OCLOSEDDOOR) || item.matches(OWALL)) && player.WTW == 0) {
     nomove = 1;
     yrepcount = 0;
     return (0);
