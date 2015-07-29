@@ -33,7 +33,7 @@ function parseEvent(e, keyDown, keyUp) {
 }
 
 
-function setupInputCallback(func, blocking) {
+function setCharCallback(func, blocking) {
   if (blocking) {
     blocking_callback = func;
   } else {

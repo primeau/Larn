@@ -3,7 +3,7 @@
 var knownSpells = [];
 
 function learnSpell(spell) {
-  debug(`learning ${spell} ${spelcode.indexOf(spell)}`)
+  //debug(`learning ${spell} ${spelcode.indexOf(spell)}`)
   knownSpells[spelcode.indexOf(spell)] = spell;
 }
 
@@ -19,7 +19,7 @@ function pre_cast() {
   if (player.SPELLS > 0) {
     updateLog(eys);
     spell_cast = "";
-    setupInputCallback(cast, true);
+    setCharCallback(cast, true);
   } else {
     nomove = 1;
     updateLog("You don't have any spells!");

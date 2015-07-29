@@ -1,56 +1,30 @@
 "use strict";
 
-/*
-    subroutine to process an altar object
-*/
-function oaltar(key) {
-  var item = getItem(player.x, player.y);
-  if (!item.matches(OALTAR)) {
-    return 1;
+
+/* For command mode. Perform the act of descecrating an altar */
+function desecrate_altar() {
+  cursors();
+  if (getItem(player.x, player.y).matches(OALTAR)) {
+    act_desecrate_altar();
+  } else {
+    updateLog("I see no altar to desecrate here!");
   }
-  switch (key) {
-    case 'p':
-      appendLog(" pray");
-      updateLog("  Do you (m) give money or (j) just pray?");
-      blocking_callback = oaltar_pray_helper;
-      return 0;
-
-    case 'd':
-      appendLog(" desecrate");
-      act_desecrate_altar();
-      return 1;
-
-    case ESC:
-    case 'i':
-      appendLog(" ignore");
-      act_ignore_altar();
-      return 1;
-  };
-  return 0;
 }
 
 
-function oaltar_pray_helper(key) {
-  switch (key) {
-    case 'j':
-      //updateLog("\n");
-      appendLog(" just pray");
-      act_just_pray();
-      return 1;
 
-    case 'm':
-      appendLog(" give money");
-      updateLog("how much do you donate? ");
-      blocking_callback = getnumberinput;
-      keyboard_input_callback = act_donation_pray;
-      return 0;
-
-    case ESC:
-      lookforobject(true, false, true); // re-find the altar
-      return 0;
-  };
-  return 0;
+/* For command mode. Perform the act of praying at an altar */
+function pray_at_altar() {
+  cursors();
+  if (!getItem(player.x, player.y).matches(OALTAR)) {
+    updateLog("I see no altar to pray at here!");
+  } else {
+    updateLog("  How much do you donate? ");
+    blocking_callback = getnumberinput;
+    keyboard_input_callback = act_donation_pray;
+  }
 }
+
 
 
 /*
@@ -58,67 +32,74 @@ function oaltar_pray_helper(key) {
     donation.
 */
 function act_donation_pray(k) {
-    // updateLog("\n");
-    // cursor(1, 24);
-    // cltoeoln();
-    // cursor(1, 23);
-    // cltoeoln();
+  // updateLog("\n");
+  // cursor(1, 24);
+  // cltoeoln();
+  // cursor(1, 23);
+  // cltoeoln();
 
-    if (k == '*') {
-      debug(k = player.GOLD);
+  if (k == '*') {
+    debug(k = player.GOLD);
+  }
+
+  /* make giving zero gold equivalent to 'just pray'ing.  Allows player to
+     'just pray' in command mode, without having to add yet another command.
+  */
+  if (k == 0) {
+    act_just_pray();
+    dropflag = 1;
+    prayed = 1;
+    return 1;
+  }
+
+  if (player.GOLD >= k) {
+    prayed = 1;
+    dropflag = 1;
+
+    var temp = player.GOLD / 10;
+    player.GOLD -= k;
+    bottomline();
+
+    /* if player gave less than 10% of _original_ gold, make a monster
+     */
+    if (k < temp || k < rnd(50)) {
+      createmonster(makemonst(player.level.depth + 1));
+      player.AGGRAVATE += 200;
+      return 1;
     }
-
-    /* make giving zero gold equivalent to 'just pray'ing.  Allows player to
-       'just pray' in command mode, without having to add yet another command.
-    */
-    if (k == 0) {
-      act_just_pray();
+    if (rnd(101) > 50) {
+      act_prayer_heard();
+      return 1;
+    }
+    if (rnd(43) == 5) {
+      if (player.WEAR != null)
+        updateLog("You feel your armor vibrate for a moment");
+      enchantarmor();
+      return 1;
+    }
+    if (rnd(43) == 8) {
+      if (player.WIELD != null)
+        updateLog("You feel your weapon vibrate for a moment");
+      enchweapon();
       return 1;
     }
 
-    if (player.GOLD >= k) {
-      var temp = player.GOLD / 10;
-      player.GOLD -= k;
-      bottomline();
+    updateLog("Thank You.");
+    return 1;
+  }
 
-      /* if player gave less than 10% of _original_ gold, make a monster
-       */
-      if (k < temp || k < rnd(50)) {
-        createmonster(makemonst(player.level.depth + 1));
-        player.AGGRAVATE += 200;
-        return 1;
-      }
-      if (rnd(101) > 50) {
-        act_prayer_heard();
-        return 1;
-      }
-      if (rnd(43) == 5) {
-        if (player.WEAR != null)
-          updateLog("You feel your armor vibrate for a moment");
-        enchantarmor();
-        return 1;
-      }
-      if (rnd(43) == 8) {
-        if (player.WIELD != null)
-          updateLog("You feel your weapon vibrate for a moment");
-        enchweapon();
-        return 1;
-      }
+  /* Player donates more gold than they have.  Loop back around so
+     player can't escape the altar for free.
+  */
+  updateLog("  You don't have that much!");
 
-      updateLog("Thank You.");
-      return 1;
-    }
-
-    /* Player donates more gold than they have.  Loop back around so
-       player can't escape the altar for free.
-    */
-    updateLog("  You don't have that much!");
-
-    updateLog("how much do you donate? ");
-    blocking_callback = getnumberinput;
-    keyboard_input_callback = act_donation_pray;
-    return 0;
-
+  // updateLog("how much do you donate? ");
+  // blocking_callback = getnumberinput;
+  // keyboard_input_callback = act_donation_pray;
+  return 1;
+  // case ESC:
+  //   lookforobject(true, false, true); // re-find the altar
+  //   return 0;
 }
 
 

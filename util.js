@@ -39,7 +39,7 @@ var KEYBOARD_INPUT = "";
 
 
 function prepare_direction_event(direction_event) {
-  setupInputCallback(getdirectioninput, true);
+  setCharCallback(getdirectioninput, true);
   keyboard_input_callback = direction_event;
   updateLog("In what direction? ");
 }
@@ -87,8 +87,8 @@ function getnumberinput(key) {
     if (new_string != KEYBOARD_INPUT.toString()) { // prevent NaN etc
       KEYBOARD_INPUT = original_number;
     } else {
-      //appendLog(key);
-      lprc(key);
+      appendLog(key);
+      //lprc(key);
     }
     // debug("getnumberinput(): " + KEYBOARD_INPUT);
     return 0;

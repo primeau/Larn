@@ -1,7 +1,7 @@
 "use strict";
 
 var dropflag = 0; /* if 1 then don't lookforobject() next round */
-var rmst = 80; /* random monster creation counter */
+var rmst = 120; /* random monster creation counter */
 var nomove = 0; /* if (nomove) then don't count next iteration as a move */
 var viewflag = 0; /* if viewflag then we have done a 99 stay here and don't showcell in the main loop */
 
@@ -211,7 +211,7 @@ function parse(e) {
     yrepcount = 0;
     if (player.TIMESTOP == 0) {
       updateLog("What do you want to drop?");
-      setupInputCallback(drop_object, true);
+      setCharCallback(drop_object, true);
     }
     return;
   }
@@ -219,7 +219,18 @@ function parse(e) {
   // TODO e - eat cookie
   // TODO g - pack weight
   // TODO i - inventory
-  // TODO p - pray at altar
+
+  //
+  // PRAY
+  //
+  // TODO: this is broken because player still ignores altar on next move
+  if (key == 'p') {
+    yrepcount = 0;
+    pray_at_altar();
+    dropflag = 1;
+    prayed = 1;
+    return;
+  }
 
   //
   // quaff
@@ -232,7 +243,7 @@ function parse(e) {
         quaffpotion(item);
       } else {
         updateLog("What do you want to quaff [* for all] ?");
-        setupInputCallback(act_quaffpotion, true); // TODO this should fall through
+        setCharCallback(act_quaffpotion, true); // TODO this should fall through
       }
     return;
   }
@@ -256,7 +267,7 @@ function parse(e) {
         read_scroll(item);
       } else {
         updateLog("What do you want to read [* for all] ?");
-        setupInputCallback(act_read_something, true);
+        setCharCallback(act_read_something, true);
       }
     }
     return;
@@ -285,12 +296,20 @@ function parse(e) {
       wield(item);
     } else {
       updateLog("What do you want to wield (- for nothing) [* for all] ?");
-      setupInputCallback(wield, true);
+      setCharCallback(wield, true);
     }
     return;
   }
 
-  // TODO A - desecrate at altar
+  //
+  // DESECRATE
+  //
+  if (key == 'A') {
+    yrepcount = 0;
+    desecrate_altar();
+    dropflag = 1;
+    return;
+  }
 
   //
   // CLOSE DOOR
@@ -374,7 +393,7 @@ function parse(e) {
       wear(item);
     } else {
       updateLog("What do you want to wear (- for nothing) [* for all] ?");
-      setupInputCallback(wear, true);
+      setCharCallback(wear, true);
     }
     return;
   }

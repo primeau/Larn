@@ -59,37 +59,6 @@ function newpotion() {
 }
 
 
-/*
- * function to process a potion. or a keypress related
- */
-function opotion(key) {
-  var potion = getItem(player.x, player.y);
-  if (potion == null) {
-    debug("opotion: couldn't find it!");
-    return;
-  }
-  switch (key) {
-    case ESC:
-    case 'i':
-      appendLog(" ignore");
-      return;
-
-    case 'q':
-      appendLog(" quaff");
-      forget(); /* destroy potion  */
-      quaffpotion(potion, true);
-      return;
-
-    case 't':
-      appendLog(" take");
-      if (take(potion)) {
-        forget(); // remove from board
-      }
-      return;
-  };
-}
-
-
 
 function act_quaffpotion(index) {
   var useindex = getIndexFromChar(index);

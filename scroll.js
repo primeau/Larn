@@ -55,41 +55,6 @@ function newscroll() {
 }
 
 
-/*
- * function to process a potion. or a keypress related
- */
-function oscroll(key) {
-  var scroll = getItem(player.x, player.y);
-  if (scroll == null) {
-    debug("oscroll: couldn't find it!");
-    return;
-  }
-  switch (key) {
-    // TODO don't allow reading scrolls if blind!
-    case ESC:
-    case 'i':
-      appendLog(" ignore");
-      return;
-    case 'r':
-      appendLog(" read");
-      if (player.BLINDCOUNT > 0) {
-        cursors();
-        updateLog("You can't read anything when you're blind!");
-        return;
-      }
-      forget(); /* destroy scroll  */
-      read_scroll(scroll);
-      return;
-    case 't':
-      appendLog(" take");
-      if (take(scroll)) {
-        forget(); // remove from board
-      }
-      return;
-  };
-}
-
-
 
 function act_read_something(index) {
   var useindex = getIndexFromChar(index);

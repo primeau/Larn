@@ -18,7 +18,9 @@ var lastpx = 0;
 var lastpy = 0;
 var lasthx = 0; /* location of monster last hit by player       */
 var lasthy = 0; /* location of monster last hit by player       */
-
+var  prayed = 1;       /* did player pray at an altar (command mode)? needs
+                           to be saved, but I don't want to add incompatibility
+                           right now.  KBR 1/11/90 */
 
 
 /*

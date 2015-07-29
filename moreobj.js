@@ -112,27 +112,6 @@ function open_something(direction) {
 }
 
 
-/*
-    process a fountain object
-*/
-function ofountain(key) {
-  var item = getItem(player.x, player.y);
-  switch (key) {
-    case ESC:
-    case 'i':
-      ignore();
-      return;
-
-    case 'D':
-      act_drink_fountain();
-      return;
-
-    case 'T':
-      act_wash_fountain();
-      return;
-  };
-}
-
 
 /*
     a subroutine to raise or lower character levels

@@ -334,10 +334,10 @@ function lookforobject(do_ident, do_pickup, do_action) {
       return;
     if (do_ident) {
       updateLog("There is a Holy Altar here!");
-      updateLog("Do you (p) pray (d) desecrate, or (i) ignore it?");
+      //updateLog("Do you (p) pray (d) desecrate, or (i) ignore it?");
     }
     if (do_action) {
-      blocking_callback = oaltar;
+      //blocking_callback = oaltar;
     }
   }
   //
@@ -475,6 +475,9 @@ function lookforobject(do_ident, do_pickup, do_action) {
 } // lookforobject
 
 
+
+
+// TODO delete
 /*
  * function to process an item. or a keypress related
  */
