@@ -37,6 +37,16 @@ function debug(text) {
 var KEYBOARD_INPUT = "";
 
 
+
+function prepare_direction_event(direction_event) {
+  setupInputCallback(getdirectioninput, true);
+  keyboard_input_callback = direction_event;
+  updateLog("In what direction? ");
+}
+
+
+
+
 function getdirectioninput(key, code) {
   //debug(`getdirectioninput: ${key} ${code}`);
   if (key == ESC) {
@@ -111,6 +121,9 @@ String.prototype.prevChar = function(i) {
 
 
 function getIndexFromChar(char) {
+  if (char == ESC) {
+    return -1;
+  }
   var acode = "a".charCodeAt(0);
   var dropcode = char.charCodeAt(0);
   var dropIndex = dropcode - acode;

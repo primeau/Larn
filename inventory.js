@@ -33,48 +33,36 @@ function take(item) {
     subroutine to drop an object  returns false if something there already else true
  */
 function drop_object(index) {
+  dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
-  if (index == null) {
-    updateLog("What do you want to drop?");
-    wait_for_drop_input = true;
-    return;
-  } else {
-    //debug("drop_item(): " + index);
-  }
-
-  if (index == ESC) {
-    updateLog("");
-    wait_for_drop_input = false;
-    return false;
-  }
-
-  var dropIndex = getIndexFromChar(index);
-  debug("drop: " + dropIndex);
-
-  var item = player.inventory[dropIndex];
+  var useindex = getIndexFromChar(index);
+  var item = player.inventory[useindex];
 
   if (item == null) {
-    if (dropIndex >= 0 && dropIndex < 26) {
-      updateLog("You don't have item " + index + "!");
+    if (useindex >= 0 && useindex < 26) {
+      updateLog(`You don't have item ${index}!`);
     }
-    wait_for_drop_input = false;
-    return false;
+    if (useindex <= -1) {
+        appendLog(` cancelled`);
+    }
+    return 1;
   }
 
   if (isItemAt(player.x, player.y)) {
     beep();
     updateLog("There's something here already");
-    wait_for_drop_input = false;
-    return false;
+    return 1;
   }
 
   // if (playery == MAXY - 1 && playerx == 33) return (1); /* not in entrance */
 
+  player.inventory[useindex] = null;
   player.level.items[player.x][player.y] = item;
-  updateLog("  You drop: " + item);
+
+  updateLog(`  You drop: ${item}`);
   // show3(k); /* show what item you dropped*/
   // know[playerx][playery] = 0;
-  player.inventory[dropIndex] = null;
+
   if (player.WIELD === item) {
     player.WIELD = null;
   }
@@ -85,10 +73,8 @@ function drop_object(index) {
     player.SHIELD = null;
   }
   player.adjustcvalues(item, false);
-  dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
-  wait_for_drop_input = false;
-  return true;
+  return 1;
 }
 
 

@@ -27,43 +27,60 @@ function othrone(key) {
 
 
 /*
+    For command mode.  Perform the action of closing something (door).
+*/
+function close_something(direction) {
+  // if (direction == 0) {
+  //   updateLog("");
+  //   return 1;
+  // }
+
+  cursors();
+
+  var x = player.x + diroffx[direction];
+  var y = player.y + diroffy[direction];
+
+  var item = getItem(x, y);
+
+  if (item == null) {
+    updateLog("There is nothing to close!");
+    return 1;
+  }
+
+  /* get direction of object to close.  test 'closeability' of object
+     indicated.
+  */
+  if (item.matches(OCLOSEDDOOR)) {
+    appendLog("The door is already closed!");
+    beep();
+  } else if (item.matches(OOPENDOOR)) {
+    if (monsterAt(x, y) != null) {
+      appendLog("Theres a monster in the way!");
+    }
+    player.level.items[x][y] = createObject(OCLOSEDDOOR, 0);
+    // know[x][y] = 0;
+    if (direction == 0) {
+      player.x = lastpx;
+      player.y = lastpy;
+    }
+
+  } else {
+    appendLog("You can't close that!");
+    beep();
+  }
+  return 1;
+}
+
+
+
+/*
     For command mode.  Perform opening an object (door, chest).
 */
 function open_something(direction) {
 
-  /* check for confusion. */
-  if (player.CONFUSE > 0) {
-    updateLog("You're too confused!");
-    beep();
-    return;
-  }
-
-  // /* check for player standing on a chest.  If he is, prompt for and
-  //    let him open it.  If player ESCs from prompt, quit the Open
-  //    command.
-  // */
-  // if (item[playerx][playery] == OCHEST) {
-  //   var tempc; /* result of prompting to open a chest */
-  //   updateLog("There is a chest here.  Open it?");
-  //   if ((tempc = getyn()) == 'y') {
-  //     act_open_chest(playerx, playery);
-  //     dropflag = 1; /* prevent player from picking back up if fail */
-  //     return;
-  //   } else if (tempc != 'n')
-  //     return;
-  // }
-
-
-  if (direction == null) {
-    updateLog("In What Direction? ");
-    wait_for_open_direction = true;
-    return;
-  }
-
   if (direction == 0) {
     updateLog("");
-    wait_for_open_direction = false;
-    return false;
+    return 1;
   }
 
   var x = player.x + diroffx[direction];
@@ -73,29 +90,23 @@ function open_something(direction) {
 
   if (item == null) {
     updateLog("There is nothing to open!");
-    wait_for_open_direction = false;
-    return;
+    return 1;
   }
 
   if (item.matches(OOPENDOOR)) {
     updateLog("The door is already open!");
     beep();
-    wait_for_open_direction = false;
-    return false;
-  }
-  // case OCHEST:
-  //   act_open_chest(x, y);
-  //   break;
-  else if (item.matches(OCLOSEDDOOR)) {
+    return 1;
+  } else if (item.matches(OCHEST)) {
+    act_open_chest(x, y);
+    return 1;
+  } else if (item.matches(OCLOSEDDOOR)) {
     act_open_door(x, y);
-    wait_for_open_direction = false;
-    return true;
-
+    return 1;
   } else {
     updateLog("You can't open that!");
     beep();
-    wait_for_open_direction = false;
-    return false;
+    return 1;
   }
 
 }

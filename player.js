@@ -404,11 +404,6 @@ function wield(index) {
   else {
     //debug("wield(): " + index);
 
-    if (index == ESC) {
-      updateLog("");
-      return 1;
-    }
-
     if (index == '*') {
       // TODO
       // i = showwield();
@@ -420,8 +415,12 @@ function wield(index) {
 
     if (item == null) {
       if (useindex >= 0 && useindex < 26) {
-        updateLog("You don't have item " + index + "!");
+        updateLog(`You don't have item ${index}!`);
       }
+      if (useindex <= -1) {
+          appendLog(` cancelled`);
+      }
+      debug(useindex);
       return 1;
     }
 
@@ -469,11 +468,6 @@ function wear(index) {
     }
   } // else player hit 'W'
   else {
-    if (index == ESC) {
-      updateLog("");
-      return 1;
-    }
-
     if (index == '*') {
       // TODO
       // i = showwear();
@@ -485,7 +479,10 @@ function wear(index) {
 
     if (item == null) {
       if (useindex >= 0 && useindex < 26) {
-        updateLog("You don't have item " + index + "!");
+        updateLog(`You don't have item ${index}!`);
+      }
+      if (useindex <= -1) {
+          appendLog(` cancelled`);
       }
       return 1;
     }

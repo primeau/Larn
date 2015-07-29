@@ -122,6 +122,63 @@ function act_wash_fountain() {
 }
 
 
+
+/*
+    Performs the act of opening a chest.
+
+    Parameters:   x,y location of the chest to open.
+    Assumptions:  cursors() has been called previously
+*/
+function act_open_chest(x, y) {
+  var chest = getItem(x, y);
+  if (!chest.matches(OCHEST)) {
+    return;
+  }
+  if (rnd(101) < 40) {
+    updateLog("The chest explodes as you open it");
+    beep();
+    var i = rnd(10);
+    lastnum = 281; /* in case he dies */
+    updateLog(`You suffer ${i} hit points damage!`);
+    if (i > 0) {
+      player.losehp(i);
+      //bottomhp();
+    }
+    switch (rnd(10)) /* see if he gets a curse */ {
+      case 1:
+        player.ITCHING += rnd(1000) + 100;
+        updateLog("You feel an irritation spread over your skin!");
+        beep();
+        break;
+
+      case 2:
+        player.CLUMSINESS += rnd(1600) + 200;
+        updateLog("You begin to lose hand to eye coordination!");
+        beep();
+        break;
+
+      case 3:
+        player.HALFDAM += rnd(1600) + 200;
+        beep();
+        updateLog("A sickness engulfs you!");
+        break;
+    };
+    player.level.items[x][y] = createObject(OEMPTY); /* destroy the chest */
+    //know[x][y] = 0;
+    if (rnd(100) < 69) {
+      creategem();  /* gems from the chest */
+    }
+    dropgold(rnd(110 * chest.arg + 200));
+    for (i = 0; i < rnd(4); i++) {
+      something(chest.arg + 2);
+    }
+  } else
+    updateLog("Nothing happens");
+  return;
+}
+
+
+
 /*
     Perform the actions common to command and prompt mode when opening a
     door.  Assumes cursors().
@@ -130,8 +187,12 @@ function act_wash_fountain() {
     Return value:   TRUE if successful in opening the door, false if not.
 */
 function act_open_door(x, y) {
+  var door = getItem(x, y);
+  if (!door.matches(OCLOSEDDOOR)) {
+    return;
+  }
   if (rnd(11) < 7) {
-    switch (getItem(x, y).arg) {
+    switch (door.arg) {
       case 6:
         player.AGGRAVATE += rnd(400);
         break;
@@ -154,12 +215,10 @@ function act_open_door(x, y) {
       default:
         break;
     }
-    //player.level.paint();
     return (0);
   } else {
     //know[x][y] = 0;
     player.level.items[x][y] = createObject(OOPENDOOR);
-    //player.level.paint();
     return (1);
   }
 }

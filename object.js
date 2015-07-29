@@ -117,7 +117,6 @@ var Item = {
         this.matches(OTHRONE) ||
         this.matches(ODEADTHRONE) ||
         this.matches(OBOOK) ||
-        this.matches(OCHEST) ||
         (this.isRing() && force_known) ||
         this.isGem()) {
         // do nothing
@@ -419,12 +418,19 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog("You are standing in front of a statue");
   }
   //
+  else if (item.matches(OCHEST)) {
+    if (nearbymonst())
+      return;
+    if (do_ident)
+      updateLog("There is a chest here");
+  }
+  //
   else if (item.matches(OOPENDOOR)) {
     if (do_ident) {
       updateLog(`You have found ${item}`);
     }
     if (do_action) {
-      non_blocking_callback = o_open_door;
+      //non_blocking_callback = o_open_door;
     }
   }
   //
@@ -433,7 +439,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog(`You have found ${item}`);
     }
     if (do_action) {
-      blocking_callback = o_closed_door;
+      //blocking_callback = o_closed_door;
     }
   }
   // put this before wield to make wear be default for shields
@@ -530,57 +536,6 @@ function obottomless() {
 
 function forget() {
   player.level.items[player.x][player.y] = createObject(OEMPTY);
-}
-
-
-
-function o_open_door(key) {
-  var item = getItem(player.x, player.y);
-  if (item == null) {
-    debug("o_open_door(): couldn't find it!");
-    return true;
-  }
-  switch (key) {
-    case ESC:
-    case 'i':
-      updateLog("ignore");
-      return true;
-    case 'c':
-      updateLog("close");
-      player.level.items[player.x][player.y] = createObject(OCLOSEDDOOR, 0);
-      player.x = lastpx;
-      player.y = lastpy;
-      //player.level.paint();
-      return true;
-  }
-}
-
-
-
-function o_closed_door(key) {
-  var item = getItem(player.x, player.y);
-  if (item == null) {
-    debug("o_closed_door(): couldn't find it!");
-    player.x = lastpx;
-    player.y = lastpy;
-    return true;
-  }
-  switch (key) {
-    case ESC:
-    case 'i':
-      updateLog("ignore");
-      player.x = lastpx;
-      player.y = lastpy;
-      return true;
-    case 'o':
-      updateLog("open");
-      var success = act_open_door(player.x, player.y) == 1;
-      if (!success) {
-        player.x = lastpx;
-        player.y = lastpy;
-      }
-      return true;
-  }
 }
 
 

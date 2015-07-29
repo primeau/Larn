@@ -2,7 +2,7 @@
 
 var dropflag = 0; /* if 1 then don't lookforobject() next round */
 var rmst = 80; /* random monster creation counter */
-var nomove=0; /* if (nomove) then don't count next iteration as a move */
+var nomove = 0; /* if (nomove) then don't count next iteration as a move */
 var viewflag = 0; /* if viewflag then we have done a 99 stay here and don't showcell in the main loop */
 
 
@@ -159,16 +159,8 @@ function parse(e) {
     non_blocking_callback = null;
   }
 
-  var item = getItem(player.x, player.y);
 
-  if (wait_for_drop_input) {
-    drop_object(code == ESC ? ESC : key);
-    return;
-  }
-  if (wait_for_open_direction) {
-    open_something(parseDirectionKeys(key, code));
-    return;
-  }
+  var item = getItem(player.x, player.y);
 
 
   /*
@@ -217,8 +209,10 @@ function parse(e) {
   //
   if (key == 'd') {
     yrepcount = 0;
-    if (player.TIMESTOP == 0)
-      drop_object(null);
+    if (player.TIMESTOP == 0) {
+      updateLog("What do you want to drop?");
+      setupInputCallback(drop_object, true);
+    }
     return;
   }
 
@@ -297,7 +291,27 @@ function parse(e) {
   }
 
   // TODO A - desecrate at altar
-  // TODO C - close something
+
+  //
+  // CLOSE DOOR
+  //
+  if (key == 'C') {
+    yrepcount = 0;
+    /* check for confusion. */
+    if (player.CONFUSE > 0) {
+      updateLog("You're too confused!");
+      beep();
+      return;
+    }
+    if (item.matches(OOPENDOOR)) {
+      close_something(0);
+      return;
+    } else {
+      prepare_direction_event(close_something, true);
+      dropflag = 1;
+      return;
+    }
+  }
 
   //
   // DRINK FROM FOUNTAIN
@@ -325,7 +339,23 @@ function parse(e) {
   //
   if (key == 'O') {
     yrepcount = 0;
-    open_something(null);
+    /* check for confusion. */
+    if (player.CONFUSE > 0) {
+      updateLog("You're too confused!");
+      beep();
+      return;
+    }
+    /* check for player standing on a chest.  If he is, prompt for and
+       let him open it.  If player ESCs from prompt, quit the Open
+       command.
+    */
+    if (item.matches(OCHEST)) {
+      act_open_chest(player.x, player.y);
+      dropflag = 1; /* prevent player from picking back up if fail */
+      return;
+    } else {
+      prepare_direction_event(open_something, true);
+    }
     return;
   }
 
@@ -486,7 +516,7 @@ function parse(e) {
   //
   // DEBUGGING SHORTCUTS
   //
-  if (key == 'C' || key == 'V') { // CLIMB IN/OUT OF VOLCANO
+  if (key == 'V') { // CLIMB IN/OUT OF VOLCANO
     if (player.level.depth == 0 && DEBUG_STAIRS_EVERYWHERE) {
       nomove = 1;
       debug("STAIRS_EVERYWHERE: entering volcano");
@@ -574,6 +604,7 @@ function parse(e) {
       player.level.items[armori++][MAXY - 1] = createObject(OTHRONE);
       player.level.items[armori++][MAXY - 1] = createObject(OFOUNTAIN);
       player.level.items[armori++][MAXY - 1] = createObject(OMIRROR);
+      player.level.items[armori++][MAXY - 1] = createObject(OCHEST);
 
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);

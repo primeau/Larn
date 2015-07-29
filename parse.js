@@ -1,8 +1,5 @@
 "use strict";
 
-var wait_for_drop_input = false; // TODO REMOVE
-var wait_for_open_direction = false; // TODO REMOVE
-
 const ESC = 27;
 const ENTER = 13;
 const SPACE = 32;

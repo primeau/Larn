@@ -82,22 +82,25 @@ Monster.prototype = {
       }
     },
 
-    /*
-     *  dropgold(amount)    Function to drop some gold around player
-     *      int amount;
-     *
-     *  Enter with the number of gold pieces to drop
-     *  Returns nothing of value.
-     */
-    dropgold: function(amount) {
-      if (amount > 250) {
-        amount = Math.round(amount / 100) * 100;
-      }
-      createitem(OGOLDPILE, amount);
-    },
-
 
   } // monster class
+
+
+
+
+/*
+ *  dropgold(amount)    Function to drop some gold around player
+ *      int amount;
+ *
+ *  Enter with the number of gold pieces to drop
+ *  Returns nothing of value.
+ */
+function dropgold(amount) {
+  if (amount > 250) {
+    amount = Math.round(amount / 100) * 100;
+  }
+  createitem(OGOLDPILE, amount);
+}
 
 
 
@@ -785,7 +788,7 @@ function hitm(x, y, damage) {
     updateLog(`The ${monster} died!`);
     player.raiseexperience(monster.experience);
     if (monster.gold > 0) {
-      monster.dropgold(rnd(monster.gold) + monster.gold);
+      dropgold(rnd(monster.gold) + monster.gold);
     }
     monster.dropsomething();
     //disappear(x, y);

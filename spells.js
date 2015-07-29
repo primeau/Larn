@@ -119,7 +119,7 @@ function speldamage(x) {
 
     case 3:
       /*    sleep   */
-      prepare_direction_spell(spell_sleep);
+      prepare_direction_event(spell_sleep);
       return;
 
     case 4:
@@ -136,7 +136,7 @@ function speldamage(x) {
 
     case 6:
       /* web */
-      prepare_direction_spell(spell_web);
+      prepare_direction_event(spell_web);
       return;
 
     case 7:
@@ -176,7 +176,7 @@ function speldamage(x) {
 
     case 12:
       /* phantasmal forces */
-      prepare_direction_spell(spell_phantasmal);
+      prepare_direction_event(spell_phantasmal);
       return;
 
     case 13:
@@ -205,7 +205,7 @@ function speldamage(x) {
 
     case 16:
       /*  polymorph */
-      prepare_direction_spell(spell_polymorph);
+      prepare_direction_event(spell_polymorph);
       return;
 
     case 17:
@@ -261,7 +261,7 @@ function speldamage(x) {
 
     case 21:
       /* dehydration */
-      prepare_direction_spell(spell_dry);
+      prepare_direction_event(spell_dry);
       return;
 
     case 22:
@@ -271,7 +271,7 @@ function speldamage(x) {
 
     case 23:
       /* drain life */
-      prepare_direction_spell(spell_drain);
+      prepare_direction_event(spell_drain);
       return;
 
     case 24:
@@ -289,7 +289,7 @@ function speldamage(x) {
     case 26:
       /* finger of death */
       if (rnd(151) != 63) {
-        prepare_direction_spell(spell_finger);
+        prepare_direction_event(spell_finger);
       } else {
         beep();
         updateLog("Your heart stopped!");
@@ -317,7 +317,7 @@ function speldamage(x) {
 
     case 30:
       /* teleport away */
-      prepare_direction_spell(spell_teleport);
+      prepare_direction_event(spell_teleport);
       return;
 
     case 31:
@@ -353,7 +353,7 @@ function speldamage(x) {
     case 34:
       /* summon demon */
       if (rnd(100) > 30) {
-        prepare_direction_spell(spell_summon);
+        prepare_direction_event(spell_summon);
       } else if (rnd(100) > 15) {
         updateLog("  Nothing seems to have happened");
       } else {
@@ -443,14 +443,6 @@ function speldamage(x) {
       beep();
       return;
   };
-}
-
-
-
-function prepare_direction_spell(spell_function) {
-  setupInputCallback(getdirectioninput, true);
-  keyboard_input_callback = spell_function;
-  updateLog("In what direction? ");
 }
 
 

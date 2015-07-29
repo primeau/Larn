@@ -58,11 +58,11 @@ function makeobject(level) {
   debug("makeobject: making objects for level " + level.depth);
 
   if (level.depth == 0) {
-    fillroom(OENTRANCE, 0);  /*  entrance to dungeon         */
-    fillroom(ODNDSTORE, 0);  /*  the DND STORE               */
+    fillroom(OENTRANCE, 0); /*  entrance to dungeon         */
+    fillroom(ODNDSTORE, 0); /*  the DND STORE               */
     // fillroom(OSCHOOL, 0);    /*  college of Larn             */
-    fillroom(OBANK, 0);      /*  1st national bank of larn   */
-    fillroom(OVOLDOWN, 0);   /*  volcano shaft to temple     */
+    fillroom(OBANK, 0); /*  1st national bank of larn   */
+    fillroom(OVOLDOWN, 0); /*  volcano shaft to temple     */
     // fillroom(OHOME, 0);      /*  the players home & family   */
     // fillroom(OTRADEPOST, 0); /*  the trading post            */
     // fillroom(OLRS, 0);       /*  the larn revenue service    */
@@ -88,6 +88,9 @@ function makeobject(level) {
   fillmroom(rund(2), OTHRONE, 0);
   fillmroom(rund(3), OALTAR, 0);
   fillmroom(rund(3), OSTATUE, 0);
+
+  if (level.depth == 1) fillmroom(1, OCHEST, level.depth);
+  else fillmroom(rund(2), OCHEST, level.depth);
 
   for (var numgold = rnd(12) + 11; numgold > 0; numgold--)
     fillroom(OGOLDPILE, 12 * rnd(level.depth + 1) + (level.depth << 3) + 10);

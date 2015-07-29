@@ -99,7 +99,13 @@ function act_quaffpotion(index) {
     quaffpotion(item);
   } else {
     if (item == null) {
-      updateLog(`You don't have item ${index}`);
+      debug(useindex);
+      if (useindex >= 0 && useindex < 26) {
+        updateLog(`You don't have item ${index}!`);
+      }
+      if (useindex <= -1) {
+          appendLog(` cancelled`);
+      }
     } else {
       updateLog(`You can't quaff that!`);
     }
