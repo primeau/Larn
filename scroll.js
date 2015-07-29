@@ -55,7 +55,7 @@ function newscroll() {
 }
 
 
-
+// TODO  quaffpotion, readscroll, eatcookie are all very similar
 function act_read_something(index) {
   var useindex = getIndexFromChar(index);
   var item = player.inventory[useindex];

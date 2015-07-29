@@ -216,7 +216,23 @@ function parse(e) {
     return;
   }
 
-  // TODO e - eat cookie
+  //
+  // EAT COOKIE
+  //
+  //
+  if (key == 'e') {
+    yrepcount = 0;
+    if (player.TIMESTOP == 0)
+      if (item.matches(OCOOKIE)) {
+        outfortune();
+        forget();
+      } else {
+        updateLog("What do you want to eat [* for all] ?");
+        setCharCallback(act_eatcookie, true);
+      }
+    return;
+  }
+
   // TODO g - pack weight
   // TODO i - inventory
 

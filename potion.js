@@ -59,7 +59,7 @@ function newpotion() {
 }
 
 
-
+// TODO  quaffpotion, readscroll, eatcookie are all very similar
 function act_quaffpotion(index) {
   var useindex = getIndexFromChar(index);
   var item = player.inventory[useindex];

@@ -88,7 +88,7 @@ function makeobject(level) {
   fillmroom(rund(2), OTHRONE, 0);
   fillmroom(rund(3), OALTAR, 0);
   fillmroom(rund(3), OSTATUE, 0);
-
+  fillmroom(rund(3),OCOOKIE,0);
   if (level.depth == 1) fillmroom(1, OCHEST, level.depth);
   else fillmroom(rund(2), OCHEST, level.depth);
 
