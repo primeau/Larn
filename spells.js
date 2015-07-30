@@ -446,41 +446,36 @@ function speldamage(x) {
 
 
 function spell_magic_missile(direction) {
-  var i = rnd(((player.LEVEL + 1) << 1)) + player.LEVEL + 3;
-  var str = attackmessage[MLE];
-  setTimeout(godirect, 100, MLE, player.x, player.y, diroffx[direction], diroffy[direction], i, str, 100, '+');
+  var damage = rnd(((player.LEVEL + 1) << 1)) + player.LEVEL + 3;
+  setup_godirect(100, MLE, direction, damage, '+');
 }
 
 
 
 function spell_sleep(direction) {
-  var i = rnd(3) + 1;
-  var str = attackmessage[SLE];
-  direct(SLE, player.x, player.y, direction, fullhit(i), str, i);
+  var hits = rnd(3) + 1;
+  direct(SLE, direction, fullhit(hits), hits);
 }
 
 
 
 function spell_sonic_spear(direction) {
-  var i = rnd(10) + 15 + player.LEVEL;
-  var str = attackmessage[SSP];
-  setTimeout(godirect, 70, SSP, player.x, player.y, diroffx[direction], diroffy[direction], i, str, 70, '@');
+  var damage = rnd(10) + 15 + player.LEVEL;
+  setup_godirect(70, SSP, direction, damage, '@');
 }
 
 
 
 function spell_web(direction) {
-  var i = rnd(3) + 2;
-  var str = attackmessage[WEB];
-  direct(WEB, direction, fullhit(i), str, i);
+  var hits = rnd(3) + 2;
+  direct(WEB, direction, fullhit(hits), hits);
 }
 
 
 
 function spell_phantasmal(direction) {
   if (rnd(11) + 7 <= player.WISDOM) {
-    var str = attackmessage[PHA];
-    direct(PHA, direction, rnd(20) + 20 + player.LEVEL, str, 0)
+    direct(PHA, direction, rnd(20) + 20 + player.LEVEL, 0)
   } else {
     updateLog("  It didn't believe the illusions!");
   }
@@ -489,17 +484,15 @@ function spell_phantasmal(direction) {
 
 
 function spell_fireball(direction) {
-  var i = rnd(25 + player.LEVEL) + 25 + player.LEVEL;
-  var str = attackmessage[BAL];
-  setTimeout(godirect, 40, BAL, player.x, player.y, diroffx[direction], diroffy[direction], i, str, 40, '*');
+  var damage = rnd(25 + player.LEVEL) + 25 + player.LEVEL;
+  setup_godirect(40, BAL, direction, damage, '*');
 }
 
 
 
 function spell_cold(direction) {
-  var i = rnd(25) + 20 + player.LEVEL;
-  var str = attackmessage[CLD];
-  setTimeout(godirect, 60, CLD, player.x, player.y, diroffx[direction], diroffy[direction], i, str, 60, 'O');
+  var damage = rnd(25) + 20 + player.LEVEL;
+  setup_godirect(60, CLD, direction, damage, 'O');
 }
 
 
@@ -544,33 +537,29 @@ function spell_polymorph(direction) {
 
 
 function spell_dry(direction) {
-  var str = attackmessage[DRY];
-  direct(DRY, direction, 100 + player.LEVEL, str, 0);
+  direct(DRY, direction, 100 + player.LEVEL, 0);
 }
 
 
 
 function spell_lightning(direction) {
-  var i = rnd(25) + 20 + (player.LEVEL << 1);
-  var str = attackmessage[LIT];
-  setTimeout(godirect, 10, LIT, player.x, player.y, diroffx[direction], diroffy[direction], i, str, 10, '~');
+  var damage = rnd(25) + 20 + (player.LEVEL << 1);
+  setup_godirect(10, LIT, direction, damage, '~');
 }
 
 
 
 function spell_drain(direction) {
-  var dam = Math.min(player.HP - 1, player.HPMAX / 2);
-  var str = attackmessage[DRL];
-  direct(DRL, direction, dam + dam, str, 0);
-  player.HP -= Math.round(dam);
+  var damage = Math.min(player.HP - 1, player.HPMAX / 2);
+  direct(DRL, direction, damage + damage, 0);
+  player.HP -= Math.round(damage);
 }
 
 
 
 function spell_finger(direction) {
   if (player.WISDOM > rnd(10) + 10) {
-    var str = attackmessage[FGR];
-    direct(FGR, direction, 2000, str, 0);
+    direct(FGR, direction, 2000, 0);
   } else {
     updateLog("  It didn't work");
   }
@@ -612,8 +601,7 @@ function spell_teleport(direction) {
 
 
 function spell_summon(direction) {
-  var str = attackmessage[SUM];
-  direct(SUM, direction, 150, str, 0);
+  direct(SUM, direction, 150, 0);
 }
 
 
@@ -710,7 +698,7 @@ function fullhit(xx) {
  *    lprintf format string in str, and lprintf's argument in arg.
  *  Returns no value.
  */
-function direct(spnum, direction, dam, str, arg) {
+function direct(spnum, direction, dam, arg) {
   //if (spnum < 0 || spnum >= SPNUM || str == 0) return; /* bad arguments */
   if (isconfuse()) {
     return;
@@ -726,6 +714,8 @@ function direct(spnum, direction, dam, str, arg) {
     updateLog("  There wasn't anything there!");
     return;
   }
+
+  var str = attackmessage[spnum];
 
   if (item.matches(OMIRROR) && monster == null) {
     if (spnum == 3) /* sleep */ {
@@ -767,6 +757,13 @@ function direct(spnum, direction, dam, str, arg) {
 
 
 
+function setup_godirect(delay, spnum, direction, damage, cshow) {
+  napping = true;
+  setTimeout(godirect, delay, spnum, player.x, player.y, diroffx[direction], diroffy[direction], damage, delay, cshow);
+}
+
+
+
 /*
  *  Function to perform missile attacks
  *
@@ -777,13 +774,15 @@ function direct(spnum, direction, dam, str, arg) {
  *    locations in delay, and the character to represent the weapon in cshow.
  *  Returns no value.
  */
-var NAPTIME = 1000;
+function godirect(spnum, x, y, dx, dy, dam, delay, cshow) {
 
-function godirect(spnum, x, y, dx, dy, dam, str, delay, cshow) {
   /* bad args */
   //if (spnum < 0 || spnum >= SPNUM || str == 0 || delay < 0) return;
 
-  if (isconfuse()) return;
+  if (isconfuse()) {
+    napping = false;
+    return;
+  }
 
   //while (dam > 0) {
   //debug(`${x}, ${y}: ${dam}`);
@@ -797,6 +796,7 @@ function godirect(spnum, x, y, dx, dy, dam, str, delay, cshow) {
   y += dy;
   if ((x > MAXX - 1) || (y > MAXY - 1) || (x < 0) || (y < 0)) {
     dam = 0;
+    napping = false;
     return;
   } /* out of bounds */
 
@@ -807,9 +807,10 @@ function godirect(spnum, x, y, dx, dy, dam, str, delay, cshow) {
 
     if ((player.HP -= dam) <= 0) {
       updateLog("You have been slain");
-      nap(NAPTIME);
+      nap(1000);
       died(278);
     }
+    napping = false;
     return;
   }
 
@@ -823,6 +824,7 @@ function godirect(spnum, x, y, dx, dy, dam, str, delay, cshow) {
 
   var monster = monsterAt(x, y);
   var item = getItem(x, y);
+  var str = attackmessage[spnum];
 
   /* is there a monster there? */
   if (monster != null) {
@@ -831,6 +833,7 @@ function godirect(spnum, x, y, dx, dy, dam, str, delay, cshow) {
     if (nospell(spnum, monster)) {
       lasthx = x;
       lasthy = y;
+      napping = false;
       return;
     }
 
@@ -838,7 +841,7 @@ function godirect(spnum, x, y, dx, dy, dam, str, delay, cshow) {
     updateLog(str(monster));
     dam -= hitm(x, y, dam);
     //show1cell(x, y);
-    nap(NAPTIME);
+    nap(1000);
 
     x -= dx;
     y -= dy;
@@ -928,11 +931,12 @@ function godirect(spnum, x, y, dx, dy, dam, str, delay, cshow) {
   //} // WHILE
 
   if (dam > 0) {
-    debug(`${player.x-x} ${player.y-y}`);
     blt();
-    setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, str, delay, cshow);
+    setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, delay, cshow);
   } else {
     paint();
+    napping = false;
+    return;
   }
 
 }
