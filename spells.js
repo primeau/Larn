@@ -105,10 +105,8 @@ function speldamage(x) {
       return;
 
     case 1:
-      updateLog("TODO: magic missile");
-      //   i = rnd(((clev + 1) << 1)) + clev + 3;
-      //   godirect(x, i, (clev >= 2) ? "  Your missiles hit the %s" : "  Your missile hit the %s", 100, '+'); /* magic missile */
-      //
+      /* magic missile */
+      prepare_direction_event(spell_magic_missile);
       return;
 
     case 2:
@@ -128,8 +126,8 @@ function speldamage(x) {
       return;
 
     case 5:
-      updateLog("TODO: sonic spear");
-      //   godirect(x, rnd(10) + 15 + clev, "  The sound damages the %s", 70, '@'); /* sonic spear */
+      /* sonic spear */
+      prepare_direction_event(spell_sonic_spear);
       return;
 
       /* ----- LEVEL 2 SPELLS ----- */
@@ -194,13 +192,13 @@ function speldamage(x) {
       /* ----- LEVEL 3 SPELLS ----- */
 
     case 14:
-      updateLog("TODO: fireball");
-      //   godirect(x, rnd(25 + clev) + 25 + clev, "  The fireball hits the %s", 40, '*');
-      return; /*    fireball */
+      /*    fireball */
+      prepare_direction_event(spell_fireball);
+      return;
 
     case 15:
-      updateLog("TODO: cone of cold");
-      //   godirect(x, rnd(25) + 20 + clev, "  Your cone of cold strikes the %s", 60, 'O'); /*  cold */
+      /*  cold */
+      prepare_direction_event(spell_cold);
       return;
 
     case 16:
@@ -265,8 +263,8 @@ function speldamage(x) {
       return;
 
     case 22:
-      updateLog("TODO: lightning");
-      //   godirect(x, rnd(25) + 20 + (clev << 1), "  A lightning bolt hits the %s", 1, '~'); /*  lightning */
+      /*  lightning */
+      prepare_direction_event(spell_lightning);
       return;
 
     case 23:
@@ -447,36 +445,61 @@ function speldamage(x) {
 
 
 
+function spell_magic_missile(direction) {
+  var i = rnd(((player.LEVEL + 1) << 1)) + player.LEVEL + 3;
+  var str = attackmessage[MLE];
+  setTimeout(godirect, 100, MLE, player.x, player.y, diroffx[direction], diroffy[direction], i, str, 100, '+');
+}
+
+
+
 function spell_sleep(direction) {
   var i = rnd(3) + 1;
-  var str = function(monster, i) {
-    return `  While the ${monster} slept, you smashed it ${i} times`;
-  };
-  direct(3 /*sleep*/ , direction, fullhit(i), str, i);
+  var str = attackmessage[SLE];
+  direct(SLE, player.x, player.y, direction, fullhit(i), str, i);
+}
+
+
+
+function spell_sonic_spear(direction) {
+  var i = rnd(10) + 15 + player.LEVEL;
+  var str = attackmessage[SSP];
+  setTimeout(godirect, 70, SSP, player.x, player.y, diroffx[direction], diroffy[direction], i, str, 70, '@');
 }
 
 
 
 function spell_web(direction) {
   var i = rnd(3) + 2;
-  var str = function(monster, i) {
-    return `  While the ${monster} is entangled, you hit ${i} times`;
-  };
-  direct(6 /*web*/ , direction, fullhit(i), str, i);
+  var str = attackmessage[WEB];
+  direct(WEB, direction, fullhit(i), str, i);
 }
 
 
 
 function spell_phantasmal(direction) {
-  var monster = getMonster(direction);
   if (rnd(11) + 7 <= player.WISDOM) {
-    var str = function(monster, i) {
-      return `  The ${monster} believed!`;
-    };
-    direct(12 /*phantasmal*/ , direction, rnd(20) + 20 + player.LEVEL, str, 0)
+    var str = attackmessage[PHA];
+    direct(PHA, direction, rnd(20) + 20 + player.LEVEL, str, 0)
   } else {
     updateLog("  It didn't believe the illusions!");
   }
+}
+
+
+
+function spell_fireball(direction) {
+  var i = rnd(25 + player.LEVEL) + 25 + player.LEVEL;
+  var str = attackmessage[BAL];
+  setTimeout(godirect, 40, BAL, player.x, player.y, diroffx[direction], diroffy[direction], i, str, 40, '*');
+}
+
+
+
+function spell_cold(direction) {
+  var i = rnd(25) + 20 + player.LEVEL;
+  var str = attackmessage[CLD];
+  setTimeout(godirect, 60, CLD, player.x, player.y, diroffx[direction], diroffy[direction], i, str, 60, 'O');
 }
 
 
@@ -521,32 +544,33 @@ function spell_polymorph(direction) {
 
 
 function spell_dry(direction) {
-  var str = function(monster) {
-    return `  The ${monster} shrivels up`;
-  };
-  direct(21 /*dehydration*/ , direction, 100 + player.LEVEL, str, 0);
+  var str = attackmessage[DRY];
+  direct(DRY, direction, 100 + player.LEVEL, str, 0);
+}
+
+
+
+function spell_lightning(direction) {
+  var i = rnd(25) + 20 + (player.LEVEL << 1);
+  var str = attackmessage[LIT];
+  setTimeout(godirect, 10, LIT, player.x, player.y, diroffx[direction], diroffy[direction], i, str, 10, '~');
 }
 
 
 
 function spell_drain(direction) {
   var dam = Math.min(player.HP - 1, player.HPMAX / 2);
-  var str = function(monster) {
-    return ``;
-  };
-  direct(23 /*drainlife*/ , direction, dam + dam, str, 0);
+  var str = attackmessage[DRL];
+  direct(DRL, direction, dam + dam, str, 0);
   player.HP -= Math.round(dam);
 }
 
 
 
 function spell_finger(direction) {
-  var monster = getMonster(direction);
   if (player.WISDOM > rnd(10) + 10) {
-    var str = function(monster) {
-      return `  The ${monster}'s heart stopped`;
-    };
-    direct(26 /*fingerofdeath*/ , direction, 2000, str, 0);
+    var str = attackmessage[FGR];
+    direct(FGR, direction, 2000, str, 0);
   } else {
     updateLog("  It didn't work");
   }
@@ -588,11 +612,8 @@ function spell_teleport(direction) {
 
 
 function spell_summon(direction) {
-  var str = function(monster) {
-    return `  The demon strikes at the ${monster}`;
-  };
-
-  direct(34 /*summondemon*/ , direction, 150, str, 0);
+  var str = attackmessage[SUM];
+  direct(SUM, direction, 150, str, 0);
 }
 
 
@@ -609,8 +630,6 @@ function create_guardian(monst, x, y) {
     y += diroffy[k];
   }
   // know[x][y] = 0;
-  // mitem[x][y] = monst;
-  // hitp[x][y] = monster[monst].hitpoints;
   if (!monsterlist[monst].genocided)
     createmonster(monst, x, y);
 }
@@ -659,8 +678,6 @@ function nospell(x, monst) {
     return (0);
   }
   cursors();
-  // updateLog('\n');
-  // updateLog(spelmes[tmp], monster[monst].name);
   updateLog(spelmes[tmp](monst));
   return (1);
 }
@@ -747,6 +764,179 @@ function direct(spnum, direction, dam, str, arg) {
     return;
   }
 }
+
+
+
+/*
+ *  Function to perform missile attacks
+ *
+ *  Function to hit in a direction from a missile weapon and have it keep
+ *  on going in that direction until its power is exhausted
+ *  Enter with the spell number in spnum, the power of the weapon in hp,
+ *    lprintf format string in str, the # of milliseconds to delay between
+ *    locations in delay, and the character to represent the weapon in cshow.
+ *  Returns no value.
+ */
+var NAPTIME = 1000;
+
+function godirect(spnum, x, y, dx, dy, dam, str, delay, cshow) {
+  /* bad args */
+  //if (spnum < 0 || spnum >= SPNUM || str == 0 || delay < 0) return;
+
+  if (isconfuse()) return;
+
+  //while (dam > 0) {
+  //debug(`${x}, ${y}: ${dam}`);
+
+  if (x != player.x || y != player.y) {
+    cursor(x + 1, y + 1);
+    lprc(getItem(x, y).char);
+  }
+
+  x += dx;
+  y += dy;
+  if ((x > MAXX - 1) || (y > MAXY - 1) || (x < 0) || (y < 0)) {
+    dam = 0;
+    return;
+  } /* out of bounds */
+
+  /* if energy hits player */
+  if (x == player.x && y == player.y) {
+    cursors();
+    updateLog("You are hit by your own magic!");
+
+    if ((player.HP -= dam) <= 0) {
+      updateLog("You have been slain");
+      nap(NAPTIME);
+      died(278);
+    }
+    return;
+  }
+
+  /* if not blind show effect */
+  if (player.BLINDCOUNT == 0) {
+    cursor(x + 1, y + 1);
+    lprc(cshow);
+    nap(delay);
+    //show1cell(x, y);
+  }
+
+  var monster = monsterAt(x, y);
+  var item = getItem(x, y);
+
+  /* is there a monster there? */
+  if (monster != null) {
+    ifblind(x, y);
+
+    if (nospell(spnum, monster)) {
+      lasthx = x;
+      lasthy = y;
+      return;
+    }
+
+    cursors();
+    updateLog(str(monster));
+    dam -= hitm(x, y, dam);
+    //show1cell(x, y);
+    nap(NAPTIME);
+
+    x -= dx;
+    y -= dy;
+  } else if (item.matches(OWALL)) {
+    cursors();
+    updateLog(str("wall"));
+    if ( /* enough damage? */
+      dam >= 50 + player.HARDGAME &&
+      /* not on V3 */
+      player.level.depth < MAXLEVEL + MAXVLEVEL - 1 &&
+      x < MAXX - 1 && y < MAXY - 1 &&
+      x != 0 && y != 0) {
+      updateLog("  The wall crumbles");
+      player.level.items[x][y] = createObject(OEMPTY);
+      // know[x][y] = 0;
+      // show1cell(x, y);
+    }
+    dam = 0;
+  } else if (item.matches(OCLOSEDDOOR)) {
+    cursors();
+    updateLog(str("door"));
+    if (dam >= 40) {
+      updateLog("  The door is blasted apart");
+      player.level.items[x][y] = createObject(OEMPTY);
+      // know[x][y] = 0;
+      // show1cell(x, y);
+    }
+    dam = 0;
+  } else if (item.matches(OSTATUE)) {
+    cursors();
+    updateLog(str("statue"));
+    if (player.HARDGAME < 3)
+      if (dam > 44) {
+        updateLog("  The statue crumbles");
+        player.level.items[x][y] = createObject(OBOOK, player.level.depth);
+        // know[x][y] = 0;
+        // show1cell(x, y);
+      }
+    dam = 0;
+  } else if (item.matches(OTHRONE)) {
+    cursors();
+    updateLog(str("throne"));
+    if (dam > 39 && item.arg == 0) {
+      create_guardian(GNOMEKING, x, y);
+      item.arg = 1; // nullify the throne
+      //show1cell(x, y);
+    }
+    dam = 0;
+  } else if (item.matches(OALTAR)) {
+    cursors();
+    updateLog(str("altar"));
+    if (dam > 75 - (player.HARDGAME >> 2)) {
+      create_guardian(DEMONPRINCE, x, y);
+      //show1cell(x, y);
+    }
+    dam = 0;
+  } else if (item.matches(OFOUNTAIN)) {
+    cursors();
+    updateLog(str("fountain"));
+    if (dam > 55) {
+      create_guardian(WATERLORD, x, y);
+      //show1cell(x, y);
+    }
+    dam = 0;
+  } else if (item.matches(OMIRROR)) {
+    var bounce = 0;
+    var odx = dx;
+    var ody = dy;
+
+    /* spells may bounce directly back or off at an angle */
+    if (rnd(100) < 50) {
+      bounce = 1;
+      dx *= -1;
+    }
+    if (rnd(100) < 50) {
+      bounce = 1;
+      dy *= -1;
+    }
+    /* guarantee a bounce */
+    if (!bounce || (odx == dx && ody == dy)) {
+      dx = -odx;
+      dy = -ody;
+    }
+  }
+
+  dam -= 3 + (player.HARDGAME >> 1);
+  //} // WHILE
+
+  if (dam > 0) {
+    debug(`${player.x-x} ${player.y-y}`);
+    blt();
+    setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, str, delay, cshow);
+  } else {
+    paint();
+  }
+
+}
+
 
 
 /*

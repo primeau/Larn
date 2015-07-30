@@ -174,21 +174,53 @@ const spelweird = [
 
  ];
 
+
+
+ // JRP i would love to use arrow functions here, but it's way too new of a feature
 var spelmes = [ ``,
-/*  1 */    function(monster) { return `the web had no effect on the ${monster}`; },
-/*  2 */    function(monster) { return `the ${monster} changed shape to avoid the web`; },
-/*  3 */    function(monster) { return `the ${monster} isn't afraid of you`; },
-/*  4 */    function(monster) { return `the ${monster} isn't affected`; },
-/*  5 */    function(monster) { return `the ${monster} can see you with his infravision`; },
-/*  6 */    function(monster) { return `the ${monster} vaporizes your missile`; },
-/*  7 */    function(monster) { return `your missile bounces off the ${monster}`; },
-/*  8 */    function(monster) { return `the ${monster} doesn't sleep`; },
-/*  9 */    function(monster) { return `the ${monster} resists`; },
-/* 10 */    function(monster) { return `the ${monster} can't hear the noise`; },
-/* 11 */    function(monster) { return `the ${monster}'s tail cuts it free of the web`; },
-/* 12 */    function(monster) { return `the ${monster} burns through the web`; },
-/* 13 */    function(monster) { return `your missiles pass right through the ${monster}`; },
-/* 14 */    function(monster) { return `the ${monster} sees through your illusions`; },
-/* 15 */    function(monster) { return `the ${monster} loves the cold!`; },
-/* 16 */    function(monster) { return `the ${monster} loves the water!`; },
+/*  1 */ function(monster) { return `the web had no effect on the ${monster}`; },
+/*  2 */ function(monster) { return `the ${monster} changed shape to avoid the web`; },
+/*  3 */ function(monster) { return `the ${monster} isn't afraid of you`; },
+/*  4 */ function(monster) { return `the ${monster} isn't affected`; },
+/*  5 */ function(monster) { return `the ${monster} can see you with his infravision`; },
+/*  6 */ function(monster) { return `the ${monster} vaporizes your missile`; },
+/*  7 */ function(monster) { return `your missile bounces off the ${monster}`; },
+/*  8 */ function(monster) { return `the ${monster} doesn't sleep`; },
+/*  9 */ function(monster) { return `the ${monster} resists`; },
+/* 10 */ function(monster) { return `the ${monster} can't hear the noise`; },
+/* 11 */ function(monster) { return `the ${monster}'s tail cuts it free of the web`; },
+/* 12 */ function(monster) { return `the ${monster} burns through the web`; },
+/* 13 */ function(monster) { return `your missiles pass right through the ${monster}`; },
+/* 14 */ function(monster) { return `the ${monster} sees through your illusions`; },
+/* 15 */ function(monster) { return `the ${monster} loves the cold!`; },
+/* 16 */ function(monster) { return `the ${monster} loves the water!`; },
  ];
+
+
+
+ const MLE = 1;
+ const SLE = 3;
+ const SSP = 5;
+ const WEB = 6;
+ const PHA = 12;
+ const BAL = 14;
+ const CLD = 15;
+ const DRY = 21;
+ const LIT = 22;
+ const DRL = 23;
+ const FGR = 26;
+ const SUM = 34;
+
+var attackmessage = [];
+attackmessage[MLE] = function(monster, i) { return `  Your missile${(player.LEVEL >= 2) ? "s" : ""} hit the ${monster}`; };
+attackmessage[SLE] = function(monster, i) { return `  While the ${monster} slept, you smashed it ${i} times`; };
+attackmessage[SSP] = function(monster, i) { return `  The sound damages the ${monster}`; };
+attackmessage[WEB] = function(monster, i) { return `  While the ${monster} is entangled, you hit ${i} times`; };
+attackmessage[PHA] = function(monster, i) { return `  The ${monster} believed!`; };
+attackmessage[BAL] = function(monster, i) { return `  The fireball hits the ${monster}`; };
+attackmessage[CLD] = function(monster, i) { return `  Your cone of cold strikes the ${monster}`; };
+attackmessage[DRY] = function(monster, i) { return `  The ${monster} shrivels up`; };
+attackmessage[LIT] = function(monster, i) { return `  A lightning bolt hits the ${monster}`; };
+attackmessage[DRL] = function(monster, i) { return ``;  };
+attackmessage[FGR] = function(monster, i) { return `  The ${monster}'s heart stopped`; };
+attackmessage[SUM] = function(monster, i) { return `  The demon strikes at the ${monster}`; };
