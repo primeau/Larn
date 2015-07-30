@@ -51,6 +51,7 @@ function getdirectioninput(key, code) {
   //debug(`getdirectioninput: ${key} ${code}`);
   if (key == ESC) {
     // TODO anything else?
+    appendLog(" cancelled");
     keyboard_input_callback = null;
     return 1;
   }

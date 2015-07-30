@@ -5,7 +5,7 @@ var rmst = 120; /* random monster creation counter */
 var nomove = 0; /* if (nomove) then don't count next iteration as a move */
 var viewflag = 0; /* if viewflag then we have done a 99 stay here and don't showcell in the main loop */
 
-
+var napping = false; // prevent keyboard input while a nap event is happening
 
 /*
     subroutine to randomly create monsters if needed
@@ -28,6 +28,10 @@ function randmonst() {
   turn the original main loop a little bit inside-out
 */
 function mainloop(e) {
+
+  if (napping) {
+    return;
+  }
 
   if (hit3flag)
     lflushall();
@@ -99,9 +103,15 @@ function mainloop(e) {
 /*****************************************************************************/
 
 
-
-
-
+// var timer;
+// var count;
+// function zzz() {
+//   napping = (--count != 0);
+//   if (count == 0) clearInterval(timer);
+//   debug(napping);
+//   appendLog("Z");
+//   paint();
+// }
 
 
 
@@ -159,6 +169,11 @@ function parse(e) {
     non_blocking_callback = null;
   }
 
+  // if (key == 'z') {
+  //   count = 15;
+  //   timer = setInterval(zzz, 200);
+  //   return;
+  // }
 
   var item = getItem(player.x, player.y);
 
