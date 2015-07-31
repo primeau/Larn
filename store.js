@@ -164,7 +164,6 @@ function dndstore() {
   }
 
   updategold();
-  //player.level.paint();
 
   blocking_callback = dnd_parse;
 }
@@ -189,7 +188,8 @@ function dnd_parse(key) {
   if (key == ESC) {
     IN_STORE = false;
     clear();
-    drawscreen();
+    //drawscreen();
+    paint();
     dndindex = 0;
     return 1;
   }
@@ -334,7 +334,8 @@ function banktitle(str) {
   // }
   lprcat("\n\n   Gemstone                 Appraisal      Gemstone                 Appraisal");
   obanksub();
-  drawscreen();
+  //drawscreen();
+  paint();
 }
 
 
@@ -407,7 +408,8 @@ function bank_parse(key) {
   if (key == ESC) {
     IN_STORE = false;
     clear();
-    drawscreen();
+    //drawscreen();
+    paint();
     dndindex = 0;
     return 1;
   }

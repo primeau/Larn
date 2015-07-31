@@ -38,6 +38,9 @@ var Larn = {
     newcavelevel(0);
 
     regen();
+
+    showcell(player.x, player.y);
+
     paint();
 
   },
@@ -72,8 +75,8 @@ function positionplayer(x, y, exact) {
   if (exact && canMove(x, y)) {
     player.x = x;
     player.y = y;
-    //player.level.paint();
     debug("positionplayer: (" + distance + ") got " + xy(x, y));
+    player.level.know[x][y] = KNOWALL;
     return true;
   }
 
@@ -90,7 +93,7 @@ function positionplayer(x, y, exact) {
         if (canMove(newx, newy)) {
           player.x = newx;
           player.y = newy;
-          //player.level.paint();
+          player.level.know[x][y] = KNOWALL;
           debug("positionplayer: (" + distance + ") got " + xy(newx, newy));
           return true;
         }

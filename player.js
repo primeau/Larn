@@ -8,6 +8,7 @@ var Player = {
   x: 0,
   y: 0,
   level: null,
+  char: `▓`,
 
   STRENGTH: 12,
   INTELLIGENCE: 12,

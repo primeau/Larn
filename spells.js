@@ -163,17 +163,15 @@ function speldamage(x) {
       return;
 
     case 8:
-      updateLog("TODO: enlightenment");
-      //   yl = playery - 5; /* enlightenment */
-      //   yh = playery + 6;
-      //   xl = playerx - 15;
-      //   xh = playerx + 16;
-      //   vxy( & xl, & yl);
-      //   vxy( & xh, & yh); /* check bounds */
-      //   for (i = yl; i <= yh; i++) /* enlightenment */
-      //     for (j = xl; j <= xh; j++)
-      //       know[j][i] = KNOWALL;
-      //   draws(xl, xh + 1, yl, yh + 1);
+      /* enlightenment */
+      var yl = Math.max(0, player.y - 5);
+      var yh = Math.min(MAXY, player.y + 6);
+      var xl = Math.max(0, player.x - 15);
+      var xh = Math.min(MAXX, player.x + 16);
+      for (var i = xl; i < xh; i++)
+        for (var j = yl; j < yh; j++)
+          player.level.know[i][j] = KNOWALL;
+      //draws(xl, xh + 1, yl, yh + 1);
       return;
 
     case 9:
@@ -205,14 +203,14 @@ function speldamage(x) {
 
     case 13:
       /* invisibility */
-      let j = 0;
-      for (let i = 0; i < 26; i++) {
+      var amuletmodifier = 0;
+      for (var i = 0; i < 26; i++) {
         /* if he has the amulet of invisibility then add more time */
         if (player.inventory[i] != null && player.inventory[i].matches(OAMULET)) {
-          j += 1 + player.inventory[i].arg;
+          amuletmodifier += 1 + player.inventory[i].arg;
         }
       }
-      player.INVISIBILITY += (j << 7) + 12;
+      player.INVISIBILITY += (amuletmodifier << 7) + 12;
       return;
 
       /* ----- LEVEL 3 SPELLS ----- */
@@ -566,7 +564,7 @@ function spell_teleport(direction) {
   if (nospell(30 /*teleportaway*/ , monster) == 0) {
     fillmonst(monster.arg);
     player.level.monsters[x][y] = null;
-    //know[x][y] &= ~KNOWHERE;
+    player.level.know[x][y] &= ~KNOWHERE;
   } else {
     lasthx = x;
     lasthy = y;
@@ -588,7 +586,7 @@ function create_guardian(monst, x, y) {
     x += diroffx[k];
     y += diroffy[k];
   }
-  // know[x][y] = 0;
+  player.level.know[x][y] = 0;
   if (!monsterlist[monst].genocided)
     createmonster(monst, x, y);
 }
@@ -964,7 +962,7 @@ function annihilate() {
         if (monster.arg < DEMONLORD + 2) {
           k += monster.experience;
           player.level.monsters[i][j] = null;
-          //*p = know[i][j] &= ~KNOWHERE;
+          player.level.know[i][j] &= ~KNOWHERE;
         } else {
           updateLog(`The ${monster} barely escapes being annihilated!`);
           monster.hitpoints = (monster.hitpoints >> 1) + 1; /* lose half hit points*/

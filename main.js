@@ -86,10 +86,10 @@ function mainloop(e) {
     /* show stuff around the player
      */
     // TODO
-    // if (viewflag == 0)
-    //   showcell(playerx, playery);
-    // else
-  viewflag = 0;
+  if (viewflag == 0)
+    showcell(player.x, player.y);
+  else
+    viewflag = 0;
 
   if (hit3flag)
     lflushall();
@@ -101,17 +101,12 @@ function mainloop(e) {
 }
 /*****************************************************************************/
 /*****************************************************************************/
+/*****************************************************************************/
 
 
-// var timer;
-// var count;
-// function zzz() {
-//   napping = (--count != 0);
-//   if (count == 0) clearInterval(timer);
-//   debug(napping);
-//   appendLog("Z");
-//   paint();
-// }
+
+
+
 
 
 
@@ -169,14 +164,7 @@ function parse(e) {
     non_blocking_callback = null;
   }
 
-  // if (key == 'z') {
-  //   count = 15;
-  //   timer = setInterval(zzz, 200);
-  //   return;
-  // }
-
   var item = getItem(player.x, player.y);
-
 
   /*
            ARROW KEYS           NUMPAD               KEYBOARD
@@ -703,6 +691,7 @@ function parse(e) {
     player.CONSTITUTION = 70;
     player.DEXTERITY = 70;
     player.CHARISMA = 70;
+    player.AWARENESS = 100000;
     player.raiseexperience(6000000 - player.EXPERIENCE);
 
     for (var i = 0; i < spelcode.length; i++) {
@@ -749,7 +738,7 @@ function run(dir) {
       i = 0;
     }
     if (i != 0) {
-      //showcell(playerx, playery); // TODO?
+      showcell(player.x, player.y);
     }
   }
 }

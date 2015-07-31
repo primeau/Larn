@@ -216,6 +216,7 @@ function act_open_door(x, y) {
       default:
         break;
     }
+    updateLog("  The door doesn't budge");
     return (0);
   } else {
     //know[x][y] = 0;

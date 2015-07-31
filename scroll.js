@@ -105,16 +105,16 @@ function read_scroll(scroll) {
       break;
 
     case 2:
-      updateLog("TODO: read_scroll(): enlightenment");
-      // lprcat("\nYou have been granted enlightenment!");
-      // yh = min(playery + 7, MAXY);
-      // xh = min(playerx + 25, MAXX);
-      // yl = max(playery - 7, 0);
-      // xl = max(playerx - 25, 0);
-      // for (i = yl; i < yh; i++)
-      //         for (j = xl; j < xh; j++)
-      //                 know[j][i] = KNOWALL;
-      // draws(xl, xh, yl, yh);
+      /* enlightenment */
+      updateLog("You have been granted enlightenment!");
+      var yh = Math.min(player.y + 7, MAXY);
+      var xh = Math.min(player.x + 25, MAXX);
+      var yl = Math.max(player.y - 7, 0);
+      var xl = Math.max(player.x - 25, 0);
+      for (var i = xl; i < xh; i++)
+        for (var j = yl; j < yh; j++)
+          player.level.know[i][j] = KNOWALL;
+      //draws(xl, xh, yl, yh);
       break;
 
     case 3:
@@ -137,13 +137,15 @@ function read_scroll(scroll) {
       break;
 
     case 7:
-      updateLog("TODO: read_scroll(): time warp");
-      // gtime += (i = rnd(1000) - 850); /* time warp */
-      // if (i >= 0)
-      //         lprintf("\nYou went forward in time by %d mobuls", (long) ((i + 99) / 100));
-      // else
-      //         lprintf("\nYou went backward in time by %d mobuls", (long) (-(i + 99) / 100));
-      // adjtime((long) i); /* adjust time for time warping */
+      /* time warp */
+      var i = rnd(1000) - 850;
+      gtime += i;
+      var mobuls = Math.abs(Math.floor((i + 99) / 100));
+      if (i >= 0)
+        updateLog(`You went forward in time by ${mobuls} mobuls`);
+      else
+        updateLog(`You went backward in time by ${mobuls} mobuls`);
+      adjtime(i); /* adjust time for time warping */
       break;
 
     case 8:
@@ -163,10 +165,10 @@ function read_scroll(scroll) {
 
     case 11:
       /* monster healing */
-      for (var i = 0; i < MAXY; i++)
-        for (var j = 0; j < MAXX; j++)
-          if (player.level.monsters[j][i] != null)
-            player.level.monsters[j][i].hitpoints = monsterlist[player.level.monsters[j][i].arg].hitpoints;
+      for (var j = 0; j < MAXY; j++)
+        for (var i = 0; i < MAXX; i++)
+          if (player.level.monsters[i][j] != null)
+            player.level.monsters[i][j].hitpoints = monsterlist[player.level.monsters[i][j].arg].hitpoints;
       break;
 
     case 12:
@@ -186,12 +188,11 @@ function read_scroll(scroll) {
 
     case 15:
       /* magic mapping */
-      updateLog("TODO: read_scroll(): magic mapping");
-      // lprcat("\nYou have been granted enlightenment!");
-      // for (i = 0; i < MAXY; i++)
-      //         for (j = 0; j < MAXX; j++)
-      //                 know[j][i] = KNOWALL;
-      // draws(0, MAXX, 0, MAXY);
+      updateLog("You have been granted enlightenment!");
+      for (var i = 0; i < MAXX; i++)
+        for (var j = 0; j < MAXY; j++)
+          player.level.know[i][j] = KNOWALL;
+      //draws(0, MAXX, 0, MAXY);
       break;
 
     case 16:

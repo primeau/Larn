@@ -30,18 +30,11 @@ function createRandomMaze(depth) {
 }; // getRandomMaze
 
 function initGrid(width, height) {
-  // initialize the grid[][] Array
   var grid = new Array(width);
   for (var x = 0; x < width; x++) {
     grid[x] = new Array(height);
     grid[x] = new Array(height);
   }
-  // // initialize each element in the array
-  // for (var x = 0 ; x < MAXX ; x++) {
-  //   for (var y = 0 ; y < MAXY ; y++) {
-  //      grid[x][y] = "";
-  //   } // inner for
-  // } // outer for
   return grid;
 }
 
@@ -78,7 +71,7 @@ const MAZES = [
 #  .  # # # # ## #-  # # #    -     D #### # # . D    # #.# # ... #\
 #     # #.# #    #   # # #   . .    # #    # #   #    # #-# # ~.! #\
 ###D### ### #######D## # ############ ###### ########## ### #######\
-#                    #  @          .#        #     .....       ...#\
+#                    #  #          .#        #     .....       ...#\
 ###D###########################################################D###\
 #  .  #.....#     #     #     #    -#     #     #     #     #     #\
 #      .....    .       D           D                 D     D.    #\
@@ -230,7 +223,7 @@ const MAZES = [
 #  .  # #-# # ## #-  # # #    -     D ## # # # . D #### #.# # ... #\
 #     # #-# #    #   # # #   . .    # #    # #   #    # #-# # -.- #\
 ###D### ### ####### ## # ############ ###### ########## ### ###D###\
-#                    #  @          .               .....       ...#\
+#                    #  #          .               .....       ...#\
 #####################################           ###############D###\
 #  .  #.....#     #     #     #    -#           #     #     #     #\
 #      .....    .       D           D                 D     D.    #\

@@ -132,87 +132,87 @@ function newobject(lev) {
   else if (lev > 4) tmp = rnd(39);
   else tmp = rnd(33);
 
-  var j = nobjtab[tmp]; /* the object type */
-  var i = 0;
+  var item = nobjtab[tmp]; /* the object type */
+  var arg = 0;
 
   switch (tmp) {
     case 1:
     case 2:
     case 3:
     case 4:
-      i = newscroll();
+      arg = newscroll();
       break; /* scroll */
     case 5:
     case 6:
     case 7:
     case 8:
-      i = newpotion();
+      arg = newpotion();
       break; /* potion */
     case 9:
     case 10:
     case 11:
     case 12:
-      i = rnd((lev + 1) * 10) + lev * 10 + 10;
+      arg = rnd((lev + 1) * 10) + lev * 10 + 10;
       break; /* gold */
     case 13:
     case 14:
     case 15:
     case 16:
-      i = lev;
+      arg = lev;
       break; /* book */
     case 17:
     case 18:
     case 19:
-      i = newdagger();
+      arg = newdagger();
       break; /* dagger */
     case 20:
     case 21:
     case 22:
-      i = newleather();
+      arg = newleather();
       break; /* leather armor */
     case 23:
     case 32:
     case 38:
-      i = rund(lev / 3 + 1);
+      arg = rund(lev / 3 + 1);
       break; /* regen ring, shield, 2-hand sword */
     case 24:
     case 26:
-      i = rnd(lev / 4 + 1);
+      arg = rnd(lev / 4 + 1);
       break; /* prot ring, dexterity ring */
     case 25:
-      i = rund(lev / 4 + 1);
+      arg = rund(lev / 4 + 1);
       break; /* energy ring */
     case 27:
     case 39:
-      i = rnd(lev / 2 + 1);
+      arg = rnd(lev / 2 + 1);
       break; /* strength ring, cleverness ring */
     case 30:
     case 34:
-      i = rund(lev / 2 + 1);
+      arg = rund(lev / 2 + 1);
       break; /* ring mail, flail */
     case 28:
     case 36:
-      i = rund(lev / 3 + 1);
+      arg = rund(lev / 3 + 1);
       break; /* spear, battleaxe */
     case 29:
     case 31:
     case 37:
-      i = rund(lev / 2 + 1);
+      arg = rund(lev / 2 + 1);
       break; /* belt, studded leather, splint */
     case 33:
-      i = 0;
+      arg = 0;
       break; /* fortune cookie */
     case 35:
-      i = newchain();
+      arg = newchain();
       break; /* chain mail */
     case 40:
-      i = newplate();
+      arg = newplate();
       break; /* plate mail */
     case 41:
-      i = newsword();
+      arg = newsword();
       break; /* longsword */
   }
-  return createObject(j, i);
+  return createObject(item, arg);
 }
 
 
@@ -346,7 +346,7 @@ function createmonster(mon, x, y) {
     player.level.monsters[x][y] = monster;
     debug("createmonster: " + mon + " " + monsterlist[mon]);
     //hitp[x][y] = monster[mon].hitpoints;
-    //know[x][y] &= ~KNOWHERE;
+    player.level.know[x][y] &= ~KNOWHERE;
     monster.awake = false;
     switch (mon) {
       case ROTHE:
@@ -619,10 +619,8 @@ function hitplayer(x, y) {
   if (player.CUBEofUNDEAD || player.UNDEADPRO) {
     if (monster.matches(VAMPIRE) || monster.matches(WRAITH) || monster.matches(ZOMBIE)) return;
   }
-
-  // TODO
-  // if ((know[x][y] & KNOWHERE) == 0)
-  //     show1cell(x,y);
+  if ((player.level.know[x][y] & KNOWHERE) == 0)
+      show1cell(x,y);
 
   var bias = player.HARDGAME + 1;
   //hitflag = hit2flag = hit3flag = 1; // TODO
@@ -670,7 +668,6 @@ function hitplayer(x, y) {
       player.losehp(dam);
       //bottomhp();
       //lflushall();
-      ////player.level.paint();
     }
   }
   if (tmp == 0) updateLog(`  The ${monster} missed `);
@@ -708,14 +705,14 @@ function hitmonster(x, y) {
     damage = fullhit(1);
     if (damage < 9999) damage = rnd(damage) + 1;
   } else {
-    updateLog("You missed the " + (blind ? "monster" : monster));
+    updateLog("  You missed the " + (blind ? "monster" : monster));
     hitflag = 0;
   }
   if (hitflag == 1) { /* if the monster was hit */
     if (monster.matches(RUSTMONSTER) || monster.matches(DISENCHANTRESS) || monster.matches(CUBE)) {
       if (player.WIELD != null) {
         if (player.WIELD.arg > -10) {
-          updateLog(`Your weapon is dulled by the ${monster}`);
+          updateLog(`  Your weapon is dulled by the ${monster}`);
           beep();
           player.WIELD.arg--;
 
@@ -738,7 +735,7 @@ function hitmonster(x, y) {
   if (monster.matches(VAMPIRE)) {
     if (monster.hitpoints > 0 && monster.hitpoints < 25) {
       player.level.monsters[x][y] = createNewMonster(BAT);
-      // know[x][y] = 0; // TODO
+      player.level.know[x][y] = 0;
     }
   }
 }
@@ -785,16 +782,15 @@ function hitm(x, y, damage) {
   debug("hitm(): hp = " + monster.hitpoints + "/" + monsterlist[monster.arg].hitpoints);
   if (monster.hitpoints <= 0) {
     player.MONSTKILLED++;
-    updateLog(`The ${monster} died!`);
+    updateLog(`  The ${monster} died!`);
     player.raiseexperience(monster.experience);
     if (monster.gold > 0) {
       dropgold(rnd(monster.gold) + monster.gold);
     }
     monster.dropsomething();
-    //disappear(x, y);
     player.level.monsters[x][y] = null;
+    player.level.know[x][y] = 0;
     //monster = null;
-    ////player.level.paint();
     return fulldamage;
     //return (hpoints); // TODO do i need this?
   }

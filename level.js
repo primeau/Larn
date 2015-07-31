@@ -8,12 +8,14 @@ var Level = {
   depth: -1,
   items: [],
   monsters: [],
+  know: [],
 
   create: function(depth) {
     var mazeTemplate = createRandomMaze(depth);
 
     this.items = initGrid(MAXX, MAXY);
     this.monsters = initGrid(MAXX, MAXY);
+    this.know = initGrid(MAXX, MAXY);
 
     this.depth = depth;
 
@@ -77,6 +79,7 @@ function paint() {
   } else {
     drawmaze();
     botside();
+    bottomline();
   }
 
   blt();
@@ -99,10 +102,46 @@ function blt() {
 // TODO!
 function bot_linex() {}
 
+
+
 //TODO!
 function drawscreen() {
-  //player.level.paint();
+  clear();
+
+  // if (messages_saved) {
+  //   messages_saved = 0;
+  //   os_save_restore_area(1, 0, 20 - 1, 80 - 1, 24 - 1);
+  // }
+  // messages_on = 1;
+  // display_status_info(0);
+
+  var know = player.level.know;
+
+  for (var j = 0; j < MAXY; j++) {
+    cursor(1, 1 + j);
+
+    for (var i = 0; i < MAXX; i++) {
+      if (know[i][j] == 0)
+        lprc(' ');
+      else if (know[i][j] & HAVESEEN) {
+        if (i == player.x && j == player.y)
+          lprc(player.char);
+        else {
+          var monst = monsterAt(i,j);
+          if (monst != null && know[i][j] & KNOWHERE)
+            lprc(monst.char);
+          else
+            lprc(getItem(i,j).char);
+        }
+      } else {
+        lprc(' ');
+        //mitem[i][j] = item[i][j] = 0;
+      }
+    }
+  }
 }
+
+
 
 function drawstore() {
   var doc = document.getElementById("STATS");
@@ -113,6 +152,9 @@ function drawstore() {
 
 
 function drawmaze() {
+  drawscreen();
+  return;
+
   var level = player.level;
   var output = "";
 
@@ -130,7 +172,7 @@ function drawmaze() {
           lprc(level.items[x][y].char);
         }
       } else {
-        lprc(`▓`); // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
+        lprc(player.char); // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
       }
       // HACK
       // HACK
@@ -141,18 +183,6 @@ function drawmaze() {
 
   bottomline();
 
-  // TODO: move to bottomline()?
-  lprcat(player.getStatString());
-  lprc("\n");
-
-  for (var logindex = 0; logindex < LOG.length; logindex++) {
-    cltoeoln();
-    lprcat(LOG[logindex] + "\n");
-  }
-
-  var doc = document.getElementById("STATS");
-  if (doc != null)
-    document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
 }
 
 
@@ -201,12 +231,6 @@ function newcavelevel(depth) {
   // positionplayer();
   // checkgen(); /* wipe out any genocided monsters */
 
-  // TODO
-  // if (wizard || x == 0)
-  //   for (j = 0; j < MAXY; j++)
-  //     for (i = 0; i < MAXX; i++)
-  //       know[i][j] = KNOWALL;
-
   var newLevel = Object.create(Level);
   newLevel.create(depth);
   LEVELS[depth] = newLevel;
@@ -214,4 +238,11 @@ function newcavelevel(depth) {
   sethp(true);
   makeobject(newLevel);
   positionplayer(player.x, player.y, true);
+
+  var wizard = 0;
+  if (wizard || player.level.depth == 0)
+    for (var j = 0; j < MAXY; j++)
+      for (var i = 0; i < MAXX; i++)
+        player.level.know[i][j] = KNOWALL;
+
 }

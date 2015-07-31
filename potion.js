@@ -73,7 +73,7 @@ function act_quaffpotion(index) {
         updateLog(`You don't have item ${index}!`);
       }
       if (useindex <= -1) {
-          appendLog(` cancelled`);
+        appendLog(` cancelled`);
       }
     } else {
       updateLog(`You can't quaff that!`);
@@ -104,7 +104,8 @@ function quaffpotion(potion, set_known) {
   }
 
   switch (potion.arg) {
-    case 0: // sleep
+    case 0:
+      /* sleep */
       updateLog("You fall asleep. . .");
       var sleeplen = rnd(11) - (player.CONSTITUTION >> 2) + 2;
       while (--sleeplen > 0) {
@@ -114,7 +115,8 @@ function quaffpotion(potion, set_known) {
       updateLog("You woke up!");
       break;
 
-    case 1: // healing
+    case 1:
+      /* healing */
       if (player.HP == player.HPMAX) {
         player.raisemhp(1);
       } else {
@@ -123,13 +125,15 @@ function quaffpotion(potion, set_known) {
       updateLog("You feel better");
       break;
 
-    case 2: // raise level
+    case 2:
+      /* raise level */
       player.raiselevel();
       player.raisemhp(1);
       updateLog("Suddenly, you feel much more skillful!");
       break;
 
-    case 3: // increase ability
+    case 3:
+      /* increase ability */
       switch (rund(6)) {
         case 0:
           player.STRENGTH++;
@@ -153,117 +157,92 @@ function quaffpotion(potion, set_known) {
       updateLog("You feel strange for a moment");
       break;
 
-    case 4: // wisdom
+    case 4:
+      /* wisdom */
       player.WISDOM += rnd(2);
       updateLog("You feel more self confident!");
       break;
 
-    case 5: // strength
+    case 5:
+      /* strength */
       player.STRENGTH = Math.max(12, player.STRENGTH + 1);
       updateLog("Wow!  You feel great!");
       break;
 
-    case 6: // charisma
+    case 6:
+      /* charisma */
       player.CHARISMA++;
       updateLog("Your charm went up by one!");
       break;
 
-    case 7: // dizziness
+    case 7:
+      /* dizziness */
       player.STRENGTH = Math.max(3, player.STRENGTH - 1);
       updateLog("You become dizzy!");
       break;
 
-    case 8: // intelligence
+    case 8:
+      /* intelligence */
       player.INTELLIGENCE++;
       updateLog("Your intelligence went up by one!");
       break;
 
     case 9:
-      updateLog("TODO: quaffpotion(): object detection");
-      // updateLog("You sense the presence of objects!");
-      // nap(1000);
-      // if (c[BLINDCOUNT])
-      //   return;
-      // for (i = 0; i < MAXY; i++)
-      //   for (j = 0; j < MAXX; j++)
-      //     switch (item[j][i]) {
-      //       case OPLATE:
-      //       case OCHAIN:
-      //       case OLEATHER:
-      //       case ORING:
-      //       case OSTUDLEATHER:
-      //       case OSPLINT:
-      //       case OPLATEARMOR:
-      //       case OSSPLATE:
-      //       case OSHIELD:
-      //       case OSWORDofSLASHING:
-      //       case OHAMMER:
-      //       case OSWORD:
-      //       case O2SWORD:
-      //       case OSPEAR:
-      //       case ODAGGER:
-      //       case OBATTLEAXE:
-      //       case OLONGSWORD:
-      //       case OFLAIL:
-      //       case OLANCE:
-      //       case ORINGOFEXTRA:
-      //       case OREGENRING:
-      //       case OPROTRING:
-      //       case OENERGYRING:
-      //       case ODEXRING:
-      //       case OSTRRING:
-      //       case OCLEVERRING:
-      //       case ODAMRING:
-      //       case OBELT:
-      //       case OSCROLL:
-      //       case OPOTION:
-      //       case OBOOK:
-      //       case OCHEST:
-      //       case OAMULET:
-      //       case OORBOFDRAGON:
-      //       case OSPIRITSCARAB:
-      //       case OCUBEofUNDEAD:
-      //       case ONOTHEFT:
-      //       case OCOOKIE:
-      //         know[j][i] = HAVESEEN;
-      //         show1cell(j, i);
-      //         break;
-      //     }
-      // showplayer();
+      /* object detection */
+      updateLog("You sense the presence of objects!");
+      nap(1000);
+      if (player.BLINDCOUNT > 0)
+        return;
+        for (var i = 0; i < MAXX; i++)
+          for (var j = 0; j < MAXY; j++) {
+          var item = getItem(i,j);
+          if (item.carry &&
+            !item.isGem() &&
+            !item.matches(OLARNEYE) &&
+            !item.matches(OGOLDPILE)) {
+            player.level.know[i][j] = HAVESEEN;
+            show1cell(i, j);
+          }
+        }
+      showplayer();
       break;
 
     case 10:
       /* monster detection */
-      updateLog("TODO: quaffpotion(): monster detection");
-      // updateLog("You detect the presence of monsters!");
-      // nap(1000);
-      // if (c[BLINDCOUNT])
-      //   return;
-      // for (i = 0; i < MAXY; i++)
-      //   for (j = 0; j < MAXX; j++)
-      //     if (mitem[j][i] && (monstnamelist[mitem[j][i]] != floorc)) {
-      //       know[j][i] = HAVESEEN;
-      //       show1cell(j, i);
-      //     }
+      updateLog("You detect the presence of monsters!");
+      nap(1000);
+      if (player.BLINDCOUNT > 0)
+        return;
+      for (var i = 0; i < MAXX; i++)
+        for (var j = 0; j < MAXY; j++) {
+          var monster = monsterAt(i, j);
+          if (monster != null && (monster.char != OEMPTY.char)) {
+            player.level.know[i][j] = HAVESEEN;
+            show1cell(i, j);
+          }
+        }
       break;
 
     case 11:
-      updateLog("TODO: quaffpotion(): forgetfulness");
-      // lprcat("\nYou stagger for a moment . .");
-      // for (i = 0; i < MAXY; i++)
-      //   for (j = 0; j < MAXX; j++)
-      //     know[j][i] = 0;
-      // nap(1000);
-      // draws(0, MAXX, 0, MAXY); /* potion of forgetfulness */
+      /* potion of forgetfulness */
+      updateLog("You stagger for a moment . .");
+      for (var i = 0; i < MAXX; i++)
+        for (var j = 0; j < MAXY; j++) {
+          player.level.know[i][j] = 0;
+          nap(1000);
+        }
+        //draws(0, MAXX, 0, MAXY);
       break;
 
-    case 12: // water
+    case 12:
+      /* water */
       updateLog("This potion has no taste to it");
       break;
 
     case 13:
+      /* blindness */
       player.BLINDCOUNT += 500;
-      updateLog("You can't see anything!"); /* blindness */
+      updateLog("You can't see anything!");
       break;
 
     case 14:
@@ -302,46 +281,42 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 19:
-      updateLog("TODO: quaffpotion(): treasure finding");
-      // lprcat("\nYou feel greedy . . .");
-      // nap(1000);
-      // if (c[BLINDCOUNT])
-      //   return;
-      // for (i = 0; i < MAXY; i++)
-      //   for (j = 0; j < MAXX; j++) {
-      //     k = item[j][i];
-      //     if ((k == ODIAMOND) ||
-      //       (k == ORUBY) ||
-      //       (k == OEMERALD) ||
-      //       (k == OMAXGOLD) ||
-      //       (k == OSAPPHIRE) ||
-      //       (k == OLARNEYE) ||
-      //       (k == OGOLDPILE)) {
-      //       know[j][i] = HAVESEEN;
-      //       show1cell(j, i);
-      //     }
-      //   }
-      // showplayer();
+      updateLog("You feel greedy . . .");
+      nap(1000);
+      if (player.BLINDCOUNT > 0)
+        return;
+      for (var i = 0; i < MAXX; i++)
+        for (var j = 0; j < MAXY; j++) {
+          var item = getItem(i, j);
+          if (item.isGem() || item.matches(OLARNEYE) || item.matches(OGOLDPILE)) {
+            player.level.know[i][j] = HAVESEEN;
+            show1cell(i, j);
+          }
+        }
+      showplayer();
       break;
 
-    case 20: // instant healing
+    case 20:
+      /* instant healing */
       player.HP = player.HPMAX;
       break;
 
-    case 21: // cure dianthroritis
+    case 21:
+      /* cure dianthroritis */
       updateLog("You don't seem to be affected");
       break;
 
     case 22:
+      /* poison */
       player.HALFDAM += 200 + rnd(200);
-      updateLog("You feel a sickness engulf you"); /* poison */
+      updateLog("You feel a sickness engulf you");
       break;
 
     case 23:
+      /* see invisible */
       player.SEEINVISIBLE += rnd(1000) + 400;
       monsterlist[INVISIBLESTALKER].char = 'I';
-      updateLog("You feel your vision sharpen"); /* see invisible */
+      updateLog("You feel your vision sharpen");
       break;
   };
-  // //player.level.paint(); /* show new stats      */
 }

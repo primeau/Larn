@@ -157,7 +157,7 @@ function fillmonst(what) {
       (player.level.monsters[x][y] == null) && //
       ((player.x != x) || (player.y != y))) {
       player.level.monsters[x][y] = monster;
-      // know[x][y] &= ~KNOWHERE; //TODO what is this for?
+      player.level.know[x][y] &= ~KNOWHERE; //TODO what is this for?
       // hitp[x][y] = monster[what].hitpoints;
       return (0);
     }
