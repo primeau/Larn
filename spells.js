@@ -7,6 +7,9 @@ function learnSpell(spell) {
   knownSpells[spelcode.indexOf(spell)] = spell;
 }
 
+function forgetSpell(spellnum) {
+  knownSpells[spellnum] = null;
+}
 
 
 var eys = "Enter your spell: ";
@@ -106,11 +109,11 @@ function speldamage(x) {
 
     case 1:
       /* magic missile */
-      function magic_missile (direction) {
+      function spell_magic_missile(direction) {
         var damage = rnd(((clev + 1) << 1)) + clev + 3;
         setup_godirect(100, MLE, direction, damage, '+');
       }
-      prepare_direction_event(magic_missile);
+      prepare_direction_event(spell_magic_missile);
       return;
 
     case 2:
@@ -475,7 +478,7 @@ function speldamage(x) {
       //     }
       //     loseint();
       //     draws(0, MAXX, 0, MAXY);
-      //     if (wizard == 0) spelknow[36] = 0;
+      //     if (wizard == 0) spelknow(36) = 0;
       //     free((char * ) save);
       //     positionplayer();
       return;
@@ -483,10 +486,10 @@ function speldamage(x) {
       //
 
     case 37:
-      updateLog("TODO: permanence");
-      //   /* permanence */ adjtime(-99999 L);
-      //   spelknow[37] = 0; /* forget */
-      //   loseint();
+      /* permanence */
+      adjtime(-99999);
+      forgetSpell(37); /* forget */
+      loseint();
       return;
 
     default:
