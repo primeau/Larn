@@ -71,7 +71,7 @@ function act_read_something(index) {
         updateLog(`You don't have item ${index}!`);
       }
       if (useindex <= -1) {
-          appendLog(` cancelled`);
+        appendLog(` cancelled`);
       }
     } else {
       updateLog(`You can't read that!`);
@@ -260,8 +260,13 @@ function read_scroll(scroll) {
 
     case 22:
       /* pulverization */
-      updateLog("TODO: read_scroll(): pulverization");
-      // godirect(22, 150, "The ray hits the %s", 0, ' ');
+      var pulverize_message = function(monster) {
+        return `  The ray hits the ${monster}`;
+      }
+      var scroll_pulverize = function(direction) {
+        setup_godirect(10, LIT /* same as LIT */ , direction, 150, ' ', pulverize_message);
+      }
+      prepare_direction_event(scroll_pulverize);
       break;
 
     case 23:
@@ -269,5 +274,4 @@ function read_scroll(scroll) {
       player.LIFEPROT++;
       break;
   };
-  // //player.level.paint(); /* show new stats      */
 }

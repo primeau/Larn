@@ -106,7 +106,11 @@ function speldamage(x) {
 
     case 1:
       /* magic missile */
-      prepare_direction_event(spell_magic_missile);
+      function magic_missile (direction) {
+        var damage = rnd(((clev + 1) << 1)) + clev + 3;
+        setup_godirect(100, MLE, direction, damage, '+');
+      }
+      prepare_direction_event(magic_missile);
       return;
 
     case 2:
@@ -117,6 +121,10 @@ function speldamage(x) {
 
     case 3:
       /*    sleep   */
+      function spell_sleep(direction) {
+        var hits = rnd(3) + 1;
+        direct(SLE, direction, fullhit(hits), hits);
+      }
       prepare_direction_event(spell_sleep);
       return;
 
@@ -127,6 +135,10 @@ function speldamage(x) {
 
     case 5:
       /* sonic spear */
+      function spell_sonic_spear(direction) {
+        var damage = rnd(10) + 15 + player.LEVEL;
+        setup_godirect(70, SSP, direction, damage, '@');
+      }
       prepare_direction_event(spell_sonic_spear);
       return;
 
@@ -134,6 +146,10 @@ function speldamage(x) {
 
     case 6:
       /* web */
+      function spell_web(direction) {
+        var hits = rnd(3) + 2;
+        direct(WEB, direction, fullhit(hits), hits);
+      }
       prepare_direction_event(spell_web);
       return;
 
@@ -174,6 +190,13 @@ function speldamage(x) {
 
     case 12:
       /* phantasmal forces */
+      function spell_phantasmal(direction) {
+        if (rnd(11) + 7 <= player.WISDOM) {
+          direct(PHA, direction, rnd(20) + 20 + player.LEVEL, 0)
+        } else {
+          updateLog("  It didn't believe the illusions!");
+        }
+      }
       prepare_direction_event(spell_phantasmal);
       return;
 
@@ -193,11 +216,19 @@ function speldamage(x) {
 
     case 14:
       /*    fireball */
+      function spell_fireball(direction) {
+        var damage = rnd(25 + player.LEVEL) + 25 + player.LEVEL;
+        setup_godirect(40, BAL, direction, damage, '*');
+      }
       prepare_direction_event(spell_fireball);
       return;
 
     case 15:
       /*  cold */
+      function spell_cold(direction) {
+        var damage = rnd(25) + 20 + player.LEVEL;
+        setup_godirect(60, CLD, direction, damage, 'O');
+      }
       prepare_direction_event(spell_cold);
       return;
 
@@ -259,16 +290,28 @@ function speldamage(x) {
 
     case 21:
       /* dehydration */
+      function spell_dry(direction) {
+        direct(DRY, direction, 100 + player.LEVEL, 0);
+      }
       prepare_direction_event(spell_dry);
       return;
 
     case 22:
       /*  lightning */
+      function spell_lightning(direction) {
+        var damage = rnd(25) + 20 + (player.LEVEL << 1);
+        setup_godirect(10, LIT, direction, damage, '~');
+      }
       prepare_direction_event(spell_lightning);
       return;
 
     case 23:
       /* drain life */
+      function spell_drain(direction) {
+        var damage = Math.min(player.HP - 1, player.HPMAX / 2);
+        direct(DRL, direction, damage + damage, 0);
+        player.HP -= Math.round(damage);
+      }
       prepare_direction_event(spell_drain);
       return;
 
@@ -286,6 +329,13 @@ function speldamage(x) {
 
     case 26:
       /* finger of death */
+      function spell_finger(direction) {
+        if (player.WISDOM > rnd(10) + 10) {
+          direct(FGR, direction, 2000, 0);
+        } else {
+          updateLog("  It didn't work");
+        }
+      }
       if (rnd(151) != 63) {
         prepare_direction_event(spell_finger);
       } else {
@@ -350,6 +400,9 @@ function speldamage(x) {
 
     case 34:
       /* summon demon */
+      function spell_summon(direction) {
+        direct(SUM, direction, 150, 0);
+      }
       if (rnd(100) > 30) {
         prepare_direction_event(spell_summon);
       } else if (rnd(100) > 15) {
@@ -445,56 +498,6 @@ function speldamage(x) {
 
 
 
-function spell_magic_missile(direction) {
-  var damage = rnd(((player.LEVEL + 1) << 1)) + player.LEVEL + 3;
-  setup_godirect(100, MLE, direction, damage, '+');
-}
-
-
-
-function spell_sleep(direction) {
-  var hits = rnd(3) + 1;
-  direct(SLE, direction, fullhit(hits), hits);
-}
-
-
-
-function spell_sonic_spear(direction) {
-  var damage = rnd(10) + 15 + player.LEVEL;
-  setup_godirect(70, SSP, direction, damage, '@');
-}
-
-
-
-function spell_web(direction) {
-  var hits = rnd(3) + 2;
-  direct(WEB, direction, fullhit(hits), hits);
-}
-
-
-
-function spell_phantasmal(direction) {
-  if (rnd(11) + 7 <= player.WISDOM) {
-    direct(PHA, direction, rnd(20) + 20 + player.LEVEL, 0)
-  } else {
-    updateLog("  It didn't believe the illusions!");
-  }
-}
-
-
-
-function spell_fireball(direction) {
-  var damage = rnd(25 + player.LEVEL) + 25 + player.LEVEL;
-  setup_godirect(40, BAL, direction, damage, '*');
-}
-
-
-
-function spell_cold(direction) {
-  var damage = rnd(25) + 20 + player.LEVEL;
-  setup_godirect(60, CLD, direction, damage, 'O');
-}
-
 
 
 /*
@@ -536,36 +539,6 @@ function spell_polymorph(direction) {
 
 
 
-function spell_dry(direction) {
-  direct(DRY, direction, 100 + player.LEVEL, 0);
-}
-
-
-
-function spell_lightning(direction) {
-  var damage = rnd(25) + 20 + (player.LEVEL << 1);
-  setup_godirect(10, LIT, direction, damage, '~');
-}
-
-
-
-function spell_drain(direction) {
-  var damage = Math.min(player.HP - 1, player.HPMAX / 2);
-  direct(DRL, direction, damage + damage, 0);
-  player.HP -= Math.round(damage);
-}
-
-
-
-function spell_finger(direction) {
-  if (player.WISDOM > rnd(10) + 10) {
-    direct(FGR, direction, 2000, 0);
-  } else {
-    updateLog("  It didn't work");
-  }
-}
-
-
 
 /*
  *  tdirect(spnum)      Routine to teleport away a monster
@@ -598,11 +571,6 @@ function spell_teleport(direction) {
   }
 }
 
-
-
-function spell_summon(direction) {
-  direct(SUM, direction, 150, 0);
-}
 
 
 
@@ -757,9 +725,9 @@ function direct(spnum, direction, dam, arg) {
 
 
 
-function setup_godirect(delay, spnum, direction, damage, cshow) {
+function setup_godirect(delay, spnum, direction, damage, cshow, stroverride) {
   napping = true;
-  setTimeout(godirect, delay, spnum, player.x, player.y, diroffx[direction], diroffy[direction], damage, delay, cshow);
+  setTimeout(godirect, delay, spnum, player.x, player.y, diroffx[direction], diroffy[direction], damage, delay, cshow, stroverride);
 }
 
 
@@ -774,7 +742,7 @@ function setup_godirect(delay, spnum, direction, damage, cshow) {
  *    locations in delay, and the character to represent the weapon in cshow.
  *  Returns no value.
  */
-function godirect(spnum, x, y, dx, dy, dam, delay, cshow) {
+function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
   /* bad args */
   //if (spnum < 0 || spnum >= SPNUM || str == 0 || delay < 0) return;
@@ -824,7 +792,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow) {
 
   var monster = monsterAt(x, y);
   var item = getItem(x, y);
-  var str = attackmessage[spnum];
+  var str = stroverride || attackmessage[spnum];
 
   /* is there a monster there? */
   if (monster != null) {
@@ -932,7 +900,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow) {
 
   if (dam > 0) {
     blt();
-    setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, delay, cshow);
+    setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, delay, cshow, stroverride);
   } else {
     paint();
     napping = false;
