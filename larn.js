@@ -172,7 +172,7 @@ function moveplayer(dir) {
   if ((!prompt_mode) &&
     (getItem(player.x, player.y).matches(OALTAR)) &&
     (!prayed)) {
-    updateLog("You have ignored the altar!");
+    updateLog("  You have ignored the altar!");
     act_ignore_altar();
   }
   prayed = 0;

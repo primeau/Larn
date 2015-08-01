@@ -23,7 +23,7 @@ function act_remove_gems(arg) {
     player.level.items[player.x][player.y].arg = 1;
     //know[player.x][player.y] = 0;
   } else {
-    updateLog("Nothing happens");
+    updateLog("  Nothing happens");
   }
   return;
 }
@@ -46,11 +46,11 @@ function act_sit_throne(arg) {
     player.level.items[player.x][player.y].arg = 1;
     //know[player.x][player.y] = 0;
   } else if (k < 35) {
-    updateLog("Zaaaappp!  You've been teleported!");
+    updateLog("  Zaaaappp!  You've been teleported!");
     beep();
     oteleport(0);
   } else {
-    updateLog("Nothing happens");
+    updateLog("  Nothing happens");
   }
   return;
 }
@@ -63,7 +63,7 @@ function act_sit_throne(arg) {
 */
 function act_drink_fountain() {
   if (rnd(1501) < 2) {
-    updateLog("Oops!  You seem to have caught the dreadful sleep!");
+    updateLog("  Oops! You seem to have caught the dreadful sleep!");
     beep();
     lflush();
     sleep(3);
@@ -74,12 +74,12 @@ function act_drink_fountain() {
   var x = rnd(100);
   if (x < 7) {
     player.HALFDAM += 200 + rnd(200);
-    updateLog("You feel a sickness coming on");
+    updateLog("  You feel a sickness coming on");
   } else if (x < 13)
     quaffpotion(createObject(OPOTION, 23), false); /* see invisible,but don't know the potion */
 
   else if (x < 45)
-    updateLog("nothing seems to have happened");
+    updateLog("  Nothing seems to have happened");
 
   else if (rnd(3) != 2)
     fntchange(1); /*  change char levels upward   */
@@ -88,7 +88,7 @@ function act_drink_fountain() {
     fntchange(-1); /*  change char levels downward */
 
   if (rnd(12) < 3) {
-    updateLog("The fountains bubbling slowly quiets");
+    updateLog("  The fountains bubbling slowly quiets");
     setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
     //know[playerx][playery]=0;
   }
@@ -104,19 +104,19 @@ function act_drink_fountain() {
 function act_wash_fountain() {
   if (rnd(100) < 11) {
     var x = rnd((player.level.depth << 2) + 2);
-    updateLog(`Oh no!  The water was foul!  You suffer ${x} hit points!`);
+    updateLog(`  Oh no!  The water was foul!  You suffer ${x} hit points!`);
     lastnum = 273;
     player.losehp(x);
     // bottomline();
     // cursors();
   } else if (rnd(100) < 29) {
-    updateLog("You got the dirt off!");
+    updateLog("  You got the dirt off!");
   } else if (rnd(100) < 31) {
-    updateLog("This water seems to be hard water!  The dirt didn't come off!");
+    updateLog("  This water seems to be hard water!  The dirt didn't come off!");
   } else if (rnd(100) < 34) {
     createmonster(WATERLORD); /*    make water lord     */
   } else {
-    updateLog("nothing seems to have happened");
+    updateLog("  Nothing seems to have happened");
   }
   //player.level.paint();
   return;
@@ -136,11 +136,11 @@ function act_open_chest(x, y) {
     return;
   }
   if (rnd(101) < 40) {
-    updateLog("The chest explodes as you open it");
+    updateLog("  The chest explodes as you open it");
     beep();
     var i = rnd(10);
     lastnum = 281; /* in case he dies */
-    updateLog(`You suffer ${i} hit points damage!`);
+    updateLog(`  You suffer ${i} hit points damage!`);
     if (i > 0) {
       player.losehp(i);
       //bottomhp();
@@ -148,20 +148,20 @@ function act_open_chest(x, y) {
     switch (rnd(10)) /* see if he gets a curse */ {
       case 1:
         player.ITCHING += rnd(1000) + 100;
-        updateLog("You feel an irritation spread over your skin!");
+        updateLog("  You feel an irritation spread over your skin!");
         beep();
         break;
 
       case 2:
         player.CLUMSINESS += rnd(1600) + 200;
-        updateLog("You begin to lose hand to eye coordination!");
+        updateLog("  You begin to lose hand to eye coordination!");
         beep();
         break;
 
       case 3:
         player.HALFDAM += rnd(1600) + 200;
         beep();
-        updateLog("A sickness engulfs you!");
+        updateLog("  A sickness engulfs you!");
         break;
     };
     player.level.items[x][y] = createObject(OEMPTY); /* destroy the chest */
@@ -174,7 +174,7 @@ function act_open_chest(x, y) {
       something(chest.arg + 2);
     }
   } else
-    updateLog("Nothing happens");
+    updateLog("  Nothing happens");
   return;
 }
 
@@ -199,7 +199,7 @@ function act_open_door(x, y) {
         break;
 
       case 7:
-        updateLog("You are jolted by an electric shock ");
+        updateLog("  You are jolted by an electric shock ");
         player.lastnum = 274;
         player.losehp(rnd(20));
         break;
@@ -209,7 +209,7 @@ function act_open_door(x, y) {
         break;
 
       case 9:
-        updateLog("You suddenly feel weaker ");
+        updateLog("  You suddenly feel weaker ");
         player.STRENGTH = Math.max(3, player.STRENGTH - 1);
         break;
 

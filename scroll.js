@@ -68,13 +68,13 @@ function act_read_something(index) {
   } else {
     if (item == null) {
       if (useindex >= 0 && useindex < 26) {
-        updateLog(`You don't have item ${index}!`);
+        updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
         appendLog(` cancelled`);
       }
     } else {
-      updateLog(`You can't read that!`);
+      updateLog(`  You can't read that!`);
     }
   }
   return 1;
@@ -95,18 +95,18 @@ function read_scroll(scroll) {
     case 0:
       /* enchant armor */
       if (enchantarmor())
-        updateLog("Your armor glows for a moment");
+        updateLog("  Your armor glows for a moment");
       break;
 
     case 1:
       /* enchant weapon */
       if (enchweapon())
-        updateLog("Your weapon glows for a moment");
+        updateLog("  Your weapon glows for a moment");
       break;
 
     case 2:
       /* enlightenment */
-      updateLog("You have been granted enlightenment!");
+      updateLog("  You have been granted enlightenment!");
       var yh = Math.min(player.y + 7, MAXY);
       var xh = Math.min(player.x + 25, MAXX);
       var yl = Math.max(player.y - 7, 0);
@@ -118,7 +118,7 @@ function read_scroll(scroll) {
       break;
 
     case 3:
-      updateLog("This scroll seems to be blank");
+      updateLog("  This scroll seems to be blank");
       break;
 
     case 4:
@@ -142,9 +142,9 @@ function read_scroll(scroll) {
       gtime += i;
       var mobuls = Math.abs(Math.floor((i + 99) / 100));
       if (i >= 0)
-        updateLog(`You went forward in time by ${mobuls} mobuls`);
+        updateLog(`  You went forward in time by ${mobuls} mobuls`);
       else
-        updateLog(`You went backward in time by ${mobuls} mobuls`);
+        updateLog(`  You went backward in time by ${mobuls} mobuls`);
       adjtime(i); /* adjust time for time warping */
       break;
 
@@ -188,7 +188,7 @@ function read_scroll(scroll) {
 
     case 15:
       /* magic mapping */
-      updateLog("You have been granted enlightenment!");
+      updateLog("  You have been granted enlightenment!");
       for (var i = 0; i < MAXX; i++)
         for (var j = 0; j < MAXY; j++)
           player.level.know[i][j] = KNOWALL;

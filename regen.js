@@ -69,8 +69,8 @@ function regen() {
     if (--player.SEEINVISIBLE <= 0) {
       monsterlist[INVISIBLESTALKER].char = OEMPTY.char;
       if (!player.BLINDCOUNT) {
-        drawscreen();
-        cursors();
+        //drawscreen();
+        //cursors();
         updateLog("You feel your vision return to normal");
       }
     }
@@ -82,12 +82,12 @@ function regen() {
         if (rnd(100) < 50) {
           player.WEAR = null;
           player.SHIELD = null;
-          cursors();
+          //cursors();
           updateLog("The hysteria of itching forces you to remove your armor!");
           recalc();
         }
     if (--player.ITCHING <= 0) {
-      cursors();
+      //cursors();
       updateLog("You now feel the irritation subside!");
     }
   }
@@ -102,7 +102,7 @@ function regen() {
             drop_object(dropindex);
           }
     if (--player.CLUMSINESS <= 0) {
-      cursors();
+      //cursors();
       updateLog("You now feel less awkward!");
     }
   }

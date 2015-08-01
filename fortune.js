@@ -1,11 +1,11 @@
 "use strict";
 
 function outfortune() {
-  updateLog("The cookie was delicious.");
+  updateLog("  The cookie was delicious.");
   if (player.BLINDCOUNT)
     return;
   var fortune = ftn[rund(ftn.length)];
-  updateLog("Inside you find a scrap of paper that says:");
+  updateLog("  Inside you find a scrap of paper that says:");
   updateLog(`  ${fortune}`);
 }
 
@@ -21,13 +21,13 @@ function act_eatcookie(index) {
     if (item == null) {
       //debug(useindex);
       if (useindex >= 0 && useindex < 26) {
-        updateLog(`You don't have item ${index}!`);
+        updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
           appendLog(` cancelled`);
       }
     } else {
-      updateLog(`You can't eat that!`);
+      updateLog(`  You can't eat that!`);
     }
   }
   return 1;
@@ -62,10 +62,10 @@ const ftn = [
   `Don't fall into a bottomless pit`,
   `Dexterity allows you to carry more`,
   `You can get 2 points of WC for the price of one`,
-  `Never enter the dungeon naked!  the monsters will laugh at you!`,
+  `Never enter the dungeon naked! The monsters will laugh at you!`,
   `Did someone put itching powder in your armor?`,
   `You klutz!`,
-  `Avoid opening doors.  You never know whats on the other side.`,
+  `Avoid opening doors. You never know whats on the other side.`,
   `Infinite regeneration ---> temptation`,
   `The greatest weapon in the game has not the highest Weapon Class`,
   `You can't buy the most powerful scroll`,

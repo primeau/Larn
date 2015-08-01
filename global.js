@@ -1,9 +1,5 @@
 "use strict";
 
-
-
-
-
 /*
     recalc()    function to recalculate the weapon and armor class of the player
  */
@@ -108,7 +104,7 @@ function enchantarmor() {
   } else {
     cursors();
     beep();
-    updateLog("You feel a sense of loss");
+    updateLog("  You feel a sense of loss");
     return false;
   }
   if (!tmp.matches(OSCROLL) && !tmp.matches(OPOTION)) {
@@ -127,7 +123,7 @@ function enchweapon() {
   if (tmp == null) {
     cursors();
     beep();
-    updateLog("You feel a sense of loss");
+    updateLog("  You feel a sense of loss");
     return false;
   }
   if (!tmp.matches(OSCROLL) && !tmp.matches(OPOTION)) {
@@ -192,6 +188,7 @@ function packweight() {
   var weight = player.GOLD / 1000;
   for (var i = 0; i < player.inventory.length; i++) {
     var item = player.inventory[i];
+    if (item == null) continue;
     switch (item.id) {
       case OSSPLATE.id:
       case OPLATEARMOR.id:

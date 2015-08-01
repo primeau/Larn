@@ -88,7 +88,7 @@ function makeobject(level) {
   fillmroom(rund(2), OTHRONE, 0);
   fillmroom(rund(3), OALTAR, 0);
   fillmroom(rund(3), OSTATUE, 0);
-  fillmroom(rund(3),OCOOKIE,0);
+  fillmroom(rund(3), OCOOKIE, 0);
   if (level.depth == 1) fillmroom(1, OCHEST, level.depth);
   else fillmroom(rund(2), OCHEST, level.depth);
 
@@ -98,6 +98,9 @@ function makeobject(level) {
     fillroom(OPOTION, newpotion());
   for (var numscrolls = rnd(5) + 3; numscrolls > 0; numscrolls--)
     fillroom(OSCROLL, newscroll());
+
+  if (level.depth == 5)
+    fillroom(OBANK2, 0); /* branch office of the bank */
 
   froom(2, ORING, 0); /* a ring mail          */
   froom(1, OSTUDLEATHER, 0); /* a studded leather    */

@@ -77,7 +77,7 @@ function paint() {
   if (IN_STORE) {
     drawstore();
   } else {
-    drawmaze();
+    drawscreen();
     botside();
     bottomline();
   }
@@ -129,7 +129,7 @@ function drawscreen() {
         else {
           var monst = monsterAt(i,j);
           if (monst != null && know[i][j] & KNOWHERE)
-            lprc(monst.char);
+            lprc(monst.getChar());
           else
             lprc(getItem(i,j).char);
         }
@@ -149,41 +149,6 @@ function drawstore() {
     document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
 }
 
-
-
-function drawmaze() {
-  drawscreen();
-  return;
-
-  var level = player.level;
-  var output = "";
-
-  cursor(1, 1);
-  for (var y = 0; y < MAXY; y++) {
-    for (var x = 0; x < MAXX; x++) {
-      // HACK
-      // HACK
-      // HACK
-      if (x != player.x || y != player.y) {
-        if (level.monsters[x][y] != null) {
-          lprc(monsterlist[level.monsters[x][y].arg].char);
-        } else {
-          //debug(`drawmaze: ${x},${y} ${player.level.items[x][y]}`);
-          lprc(level.items[x][y].char);
-        }
-      } else {
-        lprc(player.char); // http://www.iam.uni-bonn.de/~alt/html/unicode_172.html
-      }
-      // HACK
-      // HACK
-      // HACK
-    } // inner for
-    lprc("\n");
-  } // outer for
-
-  bottomline();
-
-}
 
 
 /*

@@ -40,7 +40,7 @@ function drop_object(index) {
 
   if (item == null) {
     if (useindex >= 0 && useindex < 26) {
-      updateLog(`You don't have item ${index}!`);
+      updateLog(`  You don't have item ${index}!`);
     }
     if (useindex <= -1) {
         appendLog(` cancelled`);
@@ -50,7 +50,7 @@ function drop_object(index) {
 
   if (isItemAt(player.x, player.y)) {
     beep();
-    updateLog("There's something here already");
+    updateLog("  There's something here already");
     return 1;
   }
 

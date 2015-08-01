@@ -231,7 +231,7 @@ var Player = {
     if (i != player.LEVEL) {
       cursors();
       beep();
-      updateLog(`You went down to level ${player.LEVEL}!`);
+      updateLog(`  You went down to level ${player.LEVEL}!`);
     }
     bottomline();
   },
@@ -325,7 +325,7 @@ function wield(index) {
 
   // player is over a weapon
   if (item.isWeapon()) {
-    updateLog("wield");
+    appendLog(" wield");
     if (take(item)) {
       forget(); // remove from board
     } else {
@@ -347,7 +347,7 @@ function wield(index) {
 
     if (item == null) {
       if (useindex >= 0 && useindex < 26) {
-        updateLog(`You don't have item ${index}!`);
+        updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
           appendLog(` cancelled`);
@@ -357,7 +357,7 @@ function wield(index) {
     }
 
     if (item.matches(OPOTION) || item.matches(OSCROLL)) {
-      updateLog("You can't wield that!");
+      updateLog("  You can't wield that!");
       return 1;
     }
 
@@ -365,7 +365,7 @@ function wield(index) {
 
   // common cases for both
   if (player.SHIELD != null && item.matches(O2SWORD)) {
-    updateLog("But one arm is busy with your shield!");
+    updateLog("  But one arm is busy with your shield!");
     return 1;
   }
 
@@ -392,7 +392,7 @@ function wear(index) {
 
   // player is over some armor
   if (item.isArmor()) {
-    updateLog("wear");
+    appendLog(" wear");
     if (take(item)) {
       forget(); // remove from board
     } else {
@@ -411,7 +411,7 @@ function wear(index) {
 
     if (item == null) {
       if (useindex >= 0 && useindex < 26) {
-        updateLog(`You don't have item ${index}!`);
+        updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
           appendLog(` cancelled`);
@@ -432,13 +432,13 @@ function wear(index) {
     player.WEAR = item;
   } else if (item.matches(OSHIELD)) {
     if (player.WIELD != null && player.WIELD.matches(O2SWORD)) {
-      updateLog("Your hands are busy with the two handed sword!");
+      updateLog("  Your hands are busy with the two handed sword!");
       return 1;
     } else {
       player.SHIELD = item;
     }
   } else {
-    updateLog("You can't wear that!");
+    updateLog("  You can't wear that!");
     return 1;
   }
 

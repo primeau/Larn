@@ -57,7 +57,7 @@ function cast(key) {
 
   --player.SPELLS;
 
-  var spellnum = knownSpells.indexOf(spell_cast);
+  var spellnum = knownSpells.indexOf(spell_cast.toLowerCase());
   if (spellnum >= 0) {
     speldamage(spellnum);
   } else {
@@ -341,7 +341,7 @@ function speldamage(x) {
         prepare_direction_event(spell_finger);
       } else {
         beep();
-        updateLog("Your heart stopped!");
+        updateLog("  Your heart stopped!");
         nap(4000);
         died(270);
       }
@@ -540,7 +540,6 @@ function spell_polymorph(direction) {
 
 
 
-
 /*
  *  tdirect(spnum)      Routine to teleport away a monster
  *      int spnum;
@@ -557,7 +556,7 @@ function spell_teleport(direction) {
   var y = player.y + diroffy[direction];
   var monster = getMonster(direction);
   if (monster == null) {
-    lprcat("  There wasn't anything there!");
+    updateLog("  There wasn't anything there!");
     return;
   }
   ifblind(x, y);
@@ -612,7 +611,7 @@ function loseint() {
  */
 function isconfuse() {
   if (player.CONFUSE) {
-    updateLog(" You can't aim your magic!");
+    updateLog("  You can't aim your magic!");
     beep();
   }
   return (player.CONFUSE > 0);
@@ -688,7 +687,7 @@ function direct(spnum, direction, dam, arg) {
 
   if (item.matches(OMIRROR) && monster == null) {
     if (spnum == 3) /* sleep */ {
-      updateLog("You fall asleep! ");
+      updateLog("  You fall asleep! ");
       beep();
       arg += 2;
       while (arg-- > 0) {
@@ -697,7 +696,7 @@ function direct(spnum, direction, dam, arg) {
       }
       return;
     } else if (spnum == 6) /* web */ {
-      updateLog("You get stuck in your own web! ");
+      updateLog("  You get stuck in your own web! ");
       beep();
       arg += 2;
       while (arg-- > 0) {
@@ -772,10 +771,10 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   /* if energy hits player */
   if (x == player.x && y == player.y) {
     cursors();
-    updateLog("You are hit by your own magic!");
+    updateLog("  You are hit by your own magic!");
 
     if ((player.HP -= dam) <= 0) {
-      updateLog("You have been slain");
+      updateLog("  You have been slain");
       nap(1000);
       died(278);
     }
@@ -931,7 +930,6 @@ function omnidirect(spnum, dam, str) {
         if (nospell(spnum, monster) == 0) {
           ifblind(x, y);
           cursors();
-          lprc('\n');
           updateLog(`  The ${monster} ${str}`);
           hitm(x, y, dam);
           nap(800);
@@ -953,10 +951,9 @@ function omnidirect(spnum, dam, str) {
  *  Returns the experience gained from all monsters killed
  */
 function annihilate() {
-  var i, j;
   var k = 0;
-  for (i = player.x - 1; i <= player.x + 1; i++) {
-    for (j = player.y - 1; j <= player.y + 1; j++) {
+  for (var i = player.x - 1; i <= player.x + 1; i++) {
+    for (var j = player.y - 1; j <= player.y + 1; j++) {
       var monster = monsterAt(i, j);
       if (monster != null) { /* if a monster there */
         if (monster.arg < DEMONLORD + 2) {
@@ -964,14 +961,14 @@ function annihilate() {
           player.level.monsters[i][j] = null;
           player.level.know[i][j] &= ~KNOWHERE;
         } else {
-          updateLog(`The ${monster} barely escapes being annihilated!`);
+          updateLog(`  The ${monster} barely escapes being annihilated!`);
           monster.hitpoints = (monster.hitpoints >> 1) + 1; /* lose half hit points*/
         }
       }
     }
   }
   if (k > 0) {
-    updateLog("You hear loud screams of agony!");
+    updateLog("  You hear loud screams of agony!");
     player.raiseexperience(k);
   }
   return k;

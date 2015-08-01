@@ -299,8 +299,8 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OGOLDPILE)) {
-    updateLog("You have found some gold!");
-    updateLog("It is worth " + item.arg + "!");
+    updateLog(`You have found some gold!`);
+    updateLog(`  It is worth ${item.arg}!`);
     player.GOLD += item.arg;
     forget();
   }
@@ -479,32 +479,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
 
 
 
-
-// TODO delete
-/*
- * function to process an item. or a keypress related
- */
-function oitem(key) {
-  var item = getItem(player.x, player.y);
-  if (item == null) {
-    debug("oitem(): couldn't find it!");
-    return;
-  }
-  switch (key) {
-    case ESC:
-    case 'i':
-      updateLog("ignore");
-      return;
-    case 't':
-      updateLog("take");
-      if (take(item)) {
-        forget(); // remove from board
-      }
-      return;
-  };
-}
-
-
 function opit() {
   if (rnd(101) < 81) {
     if (rnd(70) > 9 * player.DEXTERITY - packweight() || rnd(101) < 5) {
@@ -514,10 +488,10 @@ function opit() {
         var damage;
         if (rnd(101) < 20) {
           damage = 0;
-          updateLog("You fell into a pit!  Your fall is cushioned by an unknown force");
+          updateLog("You fell into a pit! Your fall is cushioned by an unknown force");
         } else {
           damage = rnd(player.level.depth * 3 + 3);
-          updateLog("You fell into a pit!  You suffer " + damage + " hit points damage");
+          updateLog("You fell into a pit! You suffer " + damage + " hit points damage");
           lastnum = 261;
           /* if hero dies scoreboard will say so */
         }
@@ -593,10 +567,10 @@ function readbook(book) {
   else
     i = rnd((tmp = splev[lev] - 9) ? tmp : 1) + 9;
   learnSpell(spelcode[i]);
-  updateLog(`Spell \"${spelcode[i]}\":  ${spelname[i]}`);
-  updateLog(`${speldescript[i]}`);
+  updateLog(`Spell \"${spelcode[i]}\": ${spelname[i]}`);
+  updateLog(`  ${speldescript[i]}`);
   if (rnd(10) == 4) {
-    updateLog("Your int went up by one!");
+    updateLog("  Your int went up by one!");
     player.INTELLIGENCE++;
     bottomline();
   }

@@ -52,6 +52,10 @@ Monster.prototype = {
         return "monster";
     },
 
+    getChar: function() {
+      return monsterlist[this.arg].char;
+    },
+
     /*
      *  dropsomething(monst)    Function to create an object when a monster dies
      *      int monst;
@@ -792,7 +796,7 @@ function hitm(x, y, damage) {
     player.level.monsters[x][y] = null;
     player.level.know[x][y] = 0;
     //monster = null;
-    return (hpoints); 
+    return (hpoints);
   }
   return (fulldamage);
 }

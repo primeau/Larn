@@ -18,7 +18,7 @@ function close_something(direction) {
   var item = getItem(x, y);
 
   if (item == null) {
-    updateLog("There is nothing to close!");
+    updateLog("  There is nothing to close!");
     return 1;
   }
 
@@ -26,11 +26,11 @@ function close_something(direction) {
      indicated.
   */
   if (item.matches(OCLOSEDDOOR)) {
-    appendLog("The door is already closed!");
+    updateLog("  The door is already closed!");
     beep();
   } else if (item.matches(OOPENDOOR)) {
     if (monsterAt(x, y) != null) {
-      appendLog("Theres a monster in the way!");
+      updateLog("  There's a monster in the way!");
       return;
     }
     player.level.items[x][y] = createObject(OCLOSEDDOOR, 0);
@@ -41,7 +41,7 @@ function close_something(direction) {
     }
 
   } else {
-    appendLog("You can't close that!");
+    updateLog("  You can't close that!");
     beep();
   }
   return 1;
@@ -65,12 +65,12 @@ function open_something(direction) {
   var item = getItem(x, y);
 
   if (item == null) {
-    updateLog("There is nothing to open!");
+    updateLog("  There is nothing to open!");
     return 1;
   }
 
   if (item.matches(OOPENDOOR)) {
-    updateLog("The door is already open!");
+    updateLog("  The door is already open!");
     beep();
     return 1;
   } else if (item.matches(OCHEST)) {
@@ -80,7 +80,7 @@ function open_something(direction) {
     act_open_door(x, y);
     return 1;
   } else {
-    updateLog("You can't open that!");
+    updateLog("  You can't open that!");
     beep();
     return 1;
   }
@@ -98,27 +98,27 @@ function fntchange(how) {
   how = how / Math.abs(how);
   switch (rnd(9)) {
     case 1:
-      updateLog("Your strength");
+      updateLog("  Your strength");
       player.STRENGTH = Math.max(3, player.STRENGTH + how);
       fch(how);
       break;
     case 2:
-      updateLog("Your intelligence");
+      updateLog("  Your intelligence");
       player.INTELLIGENCE = Math.max(3, player.INTELLIGENCE + how);
       fch(how);
       break;
     case 3:
-      updateLog("Your wisdom");
+      updateLog("  Your wisdom");
       player.WISDOM = Math.max(3, player.WISDOM + how);
       fch(how);
       break;
     case 4:
-      updateLog("Your constitution");
+      updateLog("  Your constitution");
       player.CONSTITUTION = Math.max(3, player.CONSTITUTION + how);
       fch(how);
       break;
     case 5:
-      updateLog("Your dexterity");
+      updateLog("  Your dexterity");
       player.DEXTERITY = Math.max(3, player.DEXTERITY + how);
       fch(how);
       break;
@@ -130,7 +130,7 @@ function fntchange(how) {
     case 7:
       var j = rnd(player.level.depth + 1);
       if (how < 0) {
-        updateLog(`You lose ${j} hit point`);
+        updateLog(`  You lose ${j} hit point`);
         if (j > 1) {
           appendLog("s!");
         } else {
@@ -138,7 +138,7 @@ function fntchange(how) {
         }
         player.losemhp(j);
       } else {
-        updateLog(`You gain ${j} hit point`);
+        updateLog(`  You gain ${j} hit point`);
         if (j > 1) {
           appendLog("s!");
         } else {
@@ -152,7 +152,7 @@ function fntchange(how) {
     case 8:
       var j = rnd(player.level.depth + 1);
       if (how > 0) {
-        updateLog(`You just gained ${j} spell`);
+        updateLog(`  You just gained ${j} spell`);
         if (j > 1) {
           appendLog("s!");
         } else {
@@ -160,7 +160,7 @@ function fntchange(how) {
         }
         player.raisemspells(j);
       } else {
-        updateLog(`You just lost ${j} spell`);
+        updateLog(`  You just lost ${j} spell`);
         if (j > 1) {
           appendLog("s!");
         } else {
@@ -174,7 +174,7 @@ function fntchange(how) {
     case 9:
       var j = 5 * rnd((player.level.depth + 1) * (player.level.depth + 1));
       if (how < 0) {
-        updateLog(`You just lost ${j} experience point`);
+        updateLog(`  You just lost ${j} experience point`);
         if (j > 1) {
           appendLog("s!");
         } else {
@@ -182,7 +182,7 @@ function fntchange(how) {
         }
         player.loseexperience(j);
       } else {
-        updateLog(`You just gained ${j} experience point`);
+        updateLog(`  You just gained ${j} experience point`);
         if (j > 1) {
           appendLog("s!");
         } else {

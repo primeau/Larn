@@ -70,13 +70,13 @@ function act_quaffpotion(index) {
     if (item == null) {
       debug(useindex);
       if (useindex >= 0 && useindex < 26) {
-        updateLog(`You don't have item ${index}!`);
+        updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
         appendLog(` cancelled`);
       }
     } else {
-      updateLog(`You can't quaff that!`);
+      updateLog(`  You can't quaff that!`);
     }
   }
   return 1;
@@ -106,13 +106,13 @@ function quaffpotion(potion, set_known) {
   switch (potion.arg) {
     case 0:
       /* sleep */
-      updateLog("You fall asleep. . .");
+      updateLog("  You fall asleep. . .");
       var sleeplen = rnd(11) - (player.CONSTITUTION >> 2) + 2;
       while (--sleeplen > 0) {
         parse2();
         nap(1000);
       }
-      updateLog("You woke up!");
+      updateLog("  You woke up!");
       break;
 
     case 1:
@@ -122,14 +122,14 @@ function quaffpotion(potion, set_known) {
       } else {
         player.raisehp(rnd(20) + 20 + player.LEVEL);
       }
-      updateLog("You feel better");
+      updateLog("  You feel better");
       break;
 
     case 2:
       /* raise level */
       player.raiselevel();
       player.raisemhp(1);
-      updateLog("Suddenly, you feel much more skillful!");
+      updateLog("  Suddenly, you feel much more skillful!");
       break;
 
     case 3:
@@ -154,42 +154,42 @@ function quaffpotion(potion, set_known) {
           player.CHARISMA++;
           break;
       };
-      updateLog("You feel strange for a moment");
+      updateLog("  You feel strange for a moment");
       break;
 
     case 4:
       /* wisdom */
       player.WISDOM += rnd(2);
-      updateLog("You feel more self confident!");
+      updateLog("  You feel more self confident!");
       break;
 
     case 5:
       /* strength */
       player.STRENGTH = Math.max(12, player.STRENGTH + 1);
-      updateLog("Wow!  You feel great!");
+      updateLog("  Wow!  You feel great!");
       break;
 
     case 6:
       /* charisma */
       player.CHARISMA++;
-      updateLog("Your charm went up by one!");
+      updateLog("  Your charm went up by one!");
       break;
 
     case 7:
       /* dizziness */
       player.STRENGTH = Math.max(3, player.STRENGTH - 1);
-      updateLog("You become dizzy!");
+      updateLog("  You become dizzy!");
       break;
 
     case 8:
       /* intelligence */
       player.INTELLIGENCE++;
-      updateLog("Your intelligence went up by one!");
+      updateLog("  Your intelligence went up by one!");
       break;
 
     case 9:
       /* object detection */
-      updateLog("You sense the presence of objects!");
+      updateLog("  You sense the presence of objects!");
       nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
@@ -209,14 +209,14 @@ function quaffpotion(potion, set_known) {
 
     case 10:
       /* monster detection */
-      updateLog("You detect the presence of monsters!");
+      updateLog("  You detect the presence of monsters!");
       nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
       for (var i = 0; i < MAXX; i++)
         for (var j = 0; j < MAXY; j++) {
           var monster = monsterAt(i, j);
-          if (monster != null && (monster.char != OEMPTY.char)) {
+          if (monster != null && (monster.getChar() != OEMPTY.char)) {
             player.level.know[i][j] = HAVESEEN;
             show1cell(i, j);
           }
@@ -225,7 +225,7 @@ function quaffpotion(potion, set_known) {
 
     case 11:
       /* potion of forgetfulness */
-      updateLog("You stagger for a moment . .");
+      updateLog("  You stagger for a moment . .");
       for (var i = 0; i < MAXX; i++)
         for (var j = 0; j < MAXY; j++) {
           player.level.know[i][j] = 0;
@@ -236,18 +236,18 @@ function quaffpotion(potion, set_known) {
 
     case 12:
       /* water */
-      updateLog("This potion has no taste to it");
+      updateLog("  This potion has no taste to it");
       break;
 
     case 13:
       /* blindness */
       player.BLINDCOUNT += 500;
-      updateLog("You can't see anything!");
+      updateLog("  You can't see anything!");
       break;
 
     case 14:
       player.CONFUSE += 20 + rnd(9);
-      updateLog("You feel confused");
+      updateLog("  You feel confused");
       break;
 
     case 15:
@@ -260,28 +260,28 @@ function quaffpotion(potion, set_known) {
         player.CHARISMA += 11;
       }
       player.HERO += 250;
-      updateLog("WOW!!!  You feel Super-fantastic!!!");
+      updateLog("  WOW!!!  You feel Super-fantastic!!!");
       break;
 
     case 16:
       player.CONSTITUTION++;
-      updateLog("You have a greater intestinal constitude!");
+      updateLog("  You have a greater intestinal constitude!");
       break;
 
     case 17:
       if (player.GIANTSTR == 0)
         player.STREXTRA += 21;
       player.GIANTSTR += 700;
-      updateLog("You now have incredibly bulging muscles!!!");
+      updateLog("  You now have incredibly bulging muscles!!!");
       break;
 
     case 18:
       player.FIRERESISTANCE += 1000;
-      updateLog("You feel a chill run up your spine!");
+      updateLog("  You feel a chill run up your spine!");
       break;
 
     case 19:
-      updateLog("You feel greedy . . .");
+      updateLog("  You feel greedy . . .");
       nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
@@ -303,20 +303,20 @@ function quaffpotion(potion, set_known) {
 
     case 21:
       /* cure dianthroritis */
-      updateLog("You don't seem to be affected");
+      updateLog("  You don't seem to be affected");
       break;
 
     case 22:
       /* poison */
       player.HALFDAM += 200 + rnd(200);
-      updateLog("You feel a sickness engulf you");
+      updateLog("  You feel a sickness engulf you");
       break;
 
     case 23:
       /* see invisible */
       player.SEEINVISIBLE += rnd(1000) + 400;
       monsterlist[INVISIBLESTALKER].char = 'I';
-      updateLog("You feel your vision sharpen");
+      updateLog("  You feel your vision sharpen");
       break;
   };
 }
