@@ -778,6 +778,7 @@ function hitm(x, y, damage) {
   if (monster.hitpoints > monsterlist[monster.arg].hitpoints)
     monster.hitpoints = monsterlist[monster.arg].hitpoints;
 
+  var hpoints = monster.hitpoints;
   monster.hitpoints -= damage;
   debug("hitm(): hp = " + monster.hitpoints + "/" + monsterlist[monster.arg].hitpoints);
   if (monster.hitpoints <= 0) {
@@ -791,8 +792,7 @@ function hitm(x, y, damage) {
     player.level.monsters[x][y] = null;
     player.level.know[x][y] = 0;
     //monster = null;
-    return fulldamage;
-    //return (hpoints); // TODO do i need this?
+    return (hpoints); 
   }
   return (fulldamage);
 }

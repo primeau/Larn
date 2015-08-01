@@ -181,3 +181,65 @@ function makemonst(lev) {
   debug("makemonst: " + lev + " -> " + tmp + " " + monsterlist[tmp]);
   return (tmp);
 }
+
+
+
+/*
+    function to calculate the pack weight of the player
+    returns the number of pounds the player is carrying
+ */
+function packweight() {
+  var weight = player.GOLD / 1000;
+  for (var i = 0; i < player.inventory.length; i++) {
+    var item = player.inventory[i];
+    switch (item.id) {
+      case OSSPLATE.id:
+      case OPLATEARMOR.id:
+        weight += 40;
+        break;
+      case OPLATE.id:
+        weight += 35;
+        break;
+      case OHAMMER.id:
+        weight += 30;
+        break;
+      case OSPLINT.id:
+        weight += 26;
+        break;
+      case OSWORDofSLASHING.id:
+      case OCHAIN.id:
+      case OBATTLEAXE.id:
+      case O2SWORD.id:
+        weight += 23;
+        break;
+      case OLONGSWORD.id:
+      case OSWORD.id:
+      case ORING.id:
+      case OFLAIL.id:
+        weight += 20;
+        break;
+      case OLANCE.id:
+      case OSTUDLEATHER.id:
+        weight += 15;
+        break;
+      case OLEATHER.id:
+      case OSPEAR.id:
+        weight += 8;
+        break;
+      case OORBOFDRAGON.id:
+      case OBELT.id:
+        weight += 4;
+        break;
+      case OSHIELD.id:
+        weight += 7;
+        break;
+      case OCHEST.id:
+        weight += 30 + item.arg;
+        break;
+      default:
+        weight++;
+        break;
+    };
+  }
+  return (weight);
+}

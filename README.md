@@ -14,15 +14,15 @@ todo:
 - make sure difficulty > 0 is fully implemented
 - winning
 - create random levels
+- volcanic shaft pack weight check
 
 bugs:
-- store
-- bank
-- store: a chest +6
 - altars are badly broken
 - monsters move before missile spells are complete
 - monsters don't advance after range attacks (probably due to 2x monster move "fix")
-
+- cell shows in previous location when descending H -> V1
+- monsters can get trapped on edge of screen in wizard mode
+- DONE missile spells don't continue after first killed monster
 
 rename:
 - player.level.items[][] -> item

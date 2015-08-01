@@ -809,7 +809,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     cursors();
     updateLog(str(monster));
     dam -= hitm(x, y, dam);
-    //show1cell(x, y);
+    show1cell(x, y);
     nap(1000);
 
     x -= dx;
