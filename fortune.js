@@ -1,11 +1,11 @@
 "use strict";
 
 function outfortune() {
-  updateLog("  The cookie was delicious.");
+  updateLog("The cookie was delicious.");
   if (player.BLINDCOUNT)
     return;
   var fortune = ftn[rund(ftn.length)];
-  updateLog("  Inside you find a scrap of paper that says:");
+  updateLog("Inside you find a scrap of paper that says:");
   updateLog(`  ${fortune}`);
 }
 

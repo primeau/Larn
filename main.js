@@ -237,7 +237,16 @@ function parse(e) {
   }
 
   // TODO g - pack weight
-  // TODO i - inventory
+
+  //
+  // INVENTORY
+  //
+  if (key == 'i') {
+    yrepcount = 0;
+    nomove = 1;
+    showinventory(0);
+    return;
+  }
 
   //
   // PRAY

@@ -91,6 +91,43 @@ function creategem() {
 }
 
 
+
+/*
+ * function to ask --more--. If the user enters a space, returns 0.  If user
+ * enters Escape, returns 1.  If user enters alphabetic, then returns that
+ *  value.
+ */
+function more(select_allowed) {
+  cltoeoln();
+  lprcat("Press ");
+  standout("Space");
+
+  if (select_allowed) {
+    lprcat(" to continue, ");
+    standout("Esc");
+    lprcat(" to cancel, letter to select: ");
+  } else lprcat(" to continue: ");
+
+  // for (;;)
+  // {
+  //   i = ttgetch();
+  //
+  //   if (i == ' ') return 0;
+  //
+  //   if (i == 27) return 1;
+  //
+  //   if (select_allowed)
+  //   {
+  //     if (isupper(i)) i = tolower(i);
+  //     if ((i >= 'a' && i <= 'z') || i == '.' ) return i;
+  //   }
+  //
+  //   bell();
+  // }
+}
+
+
+
 /*
     function to enchant armor player is currently wearing
  */

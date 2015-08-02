@@ -121,6 +121,13 @@ String.prototype.prevChar = function(i) {
 }
 
 
+
+function getCharFromIndex(i) {
+  return 'a'.nextChar(i);
+}
+
+
+
 function getIndexFromChar(char) {
   if (char == ESC) {
     return -1;

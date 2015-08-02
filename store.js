@@ -266,7 +266,7 @@ function dnditem(i) {
   }
 
   var item = dnd_item[i].item;
-  lprintf(`${'a'.nextChar(i%26)}) `);
+  lprintf(`${getCharFromIndex(i%26)}) `);
 
   if (item.matches(OPOTION)) lprintf(`${item.toString(true).substring(8)}`);
   else if (item.matches(OSCROLL)) lprintf(`${item.toString(true).substring(8)}`);
@@ -359,7 +359,7 @@ function obanksub() {
       }
       gemorder[i] = k;
       cursor((k % 2) * 40 + 1, (k >> 1) + 4);
-      lprintf(`${'a'.nextChar(i)}) ${item}`);
+      lprintf(`${getCharFromIndex(i)}) ${item}`);
       cursor((k % 2) * 40 + 32, (k >> 1) + 4);
       lprintf(`${gemvalue[i]}`, 6);
       k++;
@@ -511,7 +511,7 @@ function bank_sell(key) {
     if (i >= 0 && i <= 26) {
       if (gemvalue[i] == 0) {
         //lprintf("\nItem %c is not a gemstone!", i + 'a');
-        bankmessage("\nThat's not a gemstone!");
+        bankmessage(`\nItem ${getCharFromIndex(i)} is not a gemstone!`);
       } else {
         player.GOLD += gemvalue[i];
         player.inventory[i] = null;

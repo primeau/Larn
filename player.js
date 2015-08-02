@@ -2,6 +2,7 @@
 
 
 const MAXPLEVEL = 100; /* maximum player level allowed        */
+const TIMELIMIT = 30000; /* maximum number of moves before the game is called */
 
 var Player = {
   inventory: [],

@@ -26,6 +26,9 @@ bugs:
 - monster identification when blind is unreliable
 - extra newline in omnidirect spells
 - going up/down stairs can drop you onto a closed door
+- bank messages aren't printed out
+- store messages aren't printed out
+- enter and exit building is counted as 2 moves
 
 rename:
 - player.level.items[][] -> item

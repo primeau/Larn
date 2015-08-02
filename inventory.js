@@ -2,6 +2,72 @@
 
 const MAXINVEN = 26;
 
+// TODO sort order:
+// eye, armor, weapon, ring, belt, scroll, potion,
+// book, chest, amulet, orb etc, gems, cookie
+
+/* show character's inventory */
+function showinventory(select_allowed) {
+  IN_STORE = true;
+  var srcount = 0;
+
+  setCharCallback(parse_inventory, true);
+
+  cursor(1, 1);
+  if (player.GOLD) {
+    cltoeoln();
+    lprcat(`.) ${player.GOLD} gold pieces\n`);
+    srcount++;
+  }
+  var widest = 40;
+  var wrap = 14;
+  for (var k = 0; k < MAXINVEN; k++) {
+    var item = player.inventory[k];
+    if (item) {
+      srcount++;
+      widest = Math.max(widest, item.toString().length + 5);
+      if (srcount <= wrap) {
+        cltoeoln();
+      } else {
+        var extra = (player.GOLD == 0) ? 0 : 1;
+        cursor(widest, srcount % wrap + extra);
+      }
+      lprcat(`${getCharFromIndex(k)}) ${item}\n`);
+    }
+  }
+  cursor(1, Math.min(wrap+1, ++srcount));
+
+  cltoeoln();
+  lprcat(`Elapsed time is ${Math.round(gtime/100)}. You have ${Math.round((TIMELIMIT - gtime) / 100)} mobuls left\n`);
+
+  cltoeoln();
+  more();
+
+  blt();
+
+}
+
+
+
+
+function getScrolls() {
+
+}
+
+
+
+function parse_inventory(key) {
+  nomove = 1;
+  if (key == ESC || key == ' ') {
+    IN_STORE = false;
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+
+
 /*
     function to put something in the players inventory
     returns true if success, false if a failure
@@ -17,9 +83,9 @@ function take(item) {
       debug("take(): " + item);
       limit = 0;
       player.adjustcvalues(item, true);
-      updateLog(`You pick up: ${'a'.nextChar(i)}) ${item}`);
+      updateLog(`You pick up: ${getCharFromIndex(i)}) ${item}`);
       if (limit) {
-        //bottomline(); //player.level.paint();
+        //bottomline(); //player.level.paint(); //TODO?
       }
       return (true);
     }
@@ -27,6 +93,7 @@ function take(item) {
   updateLog("You can't carry anything else");
   return false;
 }
+
 
 
 /*
@@ -43,7 +110,7 @@ function drop_object(index) {
       updateLog(`  You don't have item ${index}!`);
     }
     if (useindex <= -1) {
-        appendLog(` cancelled`);
+      appendLog(` cancelled`);
     }
     return 1;
   }
@@ -76,6 +143,7 @@ function drop_object(index) {
 
   return 1;
 }
+
 
 
 /*
