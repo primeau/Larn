@@ -28,10 +28,10 @@ var Larn = {
 
     updateLog("Welcome to Larn"); // need to initialize the log
 
-    player.inventory[0] = createObject(ODAGGER);
-    player.inventory[1] = createObject(OLEATHER);
-    player.WIELD = player.inventory[0];
-    player.WEAR = player.inventory[1];
+    player.inventory[0] = createObject(OLEATHER);
+    player.inventory[1] = createObject(ODAGGER);
+    player.WEAR = player.inventory[0];
+    player.WIELD = player.inventory[1];
 
     learnSpell("pro");
     learnSpell("mle");

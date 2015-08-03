@@ -106,7 +106,7 @@ function more(select_allowed) {
     lprcat(" to continue, ");
     standout("Esc");
     lprcat(" to cancel, letter to select: ");
-  } else lprcat(" to continue: ");
+  } else lprcat(" to continue");
 
   // for (;;)
   // {
