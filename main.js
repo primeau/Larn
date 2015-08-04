@@ -213,7 +213,7 @@ function parse(e) {
   if (key == 'd') {
     yrepcount = 0;
     if (player.TIMESTOP == 0) {
-      updateLog("What do you want to drop?");
+      updateLog("What do you want to drop [Space to view]");
       setCharCallback(drop_object, true);
     }
     return;
@@ -230,7 +230,7 @@ function parse(e) {
         outfortune();
         forget();
       } else {
-        updateLog("What do you want to eat [* for all] ?");
+        updateLog("What do you want to eat [Space to view]");
         setCharCallback(act_eatcookie, true);
       }
     return;
@@ -244,7 +244,7 @@ function parse(e) {
   if (key == 'i') {
     yrepcount = 0;
     nomove = 1;
-    showinventory(0);
+    showinventory(false, parse_inventory, showall, true, true);
     return;
   }
 
@@ -270,7 +270,7 @@ function parse(e) {
         forget();
         quaffpotion(item);
       } else {
-        updateLog("What do you want to quaff [* for all] ?");
+        updateLog("What do you want to quaff [Space to view]");
         setCharCallback(act_quaffpotion, true); // TODO this should fall through
       }
     return;
@@ -294,7 +294,7 @@ function parse(e) {
         forget();
         read_scroll(item);
       } else {
-        updateLog("What do you want to read [* for all] ?");
+        updateLog("What do you want to read [Space to view]");
         setCharCallback(act_read_something, true);
       }
     }
@@ -331,7 +331,7 @@ function parse(e) {
     if (item.isWeapon()) {
       wield(item);
     } else {
-      updateLog("What do you want to wield (- for nothing) [* for all] ?");
+      updateLog("What do you want to wield [(-) for nothing, Space to view]");
       setCharCallback(wield, true);
     }
     return;
@@ -438,7 +438,7 @@ function parse(e) {
     if (item.isArmor()) {
       wear(item);
     } else {
-      updateLog("What do you want to wear (- for nothing) [* for all] ?");
+      updateLog("What do you want to wear [(- for nothing), Space to view]");
       setCharCallback(wear, true);
     }
     return;

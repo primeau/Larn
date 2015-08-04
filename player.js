@@ -324,12 +324,15 @@ function ifblind(x, y) {
 function wield(index) {
   var item = getItem(player.x, player.y);
 
+  debug("wield: " + index);
+
   // player is over a weapon
   if (item.isWeapon()) {
     appendLog(" wield");
     if (take(item)) {
       forget(); // remove from board
     } else {
+      IN_STORE = false;
       return 1;
     }
   }
@@ -337,10 +340,16 @@ function wield(index) {
   else {
     //debug("wield(): " + index);
 
-    if (index == '*') {
-      // TODO
-      // i = showwield();
-      // cursors();
+    if (index == '*' || index == ' ') {
+      if (!IN_STORE) {
+        showinventory(true, wield, showwield, false, false);
+      }
+      else {
+        IN_STORE = false;
+        paint();
+      }
+      nomove = 1;
+      return;
     }
 
     var useindex = getIndexFromChar(index);
@@ -351,14 +360,16 @@ function wield(index) {
         updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
-          appendLog(` cancelled`);
+        appendLog(` cancelled`);
       }
       debug(useindex);
+      IN_STORE = false;
       return 1;
     }
 
-    if (item.matches(OPOTION) || item.matches(OSCROLL)) {
+    if (!item.isWeapon()) {
       updateLog("  You can't wield that!");
+      IN_STORE = false;
       return 1;
     }
 
@@ -367,6 +378,7 @@ function wield(index) {
   // common cases for both
   if (player.SHIELD != null && item.matches(O2SWORD)) {
     updateLog("  But one arm is busy with your shield!");
+    IN_STORE = false;
     return 1;
   }
 
@@ -380,7 +392,7 @@ function wield(index) {
 
   player.WIELD = item;
 
-  //player.level.paint();
+  IN_STORE = false;
   return 1;
 }
 
@@ -397,14 +409,21 @@ function wear(index) {
     if (take(item)) {
       forget(); // remove from board
     } else {
+      IN_STORE = false;
       return 1;
     }
   } // else player hit 'W'
   else {
-    if (index == '*') {
-      // TODO
-      // i = showwear();
-      // cursors();
+    if (index == '*' || index == ' ') {
+      if (!IN_STORE) {
+        showinventory(true, wear, showwear, false, false);
+      }
+      else {
+        IN_STORE = false;
+        paint();
+      }
+      nomove = 1;
+      return;
     }
 
     var useindex = getIndexFromChar(index);
@@ -415,8 +434,9 @@ function wear(index) {
         updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
-          appendLog(` cancelled`);
+        appendLog(` cancelled`);
       }
+      IN_STORE = false;
       return 1;
     }
   }
@@ -434,16 +454,18 @@ function wear(index) {
   } else if (item.matches(OSHIELD)) {
     if (player.WIELD != null && player.WIELD.matches(O2SWORD)) {
       updateLog("  Your hands are busy with the two handed sword!");
+      IN_STORE = false;
       return 1;
     } else {
       player.SHIELD = item;
     }
   } else {
     updateLog("  You can't wear that!");
+    IN_STORE = false;
     return 1;
   }
 
-  //player.level.paint();
+  IN_STORE = false;
   return 1;
 }
 

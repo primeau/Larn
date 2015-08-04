@@ -20,6 +20,19 @@ function act_eatcookie(index) {
   } else {
     if (item == null) {
       //debug(useindex);
+
+      if (index == '*' || index == ' ') {
+        if (!IN_STORE) {
+          showinventory(true, act_eatcookie, showeat, false, false);
+        }
+        else {
+          IN_STORE = false;
+          paint();
+        }
+        nomove = 1;
+        return;
+      }
+
       if (useindex >= 0 && useindex < 26) {
         updateLog(`  You don't have item ${index}!`);
       }
@@ -30,6 +43,7 @@ function act_eatcookie(index) {
       updateLog(`  You can't eat that!`);
     }
   }
+  IN_STORE = false;
   return 1;
 }
 

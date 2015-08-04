@@ -68,7 +68,18 @@ function act_quaffpotion(index) {
     quaffpotion(item);
   } else {
     if (item == null) {
-      debug(useindex);
+      //debug(useindex);
+      if (index == '*' || index == ' ') {
+        if (!IN_STORE) {
+          showinventory(true, act_quaffpotion, showquaff, false, false);
+        } else {
+          IN_STORE = false;
+          paint();
+        }
+        nomove = 1;
+        return;
+      }
+
       if (useindex >= 0 && useindex < 26) {
         updateLog(`  You don't have item ${index}!`);
       }
@@ -79,6 +90,7 @@ function act_quaffpotion(index) {
       updateLog(`  You can't quaff that!`);
     }
   }
+  IN_STORE = false;
   return 1;
 }
 
@@ -193,9 +205,9 @@ function quaffpotion(potion, set_known) {
       nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
-        for (var i = 0; i < MAXX; i++)
-          for (var j = 0; j < MAXY; j++) {
-          var item = getItem(i,j);
+      for (var i = 0; i < MAXX; i++)
+        for (var j = 0; j < MAXY; j++) {
+          var item = getItem(i, j);
           if (item.carry &&
             !item.isGem() &&
             !item.matches(OLARNEYE) &&

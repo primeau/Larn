@@ -4,33 +4,41 @@ const MAXINVEN = 26;
 
 
 /* show character's inventory */
-function showinventory(select_allowed) {
+function showinventory(select_allowed, callback, inv_filter, show_gold, show_time) {
   IN_STORE = true;
   var srcount = 0;
 
-  setCharCallback(parse_inventory, true);
+  setCharCallback(callback, true);
 
   cursor(1, 1);
-  if (player.GOLD) {
-    cltoeoln();
-    lprcat(`.) ${player.GOLD} gold pieces\n`);
-    srcount++;
+
+  if (show_gold) {
+    if (player.GOLD) {
+      cltoeoln();
+      lprcat(`.) ${player.GOLD} gold pieces\n`);
+      srcount++;
+    } else {
+      show_gold = false;
+    }
   }
+
   var widest = 40;
-  var wrap = 22;
+  var wrap = 23;
+  //wrap -= show_gold ? 1 : 0;
+  wrap -= show_time ? 1 : 0;
 
   var inventory = player.inventory.slice();
   inventory.sort(inv_sort);
 
   for (var k = 0; k < inventory.length; k++) {
     var item = inventory[k];
-    if (item) {
+    if (inv_filter(item)) {
       srcount++;
       if (srcount <= wrap) {
         cltoeoln();
         widest = Math.max(widest, item.toString().length + 5);
       } else {
-        var extra = (player.GOLD == 0) ? 0 : 1;
+        var extra = show_gold ? 1 : 0;
         cursor(widest, srcount % wrap + extra);
       }
       var foo = player.inventory.indexOf(item);
@@ -39,20 +47,48 @@ function showinventory(select_allowed) {
   }
 
   cursor(1, Math.min(wrap + 1, ++srcount));
-  cltoeoln();
-  lprcat(`Elapsed time is ${Math.round(gtime/100)}. You have ${Math.round((TIMELIMIT - gtime) / 100)} mobuls left\n`);
+
+  if (show_time) {
+    cltoeoln();
+    lprcat(`Elapsed time is ${Math.round(gtime/100)}. You have ${Math.round((TIMELIMIT - gtime) / 100)} mobuls left\n`);
+  }
 
   cltoeoln();
-  more();
+  more(select_allowed);
 
   blt();
 
 }
 
 
+
+function showall(item) {
+  return item != null;
+}
+
+function showwield(item) {
+  return item && item.isWeapon();
+}
+
+function showwear(item) {
+  return item && item.isArmor();
+}
+
+function showeat(item) {
+  return item && item.matches(OCOOKIE);
+}
+
+function showread(item) {
+  return item && (item.matches(OSCROLL) || item.matches(OBOOK));
+}
+
+function showquaff(item) {
+  return item && item.matches(OPOTION);
+}
+
+
+
 const sortorder = [
-  OSSPLATE.id,
-  OLANCE.id,
   OLARNEYE.id,
 
   OSHIELD.id,
@@ -63,6 +99,7 @@ const sortorder = [
   OSPLINT.id,
   OPLATE.id,
   OPLATEARMOR.id,
+  OSSPLATE.id,
 
   ODAGGER.id,
   OSPEAR.id,
@@ -73,6 +110,7 @@ const sortorder = [
   OSWORD.id,
   OSWORDofSLASHING.id,
   OHAMMER.id,
+  OLANCE.id,
 
   ORINGOFEXTRA.id,
   OREGENRING.id,
@@ -103,6 +141,8 @@ const sortorder = [
 
   OCOOKIE.id,
 ];
+
+
 
 function inv_sort(a, b) {
   if (a == null && b == null) return 0;

@@ -67,6 +67,18 @@ function act_read_something(index) {
     readbook(item);
   } else {
     if (item == null) {
+
+      if (index == '*' || index == ' ') {
+        if (!IN_STORE) {
+          showinventory(true, act_read_something, showread, false, false);
+        } else {
+          IN_STORE = false;
+          paint();
+        }
+        nomove = 1;
+        return;
+      }
+
       if (useindex >= 0 && useindex < 26) {
         updateLog(`  You don't have item ${index}!`);
       }
@@ -77,6 +89,7 @@ function act_read_something(index) {
       updateLog(`  You can't read that!`);
     }
   }
+  IN_STORE = false;
   return 1;
 }
 
