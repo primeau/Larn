@@ -392,7 +392,7 @@ function parse(e) {
   //
   // OPEN (in a direction)
   //
-  if (key == 'O') {
+  if (key == 'O' || key == 'o') {
     yrepcount = 0;
     /* check for confusion. */
     if (player.CONFUSE > 0) {
