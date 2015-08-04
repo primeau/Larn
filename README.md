@@ -1,8 +1,10 @@
 todo:
 - Thrift Shop
-- view inventory
+- view inventory on drop
+- 'o' to open also? maybe also double move into door?
 - warn player that back button will kill the game
 - drop gold
+- auto-pickup
 - random mazes (especially on L1)
 - traps
 - monster rooms
@@ -17,9 +19,12 @@ todo:
 
 bugs:
 - altars are badly broken
+- cast lit at throne - gnome king == black spot
+- should lit 'discover' beyond where player has seen?
 - monsters move before missile spells are complete
 - missile char stays visible sometimes
 - monsters don't advance after range attacks (probably due to 2x monster move "fix")
+- it looks like sometimes monster still attack twice
 - cell shows in previous location when descending H -> V1
 - monsters can get trapped on edge of screen in wizard mode
 - cells not revealed when blind
@@ -28,6 +33,7 @@ bugs:
 - going up/down stairs can drop you onto a closed door
 - bank messages aren't printed out
 - store messages aren't printed out
+- object detection showed an empty dot? also treasure fining?
 - enter and exit building is counted as 2 moves
 
 rename:

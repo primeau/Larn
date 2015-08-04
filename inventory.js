@@ -188,7 +188,8 @@ function take(item) {
       debug("take(): " + item);
       limit = 0;
       player.adjustcvalues(item, true);
-      updateLog(`You pick up: ${getCharFromIndex(i)}) ${item}`);
+      updateLog(`  You pick up:`);
+      updateLog(`${getCharFromIndex(i)}) ${item}`);
       if (limit) {
         //bottomline();  //TODO?
       }
@@ -207,6 +208,18 @@ function take(item) {
 function drop_object(index) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
+  if (index == '*' || index == ' ') {
+    if (!IN_STORE) {
+      showinventory(true, drop_object, showall, false, false);
+    }
+    else {
+      IN_STORE = false;
+      paint();
+    }
+    nomove = 1;
+    return;
+  }
+
   var useindex = getIndexFromChar(index);
   var item = player.inventory[useindex];
 
@@ -217,12 +230,14 @@ function drop_object(index) {
     if (useindex <= -1) {
       appendLog(` cancelled`);
     }
+    IN_STORE = false;
     return 1;
   }
 
   if (isItemAt(player.x, player.y)) {
     beep();
     updateLog("  There's something here already");
+    IN_STORE = false;
     return 1;
   }
 
@@ -231,7 +246,8 @@ function drop_object(index) {
   player.inventory[useindex] = null;
   player.level.items[player.x][player.y] = item;
 
-  updateLog(`  You drop: ${item}`);
+  updateLog(`  You drop: `);
+  updateLog(`${getCharFromIndex(useindex)}) ${item}`);
   // show3(k); /* show what item you dropped*/
   // know[playerx][playery] = 0;
 
@@ -246,6 +262,7 @@ function drop_object(index) {
   }
   player.adjustcvalues(item, false);
 
+  IN_STORE = false;
   return 1;
 }
 
