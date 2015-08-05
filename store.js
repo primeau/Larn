@@ -579,17 +579,20 @@ function parse_tradepost(key) {
   var value = 0;
   var i = getIndexFromChar(key);
 
+  cursor(59, 22);
+  lprc(key);
+
   if (i >= 0 && i <= 26) {
     var item = player.inventory[i];
     if (item == null) {
-      storemessage(`You don't have item ${key}!`);
-      nap(2000);
+      storemessage(`You don't have item ${key}!`, 500);
+      //nap(2000);
       return 0;
     }
     if (item.matches(OSCROLL) && !isKnownScroll(item) ||
       item.matches(OPOTION) && !isKnownPotion(item)) {
-      storemessage("Sorry, we can't accept unidentified objects");
-      nap(2000);
+      storemessage("Sorry, we can't accept unidentified objects", 500);
+      //nap(2000);
       return 0;
     }
     if (item.isGem()) {
@@ -607,8 +610,8 @@ function parse_tradepost(key) {
         }
       }
       if (found == MAXITM) {
-        storemessage("Sorry, we can't accept unidentified objects");
-        nap(2000);
+        storemessage("Sorry, we can't accept unidentified objects", 500);
+        //nap(2000);
         return 0;
       }
       if (item.matches(OSCROLL) || item.matches(OPOTION)) {
@@ -625,7 +628,7 @@ function parse_tradepost(key) {
       }
     }
   } else {
-    storemessage("Sorry, but we are not authorized to accept that item");
+    storemessage("Sorry, but we are not authorized to accept that item", 500);
     return 0;
   }
 
@@ -646,18 +649,19 @@ var itemToSell = null; // GLOBAL
 
 function parse_sellitem(key) {
   if (key == ESC || key == 'N' || key == 'n') {
+    cursor(63 + itemToSell.price.toString().length, 24);
     setCharCallback(parse_tradepost, true);
-    cursor(64, 24);
-    lprcat("no thanks"); // TODO this doesn't actually show up
-    nap(500);
-    storemessage(``);
+    lprcat("no thanks");
+    //nap(500);
+    setTimeout(storemessage, 500, "");
     itemToSell = null;
     return 1;
   }
   if (key == 'Y' || key == 'y') {
+    cursor(63 + itemToSell.price.toString().length, 24);
     setCharCallback(parse_tradepost, true);
-    cursor(64, 24);
-    lprcat("yes"); // TODO this doesn't actually show up
+    lprcat("yes");
+    setTimeout(storemessage, 500, "");
     player.GOLD += itemToSell.price;
     if (player.WEAR === itemToSell.item) player.WEAR = null;
     if (player.WIELD === itemToSell.item) player.WIELD = null;
@@ -666,12 +670,173 @@ function parse_sellitem(key) {
     var index = player.inventory.indexOf(itemToSell.item);
     player.inventory[index] = null;
     cleartradiven(index);
-    storemessage(``);
     itemToSell = null;
     return 1;
   }
   return 0;
 }
+
+
+
+
+
+/*
+ *
+ *
+ * SCHOOL
+ *
+ *
+ */
+
+const coursetime = [10, 15, 10, 20, 10, 10, 10, 5];
+
+function oschool() {
+  setCharCallback(parse_class, true);
+  napping = false;
+
+  printclasses();
+
+  cl_dn(1,19);
+  cursor(1, 20);
+  lprcat("What is your choice? [Press ");
+  lstandout("Esc");
+  lprcat(" to leave] ");
+
+  blt();
+}
+
+
+
+function printclasses() {
+  cl_up(1, 18);
+  cursor(1, 1);
+  lprcat("The College of Larn offers the exciting opportunity of higher education to\n");
+  lprcat("all inhabitants of the caves. Here is the class schedule:\n\n\n");
+  lprcat("\t\t    Course Name               Time Needed\n\n");
+
+  if (course[0] == null) lprcat("\t\ta)  Fighter Training I          10 mobuls");
+  lprc('\n');
+  if (course[1] == null) lprcat("\t\tb)  Fighter Training II         15 mobuls");
+  lprc('\n');
+  if (course[2] == null) lprcat("\t\tc)  Introduction to Wizardry    10 mobuls");
+  lprc('\n');
+  if (course[3] == null) lprcat("\t\td)  Applied Wizardry            20 mobuls");
+  lprc('\n');
+  if (course[4] == null) lprcat("\t\te)  Behavioral Psychology       10 mobuls");
+  lprc('\n');
+  if (course[5] == null) lprcat("\t\tf)  Faith for Today             10 mobuls");
+  lprc('\n');
+  if (course[6] == null) lprcat("\t\tg)  Contemporary Dance          10 mobuls");
+  lprc('\n');
+  if (course[7] == null) lprcat("\t\th)  History of Larn              5 mobuls");
+
+  lprcat("\n\n\t\tAll courses cost 250 gold pieces");
+  cursor(30, 18);
+  lprcat(`You are presently carrying ${player.GOLD} gold pieces`);
+}
+
+
+
+function parse_class(key) {
+  if (key == ESC) {
+    return exitbuilding();
+  }
+
+  var naptime = 700;
+
+  lprc(`${key}`);
+  var i = getIndexFromChar(key);
+
+  if (i < 0 || i >= 8 || course[i] != null) {
+    lprcat("\nSorry, but that class is filled");
+  } else if (player.GOLD < 250) {
+    lprcat("\nYou don't have enough gold to pay for that!");
+  } else {
+    player.GOLD -= 250;
+    var time_used = 0;
+
+    switch (key) {
+      case 'a':
+        player.STRENGTH += 2;
+        player.CONSTITUTION++;
+        lprcat("\nYou feel stronger!");
+        break;
+
+      case 'b':
+        if (course[0] == null) {
+          player.GOLD += 250;
+          time_used = -10000;
+          lprcat("\nSorry, but this class has a prerequisite of Fighter Training I");
+          break;
+        }
+        player.STRENGTH += 2;
+        player.CONSTITUTION += 2;
+        lprcat("\nYou feel much stronger!");
+        break;
+
+      case 'c':
+        player.INTELLIGENCE += 2;
+        lprcat("\nThe task before you now seems more attainable!");
+        break;
+
+      case 'd':
+        if (course[2] == null) {
+          player.GOLD += 250;
+          time_used = -10000;
+          lprcat("\nSorry, but this class has a prerequisite of Introduction to Wizardry");
+          break;
+        }
+        player.INTELLIGENCE += 2;
+        lprcat("\nThe task before you now seems very attainable!");
+        break;
+
+      case 'e':
+        player.CHARISMA += 3;
+        lprcat("\nYou now feel like a born leader!");
+        break;
+
+      case 'f':
+        player.WISDOM += 2;
+        lprcat("\nYou now feel more confident that you can find the potion in time!");
+        break;
+
+      case 'g':
+        player.DEXTERITY += 3;
+        lprcat("\nYou feel like dancing!");
+        break;
+
+      case 'h':
+        player.INTELLIGENCE++;
+        lprcat("\nYour instructor told you that the Eye of Larn is rumored to be guarded");
+        lprcat("\nby a platinum dragon who possesses psionic abilities");
+        break;
+    }
+
+    time_used += coursetime[i] * 100;
+
+    if (time_used > 0) {
+      gtime += time_used;
+      course[i] = 1; /* remember that he has taken that course */
+      player.HP = player.HPMAX;
+      player.SPELLS = player.SPELLMAX; /* he regenerated */
+      if (player.BLINDCOUNT) player.BLINDCOUNT = 1; /* cure blindness too! */
+      if (player.CONFUSE) player.CONFUSE = 1; /* end confusion */
+      adjtime(time_used); /* adjust parameters for time change */
+      naptime += 1000;
+    }
+  }
+
+  printclasses();
+  blt();
+
+  setTimeout(oschool, naptime);
+  napping = true;
+  return 0;
+}
+
+
+
+
 
 
 /*
@@ -689,14 +854,20 @@ function exitbuilding() {
   return 1;
 }
 
-function storemessage(str) {
+function storemessage(str, duration) {
   //lflush();
   //dndstore();
   cursors();
   cltoeoln();
   lprcat(str);
   cursor(59, 21);
-  nap(2000);
+  //nap(2000);
+
+  blt();
+
+  if (duration != null && duration != 0) {
+    setTimeout(storemessage, duration, "", 0);
+  }
 }
 
 var dnd_item = null;

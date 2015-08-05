@@ -23,6 +23,7 @@ var  prayed = 1;       /* did player pray at an altar (command mode)? needs
                            right now.  KBR 1/11/90 */
 var oldx = 0;
 var oldy = 0;
+var course = []; /* the list of courses taken */
 
 /*
     table of experience needed to be a certain level of player

@@ -60,7 +60,7 @@ function makeobject(level) {
   if (level.depth == 0) {
     fillroom(OENTRANCE, 0); /*  entrance to dungeon         */
     fillroom(ODNDSTORE, 0); /*  the DND STORE               */
-    // fillroom(OSCHOOL, 0);    /*  college of Larn             */
+    fillroom(OSCHOOL, 0); /*  college of Larn             */
     fillroom(OBANK, 0); /*  1st national bank of larn   */
     fillroom(OVOLDOWN, 0); /*  volcano shaft to temple     */
     // fillroom(OHOME, 0);      /*  the players home & family   */

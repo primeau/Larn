@@ -1,8 +1,7 @@
 todo:
-- Thrift Shop
-- view inventory on drop
-- 'o' to open also? maybe also double move into door?
-- warn player that back button will kill the game
+- shift-arrow to open door?
+- put platinum dragon beside eye of larn
+- warn player that back button, window close will kill the game
 - drop gold
 - auto-pickup
 - random mazes (especially on L1)
@@ -10,7 +9,6 @@ todo:
 - monster rooms
 - monster special attacks
 - spells: sph, alt
-- College
 - Home
 - make sure difficulty > 0 is fully implemented
 - winning
