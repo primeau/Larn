@@ -72,12 +72,21 @@ function getnumberinput(key) {
     return getinput_done();
   } else if (key == '*') {
     KEYBOARD_INPUT = key;
-    lprc(key);
+    if (IN_STORE)
+      lprc(key);
+    else
+      appendLog(key);
     return getinput_done();
   } else if (key == DEL) {
-    appendLog(key);
     var num = KEYBOARD_INPUT + "";
     num = num.substring(0, num.length - 1);
+    //debug(num.length);
+    if (num.length > 0) {
+      if (IN_STORE) {
+        lprc(`\b`);
+      } else
+        appendLog(`\b`);
+    }
     KEYBOARD_INPUT = Number(num);
     //debug("getnumberinput(): " + KEYBOARD_INPUT);
     return 0;
@@ -88,10 +97,12 @@ function getnumberinput(key) {
     if (new_string != KEYBOARD_INPUT.toString()) { // prevent NaN etc
       KEYBOARD_INPUT = original_number;
     } else {
-      appendLog(key);
-      //lprc(key);
+      if (IN_STORE)
+        lprc(key);
+      else
+        appendLog(key);
     }
-    // debug("getnumberinput(): " + KEYBOARD_INPUT);
+    //debug("getnumberinput(): " + KEYBOARD_INPUT);
     return 0;
   }
 }

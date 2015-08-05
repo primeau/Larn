@@ -183,13 +183,13 @@ function dnd_parse(key) {
   if (i >= 0 && i <= 26) {
     i += dndindex;
     if (i >= MAXITM) {
-      storemessage("Sorry, but we are out of that item.");
+      storemessage("Sorry, but we are out of that item.", 700);
     } else if (dnd_item[i].qty <= 0) {
-      storemessage("Sorry, but we are out of that item.");
+      storemessage("Sorry, but we are out of that item.", 700);
     } else if (pocketfull()) {
-      storemessage("You can't carry anything more!");
+      storemessage("You can't carry anything more!", 700);
     } else if (player.GOLD < dnd_item[i].price) {
-      storemessage("You don't have enough gold to pay for that!");
+      storemessage("You don't have enough gold to pay for that!", 700);
     } else {
       player.GOLD -= dnd_item[i].price;
       dnd_item[i].qty--;
@@ -342,9 +342,9 @@ function obanksub() {
   standout("s");
   lprcat(") sell a stone, or ");
   standout("escape");
-  lprcat("]  ");
+  lprcat("] ");
 
-  blocking_callback = bank_parse;
+  setCharCallback(bank_parse, true);
 
   yrepcount = 0;
 
@@ -379,7 +379,9 @@ function bank_parse(key) {
   }
 
   if (key == 'w') {
-    lprcat("withdraw\nHow much? [* for all] ");
+    lprcat("withdraw\n");
+    cltoeoln();
+    lprcat("How much? [* for all] ");
     blocking_callback = getnumberinput;
     keyboard_input_callback = bank_withdraw;
   }
@@ -388,20 +390,29 @@ function bank_parse(key) {
     lprcat("sell\n");
     cltoeoln();
     lprcat("Which stone would you like to sell? [* for all] ");
-    blocking_callback = bank_sell;
+    setCharCallback(bank_sell, true);
   }
 }
 
 
 
-function bankmessage(str) { //TODO convert to storemessage?
-  lprcat(str);
-  nap(2000);
-  cl_dn(1, 23);
+function bankmessage(str, duration) { //TODO convert to storemessage?
+  if (duration == "")
+    cl_dn(1, 23);
+  else
+    cl_dn(1, 24);
   bank_print_gold();
-  cursor(70, 22);
+  cursor(1, 24);
+  lprcat(str);
+  cursor(69, 22);
   cltoeoln();
-  blocking_callback = bank_parse;
+  setCharCallback(bank_parse, true);
+
+  blt();
+
+  if (duration != null && duration != 0) {
+    setTimeout(bankmessage, duration, "", 0);
+  }
 }
 
 
@@ -411,13 +422,13 @@ function bank_deposit(amt) {
     amt = player.GOLD;
   }
   if (amt < 0) {
-    bankmessage("\nSorry, but we can't take negative gold!");
+    bankmessage("Sorry, but we can't take negative gold!", 700);
   } else if (amt > player.GOLD) {
-    bankmessage("  You don't have that much.");
+    bankmessage("You don't have that much.", 700);
   } else {
     player.GOLD -= amt;
     player.BANKACCOUNT += amt;
-    bankmessage("");
+    bankmessage("", 700);
   }
   return 0;
 }
@@ -429,13 +440,13 @@ function bank_withdraw(amt) {
     amt = player.BANKACCOUNT;
   }
   if (amt < 0) {
-    bankmessage("\nSorry, but we don't have any negative gold!");
+    bankmessage("Sorry, but we don't have any negative gold!", 700);
   } else if (amt > player.BANKACCOUNT) {
-    bankmessage("\nYou don't have that much in the bank!");
+    bankmessage("You don't have that much in the bank!", 700);
   } else {
     player.GOLD += amt;
     player.BANKACCOUNT -= amt;
-    bankmessage("");
+    bankmessage("", 700);
   }
   return 0;
 }
@@ -444,7 +455,7 @@ function bank_withdraw(amt) {
 
 function bank_sell(key) {
   if (key == ESC) {
-    bankmessage("");
+    bankmessage("", 700);
   } else if (key == '*') {
     var gems_sold = false;
     for (i = 0; i < 26; i++) {
@@ -456,18 +467,18 @@ function bank_sell(key) {
         var k = gemorder[i];
         cursor((k % 2) * 40 + 1, (k >> 1) + 4);
         lprintf("", 39);
-        bankmessage("");
+        bankmessage("", 700);
       }
     }
     if (!gems_sold) {
-      bankmessage("\nYou have no gems to sell!");
+      bankmessage("You have no gems to sell!", 700);
     }
   } else {
     var i = getIndexFromChar(key);
     if (i >= 0 && i <= 26) {
       if (gemvalue[i] == 0) {
         //lprintf("\nItem %c is not a gemstone!", i + 'a');
-        bankmessage(`\nItem ${getCharFromIndex(i)} is not a gemstone!`);
+        bankmessage(`Item ${getCharFromIndex(i)} is not a gemstone!`, 700);
       } else {
         player.GOLD += gemvalue[i];
         player.inventory[i] = null;
@@ -475,7 +486,7 @@ function bank_sell(key) {
         var k = gemorder[i];
         cursor((k % 2) * 40 + 1, (k >> 1) + 4);
         lprintf("", 39);
-        bankmessage("");
+        bankmessage("", 700);
       }
     }
   }
@@ -579,19 +590,19 @@ function parse_tradepost(key) {
   var value = 0;
   var i = getIndexFromChar(key);
 
-  cursor(59, 22);
-  lprc(key);
+  //cursor(59, 22);
+  //lprc(key);
 
   if (i >= 0 && i <= 26) {
     var item = player.inventory[i];
     if (item == null) {
-      storemessage(`You don't have item ${key}!`, 500);
+      storemessage(`You don't have item ${key}!`, 700);
       //nap(2000);
       return 0;
     }
     if (item.matches(OSCROLL) && !isKnownScroll(item) ||
       item.matches(OPOTION) && !isKnownPotion(item)) {
-      storemessage("Sorry, we can't accept unidentified objects", 500);
+      storemessage("Sorry, we can't accept unidentified objects", 700);
       //nap(2000);
       return 0;
     }
@@ -610,7 +621,7 @@ function parse_tradepost(key) {
         }
       }
       if (found == MAXITM) {
-        storemessage("Sorry, we can't accept unidentified objects", 500);
+        storemessage("Sorry, we can't accept unidentified objects", 700);
         //nap(2000);
         return 0;
       }
@@ -628,7 +639,7 @@ function parse_tradepost(key) {
       }
     }
   } else {
-    storemessage("Sorry, but we are not authorized to accept that item", 500);
+    storemessage("Sorry, but we are not authorized to accept that item", 700);
     return 0;
   }
 
@@ -653,7 +664,7 @@ function parse_sellitem(key) {
     setCharCallback(parse_tradepost, true);
     lprcat("no thanks");
     //nap(500);
-    setTimeout(storemessage, 500, "");
+    setTimeout(storemessage, 700, "");
     itemToSell = null;
     return 1;
   }
@@ -661,7 +672,7 @@ function parse_sellitem(key) {
     cursor(63 + itemToSell.price.toString().length, 24);
     setCharCallback(parse_tradepost, true);
     lprcat("yes");
-    setTimeout(storemessage, 500, "");
+    setTimeout(storemessage, 700, "");
     player.GOLD += itemToSell.price;
     if (player.WEAR === itemToSell.item) player.WEAR = null;
     if (player.WIELD === itemToSell.item) player.WIELD = null;
@@ -696,7 +707,7 @@ function oschool() {
 
   printclasses();
 
-  cl_dn(1,19);
+  cl_dn(1, 19);
   cursor(1, 20);
   lprcat("What is your choice? [Press ");
   lstandout("Esc");

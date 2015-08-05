@@ -30,10 +30,9 @@ bugs:
 - monster identification when blind is unreliable
 - extra newline in omnidirect spells
 - going up/down stairs can drop you onto a closed door
-- bank messages aren't printed out
-- store messages aren't printed out
 - object detection showed an empty dot? also treasure fining?
 - enter and exit building is counted as 2 moves
+- if you delete numbers (in bank, etc) to 0, you can't enter new numbers
 
 rename:
 - player.level.items[][] -> item
