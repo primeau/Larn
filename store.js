@@ -1,34 +1,15 @@
 "use strict";
 
 
-/*
- *
- *
- * DND STORE
- *
- *
- */
-
 
 /* number of items in the dnd inventory table   */
 const MAXITM = 83;
-
 
 var DND_Item = function DND_Item(price, item, qty) {
   this.price = price;
   this.item = item;
   this.qty = qty;
 }
-
-DND_Item.prototype = {
-  price: 0,
-  item: null,
-  qty: 0,
-}
-
-
-var dnd_item = null;
-
 
 var _itm = [
   /* cost      iven name    iven arg   how
@@ -121,19 +102,18 @@ var _itm = [
 
 
 /*
-    function for the dnd store
+ *
+ *
+ * DND STORE
+ *
+ *
  */
 
 var dndindex = 0;
 
 function dndstore() {
 
-  if (dnd_item == null) {
-    dnd_item = [];
-    for (var i = 0; i < _itm.length; i++) {
-      dnd_item[i] = new DND_Item(_itm[i][0], createObject(_itm[i][1], _itm[i][2]), _itm[i][3]);
-    }
-  }
+  initpricelist();
 
   clear();
 
@@ -165,7 +145,7 @@ function dndstore() {
 
   updategold();
 
-  blocking_callback = dnd_parse;
+  setCharCallback(dnd_parse, true);
 }
 
 
@@ -186,12 +166,8 @@ function updategold() {
 
 function dnd_parse(key) {
   if (key == ESC) {
-    IN_STORE = false;
-    clear();
-    //drawscreen();
-    paint();
     dndindex = 0;
-    return 1;
+    return exitbuilding();
   }
 
   if (key == ' ') {
@@ -230,21 +206,6 @@ function dnd_parse(key) {
   } else {
     return 0;
   }
-}
-
-
-
-/*
-    function for the players hands are full
- */
-function storemessage(str) {
-  //lflush();
-  //dndstore();
-  cursors();
-  cltoeoln();
-  lprcat(str);
-  cursor(59, 21);
-  nap(2200);
 }
 
 
@@ -406,12 +367,7 @@ function bank_print_gold() {
 
 function bank_parse(key) {
   if (key == ESC) {
-    IN_STORE = false;
-    clear();
-    //drawscreen();
-    paint();
-    dndindex = 0;
-    return 1;
+    return exitbuilding();
   }
 
   if (key == 'd') {
@@ -438,7 +394,7 @@ function bank_parse(key) {
 
 
 
-function bankmessage(str) {
+function bankmessage(str) { //TODO convert to storemessage?
   lprcat(str);
   nap(2000);
   cl_dn(1, 23);
@@ -529,7 +485,7 @@ function bank_sell(key) {
 
 
 /* function to put interest on your bank account */
-function ointerest() {
+function ointerest() { // TODO IS THIS WORKING?
   if (player.BANKACCOUNT < 0) player.BANKACCOUNT = 0;
   if ((player.BANKACCOUNT > 0) && (player.BANKACCOUNT < 500000)) {
     var i = (gtime - lasttime) / 100; /* # mobuls elapsed */
@@ -546,7 +502,210 @@ function ointerest() {
 /*
  *
  *
- * NEXT
+ * TRADING POST
  *
  *
  */
+
+var tradorder = [];
+
+function otradiven() {
+  var iven = player.inventory;
+  var i = 0;
+  var j = 0;
+  /* Print user's iventory like bank */
+  for (; i < 26; i++) {
+    var item = iven[i];
+    if (item) {
+      cursor((j % 2) * 40 + 1, (j >> 1) + 8);
+      tradorder[i] = 0; /* init position on screen to zero */
+
+      if (item.matches(OPOTION) && !isKnownPotion(item) ||
+        item.matches(OSCROLL) && !isKnownScroll(item)) {
+        // can't sell unknown stuff
+        continue;
+      }
+      tradorder[i] = j++; /* will display only if identified */
+      var fancy = !item.isRing();
+      lprcat(`${getCharFromIndex(i)}) ${item.toString(fancy)}`);
+
+    } else {
+      tradorder[i] = 0; /* make sure order array is clear */
+    }
+  } // for
+}
+
+
+function otradepost() {
+  setCharCallback(parse_tradepost, true);
+  initpricelist();
+
+  clear();
+
+  lprcat("Welcome to the Larn Trading Post. We buy items that explorers no longer find\n");
+  lprcat("useful. Since the condition of the items you bring in is not certain,\n");
+  lprcat("and we incur great expense in reconditioning the items, we usually pay\n");
+  lprcat("only 20% of their value were they to be new. If the items are badly\n");
+  lprcat("damaged, we will pay only 10% of their new value.\n\n");
+
+  lprcat("Here are the items we would be willing to buy from you:\n");
+
+  otradiven();
+
+  cl_dn(1, 21);
+
+  lprcat("\nWhat item do you want to sell to us? [Press ");
+  lstandout("Esc");
+  lprcat(" to leave] ");
+
+}
+
+
+
+function cleartradiven(i) {
+  var j = tradorder[i];
+  cursor((j % 2) * 40 + 1, (j >> 1) + 8);
+  lprintf(" ", 39);
+  tradorder[i] = 0;
+}
+
+
+
+function parse_tradepost(key) {
+  if (key == ESC) {
+    return exitbuilding();
+  }
+
+  var value = 0;
+  var i = getIndexFromChar(key);
+
+  if (i >= 0 && i <= 26) {
+    var item = player.inventory[i];
+    if (item == null) {
+      storemessage(`You don't have item ${key}!`);
+      nap(2000);
+      return 0;
+    }
+    if (item.matches(OSCROLL) && !isKnownScroll(item) ||
+      item.matches(OPOTION) && !isKnownPotion(item)) {
+      storemessage("Sorry, we can't accept unidentified objects");
+      nap(2000);
+      return 0;
+    }
+    if (item.isGem()) {
+      value = 20 * (item.arg & 255);
+    } //
+    else if (item.matches(OLARNEYE)) {
+      value = Math.max(10000, 50000 - (((gtime * 7) / 100) * 20));
+    } //
+    else {
+      var found = MAXITM;
+      for (var j = 0; j < MAXITM; j++) {
+        if (dnd_item[j].item.matches(item)) {
+          found = j;
+          break;
+        }
+      }
+      if (found == MAXITM) {
+        storemessage("Sorry, we can't accept unidentified objects");
+        nap(2000);
+        return 0;
+      }
+      if (item.matches(OSCROLL) || item.matches(OPOTION)) {
+        value = 0.2 * dnd_item[j + item.arg].price;
+      } else {
+        var izarg = item.arg;
+        value = 0.1 * dnd_item[j].price;
+
+        /* appreciate if a +n object */
+        if (izarg >= 0) {
+          value *= 2;
+        }
+        while ((izarg-- > 0) && ((value = 14 * (67 + value) / 10) < 500000));
+      }
+    }
+  } else {
+    storemessage("Sorry, but we are not authorized to accept that item");
+    return 0;
+  }
+
+  /* we have now found the value of the item, and dealt with any error
+  cases. print the object's value, let the user sell it */
+  value = Math.floor(value);
+  storemessage(`Item (${key}) is worth ${value} gold pieces to us. Do you want to sell it?`);
+
+  itemToSell = new DND_Item(value, item, 1);
+  setCharCallback(parse_sellitem, true);
+}
+
+
+
+var itemToSell = null; // GLOBAL
+
+
+
+function parse_sellitem(key) {
+  if (key == ESC || key == 'N' || key == 'n') {
+    setCharCallback(parse_tradepost, true);
+    cursor(64, 24);
+    lprcat("no thanks"); // TODO this doesn't actually show up
+    nap(500);
+    storemessage(``);
+    itemToSell = null;
+    return 1;
+  }
+  if (key == 'Y' || key == 'y') {
+    setCharCallback(parse_tradepost, true);
+    cursor(64, 24);
+    lprcat("yes"); // TODO this doesn't actually show up
+    player.GOLD += itemToSell.price;
+    if (player.WEAR === itemToSell.item) player.WEAR = null;
+    if (player.WIELD === itemToSell.item) player.WIELD = null;
+    if (player.SHIELD === itemToSell.item) player.SHIELD = null;
+    player.adjustcvalues(itemToSell.item, false);
+    var index = player.inventory.indexOf(itemToSell.item);
+    player.inventory[index] = null;
+    cleartradiven(index);
+    storemessage(``);
+    itemToSell = null;
+    return 1;
+  }
+  return 0;
+}
+
+
+/*
+ *
+ *
+ * COMMON
+ *
+ *
+ */
+function exitbuilding() {
+  IN_STORE = false;
+  clear();
+  //drawscreen();
+  paint();
+  return 1;
+}
+
+function storemessage(str) {
+  //lflush();
+  //dndstore();
+  cursors();
+  cltoeoln();
+  lprcat(str);
+  cursor(59, 21);
+  nap(2000);
+}
+
+var dnd_item = null;
+
+function initpricelist() {
+  if (dnd_item == null) {
+    dnd_item = [];
+    for (var i = 0; i < _itm.length; i++) {
+      dnd_item[i] = new DND_Item(_itm[i][0], createObject(_itm[i][1], _itm[i][2]), _itm[i][3]);
+    }
+  }
+}

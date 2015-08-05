@@ -21,6 +21,7 @@ bugs:
 - altars are badly broken
 - cast lit at throne - gnome king == black spot
 - should lit 'discover' beyond where player has seen?
+- is interest being paid correctly?
 - monsters move before missile spells are complete
 - missile char stays visible sometimes
 - monsters don't advance after range attacks (probably due to 2x monster move "fix")

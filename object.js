@@ -98,16 +98,16 @@ var Item = {
       return (this.id == item.id);
     },
 
-    toString: function(force_known) {
+    toString: function(in_store) {
       var description = this.desc;
       if (this.matches(OPOTION)) {
-        if (isKnownPotion(this) || force_known || DEBUG_KNOW_ALL) {
+        if (isKnownPotion(this) || in_store || DEBUG_KNOW_ALL) {
           description += " of " + potionname[this.arg];
         }
       }
       //
       else if (this.matches(OSCROLL)) {
-        if (isKnownScroll(this) || force_known || DEBUG_KNOW_ALL) {
+        if (isKnownScroll(this) || in_store || DEBUG_KNOW_ALL) {
           description += " of " + scrollname[this.arg];
         }
       }
@@ -118,7 +118,7 @@ var Item = {
         this.matches(ODEADTHRONE) ||
         this.matches(OBOOK) ||
         this.matches(OCHEST) ||
-        (this.isRing() && force_known) ||
+        (this.isRing() && in_store) ||
         this.isGem()) {
         // do nothing
       }
@@ -129,10 +129,10 @@ var Item = {
         } else if (this.arg < 0) {
           description += " " + this.arg;
         }
-        if (this === player.WIELD) {
+        if (this === player.WIELD && !in_store) {
           description += " (weapon in hand)"
         }
-        if (this === player.WEAR || this === player.SHIELD) {
+        if ((this === player.WEAR || this === player.SHIELD) && !in_store) {
           description += " (being worn)"
         }
       }

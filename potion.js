@@ -37,7 +37,7 @@ function isKnownPotion(item) {
   // debug("isKnownPotion(): " + item.arg);
   // debug("isKnownPotion(): " + knownPotions);
   if (item.matches(OPOTION)) {
-    if (knownPotions.indexOf(item.arg) >= 0) {
+    if (knownPotions.indexOf(item.arg) >= 0 || DEBUG_KNOW_ALL) {
       return true;
     }
   }

@@ -137,6 +137,10 @@ function cl_dn(x, y) {
 
 
 
+function lstandout(str) {
+  standout(str);
+}
+
 /*
  * standout(str)    Print the argument string in inverse video (standout mode).
  */
