@@ -850,6 +850,110 @@ function parse_class(key) {
 
 
 
+var GAME_OVER = false;
+
+function ohome() {
+
+  setCharCallback(parse_home, true);
+
+  for (var i = 0; i < 26; i++) {
+    var item = player.inventory[i];
+    if (item != null && item.matches(OPOTION) && item.arg == 21) {
+      //iven[i] = 0; /* remove from inventory */
+      if (gtime > TIMELIMIT) {
+        IN_STORE = false; // HACK?
+        updateLog("Congratulations. You found a potion of cure dianthroritis. Frankly, no one");
+        updateLog("thought you could do it. Boy! Did you surprise them! The doctor has the sad");
+        updateLog("duty to inform you that your daughter died before your return. There was");
+        updateLog("nothing that could be done without the potion.");
+        died(269);
+        return;
+      } else {
+        IN_STORE = false; // HACK?
+        updateLog("Congratulations. You found a potion of cure dianthroritis. Frankly, no one");
+        updateLog("thought you could do it. Boy! Did you surprise them! The doctor is now");
+        updateLog("administering the potion, and in a few moments your daughter should be well");
+        updateLog("on her way to recovery.");
+
+        updateLog("Press ");
+        appendLog("Enter"); // TODO BOLD
+        appendLog(" to continue: ");
+
+        setCharCallback(win, true);
+        return;
+      }
+    }
+  }
+
+  if (gtime > TIMELIMIT) {
+    IN_STORE = false; // HACK?
+    updateLog(`Welcome home ${logname}.`);
+    updateLog("The latest word from the doctor is not good.");
+    updateLog("The doctor has the sad duty to inform you that your daughter died! You didn't");
+    updateLog("make it in time. There was nothing that could be done without the potion.");
+    died(269);
+    return;
+  }
+
+  clear();
+
+  cursor(1, 7);
+
+  lprcat(`\tWelcome home ${logname}.`);
+  lprcat("\n\n\tThe latest word from the doctor is not good.");
+  lprcat("\n\n\tThe diagnosis is confirmed as dianthroritis. The doctor guesses that");
+  lprintf(`\n\tyour daughter has only ${timeleft()} mobuls left in this world. It's up to you,`);
+  lprintf(`\n\t${logname}, to find the only hope for your daughter, the`);
+  lprcat("\n\tvery rare potion of cure dianthroritis. It is rumored that only deep");
+  lprcat("\n\tin the depths of the caves can this potion be found.");
+
+  lprcat("\n\n\tPress ");
+  lstandout("Esc");
+  lprcat(" to leave: ");
+
+  paint();
+
+}
+
+function parse_home(key) {
+  if (key == ESC && !GAME_OVER) {
+    return exitbuilding();
+  }
+}
+
+function win(key) {
+  updateLog("");
+  updateLog("");
+  updateLog("");
+  updateLog("");
+  updateLog("");
+  updateLog("The potion is ");
+
+  setTimeout(function() {
+    appendLog("working!");
+    paint();
+    setTimeout(function() {
+      updateLog("");
+      updateLog("");
+      updateLog("The doctor thinks that your daughter will recover in a few days.");
+      paint();
+      setTimeout(function() {
+        updateLog("Congratulations!");
+        paint();
+        died(263);
+      }, 1000);
+    }, 2000);
+  }, 3000);
+
+  return 0;
+}
+
+
+
+
+
+
+
 /*
  *
  *

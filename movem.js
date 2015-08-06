@@ -32,6 +32,9 @@ let w1y = [];
  *  Returns no value.
  */
 function movemonst() {
+
+  //debug("movemonst()");
+
   let tmp1, tmp2, tmp3, tmp4, distance;
 
   if (player.HOLDMONST > 0) return; /* no action if monsters are held */
@@ -78,7 +81,7 @@ function movemonst() {
   let smart_count = 0;
   let movecnt = 0;
   let min_int = 10 - player.HARDGAME; /* minimum monster intelligence to move smart */
-  if (player.AGGRAVATE > 0 || player.STEALTH <= 0) {
+  if (player.AGGRAVATE > 0 || player.STEALTH == 0) {
     for (let j = tmp1; j < tmp2; j++)
       for (let i = tmp3; i < tmp4; i++)
         if (player.level.monsters[i][j] != null) {
@@ -145,7 +148,7 @@ function movemonst() {
      the player from getting free hits on a monster with long range
      spells or when stealthed.
   */
-  if (player.AGGRAVATE > 0 || player.STEALTH > 0) {
+  if (player.AGGRAVATE > 0 || player.STEALTH == 0) {
     /* If the last monster hit is within the move window, its already
        been moved.
     */
@@ -170,23 +173,22 @@ function movemonst() {
        Otherwise (monster outside window, asleep due to stealth),
        move the monster and update the lasthit x,y position.
         */
-    if (
-      player.level.monsters[lasthx][lasthy] != null &&
-      (
-        (lasthx < tmp3 || lasthx >= tmp4) || (lasthy < tmp1 || lasthy >= tmp2) &&
-        player.level.monsters[lasthx][lasthy] || player.level.monsters[lasthx][lasthy].awake // TODO THIS MAY BE A BUG
-      )
-    ) {
-      if (player.SCAREMONST > 0)
+    if ((lasthx < tmp3 || lasthx >= tmp4) ||
+      (lasthy < tmp1 || lasthy >= tmp2) &&
+      player.level.monsters[lasthx][lasthy] ||
+      // !player.level.monsters[lasthx][lasthy].awake) { // TODO one of these
+      player.level.monsters[lasthx][lasthy].awake) { // TODO     lines is buggy
+      if (player.SCAREMONST > 0) {
         move_scared(lasthx, lasthy);
-      else
+      } else
       if (player.level.monsters[lasthx][lasthy].intelligence > min_int) {
-        if (smart_count == 0)
+        if (smart_count == 0) {
           build_proximity_ripple();
+        }
         move_smart(lasthx, lasthy);
       } else {
         // TODO: THERE IS A BUG HERE WITH DOUBLE MONSTER MOVEMENT AFTER THEY HAVE BEEN HIT
-        //move_dumb(lasthx, lasthy);
+        move_dumb(lasthx, lasthy);
         // TODO: THERE IS A BUG HERE WITH DOUBLE MONSTER MOVEMENT AFTER THEY HAVE BEEN HIT
       }
       lasthx = w1x[0]; /* make sure the monster gets moved again */
@@ -414,8 +416,6 @@ function move_smart(i, j) {
    Parameters: the X,Y position of the monster to move.
 */
 function move_dumb(i, j) {
-  let xl, yl, xh, yh;
-  let k, m, tmp, tmpd, tmpx, tmpy;
 
   /* check for a half-speed monster, and check if not to move.  Could be
      done in the monster list build.
@@ -437,10 +437,10 @@ function move_dumb(i, j) {
      example, if the player is up and right of the monster, check only
      the three spots up and right of the monster.
   */
-  xl = i - 1;
-  yl = j - 1;
-  xh = i + 2;
-  yh = j + 2;
+  var xl = i - 1;
+  var yl = j - 1;
+  var xh = i + 2;
+  var yh = j + 2;
   if (i < player.x) xl++;
   else if (i > player.x) --xh;
   if (j < player.y) yl++;
@@ -450,11 +450,11 @@ function move_dumb(i, j) {
      the player.  if the monster is already next to the player, exit
      the check immediately.
   */
-  tmpd = 10000;
-  tmpx = i;
-  tmpy = j;
-  for (k = xl; k < xh; k++) {
-    for (m = yl; m < yh; m++) {
+  var tmpd = 10000;
+  var tmpx = i;
+  var tmpy = j;
+  for (var k = xl; k < xh; k++) {
+    for (var m = yl; m < yh; m++) {
       if (k == player.x && m == player.y) {
         tmpd = 1;
         tmpx = k;
@@ -468,7 +468,7 @@ function move_dumb(i, j) {
           (player.level.monsters[k][m] == null || (k == i) && (m == j)) &&
           (!player.level.monsters[i][j].matches(VAMPIRE) || !player.level.items[k][m].matches(OMIRROR))
         ) {
-          tmp = (player.x - k) * (player.x - k) + (player.y - m) * (player.y - m);
+          var tmp = (player.x - k) * (player.x - k) + (player.y - m) * (player.y - m);
           if (tmp < tmpd) {
             tmpd = tmp;
             tmpx = k;
@@ -577,20 +577,30 @@ function mmove(aa, bb, cc, dd) {
   //     if (i==OTELEPORTER) /* monster hits teleport trap */
   //         { flag=3; fillmonst(mitem[cc][dd]);  mitem[cc][dd]=0; }
   //     if (c[BLINDCOUNT]) return;  /* if blind don't show where monsters are   */
-  //     if (know[cc][dd] & HAVESEEN)
-  //         {
-  //         p=0;
-  //         if (flag) cursors();
-  //         switch(flag)
-  //           {
-  //           case 1: p="\n%s hits the %s";  break;
-  //           case 2: p="\n%s hits and kills the %s";  break;
-  //           case 3: p="\nThe %s%s gets teleported"; who="";  break;
-  //           };
-  //         if (p) { lprintf(p,who,monster[tmp].name); beep(); }
-  //         }
-  //     if (know[aa][bb] & HAVESEEN)   show1cell(aa,bb);
-  //     if (know[cc][dd] & HAVESEEN)   show1cell(cc,dd);
+
   // TODO
+  // if (know[cc][dd] & HAVESEEN) {
+  //   p = 0;
+  //   if (flag) cursors();
+  //   switch (flag) {
+  //     case 1:
+  //       p = "\n%s hits the %s";
+  //       break;
+  //     case 2:
+  //       p = "\n%s hits and kills the %s";
+  //       break;
+  //     case 3:
+  //       p = "\nThe %s%s gets teleported";
+  //       who = "";
+  //       break;
+  //   };
+  //   if (p) {
+  //     lprintf(p, who, monster[tmp].name);
+  //     beep();
+  //   }
+  // }
+
+  if (player.level.know[aa][bb] & HAVESEEN) show1cell(aa, bb);
+  if (player.level.know[cc][dd] & HAVESEEN) show1cell(cc, dd);
 
 }

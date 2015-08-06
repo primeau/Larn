@@ -627,7 +627,9 @@ function hitplayer(x, y) {
       show1cell(x,y);
 
   var bias = player.HARDGAME + 1;
-  //hitflag = hit2flag = hit3flag = 1; // TODO
+  hitflag = 1;
+  hit2flag = 1;
+  hit3flag = 1;
   yrepcount = 0;
 
   cursors();
@@ -700,7 +702,7 @@ function hitmonster(x, y) {
     debug("monster.hitmonster(): no monster at: " + xy(x, y));
     return;
   }
-  //hit3flag = 1;
+  hit3flag = 1;
   var blind = ifblind(x, y);
   var tmp = monster.armorclass + player.LEVEL + player.DEXTERITY + player.WCLASS / 4 - 12;
   if ((rnd(20) < tmp - player.HARDGAME) || (rnd(71) < 5)) /* need at least random chance to hit */ {

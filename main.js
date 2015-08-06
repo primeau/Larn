@@ -33,12 +33,16 @@ function mainloop(e) {
     return;
   }
 
-  if (hit3flag)
-    lflushall();
+  if (hit3flag) {
+    //lflushall(); // TODO what is this for?
+  }
 
   nomove = 0;
 
   parse(e);
+
+  // debug("nomove: " + nomove);
+  // debug("hitflag: " + hitflag);
 
   if (nomove == 1) {
     paint();
@@ -69,9 +73,8 @@ function mainloop(e) {
      update game time, move spheres, move walls, move monsters
      all the stuff affected by TIMESTOP and HASTESELF
   */
-  if (player.TIMESTOP <= 0)
-    if (player.HASTESELF == 0 ||
-      (player.HASTESELF & 1) == 0) {
+  if (player.TIMESTOP <= 0) {
+    if (player.HASTESELF == 0 || (player.HASTESELF & 1) == 0) {
       gtime++;
       // movsphere(); // TODO
 
@@ -82,17 +85,19 @@ function mainloop(e) {
         movemonst();
       }
     }
+  }
 
-    /* show stuff around the player
-     */
-    // TODO
+  /* show stuff around the player
+   */
+  // TODO
   if (viewflag == 0)
     showcell(player.x, player.y);
   else
     viewflag = 0;
 
-  if (hit3flag)
-    lflushall();
+  if (hit3flag) {
+    //lflushall();
+  }
   hitflag = 0;
   hit3flag = 0;
   bot_linex(); /* update bottom line */

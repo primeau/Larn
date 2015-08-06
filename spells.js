@@ -19,12 +19,12 @@ var spell_cast = null;
 
 function pre_cast() {
   cursors();
+  nomove = 1; // does nothing?
   if (player.SPELLS > 0) {
     updateLog(eys);
     spell_cast = "";
     setCharCallback(cast, true);
   } else {
-    nomove = 1;
     updateLog("You don't have any spells!");
   }
 }
@@ -32,6 +32,8 @@ function pre_cast() {
 
 
 function cast(key) {
+
+  nomove = 1; // does nothing?
 
   if (key == 'I' || key == " ") {
     // TODO
@@ -53,7 +55,7 @@ function cast(key) {
     return 0;
   }
 
-  updateLog("");
+  //updateLog("");
 
   --player.SPELLS;
 
@@ -65,7 +67,6 @@ function cast(key) {
     bottomline();
   }
 
-  //player.level.paint();
   return 1;
 }
 
@@ -897,6 +898,8 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
   dam -= 3 + (player.HARDGAME >> 1);
   //} // WHILE
+
+  nomove = 1; // TODO does nothing?
 
   if (dam > 0) {
     blt();

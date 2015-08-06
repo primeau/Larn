@@ -148,3 +148,15 @@ function getIndexFromChar(char) {
   var dropIndex = dropcode - acode;
   return dropIndex;
 }
+
+
+
+function elapsedtime() {
+  return Math.round(gtime / 100);
+}
+
+
+
+function timeleft() {
+  return Math.round((TIMELIMIT - gtime) / 100);
+}

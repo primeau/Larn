@@ -63,7 +63,7 @@ function makeobject(level) {
     fillroom(OSCHOOL, 0); /*  college of Larn             */
     fillroom(OBANK, 0); /*  1st national bank of larn   */
     fillroom(OVOLDOWN, 0); /*  volcano shaft to temple     */
-    // fillroom(OHOME, 0);      /*  the players home & family   */
+    fillroom(OHOME, 0); /*  the players home & family   */
     fillroom(OTRADEPOST, 0); /*  the trading post            */
     // fillroom(OLRS, 0); /*  the larn revenue service    */
     return;

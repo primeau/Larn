@@ -5,6 +5,7 @@ var gtime = 0; /*  the clock for the game                      */
 
 var prompt_mode = false;
 
+var logname = "adventurer";
 
 var lastmonst = "";
 
@@ -18,7 +19,7 @@ var lastpx = 0;
 var lastpy = 0;
 var lasthx = 0; /* location of monster last hit by player       */
 var lasthy = 0; /* location of monster last hit by player       */
-var  prayed = 1;       /* did player pray at an altar (command mode)? needs
+var prayed = 1;       /* did player pray at an altar (command mode)? needs
                            to be saved, but I don't want to add incompatibility
                            right now.  KBR 1/11/90 */
 var oldx = 0;
@@ -81,4 +82,39 @@ const CLASSES = [
   "  earth guardian   ", "   air guardian    ", "   fire guardian   ", /* -96*/
   "  water guardian   ", "  time guardian    ", " ethereal guardian ", /* -99*/
   "    The Creator    ", "    The Creator    ", "    The Creator    ", /* -102*/
+];
+
+
+const whydead =
+[
+  "",
+  "",
+  "self - annihilated",
+  "shot by an arrow",
+  "hit by a dart",
+  "fell into a pit",
+  "fell into a bottomless pit",
+  "a winner",
+  "trapped in solid rock",
+  "",
+  "",
+  "",
+  "",
+  "failed",
+  "erased by a wayward finger",
+  "fell through a bottomless trap door",
+  "fell through a trap door",
+  "drank some poisonous water",
+  "fried by an electric shock",
+  "slipped on a volcano shaft",
+  "",
+  "attacked by a revolting demon",
+  "hit by own magic",
+  "demolished by an unseen attacker",
+  "fell into the dreadful sleep",
+  "killed by an exploding chest",
+  "",
+  "annihilated in a sphere",
+  "",
+  ""
 ];

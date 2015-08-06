@@ -50,7 +50,7 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
 
   if (show_time) {
     cltoeoln();
-    lprcat(`Elapsed time is ${Math.round(gtime/100)}. You have ${Math.round((TIMELIMIT - gtime) / 100)} mobuls left\n`);
+    lprcat(`Elapsed time is ${elapsedtime()}. You have ${timeleft()} mobuls left\n`);
   }
 
   cltoeoln();
