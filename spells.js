@@ -750,6 +750,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
   if (isconfuse()) {
     napping = false;
+    paint();
     return;
   }
 
@@ -766,6 +767,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   if ((x > MAXX - 1) || (y > MAXY - 1) || (x < 0) || (y < 0)) {
     dam = 0;
     napping = false;
+    paint();
     return;
   } /* out of bounds */
 
@@ -780,6 +782,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       died(278);
     }
     napping = false;
+    paint();
     return;
   }
 
@@ -803,6 +806,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       lasthx = x;
       lasthy = y;
       napping = false;
+      paint();
       return;
     }
 
@@ -902,11 +906,11 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   nomove = 1; // TODO does nothing?
 
   if (dam > 0) {
-    blt(); // TODO use paint()?
+    blt(); // TODO use paint()? -> no because it doesn't show missile trail
     setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, delay, cshow, stroverride);
   } else {
-    paint();
     napping = false;
+    paint();
     return;
   }
 
@@ -935,6 +939,7 @@ function omnidirect(spnum, dam, str) {
           cursors();
           updateLog(`  The ${monster} ${str}`);
           hitm(x, y, dam);
+          //player.level.know[x][y] = KNOWALL; // TODO HACK FIX FOR BLACK TILE IF KNOW = 0 in HITM()
           nap(800);
         } else {
           lasthx = x;

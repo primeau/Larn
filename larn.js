@@ -11,6 +11,7 @@ var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
 var DEBUG_STAIRS_EVERYWHERE = false;
 var DEBUG_KNOW_ALL = false;
+var DEBUG_IMMORTAL = false;
 var DEBUG_PAINT = 0;
 var DEBUG_LPRCAT = 0;
 var DEBUG_LPRC = 0;
@@ -66,6 +67,9 @@ var Larn = {
 
 
 function positionplayer(x, y, exact) {
+
+  // TODO update with larn code
+
   if (x == null) x = player.x;
   if (y == null) y = player.y;
   if (exact == null) exact = false;
@@ -77,6 +81,10 @@ function positionplayer(x, y, exact) {
     player.y = y;
     debug("positionplayer: (" + distance + ") got " + xy(x, y));
     player.level.know[x][y] = KNOWALL;
+
+    oldx = player.x;
+    oldy = player.y;
+
     return true;
   }
 
@@ -95,6 +103,10 @@ function positionplayer(x, y, exact) {
           player.y = newy;
           player.level.know[x][y] = KNOWALL;
           debug("positionplayer: (" + distance + ") got " + xy(newx, newy));
+
+          oldx = player.x;
+          oldy = player.y;
+
           return true;
         }
       }
@@ -102,6 +114,10 @@ function positionplayer(x, y, exact) {
     numTries = maxTries;
     distance++;
   }
+
+  oldx = player.x;
+  oldy = player.y;
+
   return false;
 }
 

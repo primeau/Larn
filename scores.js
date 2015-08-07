@@ -31,6 +31,7 @@
  * 283     annihilated in a sphere
  */
 function died(reason) {
+
   var cantprotect = false;
 
   var cause = '-- ';
@@ -63,17 +64,22 @@ function died(reason) {
     }
   }
 
-  setCharCallback(dead, true);
-
   if (reason != 263) {
     var pad = 67 - 14 - cause.length;
     cause = Array(pad).join(' ') + cause;
     updateLog(`You Have Died! ${cause}`);
   }
   paint();
-  napping = true;
   nomove = 1;
   dropflag = 1;
+
+  if (DEBUG_IMMORTAL) {
+    updateLog(`You are lucky you are immortal...`);
+    return;
+  }
+
+  setCharCallback(dead, true);
+  napping = true;
   IN_STORE = true;
   GAME_OVER = true;
 

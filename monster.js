@@ -438,7 +438,7 @@ function createitem(it, arg) {
     y = player.y + diroffy[k];
     if (cgood(x, y, 1, 0)) /* if we can create here */ {
       player.level.items[x][y] = createObject(it, arg);
-      player.level.know[x][y] = 0;
+      //player.level.know[x][y] = 0;
       return;
     }
   }
@@ -799,7 +799,7 @@ function hitm(x, y, damage) {
     }
     monster.dropsomething();
     player.level.monsters[x][y] = null;
-    player.level.know[x][y] = 0;
+    //player.level.know[x][y] = 0; // HACK FIX FOR BLACK TILE FIX ON OMNIDIRECT
     //monster = null;
     return (hpoints);
   }

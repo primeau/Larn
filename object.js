@@ -293,7 +293,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   if (player.TIMESTOP)
     return;
 
-  // showcell(player.x, player.y); // TODO?
+  showcell(player.x, player.y);
 
   var item = player.level.items[player.x][player.y];
 

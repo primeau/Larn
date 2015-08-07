@@ -77,7 +77,6 @@ function mainloop(e) {
     if (player.HASTESELF == 0 || (player.HASTESELF & 1) == 0) {
       gtime++;
       // movsphere(); // TODO
-
       if (hitflag == 0) {
         if (player.HASTEMONST) {
           movemonst();
@@ -101,6 +100,8 @@ function mainloop(e) {
   hitflag = 0;
   hit3flag = 0;
   bot_linex(); /* update bottom line */
+
+  showplayer(); // JRP NEW (was in yylex())
 
   paint();
 }
@@ -690,6 +691,11 @@ function parse(e) {
       player.HOLDMONST = 0;
       player.STEALTH = 0;
     }
+  }
+  if ( /*key == 'X' ||*/ key == '+') {
+    nomove = 1;
+    DEBUG_IMMORTAL = !DEBUG_IMMORTAL;
+    updateLog("DEBUG: IMMORTAL: " + DEBUG_IMMORTAL);
   }
   if (key == 'X') {
     nomove = 1;

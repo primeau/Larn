@@ -109,10 +109,10 @@ var Player = {
       warning -- will kill player if hp goes to zero
    */
   losehp: function(damage) {
-    debug("losehp: damage: " + damage);
+    //debug("losehp: damage: " + damage);
     this.HP -= damage;
     if (this.HP <= 0) {
-      debug("losehp: DEATH!: " + damage);
+      //debug("losehp: DEATH!: " + damage);
       beep();
       nap(3000);
       died(lastnum);
