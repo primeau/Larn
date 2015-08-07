@@ -1,14 +1,4 @@
 "use strict";
-/*
- *  movem.c (move monster)
- *
- *  movemonst()     Routine to move the monsters toward the player
- *  build_proximity_ripple()  Build proximity ripple for smart monster move
- *  move_scared()   Move scared monsters
- *  move_smart()    Move smart monsters
- *  move_dumb()     Move dumb monsters
- *  mmove(x,y,xd,yd)    Function to actually perform the monster movement
- */
 
 const IDISTNORM = 8; /* was 17 - dgk */ // TODO: WHAT SHOULD THIS BE?
 const IDISTAGGR = 20; /* was 40 - dgk */
@@ -148,7 +138,8 @@ function movemonst() {
      the player from getting free hits on a monster with long range
      spells or when stealthed.
   */
-  if (player.AGGRAVATE > 0 || player.STEALTH == 0) {
+  if (player.AGGRAVATE > 0 || player.STEALTH == 0) { // TODO CORRECT?
+//    if (player.AGGRAVATE > 0 || player.STEALTH > 0) {
     /* If the last monster hit is within the move window, its already
        been moved.
     */
@@ -173,11 +164,11 @@ function movemonst() {
        Otherwise (monster outside window, asleep due to stealth),
        move the monster and update the lasthit x,y position.
         */
-    if ((lasthx < tmp3 || lasthx >= tmp4) ||
-      (lasthy < tmp1 || lasthy >= tmp2) &&
-      player.level.monsters[lasthx][lasthy] ||
-      // !player.level.monsters[lasthx][lasthy].awake) { // TODO one of these
-      player.level.monsters[lasthx][lasthy].awake) { // TODO     lines is buggy
+        if (((lasthx < tmp3 || lasthx >= tmp4) ||
+            (lasthy < tmp1 || lasthy >= tmp2)) &&
+      player.level.monsters[lasthx][lasthy] != null ||
+      player.level.monsters[lasthx][lasthy] && !player.level.monsters[lasthx][lasthy].awake) { // TODO CORRECT?
+      //player.level.monsters[lasthx][lasthy] && player.level.monsters[lasthx][lasthy].awake) { // TODO     lines is buggy
       if (player.SCAREMONST > 0) {
         move_scared(lasthx, lasthy);
       } else
@@ -285,13 +276,13 @@ function build_proximity_ripple() {
 //             break;
 //         };
 //           }
-//       screen[playerx][playery]=1;
+//       screen[player.x][player.y]=1;
 //
-// /* now perform proximity ripple from playerx,playery to monster */
+// /* now perform proximity ripple from player.x,player.y to monster */
 //       xl=tmp3-1; yl=tmp1-1; xh=tmp4+1;  yh=tmp2+1;
 //       vxy(&xl,&yl);  vxy(&xh,&yh);
 //
-//       PUTQUEUE( playerx, playery, 1 );
+//       PUTQUEUE( player.x, player.y, 1 );
 //       do
 //       {
 //       GETQUEUE( curx, cury, curdist );
@@ -579,7 +570,7 @@ function mmove(aa, bb, cc, dd) {
   //     if (c[BLINDCOUNT]) return;  /* if blind don't show where monsters are   */
 
   // TODO
-  // if (know[cc][dd] & HAVESEEN) {
+  // if (player.level.know[cc][dd] & HAVESEEN) {
   //   p = 0;
   //   if (flag) cursors();
   //   switch (flag) {

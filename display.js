@@ -135,7 +135,7 @@ function showcell(x, y) {
         show1cell(i, j);
         // cursor(1+i, 1+j);
         //
-        // if (i == playerx && j == playery) lprc_map('@', 0);
+        // if (i == player.x && j == player.y) lprc_map('@', 0);
         // else if (mitem[i][j])             lprc_map(monstnamelist[mitem[i][j]], mitem[i][j]);
         // else                              lprc_map(objnamelist[item[i][j]], item[i][j]);
         //

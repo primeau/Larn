@@ -66,7 +66,7 @@ function died(reason) {
   setCharCallback(dead, true);
 
   if (reason != 263) {
-    var pad = 80 - 14 - cause.length;
+    var pad = 67 - 14 - cause.length;
     cause = Array(pad).join(' ') + cause;
     updateLog(`You Have Died! ${cause}`);
   }

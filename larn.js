@@ -124,7 +124,6 @@ const diroffy = [0, 1, 0, -1, 0, -1, -1, 1, 1];
         [5-northeast] [6-northwest] [7-southeast] [8-southwest]
         if direction=0, don't move--just show where he is */
 function moveplayer(dir) {
-  var prayed;
 
   if (player.CONFUSE > 0) {
     if (player.level.depth < rnd(30)) {
@@ -134,6 +133,7 @@ function moveplayer(dir) {
 
   var k = player.x + diroffx[dir];
   var m = player.y + diroffy[dir];
+
   if (k < 0 || k >= MAXX || m < 0 || m >= MAXY) {
     nomove = 1;
     yrepcount = 0;
@@ -145,12 +145,26 @@ function moveplayer(dir) {
   /* prevent the player from moving onto a wall, or a closed door when
      in command mode, unless the character has Walk-Through-Walls.
    */
-  //if ((item.matches(OCLOSEDDOOR) && !prompt_mode) || (item.matches(OWALL)) && player.WTW <= 0) {
   if ((item.matches(OCLOSEDDOOR) || item.matches(OWALL)) && player.WTW == 0) {
     nomove = 1;
     yrepcount = 0;
     return (0);
   }
+
+  // if (k == 33 && m == MAXY-1 && level == 1)
+  // {
+  //   newcavelevel(0);
+  //
+  //   for (k=0; k<MAXX; k++) for (m=0; m<MAXY; m++) if (item[k][m] == OENTRANCE)
+  //   {
+  //     player.x = k;
+  //     player.y = m;
+  //     positionplayer();
+  //     drawscreen();
+  //     new_position_flag = 1;
+  //     return 0;
+  //   }
+  // }
 
   if (item.matches(OHOMEENTRANCE)) {
     updateLog("Going to Home Level");
@@ -161,7 +175,7 @@ function moveplayer(dir) {
 
   /* hit a monster
    */
-  if (monster != null) {
+  if (monster) {
     hitmonster(k, m);
     yrepcount = 0;
     return (0);
@@ -169,9 +183,7 @@ function moveplayer(dir) {
 
   /* check for the player ignoring an altar when in command mode.
    */
-  if ((!prompt_mode) &&
-    (getItem(player.x, player.y).matches(OALTAR)) &&
-    (!prayed)) {
+  if (getItem(player.x, player.y).matches(OALTAR) && !prayed) {
     updateLog("  You have ignored the altar!");
     act_ignore_altar();
   }
@@ -182,6 +194,8 @@ function moveplayer(dir) {
   player.x = k;
   player.y = m;
 
+  // new_position_flag = 1; TODO
+
   // TODO: JRP NOT IN ORIGINAL CODE
   // stop running when hitting an object
   if (!getItem(k, m).matches(OEMPTY)) {
@@ -189,13 +203,16 @@ function moveplayer(dir) {
     return (0);
   }
 
-  if (!item.matches(OTRAPARROWIV) && !item.matches(OIVTELETRAP) && //
-    !item.matches(OIVDARTRAP) && !item.matches(OIVTRAPDOOR)) {
-    yrepcount = 0;
-    return (1);
-  } else {
-    return (1);
-  }
+  // TODO
+  // if (!item.matches(OTRAPARROWIV) && !item.matches(OIVTELETRAP) && //
+  //   !item.matches(OIVDARTRAP) && !item.matches(OIVTRAPDOOR)) {
+  //   yrepcount = 0;
+  //   return (1);
+  // } else {
+  //   return (1);
+  // }
+
+  return 1;
 }
 
 

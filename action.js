@@ -17,11 +17,11 @@ function act_remove_gems(arg) {
       creategem(); /* gems pop off the throne */
     }
     player.level.items[player.x][player.y] = createObject(ODEADTHRONE, getItem(player.x, player.y).arg);
-    //know[player.x][player.y] = 0;
+    player.level.know[player.x][player.y] = 0;
   } else if (k < 40 && arg == 0) {
     createmonster(GNOMEKING);
     player.level.items[player.x][player.y].arg = 1;
-    //know[player.x][player.y] = 0;
+    player.level.know[player.x][player.y] = 0;
   } else {
     updateLog("  Nothing happens");
   }
@@ -44,7 +44,7 @@ function act_sit_throne(arg) {
   if (k < 30 && arg == 0) {
     createmonster(GNOMEKING);
     player.level.items[player.x][player.y].arg = 1;
-    //know[player.x][player.y] = 0;
+    player.level.know[player.x][player.y] = 0;
   } else if (k < 35) {
     updateLog("  Zaaaappp!  You've been teleported!");
     beep();
@@ -90,7 +90,7 @@ function act_drink_fountain() {
   if (rnd(12) < 3) {
     updateLog("  The fountains bubbling slowly quiets");
     setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
-    //know[playerx][playery]=0;
+    player.level.know[player.x][player.y] = 0;
   }
   return;
 }
@@ -165,7 +165,7 @@ function act_open_chest(x, y) {
         break;
     };
     player.level.items[x][y] = createObject(OEMPTY); /* destroy the chest */
-    //know[x][y] = 0;
+    player.level.know[x][y] = 0;
     if (rnd(100) < 69) {
       creategem();  /* gems from the chest */
     }
@@ -219,7 +219,7 @@ function act_open_door(x, y) {
     updateLog("  The door doesn't budge");
     return (0);
   } else {
-    //know[x][y] = 0;
+    player.level.know[x][y] = 0;
     player.level.items[x][y] = createObject(OOPENDOOR);
     return (1);
   }

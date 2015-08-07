@@ -241,7 +241,7 @@ function drop_object(index) {
     return 1;
   }
 
-  // if (playery == MAXY - 1 && playerx == 33) return (1); /* not in entrance */
+  // if (player.y == MAXY - 1 && player.x == 33) return (1); /* not in entrance */
 
   player.inventory[useindex] = null;
   player.level.items[player.x][player.y] = item;
@@ -249,7 +249,7 @@ function drop_object(index) {
   updateLog(`  You drop: `);
   updateLog(`${getCharFromIndex(useindex)}) ${item}`);
   // show3(k); /* show what item you dropped*/
-  // know[playerx][playery] = 0;
+  player.level.know[player.x][player.y] = 0;
 
   if (player.WIELD === item) {
     player.WIELD = null;

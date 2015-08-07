@@ -34,7 +34,7 @@ function close_something(direction) {
       return;
     }
     player.level.items[x][y] = createObject(OCLOSEDDOOR, 0);
-    // know[x][y] = 0;
+    player.level.know[x][y] = 0;
     if (direction == 0) {
       player.x = lastpx;
       player.y = lastpy;

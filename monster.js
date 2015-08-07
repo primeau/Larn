@@ -438,7 +438,7 @@ function createitem(it, arg) {
     y = player.y + diroffy[k];
     if (cgood(x, y, 1, 0)) /* if we can create here */ {
       player.level.items[x][y] = createObject(it, arg);
-      //know[x][y] = 0;
+      player.level.know[x][y] = 0;
       return;
     }
   }
@@ -690,31 +690,33 @@ function hitplayer(x, y) {
  *  Returns no value.
  */
 function hitmonster(x, y) {
-  var monster = player.level.monsters[x][y];
-  hitflag = 0;
-  var damage = 0;
-
-  //extern char lastmonst[];
-  //  register int tmp, monst;
   if (player.TIMESTOP > 0) return; /* not if time stopped */
+
   //vxy( & x, & y); /* verify coordinates are within range */
+
+  var monster = player.level.monsters[x][y];
+
   if ((monster) == null) {
     debug("monster.hitmonster(): no monster at: " + xy(x, y));
     return;
   }
+
   hit3flag = 1;
   var blind = ifblind(x, y);
+  var damage = 0;
+  var flag = 0;
+
   var tmp = monster.armorclass + player.LEVEL + player.DEXTERITY + player.WCLASS / 4 - 12;
   if ((rnd(20) < tmp - player.HARDGAME) || (rnd(71) < 5)) /* need at least random chance to hit */ {
     updateLog("You hit the " + (blind ? "monster" : monster));
-    hitflag = 1;
+    flag = 1;
     damage = fullhit(1);
     if (damage < 9999) damage = rnd(damage) + 1;
   } else {
     updateLog("  You missed the " + (blind ? "monster" : monster));
-    hitflag = 0;
+    flag = 0;
   }
-  if (hitflag == 1) { /* if the monster was hit */
+  if (flag == 1) { /* if the monster was hit */
     if (monster.matches(RUSTMONSTER) || monster.matches(DISENCHANTRESS) || monster.matches(CUBE)) {
       if (player.WIELD != null) {
         if (player.WIELD.arg > -10) {
@@ -735,10 +737,11 @@ function hitmonster(x, y) {
       }
     }
   }
-  if (hitflag == 1) {
+  if (flag == 1) {
     hitm(x, y, damage);
   }
   if (monster.matches(VAMPIRE)) {
+    //if (monster.hitpoints < 25) { // TODO this is original code?
     if (monster.hitpoints > 0 && monster.hitpoints < 25) {
       player.level.monsters[x][y] = createNewMonster(BAT);
       player.level.know[x][y] = 0;

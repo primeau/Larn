@@ -386,8 +386,8 @@ function speldamage(x) {
       //     died(258);
       //     return;
       //   }
-      //   xl = playerx;
-      //   yl = playery;
+      //   xl = player.x;
+      //   yl = player.y;
       //   loseint();
       //   i = dirsub( & xl, & yl); /* get direction of sphere */
       //   newsphere(xl, yl, i, rnd(20) + 11); /* make a sphere */
@@ -450,9 +450,9 @@ function speldamage(x) {
       //         item[i][j] = OWALL;
       //         mitem[i][j] = 0;
       //         if (wizard)
-      //           know[i][j] = KNOWALL;
+      //           player.level.know[i][j] = KNOWALL;
       //         else
-      //           know[i][j] = 0;
+      //           player.level.know[i][j] = 0;
       //       }
       //     eat(1, 1);
       //     if (level == 1) item[33][MAXY - 1] = OENTRANCE;
@@ -532,7 +532,7 @@ function spell_polymorph(direction) {
     //while (monster[m = mitem[x][y] = rnd(MAXMONST + 7)].genocided);
     player.level.monsters[x][y] = null;
     createmonster(rnd(monsterlist.length - 1), x, y);
-    //show1cell(x, y); /* show the new monster */
+    show1cell(x, y); /* show the new monster */
   } else {
     lasthx = x;
     lasthy = y;
@@ -788,7 +788,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     cursor(x + 1, y + 1);
     lprc(cshow);
     nap(delay);
-    //show1cell(x, y);
+    show1cell(x, y);
   }
 
   var monster = monsterAt(x, y);
@@ -825,8 +825,8 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       x != 0 && y != 0) {
       updateLog("  The wall crumbles");
       player.level.items[x][y] = createObject(OEMPTY);
-      // know[x][y] = 0;
-      // show1cell(x, y);
+      player.level.know[x][y] = 0;
+      show1cell(x, y);
     }
     dam = 0;
   } else if (item.matches(OCLOSEDDOOR)) {
@@ -835,8 +835,8 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     if (dam >= 40) {
       updateLog("  The door is blasted apart");
       player.level.items[x][y] = createObject(OEMPTY);
-      // know[x][y] = 0;
-      // show1cell(x, y);
+      player.level.know[x][y] = 0;
+      show1cell(x, y);
     }
     dam = 0;
   } else if (item.matches(OSTATUE)) {
@@ -846,8 +846,8 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       if (dam > 44) {
         updateLog("  The statue crumbles");
         player.level.items[x][y] = createObject(OBOOK, player.level.depth);
-        // know[x][y] = 0;
-        // show1cell(x, y);
+        player.level.know[x][y] = 0;
+        show1cell(x, y);
       }
     dam = 0;
   } else if (item.matches(OTHRONE)) {
@@ -856,7 +856,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     if (dam > 39 && item.arg == 0) {
       create_guardian(GNOMEKING, x, y);
       item.arg = 1; // nullify the throne
-      //show1cell(x, y);
+      show1cell(x, y);
     }
     dam = 0;
   } else if (item.matches(OALTAR)) {
@@ -864,7 +864,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     updateLog(str("altar"));
     if (dam > 75 - (player.HARDGAME >> 2)) {
       create_guardian(DEMONPRINCE, x, y);
-      //show1cell(x, y);
+      show1cell(x, y);
     }
     dam = 0;
   } else if (item.matches(OFOUNTAIN)) {
@@ -872,7 +872,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     updateLog(str("fountain"));
     if (dam > 55) {
       create_guardian(WATERLORD, x, y);
-      //show1cell(x, y);
+      show1cell(x, y);
     }
     dam = 0;
   } else if (item.matches(OMIRROR)) {
@@ -902,7 +902,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   nomove = 1; // TODO does nothing?
 
   if (dam > 0) {
-    blt();
+    blt(); // TODO use paint()?
     setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, delay, cshow, stroverride);
   } else {
     paint();
@@ -948,7 +948,7 @@ function omnidirect(spnum, dam, str) {
 
 
 /*
- *  annihilate()    Routine to annihilate all monsters around player (playerx,playery)
+ *  annihilate()    Routine to annihilate all monsters around player (player.x,player.y)
  *
  *  Gives player experience, but no dropped objects
  *  Returns the experience gained from all monsters killed

@@ -741,12 +741,7 @@ function run(dir) {
   while (i == 1) {
     i = moveplayer(dir);
     if (i > 0) {
-      if (player.HASTEMONST > 0) {
-        movemonst();
-      }
-      movemonst();
-      randmonst();
-      regen();
+      parse2();
     }
     if (hitflag == 1) {
       i = 0;
