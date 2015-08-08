@@ -1,12 +1,17 @@
 todo:
+- monster rooms
+- traps
+- show known spells while casting
+- view known spells, potions, scrolls
+- help screens
+- intro screen
 - warn player that back button, window close will kill the game
 - save game
 - drop gold
+- take off armor
+- wield '-'
 - random mazes (especially on L1)
-- traps
-- monster rooms
-- monster special attacks
-- spells: sph, alt
+- spells: sph, alt, gen
 - make sure difficulty > 0 is fully implemented
 - scoreboard
 - volcanic shaft pack weight check
@@ -16,6 +21,7 @@ todo:
 extras:
 - shift-arrow to open door?
 - put platinum dragon beside eye of larn
+- global scoreboard, use hmac to secure?
 
 bugs:
 * rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD

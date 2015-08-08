@@ -67,14 +67,18 @@ function died(reason) {
   if (reason != 263) {
     var pad = 67 - 14 - cause.length;
     cause = Array(pad).join(' ') + cause;
-    updateLog(`You Have Died! ${cause}`);
+    if (DEBUG_IMMORTAL) {
+        updateLog(`Immortal...    ${cause}`);
+    }
+    else {
+        updateLog(`You Have Died! ${cause}`);
+    }
   }
   paint();
   nomove = 1;
   dropflag = 1;
 
   if (DEBUG_IMMORTAL) {
-    updateLog(`You are lucky you are immortal...`);
     return;
   }
 

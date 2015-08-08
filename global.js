@@ -201,6 +201,40 @@ function makemonst(lev) {
 
 
 /*
+ * function to steal an item from the players pockets
+ * returns 1 if steals something else returns 0
+ */
+function stealsomething() {
+  var j = 100;
+  for (;;) {
+    var i = rund(26);
+    var item = player.inventory[i];
+    if (item && item !== player.WIELD && item !== player.WEAR && item !== player.SHIELD) {
+      updateLog(`  ${getCharFromIndex(i)}) ${item}`);
+      player.adjustcvalues(item, false);
+      player.inventory[i] = null;
+      return 1;
+    }
+    if (--j <= 0) return 0;
+  }
+}
+
+
+
+/* function to return 1 is player carrys nothing else return 0 */
+function emptyhanded() {
+  for (var i = 0; i < 26; i++) {
+    var item = player.inventory[i];
+    if (item && item !== player.WIELD && item !== player.WEAR && item !== player.SHIELD) {
+      return 0;
+    }
+  }
+  return 1;
+}
+
+
+
+/*
     function to calculate the pack weight of the player
     returns the number of pounds the player is carrying
  */

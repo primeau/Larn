@@ -109,7 +109,7 @@ var Player = {
       warning -- will kill player if hp goes to zero
    */
   losehp: function(damage) {
-    //debug("losehp: damage: " + damage);
+    debug(`losehp: ${lastmonst}:${damage}`);
     this.HP -= damage;
     if (this.HP <= 0) {
       //debug("losehp: DEATH!: " + damage);

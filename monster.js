@@ -325,7 +325,7 @@ function getMonster(direction) {
 function createmonster(mon, x, y) {
   if (mon < 1 || mon > monsterlist.length - 1) /* check for monster number out of bounds */ {
     beep();
-    updateLog(`can't createmonst ${mon}`);
+    debug(`can't createmonst ${mon}`);
     nap(3000);
     return;
   }
@@ -624,7 +624,7 @@ function hitplayer(x, y) {
     if (monster.matches(VAMPIRE) || monster.matches(WRAITH) || monster.matches(ZOMBIE)) return;
   }
   if ((player.level.know[x][y] & KNOWHERE) == 0)
-      show1cell(x,y);
+    show1cell(x, y);
 
   var bias = player.HARDGAME + 1;
   hitflag = 1;
@@ -654,20 +654,19 @@ function hitplayer(x, y) {
 
   var tmp = 0;
 
-  // TODO special attack
-  // if (monster[mster].attack > 0)
-  //   if (((dam + bias + 8) > c[AC]) || (rnd((int)((c[AC] > 0) ? c[AC] : 1)) == 1)) {
-  //     if (spattack(monster[mster].attack, x, y)) {
-  //       lflushall();
-  //       return;
-  //     }
-  //     tmp = 1;
-  //     bias -= 2;
-  //     cursors();
-  //   }
+  if (monster.attack > 0)
+    if (((dam + bias + 8) > player.AC) || (rnd(((player.AC > 0) ? player.AC : 1)) == 1)) {
+      if (spattack(monster.attack, x, y)) {
+        //lflushall();
+        return;
+      }
+      tmp = 1;
+      bias -= 2;
+      //cursors();
+    }
 
   if (((dam + bias) > player.AC) || (rnd(((player.AC > 0) ? player.AC : 1)) == 1)) {
-    updateLog(`  The ${monster} hit you `);
+    updateLog(`  The ${monster} hit you`);
     tmp = 1;
     if ((dam -= player.AC) < 0) dam = 0;
     if (dam > 0) {
@@ -713,7 +712,7 @@ function hitmonster(x, y) {
     damage = fullhit(1);
     if (damage < 9999) damage = rnd(damage) + 1;
   } else {
-    updateLog("  You missed the " + (blind ? "monster" : monster));
+    updateLog("You missed the " + (blind ? "monster" : monster));
     flag = 0;
   }
   if (flag == 1) { /* if the monster was hit */
@@ -804,4 +803,205 @@ function hitm(x, y, damage) {
     return (hpoints);
   }
   return (fulldamage);
+}
+
+
+
+/*
+ *  Function to process special attacks from monsters
+ *
+ *  Enter with the special attack number, and the coordinates (xx,yy)
+ *      of the monster that is special attacking
+ *  Returns 1 if must do a show1cell(xx,yy) upon return, 0 otherwise
+ *
+ * atckno   monster     effect
+ * ---------------------------------------------------
+ *  0   none
+ *  1   rust monster    eat armor
+ *  2   hell hound      breathe light fire
+ *  3   dragon          breathe fire
+ *  4   giant centipede weakening sing
+ *  5   white dragon    cold breath
+ *  6   wraith          drain level
+ *  7   waterlord       water gusher
+ *  8   leprechaun      steal gold
+ *  9   disenchantress  disenchant weapon or armor
+ *  10  ice lizard      hits with barbed tail
+ *  11  umber hulk      confusion
+ *  12  spirit naga     cast spells taken from special attacks
+ *  13  platinum dragon psionics
+ *  14  nymph           steal objects
+ *  15  bugbear         bite
+ *  16  osequip         bite
+ *
+ *  int rustarm[ARMORTYPES][2];
+ *  special array for maximum rust damage to armor from rustmonster
+ *  format is: { armor type , minimum attribute
+ */
+const spsel = [1, 2, 3, 5, 6, 8, 9, 11, 13, 14];
+const rustarm = [
+  [OSTUDLEATHER, -2],
+  [ORING, -4],
+  [OCHAIN, -5],
+  [OSPLINT, -6],
+  [OPLATE, -8],
+  [OPLATEARMOR, -9],
+];
+
+function spattack(x, xx, yy) {
+
+  if (player.CANCELLATION) return 0;
+
+  //vxy( & xx, & yy); /* verify x & y coordinates */
+
+  var damage = null;
+  var armorclass = player.AC;
+  var monster = lastmonst;
+
+  switch (x) {
+    case 1:
+      /* rust your armor, rust=1 when rusting has occurred */
+      var rust = 0;
+      var armor = player.WEAR;
+      var shield = player.SHIELD;
+      if (shield) {
+        if (shield.arg >= 0) {
+          shield.arg -= 1;
+          rust = 1;
+        }
+      }
+      if (rust == 0 && armor) {
+        for (var i = 0; i < rustarm.length; i++) {
+          if (armor.matches(rustarm[i][0])) { /* find armor in table */
+            if (armor.arg > rustarm[i][1]) {
+              armor.arg -= 1;
+              rust = 1;
+            }
+            break;
+          }
+        }
+      }
+      /* if rusting did not occur */
+      if (rust == 0) {
+        if (armor.matches(OLEATHER)) {
+          updateLog(`The ${monster} hit you -- you're lucky to be wearing leather armor`);
+        }
+        if (armor.matches(OSSPLATE)) {
+          updateLog(`The ${monster} hit you -- you're fortunate to have stainless steel armor!`);
+        }
+      } else {
+        updateLog(`The ${monster} hit you -- your armor feels weaker`);
+      }
+      break;
+
+    case 2: // hell hound
+      damage = rnd(15) + 8 - ;
+    case 3: // dragon
+      if (damage == null) damage = rnd(20) + 25 - ;
+      if (player.FIRERESISTANCE) updateLog(`The ${monster}'s flame doesn't faze you!`);
+      else updateLog(`The ${monster} breathes fire at you!`);
+      player.losehp(damage);
+      return 0;
+
+    case 4:
+      if (player.STRENGTH > 3) {
+        updateLog(`The ${monster} stung you! You feel weaker`);
+        --cdesc[STRENGTH];
+      } else updateLog(`The ${monster} stung you!`);
+      break;
+
+    case 5:
+      updateLog(`The ${monster} blasts you with its cold breath`);
+      damage = rnd(15) + 18 - ;
+      player.losehp(damage);
+      return 0;
+
+    case 6:
+      updateLog(`The ${monster} drains you of your life energy!`);
+      player.loselevel();
+      return 0;
+
+    case 7:
+      updateLog(`The ${monster} got you with a gusher!`);
+      damage = rnd(15) + 25 - ;
+      player.losehp(damage);
+      return 0;
+
+    case 8:
+      if (player.NOTHEFT) return 0; /* he has a device of no theft */
+      if (player.GOLD) {
+        updateLog(`The ${monster} hit you -- your purse feels lighter`);
+        if (player.GOLD > 32767) player.GOLD >>= 1;
+        else player.GOLD -= rnd(1 + (player.GOLD >> 1));
+        if (player.GOLD < 0) player.GOLD = 0;
+      } else updateLog(`The ${monster} couldn't find any gold to steal`);
+      player.level.monsters[xx][yy] = null;
+      player.level.know[xx][yy] = 0;
+      return 1;
+
+    case 9:
+      for (j = 50;;) { /* disenchant */
+        var i = rund(26);
+        var item = player.inventory[i]; /* randomly select item */
+        if (item && item.arg > 0 && !item.matches(OSCROLL) && !item.matches(OPOTION)) {
+          if ((item.arg -= 3) < 0) item.arg = 0;
+          updateLog(`The ${monster} hits you -- you feel a sense of loss`);
+          updateLog(`  ${getCharFromIndex(i)}) ${item}`);
+          recalc();
+          return 0;
+        }
+        if (--j <= 0) {
+          updateLog(`The ${monster} nearly misses`);
+        }
+        break;
+      }
+      break;
+
+    case 10:
+      updateLog(`The ${monster} hit you with its barbed tail`);
+      damage = rnd(25) - ;
+      player.losehp(damage);
+      return 0;
+
+    case 11:
+      updateLog(`The ${monster} has confused you`);
+      player.CONFUSE += 10 + rnd(10);
+      break;
+
+    case 12:
+      /* performs any number of other special attacks */
+      return spattack(spsel[rund(10)], xx, yy);
+
+    case 13:
+      updateLog(`The ${monster} flattens you with its psionics!`);
+      damage = rnd(15) + 30 - ;
+      player.losehp(damage);
+      return 0;
+
+    case 14:
+      if (player.NOTHEFT) return 0; /* he has device of no theft */
+      if (emptyhanded() == 1) {
+        updateLog(`The ${monster} couldn't find anything to steal`);
+        break;
+      }
+      updateLog(`The ${monster} picks your pocket and takes: `);
+      if (stealsomething() == 0) updateLog("  nothing");
+      player.level.monsters[xx][yy] = null;
+      player.level.know[xx][yy] = 0;
+      recalc();
+      return 1;
+
+    case 15: // bugbear
+      damage = rnd(10) + 5 - ;
+
+    case 16: // osequip
+      if (damage == null) damage = rnd(15) + 10 - ;
+      updateLog(`The ${monster} bit you!`);
+      player.losehp(damage);
+      return 0;
+
+  }
+
+  recalc();
+  return 0;
 }
