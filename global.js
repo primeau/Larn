@@ -148,12 +148,14 @@ function enchweapon() {
   }
   if (!tmp.matches(OSCROLL) && !tmp.matches(OPOTION)) {
     tmp.arg++;
-    // TODO
-    // if (tmp.matches(OCLEVERRING)) player.INTELLIGENCE++;
-    // else
-    // if (tmp.matches(OSTRRING)) player.STREXTRA++;
-    // else
-    // if (tmp.matches(ODEXRING)) player.DEXTERITY++;
+    if (tmp.matches(OCLEVERRING))
+      player.INTELLIGENCE++;
+    else
+    if (tmp.matches(OSTRRING))
+      player.STREXTRA++;
+    else
+    if (tmp.matches(ODEXRING))
+      player.DEXTERITY++;
     bottomline();
     return true;
   }

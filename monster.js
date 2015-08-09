@@ -895,9 +895,9 @@ function spattack(x, xx, yy) {
       break;
 
     case 2: // hell hound
-      damage = rnd(15) + 8 - ;
+      damage = rnd(15) + 8 - armorclass;
     case 3: // dragon
-      if (damage == null) damage = rnd(20) + 25 - ;
+      if (damage == null) damage = rnd(20) + 25 - armorclass;
       if (player.FIRERESISTANCE) updateLog(`The ${monster}'s flame doesn't faze you!`);
       else updateLog(`The ${monster} breathes fire at you!`);
       player.losehp(damage);
@@ -906,13 +906,13 @@ function spattack(x, xx, yy) {
     case 4:
       if (player.STRENGTH > 3) {
         updateLog(`The ${monster} stung you! You feel weaker`);
-        --cdesc[STRENGTH];
+        --player.STRENGTH;
       } else updateLog(`The ${monster} stung you!`);
       break;
 
     case 5:
       updateLog(`The ${monster} blasts you with its cold breath`);
-      damage = rnd(15) + 18 - ;
+      damage = rnd(15) + 18 - armorclass;
       player.losehp(damage);
       return 0;
 
@@ -923,7 +923,7 @@ function spattack(x, xx, yy) {
 
     case 7:
       updateLog(`The ${monster} got you with a gusher!`);
-      damage = rnd(15) + 25 - ;
+      damage = rnd(15) + 25 - armorclass;
       player.losehp(damage);
       return 0;
 
@@ -959,7 +959,7 @@ function spattack(x, xx, yy) {
 
     case 10:
       updateLog(`The ${monster} hit you with its barbed tail`);
-      damage = rnd(25) - ;
+      damage = rnd(25) - armorclass;
       player.losehp(damage);
       return 0;
 
@@ -974,7 +974,7 @@ function spattack(x, xx, yy) {
 
     case 13:
       updateLog(`The ${monster} flattens you with its psionics!`);
-      damage = rnd(15) + 30 - ;
+      damage = rnd(15) + 30 - armorclass;
       player.losehp(damage);
       return 0;
 
@@ -992,10 +992,10 @@ function spattack(x, xx, yy) {
       return 1;
 
     case 15: // bugbear
-      damage = rnd(10) + 5 - ;
+      damage = rnd(10) + 5 - armorclass;
 
     case 16: // osequip
-      if (damage == null) damage = rnd(15) + 10 - ;
+      if (damage == null) damage = rnd(15) + 10 - armorclass;
       updateLog(`The ${monster} bit you!`);
       player.losehp(damage);
       return 0;

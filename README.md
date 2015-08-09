@@ -41,6 +41,10 @@ bugs:
   - go blind, move to a known place, kill a monster = black spot
   - cells not revealed when blind
   - monster identification when blind is unreliable
+- no zzzzap you have been teleported?
+- show what was worn/wielded?
+- exiting bank before a deposit/withdraw/etc message is done locks the keyboard
+- strextra can get out of balance?
 
 rename/refactor:
 - player.level.items[][] -> item

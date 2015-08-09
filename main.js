@@ -274,7 +274,7 @@ function parse(e) {
     if (player.TIMESTOP == 0)
       if (item.matches(OPOTION)) {
         forget();
-        quaffpotion(item);
+        quaffpotion(item, true);
       } else {
         updateLog("What do you want to quaff [Space to view]");
         setCharCallback(act_quaffpotion, true); // TODO this should fall through

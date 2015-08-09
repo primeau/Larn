@@ -109,6 +109,7 @@ var Player = {
       warning -- will kill player if hp goes to zero
    */
   losehp: function(damage) {
+    if (damage < 0) return;
     debug(`losehp: ${lastmonst}:${damage}`);
     this.HP -= damage;
     if (this.HP <= 0) {
@@ -120,6 +121,7 @@ var Player = {
   },
 
   losemhp: function(x) {
+    if (x < 0) return;
     this.HP = Math.max(1, this.HP - x);
     this.HPMAX = Math.max(1, this.HPMAX - x);
   },
@@ -131,10 +133,12 @@ var Player = {
       subroutine to gain maximum hit points
    */
   raisehp: function(x) {
+    if (x < 0) return;
     this.HP = Math.min(this.HP + x, this.HPMAX);
   },
 
   raisemhp: function(x) {
+    if (x < 0) return;
     this.HP += x;
     this.HPMAX += x;
   },
@@ -146,6 +150,7 @@ var Player = {
       subroutine to gain maximum spells
   */
   raisemspells: function(x) {
+    if (x < 0) return;
     this.SPELLMAX += x;
     player.SPELLS += x;
   },
@@ -157,6 +162,7 @@ var Player = {
       subroutine to lose maximum spells
   */
   losemspells: function(x) {
+    if (x < 0) return;
     player.SPELLMAX = Math.max(0, player.SPELLMAX - x);
     player.SPELLS = Math.max(0, player.SPELLS - x);
   },
