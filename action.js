@@ -192,9 +192,7 @@ function act_open_door(x, y) {
   if (!door.matches(OCLOSEDDOOR)) {
     return;
   }
-  door.arg = 7;
-//  if (rnd(11) < 7) {
-  if (true) {
+  if (rnd(11) < 7) {
     switch (door.arg) {
       case 6:
         player.AGGRAVATE += rnd(400);
