@@ -33,6 +33,7 @@ function parseEvent(e, keyDown, keyUp) {
 }
 
 
+
 function setCharCallback(func, blocking) {
   if (blocking) {
     blocking_callback = func;
@@ -41,6 +42,14 @@ function setCharCallback(func, blocking) {
   }
   nomove = 1;
 }
+
+
+
+function setNumberCallback(func) {
+  blocking_callback = getnumberinput;
+  keyboard_input_callback = func;
+}
+
 
 
 //const diroffx = { 0,  0, 1,  0, -1,  1, -1, 1, -1 };

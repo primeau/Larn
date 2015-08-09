@@ -192,7 +192,9 @@ function act_open_door(x, y) {
   if (!door.matches(OCLOSEDDOOR)) {
     return;
   }
-  if (rnd(11) < 7) {
+  door.arg = 7;
+//  if (rnd(11) < 7) {
+  if (true) {
     switch (door.arg) {
       case 6:
         player.AGGRAVATE += rnd(400);
@@ -200,7 +202,7 @@ function act_open_door(x, y) {
 
       case 7:
         updateLog("  You are jolted by an electric shock ");
-        player.lastnum = 274;
+        lastnum = 274;
         player.losehp(rnd(20));
         break;
 

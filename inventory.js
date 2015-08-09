@@ -24,7 +24,6 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
 
   var widest = 40;
   var wrap = 23;
-  //wrap -= show_gold ? 1 : 0;
   wrap -= show_time ? 1 : 0;
 
   var inventory = player.inventory.slice();
@@ -207,17 +206,22 @@ function take(item) {
  */
 function drop_object(index) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
-
   if (index == '*' || index == ' ') {
     if (!IN_STORE) {
       showinventory(true, drop_object, showall, false, false);
-    }
-    else {
+    } else {
       IN_STORE = false;
       paint();
     }
     nomove = 1;
-    return;
+    return 0;
+  }
+
+  if (index == '.') {
+    nomove = 1;
+    updateLog("How much gold will you drop? ");
+    setNumberCallback(drop_object_gold);
+    return 1;
   }
 
   var useindex = getIndexFromChar(index);
@@ -263,6 +267,33 @@ function drop_object(index) {
   player.adjustcvalues(item, false);
 
   IN_STORE = false;
+  return 1;
+}
+
+
+
+function drop_object_gold(amount) {
+  dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
+
+  if (amount == '*') amount = player.GOLD;
+
+  if (amount == 0) return 1;
+
+  if (amount > player.GOLD) {
+    updateLog("  You don't have that much!");
+    return 1;
+  }
+
+  if (isItemAt(player.x, player.y)) {
+    beep();
+    updateLog("  There's something here already");
+    return 1;
+  }
+
+  player.GOLD -= amount;
+  updateLog(`  You drop ${amount} gold pieces`);
+  player.level.items[player.x][player.y] = createObject(OGOLDPILE, amount);
+  player.level.know[player.x][player.y] = 0;
   return 1;
 }
 

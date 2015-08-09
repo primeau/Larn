@@ -7,7 +7,6 @@ todo:
 - intro screen
 - warn player that back button, window close will kill the game
 - save game
-- drop gold
 - take off armor
 - wield '-'
 - random mazes (especially on L1)

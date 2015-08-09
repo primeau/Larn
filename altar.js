@@ -20,8 +20,8 @@ function pray_at_altar() {
     updateLog("I see no altar to pray at here!");
   } else {
     updateLog("  How much do you donate? ");
-    blocking_callback = getnumberinput;
-    keyboard_input_callback = act_donation_pray;
+    setNumberCallback(act_donation_pray);
+    nomove = 1;
   }
 }
 
