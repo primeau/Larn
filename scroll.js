@@ -35,7 +35,7 @@ var knownScrolls = [];
 
 function isKnownScroll(item) {
   if (item.matches(OSCROLL)) {
-    if (knownScrolls.indexOf(item.arg) >= 0 || DEBUG_KNOW_ALL) {
+    if (knownScrolls[item.arg] || DEBUG_KNOW_ALL) {
       return true;
     }
   }
@@ -44,7 +44,7 @@ function isKnownScroll(item) {
 
 function learnScroll(item) {
   if (item.matches(OSCROLL)) {
-    knownScrolls.push(item.arg);
+    knownScrolls[item.arg] = item;
   }
 }
 

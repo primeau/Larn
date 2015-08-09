@@ -393,7 +393,14 @@ function parse(e) {
     return;
   }
 
-  // TODO I - list spells and scrolls
+  //
+  // list spells and scrolls
+  //
+  if (key == 'I') {
+    yrepcount = 0;
+    seemagic(false);
+    return;
+  }
 
   //
   // OPEN (in a direction)

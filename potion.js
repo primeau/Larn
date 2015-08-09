@@ -31,13 +31,11 @@ const potionname = [
 ];
 
 
-var knownPotions = [21]; // always know cure dianthroritis
+var knownPotions = [];
 
 function isKnownPotion(item) {
-  // debug("isKnownPotion(): " + item.arg);
-  // debug("isKnownPotion(): " + knownPotions);
   if (item.matches(OPOTION)) {
-    if (knownPotions.indexOf(item.arg) >= 0 || DEBUG_KNOW_ALL) {
+    if (knownPotions[item.arg] || DEBUG_KNOW_ALL) {
       return true;
     }
   }
@@ -45,10 +43,8 @@ function isKnownPotion(item) {
 }
 
 function learnPotion(item) {
-  // debug("learnPotion(): " + item.arg);
-  // debug("learnPotion(): " + knownPotions);
   if (item.matches(OPOTION)) {
-    knownPotions.push(item.arg);
+    knownPotions[item.arg] = item;
   }
 }
 

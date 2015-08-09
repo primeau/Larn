@@ -79,7 +79,7 @@ function show1cell(x, y) {
     return;
   }
 
-  var c = monsterAt(x,y) != null ? monsterAt(x,y).char : getItem(x,y).char;
+  var c = monsterAt(x, y) != null ? monsterAt(x, y).char : getItem(x, y).char;
 
   player.level.know[x][y] = KNOWALL; /* we end up knowing about it */
 }
@@ -144,4 +144,73 @@ function showcell(x, y) {
   }
 
   cursor(1 + x, 1 + y);
+}
+
+
+
+
+/*
+ *  function to show what magic items have been discovered thus far
+ *  enter with -1 for just spells, anything else will give scrolls & potions
+ */
+function seemagic(onlyspells) {
+
+  return;
+  
+  IN_STORE = true;
+  cursor(1, 1);
+
+  if (onlyspells) {
+    //cl_up(79, ((number + 2) / 3 + 4)); /* lines needed for display */
+    updateLog("NOT YET");
+    return;
+  } else {
+    clear();
+  }
+
+  var lines = 0;
+
+  var spellstring = "  The magic spells you have discovered thus far:\n\n";
+  var spellfunc = function(spell) {
+    lprcat(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
+  }
+  lines += printknown(spellstring, knownSpells, spellfunc);
+
+  var scrollstring = "\n\n  The magic scrolls you have found to date are:\n\n";
+  var scrollfunc = function(scroll) {
+    lprcat(`${scrollname[scroll.arg]}`, -26);
+  }
+  lines += printknown(scrollstring, knownScrolls, spellfunc);
+
+
+  var potionstring = "\n\n  The magic potions you have found to date are:\n\n";
+  var potionfunc = function(potion) {
+    lprcat(`${potionname[potion.arg]}`, -26);
+  }
+  lines += printknown(potionstring, knownPotions, potionfunc);
+
+
+
+}
+
+
+function printknown(firstline, itemlist, printfunc) {
+  var sorted_list = itemlist.slice().sort();
+  var count = 0;
+  lprcat(firstline);
+  for (var i = 0; i < sorted_list.length; i++) {
+    var item = sorted_list[i];
+    if (item) {
+      printfunc(item);
+      if (++count % 3 == 0) {
+        lprcat(`\n`);
+      }
+    }
+  }
+  if (count == 0) {
+    lprcat(`\n`);
+    lprcat("...");
+    lprcat(`\n`);
+  }
+  return count;
 }

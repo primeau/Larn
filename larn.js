@@ -34,6 +34,9 @@ var Larn = {
     player.WEAR = player.inventory[0];
     player.WIELD = player.inventory[1];
 
+    // always know cure dianthroritis
+    learnPotion(createObject(OPOTION,21));
+
     learnSpell("pro");
     learnSpell("mle");
     newcavelevel(0);

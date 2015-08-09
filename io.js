@@ -11,16 +11,26 @@ var display = initGrid(80, 24);
 function lprintf(str, width) {
   if (width != null) {
     //str = str.toString(); // TODO
-    var spaces = width - str.length;
-    while (--spaces >= 0) lprc(" ");
+    var spaces = Math.abs(width) - str.length;
+    if (width > 0) {
+      while (--spaces >= 0) lprc(" ");
+      lprcat(str);
+    }
+    else {
+      lprcat(str);
+      while (--spaces >= 0) lprc(" ");
+    }
   }
-  lprcat(str);
 }
 
 
 
-function lprcat(str) {
+function lprcat(str, width) {
 
+  if (width) {
+      lprintf(str, width);
+      return;
+  }
   DEBUG_LPRCAT++;
 
   // if (messages_on && cursory == 24) play_message_sound(str);
