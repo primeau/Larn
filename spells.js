@@ -36,9 +36,8 @@ function cast(key) {
   nomove = 1; // does nothing?
 
   if (key == 'I' || key == " ") {
-    // TODO
-    // seemagic(-1);
-    // cursors();
+    seemagic(true);
+    setCharCallback(parse_see_spells, true);
     if (spell_cast == null) updateLog(eys);
     return 0;
   }
@@ -54,8 +53,6 @@ function cast(key) {
   if (spell_cast.length < 3) {
     return 0;
   }
-
-  //updateLog("");
 
   --player.SPELLS;
 

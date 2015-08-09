@@ -12,14 +12,19 @@ function lprintf(str, width) {
   if (width != null) {
     //str = str.toString(); // TODO
     var spaces = Math.abs(width) - str.length;
-    if (width > 0) {
-      while (--spaces >= 0) lprc(" ");
-      lprcat(str);
-    }
-    else {
-      lprcat(str);
-      while (--spaces >= 0) lprc(" ");
-    }
+    lprcat(padString(str, width));
+  }
+}
+
+
+
+function padString(str, width) {
+  if (!width) return str;
+  var spaces = Array(Math.abs(width) - str.length).join(" ");
+  if (width < 0) {
+    return str + spaces;
+  } else {
+    return spaces + str;
   }
 }
 
@@ -28,8 +33,8 @@ function lprintf(str, width) {
 function lprcat(str, width) {
 
   if (width) {
-      lprintf(str, width);
-      return;
+    lprintf(str, width);
+    return;
   }
   DEBUG_LPRCAT++;
 
@@ -58,6 +63,7 @@ function cursors() {
 
 
 var messages_on = false;
+
 function lprc(ch) {
 
   DEBUG_LPRC++;

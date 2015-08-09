@@ -148,69 +148,107 @@ function showcell(x, y) {
 
 
 
+var PAGE_COUNT = 1;
+const NO_MORE = "nomore";
 
 /*
  *  function to show what magic items have been discovered thus far
  *  enter with -1 for just spells, anything else will give scrolls & potions
  */
 function seemagic(onlyspells) {
-
-  return;
-  
   IN_STORE = true;
-  cursor(1, 1);
 
   if (onlyspells) {
-    //cl_up(79, ((number + 2) / 3 + 4)); /* lines needed for display */
-    updateLog("NOT YET");
-    return;
+    cl_up(79, ((knownSpells.length + 2) / 3 + 4)); /* lines needed for display */
   } else {
     clear();
   }
 
-  var lines = 0;
+  cursor(1, 1);
 
-  var spellstring = "  The magic spells you have discovered thus far:\n\n";
-  var spellfunc = function(spell) {
-    lprcat(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
+  var buffer = [];
+
+  var spellstring = "  The magic spells you have discovered thus far:";
+  var spellfunc = function(spell, buffer) {
+    return padString(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
   }
-  lines += printknown(spellstring, knownSpells, spellfunc);
+  printknown(spellstring, knownSpells, spellfunc, buffer, true);
 
-  var scrollstring = "\n\n  The magic scrolls you have found to date are:\n\n";
-  var scrollfunc = function(scroll) {
-    lprcat(`${scrollname[scroll.arg]}`, -26);
+  if (!onlyspells) {
+    var scrollstring = "  The magic scrolls you have found to date are:";
+    var scrollfunc = function(scroll) {
+      return padString(`${scrollname[scroll.arg]}`, -26);
+    }
+    printknown(scrollstring, knownScrolls, scrollfunc, buffer, true);
+
+    var potionstring = "  The magic potions you have found to date are:";
+    var potionfunc = function(potion) {
+      return padString(`${potionname[potion.arg]}`, -26);
+    }
+    printknown(potionstring, knownPotions, potionfunc, buffer, false);
   }
-  lines += printknown(scrollstring, knownScrolls, spellfunc);
 
-
-  var potionstring = "\n\n  The magic potions you have found to date are:\n\n";
-  var potionfunc = function(potion) {
-    lprcat(`${potionname[potion.arg]}`, -26);
+  const max = 20;
+  if (buffer.length <= max) PAGE_COUNT = 1;
+  var startindex = (PAGE_COUNT - 1) * max;
+  var endindex = startindex == 0 ? Math.min(max, buffer.length) : buffer.length;
+  for (var i = startindex; i < endindex; i++) {
+    lprcat(buffer[i] + '\n');
   }
-  lines += printknown(potionstring, knownPotions, potionfunc);
-
-
-
+  if (buffer.length <= max || PAGE_COUNT == 2) {
+    PAGE_COUNT = NO_MORE;
+  }
+  if (!onlyspells) lprcat('\n');
+  lprcat("Press Space to continue: \n");
 }
 
 
-function printknown(firstline, itemlist, printfunc) {
+
+function printknown(firstline, itemlist, printfunc, buffer, extra) {
   var sorted_list = itemlist.slice().sort();
+  buffer.push(firstline);
+  buffer.push("");
+  var line = "";
   var count = 0;
-  lprcat(firstline);
   for (var i = 0; i < sorted_list.length; i++) {
     var item = sorted_list[i];
     if (item) {
-      printfunc(item);
+      line += printfunc(item);
       if (++count % 3 == 0) {
-        lprcat(`\n`);
+        buffer.push(line);
+        line = "";
       }
     }
   }
-  if (count == 0) {
-    lprcat(`\n`);
-    lprcat("...");
-    lprcat(`\n`);
+  if (count % 3 != 0) {
+    buffer.push(line);
   }
-  return count;
+  if (count == 0) {
+    buffer.push("...");
+  }
+  if (extra) buffer.push("");
+}
+
+
+
+function parse_see_all(key) {
+  if (PAGE_COUNT == NO_MORE) key = ESC;
+  if (key == ESC) {
+    PAGE_COUNT = 1;
+    return exitbuilding();
+  }
+  if (key == ' ') {
+    PAGE_COUNT = 2;
+    seemagic(false);
+    return 0;
+  }
+}
+
+
+function parse_see_spells(key) {
+  if (key == ESC || key == ' ') {
+    PAGE_COUNT = 1;
+    setCharCallback(cast, true);
+    return exitbuilding();
+  }
 }

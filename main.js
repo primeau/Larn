@@ -399,6 +399,7 @@ function parse(e) {
   if (key == 'I') {
     yrepcount = 0;
     seemagic(false);
+    setCharCallback(parse_see_all, true);
     return;
   }
 
@@ -724,6 +725,8 @@ function parse(e) {
     for (var i = 0; i < spelcode.length; i++) {
       learnSpell(spelcode[i]);
     }
+
+
   }
 } // parse
 /*****************************************************************************/
