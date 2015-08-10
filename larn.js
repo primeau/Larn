@@ -2,7 +2,7 @@
 
 const MAXLEVEL = 11; /*  max # levels in the dungeon         */
 const MAXVLEVEL = 3; /*  max # of levels in the temple of the luran  */
-var LEVELS = [14];
+var LEVELS = [];
 var LOG_SIZE = 5;
 var LOG = [""];
 var LAST_LOG = 0;
@@ -82,7 +82,7 @@ function positionplayer(x, y, exact) {
   if (exact && canMove(x, y)) {
     player.x = x;
     player.y = y;
-    debug("positionplayer: (" + distance + ") got " + xy(x, y));
+    //debug("positionplayer: (" + distance + ") got " + xy(x, y));
     player.level.know[x][y] = KNOWALL;
 
     oldx = player.x;
@@ -99,13 +99,13 @@ function positionplayer(x, y, exact) {
     while (numTries-- > 0) {
       var newx = x + (rnd(3) - 2) * distance;
       var newy = y + (rnd(3) - 2) * distance;
-      debug("positionplayer: (" + distance + ") try " + xy(newx, newy));
+      //debug("positionplayer: (" + distance + ") try " + xy(newx, newy));
       if ((newx != x || newy != y)) {
         if (canMove(newx, newy)) {
           player.x = newx;
           player.y = newy;
           player.level.know[x][y] = KNOWALL;
-          debug("positionplayer: (" + distance + ") got " + xy(newx, newy));
+          //debug("positionplayer: (" + distance + ") got " + xy(newx, newy));
 
           oldx = player.x;
           oldy = player.y;
@@ -242,7 +242,7 @@ function moveNear(item, exact) {
   for (var x = 0; x < MAXX; x++) {
     for (var y = 0; y < MAXY; y++) {
       if (isItem(x, y, item)) {
-        debug("movenear: found: " + item.id + " at " + xy(x, y));
+        //debug("movenear: found: " + item.id + " at " + xy(x, y));
         positionplayer(x, y, exact);
         return true;
       }

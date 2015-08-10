@@ -21,6 +21,7 @@ function createNewMonster(arg) {
     tmp.armorclass, tmp.damage, tmp.attack, tmp.defence, tmp.genocided,
     tmp.intelligence, tmp.gold, tmp.hitpoints, tmp.experience);
   monster.arg = arg;
+  //debug("newmonster: " + tmp.level + " -> " + arg + " " + monsterlist[arg]);
   return monster;
 }
 
@@ -348,8 +349,6 @@ function createmonster(mon, x, y) {
   if (oktocreate) {
     var monster = createNewMonster(mon);
     player.level.monsters[x][y] = monster;
-    debug("createmonster: " + mon + " " + monsterlist[mon]);
-    //hitp[x][y] = monster[mon].hitpoints;
     player.level.know[x][y] &= ~KNOWHERE;
     monster.awake = false;
     switch (mon) {
@@ -407,7 +406,7 @@ function cgood(x, y, itm, monst) {
          by them.
       */
       case OPIT.id:
-        // case OANNIHILATION.id:
+        // case OANNIHILATION.id: TODO
         // case OTELEPORTER.id:
         // case OTRAPARROW.id:
         // case ODARTRAP.id:
@@ -608,7 +607,7 @@ function hitplayer(x, y) {
   //console.trace();
   var monster = player.level.monsters[x][y];
   if ((monster) == null) {
-    debug("monster.hitplayer(): no monster at: " + xy(x, y));
+    //debug("monster.hitplayer(): no monster at: " + xy(x, y));
     return;
   }
 
@@ -696,7 +695,7 @@ function hitmonster(x, y) {
   var monster = player.level.monsters[x][y];
 
   if ((monster) == null) {
-    debug("monster.hitmonster(): no monster at: " + xy(x, y));
+    //debug("monster.hitmonster(): no monster at: " + xy(x, y));
     return;
   }
 

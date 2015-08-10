@@ -182,21 +182,25 @@ function nearbymonst() {
         for the given cave level
  */
 function makemonst(lev) {
-  var tmp;
-  if (lev < 1)
+  var x, tmp;
+  if (lev < 1) {
     lev = 1;
-  if (lev > 12)
+  } else if (lev > 12) {
     lev = 12;
-  if (lev < 5)
-  //tmp = rnd((x = monstlevel[lev - 1]) ? x : 1);
-    tmp = rnd(monstlevel[lev - 1]);
-  else
-  //tmp = rnd((x = monstlevel[lev - 1] - monstlevel[lev - 4]) ? x : 1) + monstlevel[lev - 4];
-    tmp = rnd(monstlevel[lev - 1] - monstlevel[lev - 4]) + monstlevel[lev - 4];
+  }
+
+  if (lev < 5) {
+    x = monstlevel[lev - 1];
+    if (x == 0) x = 1;
+    tmp = rnd(x);
+  } else {
+    x = monstlevel[lev - 1] - monstlevel[lev - 4];
+    if (x == 0) x = 1;
+    tmp = rnd(x) + monstlevel[lev - 4];
+  }
 
   while (monsterlist[tmp].genocided && tmp < monsterlist.length - 1)
     tmp++; /* genocided? */
-  debug("makemonst: " + lev + " -> " + tmp + " " + monsterlist[tmp]);
   return (tmp);
 }
 

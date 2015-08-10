@@ -1,16 +1,13 @@
 todo:
-- monster rooms
+- genocide
 - traps
-- show known spells while casting
-- view known spells, potions, scrolls
 - help screens
 - intro screen
-- warn player that back button, window close will kill the game
 - save game
+- warn player that back button, window close will kill the game
 - take off armor
 - wield '-'
-- random mazes (especially on L1)
-- spells: sph, alt, gen
+- spells: sph, alt
 - make sure difficulty > 0 is fully implemented
 - scoreboard
 - volcanic shaft pack weight check

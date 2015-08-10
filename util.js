@@ -16,14 +16,22 @@ function rund(value) {
 }
 
 
+
 function beep() {
   //debug("TODO: util.beep()");
 }
 
 
-function xy(x, y) {
-  return `(${x},${y})`;
+
+function initGrid(width, height) {
+  var grid = new Array(width);
+  for (var x = 0; x < width; x++) {
+    grid[x] = new Array(height);
+    grid[x] = new Array(height);
+  }
+  return grid;
 }
+
 
 
 function debug(text) {
