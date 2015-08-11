@@ -112,6 +112,15 @@ function mainloop(e) {
 
 
 
+var DEBUG_STATS = false;
+var DEBUG_OUTPUT = false;
+var DEBUG_STAIRS_EVERYWHERE = false;
+var DEBUG_KNOW_ALL = false;
+var DEBUG_IMMORTAL = false;
+var DEBUG_PAINT = 0;
+var DEBUG_LPRCAT = 0;
+var DEBUG_LPRC = 0;
+var DEBUG_PROXIMITY = false;
 
 /*****************************************************************************/
 /*****************************************************************************/
@@ -706,6 +715,13 @@ function parse(e) {
       updateLog("DEBUG: EXPANDED AWARENESS--");
       player.AWARENESS = 0;
     }
+  }
+  if (key == 'P') {
+    nomove = 1;
+    DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
+    if (!DEBUG_PROXIMITY) IN_STORE = false;
+    updateLog("DEBUG: PROXIMITY: " + DEBUG_PROXIMITY);
+    paint();
   }
   if (key == 'X') {
     nomove = 1;
