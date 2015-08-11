@@ -18,7 +18,7 @@ function act_remove_gems(arg) {
     }
     player.level.items[player.x][player.y] = createObject(ODEADTHRONE, getItem(player.x, player.y).arg);
     player.level.know[player.x][player.y] = 0;
-  } else if (k < 40 && arg == 0) {
+  } else if (k < 40 && arg == 0 && monsterlist[GNOMEKING].genocided == 0) {
     createmonster(GNOMEKING);
     player.level.items[player.x][player.y].arg = 1;
     player.level.know[player.x][player.y] = 0;
@@ -41,7 +41,7 @@ function act_remove_gems(arg) {
 */
 function act_sit_throne(arg) {
   var k = rnd(101);
-  if (k < 30 && arg == 0) {
+  if (k < 30 && arg == 0 && monsterlist[GNOMEKING].genocided == 0) {
     createmonster(GNOMEKING);
     player.level.items[player.x][player.y].arg = 1;
     player.level.know[player.x][player.y] = 0;
@@ -65,7 +65,7 @@ function act_drink_fountain() {
   if (rnd(1501) < 2) {
     updateLog("  Oops! You seem to have caught the dreadful sleep!");
     beep();
-    lflush();
+    //lflush();
     sleep(3);
     died(280);
     return;
@@ -113,7 +113,7 @@ function act_wash_fountain() {
     updateLog("  You got the dirt off!");
   } else if (rnd(100) < 31) {
     updateLog("  This water seems to be hard water!  The dirt didn't come off!");
-  } else if (rnd(100) < 34) {
+  } else if (rnd(100) < 34 && monsterlist[WATERLORD].genocided == 0) {
     createmonster(WATERLORD); /*    make water lord     */
   } else {
     updateLog("  Nothing seems to have happened");
@@ -167,7 +167,7 @@ function act_open_chest(x, y) {
     player.level.items[x][y] = createObject(OEMPTY); /* destroy the chest */
     player.level.know[x][y] = 0;
     if (rnd(100) < 69) {
-      creategem();  /* gems from the chest */
+      creategem(); /* gems from the chest */
     }
     dropgold(rnd(110 * chest.arg + 200));
     for (i = 0; i < rnd(4); i++) {
@@ -195,6 +195,7 @@ function act_open_door(x, y) {
   if (rnd(11) < 7) {
     switch (door.arg) {
       case 6:
+        updateLog("  The door makes an awful groan, but remains stuck");
         player.AGGRAVATE += rnd(400);
         break;
 
@@ -205,6 +206,7 @@ function act_open_door(x, y) {
         break;
 
       case 8:
+        updateLog("  You feel drained");
         player.loselevel();
         break;
 
@@ -214,11 +216,12 @@ function act_open_door(x, y) {
         break;
 
       default:
+        updateLog("  The door doesn't budge");
+        return (0);
         break;
     }
-    updateLog("  The door doesn't budge");
-    return (0);
   } else {
+    updateLog("  The door opens");
     player.level.know[x][y] = 0;
     player.level.items[x][y] = createObject(OOPENDOOR);
     return (1);

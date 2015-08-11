@@ -768,7 +768,7 @@ function hitm(x, y, damage) {
   }
   lasthx = x;
   lasthy = y;
-  player.level.monsters[x][y].awake = true; /* make sure hitting monst breaks stealth condition */
+  monster.awake = true; /* make sure hitting monst breaks stealth condition */
   player.HOLDMONST = 0; /* hit a monster breaks hold monster spell  */
   switch (monster.arg) { /* if a dragon and orb(s) of dragon slaying   */
     case WHITEDRAGON:
@@ -787,7 +787,7 @@ function hitm(x, y, damage) {
 
   var hpoints = monster.hitpoints;
   monster.hitpoints -= damage;
-  debug("hitm(): hp = " + monster.hitpoints + "/" + monsterlist[monster.arg].hitpoints);
+  debug(`hitm(): ${monster.char} ${monster.hitpoints} / ${monsterlist[monster.arg].hitpoints}`);
   if (monster.hitpoints <= 0) {
     player.MONSTKILLED++;
     updateLog(`  The ${monster} died!`);
@@ -882,10 +882,10 @@ function spattack(x, xx, yy) {
       }
       /* if rusting did not occur */
       if (rust == 0) {
-        if (armor.matches(OLEATHER)) {
+        if (armor && armor.matches(OLEATHER)) {
           updateLog(`The ${monster} hit you -- you're lucky to be wearing leather armor`);
         }
-        if (armor.matches(OSSPLATE)) {
+        if (armor && armor.matches(OSSPLATE)) {
           updateLog(`The ${monster} hit you -- you're fortunate to have stainless steel armor!`);
         }
       } else {

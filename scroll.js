@@ -146,6 +146,7 @@ function read_scroll(scroll) {
 
     case 6:
       /* aggravate monsters */
+      updateLog("  Something isn't right...");
       player.AGGRAVATE += 800;
       break;
 
@@ -163,21 +164,25 @@ function read_scroll(scroll) {
 
     case 8:
       /* teleportation */
+      updateLog("  Your surroundings change");
       oteleport(0);
       break;
 
     case 9:
       /* expanded awareness   */
+      updateLog("  You feel extra alert");
       player.AWARENESS += 1800;
       break;
 
     case 10:
       /* haste monster */
+      updateLog("  Something isn't right...");
       player.HASTEMONST += rnd(55) + 12;
       break;
 
     case 11:
       /* monster healing */
+      updateLog("  Something isn't right...");
       for (var j = 0; j < MAXY; j++)
         for (var i = 0; i < MAXX; i++)
           if (player.level.monsters[i][j] != null)
@@ -215,6 +220,7 @@ function read_scroll(scroll) {
 
     case 17:
       /* gem perfection */
+      updateLog("  You feel someone eyeing your belongings");
       for (var i = 0; i < 26; i++) {
         var item = player.inventory[i];
         if (item != null && item.isGem()) {
@@ -227,6 +233,7 @@ function read_scroll(scroll) {
 
     case 18:
       /* spell extension */
+      updateLog("  You feel a twitch at the base of your skull");
       player.PROTECTIONTIME <<= 1;
       player.DEXCOUNT <<= 1;
       player.STRCOUNT <<= 1;
@@ -242,6 +249,7 @@ function read_scroll(scroll) {
 
     case 19:
       /* identify */
+      updateLog("  You feel someone eyeing your belongings");
       for (var i = 0; i < player.inventory.length; i++) {
         var item = player.inventory[i];
         if (item != null) {
@@ -255,6 +263,7 @@ function read_scroll(scroll) {
 
     case 20:
       /* remove curse */
+      updateLog("  You sense a benign presence");
       if (player.BLINDCOUNT > 0) player.BLINDCOUNT = 1;
       if (player.CONFUSE > 0) player.CONFUSE = 1;
       if (player.AGGRAVATE > 0) player.AGGRAVATE = 1;
@@ -285,6 +294,7 @@ function read_scroll(scroll) {
 
     case 23:
       /* life protection */
+      updateLog("  You sense a benign presence");
       player.LIFEPROT++;
       break;
   };

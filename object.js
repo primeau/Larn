@@ -129,16 +129,31 @@ var Item = {
         } else if (this.arg < 0) {
           description += " " + this.arg;
         }
-        if (this === player.WIELD && !in_store) {
-          description += " (weapon in hand)"
-        }
-        if ((this === player.WEAR || this === player.SHIELD) && !in_store) {
-          description += " (being worn)"
-        }
+      }
+      if ((this === player.WEAR || this === player.SHIELD) && !in_store) {
+        description += " (being worn)"
+      }
+      if (this === player.WIELD && !in_store) {
+        description += " (weapon in hand)"
       }
       return description;
     },
 
+    // we can wield more things than we show during wield inventory check
+    // this is everything that a player can actually wield
+    canWield: function () {
+      switch (this.id) {
+        case OPOTION.id:
+        case OSCROLL.id:
+          return false;
+          break;
+      };
+      return this.carry;
+    },
+
+
+    // we can wield more things than we show during wield inventory check
+    // this is what we show during an inventory check while wielding
     isWeapon: function() {
       switch (this.id) {
         case ODIAMOND.id:
@@ -299,6 +314,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
 
   if (item.matches(OEMPTY)) {
     // do nothing
+    return;
   }
   //
   else if (item.matches(OGOLDPILE)) {
@@ -306,33 +322,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     updateLog(`  It is worth ${item.arg}!`);
     player.GOLD += item.arg;
     forget();
-  }
-  //
-  else if (item.matches(OPOTION)) {
-    if (do_ident) {
-      updateLog(`You have found ${item}`);
-    }
-    if (do_action) {
-      //non_blocking_callback = opotion;
-    }
-  }
-  //
-  else if (item.matches(OSCROLL)) {
-    if (do_ident) {
-      updateLog(`You have found ${item}`);
-    }
-    if (do_action) {
-      //non_blocking_callback = oscroll;
-    }
-  }
-  //
-  else if (item.matches(OBOOK)) {
-    if (do_ident) {
-      updateLog(`You have found ${item}`);
-    }
-    if (do_action) {
-      //non_blocking_callback = obook;
-    }
   }
   //
   else if (item.matches(OALTAR)) {
@@ -430,43 +419,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_ident)
       updateLog("There is a chest here");
   }
-  //
-  else if (item.matches(OOPENDOOR)) {
-    if (do_ident) {
-      updateLog(`You have found ${item}`);
-    }
-    if (do_action) {
-      //non_blocking_callback = o_open_door;
-    }
-  }
-  //
-  else if (item.matches(OCLOSEDDOOR)) {
-    if (do_ident) {
-      updateLog(`You have found ${item}`);
-    }
-    if (do_action) {
-      //blocking_callback = o_closed_door;
-    }
-  }
-  // put this before wield to make wear be default for shields
-  else if (item.isArmor()) {
-    if (do_ident) {
-      updateLog(`You have found ${item}`);
-    }
-    if (do_action) {
-      //non_blocking_callback = wear;
-    }
-  }
-  //
-  else if (item.isWeapon()) {
-    if (do_ident) {
-      updateLog(`You have found ${item}`);
-    }
-    if (do_action) {
-      //non_blocking_callback = wield;
-    }
-  }
-
   // base case
   else {
     if (do_ident) {

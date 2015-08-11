@@ -306,6 +306,7 @@ function quaffpotion(potion, set_known) {
 
     case 20:
       /* instant healing */
+      lprcat("  You feel all better now!");
       player.HP = player.HPMAX;
       break;
 

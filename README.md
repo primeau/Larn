@@ -1,6 +1,6 @@
 todo:
-- genocide
 - traps
+- smart monster movement
 - help screens
 - intro screen
 - save game
@@ -22,7 +22,7 @@ extras:
 bugs:
 * rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD
   - need to do one more action before leaving bank?
-* monsters move before missile spells are complete
+- going up/down stairs can drop you onto a closed door, monster
 - altars are broken?
 - monsters 'disappear' infrequently when moving over specific squares
   - if you (re?)discover the square, they will always be visible again
@@ -31,13 +31,11 @@ bugs:
 - missile char stays visible sometimes
 - cell shows in previous location when descending H -> V1
 - monsters can get trapped on edge of screen in wizard mode
-- going up/down stairs can drop you onto a closed door, monster
 - if you delete numbers (in bank, etc) to 0, you can't enter new numbers
-- blindness is generally broken
+* blindness is generally broken
   - go blind, move to a known place, kill a monster = black spot
   - cells not revealed when blind
   - monster identification when blind is unreliable
-- no zzzzap you have been teleported?
 - show what was worn/wielded?
 - exiting bank before a deposit/withdraw/etc message is done locks the keyboard
 - strextra can get out of balance?

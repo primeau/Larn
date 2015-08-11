@@ -165,13 +165,13 @@ function makemaze(k) {
         mx = rnd(60) + 3;
         mxl = mx - rnd(2);
         mxh = mx + rnd(2);
-        z = createNewMonster(makemonst(k));
+        z = makemonst(k);
       }
 
       for (i = mxl; i < mxh; i++)
         for (j = myl; j < myh; j++) {
           item[i][j] = empty;
-          mitem[i][j] = z;
+          mitem[i][j] = z ? createNewMonster(z) : null;
         }
     }
   }
@@ -537,12 +537,9 @@ function sethp(flg) {
 function checkgen() {
   for (var y = 0; y < MAXY; y++) {
     for (var x = 0; x < MAXX; x++) {
-      //      if (genocided[mitem[x][y]]) mitem[x][y] = 0;
-      var monster = monsterAt(x,y);
-      if (monster) {
-        if (monsterlist[monster.arg].genocided) {
-          player.level.monster = null;
-        }
+      var monster = player.level.monsters[x][y];
+      if (monster && monsterlist[monster.arg].genocided) {
+         player.level.monsters[x][y] = null;
       }
     }
   }

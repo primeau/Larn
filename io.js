@@ -10,17 +10,18 @@ var display = initGrid(80, 24);
 
 function lprintf(str, width) {
   if (width != null) {
-    //str = str.toString(); // TODO
-    var spaces = Math.abs(width) - str.length;
     lprcat(padString(str, width));
+  }
+  else {
+      lprcat(str);
   }
 }
 
 
 
 function padString(str, width) {
-  if (!width) return str;
-  var spaces = Array(Math.abs(width) - str.length).join(" ");
+  if (width == null || width == 0) return str;
+  var spaces = Array(Math.abs(width)+1 - str.length).join(" ");
   if (width < 0) {
     return str + spaces;
   } else {

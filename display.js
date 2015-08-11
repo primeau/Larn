@@ -232,6 +232,7 @@ function printknown(firstline, itemlist, printfunc, buffer, extra) {
 
 
 function parse_see_all(key) {
+  nomove = 1;
   if (PAGE_COUNT == NO_MORE) key = ESC;
   if (key == ESC) {
     PAGE_COUNT = 1;
@@ -246,6 +247,7 @@ function parse_see_all(key) {
 
 
 function parse_see_spells(key) {
+  nomove = 1;
   if (key == ESC || key == ' ') {
     PAGE_COUNT = 1;
     setCharCallback(cast, true);

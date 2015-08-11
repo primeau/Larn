@@ -64,6 +64,9 @@ function getdirectioninput(key, code) {
     return 1;
   }
   var direction = parseDirectionKeys(key, code);
+  if (direction == 0) {
+    return 0;
+  }
   //debug(`getdirectioninput: ${direction}`);
   if (keyboard_input_callback != null) {
     //debug(`getdirectioninput: ${keyboard_input_callback.name}`);
@@ -167,4 +170,11 @@ function elapsedtime() {
 
 function timeleft() {
   return Math.round((TIMELIMIT - gtime) / 100);
+}
+
+
+
+function isalpha(str) {
+    str = String(str);
+    return str.match(/^[A-Za-z]+$/);
 }

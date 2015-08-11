@@ -41,9 +41,6 @@ function mainloop(e) {
 
   parse(e);
 
-  // debug("nomove: " + nomove);
-  // debug("hitflag: " + hitflag);
-
   if (nomove == 1) {
     paint();
     return;
@@ -334,7 +331,7 @@ function parse(e) {
   //
   if (key == 'w') {
     yrepcount = 0;
-    if (item.isWeapon()) {
+    if (item.canWield()) {
       wield(item);
     } else {
       updateLog("What do you want to wield [(-) for nothing, Space to view]");
@@ -518,11 +515,9 @@ function parse(e) {
   //
   else if (key == '<') { // UP STAIRS
     if (isItem(newx, newy, OSTAIRSUP)) {
-      updateLog("Climbing Up Stairs");
       newcavelevel(player.level.depth - 1);
       //positionplayer(newx, newy, true);
     } else if (isItem(newx, newy, OVOLUP)) {
-      updateLog("Climbing Up Volcanic Shaft");
       newcavelevel(0);
       moveNear(OVOLDOWN, false);
     } else if (DEBUG_STAIRS_EVERYWHERE) {
@@ -557,15 +552,12 @@ function parse(e) {
   //
   else if (key == '>') { // DOWN STAIRS
     if (isItem(newx, newy, OSTAIRSDOWN)) {
-      updateLog("Climbing Down Stairs");
       newcavelevel(player.level.depth + 1);
       //positionplayer(newx, newy, true);
     } else if (isItem(newx, newy, OVOLDOWN)) {
-      updateLog("Climbing Down Volcanic Shaft");
       newcavelevel(11);
       //positionplayer(newx, newy, true); // should do this to make it more difficult
-      moveNear(OVOLUP, false);
-      debug("Moving near V -- REMOVE THIS FEATURE LATER");
+      //moveNear(OVOLUP, false); // this is a larn 12.0 "feature"
     } else if (isItem(newx, newy, OENTRANCE)) {
       // updateLog("Entering Dungeon");
       // player.x = Math.floor(MAXX / 2);
@@ -704,6 +696,16 @@ function parse(e) {
     nomove = 1;
     DEBUG_IMMORTAL = !DEBUG_IMMORTAL;
     updateLog("DEBUG: IMMORTAL: " + DEBUG_IMMORTAL);
+  }
+  if (key == '`') {
+    nomove = 1;
+    if (player.AWARENESS <= 0) {
+      updateLog("DEBUG: EXPANDED AWARENESS++");
+      player.AWARENESS = 100000;
+    } else {
+      updateLog("DEBUG: EXPANDED AWARENESS--");
+      player.AWARENESS = 0;
+    }
   }
   if (key == 'X') {
     nomove = 1;

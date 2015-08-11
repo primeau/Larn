@@ -281,6 +281,7 @@ function speldamage(x) {
             ifblind(i, j);
             hitm(i, j, 200);
           }
+          player.level.know[i][j] = KNOWALL; // HACK fix for black tile
         }
       }
       return;
@@ -391,10 +392,11 @@ function speldamage(x) {
       return;
       //
     case 33:
-      updateLog("TODO: genocide");
-      //   genmonst();
-      //   spelknow[33] = 0; /* genocide */
-      //   loseint();
+      /* genocide */
+      updateLog("Genocide what monster? ");
+      setCharCallback(genmonst, true);
+      forgetSpell(33); /* forget */
+      loseint();
       return;
 
     case 34:
@@ -725,6 +727,7 @@ function direct(spnum, direction, dam, arg) {
 
 function setup_godirect(delay, spnum, direction, damage, cshow, stroverride) {
   napping = true;
+  nomove = 1;
   setTimeout(godirect, delay, spnum, player.x, player.y, diroffx[direction], diroffy[direction], damage, delay, cshow, stroverride);
 }
 
@@ -746,12 +749,10 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   //if (spnum < 0 || spnum >= SPNUM || str == 0 || delay < 0) return;
 
   if (isconfuse()) {
-    napping = false;
-    paint();
+    exitspell();
     return;
   }
 
-  //while (dam > 0) {
   //debug(`${x}, ${y}: ${dam}`);
 
   if (x != player.x || y != player.y) {
@@ -763,8 +764,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   y += dy;
   if ((x > MAXX - 1) || (y > MAXY - 1) || (x < 0) || (y < 0)) {
     dam = 0;
-    napping = false;
-    paint();
+    exitspell();
     return;
   } /* out of bounds */
 
@@ -778,8 +778,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       nap(1000);
       died(278);
     }
-    napping = false;
-    paint();
+    exitspell();
     return;
   }
 
@@ -802,8 +801,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     if (nospell(spnum, monster)) {
       lasthx = x;
       lasthy = y;
-      napping = false;
-      paint();
+      exitspell();
       return;
     }
 
@@ -898,19 +896,23 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   }
 
   dam -= 3 + (player.HARDGAME >> 1);
-  //} // WHILE
-
-  nomove = 1; // TODO does nothing?
 
   if (dam > 0) {
+    nomove = 1;
     blt(); // TODO use paint()? -> no because it doesn't show missile trail
     setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, delay, cshow, stroverride);
   } else {
-    napping = false;
-    paint();
+    exitspell();
     return;
   }
 
+}
+
+function exitspell() {
+  napping = false;
+  nomove = 0;
+  parse2(); // monsters need a chance to attack
+  paint();
 }
 
 
@@ -977,4 +979,63 @@ function annihilate() {
     player.raiseexperience(k);
   }
   return k;
+}
+
+
+
+/* Function to ask for monster and genocide from game */
+function genmonst(key) {
+
+  if (!isalpha(key)) {
+    return 0;
+  }
+
+  //bell();
+
+  appendLog(key);
+
+  for (var j = 0; j < monsterlist.length; j++)
+    if (monsterlist[j].char == key) {
+      var monstname;
+      debug(monsterlist[j]);
+      monsterlist[j].genocided = 1;
+      switch (j) {
+        case JACULI:
+          monstname = "jaculi";
+          break;
+        case YETI:
+          monstname = "yeti";
+          break;
+        case ELF:
+          monstname = "elves";
+          break;
+        case VORTEX:
+          monstname = "vortexes";
+          break;
+        case VIOLETFUNGI:
+          monstname = "violet fungi";
+          break;
+        case DISENCHANTRESS:
+          monstname = "disenchantresses";
+          break;
+        case LAMANOBE:
+          // JRP: Everyone gets an easter egg. This one is mine.
+          monsterlist[j].genocided = 0;
+          updateLog("  Lawless resists!");
+          return 1;
+        default:
+          monstname = monsterlist[j] + "s";
+          break;
+      }
+
+      updateLog(`  There will be no more ${monstname}`);
+
+      newcavelevel(player.level.depth); /* now wipe out monsters on this level */
+      //drawscreen();
+      paint();
+      return 1;
+    }
+
+  updateLog("  You sense failure!");
+  return 1;
 }

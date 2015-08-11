@@ -333,7 +333,7 @@ function wield(index) {
   debug("wield: " + index);
 
   // player is over a weapon
-  if (item.isWeapon()) {
+  if (item.canWield()) {
     appendLog(" wield");
     if (take(item)) {
       forget(); // remove from board
@@ -373,7 +373,7 @@ function wield(index) {
       return 1;
     }
 
-    if (!item.isWeapon()) {
+    if (!item.canWield()) {
       updateLog("  You can't wield that!");
       IN_STORE = false;
       return 1;
