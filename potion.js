@@ -65,7 +65,7 @@ function act_quaffpotion(index) {
   } else {
     if (item == null) {
       //debug(useindex);
-      if (index == '*' || index == ' ') {
+      if (index == '*' || index == ' ' || index == 'I') {
         if (!IN_STORE) {
           showinventory(true, act_quaffpotion, showquaff, false, false);
         } else {
@@ -135,9 +135,9 @@ function quaffpotion(potion, set_known) {
 
     case 2:
       /* raise level */
+      updateLog("  Suddenly, you feel much more skillful!");
       player.raiselevel();
       player.raisemhp(1);
-      updateLog("  Suddenly, you feel much more skillful!");
       break;
 
     case 3:
@@ -306,7 +306,7 @@ function quaffpotion(potion, set_known) {
 
     case 20:
       /* instant healing */
-      lprcat("  You feel all better now!");
+      updateLog("  You feel all better now!");
       player.HP = player.HPMAX;
       break;
 

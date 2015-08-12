@@ -206,7 +206,7 @@ function take(item) {
  */
 function drop_object(index) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
-  if (index == '*' || index == ' ') {
+  if (index == '*' || index == ' ' || index == 'I') {
     if (!IN_STORE) {
       showinventory(true, drop_object, showall, false, false);
     } else {

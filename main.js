@@ -178,14 +178,6 @@ function parse(e) {
 
   var item = getItem(player.x, player.y);
 
-  /*
-           ARROW KEYS           NUMPAD               KEYBOARD
-               ↑               7  8  9               y  k  u
-               |                \ | /                 \ | /
-            ←- . -→            4 -.- 6               h -.- l
-               |                / | \                 / | \
-               ↓               1  2  3               b  j  n
-  */
 
   //
   // MOVE PLAYER
@@ -199,7 +191,6 @@ function parse(e) {
     }
     return;
   }
-
 
   //
   // STAY HERE
@@ -225,7 +216,7 @@ function parse(e) {
   if (key == 'd') {
     yrepcount = 0;
     if (player.TIMESTOP == 0) {
-      updateLog("What do you want to drop [Space to view]");
+      updateLog("What do you want to drop [Space to view] ? ");
       setCharCallback(drop_object, true);
     }
     return;
@@ -234,7 +225,6 @@ function parse(e) {
   //
   // EAT COOKIE
   //
-  //
   if (key == 'e') {
     yrepcount = 0;
     if (player.TIMESTOP == 0)
@@ -242,13 +232,21 @@ function parse(e) {
         outfortune();
         forget();
       } else {
-        updateLog("What do you want to eat [Space to view]");
+        updateLog("What do you want to eat [Space to view] ? ");
         setCharCallback(act_eatcookie, true);
       }
     return;
   }
 
-  // TODO g - pack weight
+  //
+  // EAT COOKIE
+  //
+  if (key == 'g') {
+    yrepcount = 0;
+    cursors();
+    updateLog(`The stuff you are carrying presently weighs ${Math.round(packweight())} pounds`);
+    return;
+  }
 
   //
   // INVENTORY
@@ -263,7 +261,6 @@ function parse(e) {
   //
   // PRAY
   //
-  // TODO: this is broken because player still ignores altar on next move
   if (key == 'p') {
     yrepcount = 0;
     pray_at_altar();
@@ -282,8 +279,8 @@ function parse(e) {
         forget();
         quaffpotion(item, true);
       } else {
-        updateLog("What do you want to quaff [Space to view]");
-        setCharCallback(act_quaffpotion, true); // TODO this should fall through
+        updateLog("What do you want to quaff [Space to view] ? ");
+        setCharCallback(act_quaffpotion, true); // TODO this should fall through?
       }
     return;
   }
@@ -306,7 +303,7 @@ function parse(e) {
         forget();
         read_scroll(item);
       } else {
-        updateLog("What do you want to read [Space to view]");
+        updateLog("What do you want to read [Space to view] ? ");
         setCharCallback(act_read_something, true);
       }
     }
@@ -326,7 +323,7 @@ function parse(e) {
   //
   // TIDY UP AT FOUNTAIN
   //
-  if (key == 'T') {
+  if (key == 'f') {
     yrepcount = 0;
     wash_fountain(null);
     dropflag = 1;
@@ -343,7 +340,7 @@ function parse(e) {
     if (item.canWield()) {
       wield(item);
     } else {
-      updateLog("What do you want to wield [(-) for nothing, Space to view]");
+      updateLog("What do you want to wield (-) for nothing [Space to view] ? ");
       setCharCallback(wield, true);
     }
     return;
@@ -448,7 +445,26 @@ function parse(e) {
   }
 
   // TODO S - save game
-  // TODO T - take off armor
+
+
+  //
+  // take off armor
+  //
+  if (key == 'T') {
+    yrepcount = 0;
+    if (player.SHIELD) {
+      player.SHIELD = null;
+      updateLog("Your shield is off");
+      //bottomline();
+    } else
+    if (player.WEAR) {
+      player.WEAR = null;
+      updateLog("Your armor is off");
+      //bottomline();
+    } else
+      updateLog("You aren't wearing anything");
+    return;
+  }
 
   //
   // WEAR
@@ -458,7 +474,7 @@ function parse(e) {
     if (item.isArmor()) {
       wear(item);
     } else {
-      updateLog("What do you want to wear [(- for nothing), Space to view]");
+      updateLog("What do you want to wear [Space to view] ? ");
       setCharCallback(wear, true);
     }
     return;
@@ -527,8 +543,8 @@ function parse(e) {
       newcavelevel(player.level.depth - 1);
       //positionplayer(newx, newy, true);
     } else if (isItem(newx, newy, OVOLUP)) {
-      newcavelevel(0);
-      moveNear(OVOLDOWN, false);
+      act_up_shaft();
+      return;
     } else if (DEBUG_STAIRS_EVERYWHERE) {
       nomove = 1;
       if (player.level.depth == 0) {
@@ -564,9 +580,8 @@ function parse(e) {
       newcavelevel(player.level.depth + 1);
       //positionplayer(newx, newy, true);
     } else if (isItem(newx, newy, OVOLDOWN)) {
-      newcavelevel(11);
-      //positionplayer(newx, newy, true); // should do this to make it more difficult
-      //moveNear(OVOLUP, false); // this is a larn 12.0 "feature"
+      act_down_shaft();
+      return;
     } else if (isItem(newx, newy, OENTRANCE)) {
       // updateLog("Entering Dungeon");
       // player.x = Math.floor(MAXX / 2);
@@ -716,7 +731,7 @@ function parse(e) {
       player.AWARENESS = 0;
     }
   }
-  if (key == 'P') {
+  if (key == ')') {
     nomove = 1;
     DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
     if (!DEBUG_PROXIMITY) IN_STORE = false;

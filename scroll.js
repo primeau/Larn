@@ -68,7 +68,7 @@ function act_read_something(index) {
   } else {
     if (item == null) {
 
-      if (index == '*' || index == ' ') {
+      if (index == '*' || index == ' ' || index == 'I') {
         if (!IN_STORE) {
           showinventory(true, act_read_something, showread, false, false);
         } else {

@@ -14,14 +14,14 @@ function outfortune() {
 function act_eatcookie(index) {
   var useindex = getIndexFromChar(index);
   var item = player.inventory[useindex];
-  if (item != null && item.matches(OCOOKIE)) {
+  if (item && item.matches(OCOOKIE)) {
     player.inventory[useindex] = null;
     outfortune();
   } else {
     if (item == null) {
       //debug(useindex);
 
-      if (index == '*' || index == ' ') {
+      if (index == '*' || index == ' ' || index == 'I') {
         if (!IN_STORE) {
           showinventory(true, act_eatcookie, showeat, false, false);
         }

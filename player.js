@@ -330,8 +330,6 @@ function ifblind(x, y) {
 function wield(index) {
   var item = getItem(player.x, player.y);
 
-  debug("wield: " + index);
-
   // player is over a weapon
   if (item.canWield()) {
     appendLog(" wield");
@@ -344,18 +342,24 @@ function wield(index) {
   }
   // wield from inventory
   else {
-    //debug("wield(): " + index);
-
-    if (index == '*' || index == ' ') {
+    if (index == '*' || index == ' ' || index == 'I') {
       if (!IN_STORE) {
         showinventory(true, wield, showwield, false, false);
-      }
-      else {
+      } else {
         IN_STORE = false;
         paint();
       }
       nomove = 1;
       return;
+    }
+    if (index == '-') {
+      if (player.WIELD) {
+        updateLog("You weapon is sheathed");
+        player.WIELD = null;
+        bottomline();
+        recalc(); // JRP added
+      }
+      return 1;
     }
 
     var useindex = getIndexFromChar(index);
@@ -378,29 +382,26 @@ function wield(index) {
       IN_STORE = false;
       return 1;
     }
-
   }
 
   // common cases for both
-  if (player.SHIELD != null && item.matches(O2SWORD)) {
+  if (player.SHIELD && item.matches(O2SWORD)) {
     updateLog("  But one arm is busy with your shield!");
     IN_STORE = false;
     return 1;
   }
 
-  if (index == '-') {
-    // TODO
-    // player.WIELD = null;
-    // bottomline();
-    // recalc(); // JRP added
-    // return 1;
+  if (index === item) {
+    index = getCharFromIndex(player.inventory.indexOf(item));
   }
-
+  updateLog(`  You wield:`);
+  updateLog(`${index}) ${item.toString(true)}`);
   player.WIELD = item;
 
   IN_STORE = false;
   return 1;
 }
+
 
 
 /*
@@ -418,13 +419,12 @@ function wear(index) {
       IN_STORE = false;
       return 1;
     }
-  } // else player hit 'W'
+  } // wear from inventory
   else {
-    if (index == '*' || index == ' ') {
+    if (index == '*' || index == ' ' || index == 'I') {
       if (!IN_STORE) {
         showinventory(true, wear, showwear, false, false);
-      }
-      else {
+      } else {
         IN_STORE = false;
         paint();
       }
@@ -458,7 +458,7 @@ function wear(index) {
     item.matches(OSSPLATE)) {
     player.WEAR = item;
   } else if (item.matches(OSHIELD)) {
-    if (player.WIELD != null && player.WIELD.matches(O2SWORD)) {
+    if (player.WIELD && player.WIELD.matches(O2SWORD)) {
       updateLog("  Your hands are busy with the two handed sword!");
       IN_STORE = false;
       return 1;
@@ -470,6 +470,12 @@ function wear(index) {
     IN_STORE = false;
     return 1;
   }
+
+  if (index === item) {
+    index = getCharFromIndex(player.inventory.indexOf(item));
+  }
+  updateLog(`  You wear:`);
+  updateLog(`${index}) ${item.toString(true)}`);
 
   IN_STORE = false;
   return 1;

@@ -125,6 +125,54 @@ function act_wash_fountain() {
 
 
 /*
+Perform the act of climbing down the volcanic shaft.  Assumes
+cursors() has been called and that a check has been made that
+are actually at a down shaft.
+*/
+function act_down_shaft() {
+  if (player.level.depth != 0) {
+    updateLog("The shaft only extends 5 feet downward!");
+    return;
+  }
+
+  if (packweight() > 45 + 3 * (player.STRENGTH + player.STREXTRA)) {
+    updateLog("You slip and fall down the shaft");
+    lastnum = 275;
+    player.losehp(30 + rnd(20));
+  }
+
+  newcavelevel(MAXLEVEL);
+  // moveNear(OVOLUP, false); // this is a larn 12.0 "feature"
+
+}
+
+
+
+/*
+Perform the action of climbing up the volcanic shaft. Assumes
+cursors() has been called and that a check has been made that
+are actually at an up shaft.
+*/
+function act_up_shaft() {
+  if (player.level.depth != 11) {
+    updateLog("The shaft only extends 8 feet upwards before you find a blockage!");
+    return;
+  }
+
+  if (packweight() > 45 + 5 * (player.STRENGTH + player.STREXTRA)) {
+    updateLog("You slip and fall down the shaft");
+    lastnum = 275;
+    player.losehp(15 + rnd(20));
+    return;
+  }
+
+  newcavelevel(0);
+  moveNear(OVOLDOWN, false);
+}
+
+
+
+/*
     Performs the act of opening a chest.
 
     Parameters:   x,y location of the chest to open.
