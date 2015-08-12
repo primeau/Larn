@@ -1,6 +1,5 @@
 todo:
 - traps
-- smart monster movement
 - help screens
 - intro screen
 - save game

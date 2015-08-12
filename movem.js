@@ -308,48 +308,48 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
 
 }
 
-// /*
-//     Move scared monsters randomly away from the player position.
-// */
-function move_scared(i, j) {
-  move_dumb(i, j);
-}
-// int i, j ;
-//     {
-//     int xl, yl, tmp, tmpitem ;
-//
-//     /* check for a half-speed monster, and check if not to move.  Could be
-//        done in the monster list build.
-//     */
-//     switch(mitem[i][j])
-//         {
-//         case TROGLODYTE:  case HOBGOBLIN:  case METAMORPH:  case XVART:
-//         case INVISIBLESTALKER:  case ICELIZARD: if ((gtime & 1) == 1) return;
-//         };
-//
-//     if ((xl = i+rnd(3)-2) < 0)
-//     xl=0;
-//     if (xl >= MAXX)
-//     xl=MAXX-1;
-//     if ((yl = j+rnd(3)-2) < 0)
-//     yl=0;
-//     if (yl >= MAXY)
-//     yl=MAXY-1;
-//
-//     if ((tmp=item[xl][yl]) != OWALL)
-//     if (mitem[xl][yl] == 0)
-//         if ((mitem[i][j] != VAMPIRE) || (tmp != OMIRROR))
-//         if (tmp != OCLOSEDDOOR)
-//             mmove(i,j,xl,yl);
-//     }
 
-// /*
-//     Move monsters that are moving intelligently, using the proximity
-//     ripple.  Attempt to move to a position in the proximity ripple
-//     that is closer to the player.
-//
-//     Parameters: the X,Y position of the monster to be moved.
-// */
+
+/*
+    Move scared monsters randomly away from the player position.
+*/
+function move_scared(i, j) {
+  /* check for a half-speed monster, and check if not to move.  Could be
+     done in the monster list build.
+  */
+  var monster = monsterAt(i, j);
+  switch (monster.arg) {
+    case TROGLODYTE:
+    case HOBGOBLIN:
+    case METAMORPH:
+    case XVART:
+    case INVISIBLESTALKER:
+    case ICELIZARD:
+      if ((gtime & 1) == 1) return;
+  };
+
+  var xl = vx(i + rnd(3) - 2);
+  var yl = vy(j + rnd(3) - 2);
+
+  var item = getItem(xl, yl);
+
+  if (!item.matches(OWALL) && !item.matches(OCLOSEDDOOR) && !monsterAt(xl, yl)) {
+    if ((!monster.matches(VAMPIRE)) || (!item.matches(OMIRROR))) {
+      mmove(i, j, xl, yl);
+    }
+  }
+
+}
+
+
+
+/*
+    Move monsters that are moving intelligently, using the proximity
+    ripple.  Attempt to move to a position in the proximity ripple
+    that is closer to the player.
+
+    Parameters: the X,Y position of the monster to be moved.
+*/
 function move_smart(i, j) {
   var x, y, z;
 

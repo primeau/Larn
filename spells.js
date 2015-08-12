@@ -253,10 +253,10 @@ function speldamage(x) {
 
     case 20:
       /* vaporize rock */
-      var xh = Math.min(player.x + 1, MAXX - 1);
-      var yh = Math.min(player.y + 1, MAXY - 1);
-      for (let i = Math.max(player.x - 1, 0); i <= xh; i++) {
-        for (let j = Math.max(player.y - 1, 0); j <= yh; j++) {
+      var xh = Math.min(player.x + 1, MAXX - 2);
+      var yh = Math.min(player.y + 1, MAXY - 2);
+      for (let i = Math.max(player.x - 1, 1); i <= xh; i++) {
+        for (let j = Math.max(player.y - 1, 1); j <= yh; j++) {
           // kn = & know[i][j];
           var item = getItem(i, j);
           if (item.matches(OWALL)) {
