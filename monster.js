@@ -819,7 +819,7 @@ function hitm(x, y, damage) {
 
   var hpoints = monster.hitpoints;
   monster.hitpoints -= damage;
-  debug(`hitm(): ${monster.char} ${monster.hitpoints} / ${monsterlist[monster.arg].hitpoints}`);
+  debug(`hitm(): ${monster.getChar()} ${monster.hitpoints} / ${monsterlist[monster.arg].hitpoints}`);
   if (monster.hitpoints <= 0) {
     player.MONSTKILLED++;
     updateLog(`  The ${monster} died!`);

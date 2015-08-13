@@ -997,7 +997,6 @@ function genmonst(key) {
   for (var j = 0; j < monsterlist.length; j++)
     if (monsterlist[j].char == key) {
       var monstname;
-      debug(monsterlist[j]);
       monsterlist[j].genocided = 1;
       switch (j) {
         case JACULI:

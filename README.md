@@ -9,6 +9,7 @@ todo:
 - scoreboard
 - auto-pickup
 - LRS
+- add larn 12.4 to repo, and patch pit bug
 
 extras:
 - shift-arrow to open door?

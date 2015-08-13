@@ -281,9 +281,9 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
               var intel = 10 - player.HARDGAME;
               if (monsterAt(tmpx, tmpy)) {
                 if (monsterAt(tmpx, tmpy).intelligence > intel) {
-                  lprc(`<b>${monsterAt(tmpx, tmpy).char}</b>`);
+                  lprc(`<b>${monsterAt(tmpx, tmpy).getChar()}</b>`);
                 } else {
-                  lprc(`${monsterAt(tmpx, tmpy).char}`);
+                  lprc(`${monsterAt(tmpx, tmpy).getChar()}`);
                 }
               } else {
                 lprc(screen[tmpx][tmpy]);

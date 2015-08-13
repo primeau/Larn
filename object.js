@@ -438,7 +438,7 @@ function opit() {
   if (rnd(101) >= 81) {
     return;
   }
-  if (rnd(70) <= 9 * player.DEXTERITY - packweight() || rnd(101) >= 5) {
+  if (rnd(70) <= 9 * player.DEXTERITY - packweight() && rnd(101) >= 5) {
     return;
   }
   if (player.level.depth == 10 || player.level.depth >= 13) {

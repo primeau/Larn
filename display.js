@@ -79,7 +79,7 @@ function show1cell(x, y) {
     return;
   }
 
-  var c = monsterAt(x, y) != null ? monsterAt(x, y).char : getItem(x, y).char;
+  var c = monsterAt(x, y) != null ? monsterAt(x, y).getChar() : getItem(x, y).char;
 
   player.level.know[x][y] = KNOWALL; /* we end up knowing about it */
 }
