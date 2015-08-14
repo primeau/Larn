@@ -72,14 +72,15 @@ function botside() {
 function show1cell(x, y) {
   cursor(x + 1, y + 1);
   /* see nothing if blind, but clear previous player position */
-  if (player.BLINDCOUNT > 0) {
+  if (player.BLINDCOUNT) {
     if ((x == oldx) && (y == oldy)) {
       lprc(' ');
     }
     return;
   }
 
-  var c = monsterAt(x, y) != null ? monsterAt(x, y).getChar() : getItem(x, y).char;
+  var c = monsterAt(x, y) ? monsterAt(x, y).getChar() : getItem(x, y).char;
+  lprc(c);
 
   player.level.know[x][y] = KNOWALL; /* we end up knowing about it */
 }
@@ -87,6 +88,7 @@ function show1cell(x, y) {
 
 
 /* subroutine to show where the player is on the screen, cursor values start from 1 up */
+// TODO different from original
 function showplayer() {
   show1cell(oldx, oldy);
   show1cell(player.x, player.y);
@@ -97,10 +99,11 @@ function showplayer() {
 
 
 /* subroutine to display a cell location on the screen */
+// TODO different from original
 function showcell(x, y) {
   if (IN_STORE) return; // TODO HACK
 
-  if (player.BLINDCOUNT > 0) {
+  if (player.BLINDCOUNT) {
     if (x == oldx && y == oldy) {
       cursor(1 + x, 1 + y);
       lprc(' ');

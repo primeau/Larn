@@ -26,7 +26,7 @@ var Larn = {
     player.WIELD = player.inventory[1];
 
     // always know cure dianthroritis
-    learnPotion(createObject(OPOTION,21));
+    learnPotion(createObject(OPOTION, 21));
 
     learnSpell("pro");
     learnSpell("mle");
@@ -60,62 +60,6 @@ var Larn = {
 
 
 
-function positionplayer(x, y, exact) {
-
-  // TODO update with larn code
-
-  if (x == null) x = player.x;
-  if (y == null) y = player.y;
-  if (exact == null) exact = false;
-
-  // short circuit for moving to exact location
-  var distance = 0;
-  if (exact && canMove(x, y)) {
-    player.x = x;
-    player.y = y;
-    //debug("positionplayer: (" + distance + ") got " + xy(x, y));
-    player.level.know[x][y] = KNOWALL;
-
-    oldx = player.x;
-    oldy = player.y;
-
-    return true;
-  }
-
-  // try 20 times to be 1 step away, then 2 steps, etc...
-  distance = 1;
-  var maxTries = 20;
-  var numTries = maxTries;
-  while (distance < 10) {
-    while (numTries-- > 0) {
-      var newx = x + (rnd(3) - 2) * distance;
-      var newy = y + (rnd(3) - 2) * distance;
-      //debug("positionplayer: (" + distance + ") try " + xy(newx, newy));
-      if ((newx != x || newy != y)) {
-        if (canMove(newx, newy)) {
-          player.x = newx;
-          player.y = newy;
-          player.level.know[x][y] = KNOWALL;
-          //debug("positionplayer: (" + distance + ") got " + xy(newx, newy));
-
-          oldx = player.x;
-          oldy = player.y;
-
-          return true;
-        }
-      }
-    }
-    numTries = maxTries;
-    distance++;
-  }
-
-  oldx = player.x;
-  oldy = player.y;
-
-  return false;
-}
-
-
 /*
     moveplayer(dir)
 
@@ -135,7 +79,7 @@ const diroffy = [0, 1, 0, -1, 0, -1, -1, 1, 1];
         if direction=0, don't move--just show where he is */
 function moveplayer(dir) {
 
-  if (player.CONFUSE > 0) {
+  if (player.CONFUSE) {
     if (player.level.depth < rnd(30)) {
       dir = rund(9); /*if confused any dir*/
     }
@@ -161,23 +105,7 @@ function moveplayer(dir) {
     return (0);
   }
 
-  // if (k == 33 && m == MAXY-1 && level == 1)
-  // {
-  //   newcavelevel(0);
-  //
-  //   for (k=0; k<MAXX; k++) for (m=0; m<MAXY; m++) if (item[k][m] == OENTRANCE)
-  //   {
-  //     player.x = k;
-  //     player.y = m;
-  //     positionplayer();
-  //     drawscreen();
-  //     new_position_flag = 1;
-  //     return 0;
-  //   }
-  // }
-
   if (item.matches(OHOMEENTRANCE)) {
-    updateLog("Going to Home Level");
     newcavelevel(0);
     moveNear(OENTRANCE, false);
     return 0;
@@ -204,25 +132,14 @@ function moveplayer(dir) {
   player.x = k;
   player.y = m;
 
-  // new_position_flag = 1; TODO
-
-  // TODO: JRP NOT IN ORIGINAL CODE
-  // stop running when hitting an object
-  if (!getItem(k, m).matches(OEMPTY)) {
+  if (!item.matches(OEMPTY) &&
+    !item.matches(OTRAPARROWIV) && !item.matches(OIVTELETRAP) &&
+    !item.matches(OIVDARTRAP) && !item.matches(OIVTRAPDOOR)) {
     yrepcount = 0;
     return (0);
+  } else {
+    return (1);
   }
-
-  // TODO
-  // if (!item.matches(OTRAPARROWIV) && !item.matches(OIVTELETRAP) && //
-  //   !item.matches(OIVDARTRAP) && !item.matches(OIVTRAPDOOR)) {
-  //   yrepcount = 0;
-  //   return (1);
-  // } else {
-  //   return (1);
-  // }
-
-  return 1;
 }
 
 
@@ -242,21 +159,6 @@ function moveNear(item, exact) {
   debug("movenear: NOT FOUND: " + item.id);
   return false;
 } // movenear
-
-function canMove(x, y) {
-  //debug("canMove: testing: (" + x + "," + y + ")");
-  if (x < 0) return false;
-  if (x >= MAXX) return false;
-  if (y < 0) return false;
-  if (y >= MAXY) return false;
-
-  var item = player.level.items[x][y];
-  if (isItem(x, y, OWALL) /*|| player.level.monsters[x][y] != null*/ ) {
-    return false;
-  } else {
-    return true;
-  }
-}
 
 
 

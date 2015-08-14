@@ -524,14 +524,47 @@ function parse(e) {
     return;
   }
 
-  // TODO : - look at object
+  //
+  // /* look at object */
+  //
+  if (key == ':') {
+    yrepcount = 0;
+    /* identify, don't pick up or prompt for action */
+    lookforobject(true, false, false);
+    nomove = 1; /* assumes look takes no time */
+    return;
+  }
+
   // TODO @ - toggle auto pickup
   // TODO / - identify object / monster
-  // TODO ^ - identify traps
+
+  //
+  // /* identify traps */
+  //
+  if (key == '^') {
+    var flag = yrepcount = 0;
+    for (var j = vy(player.y - 1); j < vy(player.y + 2); j++) {
+      for (var i = vx(player.x - 1); i < vx(player.x + 2); i++) {
+        var trap = getItem(i, j);
+        switch (trap.id) {
+          case OTRAPDOOR.id:
+          case ODARTRAP.id:
+          case OTRAPARROW.id:
+          case OTELEPORTER.id:
+          case OPIT.id:
+            updateLog(`It's ${trap}`);
+            flag++;
+        };
+      }
+    }
+    if (flag == 0)
+      updateLog("No traps are visible");
+    return;
+  }
+
+
+
   // TODO _ - wizard id
-
-
-
 
 
 
@@ -555,13 +588,12 @@ function parse(e) {
         moveNear(OENTRANCE, false);
       } else if (player.level.depth == 11) {
         debug("STAIRS_EVERYWHERE: climbing up volcanic shaft");
-        moveNear(OVOLUP, true);
-        parse(e);
+        act_up_shaft();
         return;
       } else {
         debug("STAIRS_EVERYWHERE: climbing up stairs");
         moveNear(OSTAIRSUP, true);
-        parse(e);
+        newcavelevel(player.level.depth - 1);
         return;
       }
     } else if (isItem(newx, newy, OSTAIRSDOWN)) {
@@ -591,13 +623,12 @@ function parse(e) {
       nomove = 1;
       if (player.level.depth == 0) {
         debug("STAIRS_EVERYWHERE: entering dungeon");
-        moveNear(OENTRANCE, true);
-        parse('E');
+        newcavelevel(player.level.depth + 1);
         return;
       } else if (player.level.depth != 10 && player.level.depth != 13) {
         debug("STAIRS_EVERYWHERE: climbing down stairs");
         moveNear(OSTAIRSDOWN, true);
-        parse(e);
+        newcavelevel(player.level.depth + 1);
         return;
       }
     } else if (isItem(newx, newy, OSTAIRSUP)) {
@@ -616,7 +647,7 @@ function parse(e) {
       nomove = 1;
       debug("STAIRS_EVERYWHERE: entering volcano");
       moveNear(OVOLDOWN, true);
-      parse('>');
+      act_down_shaft();
       return;
     }
   }

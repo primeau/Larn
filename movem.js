@@ -223,9 +223,9 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
         case OPIT.id:
         case OCLOSEDDOOR.id:
         case OTRAPDOOR.id:
-          // case OTRAPARROW.id: TODO
-          // case ODARTRAP.id: TODO
-          // case OTELEPORTER.id: TODO
+        case OTRAPARROW.id:
+        case ODARTRAP.id:
+        case OTELEPORTER.id:
           screen[m][k] = 127;
           break;
         case OHOMEENTRANCE.id:
@@ -505,12 +505,12 @@ function mmove(aa, bb, cc, dd) {
   }
 
   var item = getItem(cc, dd);
+  var monster = player.level.monsters[aa][bb];
 
-  var tmp = player.level.monsters[aa][bb];
-  player.level.monsters[cc][dd] = tmp;
+  player.level.monsters[cc][dd] = monster;
 
   if (item.matches(OPIT) || item.matches(OTRAPDOOR)) {
-    switch (tmp.arg) {
+    switch (monster.arg) {
       case BAT:
       case EYE:
       case SPIRITNAGA:
@@ -534,68 +534,70 @@ function mmove(aa, bb, cc, dd) {
     };
   }
 
-  // TODO
-  // TODO
-  // if (i==OANNIHILATION)
-  //     {
-  //     if (tmp>=DEMONLORD+3) /* demons dispel spheres */
-  //         {
-  //         cursors();
-  //         lprintf("\nThe %s dispels the sphere!",monster[tmp].name);
-  //         rmsphere(cc,dd);    /* delete the sphere */
-  //         }
-  //     else mitem[cc][dd]=i=tmp=0;
-  //     }
-  // TODO
-  // TODO
+  if (item.matches(OANNIHILATION)) {
+    if (monster.arg >= DEMONLORD + 3) /* demons dispel spheres */ {
+      cursors();
+      updateLog(`The ${monster} dispels the sphere!`);
+      rmsphere(cc, dd); /* delete the sphere */
+    }
+    else {
+      player.level.monsters[cc][dd] = null;
+      // TODO? delete item too?
+    }
+  }
 
-  tmp.awake = true;
-  //if ((hitp[cc][dd] = hitp[aa][bb]) < 0) hitp[cc][dd]=1; // TODO: do we need this?
+  monster.awake = true;
   player.level.monsters[aa][bb] = null;
 
-
-  if (tmp.matches(LEPRECHAUN) && (item.matches(OGOLDPILE) || item.isGem())) {
+  if (monster.matches(LEPRECHAUN) && (item.matches(OGOLDPILE) || item.isGem())) {
     player.level.items[cc][dd] = createObject(OEMPTY); /* leprechaun takes gold */
   }
 
-  if (tmp.matches(TROLL)) { /* if a troll regenerate him */
+  if (monster.matches(TROLL)) { /* if a troll regenerate him */
     if ((gtime & 1) == 0)
-      if (monsterlist[tmp.arg].hitpoints > tmp.hitpoints) tmp.hitpoints++;
+      if (monsterlist[monster.arg].hitpoints > monster.hitpoints) monster.hitpoints++;
   }
 
-  // TODO
-  // var flag = 0; /* set to 1 if monster hit by arrow trap */
-  //     if (i==OTRAPARROW)  /* arrow hits monster */
-  //         { who = "An arrow";  if ((hitp[cc][dd] -= rnd(10)+level) <= 0)
-  //             { mitem[cc][dd]=0;  flag=2; } else flag=1; }
-  //     if (i==ODARTRAP)    /* dart hits monster */
-  //         { who = "A dart";  if ((hitp[cc][dd] -= rnd(6)) <= 0)
-  //             { mitem[cc][dd]=0;  flag=2; } else flag=1; }
-  //     if (i==OTELEPORTER) /* monster hits teleport trap */
-  //         { flag=3; fillmonst(mitem[cc][dd]);  mitem[cc][dd]=0; }
-  //     if (c[BLINDCOUNT]) return;  /* if blind don't show where monsters are   */
+  var what;
+  var flag = 0; /* set to 1 if monster hit by arrow trap */
+  if (item.matches(OTRAPARROW)) /* arrow hits monster */ {
+    what = "An arrow";
+    if ((monster.hitpoints -= rnd(10) + player.level.depth) <= 0) {
+      player.level.monsters[cc][dd] = null;
+      flag = 2;
+    } else flag = 1;
+  }
+  if (item.matches(ODARTRAP)) /* dart hits monster */ {
+    what = "A dart";
+    if ((monster.hitpoints -= rnd(6)) <= 0) {
+      player.level.monsters[cc][dd] = null;
+      flag = 2;
+    } else flag = 1;
+  }
+  if (item.matches(OTELEPORTER)) /* monster hits teleport trap */ {
+    flag = 3;
+    fillmonst(monster.arg);
+    player.level.monsters[cc][dd] = null;
+  }
+  if (player.BLINDCOUNT) return; /* if blind don't show where monsters are   */
 
-  // TODO
-  // if (player.level.know[cc][dd] & HAVESEEN) {
-  //   p = 0;
-  //   if (flag) cursors();
-  //   switch (flag) {
-  //     case 1:
-  //       p = "\n%s hits the %s";
-  //       break;
-  //     case 2:
-  //       p = "\n%s hits and kills the %s";
-  //       break;
-  //     case 3:
-  //       p = "\nThe %s%s gets teleported";
-  //       who = "";
-  //       break;
-  //   };
-  //   if (p) {
-  //     lprintf(p, who, monster[tmp].name);
-  //     beep();
-  //   }
-  // }
+  if (player.level.know[cc][dd] & HAVESEEN) {
+    if (flag) {
+      cursors();
+      beep();
+    }
+    switch (flag) {
+      case 1:
+        updateLog(`${what} hits the ${monster}`);
+        break;
+      case 2:
+        updateLog(`${what} hits and kills the ${monster}`);
+        break;
+      case 3:
+        updateLog(`The ${monster} gets teleported`);
+        break;
+    };
+  }
 
   if (player.level.know[aa][bb] & HAVESEEN) show1cell(aa, bb);
   if (player.level.know[cc][dd] & HAVESEEN) show1cell(cc, dd);

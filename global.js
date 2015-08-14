@@ -1,5 +1,74 @@
 "use strict";
 
+
+function positionplayer(x, y, exact) {
+
+  // TODO update with larn code? this is actually more random
+
+  if (x == null) x = player.x;
+  if (y == null) y = player.y;
+  if (exact == null) exact = false;
+
+  // short circuit for moving to exact location
+  var distance = 0;
+  if (exact && canMove(x, y)) {
+    player.x = x;
+    player.y = y;
+    //debug("positionplayer: (" + distance + ") got " + xy(x, y));
+    player.level.know[x][y] = KNOWALL;
+
+    oldx = player.x;
+    oldy = player.y;
+
+    return true;
+  }
+
+  // try 20 times to be 1 step away, then 2 steps, etc...
+  distance = 1;
+  var maxTries = 20;
+  var numTries = maxTries;
+  while (distance < 10) {
+    while (numTries-- > 0) {
+      var newx = x + (rnd(3) - 2) * distance;
+      var newy = y + (rnd(3) - 2) * distance;
+      //debug("positionplayer: (" + distance + ") try " + xy(newx, newy));
+      if ((newx != x || newy != y)) {
+        if (canMove(newx, newy)) {
+          player.x = newx;
+          player.y = newy;
+          player.level.know[x][y] = KNOWALL;
+          //debug("positionplayer: (" + distance + ") got " + xy(newx, newy));
+
+          oldx = player.x;
+          oldy = player.y;
+
+          return true;
+        }
+      }
+    }
+    numTries = maxTries;
+    distance++;
+  }
+
+  oldx = player.x;
+  oldy = player.y;
+
+  return false;
+}
+
+
+
+function canMove(x, y) {
+  if (x < 0) return false;
+  if (x >= MAXX) return false;
+  if (y < 0) return false;
+  if (y >= MAXY) return false;
+  var item = getItem(x,y);
+  return (!item.matches(OWALL) && !item.matches(OCLOSEDDOOR) && !monsterAt(x, y));
+}
+
+
+
 /*
     recalc()    function to recalculate the weapon and armor class of the player
  */

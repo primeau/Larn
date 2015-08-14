@@ -365,18 +365,18 @@ function makeobject(depth) {
   fillmroom(rund(3), OSTATUE, 0);
   fillmroom(rund(3), OPIT, 0);
   fillmroom(rund(3), OFOUNTAIN, 0);
-  //fillmroom(rnd(3)-2, OIVTELETRAP, 0); TODO
+  fillmroom(rnd(3) - 2, OIVTELETRAP, 0);
   fillmroom(rund(2), OTHRONE, 0);
   fillmroom(rund(2), OMIRROR, 0);
-  //fillmroom(rund(2), OTRAPARROWIV, 0); TODO
-  //fillmroom(rnd(3)-2, OIVDARTRAP, 0); TODO
+  fillmroom(rund(2), OTRAPARROWIV, 0);
+  fillmroom(rnd(3) - 2, OIVDARTRAP, 0);
   fillmroom(rund(3), OCOOKIE, 0);
 
   if (depth == 1) fillmroom(1, OCHEST, depth);
   else fillmroom(rund(2), OCHEST, depth);
 
-  //if ((depth != MAXLEVEL-1) && (depth != MAXLEVEL+MAXVLEVEL-1))
-  //  fillmroom(rund(2), OIVTRAPDOOR, 0); TODO
+  if ((depth != MAXLEVEL - 1) && (depth != MAXLEVEL + MAXVLEVEL - 1))
+    fillmroom(rund(2), OIVTRAPDOOR, 0);
 
   if (depth <= 10) {
     fillmroom((rund(2)), ODIAMOND, rnd(10 * depth + 1) + 10);
@@ -539,7 +539,7 @@ function checkgen() {
     for (var x = 0; x < MAXX; x++) {
       var monster = player.level.monsters[x][y];
       if (monster && monsterlist[monster.arg].genocided) {
-         player.level.monsters[x][y] = null;
+        player.level.monsters[x][y] = null;
       }
     }
   }

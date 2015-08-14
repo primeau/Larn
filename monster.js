@@ -375,19 +375,17 @@ function createmonster(mon, x, y) {
  *  on level 1
  */
 function cgood(x, y, itm, monst) {
-  var item = getItem(x, y);
-  var monster = monsterAt(x, y);
-
   /* cannot create either monster or item if:
      - out of bounds
      - wall
      - closed door
      - dungeon entrance
   */
+  var item = getItem(x, y);
   if (((y < 0) || (y > MAXY - 1) || (x < 0) || (x > MAXX - 1)) ||
     (item.matches(OWALL)) ||
     (item.matches(OCLOSEDDOOR)) ||
-    (item.matches(OENTRANCE))) return (false);
+    (item.matches(OHOMEENTRANCE))) return (false);
 
   /* if checking for an item, return False if one there already
    */
@@ -398,20 +396,20 @@ function cgood(x, y, itm, monst) {
      there is a pit/trap there.
   */
   if (monst) {
-    if (monsterAt(x, y) != null) {
+    if (monsterAt(x, y)) {
       return (false);
     }
-    switch (getItem(x, y).id) {
+    switch (item.id) {
       /* note: not invisible traps, since monsters are not affected
          by them.
       */
       case OPIT.id:
-        // case OANNIHILATION.id: TODO
-        // case OTELEPORTER.id:
-        // case OTRAPARROW.id:
-        // case ODARTRAP.id:
-        // case OTRAPDOOR.id:          return (false);
-        break;
+      case OANNIHILATION.id:
+      case OTELEPORTER.id:
+      case OTRAPARROW.id:
+      case ODARTRAP.id:
+      case OTRAPDOOR.id:
+        return (false);
       default:
         break;
     };
