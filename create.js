@@ -32,7 +32,6 @@ function newcavelevel(depth) {
   positionplayer(player.x, player.y, true);
   checkgen(); /* wipe out any genocided monsters */
 
-  var wizard = DEBUG_KNOW_ALL;
   if (wizard || player.level.depth == 0)
     for (var j = 0; j < MAXY; j++)
       for (var i = 0; i < MAXX; i++)

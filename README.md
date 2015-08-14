@@ -1,9 +1,9 @@
 todo:
+- spells: sph
 - help screens
 - intro screen
 - save game
 - warn player that back button, window close will kill the game
-- spells: sph, alt
 - make sure difficulty > 0 is fully implemented
 - scoreboard
 - auto-pickup
@@ -24,7 +24,6 @@ bugs:
     - cells not revealed when blind
     - monster identification when blind is unreliable
 - if you delete numbers (in bank, etc) to 0, you can't enter new numbers
-- cell shows in previous location when descending H -> V1
 - is interest being paid correctly?
 - exiting bank before a deposit/withdraw/etc message is done locks the keyboard
 - strextra can get out of balance? caused by heroism/giant strength
@@ -34,6 +33,7 @@ bugs:
 ? should lit 'discover' beyond where player has seen?
 ? missile char stays visible sometimes
 ? monsters can get trapped on edge of screen in wizard mode
+? cell shows in previous location when descending H -> V1
 
 rename/refactor:
 - player.level.items[][] -> item

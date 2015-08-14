@@ -19,12 +19,14 @@ var lastpx = 0;
 var lastpy = 0;
 var lasthx = 0; /* location of monster last hit by player       */
 var lasthy = 0; /* location of monster last hit by player       */
-var prayed = 1;       /* did player pray at an altar (command mode)? needs
-                           to be saved, but I don't want to add incompatibility
-                           right now.  KBR 1/11/90 */
+var prayed = 1;
+/* did player pray at an altar (command mode)? needs
+                    to be saved, but I don't want to add incompatibility
+                    right now.  KBR 1/11/90 */
 var oldx = 0;
 var oldy = 0;
 var course = []; /* the list of courses taken */
+var wizard = false; /*  the wizard mode flag                            */
 
 /*
     table of experience needed to be a certain level of player
@@ -85,8 +87,7 @@ const CLASSES = [
 ];
 
 
-const whydead =
-[
+const whydead = [
   "",
   "",
   "self - annihilated",

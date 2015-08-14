@@ -674,6 +674,7 @@ function parse(e) {
   if (key == 'X' || key == '$') {
     nomove = 1;
     DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
+    wizard = DEBUG_KNOW_ALL;
     if (DEBUG_KNOW_ALL) {
       for (var potioni = 0; potioni < potionname.length; potioni++) {
         var potion = createObject(OPOTION, potioni);

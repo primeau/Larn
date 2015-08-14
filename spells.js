@@ -395,7 +395,8 @@ function speldamage(x) {
       /* genocide */
       updateLog("Genocide what monster? ");
       setCharCallback(genmonst, true);
-      forgetSpell(33); /* forget */
+      if (!wizard)
+        forgetSpell(33); /* forget */
       loseint();
       return;
 
@@ -423,70 +424,58 @@ function speldamage(x) {
       return;
 
     case 36:
-      updateLog("TODO: alter reality");
-      //   /* alter reality */ {
-      //     struct isave * save; /* pointer to item save structure */
-      //     int sc;
-      //     sc = 0; /* # items saved */
-      //     save = (struct isave * ) malloc(sizeof(struct isave) * MAXX * MAXY * 2);
-      //     if (save == NULL) {
-      //       lprcat("\nPolinneaus won't let you mess with his dungeon!");
-      //       return;
-      //     }
-      //     for (j = 0; j < MAXY; j++)
-      //       for (i = 0; i < MAXX; i++) /* save all items and monsters */ {
-      //         xl = item[i][j];
-      //         if (xl && xl != OWALL && xl != OANNIHILATION) {
-      //           save[sc].type = 0;
-      //           save[sc].id = item[i][j];
-      //           save[sc++].arg = iarg[i][j];
-      //         }
-      //         if (mitem[i][j]) {
-      //           save[sc].type = 1;
-      //           save[sc].id = mitem[i][j];
-      //           save[sc++].arg = hitp[i][j];
-      //         }
-      //         item[i][j] = OWALL;
-      //         mitem[i][j] = 0;
-      //         if (wizard)
-      //           player.level.know[i][j] = KNOWALL;
-      //         else
-      //           player.level.know[i][j] = 0;
-      //       }
-      //     eat(1, 1);
-      //     if (level == 1) item[33][MAXY - 1] = OENTRANCE;
-      //     for (j = rnd(MAXY - 2), i = 1; i < MAXX - 1; i++) item[i][j] = 0;
-      //     while (sc > 0) /* put objects back in level */ {
-      //       --sc;
-      //       if (save[sc].type == 0) {
-      //         int trys;
-      //         for (trys = 100, i = j = 1; --trys > 0 && item[i][j]; i = rnd(MAXX - 1), j = rnd(MAXY - 1));
-      //         if (trys) {
-      //           item[i][j] = save[sc].id;
-      //           iarg[i][j] = save[sc].arg;
-      //         }
-      //       } else { /* put monsters back in */
-      //         int trys;
-      //         for (trys = 100, i = j = 1; --trys > 0 && (item[i][j] == OWALL || mitem[i][j]); i = rnd(MAXX - 1), j = rnd(MAXY - 1));
-      //         if (trys) {
-      //           mitem[i][j] = save[sc].id;
-      //           hitp[i][j] = save[sc].arg;
-      //         }
-      //       }
-      //     }
-      //     loseint();
-      //     draws(0, MAXX, 0, MAXY);
-      //     if (wizard == 0) spelknow(36) = 0;
-      //     free((char * ) save);
-      //     positionplayer();
+      var savemon = [];
+      var saveitm = [];
+      var i, j;
+      var wall = createObject(OWALL);
+      var empty = createObject(OEMPTY);
+      for (j = 0; j < MAXY; j++) {
+        for (i = 0; i < MAXX; i++) /* save all items and monsters */ {
+          var item = getItem(i, j);
+          var monster = monsterAt(i, j);
+          if (!item.matches(OEMPTY) && !item.matches(OWALL) &&
+            !item.matches(OANNIHILATION) && !item.matches(OHOMEENTRANCE)) {
+            saveitm.push(item);
+          }
+          if (monster) {
+            savemon.push(monster);
+          }
+          player.level.items[i][j] = wall;
+          player.level.monsters[i][j] = null;
+          if (wizard)
+            player.level.know[i][j] = KNOWALL;
+          else
+            player.level.know[i][j] = 0;
+        }
+      }
+      eat(1, 1);
+      if (player.level.depth == 1)
+        player.level.items[33][MAXY - 1] = createObject(OHOMEENTRANCE);
+      for (j = rnd(MAXY - 2), i = 1; i < MAXX - 1; i++) {
+        // JRP: I'm not sure why we do this, but it's in the original code
+        player.level.items[i][j] = empty;
+      }
+      /* put objects back in level */
+      while (saveitm.length > 0) {
+        var item = saveitm.pop();
+        fillroom(item, item.arg);
+      }
+      /* put monsters back in */
+      while (savemon.length > 0) {
+        var monster = savemon.pop();
+        fillmonst(monster.arg);
+      }
+      loseint();
+      if (!wizard)
+        spelknow[36] = 0;
+      positionplayer();
       return;
-      //   }
-      //
 
     case 37:
       /* permanence */
       adjtime(-99999);
-      forgetSpell(37); /* forget */
+      if (!wizard)
+        forgetSpell(37); /* forget */
       loseint();
       return;
 
