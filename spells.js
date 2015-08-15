@@ -376,19 +376,22 @@ function speldamage(x) {
       /* ----- LEVEL 6 SPELLS ----- */
 
     case 32:
-      updateLog("TODO: sphere of annihilation");
-      //   if ((rnd(23) == 5) && (wizard == 0)) /* sphere of annihilation */ {
-      //     beep();
-      //     lprcat("\nYou have been enveloped by the zone of nothingness!\n");
-      //     nap(4000);
-      //     died(258);
-      //     return;
-      //   }
-      //   xl = player.x;
-      //   yl = player.y;
-      //   loseint();
-      //   i = dirsub( & xl, & yl); /* get direction of sphere */
-      //   newsphere(xl, yl, i, rnd(20) + 11); /* make a sphere */
+      /* sphere of annihilation */
+      function spell_sphere(direction) {
+        var x = player.x + diroffx[direction];
+        var y = player.y + diroffy[direction];
+        newsphere(x, y, direction, rnd(20) + 11); /* make a sphere */
+        newsphereflag = true;
+      }
+      if ((rnd(23) == 5) && (wizard == 0)) {
+        //beep();
+        updateLog("You have been enveloped by the zone of nothingness!");
+        nap(4000);
+        died(258);
+        return;
+      }
+      loseint();
+      prepare_direction_event(spell_sphere);
       return;
       //
     case 33:
@@ -424,6 +427,7 @@ function speldamage(x) {
       return;
 
     case 36:
+      /* alter reality */
       var savemon = [];
       var saveitm = [];
       var i, j;

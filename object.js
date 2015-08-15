@@ -510,6 +510,11 @@ function lookforobject(do_ident, do_pickup, do_action) {
     newcavelevel(player.level.depth + 1);
     return;
   }
+  //
+  else if (item.matches(OANNIHILATION)) {
+    died(283); /* annihilated by sphere of annihilation */
+    return;
+  }
 
   // base case
   else {

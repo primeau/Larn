@@ -539,9 +539,9 @@ function mmove(aa, bb, cc, dd) {
       cursors();
       updateLog(`The ${monster} dispels the sphere!`);
       rmsphere(cc, dd); /* delete the sphere */
-    }
-    else {
+    } else {
       player.level.monsters[cc][dd] = null;
+      setItem(cc, dd, createObject(OEMPTY));
       // TODO? delete item too?
     }
   }

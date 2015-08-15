@@ -1,5 +1,4 @@
 todo:
-- spells: sph
 - help screens
 - intro screen
 - save game
@@ -23,11 +22,13 @@ bugs:
     - go blind, move to a known place, kill a monster = black spot
     - cells not revealed when blind
     - monster identification when blind is unreliable
-- if you delete numbers (in bank, etc) to 0, you can't enter new numbers
+* if you delete numbers (in bank, etc) to 0, you can't enter new numbers
+* exiting bank before a deposit/withdraw/etc message is done locks the keyboard
+* dnd store message, bank message not being printed
 - is interest being paid correctly?
-- exiting bank before a deposit/withdraw/etc message is done locks the keyboard
 - strextra can get out of balance? caused by heroism/giant strength
-- pressing ! at home after winning in cheat mode does wierd things
+- casting sph twice in the same direction will always kill the player
+? pressing ! at home after winning in cheat mode does weird things
 ? altars are broken?
 ? monsters 'disappear' infrequently when moving over specific squares
 ? should lit 'discover' beyond where player has seen?

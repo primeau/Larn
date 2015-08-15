@@ -73,7 +73,14 @@ function mainloop(e) {
   if (player.TIMESTOP <= 0) {
     if (player.HASTESELF == 0 || (player.HASTESELF & 1) == 0) {
       gtime++;
-      // movsphere(); // TODO
+      /* JRP: larn12.4 start spheres 1 extra space away,
+      uncomment the code below to prevent that */
+      // if (!newsphereflag) {
+      movsphere();
+      // } else {
+      //   newsphereflag = false;
+      // }
+
       if (hitflag == 0) {
         if (player.HASTEMONST) {
           movemonst();

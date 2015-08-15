@@ -28,6 +28,9 @@ var oldy = 0;
 var course = []; /* the list of courses taken */
 var wizard = false; /*  the wizard mode flag                            */
 
+var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
+
+
 /*
     table of experience needed to be a certain level of player
     skill[c[LEVEL]] is the experience required to attain the next level
