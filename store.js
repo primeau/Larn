@@ -952,6 +952,77 @@ function win(key) {
 
 
 
+/*
+ *
+ *
+ * for the Larn Revenue Service
+ *
+ *
+ */
+
+
+function parse_lrs(key) {
+  if (key == ESC) {
+    return exitbuilding();
+  }
+  if (key == 'p') {
+    setNumberCallback(parse_lrs_pay);
+    lprcat("pay taxes\nHow much? ");
+  }
+}
+
+
+
+function parse_lrs_pay(amount) {
+  if (amount > player.GOLD) {
+    lprcat("\n  You don't have that much\n");
+  } else {
+    amount = paytaxes(amount);
+    player.GOLD -= amount;
+    lprcat(`\n  You pay ${amount} gold pieces\n`);
+  }
+  setTimeout(olrs, 700);
+}
+
+
+
+function olrs() {
+
+  setCharCallback(parse_lrs, true);
+
+  clear();
+
+  cursor(1, 4);
+  lprcat("Welcome to the Larn Revenue Service district office  ");
+
+  cursor(1, 6);
+  if (outstanding_taxes > 0) {
+    lprcat(`You presently owe ${outstanding_taxes} gold pieces in taxes  `);
+  } else {
+    lprcat("You do not owe us any taxes           ");
+  }
+
+  cursor(1, 8);
+  if (player.GOLD > 0) {
+    lprcat(`You have ${player.GOLD} gold pieces    `);
+  } else {
+    lprcat("You have no gold pieces  ");
+  }
+
+  cursor(1, 20);
+  lprcat("How can we help you? [(");
+  lstandout("p");
+  lprcat(") pay taxes, or ");
+  lstandout("escape");
+  lprcat("]  ");
+
+  blt();
+}
+
+
+
+
+
 
 
 /*

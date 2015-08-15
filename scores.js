@@ -118,3 +118,37 @@ function died(reason) {
 function dead(key) {
   return 0;
 }
+
+
+
+
+
+/*
+*  int paytaxes(x)         Function to pay taxes if any are due
+*
+*  Enter with the amount (in gp) to pay on the taxes.
+*  Returns amount actually paid.
+*/
+// TODO, maybe
+function paytaxes(x)
+{
+  return 0;
+	// int i;
+	// int amt;
+  //
+	// if (x<0) return(0);
+	// if (readboard()<0) return(0L);
+	// for (i=0; i<SCORESIZE; i++)
+	// 	if (strcmp(winr[i].who, logname) == 0) /* look for players winning entry */
+	// 		if (winr[i].score>0) /* search for a winning entry for the player */
+	// 		{
+	// 			amt = winr[i].taxes;
+	// 			if (x < amt) amt=x;     /* don't overpay taxes (Ughhhhh) */
+	// 			winr[i].taxes -= amt;
+	// 			outstanding_taxes -= amt;
+	// 			if (writeboard()<0)
+	// 				return(0);
+	// 			return(amt);
+	// 		}
+	// 		return(0L); /* couldn't find user on winning scoreboard */
+}

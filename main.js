@@ -199,6 +199,16 @@ function parse(e) {
     return;
   }
 
+
+
+  //
+  // DO NOTHING
+  //
+  if (key == ' ' || code == ESC) {
+    yrepcount = 0;
+    nomove = 1;
+  }
+
   //
   // STAY HERE
   //
@@ -438,7 +448,22 @@ function parse(e) {
     return;
   }
 
-  // TODO P - outstanding taxes
+  //
+  // outstanding taxes
+  //
+
+  if (key == 'P') {
+    cursors();
+    yrepcount = 0;
+    nomove = 1;
+    if (outstanding_taxes > 0)
+      updateLog(`You presently owe ${outstanding_taxes} gold pieces in taxes`);
+    else
+      updateLog("You do not owe any taxes");
+    return;
+  }
+
+
   // TODO? Q - quit
 
   //
@@ -499,14 +524,6 @@ function parse(e) {
     cursors();
     updateLog("As yet, you don't have enough experience to use teleportation");
     return;
-  }
-
-  //
-  // SPACE
-  //
-  if (key == ' ') {
-    yrepcount = 0;
-    nomove = 1;
   }
 
 

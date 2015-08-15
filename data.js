@@ -27,6 +27,7 @@ var oldx = 0;
 var oldy = 0;
 var course = []; /* the list of courses taken */
 var wizard = false; /*  the wizard mode flag                            */
+var outstanding_taxes=0;   /* present tax bill from score file             */
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 

@@ -2,11 +2,11 @@ todo:
 - help screens
 - intro screen
 - save game
+- print program version
 - warn player that back button, window close will kill the game
 - make sure difficulty > 0 is fully implemented
 - scoreboard
 - auto-pickup
-- LRS
 - add larn 12.4 to repo, and patch pit bug
 
 extras:
