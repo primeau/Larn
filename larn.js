@@ -18,7 +18,7 @@ var Larn = {
     player.x = rnd(MAXX - 2);
     player.y = rnd(MAXY - 2);
 
-    updateLog("Welcome to Larn"); // need to initialize the log
+    updateLog("Welcome to Larn -- Press ? for help"); // need to initialize the log
 
     player.inventory[0] = createObject(OLEATHER);
     player.inventory[1] = createObject(ODAGGER);

@@ -11,9 +11,8 @@ var display = initGrid(80, 24);
 function lprintf(str, width) {
   if (width != null) {
     lprcat(padString(str, width));
-  }
-  else {
-      lprcat(str);
+  } else {
+    lprcat(str);
   }
 }
 
@@ -21,7 +20,7 @@ function lprintf(str, width) {
 
 function padString(str, width) {
   if (width == null || width == 0) return str;
-  var spaces = Array(Math.abs(width)+1 - str.length).join(" ");
+  var spaces = Array(Math.abs(width) + 1 - str.length).join(" ");
   if (width < 0) {
     return str + spaces;
   } else {
@@ -44,8 +43,31 @@ function lprcat(str, width) {
   // if (messages_on && cursory >= 20 && cursory <= 24) current_attr = MESSAGE_ATTR;
 
   var len = str.length;
+  var tag = false;
+  var tagstring = "";
+  var endtag = false;
   for (var i = 0; i < len; i++) {
-    lprc(str[i]);
+    var c = str[i];
+    var newline = (c == '\n');
+    if (c == '<') {
+      tag = true;
+    }
+    if (tag) {
+      tagstring += c;
+      if (c == '>' || newline) {
+        endtag = true;
+        if (!newline) continue;
+        if (i != len - 1) continue; // close tag if at end of string
+      }
+      if (endtag) {
+        endtag = false;
+        tag = false;
+        lprc(tagstring);
+        tagstring = "";
+      }
+    } else {
+      lprc(str[i]);
+    }
   } // current_attr = save_attr;
 }
 
@@ -93,7 +115,7 @@ function lprc(ch) {
 
 
 function os_scroll_down(x1, x2) {
-
+  // TODO
 }
 
 
@@ -163,10 +185,11 @@ function lstandout(str) {
  */
 function standout(str) {
   //    setbold(); // TODO
-  //lprcat(`<b>`)
-  lprcat(str);
-  //lprcat(`</b>`)
-  //    resetbold(); // TODO
+  lprc('<b>')
+    //  lprcat(`<b>${str}</b>`)
+  lprcat(str)
+  lprc('</b>')
+    //    resetbold(); // TODO
 }
 
 

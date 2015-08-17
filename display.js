@@ -202,7 +202,7 @@ function seemagic(onlyspells) {
     PAGE_COUNT = NO_MORE;
   }
   if (!onlyspells) lprcat('\n');
-  lprcat("Press Space to continue: \n");
+  lprcat("Press <b>space</b> to continue \n");
 }
 
 

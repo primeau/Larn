@@ -159,7 +159,7 @@ function updategold() {
   standout("space");
   lprcat(" for more, ");
   standout("escape");
-  lprcat(" to leave]? ");
+  lprcat(" to leave] ");
 }
 
 
@@ -566,7 +566,7 @@ function otradepost() {
   cl_dn(1, 21);
 
   lprcat("\nWhat item do you want to sell to us? [Press ");
-  lstandout("Esc");
+  lstandout("escape");
   lprcat(" to leave] ");
 
 }
@@ -710,7 +710,7 @@ function oschool() {
   cl_dn(1, 19);
   cursor(1, 20);
   lprcat("What is your choice? [Press ");
-  lstandout("Esc");
+  lstandout("escape");
   lprcat(" to leave] ");
 
   blt();
@@ -908,7 +908,7 @@ function ohome() {
   lprcat("\n\tin the depths of the caves can this potion be found.");
 
   lprcat("\n\n\tPress ");
-  lstandout("Esc");
+  lstandout("escape");
   lprcat(" to leave: ");
 
   paint();
@@ -1014,7 +1014,7 @@ function olrs() {
   lstandout("p");
   lprcat(") pay taxes, or ");
   lstandout("escape");
-  lprcat("]  ");
+  lprcat("] ");
 
   blt();
 }

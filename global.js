@@ -169,11 +169,11 @@ function creategem() {
 function more(select_allowed) {
   cltoeoln();
   lprcat("Press ");
-  standout("Space");
+  standout("space");
 
   if (select_allowed) {
     lprcat(" to continue, ");
-    standout("Esc");
+    standout("escape");
     lprcat(" to cancel, letter to select: ");
   } else lprcat(" to continue");
 }

@@ -233,7 +233,7 @@ function parse(e) {
   if (key == 'd') {
     yrepcount = 0;
     if (player.TIMESTOP == 0) {
-      updateLog("What do you want to drop [Space to view] ? ");
+      updateLog("What do you want to drop [<b>space</b> to view] ? ");
       setCharCallback(drop_object, true);
     }
     return;
@@ -249,7 +249,7 @@ function parse(e) {
         outfortune();
         forget();
       } else {
-        updateLog("What do you want to eat [Space to view] ? ");
+        updateLog("What do you want to eat [<b>space</b> to view] ? ");
         setCharCallback(act_eatcookie, true);
       }
     return;
@@ -296,7 +296,7 @@ function parse(e) {
         forget();
         quaffpotion(item, true);
       } else {
-        updateLog("What do you want to quaff [Space to view] ? ");
+        updateLog("What do you want to quaff [<b>space</b> to view] ? ");
         setCharCallback(act_quaffpotion, true); // TODO this should fall through?
       }
     return;
@@ -320,7 +320,7 @@ function parse(e) {
         forget();
         read_scroll(item);
       } else {
-        updateLog("What do you want to read [Space to view] ? ");
+        updateLog("What do you want to read [<b>space</b> to view] ? ");
         setCharCallback(act_read_something, true);
       }
     }
@@ -357,7 +357,7 @@ function parse(e) {
     if (item.canWield()) {
       wield(item);
     } else {
-      updateLog("What do you want to wield (-) for nothing [Space to view] ? ");
+      updateLog("What do you want to wield (-) for nothing [<b>space</b> to view] ? ");
       setCharCallback(wield, true);
     }
     return;
@@ -506,7 +506,7 @@ function parse(e) {
     if (item.isArmor()) {
       wear(item);
     } else {
-      updateLog("What do you want to wear [Space to view] ? ");
+      updateLog("What do you want to wear [<b>space</b> to view] ? ");
       setCharCallback(wear, true);
     }
     return;
@@ -531,9 +531,10 @@ function parse(e) {
   // >
 
 
-  // TODO ? - help screen
+  //
+  // help screen
+  //
   if (key == '?') {
-
     var currentpage = 0;
     function parse_help(key) {
       if (key == ESC) {
@@ -548,9 +549,12 @@ function parse(e) {
       clear();
       cursor(1, 1);
       if (++currentpage > helppages.length-1) {
-        currentpage = 0;
+        currentpage = 1;
       }
       lprcat(helppages[currentpage]);
+      cursors();
+      lprcat("              ---- Press <b>space</b> for more help, <b>escape</b> to exit  ----");
+
       blt();
     }
 

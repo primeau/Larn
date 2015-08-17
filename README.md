@@ -3,10 +3,13 @@ todo:
 - intro screen
 - save game
 - print program version
+- hack-style characters
 - warn player that back button, window close will kill the game
 - make sure difficulty > 0 is fully implemented
 - scoreboard
 - auto-pickup
+- highlight changed attributes
+- disable debugging shortcuts
 
 extras:
 - shift-arrow to open door?
@@ -14,6 +17,7 @@ extras:
 - global scoreboard, use hmac to secure?
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - add larn 12.4 to repo, and patch pit bug
+- color
 
 bugs:
 * rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD
@@ -28,6 +32,7 @@ bugs:
 - is interest being paid correctly?
 - strextra can get out of balance? caused by heroism/giant strength
 - casting sph twice in the same direction will always kill the player
+- parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
 ? pressing ! at home after winning in cheat mode does weird things
 ? altars are broken?
 ? monsters 'disappear' infrequently when moving over specific squares

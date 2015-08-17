@@ -14,7 +14,7 @@ const OTELEPORTER = new Item(9, "<b>^</b>", "a teleport trap", false);
 const OSCHOOL = new Item(10, "<b>+</b>", "the college of Larn", false);
 const OMIRROR = new Item(11, "<b>M</b>", "a mirror", false);
 const ODNDSTORE = new Item(12, "<b>=</b>", "the DND store", false);
-const OSTAIRSDOWN = new Item(13, "<b>></b>", "a staircase going down", false);
+const OSTAIRSDOWN = new Item(13, "<b>&gt</b>", "a staircase going down", false);
 //#define OELEVATORDOWN 14
 const OBANK2 = new Item(15, "<b>$</b>", "the 5th branch of the Bank of Larn", false);
 const OBANK = new Item(16, "<b>$</b>", "the bank of Larn", false);
