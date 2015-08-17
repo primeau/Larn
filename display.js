@@ -80,7 +80,7 @@ function show1cell(x, y) {
   }
 
   var c = monsterAt(x, y) ? monsterAt(x, y).getChar() : getItem(x, y).char;
-  lprc(c);
+  //lprc(c); /* JRP this causes missile spells to not appear */
 
   player.level.know[x][y] = KNOWALL; /* we end up knowing about it */
 }

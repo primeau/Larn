@@ -876,7 +876,7 @@ function ohome() {
         updateLog("on her way to recovery.");
 
         updateLog("Press ");
-        appendLog("Enter"); // TODO BOLD
+        appendLog("<b>enter</b>");
         appendLog(" to continue: ");
 
         setCharCallback(win, true);
@@ -922,6 +922,11 @@ function parse_home(key) {
 }
 
 function win(key) {
+  if (key != ENTER) {
+    return 0;
+  }
+
+  napping = true;
   updateLog("");
   updateLog("");
   updateLog("");

@@ -10,6 +10,7 @@ todo:
 - auto-pickup
 - highlight changed attributes
 - disable debugging shortcuts
+- nap & show monster movement during when falling asleep
 
 extras:
 - shift-arrow to open door?
@@ -29,6 +30,8 @@ bugs:
 * if you delete numbers (in bank, etc) to 0, you can't enter new numbers
 * exiting bank before a deposit/withdraw/etc message is done locks the keyboard
 * dnd store message, bank message not being printed
+* fall down trapdoor, land next to monster, cast spell (which fails) -- monster doesn't attack?
+- thrift shop messages are on the wrong line
 - is interest being paid correctly?
 - strextra can get out of balance? caused by heroism/giant strength
 - casting sph twice in the same direction will always kill the player

@@ -578,6 +578,8 @@ function create_guardian(monst, x, y) {
     x += diroffx[k];
     y += diroffy[k];
   }
+  // get rid of any monster that might be there already
+  player.level.monsters[x][y] = null;
   player.level.know[x][y] = 0;
   if (!monsterlist[monst].genocided)
     createmonster(monst, x, y);

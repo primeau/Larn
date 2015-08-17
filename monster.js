@@ -333,6 +333,10 @@ function createmonster(mon, x, y) {
   while (monsterlist[mon].genocided && mon < monsterlist.length - 1) mon++; /* genocided? */
 
   // JRP force creation and use exact co-ordinates if they are given
+  if (x != null && y != null) {
+      // get rid of any monster that might be there already if we want to force creation
+      player.level.monsters[x][y] = null;
+  }
   var oktocreate = (x != null && y != null && cgood(x, y, 0, 1));
   var i = oktocreate ? 0 : -8;
 

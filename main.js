@@ -30,6 +30,7 @@ function randmonst() {
 function mainloop(e) {
 
   if (napping) {
+      debug("napping");
     return;
   }
 
