@@ -532,6 +532,31 @@ function parse(e) {
 
 
   // TODO ? - help screen
+  if (key == '?') {
+
+    var currentpage = 0;
+    function parse_help(key) {
+      if (key == ESC) {
+        return exitbuilding();
+      } else if (key == ' '){
+        print_help();
+      }
+    }
+
+    function print_help() {
+      IN_STORE = true;
+      clear();
+      cursor(1, 1);
+      if (++currentpage > helppages.length-1) {
+        currentpage = 0;
+      }
+      lprcat(helppages[currentpage]);
+      blt();
+    }
+
+    setCharCallback(parse_help, true);
+    print_help();
+  }
 
   //
   // PICK UP

@@ -7,13 +7,13 @@ todo:
 - make sure difficulty > 0 is fully implemented
 - scoreboard
 - auto-pickup
-- add larn 12.4 to repo, and patch pit bug
 
 extras:
 - shift-arrow to open door?
 - put platinum dragon beside eye of larn
 - global scoreboard, use hmac to secure?
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
+- add larn 12.4 to repo, and patch pit bug
 
 bugs:
 * rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD
