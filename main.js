@@ -1,21 +1,6 @@
 "use strict";
 
 /*
-    subroutine to randomly create monsters if needed
- */
-function randmonst() {
-  if (player.TIMESTOP) return; /*  don't make monsters if time is stopped  */
-  if (--rmst <= 0) {
-    rmst = 120 - (player.level.depth << 2);
-    fillmonst(makemonst(player.level.depth));
-  }
-}
-
-
-/*****************************************************************************/
-/*****************************************************************************/
-/*****************************************************************************/
-/*
   JRP
   since we're running in a event-driven system we need to
   turn the original main loop a little bit inside-out
@@ -25,10 +10,6 @@ function mainloop(e) {
   if (napping) {
     debug("napping");
     return;
-  }
-
-  if (hit3flag) {
-    //lflushall(); // TODO what is this for?
   }
 
   nomove = 0;
@@ -84,17 +65,13 @@ function mainloop(e) {
     }
   }
 
-  /* show stuff around the player
-   */
+  /* show stuff around the player */
   // TODO
   if (viewflag == 0)
     showcell(player.x, player.y);
   else
     viewflag = 0;
 
-  if (hit3flag) {
-    //lflushall();
-  }
   hitflag = 0;
   hit3flag = 0;
   bot_linex(); /* update bottom line */
@@ -103,9 +80,10 @@ function mainloop(e) {
 
   paint();
 }
-/*****************************************************************************/
-/*****************************************************************************/
-/*****************************************************************************/
+
+
+
+
 
 
 
@@ -236,7 +214,7 @@ function parse(e) {
   }
 
   //
-  // EAT COOKIE
+  // PACK WEIGHT
   //
   if (key == 'g') {
     yrepcount = 0;
@@ -431,7 +409,6 @@ function parse(e) {
   //
   // outstanding taxes
   //
-
   if (key == 'P') {
     cursors();
     yrepcount = 0;
@@ -446,6 +423,7 @@ function parse(e) {
 
   // TODO? Q - quit
 
+
   //
   // REMOVE GEMS
   //
@@ -457,32 +435,33 @@ function parse(e) {
   }
 
   //
-  // TODO S - save game
+  // S - save game
   //
   if (key == 'S') {
-    var hmac = forge.random.getBytesSync(128);
-    Cookies.set('hmac', hmac, {
-      expires: 10000
-    });
-    console.log(forge.util.bytesToHex(hmac));
+    nomove = 1;
 
+    var hmac = forge.random.getBytesSync(128);
+    console.log(forge.util.bytesToHex(hmac));
     localStorage.setItem('hmac', hmac);
 
+    // HACK TODO to not store player.level
+    //    var x = player.level;
+    //    player.level = null;
     localStorage.setObject('player', player);
+    //    player.level = x;
     localStorage.setObject('levels', LEVELS);
     localStorage.setObject('log', LOG);
 
   }
 
   //
-  // TODO Q - load saved game
+  // Q - load saved game
   //
   if (key == 'Q') {
-    var hmac_cookie = Cookies.get('hmac');
-    console.log(forge.util.bytesToHex(hmac_cookie));
+    nomove = 1;
 
-    var hmac_local = localStorage.getItem('hmac');
-    console.log(forge.util.bytesToHex(hmac_local));
+    var hmac = localStorage.getItem('hmac');
+    console.log(forge.util.bytesToHex(hmac));
 
     LOG = localStorage.getObject('log');
 
@@ -603,7 +582,6 @@ function parse(e) {
 
       blt();
     }
-
     setCharCallback(parse_help, true);
     print_help();
   }
@@ -624,7 +602,7 @@ function parse(e) {
   }
 
   //
-  // /* look at object */
+  // look at object
   //
   if (key == ':') {
     yrepcount = 0;
@@ -735,163 +713,10 @@ function parse(e) {
     } else if (!isItem(newx, newy, OSTAIRSDOWN) || !isItem(newx, newy, OVOLDOWN)) {
       updateLog("I see no way to go down here!");
     }
-
   }
 
-  //
-  // DEBUGGING SHORTCUTS
-  //
-  if (key == 'V') { // CLIMB IN/OUT OF VOLCANO
-    if (player.level.depth == 0 && DEBUG_STAIRS_EVERYWHERE) {
-      nomove = 1;
-      debug("STAIRS_EVERYWHERE: entering volcano");
-      moveNear(OVOLDOWN, true);
-      act_down_shaft();
-      return;
-    }
-  }
-  if (key == 'X' || key == '~') {
-    DEBUG_STATS = !DEBUG_STATS;
-    nomove = 1;
-    updateLog("DEBUG_STATS: " + DEBUG_STATS);
-  }
-  if (key == 'X' || key == '!') {
-    DEBUG_OUTPUT = !DEBUG_OUTPUT;
-    nomove = 1;
-    updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
-  }
-  if (key == 'X' || key == '@') {
-    nomove = 1;
-    player.WTW = player.WTW == 0 ? 100000 : 0;
-    updateLog("DEBUG_WALK_THROUGH_WALLS: " + (player.WTW > 0));
-  }
-  if (key == 'X' || key == '#') {
-    nomove = 1;
-    DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
-    updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
-  }
-  if (key == 'X' || key == '$') {
-    nomove = 1;
-    DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
-    wizard = DEBUG_KNOW_ALL;
-    if (DEBUG_KNOW_ALL) {
-      for (var potioni = 0; potioni < potionname.length; potioni++) {
-        var potion = createObject(OPOTION, potioni);
-        player.level.items[potioni][0] = potion;
-      }
-      for (var scrolli = 0; scrolli < scrollname.length; scrolli++) {
-        var scroll = createObject(OSCROLL, scrolli);
-        player.level.items[potioni + scrolli][0] = scroll;
-      }
-      var weaponi = 0;
-      player.level.items[weaponi++][MAXY - 1] = createObject(ODAGGER);
-      player.level.items[weaponi++][MAXY - 1] = createObject(OBELT);
-      player.level.items[weaponi++][MAXY - 1] = createObject(OSPEAR);
-      player.level.items[weaponi++][MAXY - 1] = createObject(OFLAIL);
-      player.level.items[weaponi++][MAXY - 1] = createObject(OBATTLEAXE);
-      player.level.items[weaponi++][MAXY - 1] = createObject(OLANCE);
-      player.level.items[weaponi++][MAXY - 1] = createObject(OLONGSWORD);
-      player.level.items[weaponi++][MAXY - 1] = createObject(O2SWORD);
-      player.level.items[weaponi++][MAXY - 1] = createObject(OSWORD);
-      player.level.items[weaponi++][MAXY - 1] = createObject(OSWORDofSLASHING);
-      player.level.items[weaponi++][MAXY - 1] = createObject(OHAMMER);
-      var armori = weaponi;
-      player.level.items[armori++][MAXY - 1] = createObject(OSHIELD);
-      player.level.items[armori++][MAXY - 1] = createObject(OLEATHER);
-      player.level.items[armori++][MAXY - 1] = createObject(OSTUDLEATHER);
-      player.level.items[armori++][MAXY - 1] = createObject(ORING);
-      player.level.items[armori++][MAXY - 1] = createObject(OCHAIN);
-      player.level.items[armori++][MAXY - 1] = createObject(OSPLINT);
-      player.level.items[armori++][MAXY - 1] = createObject(OPLATE);
-      player.level.items[armori++][MAXY - 1] = createObject(OPLATEARMOR);
-      player.level.items[armori++][MAXY - 1] = createObject(OSSPLATE);
+  parseDebug(key);
 
-      player.level.items[armori++][MAXY - 1] = createObject(ODAMRING);
-      player.level.items[armori++][MAXY - 1] = createObject(ODEXRING);
-      player.level.items[armori++][MAXY - 1] = createObject(OSTRRING);
-      player.level.items[armori++][MAXY - 1] = createObject(OENERGYRING);
-      player.level.items[armori++][MAXY - 1] = createObject(OCLEVERRING);
-      player.level.items[armori++][MAXY - 1] = createObject(OPROTRING);
-      player.level.items[armori++][MAXY - 1] = createObject(OREGENRING);
-      player.level.items[armori++][MAXY - 1] = createObject(ORINGOFEXTRA);
-
-      player.level.items[armori++][MAXY - 1] = createObject(OSPIRITSCARAB);
-      player.level.items[armori++][MAXY - 1] = createObject(OCUBEofUNDEAD);
-      player.level.items[armori++][MAXY - 1] = createObject(ONOTHEFT);
-      player.level.items[armori++][MAXY - 1] = createObject(OORBOFDRAGON);
-
-      player.level.items[armori++][MAXY - 1] = createObject(OLARNEYE);
-      player.level.items[armori++][MAXY - 1] = createObject(OEMERALD, 20);
-      player.level.items[armori++][MAXY - 1] = createObject(OSAPPHIRE, 15);
-      player.level.items[armori++][MAXY - 1] = createObject(ODIAMOND, 10);
-      player.level.items[armori++][MAXY - 1] = createObject(ORUBY, 5);
-
-      player.level.items[armori++][MAXY - 1] = createObject(OALTAR);
-      player.level.items[armori++][MAXY - 1] = createObject(OTHRONE);
-      player.level.items[armori++][MAXY - 1] = createObject(OFOUNTAIN);
-      player.level.items[armori++][MAXY - 1] = createObject(OMIRROR);
-      player.level.items[armori++][MAXY - 1] = createObject(OCHEST);
-
-    }
-    updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
-  }
-  if (key == 'X' || key == '^') {
-    nomove = 1;
-    if (player.STEALTH <= 0) {
-      updateLog("DEBUG: FREEZING MONSTERS");
-      player.HOLDMONST = 100000;
-      player.STEALTH = 100000;
-    } else {
-      updateLog("DEBUG: UNFREEZING MONSTERS");
-      player.HOLDMONST = 0;
-      player.STEALTH = 0;
-    }
-  }
-  if ( /*key == 'X' ||*/ key == '+') {
-    nomove = 1;
-    DEBUG_IMMORTAL = !DEBUG_IMMORTAL;
-    updateLog("DEBUG: IMMORTAL: " + DEBUG_IMMORTAL);
-  }
-  if (key == '`') {
-    nomove = 1;
-    if (player.AWARENESS <= 0) {
-      updateLog("DEBUG: EXPANDED AWARENESS++");
-      player.AWARENESS = 100000;
-    } else {
-      updateLog("DEBUG: EXPANDED AWARENESS--");
-      player.AWARENESS = 0;
-    }
-  }
-  if (key == ')') {
-    nomove = 1;
-    DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
-    if (!DEBUG_PROXIMITY) IN_STORE = false;
-    updateLog("DEBUG: PROXIMITY: " + DEBUG_PROXIMITY);
-    paint();
-  }
-  if (key == 'X') {
-    nomove = 1;
-    player.WEAR = null;
-    player.inventory[0] = createObject(OLANCE, 25);
-    player.WIELD = player.inventory[0];
-    player.inventory[1] = createObject(OPROTRING, 50);
-    player.STEALTH = 0;
-    player.GOLD = 250000;
-    player.STRENGTH = 70;
-    player.INTELLIGENCE = 70;
-    player.WISDOM = 70;
-    player.CONSTITUTION = 70;
-    player.DEXTERITY = 70;
-    player.CHARISMA = 70;
-    player.AWARENESS = 100000;
-    player.raiseexperience(6000000 - player.EXPERIENCE);
-
-    for (var i = 0; i < spelcode.length; i++) {
-      learnSpell(spelcode[i]);
-    }
-
-
-  }
 } // parse
 /*****************************************************************************/
 /*****************************************************************************/
@@ -923,5 +748,18 @@ function run(dir) {
     if (i != 0) {
       showcell(player.x, player.y);
     }
+  }
+}
+
+
+
+/*
+    subroutine to randomly create monsters if needed
+ */
+function randmonst() {
+  if (player.TIMESTOP) return; /*  don't make monsters if time is stopped  */
+  if (--rmst <= 0) {
+    rmst = 120 - (player.level.depth << 2);
+    fillmonst(makemonst(player.level.depth));
   }
 }

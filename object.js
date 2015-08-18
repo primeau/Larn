@@ -233,6 +233,9 @@ function Item(id, char, desc, carry, arg) {
 
 
 function createObject(item, arg) {
+
+  if (!item) return null;
+
   var newItem = Object.create(Item);
   newItem.id = item.id;
   newItem.char = item.char;

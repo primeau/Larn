@@ -14,19 +14,23 @@ const MAXLEVEL = 11; /*  max # levels in the dungeon         */
 const MAXVLEVEL = 3; /*  max # of levels in the temple of the luran  */
 var LOG_SIZE = 5;
 
+var player;
+
 var Larn = {
   run: function() {
+    updateLog("Welcome to Larn -- Press ? for help"); // need to initialize the log
+
     document.onkeypress = this.keyPress;
     document.onkeydown = this.keyDown;
-    //document.onkeyup = this.keyUp;
+
+    player = new Player();
 
     player.x = rnd(MAXX - 2);
     player.y = rnd(MAXY - 2);
 
-    updateLog("Welcome to Larn -- Press ? for help"); // need to initialize the log
-
     player.inventory[0] = createObject(OLEATHER);
     player.inventory[1] = createObject(ODAGGER);
+
     player.WEAR = player.inventory[0];
     player.WIELD = player.inventory[1];
 
@@ -35,6 +39,7 @@ var Larn = {
 
     learnSpell("pro");
     learnSpell("mle");
+
     newcavelevel(0);
 
     regen();
@@ -42,7 +47,6 @@ var Larn = {
     showcell(player.x, player.y);
 
     paint();
-
   },
 
   // http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
@@ -56,10 +60,10 @@ var Larn = {
     parseEvent(e, true, false);
   }, // KEYDOWN
 
-  keyUp: function(e) {
-    e = e || window.event;
-    parseEvent(e, false, true);
-  }, // KEYUP
+  // keyUp: function(e) {
+  //   e = e || window.event;
+  //   parseEvent(e, false, true);
+  // }, // KEYUP
 
 }; // LARN OBJECT
 
@@ -85,4 +89,163 @@ function appendLog(text) {
     newText = LOG.pop() + text;
   }
   updateLog(newText);
+}
+
+
+
+function parseDebug(key) {
+  //
+  // DEBUGGING SHORTCUTS
+  //
+  if (key == 'V') { // CLIMB IN/OUT OF VOLCANO
+    if (player.level.depth == 0 && DEBUG_STAIRS_EVERYWHERE) {
+      nomove = 1;
+      debug("STAIRS_EVERYWHERE: entering volcano");
+      moveNear(OVOLDOWN, true);
+      act_down_shaft();
+      return;
+    }
+  }
+  if (key == 'X' || key == '~') {
+    DEBUG_STATS = !DEBUG_STATS;
+    nomove = 1;
+    updateLog("DEBUG_STATS: " + DEBUG_STATS);
+  }
+  if (key == 'X' || key == '!') {
+    DEBUG_OUTPUT = !DEBUG_OUTPUT;
+    nomove = 1;
+    updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
+  }
+  if (key == 'X' || key == '@') {
+    nomove = 1;
+    player.WTW = player.WTW == 0 ? 100000 : 0;
+    updateLog("DEBUG_WALK_THROUGH_WALLS: " + (player.WTW > 0));
+  }
+  if (key == 'X' || key == '#') {
+    nomove = 1;
+    DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
+    updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
+  }
+  if (key == 'X' || key == '$') {
+    nomove = 1;
+    DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
+    wizard = DEBUG_KNOW_ALL;
+    if (DEBUG_KNOW_ALL) {
+      for (var potioni = 0; potioni < potionname.length; potioni++) {
+        var potion = createObject(OPOTION, potioni);
+        player.level.items[potioni][0] = potion;
+      }
+      for (var scrolli = 0; scrolli < scrollname.length; scrolli++) {
+        var scroll = createObject(OSCROLL, scrolli);
+        player.level.items[potioni + scrolli][0] = scroll;
+      }
+      var weaponi = 0;
+      player.level.items[weaponi++][MAXY - 1] = createObject(ODAGGER);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OBELT);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OSPEAR);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OFLAIL);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OBATTLEAXE);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OLANCE);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OLONGSWORD);
+      player.level.items[weaponi++][MAXY - 1] = createObject(O2SWORD);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OSWORD);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OSWORDofSLASHING);
+      player.level.items[weaponi++][MAXY - 1] = createObject(OHAMMER);
+      var armori = weaponi;
+      player.level.items[armori++][MAXY - 1] = createObject(OSHIELD);
+      player.level.items[armori++][MAXY - 1] = createObject(OLEATHER);
+      player.level.items[armori++][MAXY - 1] = createObject(OSTUDLEATHER);
+      player.level.items[armori++][MAXY - 1] = createObject(ORING);
+      player.level.items[armori++][MAXY - 1] = createObject(OCHAIN);
+      player.level.items[armori++][MAXY - 1] = createObject(OSPLINT);
+      player.level.items[armori++][MAXY - 1] = createObject(OPLATE);
+      player.level.items[armori++][MAXY - 1] = createObject(OPLATEARMOR);
+      player.level.items[armori++][MAXY - 1] = createObject(OSSPLATE);
+
+      player.level.items[armori++][MAXY - 1] = createObject(ODAMRING);
+      player.level.items[armori++][MAXY - 1] = createObject(ODEXRING);
+      player.level.items[armori++][MAXY - 1] = createObject(OSTRRING);
+      player.level.items[armori++][MAXY - 1] = createObject(OENERGYRING);
+      player.level.items[armori++][MAXY - 1] = createObject(OCLEVERRING);
+      player.level.items[armori++][MAXY - 1] = createObject(OPROTRING);
+      player.level.items[armori++][MAXY - 1] = createObject(OREGENRING);
+      player.level.items[armori++][MAXY - 1] = createObject(ORINGOFEXTRA);
+
+      player.level.items[armori++][MAXY - 1] = createObject(OSPIRITSCARAB);
+      player.level.items[armori++][MAXY - 1] = createObject(OCUBEofUNDEAD);
+      player.level.items[armori++][MAXY - 1] = createObject(ONOTHEFT);
+      player.level.items[armori++][MAXY - 1] = createObject(OORBOFDRAGON);
+
+      player.level.items[armori++][MAXY - 1] = createObject(OLARNEYE);
+      player.level.items[armori++][MAXY - 1] = createObject(OEMERALD, 20);
+      player.level.items[armori++][MAXY - 1] = createObject(OSAPPHIRE, 15);
+      player.level.items[armori++][MAXY - 1] = createObject(ODIAMOND, 10);
+      player.level.items[armori++][MAXY - 1] = createObject(ORUBY, 5);
+
+      player.level.items[armori++][MAXY - 1] = createObject(OALTAR);
+      player.level.items[armori++][MAXY - 1] = createObject(OTHRONE);
+      player.level.items[armori++][MAXY - 1] = createObject(OFOUNTAIN);
+      player.level.items[armori++][MAXY - 1] = createObject(OMIRROR);
+      player.level.items[armori++][MAXY - 1] = createObject(OCHEST);
+
+    }
+    updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
+  }
+  if (key == 'X' || key == '^') {
+    nomove = 1;
+    if (player.STEALTH <= 0) {
+      updateLog("DEBUG: FREEZING MONSTERS");
+      player.HOLDMONST = 100000;
+      player.STEALTH = 100000;
+    } else {
+      updateLog("DEBUG: UNFREEZING MONSTERS");
+      player.HOLDMONST = 0;
+      player.STEALTH = 0;
+    }
+  }
+  if ( /*key == 'X' ||*/ key == '+') {
+    nomove = 1;
+    DEBUG_IMMORTAL = !DEBUG_IMMORTAL;
+    updateLog("DEBUG: IMMORTAL: " + DEBUG_IMMORTAL);
+  }
+  if (key == '`') {
+    nomove = 1;
+    if (player.AWARENESS <= 0) {
+      updateLog("DEBUG: EXPANDED AWARENESS++");
+      player.AWARENESS = 100000;
+    } else {
+      updateLog("DEBUG: EXPANDED AWARENESS--");
+      player.AWARENESS = 0;
+    }
+  }
+  if (key == ')') {
+    nomove = 1;
+    DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
+    if (!DEBUG_PROXIMITY) IN_STORE = false;
+    updateLog("DEBUG: PROXIMITY: " + DEBUG_PROXIMITY);
+    paint();
+  }
+  if (key == 'X') {
+    nomove = 1;
+    player.WEAR = null;
+    player.inventory[0] = createObject(OLANCE, 25);
+    player.WIELD = player.inventory[0];
+    player.inventory[1] = createObject(OPROTRING, 50);
+    player.STEALTH = 0;
+    player.GOLD = 250000;
+    player.STRENGTH = 70;
+    player.INTELLIGENCE = 70;
+    player.WISDOM = 70;
+    player.CONSTITUTION = 70;
+    player.DEXTERITY = 70;
+    player.CHARISMA = 70;
+    player.AWARENESS = 100000;
+    player.raiseexperience(6000000 - player.EXPERIENCE);
+
+    for (var i = 0; i < spelcode.length; i++) {
+      learnSpell(spelcode[i]);
+    }
+
+
+  }
 }

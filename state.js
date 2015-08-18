@@ -4,12 +4,10 @@ var LEVELS = [];
 var LOG = [""];
 var IN_STORE = false;
 
+var logname = "adventurer";
 
 var gtime = 0; /*  the clock for the game                      */
 
-var prompt_mode = false;
-
-var logname = "adventurer";
 
 var lastmonst = "";
 
@@ -35,15 +33,12 @@ var outstanding_taxes=0;   /* present tax bill from score file             */
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 
-
-
 var dropflag = 0; /* if 1 then don't lookforobject() next round */
 var rmst = 120; /* random monster creation counter */
 var nomove = 0; /* if (nomove) then don't count next iteration as a move */
 var viewflag = 0; /* if viewflag then we have done a 99 stay here and don't showcell in the main loop */
 
 var napping = false; // prevent keyboard input while a nap event is happening
-
 
 var lasttime = 0; /* last time he was in bank */
 

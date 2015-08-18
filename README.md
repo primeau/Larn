@@ -29,12 +29,12 @@ bugs:
     - go blind, move to a known place, kill a monster = black spot
     - cells not revealed when blind
     - monster identification when blind is unreliable
+* interest accumulates at bank immediately after leaving/returning
 * if you delete numbers (in bank, etc) to 0, you can't enter new numbers
 * exiting bank before a deposit/withdraw/etc message is done locks the keyboard
 * dnd store message, bank message not being printed
 * fall down trapdoor, land next to monster, cast spell (which fails) -- monster doesn't attack?
 - thrift shop messages are on the wrong line
-- is interest being paid correctly?
 - strextra can get out of balance? caused by heroism/giant strength
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL

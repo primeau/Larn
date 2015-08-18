@@ -17,7 +17,7 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, de
 
 function createMonster(monst) {
 
-  if (!monst) return null;  
+  if (!monst) return null;
 
   var monster;
   var arg = monst.arg;
@@ -670,7 +670,6 @@ function hitplayer(x, y) {
   if (monster.attack > 0)
     if (((dam + bias + 8) > player.AC) || (rnd(((player.AC > 0) ? player.AC : 1)) == 1)) {
       if (spattack(monster.attack, x, y)) {
-        //lflushall();
         return;
       }
       tmp = 1;
@@ -684,8 +683,6 @@ function hitplayer(x, y) {
     if ((dam -= player.AC) < 0) dam = 0;
     if (dam > 0) {
       player.losehp(dam);
-      //bottomhp();
-      //lflushall();
     }
   }
   if (tmp == 0) updateLog(`  The ${monster} missed `);

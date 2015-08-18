@@ -4,101 +4,101 @@
 const MAXPLEVEL = 100; /* maximum player level allowed        */
 const TIMELIMIT = 30000; /* maximum number of moves before the game is called */
 
-var Player = {
-  inventory: [],
-  x: 0,
-  y: 0,
-  level: null,
-  char: `▓`,
+var Player = function Player() {
+  this.inventory = [];
+  this.x = 0;
+  this.y = 0;
+  this.level = null;
+  this.char = `▓`;
 
-  STRENGTH: 12,
-  INTELLIGENCE: 12,
-  WISDOM: 12,
-  CONSTITUTION: 12,
-  DEXTERITY: 12,
-  CHARISMA: 12,
-  HPMAX: 10,
-  HP: 10,
-  GOLD: 0,
-  EXPERIENCE: 0,
-  LEVEL: 1,
-  REGEN: 1,
-  WCLASS: 0,
-  AC: 0,
-  BANKACCOUNT: 0,
-  SPELLMAX: 1,
-  SPELLS: 1,
-  ENERGY: 0,
-  ECOUNTER: 100,
-  MOREDEFENSES: 0,
-  WEAR: null,
-  PROTECTIONTIME: 0,
-  WIELD: null,
-  // AMULET:           // UNUSED
-  REGENCOUNTER: 20,
-  MOREDAM: 0,
-  DEXCOUNT: 0,
-  STRCOUNT: 0,
-  BLINDCOUNT: 0,
-  CAVELEVEL: function() {
-    return this.level.depth;
-  },
-  CONFUSE: 0,
-  ALTPRO: 0,
-  HERO: 0,
-  CHARMCOUNT: 0,
-  INVISIBILITY: 0,
-  CANCELLATION: 0,
-  HASTESELF: 0,
-  // EYEOFLARN:        // UNUSED
-  AGGRAVATE: 0,
-  GLOBE: 0,
-  TELEFLAG: 0,
-  SLAYING: 0,
-  NEGATESPIRIT: 0,
-  SCAREMONST: 0,
-  AWARENESS: 0,
-  HOLDMONST: 0,
-  TIMESTOP: 0,
-  HASTEMONST: 0,
-  CUBEofUNDEAD: 0,
-  GIANTSTR: 0,
-  FIRERESISTANCE: 0,
-  BESSMANN: 0,
-  NOTHEFT: 0,
-  HARDGAME: 0,
-  // CPUTIME:
-  // BYTESIN:
-  // BYTESOUT:
-  // MOVESMADE:
-  MONSTKILLED: 0,
-  // SPELLSCAST:
-  // LANCEDEATH: null, // NOT USING
-  SPIRITPRO: 0,
-  UNDEADPRO: 0,
-  SHIELD: null,
-  STEALTH: 0,
-  ITCHING: 0,
-  LAUGHING: 0, // UNUSED
-  DRAINSTRENGTH: 0, // UNUSED
-  CLUMSINESS: 0,
-  INFEEBLEMENT: 0, // UNUSED
-  HALFDAM: 0,
-  SEEINVISIBLE: 0,
-  // FILLROOM:
-  // RANDOMWALK:
-  // SPHCAST:    /* nz if an active sphere of annihilation */
-  WTW: 0,
+  this.STRENGTH = 12;
+  this.INTELLIGENCE = 12;
+  this.WISDOM = 12;
+  this.CONSTITUTION = 12;
+  this.DEXTERITY = 12;
+  this.CHARISMA = 12;
+  this.HPMAX = 10;
+  this.HP = 10;
+  this.GOLD = 0;
+  this.EXPERIENCE = 0;
+  this.LEVEL = 1;
+  this.REGEN = 1;
+  this.WCLASS = 0;
+  this.AC = 0;
+  this.BANKACCOUNT = 0;
+  this.SPELLMAX = 1;
+  this.SPELLS = 1;
+  this.ENERGY = 0;
+  this.ECOUNTER = 100;
+  this.MOREDEFENSES = 0;
+  this.WEAR = null;
+  this.PROTECTIONTIME = 0;
+  this.WIELD = null;
+  // AMULET =           // UNUSED
+  this.REGENCOUNTER = 20;
+  this.MOREDAM = 0;
+  this.DEXCOUNT = 0;
+  this.STRCOUNT = 0;
+  this.BLINDCOUNT = 0;
+  // this.CAVELEVEL = function() {
+  //   return this.level.depth;
+  // };
+  this.CONFUSE = 0;
+  this.ALTPRO = 0;
+  this.HERO = 0;
+  this.CHARMCOUNT = 0;
+  this.INVISIBILITY = 0;
+  this.CANCELLATION = 0;
+  this.HASTESELF = 0;
+  // EYEOFLARN =        // UNUSED
+  this.AGGRAVATE = 0;
+  this.GLOBE = 0;
+  this.TELEFLAG = 0;
+  this.SLAYING = 0;
+  this.NEGATESPIRIT = 0;
+  this.SCAREMONST = 0;
+  this.AWARENESS = 0;
+  this.HOLDMONST = 0;
+  this.TIMESTOP = 0;
+  this.HASTEMONST = 0;
+  this.CUBEofUNDEAD = 0;
+  this.GIANTSTR = 0;
+  this.FIRERESISTANCE = 0;
+  this.BESSMANN = 0;
+  this.NOTHEFT = 0;
+  this.HARDGAME = 0;
+  // CPUTIME =
+  // BYTESIN =
+  // BYTESOUT =
+  // MOVESMADE =
+  this.MONSTKILLED = 0;
+  // SPELLSCAST =
+  // LANCEDEATH = null; // NOT USING
+  this.SPIRITPRO = 0;
+  this.UNDEADPRO = 0;
+  this.SHIELD = null;
+  this.STEALTH = 0;
+  this.ITCHING = 0;
+  this.LAUGHING = 0; // UNUSED
+  this.DRAINSTRENGTH = 0; // UNUSED
+  this.CLUMSINESS = 0;
+  this.INFEEBLEMENT = 0; // UNUSED
+  this.HALFDAM = 0;
+  this.SEEINVISIBLE = 0;
+  // FILLROOM =
+  // RANDOMWALK =
+  // SPHCAST =    /* nz if an active sphere of annihilation */
+  this.WTW = 0;
   /* walk through walls */
-  STREXTRA: 0,
+  this.STREXTRA = 0;
   /* character strength due to objects or enchantments */
-  // TMP:        /* misc scratch space */
-  LIFEPROT: 0,
+  // TMP =        /* misc scratch space */
+  this.LIFEPROT = 0;
   /* life protection counter */
 
-  CLASS: function() {
+  this.CLASS = function() {
     return CLASSES[this.LEVEL - 1];
-  },
+  };
 
 
   /*
@@ -108,7 +108,7 @@ var Player = {
       subroutine to remove hit points from the player
       warning -- will kill player if hp goes to zero
    */
-  losehp: function(damage) {
+  this.losehp = function(damage) {
     if (damage < 0) return;
     debug(`losehp: ${lastmonst}:${damage}`);
     this.HP -= damage;
@@ -118,13 +118,13 @@ var Player = {
       nap(3000);
       died(lastnum);
     }
-  },
+  };
 
-  losemhp: function(x) {
+  this.losemhp = function(x) {
     if (x < 0) return;
     this.HP = Math.max(1, this.HP - x);
     this.HPMAX = Math.max(1, this.HPMAX - x);
-  },
+  };
 
   /*
       raisehp(x)
@@ -132,16 +132,16 @@ var Player = {
 
       subroutine to gain maximum hit points
    */
-  raisehp: function(x) {
+  this.raisehp = function(x) {
     if (x < 0) return;
     this.HP = Math.min(this.HP + x, this.HPMAX);
-  },
+  };
 
-  raisemhp: function(x) {
+  this.raisemhp = function(x) {
     if (x < 0) return;
     this.HP += x;
     this.HPMAX += x;
-  },
+  };
 
 
   /*
@@ -149,11 +149,11 @@ var Player = {
 
       subroutine to gain maximum spells
   */
-  raisemspells: function(x) {
+  this.raisemspells = function(x) {
     if (x < 0) return;
     this.SPELLMAX += x;
     player.SPELLS += x;
-  },
+  };
 
 
   /*
@@ -161,11 +161,11 @@ var Player = {
 
       subroutine to lose maximum spells
   */
-  losemspells: function(x) {
+  this.losemspells = function(x) {
     if (x < 0) return;
     player.SPELLMAX = Math.max(0, player.SPELLMAX - x);
     player.SPELLS = Math.max(0, player.SPELLS - x);
-  },
+  };
 
 
   /*
@@ -175,11 +175,11 @@ var Player = {
       uses the skill[] array to find level boundarys
       uses c[EXPERIENCE]  c[LEVEL]
    */
-  raiselevel: function() {
+  this.raiselevel = function() {
     if (player.LEVEL < MAXPLEVEL) {
       player.raiseexperience(skill[player.LEVEL] - player.EXPERIENCE);
     }
-  },
+  };
 
 
   /*
@@ -187,16 +187,16 @@ var Player = {
 
       subroutine to lower the players character level by one
    */
-  loselevel: function() {
+  this.loselevel = function() {
     if (player.LEVEL > 1) player.loseexperience((player.EXPERIENCE - skill[player.LEVEL - 1] + 1));
-  },
+  };
 
 
   /*
       raiseexperience(x)
       subroutine to increase experience points
    */
-  raiseexperience: function(x) {
+  this.raiseexperience = function(x) {
     var i = player.LEVEL;
     player.EXPERIENCE += x;
     while (player.EXPERIENCE >= skill[player.LEVEL] && (player.LEVEL < MAXPLEVEL)) {
@@ -213,7 +213,7 @@ var Player = {
       updateLog("Welcome to level " + player.LEVEL); /* if we changed levels */
     }
     //player.level.paint();
-  },
+  };
 
 
   /*
@@ -221,7 +221,7 @@ var Player = {
 
       subroutine to lose experience points
    */
-  loseexperience: function(x) {
+  this.loseexperience = function(x) {
     var i = player.LEVEL;
     player.EXPERIENCE = Math.max(0, player.EXPERIENCE - x);
     while (player.EXPERIENCE < skill[player.LEVEL - 1]) {
@@ -241,14 +241,14 @@ var Player = {
       updateLog(`  You went down to level ${player.LEVEL}!`);
     }
     bottomline();
-  },
+  };
 
 
   /*
       function to change character levels as needed when taking/dropping an object
       that affects these characteristics
    */
-  adjustcvalues: function(item, pickup) {
+  this.adjustcvalues = function(item, pickup) {
     if (item.matches(ODEXRING))
       player.DEXTERITY += pickup ? item.arg + 1 : (item.arg + 1) * -1;
     if (item.matches(OSTRRING))
@@ -271,10 +271,10 @@ var Player = {
       pickup ? player.CUBEofUNDEAD++ : player.CUBEofUNDEAD--;
     if (item.matches(ONOTHEFT))
       pickup ? player.NOTHEFT++ : player.NOTHEFT--;
-  },
+  };
 
 
-  getStatString: function() {
+  this.getStatString = function() {
     if (player.level.depth == 0) player.TELEFLAG = 0;
     var output = "";
     output += "Spells: " + this.SPELLS + "(" + this.SPELLMAX + ")  " +
@@ -292,7 +292,7 @@ var Player = {
       "LV: " + (player.TELEFLAG ? "?" : levelnames[player.level.depth]) + " " +
       "Gold: " + this.GOLD + "        ";
     return output;
-  }, //
+  }; //
 
 };
 
