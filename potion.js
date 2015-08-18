@@ -31,7 +31,6 @@ const potionname = [
 ];
 
 
-var knownPotions = [];
 
 function isKnownPotion(item) {
   if (item.matches(OPOTION)) {

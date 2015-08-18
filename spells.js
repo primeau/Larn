@@ -1,7 +1,5 @@
 "use strict";
 
-var knownSpells = [];
-
 function learnSpell(spell) {
   //debug(`learning ${spell} ${spelcode.indexOf(spell)}`)
   knownSpells[spelcode.indexOf(spell)] = spell;
@@ -12,7 +10,7 @@ function forgetSpell(spellnum) {
 }
 
 
-var eys = "Enter your spell: ";
+const eys = "Enter your spell: ";
 var spell_cast = null;
 
 
@@ -578,8 +576,6 @@ function create_guardian(monst, x, y) {
     x += diroffx[k];
     y += diroffy[k];
   }
-  // get rid of any monster that might be there already
-  player.level.monsters[x][y] = null;
   player.level.know[x][y] = 0;
   if (!monsterlist[monst].genocided)
     createmonster(monst, x, y);

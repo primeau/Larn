@@ -1,7 +1,7 @@
 todo:
 - help screens
 - intro screen
-- save game
+- save game (save unique key in a cookie)
 - print program version
 - hack-style characters
 - warn player that back button, window close will kill the game
@@ -11,6 +11,7 @@ todo:
 - highlight changed attributes
 - disable debugging shortcuts
 - nap & show monster movement during when falling asleep
+- change drink at fountain to F?
 
 extras:
 - shift-arrow to open door?
@@ -19,6 +20,7 @@ extras:
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - add larn 12.4 to repo, and patch pit bug
 - color
+- ipad support
 
 bugs:
 * rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD

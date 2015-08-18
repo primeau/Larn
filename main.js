@@ -1,12 +1,5 @@
 "use strict";
 
-var dropflag = 0; /* if 1 then don't lookforobject() next round */
-var rmst = 120; /* random monster creation counter */
-var nomove = 0; /* if (nomove) then don't count next iteration as a move */
-var viewflag = 0; /* if viewflag then we have done a 99 stay here and don't showcell in the main loop */
-
-var napping = false; // prevent keyboard input while a nap event is happening
-
 /*
     subroutine to randomly create monsters if needed
  */
@@ -30,7 +23,7 @@ function randmonst() {
 function mainloop(e) {
 
   if (napping) {
-      debug("napping");
+    debug("napping");
     return;
   }
 
@@ -115,20 +108,6 @@ function mainloop(e) {
 /*****************************************************************************/
 
 
-
-
-
-
-
-var DEBUG_STATS = false;
-var DEBUG_OUTPUT = false;
-var DEBUG_STAIRS_EVERYWHERE = false;
-var DEBUG_KNOW_ALL = false;
-var DEBUG_IMMORTAL = false;
-var DEBUG_PAINT = 0;
-var DEBUG_LPRCAT = 0;
-var DEBUG_LPRC = 0;
-var DEBUG_PROXIMITY = false;
 
 /*****************************************************************************/
 /*****************************************************************************/
@@ -477,7 +456,72 @@ function parse(e) {
     return;
   }
 
+  //
   // TODO S - save game
+  //
+  if (key == 'S') {
+    var hmac = forge.random.getBytesSync(128);
+    Cookies.set('hmac', hmac, {
+      expires: 10000
+    });
+    console.log(forge.util.bytesToHex(hmac));
+
+    localStorage.setItem('hmac', hmac);
+
+    localStorage.setObject('player', player);
+    localStorage.setObject('levels', LEVELS);
+    localStorage.setObject('log', LOG);
+
+  }
+
+  //
+  // TODO Q - load saved game
+  //
+  if (key == 'Q') {
+    var hmac_cookie = Cookies.get('hmac');
+    console.log(forge.util.bytesToHex(hmac_cookie));
+
+    var hmac_local = localStorage.getItem('hmac');
+    console.log(forge.util.bytesToHex(hmac_local));
+
+    LOG = localStorage.getObject('log');
+
+    var savedPlayer = localStorage.getObject('player');
+    var savedDepth = loadPlayer(savedPlayer);
+
+    var savedLevels = localStorage.getObject('levels');
+    for (var lev = 0; lev < 14; lev++) {
+      if (!savedLevels[lev]) {
+        LEVELS[lev] = null;
+        continue;
+      }
+      console.log(`loading: ${lev}`);
+      var tempLev = savedLevels[lev];
+      var items = tempLev.items;
+      var monsters = tempLev.monsters;
+      for (var x = 0; x < MAXX; x++) {
+        for (var y = 0; y < MAXY; y++) {
+          items[x][y] = createObject(items[x][y]);
+          monsters[x][y] = createMonster(monsters[x][y]);
+        }
+      }
+      //newLevel.items = items;
+      if (!LEVELS[lev]) {
+        LEVELS[lev] = Object.create(Level);
+      }
+      LEVELS[lev].items = items;
+      LEVELS[lev].monsters = monsters;
+      LEVELS[lev].know = tempLev.know;
+      LEVELS[lev].depth = tempLev.depth;
+    }
+
+    var foo = player.level.items[35][16];
+    console.log("isgem: " + foo.isGem());
+
+    newcavelevel(savedDepth);
+    return;
+  }
+
 
 
   //
@@ -537,10 +581,11 @@ function parse(e) {
   //
   if (key == '?') {
     var currentpage = 0;
+
     function parse_help(key) {
       if (key == ESC) {
         return exitbuilding();
-      } else if (key == ' '){
+      } else if (key == ' ') {
         print_help();
       }
     }
@@ -549,7 +594,7 @@ function parse(e) {
       IN_STORE = true;
       clear();
       cursor(1, 1);
-      if (++currentpage > helppages.length-1) {
+      if (++currentpage > helppages.length - 1) {
         currentpage = 1;
       }
       lprcat(helppages[currentpage]);
@@ -851,12 +896,6 @@ function parse(e) {
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
-
-
-
-
-
-
 
 
 

@@ -211,7 +211,7 @@ var spelmes = [ ``,
  const FGR = 26;
  const SUM = 34;
 
-var attackmessage = [];
+const attackmessage = [];
 attackmessage[MLE] = function(monster, i) { return `  Your missile${(player.LEVEL >= 2) ? "s" : ""} hit the ${monster}`; };
 attackmessage[SLE] = function(monster, i) { return `  While the ${monster} slept, you smashed it ${i} times`; };
 attackmessage[SSP] = function(monster, i) { return `  The sound damages the ${monster}`; };

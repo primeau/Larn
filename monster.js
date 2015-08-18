@@ -15,13 +15,25 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, de
   this.experience = experience;
 }
 
-function createNewMonster(arg) {
-  var tmp = monsterlist[arg];
-  var monster = new Monster(tmp.char, tmp.desc, tmp.level,
-    tmp.armorclass, tmp.damage, tmp.attack, tmp.defence, tmp.genocided,
-    tmp.intelligence, tmp.gold, tmp.hitpoints, tmp.experience);
+function createMonster(monst) {
+
+  if (!monst) return null;  
+
+  var monster;
+  var arg = monst.arg;
+
+  // if we are passed an int, retrieve the appropriate monster
+  if (!arg) {
+    arg = monst;
+    monst = monsterlist[arg];
+  }
+
+  monster = new Monster(monst.char, monst.desc, monst.level,
+    monst.armorclass, monst.damage, monst.attack, monst.defence, monst.genocided,
+    monst.intelligence, monst.gold, monst.hitpoints, monst.experience);
+
   monster.arg = arg;
-  //debug("newmonster: " + tmp.level + " -> " + arg + " " + monsterlist[arg]);
+
   return monster;
 }
 
@@ -334,8 +346,8 @@ function createmonster(mon, x, y) {
 
   // JRP force creation and use exact co-ordinates if they are given
   if (x != null && y != null) {
-      // get rid of any monster that might be there already if we want to force creation
-      player.level.monsters[x][y] = null;
+    // get rid of any monster that might be there already if we want to force creation
+    player.level.monsters[x][y] = null;
   }
   var oktocreate = (x != null && y != null && cgood(x, y, 0, 1));
   var i = oktocreate ? 0 : -8;
@@ -351,7 +363,7 @@ function createmonster(mon, x, y) {
   }
 
   if (oktocreate) {
-    var monster = createNewMonster(mon);
+    var monster = createMonster(mon);
     player.level.monsters[x][y] = monster;
     player.level.know[x][y] &= ~KNOWHERE;
     monster.awake = false;
@@ -775,7 +787,7 @@ function hitmonster(x, y) {
   if (monster.matches(VAMPIRE)) {
     //if (monster.hitpoints < 25) { // TODO this is original code?
     if (monster.hitpoints > 0 && monster.hitpoints < 25) {
-      player.level.monsters[x][y] = createNewMonster(BAT);
+      player.level.monsters[x][y] = createMonster(BAT);
       player.level.know[x][y] = 0;
     }
   }

@@ -96,17 +96,17 @@ function cannedlevel(depth) {
           break;
         case '.':
           if (depth < MAXLEVEL) break;
-          monsters[x][y] = createNewMonster(makemonst(depth + 1));
+          monsters[x][y] = createMonster(makemonst(depth + 1));
           break;
         case '~':
           if (depth != MAXLEVEL - 1) break;
           items[x][y] = createObject(OLARNEYE);
-          monsters[x][y] = createNewMonster(rund(8) + DEMONLORD);
+          monsters[x][y] = createMonster(rund(8) + DEMONLORD);
           break;
         case '!':
           if (depth != MAXLEVEL + MAXVLEVEL - 1) break;
           items[x][y] = createObject(OPOTION, 21);
-          monsters[x][y] = createNewMonster(DEMONPRINCE);
+          monsters[x][y] = createMonster(DEMONPRINCE);
           break;
       } // switch
       if (items[x][y] == null) {
@@ -170,7 +170,7 @@ function makemaze(k) {
       for (i = mxl; i < mxh; i++)
         for (j = myl; j < myh; j++) {
           item[i][j] = empty;
-          mitem[i][j] = z ? createNewMonster(z) : null;
+          mitem[i][j] = z ? createMonster(z) : null;
         }
     }
   }
@@ -479,7 +479,7 @@ function fillroom(what, arg) {
     monsters
  */
 function fillmonst(what) {
-  var monster = createNewMonster(what);
+  var monster = createMonster(what);
   for (var trys = 5; trys > 0; --trys) /* max # of creation attempts */ {
     var x = rnd(MAXX - 2);
     var y = rnd(MAXY - 2);

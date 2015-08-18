@@ -1,9 +1,5 @@
 "use strict";
 
-var spheres = [];
-
-
-
 /* this is the structure for maintaining & moving the spheres of annihilation */
 var Sphere = function(x, y, dir, lifetime, lev) {
   this.x = x; /* location of the sphere */

@@ -1,43 +1,11 @@
 "use strict";
 
-
-var gtime = 0; /*  the clock for the game                      */
-
-var prompt_mode = false;
-
-var logname = "adventurer";
-
-var lastmonst = "";
-
-// TODO! var level = 0; /*  cavelevel player is on = c[CAVELEVEL]           */
-
-var lastnum = 0; /* the number of the monster last hitting player    */
-var hitflag = 0; /*  flag for if player has been hit when running    */
-var hit2flag = 0; /*  flag for if player has been hit when running    */
-var hit3flag = 0; /*  flag for if player has been hit flush input     */
-var lastpx = 0;
-var lastpy = 0;
-var lasthx = 0; /* location of monster last hit by player       */
-var lasthy = 0; /* location of monster last hit by player       */
-var prayed = 1;
-/* did player pray at an altar (command mode)? needs
-                    to be saved, but I don't want to add incompatibility
-                    right now.  KBR 1/11/90 */
-var oldx = 0;
-var oldy = 0;
-var course = []; /* the list of courses taken */
-var wizard = false; /*  the wizard mode flag                            */
-var outstanding_taxes=0;   /* present tax bill from score file             */
-
-var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
-
-
 /*
     table of experience needed to be a certain level of player
     skill[c[LEVEL]] is the experience required to attain the next level
  */
 const MEG = 1000000;
-var skill = [
+const skill = [
   0, 10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120, /*  1-11 */
   10240, 20480, 40960, 100000, 200000, 400000, 700000, 1 * MEG, /* 12-19 */
   2 * MEG, 3 * MEG, 4 * MEG, 5 * MEG, 6 * MEG, 8 * MEG, 10 * MEG, /* 20-26 */

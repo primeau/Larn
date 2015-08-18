@@ -178,3 +178,16 @@ function isalpha(str) {
     str = String(str);
     return str.match(/^[A-Za-z]+$/);
 }
+
+
+
+Storage.prototype.setObject = function(key, value) {
+    this.setItem(key, JSON.stringify(value));
+}
+
+
+
+Storage.prototype.getObject = function(key) {
+    var value = this.getItem(key);
+    return value && JSON.parse(value);
+}

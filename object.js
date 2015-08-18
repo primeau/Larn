@@ -230,9 +230,6 @@ function Item(id, char, desc, carry, arg) {
   this.arg = arg;
 }
 
-// Item.prototype.toString = function itemToString() {
-//   return this.desc;
-// }
 
 
 function createObject(item, arg) {
@@ -251,6 +248,8 @@ function createObject(item, arg) {
   }
   return newItem;
 }
+
+
 
 function isItem(x, y, compareItem) {
   var levelItem = player.level.items[x][y];

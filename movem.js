@@ -1,15 +1,10 @@
 "use strict";
 
-/* list of monsters to move */
-var movelist = [];
 var MonsterLocation = {
   x: 0,
   y: 0,
   smart: false,
 }
-
-var w1x = [];
-var w1y = [];
 
 /*
  *  movemonst()     Routine to move the monsters toward the player
@@ -20,6 +15,9 @@ var w1y = [];
  */
 function movemonst() {
   if (player.HOLDMONST) return; /* no action if monsters are held */
+
+  /* list of monsters to move */
+  var movelist = [];
 
   var tmp1, tmp2, tmp3, tmp4;
 
@@ -151,8 +149,8 @@ function movemonst() {
         move_smart(lasthx, lasthy);
       } else
         move_dumb(lasthx, lasthy);
-      lasthx = w1x[0]; /* make sure the monster gets moved again */
-      lasthy = w1y[0];
+      lasthx = w1x; /* make sure the monster gets moved again */
+      lasthy = w1y;
     }
   } else {
     /* If the last monster hit is within the move window, and not
@@ -175,13 +173,13 @@ function movemonst() {
       } else {
         move_dumb(lasthx, lasthy);
       }
-      lasthx = w1x[0]; /* make sure the monster gets moved again */
-      lasthy = w1y[0];
+      lasthx = w1x; /* make sure the monster gets moved again */
+      lasthy = w1y;
     }
   }
 }
 
-var screen = initGrid(MAXX, MAXY); /* proximity ripple storage */
+const screen = initGrid(MAXX, MAXY); /* proximity ripple storage */
 
 function QueueEntry(x, y, distance) {
   this.x = x;
@@ -377,8 +375,8 @@ function move_smart(i, j) {
       y = j + diroffy[z];
       if (screen[x][y] < screen[i][j])
         if (monsterAt(x, y) == null) {
-          w1x[0] = x;
-          w1y[0] = y;
+          w1x = x;
+          w1y = y;
           mmove(i, j, x, y);
           return;
         }
@@ -390,8 +388,8 @@ function move_smart(i, j) {
       y = j + diroffy[z];
       if ((screen[x][y] < screen[i][j]) && !(getItem(x, y).matches(OMIRROR)))
         if (monsterAt(x, y) == null) {
-          w1x[0] = x;
-          w1y[0] = y;
+          w1x = x;
+          w1y = y;
           mmove(i, j, x, y);
           return;
         }
@@ -481,11 +479,11 @@ function move_dumb(i, j) {
   */
   if ((tmpd < 10000) && ((tmpx != i) || (tmpy != j))) {
     mmove(i, j, tmpx, tmpy);
-    w1x[0] = tmpx; /* for last monster hit */
-    w1y[0] = tmpy;
+    w1x = tmpx; /* for last monster hit */
+    w1y = tmpy;
   } else {
-    w1x[0] = i; /* for last monster hit */
-    w1y[0] = j;
+    w1x = i; /* for last monster hit */
+    w1y = j;
   }
 } /* end move_dumb() */
 

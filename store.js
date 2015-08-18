@@ -255,7 +255,6 @@ function dnditem(i) {
 /*
  *  for the first national bank of Larn
  */
-var lasttime = 0; /* last time he was in bank */
 
 function obank() {
   banktitle("Welcome to the First National Bank of Larn.");
@@ -850,7 +849,6 @@ function parse_class(key) {
 
 
 
-var GAME_OVER = false;
 
 function ohome() {
 
