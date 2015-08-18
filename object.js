@@ -461,7 +461,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   else if (item.matches(OTRAPARROW)) {
     updateLog("You are hit by an arrow");
     lastnum = 259;
-    player.losehp(rnd(10) + player.level.depth);
+    player.losehp(rnd(10) + level);
     //bottomhp();
     return;
   }
@@ -500,16 +500,16 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OTRAPDOOR)) {
     lastnum = 272; /* a trap door */
-    if ((player.level.depth == MAXLEVEL - 1) || (player.level.depth == MAXLEVEL + MAXVLEVEL - 1)) {
+    if ((level == MAXLEVEL - 1) || (level == MAXLEVEL + MAXVLEVEL - 1)) {
       updateLog("You fell through a bottomless trap door!");
       nap(2000);
       died(271);
     }
-    var dmg = rnd(5 + player.level.depth);
+    var dmg = rnd(5 + level);
     updateLog(`You fall through a trap door!  You lose ${dmg} hit points`);
     player.losehp(dmg);
     nap(2000);
-    newcavelevel(player.level.depth + 1);
+    newcavelevel(level + 1);
     return;
   }
   //
@@ -540,21 +540,21 @@ function opit() {
   if (rnd(70) <= 9 * player.DEXTERITY - packweight() && rnd(101) >= 5) {
     return;
   }
-  if (player.level.depth == 10 || player.level.depth >= 13) {
+  if (level == 10 || level >= 13) {
     obottomless();
   } else {
     var damage = 0;
     if (rnd(101) < 20) {
       updateLog("You fell into a pit! Your fall is cushioned by an unknown force");
     } else {
-      damage = rnd(player.level.depth * 3 + 3);
+      damage = rnd(level * 3 + 3);
       updateLog(`You fell into a pit! You suffer ${damage} hit points damage`);
       lastnum = 261;
       /* if hero dies scoreboard will say so */
     }
     player.losehp(damage);
     nap(2000);
-    newcavelevel(player.level.depth + 1);
+    newcavelevel(level + 1);
   }
 }
 
@@ -584,17 +584,17 @@ function oteleport(err) {
     if (rnd(151) < 3)
       died(264); /* stuck in a rock */
   player.TELEFLAG = 1; /* show ?? on bottomline if been teleported    */
-  if (player.level.depth == 0)
+  if (level == 0)
     tmp = 0;
   else
-  if (player.level.depth < MAXLEVEL) {
-    tmp = rnd(5) + player.level.depth - 3;
+  if (level < MAXLEVEL) {
+    tmp = rnd(5) + level - 3;
     if (tmp >= MAXLEVEL)
       tmp = MAXLEVEL - 1;
     if (tmp < 1)
       tmp = 1;
   } else {
-    tmp = rnd(3) + player.level.depth - 2;
+    tmp = rnd(3) + level - 2;
     if (tmp >= MAXLEVEL + MAXVLEVEL)
       tmp = MAXLEVEL + MAXVLEVEL - 1;
     if (tmp < MAXLEVEL)
@@ -602,7 +602,7 @@ function oteleport(err) {
   }
   player.x = rnd(MAXX - 2);
   player.y = rnd(MAXY - 2);
-  if (player.level.depth != tmp)
+  if (level != tmp)
     newcavelevel(tmp);
   positionplayer();
   //draws(0, MAXX, 0, MAXY);

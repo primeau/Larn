@@ -441,17 +441,17 @@ function parse(e) {
     nomove = 1;
 
     var hmac = forge.random.getBytesSync(128);
-    console.log(forge.util.bytesToHex(hmac));
     localStorage.setItem('hmac', hmac);
 
     // HACK TODO to not store player.level
-    //    var x = player.level;
-    //    player.level = null;
+    var x = player.level;
+    player.level = null;
     localStorage.setObject('player', player);
-    //    player.level = x;
+    player.level = x;
+
     localStorage.setObject('levels', LEVELS);
     localStorage.setObject('log', LOG);
-
+    localStorage.setObject('state', new GameState());
   }
 
   //
@@ -463,41 +463,20 @@ function parse(e) {
     var hmac = localStorage.getItem('hmac');
     console.log(forge.util.bytesToHex(hmac));
 
-    LOG = localStorage.getObject('log');
+    var savedLog = localStorage.getObject('log');
+    LOG = savedLog;
 
     var savedPlayer = localStorage.getObject('player');
-    var savedDepth = loadPlayer(savedPlayer);
+    loadPlayer(savedPlayer);
+
+    var savedState = localStorage.getObject('state');
+    loadState(savedState);
 
     var savedLevels = localStorage.getObject('levels');
-    for (var lev = 0; lev < 14; lev++) {
-      if (!savedLevels[lev]) {
-        LEVELS[lev] = null;
-        continue;
-      }
-      console.log(`loading: ${lev}`);
-      var tempLev = savedLevels[lev];
-      var items = tempLev.items;
-      var monsters = tempLev.monsters;
-      for (var x = 0; x < MAXX; x++) {
-        for (var y = 0; y < MAXY; y++) {
-          items[x][y] = createObject(items[x][y]);
-          monsters[x][y] = createMonster(monsters[x][y]);
-        }
-      }
-      //newLevel.items = items;
-      if (!LEVELS[lev]) {
-        LEVELS[lev] = Object.create(Level);
-      }
-      LEVELS[lev].items = items;
-      LEVELS[lev].monsters = monsters;
-      LEVELS[lev].know = tempLev.know;
-      LEVELS[lev].depth = tempLev.depth;
-    }
+    loadLevels(savedLevels);
 
-    var foo = player.level.items[35][16];
-    console.log("isgem: " + foo.isGem());
+    newcavelevel(level);
 
-    newcavelevel(savedDepth);
     return;
   }
 
@@ -650,27 +629,27 @@ function parse(e) {
   //
   else if (key == '<') { // UP STAIRS
     if (isItem(newx, newy, OSTAIRSUP)) {
-      newcavelevel(player.level.depth - 1);
+      newcavelevel(level - 1);
       //positionplayer(newx, newy, true);
     } else if (isItem(newx, newy, OVOLUP)) {
       act_up_shaft();
       return;
     } else if (DEBUG_STAIRS_EVERYWHERE) {
       nomove = 1;
-      if (player.level.depth == 0) {
+      if (level == 0) {
         // do nothing
-      } else if (player.level.depth == 1) {
+      } else if (level == 1) {
         debug("STAIRS_EVERYWHERE: going to home level");
         newcavelevel(0);
         moveNear(OENTRANCE, false);
-      } else if (player.level.depth == 11) {
+      } else if (level == 11) {
         debug("STAIRS_EVERYWHERE: climbing up volcanic shaft");
         act_up_shaft();
         return;
       } else {
         debug("STAIRS_EVERYWHERE: climbing up stairs");
         moveNear(OSTAIRSUP, true);
-        newcavelevel(player.level.depth - 1);
+        newcavelevel(level - 1);
         return;
       }
     } else if (isItem(newx, newy, OSTAIRSDOWN)) {
@@ -686,7 +665,7 @@ function parse(e) {
   //
   else if (key == '>') { // DOWN STAIRS
     if (isItem(newx, newy, OSTAIRSDOWN)) {
-      newcavelevel(player.level.depth + 1);
+      newcavelevel(level + 1);
       //positionplayer(newx, newy, true);
     } else if (isItem(newx, newy, OVOLDOWN)) {
       act_down_shaft();
@@ -698,14 +677,14 @@ function parse(e) {
       // newcavelevel(1);
     } else if (DEBUG_STAIRS_EVERYWHERE) {
       nomove = 1;
-      if (player.level.depth == 0) {
+      if (level == 0) {
         debug("STAIRS_EVERYWHERE: entering dungeon");
-        newcavelevel(player.level.depth + 1);
+        newcavelevel(level + 1);
         return;
-      } else if (player.level.depth != 10 && player.level.depth != 13) {
+      } else if (level != 10 && level != 13) {
         debug("STAIRS_EVERYWHERE: climbing down stairs");
         moveNear(OSTAIRSDOWN, true);
-        newcavelevel(player.level.depth + 1);
+        newcavelevel(level + 1);
         return;
       }
     } else if (isItem(newx, newy, OSTAIRSUP)) {
@@ -759,7 +738,7 @@ function run(dir) {
 function randmonst() {
   if (player.TIMESTOP) return; /*  don't make monsters if time is stopped  */
   if (--rmst <= 0) {
-    rmst = 120 - (player.level.depth << 2);
-    fillmonst(makemonst(player.level.depth));
+    rmst = 120 - (level << 2);
+    fillmonst(makemonst(level));
   }
 }

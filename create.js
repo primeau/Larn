@@ -14,10 +14,10 @@
 function newcavelevel(depth) {
   if (player.level) {
     // TODO save current level
-    savelevel(player.level.depth); /* put the level back into storage  */
+    savelevel(level); /* put the level back into storage  */
   }
-  //level = depth; /* get the new level and put in working storage */
-  if (LEVELS[depth]) {
+
+  if (LEVELS[depth]) { // if we have visited this level before
     getlevel(depth);
     sethp(false);
     positionplayer(player.x, player.y, true);
@@ -32,7 +32,7 @@ function newcavelevel(depth) {
   positionplayer(player.x, player.y, true);
   checkgen(); /* wipe out any genocided monsters */
 
-  if (wizard || player.level.depth == 0)
+  if (wizard || level == 0)
     for (var j = 0; j < MAXY; j++)
       for (var i = 0; i < MAXX; i++)
         player.level.know[i][j] = KNOWALL;
@@ -41,18 +41,15 @@ function newcavelevel(depth) {
 
 
 function initNewLevel(depth) {
-  var items = initGrid(MAXX, MAXY);
-  var monsters = initGrid(MAXX, MAXY);
-  var know = initGrid(MAXX, MAXY);
+  var newLevel = Object.create(Level);
 
-  var level = Object.create(Level);
-  LEVELS[depth] = level;
-  player.level = level;
+  newLevel.items = initGrid(MAXX, MAXY);
+  newLevel.monsters = initGrid(MAXX, MAXY);
+  newLevel.know = initGrid(MAXX, MAXY);
 
-  level.items = items;
-  level.monsters = monsters;
-  level.know = know;
-  level.depth = depth;
+  LEVELS[depth] = newLevel;
+  player.level = newLevel;
+  level = depth;
 }
 
 
@@ -513,20 +510,20 @@ function sethp(flg) {
   }
 
   /* if teleported and found level 1 then know level we are on */
-  if (player.level.depth == 0) {
+  if (level == 0) {
     player.TELEFLAG = 0;
     return;
   }
 
   var nummonsters;
   if (flg) {
-    nummonsters = rnd(12) + 2 + (player.level.depth >> 1);
+    nummonsters = rnd(12) + 2 + (level >> 1);
   } else {
-    nummonsters = (player.level.depth >> 1) + 1;
+    nummonsters = (level >> 1) + 1;
   }
 
   for (var i = 0; i < nummonsters; i++) {
-    fillmonst(makemonst(player.level.depth));
+    fillmonst(makemonst(level));
   }
 }
 

@@ -182,7 +182,7 @@ function speldamage(x) {
 
     case 11:
       /* create monster   */
-      createmonster(makemonst(player.level.depth + 1) + 8);
+      createmonster(makemonst(level + 1) + 8);
       return;
 
     case 12:
@@ -258,12 +258,12 @@ function speldamage(x) {
           // kn = & know[i][j];
           var item = getItem(i, j);
           if (item.matches(OWALL)) {
-            if (player.level.depth < MAXLEVEL + MAXVLEVEL - 1)
+            if (level < MAXLEVEL + MAXVLEVEL - 1)
             //* p = * kn = 0;
               setItem(i, j, createObject(OEMPTY));
           } else if (item.matches(OSTATUE)) {
             if (player.HARDGAME < 3) {
-              setItem(i, j, createObject(OBOOK, player.level.depth));
+              setItem(i, j, createObject(OBOOK, level));
               //* kn = 0;
             }
           } else if (item.matches(OTHRONE)) {
@@ -451,7 +451,7 @@ function speldamage(x) {
         }
       }
       eat(1, 1);
-      if (player.level.depth == 1)
+      if (level == 1)
         player.level.items[33][MAXY - 1] = createObject(OHOMEENTRANCE);
       for (j = rnd(MAXY - 2), i = 1; i < MAXX - 1; i++) {
         // JRP: I'm not sure why we do this, but it's in the original code
@@ -810,7 +810,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     if ( /* enough damage? */
       dam >= 50 + player.HARDGAME &&
       /* not on V3 */
-      player.level.depth < MAXLEVEL + MAXVLEVEL - 1 &&
+      level < MAXLEVEL + MAXVLEVEL - 1 &&
       x < MAXX - 1 && y < MAXY - 1 &&
       x != 0 && y != 0) {
       updateLog("  The wall crumbles");
@@ -835,7 +835,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     if (player.HARDGAME < 3)
       if (dam > 44) {
         updateLog("  The statue crumbles");
-        player.level.items[x][y] = createObject(OBOOK, player.level.depth);
+        player.level.items[x][y] = createObject(OBOOK, level);
         player.level.know[x][y] = 0;
         show1cell(x, y);
       }
@@ -1020,7 +1020,7 @@ function genmonst(key) {
 
       updateLog(`  There will be no more ${monstname}`);
 
-      newcavelevel(player.level.depth); /* now wipe out monsters on this level */
+      newcavelevel(level); /* now wipe out monsters on this level */
       //drawscreen();
       paint();
       return 1;

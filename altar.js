@@ -63,7 +63,7 @@ function act_donation_pray(k) {
     /* if player gave less than 10% of _original_ gold, make a monster
      */
     if (k < temp || k < rnd(50)) {
-      createmonster(makemonst(player.level.depth + 1));
+      createmonster(makemonst(level + 1));
       player.AGGRAVATE += 200;
       return 1;
     }
@@ -125,7 +125,7 @@ function act_just_pray() {
     enchweapon();
     return;
   } else
-    createmonster(makemonst(player.level.depth + 1));
+    createmonster(makemonst(level + 1));
   return;
 }
 
@@ -135,7 +135,7 @@ function act_just_pray() {
 */
 function act_desecrate_altar() {
   if (rnd(100) < 60) {
-    createmonster(makemonst(player.level.depth + 2) + 8);
+    createmonster(makemonst(level + 2) + 8);
     player.AGGRAVATE += 2500;
   } else if (rnd(101) < 30) {
     updateLog("  The altar crumbles into a pile of dust before your eyes");
@@ -153,7 +153,7 @@ function act_desecrate_altar() {
 */
 function act_ignore_altar() {
   if (rnd(100) < 30) {
-    createmonster(makemonst(player.level.depth + 1));
+    createmonster(makemonst(level + 1));
     player.AGGRAVATE += rnd(450);
   } else
     updateLog("  Nothing happens");

@@ -27,7 +27,7 @@ const diroffy = [0, 1, 0, -1, 0, -1, -1, 1, 1];
 function moveplayer(dir) {
 
   if (player.CONFUSE) {
-    if (player.level.depth < rnd(30)) {
+    if (level < rnd(30)) {
       dir = rund(9); /*if confused any dir*/
     }
   }

@@ -128,7 +128,7 @@ function fntchange(how) {
       fch(how);
       break;
     case 7:
-      var j = rnd(player.level.depth + 1);
+      var j = rnd(level + 1);
       if (how < 0) {
         updateLog(`  You lose ${j} hit point`);
         if (j > 1) {
@@ -150,7 +150,7 @@ function fntchange(how) {
       break;
 
     case 8:
-      var j = rnd(player.level.depth + 1);
+      var j = rnd(level + 1);
       if (how > 0) {
         updateLog(`  You just gained ${j} spell`);
         if (j > 1) {
@@ -172,7 +172,7 @@ function fntchange(how) {
       break;
 
     case 9:
-      var j = 5 * rnd((player.level.depth + 1) * (player.level.depth + 1));
+      var j = 5 * rnd((level + 1) * (level + 1));
       if (how < 0) {
         updateLog(`  You just lost ${j} experience point`);
         if (j > 1) {

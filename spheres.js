@@ -22,7 +22,7 @@ var Sphere = function(x, y, dir, lifetime, lev) {
  */
 function newsphere(x, y, dir, life) {
   if (dir >= 9) dir = 0; /* no movement if direction not found */
-  if (player.level.depth == 0) { /* don't go out of bounds */
+  if (level == 0) { /* don't go out of bounds */
     x = vx(x);
     y = vy(y);
   } else {
@@ -73,7 +73,7 @@ function newsphere(x, y, dir, life) {
   show1cell(x, y); /* show the new sphere */
 
   /* one more sphere in the world */
-  var sp = new Sphere(x, y, dir, life, player.level.depth);
+  var sp = new Sphere(x, y, dir, life, level);
   spheres.push(sp);
 
   return;
@@ -92,7 +92,7 @@ function rmsphere(x, y) {
   for (var i = 0; i < spheres.length; i++) {
     var sp = spheres[i];
     if (!sp) continue;
-    if (sp.level == player.level.depth) { /* is sphere on this level? */
+    if (sp.level == level) { /* is sphere on this level? */
       if (x == sp.x && y == sp.y) /* locate sphere at this location */ {
         setItem(x, y, createObject(OEMPTY));
         player.level.monsters[x][y] = null;

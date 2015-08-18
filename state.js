@@ -2,16 +2,19 @@
 
 var LEVELS = [];
 var LOG = [""];
+
+
 var IN_STORE = false;
 
 var logname = "adventurer";
 
 var gtime = 0; /*  the clock for the game                      */
 
+var cheat = 0; /*  1 if the player has fudged save file            */
+var level = 0; /*  cavelevel player is on = cdesc[CAVELEVEL]           */
+var wizard = 0; /*  the wizard mode flag                            */
 
 var lastmonst = "";
-
-// TODO! var level = 0; /*  cavelevel player is on = c[CAVELEVEL]           */
 
 var lastnum = 0; /* the number of the monster last hitting player    */
 var hitflag = 0; /*  flag for if player has been hit when running    */
@@ -28,8 +31,7 @@ var prayed = 1;
 var oldx = 0;
 var oldy = 0;
 var course = []; /* the list of courses taken */
-var wizard = false; /*  the wizard mode flag                            */
-var outstanding_taxes=0;   /* present tax bill from score file             */
+var outstanding_taxes = 0; /* present tax bill from score file             */
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 
@@ -52,3 +54,42 @@ var spheres = [];
 var knownPotions = [];
 var knownScrolls = [];
 var knownSpells = [];
+
+
+function GameState() {
+  this.cheat = cheat;
+  this.level = level;
+  this.wizard = wizard;
+  this.IN_STORE = IN_STORE;
+  this.logname = logname;
+  this.gtime = gtime;
+  this.lastmonst = lastmonst;
+  this.lastnum = lastnum;
+  this.hitflag = hitflag;
+  this.hit2flag = hit2flag;
+  this.hit3flag = hit3flag;
+  this.lastpx = lastpx;
+  this.lastpy = lastpy;
+  this.lasthx = lasthx;
+  this.lasthy = lasthy;
+  this.prayed = prayed;
+  this.oldx = oldx;
+  this.oldy = oldy;
+  this.course = course;
+  this.wizard = wizard;
+  this.outstanding_taxes = outstanding_taxes;
+  this.newsphereflag = newsphereflag;
+  this.dropflag = dropflag;
+  this.rmst = rmst;
+  this.nomove = nomove;
+  this.viewflag = viewflag;
+  this.napping = napping;
+  this.lasttime = lasttime;
+  this.GAME_OVER = GAME_OVER;
+  this.w1x = w1x;
+  this.w1y = w1y;
+  this.spheres = spheres;
+  this.knownPotions = knownPotions;
+  this.knownScrolls = knownScrolls;
+  this.knownSpells = knownSpells;
+}

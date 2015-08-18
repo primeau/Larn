@@ -89,7 +89,7 @@ Monster.prototype = {
         case PLATINUMDRAGON:
         case GNOMEKING:
         case REDDRAGON:
-          something(player.level.depth);
+          something(level);
           return;
 
         case LEPRECHAUN:

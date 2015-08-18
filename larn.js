@@ -98,7 +98,7 @@ function parseDebug(key) {
   // DEBUGGING SHORTCUTS
   //
   if (key == 'V') { // CLIMB IN/OUT OF VOLCANO
-    if (player.level.depth == 0 && DEBUG_STAIRS_EVERYWHERE) {
+    if (level == 0 && DEBUG_STAIRS_EVERYWHERE) {
       nomove = 1;
       debug("STAIRS_EVERYWHERE: entering volcano");
       moveNear(OVOLDOWN, true);

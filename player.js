@@ -40,9 +40,6 @@ var Player = function Player() {
   this.DEXCOUNT = 0;
   this.STRCOUNT = 0;
   this.BLINDCOUNT = 0;
-  // this.CAVELEVEL = function() {
-  //   return this.level.depth;
-  // };
   this.CONFUSE = 0;
   this.ALTPRO = 0;
   this.HERO = 0;
@@ -275,7 +272,7 @@ var Player = function Player() {
 
 
   this.getStatString = function() {
-    if (player.level.depth == 0) player.TELEFLAG = 0;
+    if (level == 0) player.TELEFLAG = 0;
     var output = "";
     output += "Spells: " + this.SPELLS + "(" + this.SPELLMAX + ")  " +
       "AC: " + this.AC + "  " +
@@ -289,7 +286,7 @@ var Player = function Player() {
       "CON=" + this.CONSTITUTION + " " +
       "DEX=" + this.DEXTERITY + " " +
       "CHA=" + this.CHARISMA + " " +
-      "LV: " + (player.TELEFLAG ? "?" : levelnames[player.level.depth]) + " " +
+      "LV: " + (player.TELEFLAG ? "?" : levelnames[level]) + " " +
       "Gold: " + this.GOLD + "        ";
     return output;
   }; //
@@ -487,7 +484,7 @@ function game_stats() {
   s += "X:     " + player.x + "\n";
   s += "Y:     " + player.y + "\n";
 
-  // s += "LV:    " + player.level.depth + "\n";
+  // s += "LV:    " + level + "\n";
   // s += "STR:   " + player.STRENGTH + "\n";
   // s += "INT:   " + player.INTELLIGENCE + "\n";
   // s += "WIS:   " + player.WISDOM + "\n";

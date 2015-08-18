@@ -33,7 +33,7 @@ function movemonst() {
     tmp4 = player.x + 6;
   }
 
-  if (player.level.depth == 0) /* if on outside level monsters can move in perimeter */ {
+  if (level == 0) /* if on outside level monsters can move in perimeter */ {
     if (tmp1 < 0) tmp1 = 0;
     if (tmp2 > MAXY) tmp2 = MAXY;
     if (tmp3 < 0) tmp3 = 0;
@@ -228,7 +228,7 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
           break;
         case OHOMEENTRANCE.id:
         case OENTRANCE.id:
-          if (player.level.depth == 1)
+          if (level == 1)
             screen[m][k] = 127;
           else
             screen[m][k] = 0;
@@ -560,7 +560,7 @@ function mmove(aa, bb, cc, dd) {
   var flag = 0; /* set to 1 if monster hit by arrow trap */
   if (item.matches(OTRAPARROW)) /* arrow hits monster */ {
     what = "An arrow";
-    if ((monster.hitpoints -= rnd(10) + player.level.depth) <= 0) {
+    if ((monster.hitpoints -= rnd(10) + level) <= 0) {
       player.level.monsters[cc][dd] = null;
       flag = 2;
     } else flag = 1;

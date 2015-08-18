@@ -103,7 +103,7 @@ function act_drink_fountain() {
 */
 function act_wash_fountain() {
   if (rnd(100) < 11) {
-    var x = rnd((player.level.depth << 2) + 2);
+    var x = rnd((level << 2) + 2);
     updateLog(`  Oh no!  The water was foul!  You suffer ${x} hit points!`);
     lastnum = 273;
     player.losehp(x);
@@ -118,7 +118,6 @@ function act_wash_fountain() {
   } else {
     updateLog("  Nothing seems to have happened");
   }
-  //player.level.paint();
   return;
 }
 
@@ -130,7 +129,7 @@ cursors() has been called and that a check has been made that
 are actually at a down shaft.
 */
 function act_down_shaft() {
-  if (player.level.depth != 0) {
+  if (level != 0) {
     updateLog("The shaft only extends 5 feet downward!");
     return;
   }
@@ -154,7 +153,7 @@ cursors() has been called and that a check has been made that
 are actually at an up shaft.
 */
 function act_up_shaft() {
-  if (player.level.depth != 11) {
+  if (level != 11) {
     updateLog("The shaft only extends 8 feet upwards before you find a blockage!");
     return;
   }

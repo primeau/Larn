@@ -4,12 +4,9 @@ const MAXX = 67;
 const MAXY = 17;
 
 var Level = {
-
-  depth: -1,
   items: [],
   monsters: [],
   know: [],
-
 }; // Level
 
 

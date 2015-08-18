@@ -2,6 +2,7 @@
 
 function getlevel(depth) {
   player.level = LEVELS[depth];
+  level = depth;
   // TODO player is where we could assign global item/monster/know arrays
 }
 
@@ -17,7 +18,6 @@ function findObject(item) {
 
 
 function loadPlayer(saved) {
-
   player.WEAR = null;
   player.WIELD = null;
   player.SHIELD = null;
@@ -36,7 +36,6 @@ function loadPlayer(saved) {
   player.x = saved.x;
   player.y = saved.y;
 
-  //player.level = saved.level;
   player.STRENGTH = saved.STRENGTH;
   player.INTELLIGENCE = saved.INTELLIGENCE;
   player.WISDOM = saved.WISDOM;
@@ -100,6 +99,69 @@ function loadPlayer(saved) {
   player.WTW = saved.WTW;
   player.STREXTRA = saved.STREXTRA;
   player.LIFEPROT = saved.LIFEPROT;
+}
 
-  return saved.level.depth; // HACK
+
+
+function loadState(state) {
+  cheat = state.cheat;
+  level = state.level;
+  wizard = state.wizard;
+  IN_STORE = state.IN_STORE;
+  logname = state.logname;
+  gtime = state.gtime;
+  lastmonst = state.lastmonst;
+  lastnum = state.lastnum;
+  hitflag = state.hitflag;
+  hit2flag = state.hit2flag;
+  hit3flag = state.hit3flag;
+  lastpx = state.lastpx;
+  lastpy = state.lastpy;
+  lasthx = state.lasthx;
+  lasthy = state.lasthy;
+  prayed = state.prayed;
+  oldx = state.oldx;
+  oldy = state.oldy;
+  course = state.course;
+  wizard = state.wizard;
+  outstanding_taxes = state.outstanding_taxes;
+  newsphereflag = state.newsphereflag;
+  dropflag = state.dropflag;
+  rmst = state.rmst;
+  nomove = state.nomove;
+  viewflag = state.viewflag;
+  napping = state.napping;
+  lasttime = state.lasttime;
+  GAME_OVER = state.GAME_OVER;
+  w1x = state.w1x;
+  w1y = state.w1y;
+  spheres = state.spheres;
+  knownPotions = state.knownPotions;
+  knownScrolls = state.knownScrolls;
+  knownSpells = state.knownSpells;
+}
+
+
+
+function loadLevels(savedLevels) {
+  for (var lev = 0; lev < 14; lev++) {
+    if (!savedLevels[lev]) {
+      LEVELS[lev] = null;
+      continue;
+    }
+    console.log(`loading: ${lev}`);
+    var tempLev = savedLevels[lev];
+    var items = tempLev.items;
+    var monsters = tempLev.monsters;
+    for (var x = 0; x < MAXX; x++) {
+      for (var y = 0; y < MAXY; y++) {
+        items[x][y] = createObject(items[x][y]);
+        monsters[x][y] = createMonster(monsters[x][y]);
+      }
+    }
+    LEVELS[lev] = Object.create(Level);
+    LEVELS[lev].items = items;
+    LEVELS[lev].monsters = monsters;
+    LEVELS[lev].know = tempLev.know;
+  }
 }

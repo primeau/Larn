@@ -136,12 +136,12 @@ function read_scroll(scroll) {
 
     case 4:
       /* this one creates a monster  */
-      createmonster(makemonst(player.level.depth + 1));
+      createmonster(makemonst(level + 1));
       break;
 
     case 5:
       /* create artifact     */
-      something(player.level.depth);
+      something(level);
       break;
 
     case 6:
