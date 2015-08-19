@@ -15,7 +15,7 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
   if (show_gold) {
     if (player.GOLD) {
       cltoeoln();
-      lprcat(`.) ${player.GOLD} gold pieces\n`);
+      lprcat(`.) ${Number(player.GOLD).toLocaleString()} gold pieces\n`);
       srcount++;
     } else {
       show_gold = false;

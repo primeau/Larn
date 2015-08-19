@@ -18,7 +18,7 @@ var player;
 
 var Larn = {
   run: function() {
-    updateLog("Welcome to Larn -- Press ? for help"); // need to initialize the log
+    updateLog("Welcome to Larn -- Press <b>?</b> for help"); // need to initialize the log
 
     document.onkeypress = this.keyPress;
     document.onkeydown = this.keyDown;

@@ -1,17 +1,19 @@
 todo:
-- help screens
+- make sure difficulty > 0 is fully implemented
 - intro screen
-- save game (save unique key in a cookie)
 - print program version
 - hack-style characters
 - warn player that back button, window close will kill the game
-- make sure difficulty > 0 is fully implemented
 - scoreboard
 - auto-pickup
 - highlight changed attributes
 - disable debugging shortcuts
 - nap & show monster movement during when falling asleep
 - change drink at fountain to F?
+- firefox / ie / safari support
+- secure save game (save hash key in a cookie)
+- clear saved game after loading
+- tighten up bottomline() printing
 
 extras:
 - shift-arrow to open door?
@@ -21,6 +23,7 @@ extras:
 - add larn 12.4 to repo, and patch pit bug
 - color
 - ipad support
+- add comma to drop gold pieces
 
 bugs:
 * rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD
@@ -33,6 +36,7 @@ bugs:
 * if you delete numbers (in bank, etc) to 0, you can't enter new numbers
 * exiting bank before a deposit/withdraw/etc message is done locks the keyboard
 * dnd store message, bank message not being printed
+* monsters don't move after failed missile attack?
 * fall down trapdoor, land next to monster, cast spell (which fails) -- monster doesn't attack?
 - thrift shop messages are on the wrong line
 - strextra can get out of balance? caused by heroism/giant strength

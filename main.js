@@ -427,7 +427,7 @@ function parse(e) {
   //
   // REMOVE GEMS
   //
-  if (key == 'R') {
+  if (key == 'G') {
     yrepcount = 0;
     remove_gems();
     dropflag = 1;
@@ -439,44 +439,31 @@ function parse(e) {
   //
   if (key == 'S') {
     nomove = 1;
-
-    var hmac = forge.random.getBytesSync(128);
-    localStorage.setItem('hmac', hmac);
-
-    // HACK TODO to not store player.level
-    var x = player.level;
-    player.level = null;
-    localStorage.setObject('player', player);
-    player.level = x;
-
-    localStorage.setObject('levels', LEVELS);
-    localStorage.setObject('log', LOG);
-    localStorage.setObject('state', new GameState());
+    saveGame();
   }
 
   //
-  // Q - load saved game
+  // load saved game
   //
-  if (key == 'Q') {
+  function parseLoadSavedGame(key) {
     nomove = 1;
+    if (key == ESC || key == 'n' || key == 'N') {
+      appendLog(" cancelled");
+      return 1;
+    }
+    if (key == 'y' || key == 'Y') {
+      loadSavedGame();
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 
-    var hmac = localStorage.getItem('hmac');
-    console.log(forge.util.bytesToHex(hmac));
 
-    var savedLog = localStorage.getObject('log');
-    LOG = savedLog;
-
-    var savedPlayer = localStorage.getObject('player');
-    loadPlayer(savedPlayer);
-
-    var savedState = localStorage.getObject('state');
-    loadState(savedState);
-
-    var savedLevels = localStorage.getObject('levels');
-    loadLevels(savedLevels);
-
-    newcavelevel(level);
-
+  if (key == 'R') {
+    nomove = 1;
+    setCharCallback(parseLoadSavedGame, true);
+    updateLog("Do you want to load your saved game [<b>y</b>/<b>n</b>] ? ")
     return;
   }
 

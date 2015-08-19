@@ -1,20 +1,82 @@
 "use strict";
 
-function getlevel(depth) {
-  player.level = LEVELS[depth];
-  level = depth;
-  // TODO player is where we could assign global item/monster/know arrays
+function saveGame() {
+  // var hmac = forge.random.getBytesSync(128);
+  // localStorage.setItem('hmac', hmac);
+
+  var state = new GameState();
+
+  var a, b, c;
+
+  // START HACK TODO to not store player.level
+  var x = player.level;
+  player.level = null;
+  localStorage.setObject('player', player);
+  var hash = forge.md.sha512.create();
+  hash.update(a = JSON.stringify(state));
+  hash.update(b = JSON.stringify(player));
+  hash.update(c = JSON.stringify(LEVELS));
+  player.level = x;
+  // END HACK TODO to not store player.level
+
+  localStorage.setObject('state', state);
+  localStorage.setObject('levels', LEVELS);
+  localStorage.setObject('log', LOG);
+
+  //console.log(JSON.stringify(LEVELS));
+
+  var numbytes = (a.length + b.length + c.length);
+  updateLog(`Game saved. ${Number(numbytes).toLocaleString()} bytes written.`);
+
+  console.log("saved hash: " + hash.digest().toHex());
+  localStorage.setItem('hmac', hash.digest().toHex());
 }
 
-function savelevel() {
-  // TODO
+
+
+function loadSavedGame() {
+  // var hmac = localStorage.getItem('hmac');
+  // console.log(forge.util.bytesToHex(hmac));
+
+  var savedLog = localStorage.getObject('log');
+  LOG = savedLog;
+
+  var savedPlayer = localStorage.getObject('player');
+  loadPlayer(savedPlayer);
+
+  var savedState = localStorage.getObject('state');
+  loadState(savedState);
+
+  var savedLevels = localStorage.getObject('levels');
+  loadLevels(savedLevels);
+
+  player.level = LEVELS[level];
+
+  // check for cheaters:
+  // 1. hash everything important
+  // 2. load the saved hash
+  // 3. are they the same?
+  var hash = forge.md.sha512.create();
+  hash.update(JSON.stringify(savedState));
+  hash.update(JSON.stringify(savedPlayer));
+  hash.update(JSON.stringify(savedLevels));
+
+  //console.log(JSON.stringify(savedLevels));
+
+  console.log("computed hash: " + hash.digest().toHex());
+
+  var savedHash = localStorage.getItem('hmac', hash);
+  console.log("saved hash: " + savedHash);
+
+  cheat = hash.digest().toHex() != savedHash;
+  console.log("cheater? " + cheat);
+
+  if (cheat) {
+    updateLog("Have you been cheating?");
+    // TODO enforce this
+  }
 }
 
-
-
-function findObject(item) {
-
-}
 
 
 function loadPlayer(saved) {

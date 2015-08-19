@@ -1,6 +1,6 @@
 "use strict";
 
-var Monster = function Monster(char, desc, level, armorclass, damage, attack, defence, genocided, intelligence, gold, hitpoints, experience) {
+var Monster = function Monster(char, desc, level, armorclass, damage, attack, defence, genocided, intelligence, gold, hitpoints, experience, awake) {
   this.char = char;
   this.desc = desc;
   this.level = level;
@@ -13,6 +13,7 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, de
   this.gold = gold;
   this.hitpoints = hitpoints;
   this.experience = experience;
+  this.awake = awake;
 }
 
 function createMonster(monst) {
@@ -30,7 +31,7 @@ function createMonster(monst) {
 
   monster = new Monster(monst.char, monst.desc, monst.level,
     monst.armorclass, monst.damage, monst.attack, monst.defence, monst.genocided,
-    monst.intelligence, monst.gold, monst.hitpoints, monst.experience);
+    monst.intelligence, monst.gold, monst.hitpoints, monst.experience, monst.awake);
 
   monster.arg = arg;
 

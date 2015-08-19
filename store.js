@@ -152,7 +152,7 @@ function dndstore() {
 
 function updategold() {
   cursor(50, 19);
-  lprcat(`You have ${player.GOLD} gold pieces`);
+  lprcat(`You have ${Number(player.GOLD).toLocaleString()} gold pieces`);
   cltoeoln();
   cl_dn(1, 20); /* erase to eod */
   lprcat("\nEnter your transaction [");
@@ -354,10 +354,10 @@ function obanksub() {
 function bank_print_gold() {
   cursor(31, 17);
   cltoeoln();
-  lprintf(`You have ${player.BANKACCOUNT} gold pieces in the bank`);
+  lprintf(`You have ${Number(player.BANKACCOUNT).toLocaleString()} gold pieces in the bank`);
   cursor(31, 18);
   cltoeoln();
-  lprintf(`You have ${player.GOLD} gold pieces`);
+  lprintf(`You have ${Number(player.GOLD).toLocaleString()} gold pieces`);
   if (player.BANKACCOUNT + player.GOLD >= 500000)
     lprcat("\n\nNote: Larndom law states that only deposits under 500,000gp can earn interest");
 }
@@ -742,7 +742,7 @@ function printclasses() {
 
   lprcat("\n\n\t\tAll courses cost 250 gold pieces");
   cursor(30, 18);
-  lprcat(`You are presently carrying ${player.GOLD} gold pieces`);
+  lprcat(`You are presently carrying ${Number(player.GOLD).toLocaleString()} gold pieces`);
 }
 
 
@@ -1007,7 +1007,7 @@ function olrs() {
 
   cursor(1, 8);
   if (player.GOLD > 0) {
-    lprcat(`You have ${player.GOLD} gold pieces    `);
+    lprcat(`You have ${Number(player.GOLD).toLocaleString()} gold pieces    `);
   } else {
     lprcat("You have no gold pieces  ");
   }
