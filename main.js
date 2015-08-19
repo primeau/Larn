@@ -165,6 +165,7 @@ function parse(e) {
   if (key == ' ' || code == ESC) {
     yrepcount = 0;
     nomove = 1;
+    return;
   }
 
   //
@@ -214,6 +215,16 @@ function parse(e) {
   }
 
   //
+  // TIDY UP AT FOUNTAIN
+  //
+  if (key == 'f') {
+    yrepcount = 0;
+    wash_fountain(null);
+    dropflag = 1;
+    return;
+  }
+
+  //
   // PACK WEIGHT
   //
   if (key == 'g') {
@@ -230,6 +241,31 @@ function parse(e) {
     yrepcount = 0;
     nomove = 1;
     showinventory(false, parse_inventory, showall, true, true);
+    return;
+  }
+
+  //
+  // OPEN (in a direction)
+  //
+  if (key == 'o' || key == 'O') {
+    yrepcount = 0;
+    /* check for confusion. */
+    if (player.CONFUSE > 0) {
+      updateLog("You're too confused!");
+      beep();
+      return;
+    }
+    /* check for player standing on a chest.  If he is, prompt for and
+       let him open it.  If player ESCs from prompt, quit the Open
+       command.
+    */
+    if (item.matches(OCHEST)) {
+      act_open_chest(player.x, player.y);
+      dropflag = 1; /* prevent player from picking back up if fail */
+      return;
+    } else {
+      prepare_direction_event(open_something, true);
+    }
     return;
   }
 
@@ -296,16 +332,29 @@ function parse(e) {
   }
 
   //
-  // TIDY UP AT FOUNTAIN
+  // PICK UP
   //
-  if (key == 'f') {
+  if (key == 't' || key == ',') {
     yrepcount = 0;
-    wash_fountain(null);
-    dropflag = 1;
+    /* pickup, don't identify or prompt for action */
+    // lookforobject( false, true, false ); // TODO???
+    if (take(item)) {
+      forget(); // remove from board
+    } else {
+      nomove = 1;
+    }
     return;
   }
 
-  // TODO version
+  //
+  // version
+  //
+  if (key == 'v') {
+    updateLog(`JS Larn, Version 12.4.4 build 137 -- Difficulty ${player.HARDGAME}`);
+    if (wizard) updateLog(" Wizard");
+    if (cheat) updateLog(" Cheater");
+    return;
+  }
 
   //
   // WIELD
@@ -320,6 +369,8 @@ function parse(e) {
     }
     return;
   }
+
+  // TODO z - show scores
 
   //
   // DESECRATE
@@ -372,37 +423,22 @@ function parse(e) {
   }
 
   //
+  // REMOVE GEMS
+  //
+  if (key == 'G') {
+    yrepcount = 0;
+    remove_gems();
+    dropflag = 1;
+    return;
+  }
+
+  //
   // list spells and scrolls
   //
   if (key == 'I') {
     yrepcount = 0;
     seemagic(false);
     setCharCallback(parse_see_all, true);
-    return;
-  }
-
-  //
-  // OPEN (in a direction)
-  //
-  if (key == 'O' || key == 'o') {
-    yrepcount = 0;
-    /* check for confusion. */
-    if (player.CONFUSE > 0) {
-      updateLog("You're too confused!");
-      beep();
-      return;
-    }
-    /* check for player standing on a chest.  If he is, prompt for and
-       let him open it.  If player ESCs from prompt, quit the Open
-       command.
-    */
-    if (item.matches(OCHEST)) {
-      act_open_chest(player.x, player.y);
-      dropflag = 1; /* prevent player from picking back up if fail */
-      return;
-    } else {
-      prepare_direction_event(open_something, true);
-    }
     return;
   }
 
@@ -420,17 +456,15 @@ function parse(e) {
     return;
   }
 
-
   // TODO? Q - quit
 
-
   //
-  // REMOVE GEMS
+  // load saved game
   //
-  if (key == 'G') {
-    yrepcount = 0;
-    remove_gems();
-    dropflag = 1;
+  if (key == 'R') {
+    nomove = 1;
+    setCharCallback(parseLoadSavedGame, true);
+    updateLog("Do you want to load your saved game [<b>y</b>/<b>n</b>] ? ")
     return;
   }
 
@@ -440,34 +474,8 @@ function parse(e) {
   if (key == 'S') {
     nomove = 1;
     saveGame();
-  }
-
-  //
-  // load saved game
-  //
-  function parseLoadSavedGame(key) {
-    nomove = 1;
-    if (key == ESC || key == 'n' || key == 'N') {
-      appendLog(" cancelled");
-      return 1;
-    }
-    if (key == 'y' || key == 'Y') {
-      loadSavedGame();
-      return 1;
-    } else {
-      return 0;
-    }
-  }
-
-
-  if (key == 'R') {
-    nomove = 1;
-    setCharCallback(parseLoadSavedGame, true);
-    updateLog("Do you want to load your saved game [<b>y</b>/<b>n</b>] ? ")
     return;
   }
-
-
 
   //
   // take off armor
@@ -516,101 +524,6 @@ function parse(e) {
     return;
   }
 
-
-  // <
-  // >
-
-
-  //
-  // help screen
-  //
-  if (key == '?') {
-    var currentpage = 0;
-
-    function parse_help(key) {
-      if (key == ESC) {
-        return exitbuilding();
-      } else if (key == ' ') {
-        print_help();
-      }
-    }
-
-    function print_help() {
-      IN_STORE = true;
-      clear();
-      cursor(1, 1);
-      if (++currentpage > helppages.length - 1) {
-        currentpage = 1;
-      }
-      lprcat(helppages[currentpage]);
-      cursors();
-      lprcat("              ---- Press <b>space</b> for more help, <b>escape</b> to exit  ----");
-
-      blt();
-    }
-    setCharCallback(parse_help, true);
-    print_help();
-  }
-
-  //
-  // PICK UP
-  //
-  if (key == ',' || key == 't') {
-    yrepcount = 0;
-    /* pickup, don't identify or prompt for action */
-    // lookforobject( false, true, false ); // TODO???
-    if (take(item)) {
-      forget(); // remove from board
-    } else {
-      nomove = 1;
-    }
-    return;
-  }
-
-  //
-  // look at object
-  //
-  if (key == ':') {
-    yrepcount = 0;
-    /* identify, don't pick up or prompt for action */
-    lookforobject(true, false, false);
-    nomove = 1; /* assumes look takes no time */
-    return;
-  }
-
-  // TODO @ - toggle auto pickup
-  // TODO / - identify object / monster
-
-  //
-  // /* identify traps */
-  //
-  if (key == '^') {
-    var flag = yrepcount = 0;
-    for (var j = vy(player.y - 1); j < vy(player.y + 2); j++) {
-      for (var i = vx(player.x - 1); i < vx(player.x + 2); i++) {
-        var trap = getItem(i, j);
-        switch (trap.id) {
-          case OTRAPDOOR.id:
-          case ODARTRAP.id:
-          case OTRAPARROW.id:
-          case OTELEPORTER.id:
-          case OPIT.id:
-            updateLog(`It's ${trap}`);
-            flag++;
-        };
-      }
-    }
-    if (flag == 0)
-      updateLog("No traps are visible");
-    return;
-  }
-
-
-
-  // TODO _ - wizard id
-
-
-
   //
   // UP LEVEL // TODO MAKE LESS COMPLICATED
   //
@@ -645,6 +558,7 @@ function parse(e) {
       // we can only go up stairs, or volcanic shaft leading upward
       updateLog("I see no way to go up here!");
     }
+    return;
   }
 
   //
@@ -679,7 +593,79 @@ function parse(e) {
     } else if (!isItem(newx, newy, OSTAIRSDOWN) || !isItem(newx, newy, OVOLDOWN)) {
       updateLog("I see no way to go down here!");
     }
+    return;
   }
+
+  //
+  // identify traps
+  //
+  if (key == '^') {
+    var flag = yrepcount = 0;
+    for (var j = vy(player.y - 1); j < vy(player.y + 2); j++) {
+      for (var i = vx(player.x - 1); i < vx(player.x + 2); i++) {
+        var trap = getItem(i, j);
+        switch (trap.id) {
+          case OTRAPDOOR.id:
+          case ODARTRAP.id:
+          case OTRAPARROW.id:
+          case OTELEPORTER.id:
+          case OPIT.id:
+            updateLog(`It's ${trap}`);
+            flag++;
+        };
+      }
+    }
+    if (flag == 0)
+      updateLog("No traps are visible");
+    return;
+  }
+
+  //
+  // look at object
+  //
+  if (key == ':') {
+    yrepcount = 0;
+    /* identify, don't pick up or prompt for action */
+    lookforobject(true, false, false);
+    nomove = 1; /* assumes look takes no time */
+    return;
+  }
+
+  // TODO @ - toggle auto pickup
+
+  //
+  // help screen
+  //
+  if (key == '?') {
+    var currentpage = 0;
+
+    function parse_help(key) {
+      if (key == ESC) {
+        return exitbuilding();
+      } else if (key == ' ') {
+        print_help();
+      }
+    }
+
+    function print_help() {
+      IN_STORE = true;
+      clear();
+      cursor(1, 1);
+      if (++currentpage > helppages.length - 1) {
+        currentpage = 1;
+      }
+      lprcat(helppages[currentpage]);
+      cursors();
+      lprcat("              ---- Press <b>space</b> for more help, <b>escape</b> to exit  ----");
+
+      blt();
+    }
+    setCharCallback(parse_help, true);
+    print_help();
+    return;
+  }
+
+  // TODO _ - wizard id
 
   parseDebug(key);
 
@@ -694,7 +680,7 @@ function parse2() {
   if (player.HASTEMONST > 0) {
     movemonst();
   }
-  movemonst(); /* move the monsters       */
+  movemonst(); /* move the monsters */
   randmonst();
   regen();
 }

@@ -287,7 +287,7 @@ var Player = function Player() {
       "DEX=" + this.DEXTERITY + " " +
       "CHA=" + this.CHARISMA + " " +
       "LV: " + (player.TELEFLAG ? "?" : levelnames[level]) + " " +
-      "Gold: " + this.GOLD + "        ";
+      "Gold: " + Number(this.GOLD).toLocaleString() + "        ";
     return output;
   }; //
 

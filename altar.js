@@ -92,10 +92,9 @@ function act_donation_pray(k) {
      player can't escape the altar for free.
   */
   updateLog("  You don't have that much!");
+  prayed = 0;
+  dropflag = 1;
 
-  // updateLog("how much do you donate? ");
-  // blocking_callback = getnumberinput;
-  // keyboard_input_callback = act_donation_pray;
   return 1;
   // case ESC:
   //   lookforobject(true, false, true); // re-find the altar

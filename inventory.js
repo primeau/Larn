@@ -291,7 +291,7 @@ function drop_object_gold(amount) {
   }
 
   player.GOLD -= amount;
-  updateLog(`  You drop ${amount} gold pieces`);
+  updateLog(`  You drop ${Number(amount).toLocaleString()} gold pieces`);
   player.level.items[player.x][player.y] = createObject(OGOLDPILE, amount);
   player.level.know[player.x][player.y] = 0;
   return 1;

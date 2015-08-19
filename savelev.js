@@ -1,5 +1,21 @@
 "use strict";
 
+function parseLoadSavedGame(key) {
+  nomove = 1;
+  if (key == ESC || key == 'n' || key == 'N') {
+    appendLog(" cancelled");
+    return 1;
+  }
+  if (key == 'y' || key == 'Y') {
+    loadSavedGame();
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+
+
 function saveGame() {
   // var hmac = forge.random.getBytesSync(128);
   // localStorage.setItem('hmac', hmac);

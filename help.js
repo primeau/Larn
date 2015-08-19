@@ -42,9 +42,9 @@ helppages[1] =
   p  pray at an altar         P  give tax status          :  look at object you\n\
   q  quaff a potion           Q  <strike>quit the game</strike>               are standing on\n\
   r  read a scroll            R  restore a saved game                         \n\
-  s  sit on a throne          S  save the game            @  <strike>auto-pickup mode</strike> \n\
+  s  sit on a throne          S  save the game            @  <strike>toggle auto-pickup</strike> \n\
   t  take an item             T  take off armor                               \n\
-  v  <strike>print program version</strike>                                   \n\
+  v  print program version                                                    \n\
   w  wield a weapon           W  wear armor                                   \n\
   z  <strike>show scores</strike>              Z  teleport yourself        ?  this help screen \n\
   ";

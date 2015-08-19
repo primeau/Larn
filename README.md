@@ -1,29 +1,28 @@
 todo:
-- make sure difficulty > 0 is fully implemented
-- intro screen
-- print program version
-- hack-style characters
-- warn player that back button, window close will kill the game
-- scoreboard
-- auto-pickup
-- highlight changed attributes
-- disable debugging shortcuts
-- nap & show monster movement during when falling asleep
-- change drink at fountain to F?
-- firefox / ie / safari support
-- secure save game (save hash key in a cookie)
-- clear saved game after loading
+* make sure difficulty > 0 is fully implemented
+* intro screen, player name, difficulty
+* warn player that back button, window close will kill the game
+* scoreboard
+* disable debugging shortcuts
+* firefox / ie / safari support
+* secure save game (save hash key in a cookie)
+* clear saved game after loading
 - tighten up bottomline() printing
+- update build number in version commmand
 
 extras:
-- shift-arrow to open door?
+- hack-style characters
+- change drink at fountain to F?
+- nap & show monster movement during when falling asleep
+- auto-pickup
+- highlight changed attributes
+- color (mcolor/ocolor)
 - put platinum dragon beside eye of larn
 - global scoreboard, use hmac to secure?
+- shift-arrow to open door?
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - add larn 12.4 to repo, and patch pit bug
-- color
 - ipad support
-- add comma to drop gold pieces
 
 bugs:
 * rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD
@@ -38,7 +37,7 @@ bugs:
 * dnd store message, bank message not being printed
 * monsters don't move after failed missile attack?
 * fall down trapdoor, land next to monster, cast spell (which fails) -- monster doesn't attack?
-- thrift shop messages are on the wrong line
+* thrift shop messages are on the wrong line
 - strextra can get out of balance? caused by heroism/giant strength
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL

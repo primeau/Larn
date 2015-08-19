@@ -471,7 +471,9 @@ const monsterlist = [
   --------------------------------------------------------------------- */
   // 0
   new Monster(" ", " ", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0),
-  new Monster("B", "bat", 1, 0, 1, 0, 0, 0, 3, 0, 1, 1),
+  //new Monster("<font color='red'>B</font>", "bat", 1, 0, 1, 0, 0, 0, 3, 0, 1, 1), // this works, but is not HTML5
+  new Monster("B", "bat", 1, 0, 1, 0, 0, 0, 3, 0, 1, 1), // this works, but is not HTML5
+  //new Monster("<p style='color:red'>G</p>", "gnome", 1, 10, 1, 0, 0, 0, 8, 30, 2, 2), // using CSS messes up the screen badly
   new Monster("G", "gnome", 1, 10, 1, 0, 0, 0, 8, 30, 2, 2),
   new Monster("H", "hobgoblin", 1, 14, 2, 0, 0, 0, 5, 25, 3, 2),
   new Monster("J", "jackal", 1, 17, 1, 0, 0, 0, 4, 0, 1, 1),
