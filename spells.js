@@ -45,6 +45,10 @@ function cast(key) {
     return 1;
   }
 
+  if (!isalpha(key)) {
+      return 0;
+  }
+
   spell_cast += key;
   appendLog(key);
 
@@ -58,8 +62,9 @@ function cast(key) {
   if (spellnum >= 0) {
     speldamage(spellnum);
   } else {
-    appendLog("  Nothing Happened ");
-    bottomline();
+    nomove = 0;
+    updateLog("  Nothing Happened ");
+    //bottomline();
   }
 
   return 1;
@@ -80,17 +85,19 @@ function speldamage(x) {
 
   /* not if time stopped */
   if (player.TIMESTOP) {
-    appendLog("  It didn't seem to work");
+    updateLog("  It didn't seem to work");
     return;
   }
 
   var clev = player.LEVEL;
   if ((rnd(23) == 7) || (rnd(18) > player.INTELLIGENCE)) {
-    appendLog("  It didn't work!");
+    nomove = 0;
+    updateLog("  It didn't work!");
     return;
   }
   if (clev * 3 + 2 < x) {
-    appendLog("  Nothing happens.  You seem inexperienced at this");
+    nomove = 0;
+    updateLog("  Nothing happens.  You seem inexperienced at this");
     return;
   }
 
@@ -482,6 +489,7 @@ function speldamage(x) {
       return;
 
     default:
+      nomove = 0;
       appendLog(`  spell ${x} not available!`);
       beep();
       return;
@@ -511,7 +519,7 @@ function spell_polymorph(direction) {
   var y = player.y + diroffy[direction];
 
   var monster = getMonster(direction);
-  if (monster == null) {
+  if (!monster) {
     updateLog("  There wasn't anything there!");
     return;
   }

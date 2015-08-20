@@ -31,10 +31,8 @@ bugs:
     - cells not revealed when blind
     - monster identification when blind is unreliable
 * interest accumulates at bank immediately after leaving/returning
-* if you delete numbers (in bank, etc) to 0, you can't enter new numbers
 * exiting bank before a deposit/withdraw/etc message is done locks the keyboard
 * dnd store message, bank message not being printed
-* monsters don't move after failed missile attack?
 * fall down trapdoor, land next to monster, cast spell (which fails) -- monster doesn't attack?
 * thrift shop messages are on the wrong line
 - strextra can get out of balance? caused by heroism/giant strength
@@ -47,7 +45,7 @@ bugs:
 ? missile char stays visible sometimes
 ? monsters can get trapped on edge of screen in wizard mode
 ? cell shows in previous location when descending H -> V1
-- * after typing a number still counts as "all" (same as original version)
+- typing * after typing a number still counts as "all" (same as original version)
 
 rename/refactor:
 - player.level.items[][] -> item
