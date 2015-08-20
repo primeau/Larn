@@ -262,7 +262,7 @@ function speldamage(x) {
             //* p = * kn = 0;
               setItem(i, j, createObject(OEMPTY));
           } else if (item.matches(OSTATUE)) {
-            if (player.HARDGAME < 3) {
+            if (HARDGAME < 3) {
               setItem(i, j, createObject(OBOOK, level));
               //* kn = 0;
             }
@@ -641,7 +641,7 @@ function nospell(x, monst) {
 function fullhit(xx) {
   if (xx < 0 || xx > 20) return (0); /* fullhits are out of range */
   if (player.WIELD != null && player.WIELD.matches(OLANCE)) return (10000); /* lance of death */
-  var i = xx * ((player.WCLASS >> 1) + player.STRENGTH + player.STREXTRA - player.HARDGAME - 12 + player.MOREDAM);
+  var i = xx * ((player.WCLASS >> 1) + player.STRENGTH + player.STREXTRA - HARDGAME - 12 + player.MOREDAM);
   return ((i >= 1) ? i : xx);
 }
 
@@ -808,7 +808,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     cursors();
     updateLog(str("wall"));
     if ( /* enough damage? */
-      dam >= 50 + player.HARDGAME &&
+      dam >= 50 + HARDGAME &&
       /* not on V3 */
       level < MAXLEVEL + MAXVLEVEL - 1 &&
       x < MAXX - 1 && y < MAXY - 1 &&
@@ -832,7 +832,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   } else if (item.matches(OSTATUE)) {
     cursors();
     updateLog(str("statue"));
-    if (player.HARDGAME < 3)
+    if (HARDGAME < 3)
       if (dam > 44) {
         updateLog("  The statue crumbles");
         player.level.items[x][y] = createObject(OBOOK, level);
@@ -852,7 +852,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   } else if (item.matches(OALTAR)) {
     cursors();
     updateLog(str("altar"));
-    if (dam > 75 - (player.HARDGAME >> 2)) {
+    if (dam > 75 - (HARDGAME >> 2)) {
       create_guardian(DEMONPRINCE, x, y);
       show1cell(x, y);
     }
@@ -886,7 +886,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     }
   }
 
-  dam -= 3 + (player.HARDGAME >> 1);
+  dam -= 3 + (HARDGAME >> 1);
 
   if (dam > 0) {
     nomove = 1;

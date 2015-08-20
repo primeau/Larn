@@ -220,7 +220,7 @@ function drop_object(index) {
   if (index == '.') {
     nomove = 1;
     updateLog("How much gold will you drop? ");
-    setNumberCallback(drop_object_gold);
+    setNumberCallback(drop_object_gold, true);
     return 1;
   }
 
@@ -276,6 +276,8 @@ function drop_object_gold(amount) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
   if (amount == '*') amount = player.GOLD;
+
+  amount = Number(amount);
 
   if (amount == 0) return 1;
 

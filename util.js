@@ -78,45 +78,75 @@ function getdirectioninput(key, code) {
 
 
 
-function getnumberinput(key) {
-  if (key == ENTER) {
-    return getinput_done();
-  } else if (key == '*') {
-    KEYBOARD_INPUT = key;
-    if (IN_STORE)
-      lprc(key);
-    else
-      appendLog(key);
-    return getinput_done();
-  } else if (key == DEL) {
-    var num = KEYBOARD_INPUT + "";
-    num = num.substring(0, num.length - 1);
-    //debug(num.length);
-    if (num.length > 0) {
-      if (IN_STORE) {
-        lprc(`\b`);
-      } else
-        appendLog(`\b`);
-    }
-    KEYBOARD_INPUT = Number(num);
-    //debug("getnumberinput(): " + KEYBOARD_INPUT);
-    return 0;
-  } else if (key >= '0' && key <= '9') {
-    var original_number = KEYBOARD_INPUT;
-    var new_string = KEYBOARD_INPUT + key;
-    KEYBOARD_INPUT = Number(new_string);
-    if (new_string != KEYBOARD_INPUT.toString()) { // prevent NaN etc
-      KEYBOARD_INPUT = original_number;
-    } else {
-      if (IN_STORE)
-        lprc(key);
-      else
-        appendLog(key);
-    }
-    //debug("getnumberinput(): " + KEYBOARD_INPUT);
-    return 0;
+function echo(key) {
+  if (IN_STORE) {
+    lprc(key);
+  } else {
+    appendLog(key);
   }
 }
+
+
+
+function gettextinput(key) {
+  var match = function(key) {
+    return isalpha(key) || isnum(key);
+  }
+  return getinput(key, match);
+}
+
+
+
+function getonlynumberinput(key) {
+  var match = function(key) {
+    return isalpha(key) || isnum(key);
+  }
+  return getinput(key, match);
+}
+
+
+
+function getnumberinput(key) {
+  var match = function(key) {
+    return isnum(key);
+  }
+  var extra = function(key) {
+    if (key == '*') {
+      KEYBOARD_INPUT = key;
+      echo(key);
+      return getinput_done();
+    }
+    else {
+        return 0;
+    }
+  }
+  return getinput(key, match, extra);
+}
+
+
+
+function getinput(key, match, extra) {
+  if (key == ENTER) {
+    return getinput_done();
+  }
+  if (key == DEL) {
+    if (KEYBOARD_INPUT.length > 0) {
+      KEYBOARD_INPUT = KEYBOARD_INPUT.slice(0, -1);
+      echo(`\b`);
+    }
+    return 0;
+  }
+  if (match(key)) {
+    KEYBOARD_INPUT += key;
+    echo(key);
+    return 0;
+  }
+  if (extra) {
+    return extra(key);
+  }
+}
+
+
 
 function getinput_done() {
   var done = 0;
@@ -131,10 +161,12 @@ function getinput_done() {
 }
 
 
+
 String.prototype.nextChar = function(i) {
   var n = (i == null) ? 1 : i;
   return String.fromCharCode(this.charCodeAt(0) + n);
 }
+
 
 
 String.prototype.prevChar = function(i) {
@@ -175,19 +207,26 @@ function timeleft() {
 
 
 function isalpha(str) {
-    str = String(str);
-    return str.match(/^[A-Za-z]+$/);
+  str = String(str);
+  return str.match(/^[A-Za-z]+$/);
+}
+
+
+
+function isnum(str) {
+  str = String(str);
+  return str.match(/^[0-9]+$/);
 }
 
 
 
 Storage.prototype.setObject = function(key, value) {
-    this.setItem(key, JSON.stringify(value));
+  this.setItem(key, JSON.stringify(value));
 }
 
 
 
 Storage.prototype.getObject = function(key) {
-    var value = this.getItem(key);
-    return value && JSON.parse(value);
+  var value = this.getItem(key);
+  return value && JSON.parse(value);
 }

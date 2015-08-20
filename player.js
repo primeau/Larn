@@ -29,13 +29,13 @@ var Player = function Player() {
   this.SPELLMAX = 1;
   this.SPELLS = 1;
   this.ENERGY = 0;
-  this.ECOUNTER = 100;
+  this.ECOUNTER = 96;
   this.MOREDEFENSES = 0;
   this.WEAR = null;
   this.PROTECTIONTIME = 0;
   this.WIELD = null;
   // AMULET =           // UNUSED
-  this.REGENCOUNTER = 20;
+  this.REGENCOUNTER = 16;
   this.MOREDAM = 0;
   this.DEXCOUNT = 0;
   this.STRCOUNT = 0;
@@ -63,7 +63,7 @@ var Player = function Player() {
   this.FIRERESISTANCE = 0;
   this.BESSMANN = 0;
   this.NOTHEFT = 0;
-  this.HARDGAME = 0;
+  // this.HARDGAME = 0; moved to state.js
   // CPUTIME =
   // BYTESIN =
   // BYTESOUT =
@@ -197,11 +197,11 @@ var Player = function Player() {
     var i = player.LEVEL;
     player.EXPERIENCE += x;
     while (player.EXPERIENCE >= skill[player.LEVEL] && (player.LEVEL < MAXPLEVEL)) {
-      var tmp = (player.CONSTITUTION - player.HARDGAME) >> 1;
+      var tmp = (player.CONSTITUTION - HARDGAME) >> 1;
       player.LEVEL++;
       player.raisemhp((rnd(3) + rnd((tmp > 0) ? tmp : 1)));
       player.raisemspells(rund(3));
-      if (player.LEVEL < 7 - player.HARDGAME) {
+      if (player.LEVEL < 7 - HARDGAME) {
         player.raisemhp((player.CONSTITUTION >> 2));
       }
     }
@@ -209,7 +209,6 @@ var Player = function Player() {
       beep();
       updateLog("Welcome to level " + player.LEVEL); /* if we changed levels */
     }
-    //player.level.paint();
   };
 
 
@@ -225,9 +224,9 @@ var Player = function Player() {
       if (--player.LEVEL <= 1) {
         player.LEVEL = 1; /*  down one level      */
       }
-      var tmp = (player.CONSTITUTION - player.HARDGAME) >> 1; /* lose hpoints */
+      var tmp = (player.CONSTITUTION - HARDGAME) >> 1; /* lose hpoints */
       player.losemhp(rnd((tmp > 0) ? tmp : 1)); /* lose hpoints */
-      if (player.LEVEL < 7 - player.HARDGAME) {
+      if (player.LEVEL < 7 - HARDGAME) {
         player.losemhp((player.CONSTITUTION >> 2));
       }
       player.losemspells(rund(3)); /*  lose spells     */

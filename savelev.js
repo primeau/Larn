@@ -162,7 +162,7 @@ function loadPlayer(saved) {
   player.FIRERESISTANCE = saved.FIRERESISTANCE;
   player.BESSMANN = saved.BESSMANN;
   player.NOTHEFT = saved.NOTHEFT;
-  player.HARDGAME = saved.HARDGAME;
+  HARDGAME = saved.HARDGAME;
   player.MONSTKILLED = saved.MONSTKILLED;
   player.SPIRITPRO = saved.SPIRITPRO;
   player.UNDEADPRO = saved.UNDEADPRO;
@@ -182,12 +182,13 @@ function loadPlayer(saved) {
 
 
 function loadState(state) {
+  // TODO double check everything is saved
+  logname = state.logname;
   cheat = state.cheat;
   level = state.level;
   wizard = state.wizard;
-  IN_STORE = state.IN_STORE;
-  logname = state.logname;
   gtime = state.gtime;
+  HARDGAME = state.HARDGAME;
   lastmonst = state.lastmonst;
   lastnum = state.lastnum;
   hitflag = state.hitflag;
@@ -201,19 +202,20 @@ function loadState(state) {
   oldx = state.oldx;
   oldy = state.oldy;
   course = state.course;
-  wizard = state.wizard;
   outstanding_taxes = state.outstanding_taxes;
-  newsphereflag = state.newsphereflag;
   dropflag = state.dropflag;
   rmst = state.rmst;
   nomove = state.nomove;
   viewflag = state.viewflag;
-  napping = state.napping;
   lasttime = state.lasttime;
-  GAME_OVER = state.GAME_OVER;
   w1x = state.w1x;
   w1y = state.w1y;
   spheres = state.spheres;
+
+  newsphereflag = state.newsphereflag;
+  GAME_OVER = state.GAME_OVER;
+  IN_STORE = state.IN_STORE;
+  napping = state.napping;
   knownPotions = state.knownPotions;
   knownScrolls = state.knownScrolls;
   knownSpells = state.knownSpells;

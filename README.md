@@ -1,20 +1,18 @@
 todo:
-* make sure difficulty > 0 is fully implemented
-* intro screen, player name, difficulty
 * warn player that back button, window close will kill the game
 * scoreboard
 * disable debugging shortcuts
 * firefox / ie / safari support
-* secure save game (save hash key in a cookie)
-* clear saved game after loading
+* clear saved game after loading, death
 - tighten up bottomline() printing
 - update build number in version commmand
+- nap & show monster movement during when falling asleep
+- auto-pickup
+- secure save game (save hash key in a cookie)
 
 extras:
 - hack-style characters
 - change drink at fountain to F?
-- nap & show monster movement during when falling asleep
-- auto-pickup
 - highlight changed attributes
 - color (mcolor/ocolor)
 - put platinum dragon beside eye of larn
@@ -25,6 +23,7 @@ extras:
 - ipad support
 
 bugs:
+* game hangs going down stairs???? debug mode only???
 * rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD
     - need to do one more action before leaving bank?
 * blindness is generally broken
@@ -48,6 +47,7 @@ bugs:
 ? missile char stays visible sometimes
 ? monsters can get trapped on edge of screen in wizard mode
 ? cell shows in previous location when descending H -> V1
+- * after typing a number still counts as "all" (same as original version)
 
 rename/refactor:
 - player.level.items[][] -> item
@@ -63,4 +63,3 @@ rename/refactor:
 - napping
 - IN_STORE
 - updateLog
-- yrepcount

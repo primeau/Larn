@@ -45,8 +45,18 @@ function setCharCallback(func, blocking) {
 
 
 
-function setNumberCallback(func) {
-  blocking_callback = getnumberinput;
+function setTextCallback(func) {
+  blocking_callback = gettextinput;
+  keyboard_input_callback = func;
+}
+
+
+
+function setNumberCallback(func, allowAsterisk) {
+  if (allowAsterisk)
+    blocking_callback = getnumberinput;
+  else
+    blocking_callback = getonlynumberinput;
   keyboard_input_callback = func;
 }
 

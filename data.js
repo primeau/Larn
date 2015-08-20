@@ -1,5 +1,9 @@
 "use strict";
 
+const MAXLEVEL = 11; /*  max # levels in the dungeon         */
+const MAXVLEVEL = 3; /*  max # of levels in the temple of the luran  */
+var LOG_SIZE = 5;
+
 /*
     table of experience needed to be a certain level of player
     skill[c[LEVEL]] is the experience required to attain the next level

@@ -344,9 +344,6 @@ function obanksub() {
   lprcat("] ");
 
   setCharCallback(bank_parse, true);
-
-  yrepcount = 0;
-
 }
 
 
@@ -373,16 +370,14 @@ function bank_parse(key) {
     lprcat("deposit\n");
     cltoeoln();
     lprcat("How much? [* for all] ");
-    blocking_callback = getnumberinput;
-    keyboard_input_callback = bank_deposit;
+    setNumberCallback(bank_deposit, true);
   }
 
   if (key == 'w') {
     lprcat("withdraw\n");
     cltoeoln();
     lprcat("How much? [* for all] ");
-    blocking_callback = getnumberinput;
-    keyboard_input_callback = bank_withdraw;
+    setNumberCallback(bank_withdraw, true);
   }
 
   if (key == 's') {
@@ -420,6 +415,9 @@ function bank_deposit(amt) {
   if (amt == '*') {
     amt = player.GOLD;
   }
+
+  amt = Number(amt);
+
   if (amt < 0) {
     bankmessage("Sorry, but we can't take negative gold!", 700);
   } else if (amt > player.GOLD) {
@@ -438,6 +436,9 @@ function bank_withdraw(amt) {
   if (amt == '*') {
     amt = player.BANKACCOUNT;
   }
+
+  amt = Number(amt);
+
   if (amt < 0) {
     bankmessage("Sorry, but we don't have any negative gold!", 700);
   } else if (amt > player.BANKACCOUNT) {
@@ -969,7 +970,7 @@ function parse_lrs(key) {
     return exitbuilding();
   }
   if (key == 'p') {
-    setNumberCallback(parse_lrs_pay);
+    setNumberCallback(parse_lrs_pay, true);
     lprcat("pay taxes\nHow much? ");
   }
 }
@@ -977,6 +978,8 @@ function parse_lrs(key) {
 
 
 function parse_lrs_pay(amount) {
+  amount = Number(amount);
+
   if (amount > player.GOLD) {
     lprcat("\n  You don't have that much\n");
   } else {

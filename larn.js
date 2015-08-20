@@ -10,43 +10,13 @@ var DEBUG_LPRCAT = 0;
 var DEBUG_LPRC = 0;
 var DEBUG_PROXIMITY = false;
 
-const MAXLEVEL = 11; /*  max # levels in the dungeon         */
-const MAXVLEVEL = 3; /*  max # of levels in the temple of the luran  */
-var LOG_SIZE = 5;
-
-var player;
 
 var Larn = {
   run: function() {
-    updateLog("Welcome to Larn -- Press <b>?</b> for help"); // need to initialize the log
-
     document.onkeypress = this.keyPress;
     document.onkeydown = this.keyDown;
-
-    player = new Player();
-
-    player.x = rnd(MAXX - 2);
-    player.y = rnd(MAXY - 2);
-
-    player.inventory[0] = createObject(OLEATHER);
-    player.inventory[1] = createObject(ODAGGER);
-
-    player.WEAR = player.inventory[0];
-    player.WIELD = player.inventory[1];
-
-    // always know cure dianthroritis
-    learnPotion(createObject(OPOTION, 21));
-
-    learnSpell("pro");
-    learnSpell("mle");
-
-    newcavelevel(0);
-
-    regen();
-
-    showcell(player.x, player.y);
-
-    paint();
+    //document.onkeyup = this.keyUp;
+    welcome();
   },
 
   // http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
@@ -60,36 +30,12 @@ var Larn = {
     parseEvent(e, true, false);
   }, // KEYDOWN
 
-  // keyUp: function(e) {
-  //   e = e || window.event;
-  //   parseEvent(e, false, true);
-  // }, // KEYUP
+  keyUp: function(e) {
+    e = e || window.event;
+    parseEvent(e, false, true);
+  }, // KEYUP
 
 }; // LARN OBJECT
-
-
-
-function updateLog(text) {
-  if (DEBUG_OUTPUT) {
-    //console.log(`LARN: ${text}`);
-  }
-  LOG.push(text);
-  if (LOG.length > LOG_SIZE) {
-    LOG.shift();
-  }
-}
-
-
-function appendLog(text) {
-  var newText;
-  if (text == DEL) {
-    newText = LOG.pop();
-    newText = newText.substring(0, newText.length - 1);
-  } else {
-    newText = LOG.pop() + text;
-  }
-  updateLog(newText);
-}
 
 
 

@@ -1,5 +1,143 @@
 "use strict";
 
+/* create new game */
+function welcome() {
+  IN_STORE = true;
+  clear();
+  cursor(1, 1);
+  lprcat(helppages[0]);
+  cursors();
+  lprcat("Welcome to Larn. Please enter your name: ");
+  setTextCallback(setname);
+  blt();
+}
+
+
+
+function setname(name) {
+  if (name)
+    logname = name;
+
+  cursors();
+  cltoeoln();
+  lprcat("What difficulty would you like to play? [default 0] ");
+  setNumberCallback(setdifficulty, false);
+  return 0;
+}
+
+
+
+function setdifficulty(hard) {
+  IN_STORE = false;
+
+  sethard(Number(hard)); /* set up the desired difficulty */
+
+  makeplayer(); /*  make the character that will play  */
+
+  newcavelevel(0); /*  make the dungeon */
+
+  /* Display their mail if they've just won the previous game */
+  //checkmail(); // TODO
+
+  updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
+  drawscreen(); /*  show the initial dungeon */
+
+  /*
+   * init previous player position to be current position, so we don't
+   * reveal any stuff on the screen prematurely.
+   */
+  oldx = player.x;
+  oldy = player.y;
+
+  return 1;
+}
+
+
+
+/*
+makeplayer()
+
+subroutine to create the player and the players attributes
+this is called at the beginning of a game and at no other time
+*/
+function makeplayer() {
+  player = new Player();
+
+  /* he knows protection, magic missile */
+  learnSpell("pro");
+  learnSpell("mle");
+
+  /* always know cure dianthroritis */
+  learnPotion(createObject(OPOTION, 21));
+
+  if (HARDGAME <= 0) {
+    player.inventory[0] = createObject(OLEATHER);
+    player.inventory[1] = createObject(ODAGGER);
+    player.WEAR = player.inventory[0];
+    player.WIELD = player.inventory[1];
+  }
+
+  player.x = rnd(MAXX - 2);
+  player.y = rnd(MAXY - 2);
+
+  recalc();
+
+  // newcavelevel(0);
+  //
+  // regen();
+  //
+  // showcell(player.x, player.y);
+  //
+  // paint();
+
+}
+
+
+
+/*
+    function to set the desired hardness
+    enter with hard= -1 for default hardness, else any desired hardness
+ */
+function sethard(hard) {
+  HARDGAME = Math.max(0, hard);
+
+  // hashewon(); TODO
+
+  var i;
+  var k = HARDGAME;
+  if (HARDGAME)
+    for (var j = 0; j < monsterlist.length; j++) {
+      var monster = monsterlist[j];
+      var before;
+
+      /* JRP we don't need to worry about blowing int boundaries
+         so we can keep making things harder as difficulty goes up */
+      i = ((6 + k) * monster.hitpoints + 1) / 6;
+      //monster.hitpoints = Math.min(32767, Math.round(i));
+      monster.hitpoints = Math.round(i);
+
+      i = ((6 + k) * monster.damage + 1) / 5;
+      //monster.damage = Math.min(127, Math.round(i));
+      monster.damage = Math.round(i);
+
+      i = (10 * monster.gold) / (10 + k);
+      //monster.gold = Math.min(32767, Math.round(i));
+      monster.gold = Math.round(i);
+
+      i = monster.armorclass - k;
+      //monster.armorclass = Math.max(-127, Math.round(i));
+      monster.armorclass = Math.round(i);
+
+      i = (7 * monster.experience) / (7 + k) + 1;
+      //monster.experience = Math.max(1, Math.round(i));
+      monster.experience = Math.round(i);
+
+      //console.log(`${monster.char}: hp:${monster.hitpoints}, d:${monster.damage}, g:${monster.gold}, ac:${monster.armorclass}, x:${monster.experience}`);
+    }
+}
+
+
+
 /*
   JRP
   since we're running in a event-driven system we need to
@@ -115,9 +253,6 @@ function parse(e) {
     key = DEL;
   }
 
-  var newx = player.x;
-  var newy = player.y;
-
   if (blocking_callback != null) {
     //debug(blocking_callback.name + ": ");
     var before = blocking_callback.name;
@@ -141,6 +276,9 @@ function parse(e) {
     non_blocking_callback = null;
   }
 
+  var newx = player.x; // TODO needed?
+  var newy = player.y;
+
   var item = getItem(player.x, player.y);
 
 
@@ -163,7 +301,6 @@ function parse(e) {
   // DO NOTHING
   //
   if (key == ' ' || code == ESC) {
-    yrepcount = 0;
     nomove = 1;
     return;
   }
@@ -172,8 +309,7 @@ function parse(e) {
   // STAY HERE
   //
   if (key == '.') {
-    if (yrepcount)
-      viewflag = 1;
+    viewflag = 1;
     return;
   }
 
@@ -181,7 +317,6 @@ function parse(e) {
   // CAST A SPELL
   //
   if (key == 'c') {
-    yrepcount = 0;
     pre_cast();
     return;
   }
@@ -190,7 +325,6 @@ function parse(e) {
   // DROP
   //
   if (key == 'd') {
-    yrepcount = 0;
     if (player.TIMESTOP == 0) {
       updateLog("What do you want to drop [<b>space</b> to view] ? ");
       setCharCallback(drop_object, true);
@@ -202,7 +336,6 @@ function parse(e) {
   // EAT COOKIE
   //
   if (key == 'e') {
-    yrepcount = 0;
     if (player.TIMESTOP == 0)
       if (item.matches(OCOOKIE)) {
         outfortune();
@@ -218,7 +351,6 @@ function parse(e) {
   // TIDY UP AT FOUNTAIN
   //
   if (key == 'f') {
-    yrepcount = 0;
     wash_fountain(null);
     dropflag = 1;
     return;
@@ -228,7 +360,6 @@ function parse(e) {
   // PACK WEIGHT
   //
   if (key == 'g') {
-    yrepcount = 0;
     cursors();
     updateLog(`The stuff you are carrying presently weighs ${Math.round(packweight())} pounds`);
     return;
@@ -238,7 +369,6 @@ function parse(e) {
   // INVENTORY
   //
   if (key == 'i') {
-    yrepcount = 0;
     nomove = 1;
     showinventory(false, parse_inventory, showall, true, true);
     return;
@@ -248,7 +378,6 @@ function parse(e) {
   // OPEN (in a direction)
   //
   if (key == 'o' || key == 'O') {
-    yrepcount = 0;
     /* check for confusion. */
     if (player.CONFUSE > 0) {
       updateLog("You're too confused!");
@@ -273,7 +402,6 @@ function parse(e) {
   // PRAY
   //
   if (key == 'p') {
-    yrepcount = 0;
     pray_at_altar();
     dropflag = 1;
     prayed = 1;
@@ -284,7 +412,6 @@ function parse(e) {
   // quaff
   //
   if (key == 'q') {
-    yrepcount = 0;
     if (player.TIMESTOP == 0)
       if (item.matches(OPOTION)) {
         forget();
@@ -300,7 +427,6 @@ function parse(e) {
   // read
   //
   if (key == 'r') {
-    yrepcount = 0;
     if (player.BLINDCOUNT > 0) {
       cursors();
       updateLog("You can't read anything when you're blind!");
@@ -325,7 +451,6 @@ function parse(e) {
   // sit on throne
   //
   if (key == 's') {
-    yrepcount = 0;
     sit_on_throne();
     dropflag = 1;
     return;
@@ -335,7 +460,6 @@ function parse(e) {
   // PICK UP
   //
   if (key == 't' || key == ',') {
-    yrepcount = 0;
     /* pickup, don't identify or prompt for action */
     // lookforobject( false, true, false ); // TODO???
     if (take(item)) {
@@ -350,7 +474,7 @@ function parse(e) {
   // version
   //
   if (key == 'v') {
-    updateLog(`JS Larn, Version 12.4.4 build 137 -- Difficulty ${player.HARDGAME}`);
+    updateLog(`JS Larn, Version 12.4.4 build 137 -- Difficulty ${HARDGAME}`);
     if (wizard) updateLog(" Wizard");
     if (cheat) updateLog(" Cheater");
     return;
@@ -360,7 +484,6 @@ function parse(e) {
   // WIELD
   //
   if (key == 'w') {
-    yrepcount = 0;
     if (item.canWield()) {
       wield(item);
     } else {
@@ -376,7 +499,6 @@ function parse(e) {
   // DESECRATE
   //
   if (key == 'A') {
-    yrepcount = 0;
     desecrate_altar();
     dropflag = 1;
     return;
@@ -386,7 +508,6 @@ function parse(e) {
   // CLOSE DOOR
   //
   if (key == 'C') {
-    yrepcount = 0;
     /* check for confusion. */
     if (player.CONFUSE > 0) {
       updateLog("You're too confused!");
@@ -407,7 +528,6 @@ function parse(e) {
   // DRINK FROM FOUNTAIN
   //
   if (key == 'D') {
-    yrepcount = 0;
     drink_fountain(null);
     dropflag = 1;
     return;
@@ -417,7 +537,6 @@ function parse(e) {
   // ENTER A BUILDING
   //
   if (key == 'E') {
-    yrepcount = 0;
     enter();
     return;
   }
@@ -426,7 +545,6 @@ function parse(e) {
   // REMOVE GEMS
   //
   if (key == 'G') {
-    yrepcount = 0;
     remove_gems();
     dropflag = 1;
     return;
@@ -436,7 +554,6 @@ function parse(e) {
   // list spells and scrolls
   //
   if (key == 'I') {
-    yrepcount = 0;
     seemagic(false);
     setCharCallback(parse_see_all, true);
     return;
@@ -447,7 +564,6 @@ function parse(e) {
   //
   if (key == 'P') {
     cursors();
-    yrepcount = 0;
     nomove = 1;
     if (outstanding_taxes > 0)
       updateLog(`You presently owe ${outstanding_taxes} gold pieces in taxes`);
@@ -481,7 +597,6 @@ function parse(e) {
   // take off armor
   //
   if (key == 'T') {
-    yrepcount = 0;
     if (player.SHIELD) {
       player.SHIELD = null;
       updateLog("Your shield is off");
@@ -500,7 +615,6 @@ function parse(e) {
   // WEAR
   //
   if (key == 'W') {
-    yrepcount = 0;
     if (item.isArmor()) {
       wear(item);
     } else {
@@ -514,7 +628,6 @@ function parse(e) {
   // TELEPORT
   //
   if (key == 'Z') {
-    yrepcount = 0;
     if (player.LEVEL > 9) {
       oteleport(1);
       return;
@@ -600,7 +713,7 @@ function parse(e) {
   // identify traps
   //
   if (key == '^') {
-    var flag = yrepcount = 0;
+    var flag = 0;
     for (var j = vy(player.y - 1); j < vy(player.y + 2); j++) {
       for (var i = vx(player.x - 1); i < vx(player.x + 2); i++) {
         var trap = getItem(i, j);
@@ -624,7 +737,6 @@ function parse(e) {
   // look at object
   //
   if (key == ':') {
-    yrepcount = 0;
     /* identify, don't pick up or prompt for action */
     lookforobject(true, false, false);
     nomove = 1; /* assumes look takes no time */

@@ -20,7 +20,7 @@ function pray_at_altar() {
     updateLog("I see no altar to pray at here!");
   } else {
     updateLog("  How much do you donate? ");
-    setNumberCallback(act_donation_pray);
+    setNumberCallback(act_donation_pray, true);
     nomove = 1;
   }
 }
@@ -41,6 +41,8 @@ function act_donation_pray(k) {
   if (k == '*') {
     debug(k = player.GOLD);
   }
+
+  k = Number(k);
 
   /* make giving zero gold equivalent to 'just pray'ing.  Allows player to
      'just pray' in command mode, without having to add yet another command.

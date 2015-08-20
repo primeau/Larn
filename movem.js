@@ -60,7 +60,7 @@ function movemonst() {
   */
   let smart_count = 0;
   let movecnt = 0;
-  let min_int = 10 - player.HARDGAME; /* minimum monster intelligence to move smart */
+  let min_int = 10 - HARDGAME; /* minimum monster intelligence to move smart */
   if (player.AGGRAVATE || player.STEALTH == 0) {
     for (let j = tmp1; j < tmp2; j++) {
       for (let i = tmp3; i < tmp4; i++) {
@@ -276,7 +276,7 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
           if (DEBUG_PROXIMITY) {
             cursor(tmpx + 1, tmpy + 1);
             if (screen[tmpx][tmpy] < 10) {
-              var intel = 10 - player.HARDGAME;
+              var intel = 10 - HARDGAME;
               if (monsterAt(tmpx, tmpy)) {
                 if (monsterAt(tmpx, tmpy).intelligence > intel) {
                   lprc(`<b>${monsterAt(tmpx, tmpy).getChar()}</b>`);

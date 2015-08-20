@@ -37,7 +37,6 @@ function moveplayer(dir) {
 
   if (k < 0 || k >= MAXX || m < 0 || m >= MAXY) {
     nomove = 1;
-    yrepcount = 0;
     return (0);
   }
   var item = player.level.items[k][m];
@@ -48,7 +47,6 @@ function moveplayer(dir) {
    */
   if ((item.matches(OCLOSEDDOOR) || item.matches(OWALL)) && player.WTW == 0) {
     nomove = 1;
-    yrepcount = 0;
     return (0);
   }
 
@@ -62,7 +60,6 @@ function moveplayer(dir) {
    */
   if (monster) {
     hitmonster(k, m);
-    yrepcount = 0;
     return (0);
   }
 
@@ -82,7 +79,6 @@ function moveplayer(dir) {
   if (!item.matches(OEMPTY) &&
     !item.matches(OTRAPARROWIV) && !item.matches(OIVTELETRAP) &&
     !item.matches(OIVDARTRAP) && !item.matches(OIVTRAPDOOR)) {
-    yrepcount = 0;
     return (0);
   } else {
     return (1);
@@ -358,4 +354,30 @@ function parse_see_spells(key) {
     setCharCallback(cast, true);
     return exitbuilding();
   }
+}
+
+
+
+
+function updateLog(text) {
+  if (DEBUG_OUTPUT) {
+    //console.log(`LARN: ${text}`);
+  }
+  LOG.push(text);
+  if (LOG.length > LOG_SIZE) {
+    LOG.shift();
+  }
+}
+
+
+
+function appendLog(text) {
+  var newText;
+  if (text == DEL) {
+    newText = LOG.pop();
+    newText = newText.substring(0, newText.length - 1);
+  } else {
+    newText = LOG.pop() + text;
+  }
+  updateLog(newText);
 }
