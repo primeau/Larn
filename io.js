@@ -176,24 +176,6 @@ function cl_dn(x, y) {
 
 
 
-function lstandout(str) {
-  standout(str);
-}
-
-/*
- * standout(str)    Print the argument string in inverse video (standout mode).
- */
-function standout(str) {
-  //    setbold(); // TODO
-  lprc('<b>')
-    //  lprcat(`<b>${str}</b>`)
-  lprcat(str)
-  lprc('</b>')
-    //    resetbold(); // TODO
-}
-
-
-
 function lflush() {
   LOG = [""];
 }

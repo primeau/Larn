@@ -24,20 +24,23 @@ extras:
 
 bugs:
 * game hangs going down stairs???? debug mode only???
-* rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD
-    - need to do one more action before leaving bank?
 * blindness is generally broken
     - go blind, move to a known place, kill a monster = black spot
     - cells not revealed when blind
     - monster identification when blind is unreliable
 * interest accumulates at bank immediately after leaving/returning
 * exiting bank before a deposit/withdraw/etc message is done locks the keyboard
-* dnd store message, bank message not being printed
+  - fix with cleartimeout? -> wrap settimeout to use global var for cleartimeout to use
+  - or block store exit until message is done?
+* dnd store message not being printed
+  -   You pick up:
+    d) a dagger
 * fall down trapdoor, land next to monster, cast spell (which fails) -- monster doesn't attack?
 * thrift shop messages are on the wrong line
 - strextra can get out of balance? caused by heroism/giant strength
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
+- hitting ESC during deposit/withdrawal prints 27, backspace deletes one too many chars
 ? pressing ! at home after winning in cheat mode does weird things
 ? altars are broken?
 ? monsters 'disappear' infrequently when moving over specific squares
@@ -45,7 +48,8 @@ bugs:
 ? missile char stays visible sometimes
 ? monsters can get trapped on edge of screen in wizard mode
 ? cell shows in previous location when descending H -> V1
-- typing * after typing a number still counts as "all" (same as original version)
+? rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD
+    - need to do one more action before leaving bank?
 
 rename/refactor:
 - player.level.items[][] -> item

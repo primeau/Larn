@@ -154,12 +154,8 @@ function updategold() {
   cursor(50, 19);
   lprcat(`You have ${Number(player.GOLD).toLocaleString()} gold pieces`);
   cltoeoln();
-  cl_dn(1, 20); /* erase to eod */
-  lprcat("\nEnter your transaction [");
-  standout("space");
-  lprcat(" for more, ");
-  standout("escape");
-  lprcat(" to leave] ");
+  //cl_dn(1, 20); /* erase to eod */
+  lprcat("\n\nEnter your transaction [<b>space</b> for more, <b>escape</b> to leave] ");
 }
 
 
@@ -195,6 +191,8 @@ function dnd_parse(key) {
       dnd_item[i].qty--;
       var boughtItem = createObject(dnd_item[i].item);
       take(boughtItem);
+      var invindex = getCharFromIndex(player.inventory.indexOf(boughtItem));
+      storemessage(`  You pick up: ${invindex}) ${boughtItem}`, 1000);
       if (boughtItem.matches(OSCROLL)) learnScroll(boughtItem);
       if (boughtItem.matches(OPOTION)) learnPotion(boughtItem);
       if (dnd_item[i].qty == 0) dnditem(i);
@@ -227,11 +225,11 @@ function dnditem(i) {
   }
 
   var item = dnd_item[i].item;
-  lprintf(`${getCharFromIndex(i%26)}) `);
+  lprcat(`${getCharFromIndex(i%26)}) `);
 
   if (item.matches(OPOTION)) lprintf(`${item.toString(true).substring(8)}`);
   else if (item.matches(OSCROLL)) lprintf(`${item.toString(true).substring(8)}`);
-  else lprintf(`${dnd_item[i].item.toString(true)}`);
+  else lprcat(`${dnd_item[i].item.toString(true)}`);
 
   cursor(j + 31, k);
 
@@ -319,7 +317,7 @@ function obanksub() {
       }
       gemorder[i] = k;
       cursor((k % 2) * 40 + 1, (k >> 1) + 4);
-      lprintf(`${getCharFromIndex(i)}) ${item}`);
+      lprcat(`${getCharFromIndex(i)}) ${item}`);
       cursor((k % 2) * 40 + 32, (k >> 1) + 4);
       lprintf(`${gemvalue[i]}`, 6);
       k++;
@@ -333,15 +331,7 @@ function obanksub() {
   bank_print_gold();
 
   cl_dn(1, 21);
-  lprcat("\nYour wish? [(");
-  standout("d");
-  lprcat(") deposit, (");
-  standout("w");
-  lprcat(") withdraw, (");
-  standout("s");
-  lprcat(") sell a stone, or ");
-  standout("escape");
-  lprcat("] ");
+  lprcat("\nYour wish? [(<b>d</b>) deposit, (<b>w</b>) withdraw, (<b>s</b>) sell a stone, or <b>escape</b>] ");
 
   setCharCallback(bank_parse, true);
 }
@@ -351,10 +341,10 @@ function obanksub() {
 function bank_print_gold() {
   cursor(31, 17);
   cltoeoln();
-  lprintf(`You have ${Number(player.BANKACCOUNT).toLocaleString()} gold pieces in the bank`);
+  lprcat(`You have ${Number(player.BANKACCOUNT).toLocaleString()} gold pieces in the bank`);
   cursor(31, 18);
   cltoeoln();
-  lprintf(`You have ${Number(player.GOLD).toLocaleString()} gold pieces`);
+  lprcat(`You have ${Number(player.GOLD).toLocaleString()} gold pieces`);
   if (player.BANKACCOUNT + player.GOLD >= 500000)
     lprcat("\n\nNote: Larndom law states that only deposits under 500,000gp can earn interest");
 }
@@ -369,21 +359,21 @@ function bank_parse(key) {
   if (key == 'd') {
     lprcat("deposit\n");
     cltoeoln();
-    lprcat("How much? [* for all] ");
+    lprcat("How much? [<b>*</b> for all] ");
     setNumberCallback(bank_deposit, true);
   }
 
   if (key == 'w') {
     lprcat("withdraw\n");
     cltoeoln();
-    lprcat("How much? [* for all] ");
+    lprcat("How much? [<b>*</b> for all] ");
     setNumberCallback(bank_withdraw, true);
   }
 
   if (key == 's') {
     lprcat("sell\n");
     cltoeoln();
-    lprcat("Which stone would you like to sell? [* for all] ");
+    lprcat("Which stone would you like to sell? [<b>*</b> for all] ");
     setCharCallback(bank_sell, true);
   }
 }
@@ -391,6 +381,8 @@ function bank_parse(key) {
 
 
 function bankmessage(str, duration) { //TODO convert to storemessage?
+  if (!IN_STORE) return;
+
   if (duration == "")
     cl_dn(1, 23);
   else
@@ -400,6 +392,7 @@ function bankmessage(str, duration) { //TODO convert to storemessage?
   lprcat(str);
   cursor(69, 22);
   cltoeoln();
+
   setCharCallback(bank_parse, true);
 
   blt();
@@ -477,7 +470,6 @@ function bank_sell(key) {
     var i = getIndexFromChar(key);
     if (i >= 0 && i <= 26) {
       if (gemvalue[i] == 0) {
-        //lprintf("\nItem %c is not a gemstone!", i + 'a');
         bankmessage(`Item ${getCharFromIndex(i)} is not a gemstone!`, 700);
       } else {
         player.GOLD += gemvalue[i];
@@ -565,10 +557,7 @@ function otradepost() {
 
   cl_dn(1, 21);
 
-  lprcat("\nWhat item do you want to sell to us? [Press ");
-  lstandout("escape");
-  lprcat(" to leave] ");
-
+  lprcat("\nWhat item do you want to sell to us? [Press <b>escape</b> to leave] ");
 }
 
 
@@ -709,9 +698,7 @@ function oschool() {
 
   cl_dn(1, 19);
   cursor(1, 20);
-  lprcat("What is your choice? [Press ");
-  lstandout("escape");
-  lprcat(" to leave] ");
+  lprcat("What is your choice? [Press <b>escape</b> to leave] ");
 
   blt();
 }
@@ -755,8 +742,13 @@ function parse_class(key) {
 
   var naptime = 700;
 
+  if (!isalpha(key)) return 0;
+
   lprc(`${key}`);
+
   var i = getIndexFromChar(key);
+
+  cursor(1, 21);
 
   if (i < 0 || i >= 8 || course[i] != null) {
     lprcat("\nSorry, but that class is filled");
@@ -833,7 +825,7 @@ function parse_class(key) {
       if (player.BLINDCOUNT) player.BLINDCOUNT = 1; /* cure blindness too! */
       if (player.CONFUSE) player.CONFUSE = 1; /* end confusion */
       adjtime(time_used); /* adjust parameters for time change */
-      naptime += 1000;
+      naptime += 200;
     }
   }
 
@@ -901,14 +893,12 @@ function ohome() {
   lprcat(`\tWelcome home ${logname}.`);
   lprcat("\n\n\tThe latest word from the doctor is not good.");
   lprcat("\n\n\tThe diagnosis is confirmed as dianthroritis. The doctor guesses that");
-  lprintf(`\n\tyour daughter has only ${timeleft()} mobuls left in this world. It's up to you,`);
-  lprintf(`\n\t${logname}, to find the only hope for your daughter, the`);
+  lprcat(`\n\tyour daughter has only ${timeleft()} mobuls left in this world. It's up to you,`);
+  lprcat(`\n\t${logname}, to find the only hope for your daughter, the`);
   lprcat("\n\tvery rare potion of cure dianthroritis. It is rumored that only deep");
   lprcat("\n\tin the depths of the caves can this potion be found.");
 
-  lprcat("\n\n\tPress ");
-  lstandout("escape");
-  lprcat(" to leave: ");
+  lprcat("\n\n\tPress <b>escape</b> to leave: ");
 
   paint();
 
@@ -1016,11 +1006,7 @@ function olrs() {
   }
 
   cursor(1, 20);
-  lprcat("How can we help you? [(");
-  lstandout("p");
-  lprcat(") pay taxes, or ");
-  lstandout("escape");
-  lprcat("] ");
+  lprcat("How can we help you? [(<b>p</b>) pay taxes, or <b>escape</b>] ");
 
   blt();
 }
@@ -1047,13 +1033,12 @@ function exitbuilding() {
 }
 
 function storemessage(str, duration) {
-  //lflush();
-  //dndstore();
+  if (!IN_STORE) return;
+
   cursors();
   cltoeoln();
   lprcat(str);
   cursor(59, 21);
-  //nap(2000);
 
   blt();
 

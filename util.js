@@ -111,7 +111,7 @@ function getnumberinput(key) {
     return isnum(key);
   }
   var extra = function(key) {
-    if (key == '*') {
+    if (key == '*' && KEYBOARD_INPUT.length == 0) { // only if it's the first char
       KEYBOARD_INPUT = key;
       echo(key);
       return getinput_done();

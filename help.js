@@ -53,16 +53,14 @@ helppages[1] =
 helppages[2] =
 "                                <b>Special Notes</b> \n\
 \n\
-When dropping gold, if you type '*' as your amount, all your gold gets dropped.\n\
-In general, typing in '*' means all of what your interested in.  This is true\n\
+When dropping gold, if you type '<b>*</b>' as your amount, all your gold gets dropped.\n\
+In general, typing in '<b>*</b>' means all of what your interested in.  This is true\n\
 when visiting the bank, or when contributing at altars.\n\
 \n\
 When in the store, trading post, school, or home, an <b>escape</b> will get you out.\n\
 \n\
-When casting a spell, if you need a list of spells you can cast, type '<b>I</b>' as\n\
-the first letter of your spell.  The available list of spells will be shown,\n\
-after which you may enter the spell code.  This only works on the 1st letter\n\
-of the spell you are casting.\n\
+When casting a spell, if you need a list of spells you can cast, type <b>space</b> \n\
+at any time and the available list of spells will be shown.\n\
 \n\
 When an inventory list is on the screen from a drop, quaff, read, or similar\n\
 command, you can type the letter of the object that you wish to act apon,\n\

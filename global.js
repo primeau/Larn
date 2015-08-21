@@ -168,14 +168,11 @@ function creategem() {
  */
 function more(select_allowed) {
   cltoeoln();
-  lprcat("Press ");
-  standout("space");
+  lprcat("Press <b>space</b> to continue");
 
   if (select_allowed) {
-    lprcat(" to continue, ");
-    standout("escape");
-    lprcat(" to cancel, letter to select: ");
-  } else lprcat(" to continue");
+    lprcat(", <b>escape</b> to cancel, letter to select: ");
+  }
 }
 
 

@@ -187,8 +187,10 @@ function take(item) {
       debug("take(): " + item);
       limit = 0;
       player.adjustcvalues(item, true);
-      updateLog(`  You pick up:`);
-      updateLog(`${getCharFromIndex(i)}) ${item}`);
+      if (!IN_STORE) {
+        updateLog(`  You pick up:`);
+        updateLog(`${getCharFromIndex(i)}) ${item}`);
+      }
       if (limit) {
         //bottomline();  //TODO?
       }
