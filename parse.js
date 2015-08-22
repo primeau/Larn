@@ -13,21 +13,21 @@ var keyboard_input_callback;
 
 function parseEvent(e, keyDown, keyUp) {
   var code = e.which;
-  //debug(`parseEvent(): got: ${code}: ${keyDown} ${keyUp} ${e.key}`);
+  //console.log(`parseEvent(): got: ${code}: ${keyDown} ${keyUp} ${e.key}`);
   if (keyDown) { // to capture ESC key etc
     if (code == ESC || code == ENTER || code == DEL_CODE || code == SPACE || code >= 37 && code <= 40) {
       e.preventDefault(); // prevent scrolling on page
       mainloop(e);
     } else {
-      //debug("parseEvent.keydown(): ignoring: " + code);
+    //  console.log("parseEvent.keydown(): ignoring: " + code);
     }
   } else if (keyUp) {
-    //debug("parseEvent.keyup(): ignoring: " + code);
+    //console.log("parseEvent.keyup(): ignoring: " + code);
   } else {
     if (code < 37 || code > 40) {
       mainloop(e);
     } else {
-      debug("parseEvent.keypress(): ignoring: " + code);
+      //console.log("parseEvent.keypress(): ignoring: " + code);
     }
   }
 }

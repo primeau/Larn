@@ -1,6 +1,5 @@
 "use strict";
 
-const MAXOBJECT = 92;
 const OEMPTY = new Item(0, "·", "empty space", false); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
 const OHOMEENTRANCE = new Item(-1, OEMPTY.char, "exit to home level", false);
 const OALTAR = new Item(1, "<b>A</b>", "a holy altar", false);

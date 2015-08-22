@@ -14,6 +14,8 @@ todo:
 - store logname and last difficulty to use as defaults, also haswon, taxes
 - add player, levels to gamestate for saving
 - move known* to player
+* use mousetrap to parse special keys, parse() for the rest
+- test everything in wizard mode
 
 extras:
 - hack-style characters

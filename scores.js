@@ -15,7 +15,7 @@ var ScoreBoardEntry = function() {
 
   this.timeused = timeused; /* the time used in mobuls to win the game          */
   this.taxes = taxes; /* taxes he owes to LRS                             */
-  this.hasmail hasmail; /* 1 if mail is to be read, 0 otherwise */
+  this.hasmail = hasmail; /* 1 if mail is to be read, 0 otherwise */
 
   this.player = player;
   this.knownPotions = knownPotions;
