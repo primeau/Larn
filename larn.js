@@ -52,7 +52,7 @@ function parseDebug(key) {
       return;
     }
   }
-  if (key == 'X' || key == '~') {
+  if (/*key == 'X' || */ key == '~') {
     DEBUG_STATS = !DEBUG_STATS;
     nomove = 1;
     updateLog("DEBUG_STATS: " + DEBUG_STATS);

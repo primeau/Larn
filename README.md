@@ -2,13 +2,18 @@ todo:
 * warn player that back button, window close will kill the game
 * scoreboard
 * disable debugging shortcuts
+* wizard mode
 * firefox / ie / safari support
 * clear saved game after loading, death
+- prompt if they have a saved game and ask to load or show how to reload
 - tighten up bottomline() printing
 - update build number in version commmand
 - nap & show monster movement during when falling asleep
 - auto-pickup
 - secure save game (save hash key in a cookie)
+- store logname and last difficulty to use as defaults, also haswon, taxes
+- add player, levels to gamestate for saving
+- move known* to player
 
 extras:
 - hack-style characters
@@ -29,25 +34,12 @@ bugs:
     - cells not revealed when blind
     - monster identification when blind is unreliable
 * interest accumulates at bank immediately after leaving/returning
-* exiting bank before a deposit/withdraw/etc message is done locks the keyboard
-  - fix with cleartimeout? -> wrap settimeout to use global var for cleartimeout to use
-  - or block store exit until message is done?
-* dnd store message not being printed
-  -   You pick up:
-    d) a dagger
-* fall down trapdoor, land next to monster, cast spell (which fails) -- monster doesn't attack?
-* thrift shop messages are on the wrong line
+- hitting ESC during deposit/withdrawal prints 27, backspace deletes one too many chars
 - strextra can get out of balance? caused by heroism/giant strength
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
-- hitting ESC during deposit/withdrawal prints 27, backspace deletes one too many chars
-? pressing ! at home after winning in cheat mode does weird things
 ? altars are broken?
-? monsters 'disappear' infrequently when moving over specific squares
 ? should lit 'discover' beyond where player has seen?
-? missile char stays visible sometimes
-? monsters can get trapped on edge of screen in wizard mode
-? cell shows in previous location when descending H -> V1
 ? rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD
     - need to do one more action before leaving bank?
 

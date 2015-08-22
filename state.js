@@ -5,7 +5,7 @@ var LEVELS = [];
 var LOG = [""];
 var player;
 
-var logname = "adventurer";
+var logname = "Adventurer";
 var cheat = 0; /* 1 if the player has fudged save file */
 var level = 0; /* cavelevel player is on = cdesc[CAVELEVEL] */
 var wizard = 0; /* the wizard mode flag */

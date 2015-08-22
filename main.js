@@ -777,7 +777,67 @@ function parse(e) {
     return;
   }
 
-  // TODO _ - wizard id
+  //
+  // wizard mode
+  //
+  if (key == '_') {
+    nomove = 1;
+    wizard = 1; /* disable to easily test win condition */
+
+    player.STRENGTH = 70;
+    player.INTELLIGENCE = 70;
+    player.WISDOM = 70;
+    player.CONSTITUTION = 70;
+    player.DEXTERITY = 70;
+    player.CHARISMA = 70;
+
+    player.WEAR = null;
+    player.inventory[0] = createObject(OLANCE, 25);
+    player.WIELD = player.inventory[0];
+    player.inventory[1] = createObject(OPROTRING, 50);
+
+    player.raiseexperience(6000000);
+    player.AWARENESS = 100000;
+
+    for (var i = 0; i < MAXY; i++)
+      for (var j = 0; j < MAXX; j++)
+        player.level.know[j][i] = KNOWALL;
+
+    for (var i = 0; i < spelcode.length; i++) {
+      learnSpell(spelcode[i]);
+    }
+
+    for (var scrolli = 0; scrolli < scrollname.length; scrolli++) {
+      var scroll = createObject(OSCROLL, scrolli);
+      learnScroll(scroll);
+      player.level.items[scrolli][0] = scroll;
+    }
+
+    for (var potioni = MAXX - 1; potioni > MAXX - 1 - potionname.length; potioni--) {
+      var potion = createObject(OPOTION, MAXX - 1 - potioni);
+      learnPotion(potion);
+      player.level.items[potioni][0] = potion;
+    }
+
+
+    for (i = 1; i < MAXY; i++) {
+      //var item = createObject()
+      //player.level.items[0][i] = item;
+    }
+    for (i = MAXY; i < MAXY + MAXX; i++) {
+      //var item = createObject()
+      //player.level.items[i - MAXY][MAXY - 1] = item;
+    }
+    for (i = MAXX + MAXY; i < MAXOBJECT; i++) {
+      //var item = createObject()
+      //player.level.items[MAXX - 1][i - MAXX - MAXY] = item;
+    }
+
+    player.GOLD = 250000;
+    return;
+  }
+
+
 
   parseDebug(key);
 
