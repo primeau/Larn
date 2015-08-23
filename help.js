@@ -2,6 +2,34 @@
 
 const helppages = [];
 
+
+
+function parse_help(key) {
+  if (key == ESC) {
+    return exitbuilding();
+  } else if (key == ' ') {
+    print_help();
+  }
+}
+
+
+
+function print_help() {
+  IN_STORE = true;
+  clear();
+  cursor(1, 1);
+  if (++currentpage > helppages.length - 1) {
+    currentpage = 1;
+  }
+  lprcat(helppages[currentpage]);
+  cursors();
+  lprcat("              ---- Press <b>space</b> for more help, <b>escape</b> to exit  ----");
+
+  blt();
+}
+
+
+
 helppages[0] =
     "Welcome to the game of Larn.  At this moment, you face a great problem.\n\
 Your daughter has contracted a strange disease, and none of your home remedies\n\

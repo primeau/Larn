@@ -5,9 +5,12 @@ function learnSpell(spell) {
   knownSpells[spelcode.indexOf(spell)] = spell;
 }
 
+
+
 function forgetSpell(spellnum) {
   knownSpells[spellnum] = null;
 }
+
 
 
 const eys = "Enter your spell: ";
@@ -46,7 +49,7 @@ function cast(key) {
   }
 
   if (!isalpha(key)) {
-      return 0;
+    return 0;
   }
 
   spell_cast += key;
@@ -114,10 +117,6 @@ function speldamage(x) {
 
     case 1:
       /* magic missile */
-      function spell_magic_missile(direction) {
-        var damage = rnd(((clev + 1) << 1)) + clev + 3;
-        setup_godirect(100, MLE, direction, damage, '+');
-      }
       prepare_direction_event(spell_magic_missile);
       return;
 
@@ -128,25 +127,17 @@ function speldamage(x) {
       return;
 
     case 3:
-      /*    sleep   */
-      function spell_sleep(direction) {
-        var hits = rnd(3) + 1;
-        direct(SLE, direction, fullhit(hits), hits);
-      }
+      /* sleep */
       prepare_direction_event(spell_sleep);
       return;
 
     case 4:
-      /*  charm monster   */
+      /* charm monster */
       player.CHARMCOUNT += player.CHARISMA << 1;
       return;
 
     case 5:
       /* sonic spear */
-      function spell_sonic_spear(direction) {
-        var damage = rnd(10) + 15 + player.LEVEL;
-        setup_godirect(70, SSP, direction, damage, '@');
-      }
       prepare_direction_event(spell_sonic_spear);
       return;
 
@@ -154,15 +145,11 @@ function speldamage(x) {
 
     case 6:
       /* web */
-      function spell_web(direction) {
-        var hits = rnd(3) + 2;
-        direct(WEB, direction, fullhit(hits), hits);
-      }
       prepare_direction_event(spell_web);
       return;
 
     case 7:
-      /*  strength    */
+      /* strength */
       if (player.STRCOUNT == 0) player.STREXTRA += 3;
       player.STRCOUNT += 150 + rnd(100);
       return;
@@ -176,7 +163,6 @@ function speldamage(x) {
       for (var i = xl; i < xh; i++)
         for (var j = yl; j < yh; j++)
           player.level.know[i][j] = KNOWALL;
-      //draws(xl, xh + 1, yl, yh + 1);
       return;
 
     case 9:
@@ -185,24 +171,17 @@ function speldamage(x) {
       return;
 
     case 10:
-      /* cure blindness   */
+      /* cure blindness */
       player.BLINDCOUNT = 0;
       return;
 
     case 11:
-      /* create monster   */
+      /* create monster */
       createmonster(makemonst(level + 1) + 8);
       return;
 
     case 12:
       /* phantasmal forces */
-      function spell_phantasmal(direction) {
-        if (rnd(11) + 7 <= player.WISDOM) {
-          direct(PHA, direction, rnd(20) + 20 + player.LEVEL, 0)
-        } else {
-          updateLog("  It didn't believe the illusions!");
-        }
-      }
       prepare_direction_event(spell_phantasmal);
       return;
 
@@ -221,35 +200,27 @@ function speldamage(x) {
       /* ----- LEVEL 3 SPELLS ----- */
 
     case 14:
-      /*    fireball */
-      function spell_fireball(direction) {
-        var damage = rnd(25 + player.LEVEL) + 25 + player.LEVEL;
-        setup_godirect(40, BAL, direction, damage, '*');
-      }
+      /* fireball */
       prepare_direction_event(spell_fireball);
       return;
 
     case 15:
-      /*  cold */
-      function spell_cold(direction) {
-        var damage = rnd(25) + 20 + player.LEVEL;
-        setup_godirect(60, CLD, direction, damage, 'O');
-      }
+      /* cold */
       prepare_direction_event(spell_cold);
       return;
 
     case 16:
-      /*  polymorph */
+      /* polymorph */
       prepare_direction_event(spell_polymorph);
       return;
 
     case 17:
-      /*  cancellation    */
+      /* cancellation */
       player.CANCELLATION += 5 + clev;
       return;
 
     case 18:
-      /* haste self  */
+      /* haste self */
       player.HASTESELF += 7 + clev;
       return;
 
@@ -262,8 +233,8 @@ function speldamage(x) {
       /* vaporize rock */
       var xh = Math.min(player.x + 1, MAXX - 2);
       var yh = Math.min(player.y + 1, MAXY - 2);
-      for (let i = Math.max(player.x - 1, 1); i <= xh; i++) {
-        for (let j = Math.max(player.y - 1, 1); j <= yh; j++) {
+      for (var i = Math.max(player.x - 1, 1); i <= xh; i++) {
+        for (var j = Math.max(player.y - 1, 1); j <= yh; j++) {
           // kn = & know[i][j];
           var item = getItem(i, j);
           if (item.matches(OWALL)) {
@@ -297,28 +268,16 @@ function speldamage(x) {
 
     case 21:
       /* dehydration */
-      function spell_dry(direction) {
-        direct(DRY, direction, 100 + player.LEVEL, 0);
-      }
       prepare_direction_event(spell_dry);
       return;
 
     case 22:
-      /*  lightning */
-      function spell_lightning(direction) {
-        var damage = rnd(25) + 20 + (player.LEVEL << 1);
-        setup_godirect(10, LIT, direction, damage, '~');
-      }
+      /* lightning */
       prepare_direction_event(spell_lightning);
       return;
 
     case 23:
       /* drain life */
-      function spell_drain(direction) {
-        var damage = Math.min(player.HP - 1, player.HPMAX / 2);
-        direct(DRL, direction, damage + damage, 0);
-        player.HP -= Math.round(damage);
-      }
       prepare_direction_event(spell_drain);
       return;
 
@@ -336,13 +295,6 @@ function speldamage(x) {
 
     case 26:
       /* finger of death */
-      function spell_finger(direction) {
-        if (player.WISDOM > rnd(10) + 10) {
-          direct(FGR, direction, 2000, 0);
-        } else {
-          updateLog("  It didn't work");
-        }
-      }
       if (rnd(151) != 63) {
         prepare_direction_event(spell_finger);
       } else {
@@ -384,12 +336,6 @@ function speldamage(x) {
 
     case 32:
       /* sphere of annihilation */
-      function spell_sphere(direction) {
-        var x = player.x + diroffx[direction];
-        var y = player.y + diroffy[direction];
-        newsphere(x, y, direction, rnd(20) + 11); /* make a sphere */
-        newsphereflag = true;
-      }
       if ((rnd(23) == 5) && (wizard == 0)) {
         //beep();
         updateLog("You have been enveloped by the zone of nothingness!");
@@ -412,9 +358,6 @@ function speldamage(x) {
 
     case 34:
       /* summon demon */
-      function spell_summon(direction) {
-        direct(SUM, direction, 150, 0);
-      }
       if (rnd(100) > 30) {
         prepare_direction_event(spell_summon);
       } else if (rnd(100) > 15) {
@@ -500,6 +443,82 @@ function speldamage(x) {
 
 
 
+/* it would be nice to have these methods closer to the
+spells they are for, but they need to be at the top level
+for firefox compatibility */
+
+function spell_magic_missile(direction) {
+  var damage = rnd(((clev + 1) << 1)) + clev + 3;
+  setup_godirect(100, MLE, direction, damage, '+');
+}
+
+function spell_sleep(direction) {
+  var hits = rnd(3) + 1;
+  direct(SLE, direction, fullhit(hits), hits);
+}
+
+function spell_sonic_spear(direction) {
+  var damage = rnd(10) + 15 + player.LEVEL;
+  setup_godirect(70, SSP, direction, damage, '@');
+}
+
+function spell_web(direction) {
+  var hits = rnd(3) + 2;
+  direct(WEB, direction, fullhit(hits), hits);
+}
+
+function spell_phantasmal(direction) {
+  if (rnd(11) + 7 <= player.WISDOM) {
+    direct(PHA, direction, rnd(20) + 20 + player.LEVEL, 0)
+  } else {
+    updateLog("  It didn't believe the illusions!");
+  }
+}
+
+function spell_fireball(direction) {
+  var damage = rnd(25 + player.LEVEL) + 25 + player.LEVEL;
+  setup_godirect(40, BAL, direction, damage, '*');
+}
+
+function spell_cold(direction) {
+  var damage = rnd(25) + 20 + player.LEVEL;
+  setup_godirect(60, CLD, direction, damage, 'O');
+}
+
+function spell_dry(direction) {
+  direct(DRY, direction, 100 + player.LEVEL, 0);
+}
+
+function spell_lightning(direction) {
+  var damage = rnd(25) + 20 + (player.LEVEL << 1);
+  setup_godirect(10, LIT, direction, damage, '~');
+}
+
+function spell_drain(direction) {
+  var damage = Math.min(player.HP - 1, player.HPMAX / 2);
+  direct(DRL, direction, damage + damage, 0);
+  player.HP -= Math.round(damage);
+}
+
+function spell_finger(direction) {
+  if (player.WISDOM > rnd(10) + 10) {
+    direct(FGR, direction, 2000, 0);
+  } else {
+    updateLog("  It didn't work");
+  }
+}
+
+function spell_sphere(direction) {
+  var x = player.x + diroffx[direction];
+  var y = player.y + diroffy[direction];
+  newsphere(x, y, direction, rnd(20) + 11); /* make a sphere */
+  newsphereflag = true;
+}
+
+function spell_summon(direction) {
+  direct(SUM, direction, 150, 0);
+}
+
 
 
 /*
@@ -574,7 +593,6 @@ function spell_teleport(direction) {
 
 
 
-
 /*
     Create a guardian for a throne/altar/fountain, as a result of the player
     using a VPR spell or pulverization scroll on it.
@@ -594,7 +612,6 @@ function create_guardian(monst, x, y) {
   // if (monsterAt(x,y)) {
   //   monsterAt(x,y).awake = true;
   // }
-
 }
 
 

@@ -79,8 +79,8 @@ function recalc() {
   player.AC = 0;
 
   if (player.WEAR != null) {
-    let armor = player.WEAR;
-    let extra = armor.arg;
+    var armor = player.WEAR;
+    var extra = armor.arg;
     if (armor.matches(OSHIELD)) player.AC = 2 + extra;
     if (armor.matches(OLEATHER)) player.AC = 2 + extra;
     if (armor.matches(OSTUDLEATHER)) player.AC = 3 + extra;
@@ -97,8 +97,8 @@ function recalc() {
   player.AC += player.MOREDEFENSES;
 
   if (player.WIELD != null) {
-    let weapon = player.WIELD;
-    let extra = weapon.arg;
+    var weapon = player.WIELD;
+    var extra = weapon.arg;
     if (weapon.matches(ODAGGER)) player.WCLASS = 3 + extra;
     if (weapon.matches(OBELT)) player.WCLASS = 7 + extra;
     if (weapon.matches(OSHIELD)) player.WCLASS = 8 + extra;
@@ -118,7 +118,7 @@ function recalc() {
   player.ENERGY = 0;
 
   for (var i = 0; i < player.inventory.length; i++) {
-    let item = player.inventory[i];
+    var item = player.inventory[i];
     if (item == null)
       continue;
 

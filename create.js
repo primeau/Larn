@@ -74,8 +74,8 @@ function cannedlevel(depth) {
   var items = player.level.items;
   var monsters = player.level.monsters;
 
-  let wall = createObject(OWALL); // TODO THIS IS BECAUSE I AM DUMB AND DON'T UNDERSTAND OBJECTS
-  let empty = createObject(OEMPTY); // TODO THIS IS BECAUSE I AM DUMB AND DON'T UNDERSTAND OBJECTS
+  var wall = createObject(OWALL); // TODO THIS IS BECAUSE I AM DUMB AND DON'T UNDERSTAND OBJECTS
+  var empty = createObject(OEMPTY); // TODO THIS IS BECAUSE I AM DUMB AND DON'T UNDERSTAND OBJECTS
 
   var pt = 0;
   for (var y = 0; y < MAXY; y++) {

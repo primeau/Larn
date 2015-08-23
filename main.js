@@ -289,7 +289,7 @@ function parse(e) {
   if (blocking_callback != null) {
     //debug(blocking_callback.name + ": ");
     var before = blocking_callback.name;
-    let done = blocking_callback(code == ESC ? ESC : key, code);
+    var done = blocking_callback(code == ESC ? ESC : key, code);
     var after = blocking_callback.name;
     //debug(blocking_callback.name + ": " + done);
 
@@ -787,28 +787,6 @@ function parse(e) {
   //
   if (key == '?') {
     var currentpage = 0;
-
-    function parse_help(key) {
-      if (key == ESC) {
-        return exitbuilding();
-      } else if (key == ' ') {
-        print_help();
-      }
-    }
-
-    function print_help() {
-      IN_STORE = true;
-      clear();
-      cursor(1, 1);
-      if (++currentpage > helppages.length - 1) {
-        currentpage = 1;
-      }
-      lprcat(helppages[currentpage]);
-      cursors();
-      lprcat("              ---- Press <b>space</b> for more help, <b>escape</b> to exit  ----");
-
-      blt();
-    }
     setCharCallback(parse_help, true);
     print_help();
     return;

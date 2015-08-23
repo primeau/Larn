@@ -58,12 +58,12 @@ function movemonst() {
 
      Also count # of smart monsters.
   */
-  let smart_count = 0;
-  let movecnt = 0;
-  let min_int = 10 - HARDGAME; /* minimum monster intelligence to move smart */
+  var smart_count = 0;
+  var movecnt = 0;
+  var min_int = 10 - HARDGAME; /* minimum monster intelligence to move smart */
   if (player.AGGRAVATE || player.STEALTH == 0) {
-    for (let j = tmp1; j < tmp2; j++) {
-      for (let i = tmp3; i < tmp4; i++) {
+    for (var j = tmp1; j < tmp2; j++) {
+      for (var i = tmp3; i < tmp4; i++) {
         var monster = monsterAt(i, j);
         if (monster) {
           var current = Object.create(MonsterLocation);
@@ -81,8 +81,8 @@ function movemonst() {
       }
     }
   } else {
-    for (let j = tmp1; j < tmp2; j++) {
-      for (let i = tmp3; i < tmp4; i++) {
+    for (var j = tmp1; j < tmp2; j++) {
+      for (var i = tmp3; i < tmp4; i++) {
         var monster = monsterAt(i, j);
         if (monster && monster.awake) {
           var current = Object.create(MonsterLocation);
@@ -107,7 +107,7 @@ function movemonst() {
   */
   if (movecnt > 0) {
     if (player.SCAREMONST)
-      for (let i = 0; i < movecnt; i++)
+      for (var i = 0; i < movecnt; i++)
         move_scared(movelist[i].x, movelist[i].y);
     else {
       if (smart_count > 0) {
@@ -118,13 +118,13 @@ function movemonst() {
            intelligent monster move.
         */
         build_proximity_ripple(tmp1, tmp2, tmp3, tmp4);
-        for (let i = 0; i < movecnt; i++)
+        for (var i = 0; i < movecnt; i++)
           if (movelist[i].smart)
             move_smart(movelist[i].x, movelist[i].y);
           else
             move_dumb(movelist[i].x, movelist[i].y);
       } else
-        for (let i = 0; i < movecnt; i++)
+        for (var i = 0; i < movecnt; i++)
           move_dumb(movelist[i].x, movelist[i].y);
     }
   }
@@ -179,7 +179,7 @@ function movemonst() {
   }
 }
 
-const screen = initGrid(MAXX, MAXY); /* proximity ripple storage */
+const ripple = initGrid(MAXX, MAXY); /* proximity ripple storage */
 
 function QueueEntry(x, y, distance) {
   this.x = x;
@@ -224,17 +224,17 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
         case OTRAPARROW.id:
         case ODARTRAP.id:
         case OTELEPORTER.id:
-          screen[m][k] = 127;
+          ripple[m][k] = 127;
           break;
         case OHOMEENTRANCE.id:
         case OENTRANCE.id:
           if (level == 1)
-            screen[m][k] = 127;
+            ripple[m][k] = 127;
           else
-            screen[m][k] = 0;
+            ripple[m][k] = 0;
           break;
         default:
-          screen[m][k] = 0;
+          ripple[m][k] = 0;
           break;
       };
     }
@@ -247,7 +247,7 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
 
   //debug(`xy2 ${xl}, ${yl}, ${xh}, ${yh}`);
 
-  screen[player.x][player.y] = 1;
+  ripple[player.x][player.y] = 1;
   queue.push(new QueueEntry(player.x, player.y, 1));
 
   IN_STORE = false; // TODO ACTUALLY PART OF DEBUG_PROXIMITY
@@ -268,14 +268,14 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
       for (z = 1; z < 9; z++) {
         tmpx = vx(curx + diroffx[z]);
         tmpy = vy(cury + diroffy[z]);
-        if (screen[tmpx][tmpy] == 0) {
-          screen[tmpx][tmpy] = curdist + 1;
+        if (ripple[tmpx][tmpy] == 0) {
+          ripple[tmpx][tmpy] = curdist + 1;
           queue.push(new QueueEntry(tmpx, tmpy, curdist + 1));
 
 
           if (DEBUG_PROXIMITY) {
             cursor(tmpx + 1, tmpy + 1);
-            if (screen[tmpx][tmpy] < 10) {
+            if (ripple[tmpx][tmpy] < 10) {
               var intel = 10 - HARDGAME;
               if (monsterAt(tmpx, tmpy)) {
                 if (monsterAt(tmpx, tmpy).intelligence > intel) {
@@ -284,10 +284,10 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
                   lprc(`${monsterAt(tmpx, tmpy).getChar()}`);
                 }
               } else {
-                lprc(screen[tmpx][tmpy]);
+                lprc(ripple[tmpx][tmpy]);
               }
             } else {
-              lprc(`<b>${(screen[tmpx][tmpy])%10}</b>`);
+              lprc(`<b>${(ripple[tmpx][tmpy])%10}</b>`);
             }
           }
 
@@ -373,7 +373,7 @@ function move_smart(i, j) {
     for (z = 1; z < 9; z++) /* go around in a circle */ {
       x = i + diroffx[z];
       y = j + diroffy[z];
-      if (screen[x][y] < screen[i][j])
+      if (ripple[x][y] < ripple[i][j])
         if (monsterAt(x, y) == null) {
           w1x = x;
           w1y = y;
@@ -386,7 +386,7 @@ function move_smart(i, j) {
       for (z = 1; z < 9; z++) /* go around in a circle */ {
       x = i + diroffx[z];
       y = j + diroffy[z];
-      if ((screen[x][y] < screen[i][j]) && !(getItem(x, y).matches(OMIRROR)))
+      if ((ripple[x][y] < ripple[i][j]) && !(getItem(x, y).matches(OMIRROR)))
         if (monsterAt(x, y) == null) {
           w1x = x;
           w1y = y;
