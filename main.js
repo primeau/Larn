@@ -705,36 +705,20 @@ function parse(e) {
   // UP LEVEL // TODO MAKE LESS COMPLICATED
   //
   else if (key == '<') { // UP STAIRS
-    if (isItem(newx, newy, OSTAIRSUP)) {
-      newcavelevel(level - 1);
-      //positionplayer(newx, newy, true);
-    } else if (isItem(newx, newy, OVOLUP)) {
-      act_up_shaft();
-      return;
-    } else if (DEBUG_STAIRS_EVERYWHERE) {
-      nomove = 1;
-      if (level == 0) {
-        // do nothing
-      } else if (level == 1) {
-        debug("STAIRS_EVERYWHERE: going to home level");
+
+    if (DEBUG_STAIRS_EVERYWHERE) {
+      if (level == 11)
+        moveNear(OVOLUP, true)
+      else if (level == 1) {
         newcavelevel(0);
-        moveNear(OENTRANCE, false);
-      } else if (level == 11) {
-        debug("STAIRS_EVERYWHERE: climbing up volcanic shaft");
-        act_up_shaft();
-        return;
-      } else {
-        debug("STAIRS_EVERYWHERE: climbing up stairs");
-        moveNear(OSTAIRSUP, true);
-        newcavelevel(level - 1);
-        return;
+        moveNear(OENTRANCE, true);
       }
-    } else if (isItem(newx, newy, OSTAIRSDOWN)) {
-      updateLog("The stairs don't go up!");
-    } else if (!isItem(newx, newy, OSTAIRSUP) || !isItem(newx, newy, OVOLUP)) {
-      // we can only go up stairs, or volcanic shaft leading upward
-      updateLog("I see no way to go up here!");
+      else if (level != 0)
+        moveNear(OSTAIRSUP, true);
     }
+
+    up_stairs();
+
     return;
   }
 
@@ -742,34 +726,18 @@ function parse(e) {
   // DOWN LEVEL // TODO MAKE LESS COMPLICATED
   //
   else if (key == '>') { // DOWN STAIRS
-    if (isItem(newx, newy, OSTAIRSDOWN)) {
-      newcavelevel(level + 1);
-      //positionplayer(newx, newy, true);
-    } else if (isItem(newx, newy, OVOLDOWN)) {
-      act_down_shaft();
-      return;
-    } else if (isItem(newx, newy, OENTRANCE)) {
-      // updateLog("Entering Dungeon");
-      // player.x = Math.floor(MAXX / 2);
-      // player.y = MAXY - 2;
-      // newcavelevel(1);
-    } else if (DEBUG_STAIRS_EVERYWHERE) {
-      nomove = 1;
-      if (level == 0) {
-        debug("STAIRS_EVERYWHERE: entering dungeon");
-        newcavelevel(level + 1);
-        return;
-      } else if (level != 10 && level != 13) {
-        debug("STAIRS_EVERYWHERE: climbing down stairs");
-        moveNear(OSTAIRSDOWN, true);
-        newcavelevel(level + 1);
-        return;
+
+    if (DEBUG_STAIRS_EVERYWHERE) {
+      if (!item.matches(OVOLDOWN) && level == 0) {
+        moveNear(OENTRANCE, true);
+        enter();
       }
-    } else if (isItem(newx, newy, OSTAIRSUP)) {
-      updateLog("The stairs don't go down!");
-    } else if (!isItem(newx, newy, OSTAIRSDOWN) || !isItem(newx, newy, OVOLDOWN)) {
-      updateLog("I see no way to go down here!");
+      else if (level != 0 && level != 10 && level != 13)
+        moveNear(OSTAIRSDOWN, true)
     }
+
+    down_stairs();
+
     return;
   }
 

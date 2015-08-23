@@ -195,6 +195,8 @@ function fntchange(how) {
   //cursors();
 }
 
+
+
 /*
     subroutine to process an up/down of a character attribute for ofountain
 */
@@ -206,6 +208,8 @@ function fch(how) {
   }
   //bottomline();
 }
+
+
 
 /*
     For command mode.  Perform drinking at a fountain.
@@ -222,6 +226,8 @@ function drink_fountain() {
   }
   return;
 }
+
+
 
 /*
     For command mode.  Perform washing (tidying up) at a fountain.
@@ -329,4 +335,57 @@ function sit_on_throne() {
   } else {
     updateLog("I see no throne to sit on here!");
   }
+}
+
+
+
+/*
+For command mode.  Checks that player is actually standing at a set up
+up stairs or volcanic shaft.
+*/
+function up_stairs() {
+  var item = getItem(player.x, player.y);
+
+  if (item.matches(OSTAIRSDOWN)) {
+    updateLog("The stairs don't go up!");
+    dropflag = 1;
+  }
+
+  else if (item.matches(OVOLUP))
+    act_up_shaft();
+
+  else if (!item.matches(OSTAIRSUP)) {
+    updateLog("I see no way to go up here!");
+    dropflag = 1;
+  }
+
+  else
+    act_up_stairs();
+}
+
+
+
+/*
+For command mode.  Checks that player is actually standing at a set of
+down stairs or volcanic shaft.
+*/
+function down_stairs() {
+  var item = getItem(player.x, player.y);
+
+  if (item.matches(OSTAIRSUP)) {
+    updateLog("The stairs don't go down!");
+    dropflag = 1;
+  }
+
+
+  else if (item.matches(OVOLDOWN))
+    act_down_shaft();
+
+  else if (!item.matches(OSTAIRSDOWN)) {
+    updateLog("I see no way to go down here!");
+    dropflag = 1;
+  }
+
+  else
+    act_down_stairs();
 }

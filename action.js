@@ -56,6 +56,37 @@ function act_sit_throne(arg) {
 }
 
 
+
+/*
+assumes that cursors() has been called and that a check has been made that
+the user is actually standing at a set of up stairs.
+*/
+function act_up_stairs() {
+  if (level >= 2 && level != 11) {
+    newcavelevel(level - 1);
+  } else {
+    updateLog("The stairs lead to a dead end!");
+    dropflag = 1;
+  }
+}
+
+
+
+/*
+assumes that cursors() has been called and that a check has been made that
+the user is actually standing at a set of down stairs.
+*/
+function act_down_stairs() {
+  if (level != 0 && level != 10 && level != 13) {
+    newcavelevel(level + 1);
+  } else {
+    updateLog("The stairs lead to a dead end!");
+    dropflag = 1;
+  }
+}
+
+
+
 /*
     Code to perform the action of drinking at a fountian.  Assumes that
     cursors() has already been called, and that a check has been made that
