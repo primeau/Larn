@@ -40,7 +40,7 @@ helppages[1] =
   i  inventory your pockets   I  list all known items     ^  identify a trap  \n\
   o  open a door or chest                                                     \n\
   p  pray at an altar         P  give tax status          :  look at object you\n\
-  q  quaff a potion           Q  <strike>quit the game</strike>               are standing on\n\
+  q  quaff a potion           Q  quit the game               are standing on\n\
   r  read a scroll            R  restore a saved game                         \n\
   s  sit on a throne          S  save the game            @  <strike>toggle auto-pickup</strike> \n\
   t  take an item             T  take off armor                               \n\

@@ -3,20 +3,19 @@
 var scoreBoard = [];
 
 var ScoreBoardEntry = function() {
-  this.hardlev = HARDGAME; /* the level of difficulty player played at         */
-  this.score = player.GOLD; /* the score of the player                          */
-  this.timeused = Math.round(gtime / 100); /* the time used in mobuls to win the game          */
-  this.what = getWhyDead(lastmonst); /* the number of the monster that killed player     */
-  this.level = levelnames[level]; /* the level player was on when he died             */
-  this.who = logname; /* the name of the character                        */
+  this.hardlev = HARDGAME; /* the level of difficulty player played at */
+  this.score = player.GOLD; /* the score of the player */
+  this.timeused = Math.round(gtime / 100); /* the time used in mobuls to win the game */
+  this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
+  this.level = levelnames[level]; /* the level player was on when he died */
+  this.who = logname; /* the name of the character */
   this.winner = lastmonst == 263;
 
   if (this.winner) {
     player.score += 100000 * this.hardlev;
   }
 
-  this.taxes = 0; /* taxes he owes to LRS                             */
-  this.hasmail = 0; /* 1 if mail is to be read, 0 otherwise */
+  this.taxes = 0; /* taxes he owes to LRS */
 
   // // TODO HACK
   // var x = player.level;
@@ -96,6 +95,7 @@ function printlosers(losers, newscore) {
   function printout(p) {
     lprcat(`${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level} \n`);
   }
+
   printscore(losers, newscore, header, printout);
 }
 
@@ -219,7 +219,6 @@ function getWhyDead(reason) {
     cause += whydead[(Number(reason) - 256)];
   } //
   else {
-    reason = 0; // TODO check for unseen attacker?
     cause += `killed by a ${lastmonst}`;
   }
   return cause;
@@ -229,7 +228,10 @@ function getWhyDead(reason) {
 
 function canProtect(reason) {
   var protect = true;
-  if (typeof reason === "number") {} else {
+  if (typeof reason === "number") {
+    // do nothing
+  } else {
+    // reason is a monster object
     reason = 0; // TODO check for unseen attacker?
   }
   switch (reason) {
@@ -237,6 +239,7 @@ function canProtect(reason) {
     case 263:
     case 269:
     case 271:
+    case 286:
       protect = false;
   }
   return protect;
@@ -272,6 +275,7 @@ function canProtect(reason) {
  * 281     killed by an exploding chest
  *
  * 283     annihilated in a sphere
+ * 286     a quitter
  */
 function died(reason) {
 
@@ -293,7 +297,8 @@ function died(reason) {
       var cause = getWhyDead();
       updateLog(`Immortal...    ${cause}`);
     } else {
-      updateLog(`You have been slain!`);
+      if (reason != 286) // 286 == quitter
+        updateLog(`You have been slain!`);
     }
   }
   paint();
@@ -306,12 +311,17 @@ function died(reason) {
 
   lastmonst = reason; // for scoreboard
   updateLog("Press <b>enter</b> to view the scoreboard: ");
-  if (cheat || wizard)
-    updateLog("(cheater and wizard scores are not recorded)");
+  if (cheat && wizard)
+    appendLog("(cheater and wizard scores not recorded)");
+  else if (wizard)
+    appendLog("(sorry, wizard scores are not recorded)");
+  else if (cheat)
+    appendLog("(sorry, cheater scores are not recorded)");
   paint();
 
   setCharCallback(endgame, true);
 }
+
 
 
 function endgame(key) {
@@ -335,6 +345,7 @@ function endgame(key) {
     if (newscore.score > 0) {
       if (newscore.winner) {
         winners.push(newscore);
+        localStorage.setObject(logname, true); // trigger to show mail next time
         localStorage.setObject('winners', winners);
       } else {
         losers.push(newscore);

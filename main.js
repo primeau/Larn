@@ -19,7 +19,7 @@ function welcome() {
 
 function setname(name) {
   if (name) {
-    logname = name.substring(0,19);
+    logname = name.substring(0, 19);
     localStorage.setObject('logname', logname);
   }
 
@@ -28,30 +28,52 @@ function setname(name) {
 
   HARDGAME = localStorage.getObject('difficulty') || 0;
 
-  lprcat(`What difficulty would you like to play? [<b>${HARDGAME}</b>] `);
-  setNumberCallback(setdifficulty, false);
+  /* if logname == true, player won last time around */
+  var winner = localStorage.getObject(logname);
+
+  if (winner) {
+    // force difficulty to be one harder
+    HARDGAME += 1;
+    readmail();
+    // clear the mail flag
+    localStorage.removeItem(logname);
+  } else {
+    lprcat(`What difficulty would you like to play? [<b>${HARDGAME}</b>] `);
+    setNumberCallback(startgame, false);
+  }
   return 0;
 }
 
 
 
 function setdifficulty(hard) {
-  IN_STORE = false;
-
   if (hard == "") {
-      hard = HARDGAME; // use the default we set in setname
+    hard = HARDGAME; // use the default we set in setname
   }
 
   sethard(Number(hard)); /* set up the desired difficulty */
 
   localStorage.setObject('difficulty', HARDGAME);
 
+  return 1;
+}
+
+
+
+function startgame(hard) {
+
+  if (highestScore) {
+    HARDGAME = highestScore.hardlev + 1;
+    setdifficulty(HARDGAME);
+  } else {
+    setdifficulty(hard);
+  }
+
   makeplayer(); /*  make the character that will play  */
 
   newcavelevel(0); /*  make the dungeon */
 
-  /* Display their mail if they've just won the previous game */
-  //checkmail(); // TODO
+  IN_STORE = false;
 
   updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
   drawscreen(); /*  show the initial dungeon */
@@ -593,7 +615,30 @@ function parse(e) {
     return;
   }
 
-  // TODO? Q - quit
+  //
+  // Q - quit
+  //
+  if (key == 'Q') {
+    nomove = 1;
+    setCharCallback(parseQuit, true);
+    updateLog("Do you really want to quit (all progress will be lost) [<b>y</b>/<b>n</b>] ? ")
+    return;
+  }
+
+  function parseQuit(key) {
+    nomove = 1;
+    if (key == ESC || key == 'n' || key == 'N') {
+      appendLog(" no");
+      return 1;
+    }
+    if (key == 'y' || key == 'Y') {
+      appendLog(" yes");
+      died(286);
+      return 1;
+    }
+    return 0;
+  }
+
 
   //
   // load saved game

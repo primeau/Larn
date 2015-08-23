@@ -93,5 +93,6 @@ const whydead = [
   "",
   "annihilated in a sphere",
   "",
-  ""
+  "",
+  "a quitter",
 ];

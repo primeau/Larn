@@ -4,6 +4,7 @@ const ESC = 27;
 const ENTER = 13;
 const SPACE = 32;
 const DEL_CODE = 8;
+const TAB = 9;
 const DEL = "___DELETE___";
 
 var blocking_callback;
@@ -13,9 +14,9 @@ var keyboard_input_callback;
 
 function parseEvent(e, keyDown, keyUp) {
   var code = e.which;
-  //console.log(`parseEvent(): got: ${code}: ${keyDown} ${keyUp} ${e.key}`);
+  console.log(`parseEvent(): got: ${code}: ${keyDown} ${keyUp} ${e.key}`);
   if (keyDown) { // to capture ESC key etc
-    if (code == ESC || code == ENTER || code == DEL_CODE || code == SPACE || code >= 37 && code <= 40) {
+    if (code == ESC || code == TAB || code == ENTER || code == DEL_CODE || code == SPACE || code >= 37 && code <= 40) {
       e.preventDefault(); // prevent scrolling on page
       mainloop(e);
     } else {

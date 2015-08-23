@@ -9,12 +9,10 @@ todo:
 - nap & show monster movement during when falling asleep
 - auto-pickup
 - secure save game (save hash key in a cookie)
-- store haswon in localstorage
 - add player, levels to gamestate for saving
 - move knownspell/scroll/potion to player
 * use mousetrap to parse special keys, parse() for the rest
 - test everything in wizard mode
-- disable tab
 - allow spaces in lognname
 
 extras:
