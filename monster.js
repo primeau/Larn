@@ -984,7 +984,7 @@ function spattack(x, xx, yy) {
       return 1;
 
     case 9:
-      for (j = 50;;) { /* disenchant */
+      for (var j = 50;;) { /* disenchant */
         var i = rund(26);
         var item = player.inventory[i]; /* randomly select item */
         if (item && item.arg > 0 && !item.matches(OSCROLL) && !item.matches(OPOTION)) {

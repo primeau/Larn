@@ -182,7 +182,17 @@ function loadPlayer(saved) {
 
 
 function loadState(state) {
-  // TODO double check everything is saved
+  //LEVELS
+  //LOG
+  //player
+  newsphereflag = state.newsphereflag;
+  GAME_OVER = state.GAME_OVER;
+  IN_STORE = state.IN_STORE;
+  napping = state.napping;
+  knownPotions = state.knownPotions;
+  knownScrolls = state.knownScrolls;
+  knownSpells = state.knownSpells;
+
   logname = state.logname;
   cheat = state.cheat;
   level = state.level;
@@ -211,14 +221,6 @@ function loadState(state) {
   w1x = state.w1x;
   w1y = state.w1y;
   spheres = state.spheres;
-
-  newsphereflag = state.newsphereflag;
-  GAME_OVER = state.GAME_OVER;
-  IN_STORE = state.IN_STORE;
-  napping = state.napping;
-  knownPotions = state.knownPotions;
-  knownScrolls = state.knownScrolls;
-  knownSpells = state.knownSpells;
 }
 
 

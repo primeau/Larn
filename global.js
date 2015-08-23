@@ -15,7 +15,7 @@ function positionplayer(x, y, exact) {
     player.x = x;
     player.y = y;
     //debug("positionplayer: (" + distance + ") got " + xy(x, y));
-    player.level.know[x][y] = KNOWALL;
+    player.level.know[player.x][player.y] = KNOWALL;
 
     oldx = player.x;
     oldy = player.y;
@@ -31,13 +31,13 @@ function positionplayer(x, y, exact) {
     while (numTries-- > 0) {
       var newx = x + (rnd(3) - 2) * distance;
       var newy = y + (rnd(3) - 2) * distance;
-      //debug("positionplayer: (" + distance + ") try " + xy(newx, newy));
+      debug("positionplayer: (" + distance + ") try " + newx + "," + newy);
       if ((newx != x || newy != y)) {
         if (canMove(newx, newy)) {
           player.x = newx;
           player.y = newy;
-          player.level.know[x][y] = KNOWALL;
-          //debug("positionplayer: (" + distance + ") got " + xy(newx, newy));
+          player.level.know[player.x][player.y] = KNOWALL;
+          //debug("positionplayer: (" + distance + ") got " + newx + "," + newy);
 
           oldx = player.x;
           oldy = player.y;
@@ -49,6 +49,8 @@ function positionplayer(x, y, exact) {
     numTries = maxTries;
     distance++;
   }
+
+  debug("positionplayer: couldn't place player");
 
   oldx = player.x;
   oldy = player.y;

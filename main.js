@@ -7,7 +7,10 @@ function welcome() {
   cursor(1, 1);
   lprcat(helppages[0]);
   cursors();
-  lprcat("Welcome to Larn. Please enter your name [Adventurer]: ");
+
+  logname = localStorage.getObject('logname') || "Adventurer";
+
+  lprcat(`Welcome to Larn. Please enter your name [<b>${logname}</b>]: `);
   setTextCallback(setname);
   blt();
 }
@@ -15,12 +18,17 @@ function welcome() {
 
 
 function setname(name) {
-  if (name)
-    logname = name;
+  if (name) {
+    logname = name.substring(0,19);
+    localStorage.setObject('logname', logname);
+  }
 
   cursors();
   cltoeoln();
-  lprcat("What difficulty would you like to play? [0] ");
+
+  HARDGAME = localStorage.getObject('difficulty') || 0;
+
+  lprcat(`What difficulty would you like to play? [<b>${HARDGAME}</b>] `);
   setNumberCallback(setdifficulty, false);
   return 0;
 }
@@ -30,7 +38,13 @@ function setname(name) {
 function setdifficulty(hard) {
   IN_STORE = false;
 
+  if (hard == "") {
+      hard = HARDGAME; // use the default we set in setname
+  }
+
   sethard(Number(hard)); /* set up the desired difficulty */
+
+  localStorage.setObject('difficulty', HARDGAME);
 
   makeplayer(); /*  make the character that will play  */
 
@@ -493,7 +507,14 @@ function parse(e) {
     return;
   }
 
-  // TODO z - show scores
+  //
+  // show scores
+  //
+  if (key == 'z') {
+    showscores();
+  }
+
+
 
   //
   // DESECRATE
@@ -797,7 +818,7 @@ function parse(e) {
 
 function wizardmode(password) {
 
-//  if (password !== 'pvnert(x)') {
+  //  if (password !== 'pvnert(x)') {
   if (password !== 'pvnert') {
     updateLog("Sorry");
     return 0;

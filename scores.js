@@ -1,29 +1,103 @@
 "use strict";
 
-
-
 var scoreBoard = [];
 
-
 var ScoreBoardEntry = function() {
+  this.hardlev = HARDGAME; /* the level of difficulty player played at         */
+  this.score = player.GOLD; /* the score of the player                          */
+  this.timeused = Math.round(gtime / 100); /* the time used in mobuls to win the game          */
+  this.what = getWhyDead(lastmonst); /* the number of the monster that killed player     */
+  this.level = levelnames[level]; /* the level player was on when he died             */
+  this.who = logname; /* the name of the character                        */
+  this.winner = lastmonst == 263;
 
-  this.score = score; /* the score of the player                          */
-  this.what = what; /* the number of the monster that killed player     */
-  this.level = level; /* the level player was on when he died             */
-  this.hardlev = hardlev; /* the level of difficulty player played at         */
-  this.who = who; /* the name of the character                        */
+  if (this.winner) {
+    player.score += 100000 * this.hardlev;
+  }
 
-  this.timeused = timeused; /* the time used in mobuls to win the game          */
-  this.taxes = taxes; /* taxes he owes to LRS                             */
-  this.hasmail = hasmail; /* 1 if mail is to be read, 0 otherwise */
+  this.taxes = 0; /* taxes he owes to LRS                             */
+  this.hasmail = 0; /* 1 if mail is to be read, 0 otherwise */
 
-  this.player = player;
+  // // TODO HACK
+  // var x = player.level;
+  // player.level = null;
+  // this.player = player;
+  // player.level = x;
+
   this.knownPotions = knownPotions;
   this.knownScrolls = knownScrolls;
   this.knownSpells = knownSpells;
+}
+
+
+
+function getScore() {
+  return new ScoreBoardEntry();
+}
+
+
+
+function sortScore(a, b) {
+  if (a == null && b == null) return 0;
+  if (a == null) return -1;
+  if (b == null) return 1;
+  if (a.hardlev != b.hardlev) {
+    return b.hardlev - a.hardlev;
+  } else if (a.score != b.score) {
+    return b.score - a.score;
+  } else if (a.level != b.level) {
+    return b.level - a.level;
+  } else {
+    return b.timeused - a.timeused;
+  }
+}
+
+
+
+function printscore(board, newscore, header, printout) {
+  var scoreboard = board.sort(sortScore);
+
+  /* the scoreboard has every game in it,
+  we only want to show one result per player */
+  var players = [];
+
+  lprcat(header);
+  for (var i = 0; i < scoreboard.length; i++) {
+    var p = scoreboard[i];
+
+    if (players.indexOf(p.who) >= 0) continue;
+    players.push(p.who);
+
+    var isNewScore = JSON.stringify(p) == JSON.stringify(newscore);
+
+    if (isNewScore) lprc("<b>");
+    printout(p);
+    if (isNewScore) lprc("</b>");
+  }
 
 }
 
+
+function printwinners(winners, newscore) {
+  var header = "\n     Score   Difficulty   Time Needed   Larn Winners List\n";
+
+  function printout(p) {
+    lprcat(`${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}  ${padString("" + p.timeused, 5)} Mobuls   ${p.who} \n`);
+  }
+
+  printscore(winners, newscore, header, printout);
+}
+
+
+
+function printlosers(losers, newscore) {
+  var header = ("\n     Score   Difficulty   Larn Visitor Log\n");
+
+  function printout(p) {
+    lprcat(`${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level} \n`);
+  }
+  printscore(losers, newscore, header, printout);
+}
 
 
 
@@ -108,123 +182,7 @@ function paytaxes(x) {
 
 
 
-/*
- *  winshou()       Subroutine to print out the winning scoreboard
- *
- *  Returns the number of players on scoreboard that were shown
- */
-function winshou() {
-  // struct wscofmt * p;
-  // int i, j, count;
-  //
-  // for (count = j = i = 0; i < SCORESIZE; i++) /* is there anyone on the scoreboard? */
-  //   if (winr[i].score != 0) {
-  //     j++;
-  //     break;
-  //   }
-  // if (j) {
-  //   lprcat("\n  Score    Difficulty   Time Needed   Larn Winners List\n");
-  //
-  //   for (i = 0; i < SCORESIZE; i++) /* this loop is needed to print out the */
-  //     for (j = 0; j < SCORESIZE; j++) /* winners in order */ {
-  //       p = & winr[j]; /* pointer to the scoreboard entry */
-  //       if (p - > order == i) {
-  //         if (p - > score) {
-  //           count++;
-  //           lprintf("%10d     %2d      %5d Mobuls   %s \n", (int) p - > score, (int) p - > hardlev, (int) p - > timeused, p - > who);
-  //         }
-  //         break;
-  //       }
-  //     }
-  // }
-  // return (count); /* return number of people on scoreboard */
-}
 
-
-
-/*
- *  Subroutine to print out the non-winners scoreboard
- *
- *  Enter with 0 to list the scores, enter with 1 to list inventories too
- *  Returns the number of players on scoreboard that were shown
- */
-function shou(x) {
-  // int i, j, n, k;
-  // int count;
-  //
-  // for (count = j = i = 0; i < SCORESIZE; i++) /* is the scoreboard empty? */
-  //   if (sco[i].score != 0) {
-  //     j++;
-  //     break;
-  //   }
-  // if (j) {
-  //   lprcat("\n   Score   Difficulty   Larn Visitor Log\n");
-  //   for (i = 0; i < SCORESIZE; i++) /* be sure to print them out in order */
-  //     for (j = 0; j < SCORESIZE; j++)
-  //       if (sco[j].order == i) {
-  //         if (sco[j].score) {
-  //           count++;
-  //           lprintf("%10ld     %2d       %s ", sco[j].score, sco[j].hardlev, sco[j].who);
-  //           if (sco[j].what < 256)
-  //             lprintf("killed by a %s", monster[sco[j].what].name);
-  //           else
-  //             lprintf("%s", whydead[sco[j].what - 256]);
-  //           if (x != 263)
-  //             lprintf(" on %s", levelname[sco[j].level]);
-  //           if (x) {
-  //             for (n = 0; n < 26; n++) {
-  //               iven[n] = sco[j].sciv[n][0];
-  //               ivenarg[n] = sco[j].sciv[n][1];
-  //             }
-  //             for (k = 1; k < 99; k++) {
-  //               for (n = 0; n < 26; n++) {
-  //                 if (k == iven[n])
-  //                   show3(n);
-  //               }
-  //             }
-  //             lprcat("\n\n");
-  //           } else lprc('\n');
-  //         }
-  //         j = SCORESIZE;
-  //       }
-  // }
-  // return (count); /* return the number of players just shown */
-}
-
-
-
-/*
- *  showscores()        Function to show the scoreboard on the terminal
- *
- *  Returns nothing of value
- */
-const esb = "The scoreboard is empty.\n";
-
-function showscores() {
-  // int i, j;
-  //
-  // lflush();
-  // lcreat((char * ) 0);
-  //
-  // if (readboard() < 0) {
-  //
-  //   return;
-  // }
-  //
-  // i = winshou();
-  // j = shou(0);
-  //
-  // if (i + j == 0) {
-  //
-  //   lprcat(esb);
-  //
-  // } else {
-  //
-  //   lprc('\n');
-  // }
-  //
-  // lflush();
-}
 
 
 
@@ -252,6 +210,36 @@ function showallscores() {
   // else
   //   lprc('\n');
   // lflush();
+}
+
+
+function getWhyDead(reason) {
+  var cause = "";
+  if (typeof reason === "number") {
+    cause += whydead[(Number(reason) - 256)];
+  } //
+  else {
+    reason = 0; // TODO check for unseen attacker?
+    cause += `killed by a ${lastmonst}`;
+  }
+  return cause;
+}
+
+
+
+function canProtect(reason) {
+  var protect = true;
+  if (typeof reason === "number") {} else {
+    reason = 0; // TODO check for unseen attacker?
+  }
+  switch (reason) {
+    case 262:
+    case 263:
+    case 269:
+    case 271:
+      protect = false;
+  }
+  return protect;
 }
 
 
@@ -287,84 +275,107 @@ function showallscores() {
  */
 function died(reason) {
 
-  var cantprotect = false;
-
-  var cause = '-- ';
-  if (typeof reason === "number") {
-    cause += whydead[(Number(reason) - 256)];
-  } //
-  else {
-    reason = 0; // TODO check for unseen attacker?
-    cause += `killed by a ${lastmonst}`;
-  }
+  var winner = reason == 263;
 
   if (player.LIFEPROT > 0) {
-    switch (reason) {
-      case 262:
-      case 263:
-      case 269:
-      case 271:
-        cantprotect = true;
-    }
-
-    if (!cantprotect) {
+    if (canProtect(reason)) {
       --player.LIFEPROT;
       --player.CONSTITUTION;
       player.HP = 1;
-
-      //cursors();
       updateLog("You feel wiiieeeeerrrrrd all over!");
       nap(2000); // TODO
       return;
     }
   }
 
-  if (reason != 263) {
-    var pad = 67 - 14 - cause.length;
-    cause = Array(pad).join(' ') + cause;
+  if (!winner) {
     if (DEBUG_IMMORTAL) {
+      var cause = getWhyDead();
       updateLog(`Immortal...    ${cause}`);
     } else {
-      updateLog(`You Have Died! ${cause}`);
+      updateLog(`You have been slain!`);
     }
   }
   paint();
   nomove = 1;
   dropflag = 1;
 
-  if (DEBUG_IMMORTAL) {
+  if (!winner && DEBUG_IMMORTAL) {
     return;
   }
 
+  lastmonst = reason; // for scoreboard
+  updateLog("Press <b>enter</b> to view the scoreboard: ");
+  if (cheat || wizard)
+    updateLog("(cheater and wizard scores are not recorded)");
+  paint();
+
+  setCharCallback(endgame, true);
+}
+
+
+function endgame(key) {
+  if (key != ENTER) {
+    return 0;
+  }
+
   setCharCallback(dead, true);
+  GAME_OVER = true;
   napping = true;
   IN_STORE = true;
-  GAME_OVER = true;
+
+  player.GOLD += player.BANKACCOUNT;
+  player.BANKACCOUNT = 0;
+
+  var newscore = getScore();
+
+  if (!wizard && !cheat) {
+    var winners = localStorage.getObject('winners') || [];
+    var losers = localStorage.getObject('losers') || [];
+    if (newscore.score > 0) {
+      if (newscore.winner) {
+        winners.push(newscore);
+        localStorage.setObject('winners', winners);
+      } else {
+        losers.push(newscore);
+        localStorage.setObject('losers', losers);
+      }
+    }
+  }
+
+  showscores(newscore);
+}
 
 
-  // WarningOnClose = 2; TODO
-  // cursors();
-  // lprcat("\nPress ");
-  // lstandout("Enter");
-  // lprcat(" to continue: ");
-  // while (ttgetch() != '\n') bell();
-  //
-  // cdesc[GOLD] += cdesc[BANKACCOUNT];
-  // cdesc[BANKACCOUNT] = 0;
-  //
-  // {
-  //   int win = 0;
-  //
-  //   if (x == 263) win = 1;
-  //   newscore(cdesc[GOLD], logname, x, win);
-  // }
-  //
-  // if (wizard == 0 && cdesc[GOLD] > 0)
-  //   if (sortboard()) writeboard();
-  //
-  // showscores(0);
-  //
-  // end_program(""); /* doesn't return */
+
+function showscores(newscore) {
+  var exitscores = function(key) {
+    if (key == ESC || key == ' ' || key == ENTER) {
+      return exitbuilding();
+    }
+  }
+
+  IN_STORE = true;
+  clear();
+  lprcat("                                <b>Larn Scoreboard</b> \n");
+  var winners = localStorage.getObject('winners') || [];
+  var losers = localStorage.getObject('losers') || [];
+
+  if (winners.length != 0 || losers.length != 0) {
+    printwinners(winners, newscore);
+    printlosers(losers, newscore);
+  } else {
+    lprcat("\n  The scoreboard is empty");
+  }
+
+  cursor(1, 24);
+  if (!GAME_OVER) {
+    lprcat("                        ---- Press <b>escape</b> to exit  ----");
+    setCharCallback(exitscores, true);
+  } else {
+    lprcat("                     ---- Reload your browser to play again  ----");
+  }
+  blt();
 }
 
 

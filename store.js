@@ -174,6 +174,10 @@ function dnd_parse(key) {
     return 0;
   }
 
+  if (!isalpha(key)) {
+    return 0;
+  }
+
   var i = getIndexFromChar(key);
 
   if (i >= 0 && i <= 26) {
@@ -576,10 +580,14 @@ function parse_tradepost(key) {
     return exitbuilding();
   }
 
+  if (!isalpha(key)) {
+    return 0;
+  }
+
   var value = 0;
   var i = getIndexFromChar(key);
 
-  //cursor(59, 22);
+  //cursor(62, 22);
   //lprc(key);
 
   if (i >= 0 && i <= 26) {
@@ -845,6 +853,8 @@ function parse_class(key) {
 
 function ohome() {
 
+  dropflag = 1;
+
   setCharCallback(parse_home, true);
 
   for (var i = 0; i < 26; i++) {
@@ -866,9 +876,7 @@ function ohome() {
         updateLog("administering the potion, and in a few moments your daughter should be well");
         updateLog("on her way to recovery.");
 
-        updateLog("Press ");
-        appendLog("<b>enter</b>");
-        appendLog(" to continue: ");
+        updateLog("Press <b>enter</b> to continue: ");
 
         setCharCallback(win, true);
         return;
@@ -934,12 +942,13 @@ function win(key) {
       setTimeout(function() {
         updateLog("Congratulations!");
         paint();
+        napping = false;
         died(263);
       }, 1000);
-    }, 2000);
-  }, 3000);
+    }, 1500);
+  }, 2000);
 
-  return 0;
+  return 1;
 }
 
 

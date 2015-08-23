@@ -136,7 +136,8 @@ function makemaze(k) {
   else tmp = wall;
 
   for (i = 0; i < MAXY; i++)
-    for (j = 0; j < MAXX; j++) item[j][i] = tmp;
+    for (j = 0; j < MAXX; j++)
+      item[j][i] = tmp;
 
   if (k == 0) return;
 
@@ -175,11 +176,14 @@ function makemaze(k) {
 
   if (k != MAXLEVEL - 1) {
     my = rnd(MAXY - 2);
-
-    for (i = 1; i < MAXX - 1; i++) item[i][my] = empty;
+    for (i = 1; i < MAXX - 1; i++)
+      item[i][my] = empty;
   }
 
-  if (k > 1) treasureroom(k);
+  if (k > 1) {
+    treasureroom(k);
+  }
+
 }
 
 
@@ -320,11 +324,11 @@ function troom(lv, xsize, ysize, tx, ty, glyph) {
         something(lv + 2);
         createmonster(makemonst(lv + 3));
       }
-
-      player.x = tp1;
-      player.y = tp2;
     }
   }
+
+  player.x = tp1;
+  player.y = tp2;
 }
 
 

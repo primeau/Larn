@@ -46,7 +46,7 @@ helppages[1] =
   t  take an item             T  take off armor                               \n\
   v  print program version                                                    \n\
   w  wield a weapon           W  wear armor                                   \n\
-  z  <strike>show scores</strike>              Z  teleport yourself        ?  this help screen \n\
+  z  show scores              Z  teleport yourself        ?  this help screen \n\
   ";
 
 
