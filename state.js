@@ -41,7 +41,7 @@ var lasttime = 0; /* last time in bank */
 var w1x;
 var w1y;
 var spheres = [];
-
+var auto_pickup = false;
 
 
 function GameState() {
@@ -85,4 +85,5 @@ function GameState() {
   this.w1x = w1x;
   this.w1y = w1y;
   this.spheres = spheres;
+  this.auto_pickup = auto_pickup;
 }

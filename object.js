@@ -334,40 +334,17 @@ function lookforobject(do_ident, do_pickup, do_action) {
     updateLog(`  It is worth ${item.arg}!`);
     player.GOLD += item.arg;
     forget();
+    return;
   }
   //
   else if (item.matches(OALTAR)) {
-    if (nearbymonst())
-      return;
-    if (do_ident) {
-      updateLog("There is a Holy Altar here!");
-      //updateLog("Do you (p) pray (d) desecrate, or (i) ignore it?");
-    }
-    if (do_action) {
-      //blocking_callback = oaltar;
-    }
+    if (nearbymonst()) return;
+    if (do_ident) updateLog("There is a Holy Altar here!");
   }
   //
-  else if (item.matches(OTHRONE)) {
-    if (nearbymonst())
-      return;
-    if (do_ident) {
-      updateLog(`There is ${item} here!`);
-    }
-    if (do_action) {
-      //non_blocking_callback = othrone;
-    }
-  }
-  //
-  else if (item.matches(ODEADTHRONE)) {
-    if (nearbymonst())
-      return;
-    if (do_ident) {
-      updateLog(`There is ${item} here!`);
-    }
-    if (do_action) {
-      //non_blocking_callback = othrone;
-    }
+  else if (item.matches(OTHRONE) || item.matches(ODEADTHRONE)) {
+    if (nearbymonst()) return;
+    if (do_ident) updateLog(`There is ${item} here!`);
   }
   //
   else if (item.matches(OPIT)) {
@@ -376,60 +353,38 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OMIRROR)) {
-    if (nearbymonst())
-      return;
-    if (do_ident)
-      updateLog("There is a mirror here");
+    if (nearbymonst()) return;
+    if (do_ident) updateLog("There is a mirror here");
   }
   //
   else if (item.matches(OFOUNTAIN)) {
-    if (nearbymonst())
-      return;
-    if (do_ident) {
-      updateLog("There is a fountain here");
-    }
-    if (do_action) {
-      //non_blocking_callback = ofountain;
-    }
+    if (nearbymonst()) return;
+    if (do_ident) updateLog("There is a fountain here");
   }
   //
   else if (item.matches(ODEADFOUNTAIN)) {
-    if (nearbymonst())
-      return;
-    if (do_ident)
-      updateLog("There is a dead fountain here");
+    if (nearbymonst()) return;
+    if (do_ident) updateLog("There is a dead fountain here");
   }
   //
   else if (item.matches(ODNDSTORE)) {
-    if (nearbymonst())
-      return;
-    if (do_ident)
-      updateLog("There is a DND store here");
-    // if (do_action)
-    //   prompt_enter();
+    if (nearbymonst()) return;
+    if (do_ident) updateLog("There is a DND store here");
   }
   //
   else if (item.matches(OBANK) || item.matches(OBANK2)) {
-    if (nearbymonst())
-      return;
-    if (do_ident)
-      updateLog(`You have found ${item}`);
-    // if (do_action)
-    //   prompt_enter();
+    if (nearbymonst()) return;
+    if (do_ident) updateLog(`You have found ${item}`);
   }
   //
   else if (item.matches(OSTATUE)) {
-    if (nearbymonst())
-      return;
-    if (do_ident)
-      updateLog("You are standing in front of a statue");
+    if (nearbymonst()) return;
+    if (do_ident) updateLog("You are standing in front of a statue");
   }
   //
   else if (item.matches(OCHEST)) {
-    if (nearbymonst())
-      return;
-    if (do_ident)
-      updateLog("There is a chest here");
+    if (nearbymonst()) return;
+    if (do_ident) updateLog("There is a chest here");
   }
   //
   else if (item.matches(OIVTELETRAP)) {
@@ -462,7 +417,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     updateLog("You are hit by an arrow");
     lastnum = 259;
     player.losehp(rnd(10) + level);
-    //bottomhp();
     return;
   }
   //
@@ -483,7 +437,6 @@ function lookforobject(do_ident, do_pickup, do_action) {
     player.losehp(rnd(5));
     if ((--player.STRENGTH) < 3)
       player.STRENGTH = 3;
-    bottomline();
     return;
   }
   //
@@ -503,7 +456,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if ((level == MAXLEVEL - 1) || (level == MAXLEVEL + MAXVLEVEL - 1)) {
       updateLog("You fell through a bottomless trap door!");
       nap(2000);
-      died(271);
+      died(271, false);
     }
     var dmg = rnd(5 + level);
     updateLog(`You fall through a trap door!  You lose ${dmg} hit points`);
@@ -514,18 +467,23 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OANNIHILATION)) {
-    died(283); /* annihilated by sphere of annihilation */
+    updateLog("You have been enveloped by the zone of nothingness!");
+    died(283, false); /* annihilated by sphere of annihilation */
     return;
   }
 
   // base case
   else {
-    if (do_ident) {
-      if (item.carry) {
-        updateLog(`You have found ${item}`);
-      } else if (!item.matches(OWALL)) {
-        updateLog(`You have found ${item}`);
-      }
+    if (do_ident && !item.matches(OWALL)) {
+      updateLog(`You have found ${item}`);
+    }
+  }
+
+  if (do_pickup && item.carry) {
+    if (take(item)) {
+      forget(); // remove from board
+    } else {
+      nomove = 1;
     }
   }
 
@@ -564,7 +522,7 @@ function obottomless() {
   updateLog("You fell into a bottomless pit!");
   beep();
   nap(3000);
-  died(262);
+  died(262, false);
 }
 
 
@@ -580,9 +538,12 @@ function forget() {
  */
 function oteleport(err) {
   var tmp;
-  if (err)
-    if (rnd(151) < 3)
-      died(264); /* stuck in a rock */
+  if (err) {
+    if (rnd(151) < 3) {
+      updateLog("You are trapped in solid rock!")
+      died(264, false); /* stuck in a rock */
+    }
+  }
   player.TELEFLAG = 1; /* show ?? on bottomline if been teleported    */
   if (level == 0)
     tmp = 0;
@@ -605,7 +566,6 @@ function oteleport(err) {
   if (level != tmp)
     newcavelevel(tmp);
   positionplayer();
-  //draws(0, MAXX, 0, MAXY);
   bot_linex();
 }
 
@@ -622,10 +582,10 @@ function readbook(book) {
   else
     i = rnd((tmp = splev[lev] - 9) ? tmp : 1) + 9;
   learnSpell(spelcode[i]);
-  updateLog(`Spell \"${spelcode[i]}\": ${spelname[i]}`);
+  updateLog(`Spell \"<b>${spelcode[i]}</b>\": ${spelname[i]}`);
   updateLog(`  ${speldescript[i]}`);
   if (rnd(10) == 4) {
-    updateLog("  Your int went up by one!");
+    updateLog("  Your intelligence went up by one!");
     player.INTELLIGENCE++;
     bottomline();
   }

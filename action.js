@@ -65,9 +65,7 @@ function act_drink_fountain() {
   if (rnd(1501) < 2) {
     updateLog("  Oops! You seem to have caught the dreadful sleep!");
     beep();
-    //lflush();
-    sleep(3);
-    died(280);
+    died(280, false);
     return;
   }
 

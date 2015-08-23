@@ -221,6 +221,7 @@ function loadState(state) {
   w1x = state.w1x;
   w1y = state.w1y;
   spheres = state.spheres;
+  auto_pickup = state.auto_pickup;
 }
 
 

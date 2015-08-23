@@ -43,36 +43,27 @@ function parseDebug(key) {
   //
   // DEBUGGING SHORTCUTS
   //
-  if (key == 'V') { // CLIMB IN/OUT OF VOLCANO
-    if (level == 0 && DEBUG_STAIRS_EVERYWHERE) {
-      nomove = 1;
-      debug("STAIRS_EVERYWHERE: entering volcano");
-      moveNear(OVOLDOWN, true);
-      act_down_shaft();
-      return;
-    }
-  }
-  if (/*key == 'X' || */ key == '~') {
+  if (/*key == '0' || */ key == '`') {
     DEBUG_STATS = !DEBUG_STATS;
     nomove = 1;
     updateLog("DEBUG_STATS: " + DEBUG_STATS);
   }
-  if (key == 'X' || key == '!') {
+  if (key == '0' || key == '1') {
     DEBUG_OUTPUT = !DEBUG_OUTPUT;
     nomove = 1;
     updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
   }
-  if (key == 'X' || key == '@') {
+  if (key == '0' || key == '2') {
     nomove = 1;
     player.WTW = player.WTW == 0 ? 100000 : 0;
     updateLog("DEBUG_WALK_THROUGH_WALLS: " + (player.WTW > 0));
   }
-  if (key == 'X' || key == '#') {
+  if (key == '0' || key == '3') {
     nomove = 1;
     DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
     updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
   }
-  if (key == 'X' || key == '$') {
+  if (key == '0' || key == '4') {
     nomove = 1;
     DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
     wizard = DEBUG_KNOW_ALL;
@@ -137,7 +128,7 @@ function parseDebug(key) {
     }
     updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
   }
-  if (key == 'X' || key == '^') {
+  if (key == '0' || key == '5') {
     nomove = 1;
     if (player.STEALTH <= 0) {
       updateLog("DEBUG: FREEZING MONSTERS");
@@ -149,12 +140,7 @@ function parseDebug(key) {
       player.STEALTH = 0;
     }
   }
-  if ( /*key == 'X' ||*/ key == '+') {
-    nomove = 1;
-    DEBUG_IMMORTAL = !DEBUG_IMMORTAL;
-    updateLog("DEBUG: IMMORTAL: " + DEBUG_IMMORTAL);
-  }
-  if (key == '`') {
+  if (key == '0' || key == '6') {
     nomove = 1;
     if (player.AWARENESS <= 0) {
       updateLog("DEBUG: EXPANDED AWARENESS++");
@@ -164,14 +150,19 @@ function parseDebug(key) {
       player.AWARENESS = 0;
     }
   }
-  if (key == ')') {
+  if ( /*key == '0' ||*/ key == '7') {
+    nomove = 1;
+    DEBUG_IMMORTAL = !DEBUG_IMMORTAL;
+    updateLog("DEBUG: IMMORTAL: " + DEBUG_IMMORTAL);
+  }
+  if (key == '8') {
     nomove = 1;
     DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
     if (!DEBUG_PROXIMITY) IN_STORE = false;
     updateLog("DEBUG: PROXIMITY: " + DEBUG_PROXIMITY);
     paint();
   }
-  if (key == 'X') {
+  if (key == '0') {
     nomove = 1;
     player.WEAR = null;
     player.inventory[0] = createObject(OLANCE, 25);

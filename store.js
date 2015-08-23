@@ -874,7 +874,7 @@ function ohome() {
         updateLog("thought you could do it. Boy! Did you surprise them! The doctor has the sad");
         updateLog("duty to inform you that your daughter died before your return. There was");
         updateLog("nothing that could be done without the potion.");
-        died(269);
+        died(269, false);
         return;
       } else {
         IN_STORE = false; // HACK?
@@ -897,7 +897,7 @@ function ohome() {
     updateLog("The latest word from the doctor is not good.");
     updateLog("The doctor has the sad duty to inform you that your daughter died! You didn't");
     updateLog("make it in time. There was nothing that could be done without the potion.");
-    died(269);
+    died(269, false);
     return;
   }
 
@@ -950,7 +950,7 @@ function win(key) {
         updateLog("Congratulations!");
         paint();
         napping = false;
-        died(263);
+        died(263, false);
       }, 1000);
     }, 1500);
   }, 2000);

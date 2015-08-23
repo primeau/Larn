@@ -277,7 +277,7 @@ function canProtect(reason) {
  * 283     annihilated in a sphere
  * 286     a quitter
  */
-function died(reason) {
+function died(reason, slain) {
 
   var winner = reason == 263;
 
@@ -294,10 +294,10 @@ function died(reason) {
 
   if (!winner) {
     if (DEBUG_IMMORTAL) {
-      var cause = getWhyDead();
+      var cause = getWhyDead(reason);
       updateLog(`Immortal...    ${cause}`);
     } else {
-      if (reason != 286) // 286 == quitter
+      if (slain)
         updateLog(`You have been slain!`);
     }
   }

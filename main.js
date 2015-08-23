@@ -207,10 +207,7 @@ function mainloop(e) {
      never prompt.
   */
   if (dropflag == 0) {
-    // if (prompt_mode)
-    lookforobject(true, false, true);
-    // else
-    //   lookforobject(true, (auto_pickup && !move_no_pickup), false);
+    lookforobject(true, auto_pickup, false);
   } else {
     dropflag = 0; /* don't show it just dropped an item */
   }
@@ -317,6 +314,12 @@ function parse(e) {
 
   var item = getItem(player.x, player.y);
 
+
+
+  if (e.ctrlKey) {
+    parseDebug(key);
+    return;
+  }
 
   //
   // MOVE PLAYER
@@ -497,12 +500,7 @@ function parse(e) {
   //
   if (key == 't' || key == ',') {
     /* pickup, don't identify or prompt for action */
-    // lookforobject( false, true, false ); // TODO???
-    if (take(item)) {
-      forget(); // remove from board
-    } else {
-      nomove = 1;
-    }
+    lookforobject(false, true, false);
     return;
   }
 
@@ -633,7 +631,7 @@ function parse(e) {
     }
     if (key == 'y' || key == 'Y') {
       appendLog(" yes");
-      died(286);
+      died(286, false);
       return 1;
     }
     return 0;
@@ -809,7 +807,12 @@ function parse(e) {
     return;
   }
 
-  // TODO @ - toggle auto pickup
+  // toggle auto pickup
+  if (key == '@') {
+    auto_pickup = !auto_pickup;
+    updateLog(`Auto-pickup: ${auto_pickup ? "on" : "off"}`);
+    return;
+  }
 
   //
   // help screen
@@ -850,9 +853,8 @@ function parse(e) {
     nomove = 1;
     updateLog("Enter Password: ");
     setTextCallback(wizardmode, true);
+    return;
   }
-
-  parseDebug(key);
 
 } // parse
 /*****************************************************************************/
@@ -866,7 +868,7 @@ function wizardmode(password) {
   //  if (password !== 'pvnert(x)') {
   if (password !== 'pvnert') {
     updateLog("Sorry");
-    return 0;
+    return 1;
   }
 
   wizard = 1;

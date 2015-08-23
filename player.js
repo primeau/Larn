@@ -110,10 +110,9 @@ var Player = function Player() {
     debug(`losehp: ${lastmonst}:${damage}`);
     this.HP -= damage;
     if (this.HP <= 0) {
-      //debug("losehp: DEATH!: " + damage);
       beep();
       nap(3000);
-      died(lastnum);
+      died(lastnum, true);
     }
   };
 

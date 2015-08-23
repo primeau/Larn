@@ -347,7 +347,7 @@ function speldamage(x) {
         beep();
         updateLog("  Your heart stopped!");
         nap(4000);
-        died(270);
+        died(270, false);
       }
       return;
 
@@ -392,7 +392,7 @@ function speldamage(x) {
         //beep();
         updateLog("You have been enveloped by the zone of nothingness!");
         nap(4000);
-        died(258);
+        died(258, false);
         return;
       }
       loseint();
@@ -773,9 +773,9 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     updateLog("  You are hit by your own magic!");
 
     if ((player.HP -= dam) <= 0) {
-      updateLog("  You have been slain");
+      //updateLog("  You have been slain");
       nap(1000);
-      died(278);
+      died(278, true);
     }
     exitspell();
     return;

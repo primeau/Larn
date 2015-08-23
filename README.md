@@ -7,8 +7,6 @@ todo:
 - tighten up bottomline() printing
 - update build number in version commmand
 - nap & show monster movement during when falling asleep
-- auto-pickup
-- secure save game (save hash key in a cookie)
 - add player, levels to gamestate for saving
 - move knownspell/scroll/potion to player
 * use mousetrap to parse special keys, parse() for the rest
@@ -22,6 +20,7 @@ extras:
 - color (mcolor/ocolor)
 - put platinum dragon beside eye of larn
 - global scoreboard, use hmac to secure?
+- secure save game (save hash key in a cookie)
 - shift-arrow to open door?
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - add larn 12.4 to repo, and patch pit bug
@@ -33,7 +32,6 @@ bugs:
     - go blind, move to a known place, kill a monster = black spot
     - cells not revealed when blind
     - monster identification when blind is unreliable
-* interest accumulates at bank immediately after leaving/returning
 - hitting ESC on game start/deposit/withdrawal prints 27, backspace deletes one too many chars
 - strextra can get out of balance? caused by heroism/giant strength
 - casting sph twice in the same direction will always kill the player
