@@ -494,12 +494,19 @@ function bank_sell(key) {
 /* function to put interest on your bank account */
 function ointerest() { // TODO IS THIS WORKING?
   if (player.BANKACCOUNT < 0) player.BANKACCOUNT = 0;
-  if ((player.BANKACCOUNT > 0) && (player.BANKACCOUNT < 500000)) {
-    var i = (gtime - lasttime) / 100; /* # mobuls elapsed */
-    while ((i-- > 0) && (player.BANKACCOUNT < 500000)) player.BANKACCOUNT += player.BANKACCOUNT / 250;
-    if (player.BANKACCOUNT > 500000) player.BANKACCOUNT = 500000; /* interest limit */
+
+  if (player.BANKACCOUNT > 0 && player.BANKACCOUNT < 500000) {
+    var i = elapsedtime() - lasttime; /* # mobuls elapsed */
+    while (i-- > 0 && player.BANKACCOUNT < 500000) {
+      player.BANKACCOUNT += player.BANKACCOUNT / 250;
+    }
   }
-  lasttime = (gtime / 100) * 100;
+
+  /* interest limit */
+  player.BANKACCOUNT = Math.min(500000, player.BANKACCOUNT);
+
+  lasttime = elapsedtime();
+
   player.BANKACCOUNT = Math.floor(player.BANKACCOUNT);
 }
 

@@ -195,13 +195,13 @@ function getIndexFromChar(char) {
 
 
 function elapsedtime() {
-  return Math.round(gtime / 100);
+  return Math.floor(gtime / 100);
 }
 
 
 
 function timeleft() {
-  return Math.round((TIMELIMIT - gtime) / 100);
+  return Math.floor((TIMELIMIT - gtime) / 100);
 }
 
 

@@ -14,7 +14,7 @@ var keyboard_input_callback;
 
 function parseEvent(e, keyDown, keyUp) {
   var code = e.which;
-  console.log(`parseEvent(): got: ${code}: ${keyDown} ${keyUp} ${e.key}`);
+  //console.log(`parseEvent(): got: ${code}: ${keyDown} ${keyUp} ${e.key}`);
   if (keyDown) { // to capture ESC key etc
     if (code == ESC || code == TAB || code == ENTER || code == DEL_CODE || code == SPACE || code >= 37 && code <= 40) {
       e.preventDefault(); // prevent scrolling on page
