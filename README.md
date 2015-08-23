@@ -5,11 +5,11 @@ todo:
 * clear saved game after loading, death
 - prompt if they have a saved game and ask to load or show how to reload
 - tighten up bottomline() printing
-- update build number in version commmand
 - nap & show monster movement during when falling asleep
 - add player, levels to gamestate for saving
 - move knownspell/scroll/potion to player
-* use mousetrap to parse special keys, parse() for the rest
+- use mousetrap to parse special keys, parse() for the rest
+- update build number in version commmand
 - allow spaces in lognname
 - look for TODO/HACK
 
@@ -40,7 +40,6 @@ bugs:
 ? should lit 'discover' beyond where player has seen?
 ? rapidly withdrawing 1 gold from bank adds a 1 to the end of player.GOLD
     - need to do one more action before leaving bank?
-- xorn are supposed to be born awake?
 
 rename/refactor:
 - player.level.items[][] -> item

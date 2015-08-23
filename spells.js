@@ -17,7 +17,7 @@ var spell_cast = null;
 
 function pre_cast() {
   cursors();
-  nomove = 1; // does nothing?
+  nomove = 1;
   if (player.SPELLS > 0) {
     updateLog(eys);
     spell_cast = "";
@@ -31,7 +31,7 @@ function pre_cast() {
 
 function cast(key) {
 
-  nomove = 1; // does nothing?
+  nomove = 1;
 
   if (key == 'I' || key == " ") {
     seemagic(true);
@@ -100,6 +100,8 @@ function speldamage(x) {
     updateLog("  Nothing happens.  You seem inexperienced at this");
     return;
   }
+
+  nomove = 0;
 
   switch (x) {
     /* ----- LEVEL 1 SPELLS ----- */
@@ -587,6 +589,12 @@ function create_guardian(monst, x, y) {
   player.level.know[x][y] = 0;
   if (!monsterlist[monst].genocided)
     createmonster(monst, x, y);
+
+  // not in original, but maybe a good idea?
+  // if (monsterAt(x,y)) {
+  //   monsterAt(x,y).awake = true;
+  // }
+
 }
 
 
@@ -910,6 +918,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 function exitspell() {
   napping = false;
   nomove = 0;
+  gtime++; // this is pretty hacky
   parse2(); // monsters need a chance to attack
   paint();
 }

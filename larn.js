@@ -168,7 +168,6 @@ function parseDebug(key) {
     player.inventory[0] = createObject(OLANCE, 25);
     player.WIELD = player.inventory[0];
     player.inventory[1] = createObject(OPROTRING, 50);
-    player.STEALTH = 0;
     player.GOLD = 250000;
     player.STRENGTH = 70;
     player.INTELLIGENCE = 70;
