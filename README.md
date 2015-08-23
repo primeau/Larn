@@ -1,7 +1,7 @@
 todo:
 * warn player that back button, window close will kill the game
 * disable debugging shortcuts
-* firefox / ie / safari support
+* firefox / ie / safari support http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
 * clear saved game after loading, death
 - prompt if they have a saved game and ask to load or show how to reload
 - tighten up bottomline() printing

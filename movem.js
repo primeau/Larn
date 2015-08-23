@@ -19,7 +19,7 @@ function movemonst() {
   /* list of monsters to move */
   var movelist = [];
 
-  var tmp1, tmp2, tmp3, tmp4;
+  var i, j, tmp1, tmp2, tmp3, tmp4;
 
   if (player.AGGRAVATE) /* determine window of monsters to move */ {
     tmp1 = player.y - 5;
@@ -62,8 +62,8 @@ function movemonst() {
   var movecnt = 0;
   var min_int = 10 - HARDGAME; /* minimum monster intelligence to move smart */
   if (player.AGGRAVATE || player.STEALTH == 0) {
-    for (var j = tmp1; j < tmp2; j++) {
-      for (var i = tmp3; i < tmp4; i++) {
+    for (j = tmp1; j < tmp2; j++) {
+      for (i = tmp3; i < tmp4; i++) {
         var monster = monsterAt(i, j);
         if (monster) {
           var current = Object.create(MonsterLocation);
@@ -81,8 +81,8 @@ function movemonst() {
       }
     }
   } else {
-    for (var j = tmp1; j < tmp2; j++) {
-      for (var i = tmp3; i < tmp4; i++) {
+    for (j = tmp1; j < tmp2; j++) {
+      for (i = tmp3; i < tmp4; i++) {
         var monster = monsterAt(i, j);
         if (monster && monster.awake) {
           var current = Object.create(MonsterLocation);
@@ -107,7 +107,7 @@ function movemonst() {
   */
   if (movecnt > 0) {
     if (player.SCAREMONST)
-      for (var i = 0; i < movecnt; i++)
+      for (i = 0; i < movecnt; i++)
         move_scared(movelist[i].x, movelist[i].y);
     else {
       if (smart_count > 0) {
@@ -118,13 +118,13 @@ function movemonst() {
            intelligent monster move.
         */
         build_proximity_ripple(tmp1, tmp2, tmp3, tmp4);
-        for (var i = 0; i < movecnt; i++)
+        for (i = 0; i < movecnt; i++)
           if (movelist[i].smart)
             move_smart(movelist[i].x, movelist[i].y);
           else
             move_dumb(movelist[i].x, movelist[i].y);
       } else
-        for (var i = 0; i < movecnt; i++)
+        for (i = 0; i < movecnt; i++)
           move_dumb(movelist[i].x, movelist[i].y);
     }
   }
