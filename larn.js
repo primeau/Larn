@@ -85,9 +85,15 @@ function eventToggleDebugStairs() {
 
 function eventToggleDebugKnowAll() {
   nomove = 1;
-  DEBUG_KNOW_ALL = !DEBUG_KNOW_ALL;
+  DEBUG_KNOW_ALL = true;
   for (var i = 0; i < spelcode.length; i++) {
     learnSpell(spelcode[i]);
+  }
+  for (var i = 0; i < scrollname.length; i++) {
+    learnScroll(createObject(OSCROLL, i));
+  }
+  for (var i = 0; i < potionname.length; i++) {
+    learnPotion(createObject(OPOTION, i));
   }
   updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
 }
@@ -115,11 +121,13 @@ function eventToggleDebugAwareness() {
     player.AWARENESS = 0;
   }
 }
+
 function eventToggleDebugImmortal() {
   nomove = 1;
   DEBUG_IMMORTAL = !DEBUG_IMMORTAL;
   updateLog("DEBUG: IMMORTAL: " + DEBUG_IMMORTAL);
 }
+
 function eventToggleDebugProximity() {
   nomove = 1;
   DEBUG_PROXIMITY = !DEBUG_PROXIMITY;

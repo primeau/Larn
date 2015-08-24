@@ -4,7 +4,6 @@ todo:
 * firefox / ie / safari support http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
 * clear saved game after loading, death
 - prompt if they have a saved game and ask to load or show how to reload
-- tighten up bottomline() printing
 - nap & show monster movement during when falling asleep
 - add player, levels to gamestate for saving
 - move knownspell/scroll/potion to player
@@ -14,6 +13,7 @@ todo:
 - look for TODO/HACK
 
 extras:
+- more authentic font
 - change drink at fountain to F?
 - highlight changed attributes
 - color (mcolor/ocolor)

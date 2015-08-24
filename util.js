@@ -42,6 +42,7 @@ function debug(text) {
 }
 
 
+
 var KEYBOARD_INPUT = "";
 
 
@@ -229,4 +230,24 @@ Storage.prototype.setObject = function(key, value) {
 Storage.prototype.getObject = function(key) {
   var value = this.getItem(key);
   return value && JSON.parse(value);
+}
+
+
+
+function pad(str, width) {
+    return padString(""+str, width);
+}
+
+
+
+// left align with -width, otherwise right align
+function padString(str, width) {
+  if (width == null || width == 0) return str;
+  var numspaces = Math.max(0, Math.abs(width) + 1 - str.length);
+  var spaces = Array(numspaces).join(" ");
+  if (width < 0) {
+    return str + spaces;
+  } else {
+    return spaces + str;
+  }
 }

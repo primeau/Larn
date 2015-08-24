@@ -764,14 +764,15 @@ function parse(e) {
   // look at object
   //
   if (key == ':') {
+    nomove = 1; /* assumes look takes no time */
     /* identify, don't pick up or prompt for action */
     lookforobject(true, false, false);
-    nomove = 1; /* assumes look takes no time */
     return;
   }
 
   // toggle auto pickup
   if (key == '@') {
+    nomove = 1;
     auto_pickup = !auto_pickup;
     updateLog(`Auto-pickup: ${auto_pickup ? "on" : "off"}`);
     return;
@@ -781,7 +782,8 @@ function parse(e) {
   // help screen
   //
   if (key == '?') {
-    var currentpage = 0;
+    nomove = 1;
+    currentpage = 0;
     setCharCallback(parse_help, true);
     print_help();
     return;

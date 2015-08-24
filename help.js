@@ -2,9 +2,12 @@
 
 const helppages = [];
 
+var currentpage = 0;
+
 
 
 function parse_help(key) {
+  nomove = 1;
   if (key == ESC) {
     return exitbuilding();
   } else if (key == ' ') {

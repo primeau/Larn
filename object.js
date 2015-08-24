@@ -69,13 +69,13 @@ Item.prototype = {
     toString: function(in_store) {
       var description = this.desc;
       if (this.matches(OPOTION)) {
-        if (isKnownPotion(this) || in_store || DEBUG_KNOW_ALL) {
+        if (isKnownPotion(this) || in_store) {
           description += " of " + potionname[this.arg];
         }
       }
       //
       else if (this.matches(OSCROLL)) {
-        if (isKnownScroll(this) || in_store || DEBUG_KNOW_ALL) {
+        if (isKnownScroll(this) || in_store) {
           description += " of " + scrollname[this.arg];
         }
       }

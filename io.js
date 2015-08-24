@@ -18,18 +18,6 @@ function lprintf(str, width) {
 
 
 
-function padString(str, width) {
-  if (width == null || width == 0) return str;
-  var spaces = Array(Math.abs(width) + 1 - str.length).join(" ");
-  if (width < 0) {
-    return str + spaces;
-  } else {
-    return spaces + str;
-  }
-}
-
-
-
 function lprcat(str, width) {
 
   if (width) {

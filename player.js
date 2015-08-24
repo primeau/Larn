@@ -269,23 +269,29 @@ var Player = function Player() {
   };
 
 
+  //  Spells:  1( 1)  AC: 2    WC: 3    Level 1  Exp: 0           novice explorer
+  // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
   this.getStatString = function() {
     if (level == 0) player.TELEFLAG = 0;
-    var output = "";
-    output += "Spells: " + this.SPELLS + "(" + this.SPELLMAX + ")  " +
-      "AC: " + this.AC + "  " +
-      "WC: " + this.WCLASS + "  " +
-      "Level " + this.LEVEL + " " +
-      "Exp: " + this.EXPERIENCE + "  " + this.CLASS() + "\n" +
-      "HP: " + this.HP + "(" + this.HPMAX + ") " +
-      "STR=" + (this.STRENGTH + this.STREXTRA) + " " +
-      "INT=" + this.INTELLIGENCE + " " +
-      "WIS=" + this.WISDOM + " " +
-      "CON=" + this.CONSTITUTION + " " +
-      "DEX=" + this.DEXTERITY + " " +
-      "CHA=" + this.CHARISMA + " " +
-      "LV: " + (player.TELEFLAG ? "?" : levelnames[level]) + " " +
-      "Gold: " + Number(this.GOLD).toLocaleString() + "        ";
+    var hpstring = `HP: ${pad(this.HP,2)}(${pad(this.HPMAX, 2)})`;
+    var output =
+      // `Spells: ${pad(this.SPELLS,2)}(${pad(this.SPELLMAX,2)})  AC: ${pad(this.AC,-4)} WC: ${pad(this.WCLASS,-4)} Level ${pad(this.LEVEL,-2)} Exp: ${pad(this.EXPERIENCE,-10)}${this.CLASS()} \n` +
+      // `${pad(hpstring,-12)} STR=${pad((this.STRENGTH + this.STREXTRA),-2)} INT=${pad(this.INTELLIGENCE,-2)} WIS=${pad(this.WISDOM,-2)} CON=${pad(this.CONSTITUTION,-2)} DEX=${pad(this.DEXTERITY,-2)} CHA=${pad(this.CHARISMA,-2)} LV: ${pad((player.TELEFLAG ? "?" : levelnames[level]),-2)} Gold: ${Number(this.GOLD).toLocaleString()}`;
+`\
+Spells: ${pad(this.SPELLS,2)}(${pad(this.SPELLMAX,2)})  \
+AC: ${pad(this.AC,-4)} \
+WC: ${pad(this.WCLASS,-4)} \
+Level ${pad(this.LEVEL,-2)} \
+Exp: ${pad(this.EXPERIENCE,-10)}${this.CLASS()}\n\
+${pad(hpstring,-12)} \
+STR=${pad((this.STRENGTH + this.STREXTRA),-2)} \
+INT=${pad(this.INTELLIGENCE,-2)} \
+WIS=${pad(this.WISDOM,-2)} \
+CON=${pad(this.CONSTITUTION,-2)} \
+DEX=${pad(this.DEXTERITY,-2)} \
+CHA=${pad(this.CHARISMA,-2)} \
+LV: ${pad((player.TELEFLAG ? "?" : levelnames[level]),-2)} \
+Gold: ${Number(this.GOLD).toLocaleString()}`;
     return output;
   }; //
 

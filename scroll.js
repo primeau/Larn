@@ -35,7 +35,7 @@ const scrollname = [
 
 function isKnownScroll(item) {
   if (item.matches(OSCROLL)) {
-    if (knownScrolls[item.arg] || DEBUG_KNOW_ALL) {
+    if (knownScrolls[item.arg]) {
       return true;
     }
   }
