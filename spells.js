@@ -448,7 +448,7 @@ spells they are for, but they need to be at the top level
 for firefox compatibility */
 
 function spell_magic_missile(direction) {
-  var damage = rnd(((clev + 1) << 1)) + clev + 3;
+  var damage = rnd(((player.LEVEL + 1) << 1)) + player.LEVEL + 3;
   setup_godirect(100, MLE, direction, damage, '+');
 }
 

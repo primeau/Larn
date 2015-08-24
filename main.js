@@ -466,6 +466,7 @@ function parse(e) {
     if (player.BLINDCOUNT > 0) {
       cursors();
       updateLog("You can't read anything when you're blind!");
+      dropflag = 1;
     }
     //
     else if (player.TIMESTOP == 0) {
