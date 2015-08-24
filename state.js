@@ -12,6 +12,7 @@ var napping = false; /* prevent keyboard input while a nap event is happening */
 var knownPotions = [];
 var knownScrolls = [];
 var knownSpells = [];
+var original_objects = true;
 
 var logname = "";
 var cheat = 0; /* 1 if the player has fudged save file */
@@ -56,7 +57,8 @@ function GameState() {
   this.knownPotions = knownPotions;
   this.knownScrolls = knownScrolls;
   this.knownSpells = knownSpells;
-
+  this.original_objects = original_objects;
+  
   this.logname = logname;
   this.cheat = cheat;
   this.level = level;

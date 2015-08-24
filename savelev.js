@@ -192,6 +192,7 @@ function loadState(state) {
   knownPotions = state.knownPotions;
   knownScrolls = state.knownScrolls;
   knownSpells = state.knownSpells;
+  original_objects = state.original_objects;
 
   logname = state.logname;
   cheat = state.cheat;

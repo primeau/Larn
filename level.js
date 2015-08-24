@@ -72,7 +72,7 @@ function drawscreen() {
           if (monst != null && know[i][j] & KNOWHERE)
             lprc(monst.getChar());
           else
-            lprc(getItem(i,j).char);
+            lprc(getItem(i,j).getChar());
         }
       } else {
         lprc(' ');

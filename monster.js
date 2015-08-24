@@ -20,7 +20,6 @@ function createMonster(monst) {
 
   if (!monst) return null;
 
-  var monster;
   var arg = monst.arg;
 
   // if we are passed an int, retrieve the appropriate monster
@@ -29,7 +28,7 @@ function createMonster(monst) {
     monst = monsterlist[arg];
   }
 
-  monster = new Monster(monst.char, monst.desc, monst.level,
+  var monster = new Monster(monst.char, monst.desc, monst.level,
     monst.armorclass, monst.damage, monst.attack, monst.defence, monst.genocided,
     monst.intelligence, monst.gold, monst.hitpoints, monst.experience, monst.awake);
 

@@ -14,7 +14,6 @@ todo:
 - look for TODO/HACK
 
 extras:
-- hack-style characters
 - change drink at fountain to F?
 - highlight changed attributes
 - color (mcolor/ocolor)

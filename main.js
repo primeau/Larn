@@ -316,10 +316,7 @@ function parse(e) {
 
 
 
-  if (e.ctrlKey) {
-    parseDebug(key);
-    return;
-  }
+
 
   //
   // MOVE PLAYER
@@ -712,8 +709,7 @@ function parse(e) {
       else if (level == 1) {
         newcavelevel(0);
         moveNear(OENTRANCE, true);
-      }
-      else if (level != 0)
+      } else if (level != 0)
         moveNear(OSTAIRSUP, true);
     }
 
@@ -731,8 +727,7 @@ function parse(e) {
       if (!item.matches(OVOLDOWN) && level == 0) {
         moveNear(OENTRANCE, true);
         enter();
-      }
-      else if (level != 0 && level != 10 && level != 13)
+      } else if (level != 0 && level != 10 && level != 13)
         moveNear(OSTAIRSDOWN, true)
     }
 

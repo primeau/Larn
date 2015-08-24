@@ -781,7 +781,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
   if (x != player.x || y != player.y) {
     cursor(x + 1, y + 1);
-    lprc(getItem(x, y).char);
+    lprc(getItem(x, y).getChar());
   }
 
   x += dx;
