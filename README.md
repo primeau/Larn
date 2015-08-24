@@ -23,7 +23,9 @@ extras:
 - secure save game (save hash key in a cookie)
 - shift-arrow to open door?
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
-- add larn 12.4 to repo, and patch pit bug
+- add larn 12.4 to repo
+  - patch pit bug // BUGFIX
+  - patch smart monster movement // UPGRADE
 - ipad support
 
 bugs:

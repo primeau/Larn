@@ -495,7 +495,7 @@ function opit() {
   if (rnd(101) >= 81) {
     return;
   }
-  if (rnd(70) <= 9 * player.DEXTERITY - packweight() && rnd(101) >= 5) {
+  if (rnd(70) <= 9 * player.DEXTERITY - packweight() && rnd(101) >= 5) { // BUGFIX this is broken in 12.4 
     return;
   }
   if (level == 10 || level >= 13) {

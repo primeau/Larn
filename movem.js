@@ -365,6 +365,8 @@ function move_smart(i, j) {
       if ((gtime & 1) == 1) return;
   };
 
+  var didmove = false; // UPGRADE -- smart monster should move inside closed rooms
+
   /* find an adjoining location in the proximity ripple that is
      closer to the player (has a lower value) than the monster's
      current position.
@@ -377,6 +379,7 @@ function move_smart(i, j) {
         if (monsterAt(x, y) == null) {
           w1x = x;
           w1y = y;
+          didmove = true; // UPGRADE
           mmove(i, j, x, y);
           return;
         }
@@ -390,11 +393,16 @@ function move_smart(i, j) {
         if (monsterAt(x, y) == null) {
           w1x = x;
           w1y = y;
+          didmove = true; // UPGRADE
           mmove(i, j, x, y);
           return;
         }
     }
 
+    // UPGRADE
+    if (!didmove) {
+        move_dumb(i,j);
+    }
 }
 
 /*
