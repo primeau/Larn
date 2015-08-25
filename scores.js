@@ -285,6 +285,7 @@ function died(reason, slain) {
     if (canProtect(reason)) {
       --player.LIFEPROT;
       --player.CONSTITUTION;
+      if (player.CONSTITUTION < 3) player.CONSTITUTION = 3;
       player.HP = 1;
       updateLog("You feel wiiieeeeerrrrrd all over!");
       nap(2000); // TODO
@@ -293,21 +294,12 @@ function died(reason, slain) {
   }
 
   if (!winner) {
-    if (DEBUG_IMMORTAL) {
-      var cause = getWhyDead(reason);
-      updateLog(`Immortal...    ${cause}`);
-    } else {
-      if (slain)
-        updateLog(`You have been slain!`);
-    }
+    if (slain)
+      updateLog(`You have been slain!`);
   }
   paint();
   nomove = 1;
   dropflag = 1;
-
-  if (!winner && DEBUG_IMMORTAL) {
-    return;
-  }
 
   // show scoreboard unless they saved the game
   if (reason != 287) {
@@ -321,8 +313,7 @@ function died(reason, slain) {
       appendLog("(sorry, cheater scores are not recorded)");
     setCharCallback(endgame, true);
     paint();
-  }
-  else {
+  } else {
     updateLog("---- Reload your browser to play again  ----");
     setCharCallback(dead, true);
     paint();

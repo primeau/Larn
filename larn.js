@@ -4,7 +4,6 @@ var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
 var DEBUG_STAIRS_EVERYWHERE = false;
 var DEBUG_KNOW_ALL = false;
-var DEBUG_IMMORTAL = false;
 var DEBUG_PAINT = 0;
 var DEBUG_LPRCAT = 0;
 var DEBUG_LPRC = 0;
@@ -125,8 +124,13 @@ function eventToggleDebugAwareness() {
 
 function eventToggleDebugImmortal() {
   nomove = 1;
-  DEBUG_IMMORTAL = !DEBUG_IMMORTAL;
-  updateLog("DEBUG: IMMORTAL: " + DEBUG_IMMORTAL);
+  if (player.LIFEPROT <= 0) {
+    player.LIFEPROT = 100000;
+    updateLog("DEBUG: LIFE PROTECTION++");
+  } else {
+    player.LIFEPROT = 0;
+    updateLog("DEBUG: LIFE PROTECTION--");
+  }
 }
 
 function eventToggleDebugProximity() {
