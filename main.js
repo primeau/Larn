@@ -76,7 +76,13 @@ function startgame(hard) {
   IN_STORE = false;
 
   updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
-  drawscreen(); /*  show the initial dungeon */
+
+  // regen();
+
+  showcell(player.x, player.y);
+
+  //drawscreen(); /*  show the initial dungeon */
+  paint();
 
   /*
    * init previous player position to be current position, so we don't
@@ -117,15 +123,6 @@ function makeplayer() {
   player.y = rnd(MAXY - 2);
 
   recalc();
-
-  // newcavelevel(0);
-  //
-  // regen();
-  //
-  // showcell(player.x, player.y);
-  //
-  // paint();
-
 }
 
 
@@ -238,10 +235,10 @@ function mainloop(e) {
 
   /* show stuff around the player */
   // TODO
-  if (viewflag == 0)
-    showcell(player.x, player.y);
-  else
-    viewflag = 0;
+  // if (viewflag == 0)
+  showcell(player.x, player.y);
+  //else
+  //   viewflag = 0;
 
   hitflag = 0;
   hit3flag = 0;

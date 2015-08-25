@@ -69,8 +69,6 @@ function regen() {
     if (--player.SEEINVISIBLE <= 0) {
       monsterlist[INVISIBLESTALKER].char = OEMPTY.char;
       if (!player.BLINDCOUNT) {
-        //drawscreen();
-        //cursors();
         updateLog("You feel your vision return to normal");
       }
     }
@@ -87,7 +85,6 @@ function regen() {
           recalc();
         }
     if (--player.ITCHING <= 0) {
-      //cursors();
       updateLog("You now feel the irritation subside!");
     }
   }
@@ -102,7 +99,6 @@ function regen() {
             drop_object(dropindex);
           }
     if (--player.CLUMSINESS <= 0) {
-      //cursors();
       updateLog("You now feel less awkward!");
     }
   }

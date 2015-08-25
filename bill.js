@@ -39,7 +39,7 @@ function letter1(gold) {
   lprcat("\nto your future successful expeditions.\n");
 
   cursors();
-  lprcat("                --- press <b>enter</b> to continue ---\n");
+  lprcat("                --- press <b>space</b> to continue ---\n");
   setCharCallback(letter2, true);
 
   return (1);
@@ -49,7 +49,7 @@ function letter1(gold) {
 
 function letter2(key) {
 
-  if (key != ENTER) return 0;
+  if (key != ' ') return 0;
 
   clear();
 
@@ -64,7 +64,7 @@ function letter2(key) {
   lprcat("\nMay you live in happiness forevermore . . .\n");
 
   cursors();
-  lprcat("                --- press <b>enter</b> to continue ---\n");
+  lprcat("                --- press <b>space</b> to continue ---\n");
   setCharCallback(letter3, true);
 
   return (1);
@@ -74,7 +74,7 @@ function letter2(key) {
 
 function letter3(key) {
 
-  if (key != ENTER) return 0;
+  if (key != ' ') return 0;
 
   clear();
 
@@ -87,7 +87,7 @@ function letter3(key) {
   lprcat(" onward, bewarned\nupon our meeting you shall pay the price!\n");
 
   cursors();
-  lprcat("                --- press <b>enter</b> to continue ---\n");
+  lprcat("                --- press <b>space</b> to continue ---\n");
   setCharCallback(letter4, true);
 
   return (1);
@@ -97,7 +97,7 @@ function letter3(key) {
 
 function letter4(key) {
 
-  if (key != ENTER) return 0;
+  if (key != ' ') return 0;
 
   clear();
 
@@ -112,7 +112,7 @@ function letter4(key) {
   lprcat("\nDuke Mainair, Shall equal thy gift also.\n");
 
   cursors();
-  lprcat("                --- press <b>enter</b> to continue ---\n");
+  lprcat("                --- press <b>space</b> to continue ---\n");
   setCharCallback(letter5, true);
 
   return (1);
@@ -122,7 +122,7 @@ function letter4(key) {
 
 function letter5(key) {
 
-  if (key != ENTER) return 0;
+  if (key != ' ') return 0;
 
   clear();
 
@@ -138,7 +138,7 @@ function letter5(key) {
   lprcat("\n(your gift is tax deductible)\n");
 
   cursors();
-  lprcat("                --- press <b>enter</b> to continue ---\n");
+  lprcat("                --- press <b>space</b> to continue ---\n");
   setCharCallback(letter6, true);
 
   return (1);
@@ -148,7 +148,7 @@ function letter5(key) {
 
 function letter6(key) {
 
-  if (key != ENTER) return 0;
+  if (key != ' ') return 0;
 
   clear();
 
@@ -167,7 +167,7 @@ function letter6(key) {
   lprcat("\ncan be your everlasting reward.\n");
 
   cursors();
-  lprcat("                --- press <b>enter</b> to continue ---\n");
+  lprcat("                --- press <b>space</b> to continue ---\n");
   setCharCallback(startgame, true);
 
   return (1);

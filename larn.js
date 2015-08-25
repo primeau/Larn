@@ -14,17 +14,17 @@ var DEBUG_PROXIMITY = false;
 var Larn = {
   run: function() {
 
-    Mousetrap.bind('ctrl+h', eventToggleOriginalObjects);
+    Mousetrap.bind('alt+h', eventToggleOriginalObjects);
 
-    Mousetrap.bind('ctrl+`', eventToggleDebugStats);
-    Mousetrap.bind('ctrl+1', eventToggleDebugOutput);
-    Mousetrap.bind('ctrl+2', eventToggleDebugWTW);
-    Mousetrap.bind('ctrl+3', eventToggleDebugStairs);
-    Mousetrap.bind('ctrl+4', eventToggleDebugKnowAll);
-    Mousetrap.bind('ctrl+5', eventToggleDebugStealth);
-    Mousetrap.bind('ctrl+6', eventToggleDebugAwareness);
-    Mousetrap.bind('ctrl+7', eventToggleDebugImmortal);
-    Mousetrap.bind('ctrl+8', eventToggleDebugProximity);
+    Mousetrap.bind('alt+`', eventToggleDebugStats);
+    Mousetrap.bind('alt+1', eventToggleDebugOutput);
+    Mousetrap.bind('alt+2', eventToggleDebugWTW);
+    Mousetrap.bind('alt+3', eventToggleDebugStairs);
+    Mousetrap.bind('alt+4', eventToggleDebugKnowAll);
+    Mousetrap.bind('alt+5', eventToggleDebugStealth);
+    Mousetrap.bind('alt+6', eventToggleDebugAwareness);
+    Mousetrap.bind('alt+7', eventToggleDebugImmortal);
+    Mousetrap.bind('alt+8', eventToggleDebugProximity);
 
     document.onkeypress = this.keyPress;
     document.onkeydown = this.keyDown;
@@ -63,6 +63,7 @@ function eventToggleDebugStats() {
   nomove = 1;
   DEBUG_STATS = !DEBUG_STATS;
   updateLog("DEBUG_STATS: " + DEBUG_STATS);
+  paint();
 }
 
 function eventToggleDebugOutput() {
@@ -101,24 +102,24 @@ function eventToggleDebugKnowAll() {
 function eventToggleDebugStealth() {
   nomove = 1;
   if (player.STEALTH <= 0) {
-    updateLog("DEBUG: FREEZING MONSTERS");
     player.HOLDMONST = 100000;
     player.STEALTH = 100000;
+    updateLog("DEBUG: FREEZING MONSTERS");
   } else {
-    updateLog("DEBUG: UNFREEZING MONSTERS");
     player.HOLDMONST = 0;
     player.STEALTH = 0;
+    updateLog("DEBUG: UNFREEZING MONSTERS");
   }
 }
 
 function eventToggleDebugAwareness() {
   nomove = 1;
   if (player.AWARENESS <= 0) {
-    updateLog("DEBUG: EXPANDED AWARENESS++");
     player.AWARENESS = 100000;
+    updateLog("DEBUG: EXPANDED AWARENESS++");
   } else {
-    updateLog("DEBUG: EXPANDED AWARENESS--");
     player.AWARENESS = 0;
+    updateLog("DEBUG: EXPANDED AWARENESS--");
   }
 }
 

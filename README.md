@@ -1,3 +1,5 @@
+You can play Larn here: http://prim.io/larn/
+
 todo:
 * warn player that back button, window close will kill the game
 * disable debugging shortcuts
@@ -13,7 +15,10 @@ todo:
 - look for TODO/HACK
 
 extras:
-- more authentic font
+- use different wizard passwords to
+  - restore backup save file
+  - restore save file created when window closed
+  - enable debugging keys
 - change drink at fountain to F?
 - highlight changed attributes
 - color (mcolor/ocolor)
@@ -23,16 +28,15 @@ extras:
 - shift-arrow to open door?
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - add larn 12.4 to repo
+  - https://sites.google.com/site/edenicholas/roguelikes/win32-larn
   - patch pit bug // BUGFIX
   - patch smart monster movement // UPGRADE
 - ipad support
+- more authentic font
 
 bugs:
 * save game diff=0, start new game diff !=0, load save ==> diff!=0 monsters
-* blindness is generally broken
-    - go blind, move to a known place, kill a monster = black spot
-    - cells not revealed when blind
-    - monster identification when blind is unreliable
+* thrift shoppe: try to sell an item you don't have and then one you do -> message deleted
 - hitting ESC on game start/deposit/withdrawal prints 27, backspace deletes one too many chars
 - strextra can get out of balance? caused by heroism/giant strength
 - casting sph twice in the same direction will always kill the player
@@ -56,3 +60,4 @@ rename/refactor:
 - napping
 - IN_STORE
 - updateLog
+- oldx, oldy

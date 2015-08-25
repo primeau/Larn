@@ -401,7 +401,10 @@ function bankmessage(str, duration) { //TODO convert to storemessage?
 
   blt();
 
+  napping = false;
+
   if (duration != null && duration != 0) {
+    napping = true;
     setTimeout(bankmessage, duration, "", 0);
   }
 }
@@ -500,15 +503,18 @@ function ointerest() { // TODO IS THIS WORKING?
     while (i-- > 0 && player.BANKACCOUNT < 500000) {
       player.BANKACCOUNT += player.BANKACCOUNT / 250;
     }
+    /* interest limit */
+    player.BANKACCOUNT = Math.min(500000, player.BANKACCOUNT);
   }
-
-  /* interest limit */
-  player.BANKACCOUNT = Math.min(500000, player.BANKACCOUNT);
 
   lasttime = elapsedtime();
 
   player.BANKACCOUNT = Math.floor(player.BANKACCOUNT);
 }
+
+
+
+
 
 
 
@@ -668,6 +674,8 @@ function parse_sellitem(key) {
     setCharCallback(parse_tradepost, true);
     lprcat("no thanks");
     //nap(500);
+
+    napping = true;
     setTimeout(storemessage, 700, "");
     itemToSell = null;
     return 1;
@@ -676,6 +684,8 @@ function parse_sellitem(key) {
     cursor(63 + itemToSell.price.toString().length, 24);
     setCharCallback(parse_tradepost, true);
     lprcat("yes");
+
+    napping = true;
     setTimeout(storemessage, 700, "");
     player.GOLD += itemToSell.price;
     if (player.WEAR === itemToSell.item) player.WEAR = null;
@@ -993,6 +1003,7 @@ function parse_lrs_pay(amount) {
     player.GOLD -= amount;
     lprcat(`\n  You pay ${amount} gold pieces\n`);
   }
+
   setTimeout(olrs, 700);
 }
 
@@ -1058,8 +1069,11 @@ function storemessage(str, duration) {
 
   blt();
 
+  napping = false;
+
   if (duration != null && duration != 0) {
-    setTimeout(storemessage, duration, "", 0);
+  napping = true;
+  setTimeout(storemessage, duration, "", 0);
   }
 }
 

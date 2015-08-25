@@ -7,6 +7,206 @@ const KNOWHERE = 0x2;
 const KNOWALL = (HAVESEEN | KNOWHERE);
 
 
+
+
+
+// TODO!
+function bot_linex() {}
+
+/*
+    bottomline()
+
+    now for the bottom line of the display
+ */
+// TODO!
+function bottomline() {
+  recalc();
+  // TODO: lots
+
+  cursor(1, 18);
+
+  lprcat(player.getStatString());
+  lprc("\n");
+
+  for (var logindex = 0; logindex < LOG.length; logindex++) {
+    cltoeoln();
+    lprcat(LOG[logindex] + "\n");
+  }
+
+  var doc = document.getElementById("STATS");
+  if (doc != null)
+    document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
+}
+
+
+const blank = "          ";
+
+// TODO!
+function botsideline(stat, name, line) {
+  cursor(70, line + 1);
+  if (stat > 0) lprcat(name);
+  else lprcat(blank);
+}
+
+// TODO!
+function botside() {
+  var line = 0;
+  botsideline(player.STEALTH, "stealth", line++);
+  botsideline(player.UNDEADPRO, "undead pro", line++);
+  botsideline(player.SPIRITPRO, "spirit pro", line++);
+  botsideline(player.CHARMCOUNT, "Charm", line++);
+  botsideline(player.TIMESTOP, "Time Stop", line++);
+  botsideline(player.HOLDMONST, "Hold Monst", line++);
+  botsideline(player.GIANTSTR, "Giant Str", line++);
+  botsideline(player.FIRERESISTANCE, "Fire Resit", line++);
+  botsideline(player.DEXCOUNT, "Dexterity", line++);
+  botsideline(player.STRCOUNT, "Strength", line++);
+  botsideline(player.SCAREMONST, "Scare", line++);
+  botsideline(player.HASTESELF, "Haste Self", line++);
+  botsideline(player.CANCELLATION, "Cancel", line++);
+  botsideline(player.INVISIBILITY, "Invisible", line++);
+  botsideline(player.ALTPRO, "Protect 3", line++);
+  botsideline(player.PROTECTIONTIME, "Protect 2", line++);
+  botsideline(player.WTW, "Wall-Walk", line++);
+}
+
+
+/*
+JRP this is very different from the original code
+I was lazy when it came to only partially drawing the screen
+and relied on fully repainting everything every move, which
+breaks how blindness works. I actually like this behaviour
+better, so you're stuck with it.
+*/
+function drawscreen() {
+
+  clear();
+
+  var know = player.level.know;
+
+  /* When we show a spot of the dungeon, we have 4 cases:
+  squares we know nothing about
+  - know == 0
+  squares we've been at and still know whats there
+  - know == KNOWALL (== KNOWHERE | HAVESEEN)
+  squares we've been at, but don't still recall because
+  something else happened there.
+  - know == HAVESEEN
+  squares we recall, but haven't been at (an error condition)
+  - know == KNOWHERE */
+
+  var blind = player.BLINDCOUNT > 0;
+
+  for (var j = 0; j < MAXY; j++) {
+    cursor(1, 1 + j);
+
+    for (var i = 0; i < MAXX; i++) {
+      if (know[i][j] == 0) {
+        lprc(' ');
+      } else if (know[i][j] & HAVESEEN) {
+        if (i == player.x && j == player.y) {
+          lprc(player.char);
+          continue;
+        }
+        var monster = monsterAt(i, j);
+        var item = getItem(i, j);
+        if (monster && know[i][j] & KNOWHERE) {
+          if (blind)
+            lprc(item.getChar())
+          else
+            lprc(monster.getChar());
+        } else {
+          if (blind)
+            item.matches(OWALL) ? lprc(OWALL.getChar()) : lprc(item.getChar())
+          else
+            lprc(item.getChar());
+        }
+      } else {
+        lprc(' ');
+        //mitem[i][j] = item[i][j] = 0;
+      }
+    }
+  }
+}
+
+
+
+/* subroutine to display a cell location on the screen */
+/* JRP this is quite different from the original, see drawscreen */
+function showcell(x, y) {
+  if (IN_STORE) return; // TODO HACK
+
+  var blind = player.BLINDCOUNT > 0;
+
+  var minx, maxx, miny, maxy, i, j, m;
+
+  if (blind) {
+    minx = x;
+    maxx = x;
+    miny = y;
+    maxy = y;
+  } else if (player.AWARENESS > 0) {
+    minx = x - 3;
+    maxx = x + 3;
+    miny = y - 3;
+    maxy = y + 3;
+  } else {
+    minx = x - 1;
+    maxx = x + 1;
+    miny = y - 1;
+    maxy = y + 1;
+  }
+
+  minx = vx(minx);
+  maxx = vx(maxx);
+  miny = vy(miny);
+  maxy = vy(maxy);
+
+  var know = player.level.know;
+
+  for (j = miny; j <= maxy; j++) {
+    for (m = minx; m <= maxx; m++) {
+      if ((know[m][j] & KNOWHERE) == 0) {
+        x = maxx;
+        while (know[x][j] & KNOWHERE)
+          --x;
+        for (i = m; i <= x; i++) {
+          know[i][j] = KNOWALL;
+        }
+        m = maxx;
+      }
+    }
+  }
+
+}
+
+
+
+/*
+    this routine shows only the spot that is given it.  the spaces around
+    these coordinated are not shown
+    used in godirect() in monster.c for missile weapons display
+ */
+/* JRP this is quite different from the original, see drawscreen */
+function show1cell(x, y) {
+  player.level.know[x][y] = KNOWALL;
+}
+
+
+
+/* subroutine to show where the player is on the screen, cursor values start from 1 up */
+// TODO this isn't really used
+function showplayer() {
+  // show1cell(oldx, oldy);
+  // cursor(player.x + 1, player.y + 1);
+  // lprc(player.char);
+  // cursor(player.x + 1, player.y + 1);
+  // oldx = player.x;
+  // oldy = player.y;
+}
+
+
+
 /*
     moveplayer(dir)
 
@@ -39,6 +239,7 @@ function moveplayer(dir) {
     nomove = 1;
     return (0);
   }
+
   var item = player.level.items[k][m];
   var monster = player.level.monsters[k][m];
 
@@ -102,150 +303,6 @@ function moveNear(item, exact) {
   debug("movenear: NOT FOUND: " + item.id);
   return false;
 } // movenear
-
-
-
-/*
-    bottomline()
-
-    now for the bottom line of the display
- */
-function bottomline() {
-  recalc();
-  // TODO: lots
-
-  cursor(1, 18);
-
-  lprcat(player.getStatString());
-  lprc("\n");
-
-  for (var logindex = 0; logindex < LOG.length; logindex++) {
-    cltoeoln();
-    lprcat(LOG[logindex] + "\n");
-  }
-
-  var doc = document.getElementById("STATS");
-  if (doc != null)
-    document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
-
-
-}
-
-
-const blank = "          ";
-
-function botsideline(stat, name, line) {
-  cursor(70, line + 1);
-  if (stat > 0) lprcat(name);
-  else lprcat(blank);
-}
-
-function botside() {
-  var line = 0;
-  botsideline(player.STEALTH, "stealth", line++);
-  botsideline(player.UNDEADPRO, "undead pro", line++);
-  botsideline(player.SPIRITPRO, "spirit pro", line++);
-  botsideline(player.CHARMCOUNT, "Charm", line++);
-  botsideline(player.TIMESTOP, "Time Stop", line++);
-  botsideline(player.HOLDMONST, "Hold Monst", line++);
-  botsideline(player.GIANTSTR, "Giant Str", line++);
-  botsideline(player.FIRERESISTANCE, "Fire Resit", line++);
-  botsideline(player.DEXCOUNT, "Dexterity", line++);
-  botsideline(player.STRCOUNT, "Strength", line++);
-  botsideline(player.SCAREMONST, "Scare", line++);
-  botsideline(player.HASTESELF, "Haste Self", line++);
-  botsideline(player.CANCELLATION, "Cancel", line++);
-  botsideline(player.INVISIBILITY, "Invisible", line++);
-  botsideline(player.ALTPRO, "Protect 3", line++);
-  botsideline(player.PROTECTIONTIME, "Protect 2", line++);
-  botsideline(player.WTW, "Wall-Walk", line++);
-}
-
-
-/*
-    this routine shows only the spot that is given it.  the spaces around
-    these coordinated are not shown
-    used in godirect() in monster.c for missile weapons display
- */
-function show1cell(x, y) {
-  cursor(x + 1, y + 1);
-  /* see nothing if blind, but clear previous player position */
-  if (player.BLINDCOUNT) {
-    if ((x == oldx) && (y == oldy)) {
-      lprc(' ');
-    }
-    return;
-  }
-
-  var c = monsterAt(x, y) ? monsterAt(x, y).getChar() : getItem(x, y).getChar();
-  //lprc(c); /* JRP this causes missile spells to not appear */
-
-  player.level.know[x][y] = KNOWALL; /* we end up knowing about it */
-}
-
-
-
-/* subroutine to show where the player is on the screen, cursor values start from 1 up */
-// TODO different from original
-function showplayer() {
-  show1cell(oldx, oldy);
-  show1cell(player.x, player.y);
-  oldx = player.x;
-  oldy = player.y;
-}
-
-
-
-/* subroutine to display a cell location on the screen */
-// TODO different from original
-function showcell(x, y) {
-  if (IN_STORE) return; // TODO HACK
-
-  if (player.BLINDCOUNT) {
-    if (x == oldx && y == oldy) {
-      cursor(1 + x, 1 + y);
-      lprc(' ');
-    }
-    if (x == player.x && y == player.y) {
-      cursor(1 + x, 1 + y);
-      lprc(player.char);
-    }
-  } else {
-    var minx, maxx, miny, maxy, i, j;
-
-    if (player.AWARENESS > 0) {
-      minx = x - 3;
-      maxx = x + 3;
-      miny = y - 3;
-      maxy = y + 3;
-    } else {
-      minx = x - 1;
-      maxx = x + 1;
-      miny = y - 1;
-      maxy = y + 1;
-    }
-
-
-    if (minx < 0) minx = 0;
-    if (maxx > MAXX - 1) maxx = MAXX - 1;
-    if (miny < 0) miny = 0;
-    if (maxy > MAXY - 1) maxy = MAXY - 1;
-
-    for (j = miny; j <= maxy; j++)
-      for (i = minx; i <= maxx; i++) {
-        show1cell(i, j);
-        // cursor(1+i, 1+j);
-        //
-        // if (i == player.x && j == player.y) lprc_map('@', 0);
-        // else if (mitem[i][j])             lprc_map(monstnamelist[mitem[i][j]], mitem[i][j]);
-        // else                              lprc_map(objnamelist[item[i][j]], item[i][j]);
-        //
-        // know[i][j] = KNOWALL;
-      }
-  }
-
-  cursor(1 + x, 1 + y);
-}
 
 
 

@@ -1055,7 +1055,6 @@ function genmonst(key) {
       updateLog(`  There will be no more ${monstname}`);
 
       newcavelevel(level); /* now wipe out monsters on this level */
-      //drawscreen();
       paint();
       return 1;
     }
