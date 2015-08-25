@@ -46,9 +46,9 @@ var auto_pickup = false;
 
 
 function GameState() {
-  //this.LEVELS = LEVELS;
-  //this.LOG = LOG;
-  //this.player = player;
+  this.LEVELS = LEVELS;
+  this.LOG = LOG;
+  this.player = player;
 
   this.newsphereflag = newsphereflag;
   this.GAME_OVER = GAME_OVER;
@@ -58,7 +58,7 @@ function GameState() {
   this.knownScrolls = knownScrolls;
   this.knownSpells = knownSpells;
   this.original_objects = original_objects;
-  
+
   this.logname = logname;
   this.cheat = cheat;
   this.level = level;

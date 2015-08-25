@@ -1,18 +1,18 @@
 "use strict";
 
-function parseLoadSavedGame(key) {
-  nomove = 1;
-  if (key == ESC || key == 'n' || key == 'N') {
-    appendLog(" cancelled");
-    return 1;
-  }
-  if (key == 'y' || key == 'Y') {
-    loadSavedGame();
-    return 1;
-  } else {
-    return 0;
-  }
-}
+// function parseLoadSavedGame(key) {
+//   nomove = 1;
+//   if (key == ESC || key == 'n' || key == 'N') {
+//     appendLog(" cancelled");
+//     return 1;
+//   }
+//   if (key == 'y' || key == 'Y') {
+//     loadSavedGame();
+//     return 1;
+//   } else {
+//     return 0;
+//   }
+// }
 
 
 
@@ -20,29 +20,21 @@ function saveGame() {
   // var hmac = forge.random.getBytesSync(128);
   // localStorage.setItem('hmac', hmac);
 
-  var state = new GameState();
-
-  var a, b, c;
-
   // START HACK TODO to not store player.level
   var x = player.level;
   player.level = null;
-  localStorage.setObject('player', player);
+
+  var state = new GameState();
+  var bytes;
+
+  localStorage.setObject(logname, state);
   var hash = forge.md.sha512.create();
-  hash.update(a = JSON.stringify(state));
-  hash.update(b = JSON.stringify(player));
-  hash.update(c = JSON.stringify(LEVELS));
+  hash.update(bytes = JSON.stringify(state));
+
   player.level = x;
   // END HACK TODO to not store player.level
 
-  localStorage.setObject('state', state);
-  localStorage.setObject('levels', LEVELS);
-  localStorage.setObject('log', LOG);
-
-  //console.log(JSON.stringify(LEVELS));
-
-  var numbytes = (a.length + b.length + c.length);
-  updateLog(`Game saved. ${Number(numbytes).toLocaleString()} bytes written.`);
+  updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
 
   console.log("saved hash: " + hash.digest().toHex());
   localStorage.setItem('hmac', hash.digest().toHex());
@@ -54,19 +46,13 @@ function loadSavedGame() {
   // var hmac = localStorage.getItem('hmac');
   // console.log(forge.util.bytesToHex(hmac));
 
-  var savedLog = localStorage.getObject('log');
-  LOG = savedLog;
+  var savedState = localStorage.getObject(logname);
 
-  var savedPlayer = localStorage.getObject('player');
-  loadPlayer(savedPlayer);
-
-  var savedState = localStorage.getObject('state');
+  if (!savedState) {
+    updateLog("Sorry, I can't find your save game file!");
+    return;
+  }
   loadState(savedState);
-
-  var savedLevels = localStorage.getObject('levels');
-  loadLevels(savedLevels);
-
-  player.level = LEVELS[level];
 
   // check for cheaters:
   // 1. hash everything important
@@ -74,10 +60,6 @@ function loadSavedGame() {
   // 3. are they the same?
   var hash = forge.md.sha512.create();
   hash.update(JSON.stringify(savedState));
-  hash.update(JSON.stringify(savedPlayer));
-  hash.update(JSON.stringify(savedLevels));
-
-  //console.log(JSON.stringify(savedLevels));
 
   console.log("computed hash: " + hash.digest().toHex());
 
@@ -87,9 +69,94 @@ function loadSavedGame() {
   cheat = hash.digest().toHex() != savedHash;
   console.log("cheater? " + cheat);
 
+  updateLog("Welcome back.");
+
   if (cheat) {
     updateLog("Have you been cheating?");
     // TODO enforce this
+  }
+
+  /* clear the saved game file */
+  localStorage.removeItem(logname);
+
+}
+
+
+
+function loadState(state) {
+  var savedLevels = state.LEVELS;
+  loadLevels(savedLevels);
+
+  var savedLog = state.LOG;
+  LOG = savedLog;
+
+  var savedPlayer = state.player;
+  loadPlayer(savedPlayer);
+
+  player.level = LEVELS[state.level];
+
+  newsphereflag = state.newsphereflag;
+  GAME_OVER = state.GAME_OVER;
+  IN_STORE = state.IN_STORE;
+  napping = state.napping;
+  knownPotions = state.knownPotions;
+  knownScrolls = state.knownScrolls;
+  knownSpells = state.knownSpells;
+  original_objects = state.original_objects;
+
+  logname = state.logname;
+  cheat = state.cheat;
+  level = state.level;
+  wizard = state.wizard;
+  gtime = state.gtime;
+  HARDGAME = state.HARDGAME;
+  lastmonst = state.lastmonst;
+  lastnum = state.lastnum;
+  hitflag = state.hitflag;
+  hit2flag = state.hit2flag;
+  hit3flag = state.hit3flag;
+  lastpx = state.lastpx;
+  lastpy = state.lastpy;
+  lasthx = state.lasthx;
+  lasthy = state.lasthy;
+  prayed = state.prayed;
+  oldx = state.oldx;
+  oldy = state.oldy;
+  course = state.course;
+  outstanding_taxes = state.outstanding_taxes;
+  dropflag = state.dropflag;
+  rmst = state.rmst;
+  nomove = state.nomove;
+  viewflag = state.viewflag;
+  lasttime = state.lasttime;
+  w1x = state.w1x;
+  w1y = state.w1y;
+  spheres = state.spheres;
+  auto_pickup = state.auto_pickup;
+}
+
+
+
+function loadLevels(savedLevels) {
+  for (var lev = 0; lev < 14; lev++) {
+    if (!savedLevels[lev]) {
+      LEVELS[lev] = null;
+      continue;
+    }
+    console.log(`loading: ${lev}`);
+    var tempLev = savedLevels[lev];
+    var items = tempLev.items;
+    var monsters = tempLev.monsters;
+    for (var x = 0; x < MAXX; x++) {
+      for (var y = 0; y < MAXY; y++) {
+        items[x][y] = createObject(items[x][y]);
+        monsters[x][y] = createMonster(monsters[x][y]);
+      }
+    }
+    LEVELS[lev] = Object.create(Level);
+    LEVELS[lev].items = items;
+    LEVELS[lev].monsters = monsters;
+    LEVELS[lev].know = tempLev.know;
   }
 }
 
@@ -177,75 +244,4 @@ function loadPlayer(saved) {
   player.WTW = saved.WTW;
   player.STREXTRA = saved.STREXTRA;
   player.LIFEPROT = saved.LIFEPROT;
-}
-
-
-
-function loadState(state) {
-  //LEVELS
-  //LOG
-  //player
-  newsphereflag = state.newsphereflag;
-  GAME_OVER = state.GAME_OVER;
-  IN_STORE = state.IN_STORE;
-  napping = state.napping;
-  knownPotions = state.knownPotions;
-  knownScrolls = state.knownScrolls;
-  knownSpells = state.knownSpells;
-  original_objects = state.original_objects;
-
-  logname = state.logname;
-  cheat = state.cheat;
-  level = state.level;
-  wizard = state.wizard;
-  gtime = state.gtime;
-  HARDGAME = state.HARDGAME;
-  lastmonst = state.lastmonst;
-  lastnum = state.lastnum;
-  hitflag = state.hitflag;
-  hit2flag = state.hit2flag;
-  hit3flag = state.hit3flag;
-  lastpx = state.lastpx;
-  lastpy = state.lastpy;
-  lasthx = state.lasthx;
-  lasthy = state.lasthy;
-  prayed = state.prayed;
-  oldx = state.oldx;
-  oldy = state.oldy;
-  course = state.course;
-  outstanding_taxes = state.outstanding_taxes;
-  dropflag = state.dropflag;
-  rmst = state.rmst;
-  nomove = state.nomove;
-  viewflag = state.viewflag;
-  lasttime = state.lasttime;
-  w1x = state.w1x;
-  w1y = state.w1y;
-  spheres = state.spheres;
-  auto_pickup = state.auto_pickup;
-}
-
-
-
-function loadLevels(savedLevels) {
-  for (var lev = 0; lev < 14; lev++) {
-    if (!savedLevels[lev]) {
-      LEVELS[lev] = null;
-      continue;
-    }
-    console.log(`loading: ${lev}`);
-    var tempLev = savedLevels[lev];
-    var items = tempLev.items;
-    var monsters = tempLev.monsters;
-    for (var x = 0; x < MAXX; x++) {
-      for (var y = 0; y < MAXY; y++) {
-        items[x][y] = createObject(items[x][y]);
-        monsters[x][y] = createMonster(monsters[x][y]);
-      }
-    }
-    LEVELS[lev] = Object.create(Level);
-    LEVELS[lev].items = items;
-    LEVELS[lev].monsters = monsters;
-    LEVELS[lev].know = tempLev.know;
-  }
 }

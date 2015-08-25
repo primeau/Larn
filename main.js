@@ -26,10 +26,22 @@ function setname(name) {
   cursors();
   cltoeoln();
 
-  HARDGAME = localStorage.getObject('difficulty') || 0;
+  var saveddata = localStorage.getObject(logname);
 
-  /* if logname == true, player won last time around */
-  var winner = localStorage.getObject(logname);
+  var winner = false;
+  var savegame = false;
+
+  /* if saveddata == winner, player won last time around */
+  /* otherwise if saveddata exits, it's the save game file */
+  if (saveddata != null) {
+    winner = saveddata == "winner";
+    savegame = !winner;
+  }
+
+  console.log("winner == " + winner);
+  console.log("savegame == " + savegame);
+
+  HARDGAME = localStorage.getObject('difficulty') || 0;
 
   if (winner) {
     // force difficulty to be one harder
@@ -37,25 +49,16 @@ function setname(name) {
     readmail();
     // clear the mail flag
     localStorage.removeItem(logname);
+  } else if (savegame) {
+    player = new Player();
+    loadSavedGame(saveddata);
+    setdifficulty(HARDGAME);
+    return 1;
   } else {
     lprcat(`What difficulty would you like to play? [<b>${HARDGAME}</b>] `);
     setNumberCallback(startgame, false);
   }
   return 0;
-}
-
-
-
-function setdifficulty(hard) {
-  if (hard == "") {
-    hard = HARDGAME; // use the default we set in setname
-  }
-
-  sethard(Number(hard)); /* set up the desired difficulty */
-
-  localStorage.setObject('difficulty', HARDGAME);
-
-  return 1;
 }
 
 
@@ -96,6 +99,66 @@ function startgame(hard) {
 
 
 
+function setdifficulty(hard) {
+  if (hard == "") {
+    hard = HARDGAME; // use the default we set in setname
+  }
+
+  sethard(Number(hard)); /* set up the desired difficulty */
+
+  localStorage.setObject('difficulty', HARDGAME);
+
+  return 1;
+}
+
+
+
+/*
+    function to set the desired hardness
+    enter with hard= -1 for default hardness, else any desired hardness
+ */
+function sethard(hard) {
+
+  HARDGAME = Math.max(0, hard);
+
+  console.log("setting difficulty: " + HARDGAME);
+
+  // hashewon(); TODO
+
+  var i;
+  var k = HARDGAME;
+  if (HARDGAME)
+    for (var j = 0; j < monsterlist.length; j++) {
+      var monster = monsterlist[j];
+
+      /* JRP we don't need to worry about blowing int boundaries
+         so we can keep making things harder as difficulty goes up */
+      i = ((6 + k) * monster.hitpoints + 1) / 6;
+      //monster.hitpoints = Math.min(32767, Math.round(i));
+      monster.hitpoints = Math.round(i);
+
+      i = ((6 + k) * monster.damage + 1) / 5;
+      //monster.damage = Math.min(127, Math.round(i));
+      monster.damage = Math.round(i);
+
+      i = (10 * monster.gold) / (10 + k);
+      //monster.gold = Math.min(32767, Math.round(i));
+      monster.gold = Math.round(i);
+
+      i = monster.armorclass - k;
+      //monster.armorclass = Math.max(-127, Math.round(i));
+      monster.armorclass = Math.round(i);
+
+      i = (7 * monster.experience) / (7 + k) + 1;
+      //monster.experience = Math.max(1, Math.round(i));
+      monster.experience = Math.round(i);
+
+      //console.log(`${monster.char}: hp:${monster.hitpoints}, d:${monster.damage}, g:${monster.gold}, ac:${monster.armorclass}, x:${monster.experience}`);
+    }
+}
+
+
+
 /*
 makeplayer()
 
@@ -123,50 +186,6 @@ function makeplayer() {
   player.y = rnd(MAXY - 2);
 
   recalc();
-}
-
-
-
-/*
-    function to set the desired hardness
-    enter with hard= -1 for default hardness, else any desired hardness
- */
-function sethard(hard) {
-  HARDGAME = Math.max(0, hard);
-
-  // hashewon(); TODO
-
-  var i;
-  var k = HARDGAME;
-  if (HARDGAME)
-    for (var j = 0; j < monsterlist.length; j++) {
-      var monster = monsterlist[j];
-      var before;
-
-      /* JRP we don't need to worry about blowing int boundaries
-         so we can keep making things harder as difficulty goes up */
-      i = ((6 + k) * monster.hitpoints + 1) / 6;
-      //monster.hitpoints = Math.min(32767, Math.round(i));
-      monster.hitpoints = Math.round(i);
-
-      i = ((6 + k) * monster.damage + 1) / 5;
-      //monster.damage = Math.min(127, Math.round(i));
-      monster.damage = Math.round(i);
-
-      i = (10 * monster.gold) / (10 + k);
-      //monster.gold = Math.min(32767, Math.round(i));
-      monster.gold = Math.round(i);
-
-      i = monster.armorclass - k;
-      //monster.armorclass = Math.max(-127, Math.round(i));
-      monster.armorclass = Math.round(i);
-
-      i = (7 * monster.experience) / (7 + k) + 1;
-      //monster.experience = Math.max(1, Math.round(i));
-      monster.experience = Math.round(i);
-
-      //console.log(`${monster.char}: hp:${monster.hitpoints}, d:${monster.damage}, g:${monster.gold}, ac:${monster.armorclass}, x:${monster.experience}`);
-    }
 }
 
 
@@ -243,8 +262,6 @@ function mainloop(e) {
   hitflag = 0;
   hit3flag = 0;
   bot_linex(); /* update bottom line */
-
-  showplayer(); // JRP NEW (was in yylex())
 
   paint();
 }
@@ -578,15 +595,6 @@ function parse(e) {
   }
 
   //
-  // REMOVE GEMS
-  //
-  if (key == 'G') {
-    remove_gems();
-    dropflag = 1;
-    return;
-  }
-
-  //
   // list spells and scrolls
   //
   if (key == 'I') {
@@ -632,16 +640,24 @@ function parse(e) {
     return 0;
   }
 
-
   //
-  // load saved game
+  // REMOVE GEMS
   //
   if (key == 'R') {
-    nomove = 1;
-    setCharCallback(parseLoadSavedGame, true);
-    updateLog("Do you want to load your saved game [<b>y</b>/<b>n</b>] ? ")
+    remove_gems();
+    dropflag = 1;
     return;
   }
+
+  // //
+  // // load saved game
+  // //
+  // if (key == 'G') {
+  //   nomove = 1;
+  //   setCharCallback(parseLoadSavedGame, true);
+  //   updateLog("Do you want to load your saved game [<b>y</b>/<b>n</b>] ? ")
+  //   return;
+  // }
 
   //
   // S - save game
@@ -649,6 +665,7 @@ function parse(e) {
   if (key == 'S') {
     nomove = 1;
     saveGame();
+    died(287, false);
     return;
   }
 

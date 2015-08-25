@@ -211,7 +211,6 @@ function quaffpotion(potion, set_known) {
             show1cell(i, j);
           }
         }
-      showplayer();
       break;
 
     case 10:
@@ -238,7 +237,6 @@ function quaffpotion(potion, set_known) {
           player.level.know[i][j] = 0;
           nap(1000);
         }
-        //draws(0, MAXX, 0, MAXY);
       break;
 
     case 12:
@@ -300,7 +298,6 @@ function quaffpotion(potion, set_known) {
             show1cell(i, j);
           }
         }
-      showplayer();
       break;
 
     case 20:

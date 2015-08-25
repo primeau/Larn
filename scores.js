@@ -309,17 +309,27 @@ function died(reason, slain) {
     return;
   }
 
-  lastmonst = reason; // for scoreboard
-  updateLog("Press <b>enter</b> to view the scoreboard: ");
-  if (cheat && wizard)
-    appendLog("(cheater and wizard scores not recorded)");
-  else if (wizard)
-    appendLog("(sorry, wizard scores are not recorded)");
-  else if (cheat)
-    appendLog("(sorry, cheater scores are not recorded)");
-  paint();
-
-  setCharCallback(endgame, true);
+  // show scoreboard unless they saved the game
+  if (reason != 287) {
+    lastmonst = reason; // for scoreboard
+    updateLog("Press <b>enter</b> to view the scoreboard: ");
+    if (cheat && wizard)
+      appendLog("(cheater and wizard scores not recorded)");
+    else if (wizard)
+      appendLog("(sorry, wizard scores are not recorded)");
+    else if (cheat)
+      appendLog("(sorry, cheater scores are not recorded)");
+    setCharCallback(endgame, true);
+    paint();
+  }
+  else {
+    updateLog("---- Reload your browser to play again  ----");
+    setCharCallback(dead, true);
+    paint();
+    GAME_OVER = true;
+    napping = true;
+    IN_STORE = true;
+  }
 }
 
 
@@ -339,13 +349,16 @@ function endgame(key) {
 
   var newscore = getScore();
 
+  console.log("wizard == " + wizard);
+  console.log("cheater == " + cheat);
+
   if (!wizard && !cheat) {
     var winners = localStorage.getObject('winners') || [];
     var losers = localStorage.getObject('losers') || [];
     if (newscore.score > 0) {
       if (newscore.winner) {
         winners.push(newscore);
-        localStorage.setObject(logname, true); // trigger to show mail next time
+        localStorage.setObject(logname, 'winner'); // trigger to show mail next time
         localStorage.setObject('winners', winners);
       } else {
         losers.push(newscore);

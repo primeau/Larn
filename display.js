@@ -194,19 +194,6 @@ function show1cell(x, y) {
 
 
 
-/* subroutine to show where the player is on the screen, cursor values start from 1 up */
-// TODO this isn't really used
-function showplayer() {
-  // show1cell(oldx, oldy);
-  // cursor(player.x + 1, player.y + 1);
-  // lprc(player.char);
-  // cursor(player.x + 1, player.y + 1);
-  // oldx = player.x;
-  // oldy = player.y;
-}
-
-
-
 /*
     moveplayer(dir)
 
