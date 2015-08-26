@@ -41,7 +41,9 @@ function newcavelevel(depth) {
 
     /* save a checkpoint file to prevent a different random
     level from being created */
-    saveGame(true);
+    if (depth > 0) {
+      saveGame(true);
+    }
 
 }
 
