@@ -31,6 +31,10 @@ function saveGame(isCheckPoint) {
   var bytes;
 
   localStorage.setObject(saveName, state);
+
+  /* save an emergency backup */
+  localStorage.setObject(saveName + 'backup', state);
+
   var hash = forge.md.sha512.create();
   hash.update(bytes = JSON.stringify(state));
 
@@ -78,10 +82,10 @@ function loadSavedGame(savedState, isCheckPoint) {
   console.log("cheater? " + cheat);
 
   if (isCheckPoint) {
-      updateLog("Welcome back. I saved your game for you.");
+      updateLog("Welcome back. I saved your game for you. (Your backup file has now been deleted)");
   }
   else {
-      updateLog("Welcome back. ");
+      updateLog("Welcome back. (Your save file has now been been deleted)");
   }
 
   if (cheat) {

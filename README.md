@@ -1,10 +1,6 @@
 You can play Larn here: http://prim.io/larn/
 
 todo:
-* warn player that back button, window close will kill the game
-* disable debugging shortcuts
-  - check for localhost, 127.0.0.1?
-* warn that save game is deleted after it's loaded
 * firefox / ie / safari support http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
 - nap & show monster movement during when falling asleep
 - use mousetrap to parse special keys, parse() for the rest
@@ -17,7 +13,7 @@ extras:
 - global scoreboard, use hmac to secure?
 - put platinum dragon beside eye of larn
 - secure save game (save hash key in a cookie)
-- use different wizard passwords to
+- document different wizard passwords to:
   - restore backup save file
   - restore save file created when window closed
   - enable debugging keys
@@ -44,6 +40,8 @@ bugs:
 - rothe/poltergeist/vampire should be born awake -> should they move during stealth?
 - test aggravate monster (should disable stealth too?)
 - test haste monsters
+- open door, monster moves on door, kill with mle -> black tile
+- does teleport scroll work?
 
 rename/refactor:
 - player.level.items[][] -> item

@@ -15,22 +15,18 @@ var Larn = {
 
     Mousetrap.bind('alt+h', eventToggleOriginalObjects);
 
-    Mousetrap.bind('alt+`', eventToggleDebugStats);
-    Mousetrap.bind('alt+1', eventToggleDebugOutput);
-    Mousetrap.bind('alt+2', eventToggleDebugWTW);
-    Mousetrap.bind('alt+3', eventToggleDebugStairs);
-    Mousetrap.bind('alt+4', eventToggleDebugKnowAll);
-    Mousetrap.bind('alt+5', eventToggleDebugStealth);
-    Mousetrap.bind('alt+6', eventToggleDebugAwareness);
-    Mousetrap.bind('alt+7', eventToggleDebugImmortal);
-    Mousetrap.bind('alt+8', eventToggleDebugProximity);
-
-
-    //Mousetrap.bind('i', eventShowInventory); // kills the i key for everything else 
+    var host = location.hostname;
+    if (host === 'localhost') {
+      enableDebug();
+    } else {
+      window.onbeforeunload = confirmExit;
+    }
+    //Mousetrap.bind('i', eventShowInventory); // kills the i key for everything else
 
     document.onkeypress = this.keyPress;
     document.onkeydown = this.keyDown;
     //document.onkeyup = this.keyUp;
+
     welcome();
   },
 
@@ -50,8 +46,29 @@ var Larn = {
     parseEvent(e, false, true);
   }, // KEYUP
 
+
+
 }; // LARN OBJECT
 
+
+
+function confirmExit() {
+  return "Are you sure? Your game will be lost!";
+}
+
+
+
+function enableDebug() {
+  Mousetrap.bind('alt+`', eventToggleDebugStats);
+  Mousetrap.bind('alt+1', eventToggleDebugOutput);
+  Mousetrap.bind('alt+2', eventToggleDebugWTW);
+  Mousetrap.bind('alt+3', eventToggleDebugStairs);
+  Mousetrap.bind('alt+4', eventToggleDebugKnowAll);
+  Mousetrap.bind('alt+5', eventToggleDebugStealth);
+  Mousetrap.bind('alt+6', eventToggleDebugAwareness);
+  Mousetrap.bind('alt+7', eventToggleDebugImmortal);
+  Mousetrap.bind('alt+8', eventToggleDebugProximity);
+}
 
 
 // toggle between hack-like and original objects

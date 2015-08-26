@@ -835,6 +835,26 @@ function parse(e) {
 
 function wizardmode(password) {
 
+  if (password === 'checkpoint') {
+    updateLog("reload to restart from backup checkpoint");
+    var checkpoint = localStorage.getItem('checkpointbackup');
+    localStorage.setItem('checkpoint', checkpoint);
+    return 1;
+  }
+
+  if (password === 'savegame') {
+    updateLog("reload to restart from backup save game");
+    var savegame = localStorage.getItem(logname + 'backup');
+    localStorage.setItem(logname, savegame);
+    return 1;
+  }
+
+  if (password === 'debug') {
+      updateLog("debugging shortcuts enabled");
+      enableDebug();
+      return 1;
+  }
+
   //  if (password !== 'pvnert(x)') {
   if (password !== 'pvnert') {
     updateLog("Sorry");
