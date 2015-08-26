@@ -27,6 +27,7 @@ function setname(name) {
   cltoeoln();
 
   var saveddata = localStorage.getObject(logname);
+  var checkpoint;
 
   var winner = false;
   var savegame = false;
@@ -37,9 +38,14 @@ function setname(name) {
     winner = saveddata == "winner";
     savegame = !winner;
   }
+  /* check for a checkpoint file */
+  else {
+    checkpoint = localStorage.getObject('checkpoint');
+  }
 
   console.log("winner == " + winner);
   console.log("savegame == " + savegame);
+  console.log("checkpoint == " + (checkpoint != null));
 
   HARDGAME = localStorage.getObject('difficulty') || 0;
 
@@ -49,9 +55,12 @@ function setname(name) {
     readmail();
     // clear the mail flag
     localStorage.removeItem(logname);
-  } else if (savegame) {
+  } else if (savegame || checkpoint) {
     player = new Player();
-    loadSavedGame(saveddata);
+    if (savegame)
+      loadSavedGame(saveddata, false);
+    else
+      loadSavedGame(checkpoint, true);
     setdifficulty(HARDGAME);
     return 1;
   } else {
@@ -263,6 +272,12 @@ function mainloop(e) {
   hit3flag = 0;
   bot_linex(); /* update bottom line */
 
+
+  if (gtime >= 400 && gtime % 100 == 0) {
+    saveGame(true);
+  }
+
+
   paint();
 }
 
@@ -322,9 +337,6 @@ function parse(e) {
     non_blocking_callback(code == ESC ? ESC : key, code);
     non_blocking_callback = null;
   }
-
-  var newx = player.x; // TODO needed?
-  var newy = player.y;
 
   var item = getItem(player.x, player.y);
 
@@ -520,7 +532,7 @@ function parse(e) {
   // version
   //
   if (key == 'v') {
-    updateLog(`JS Larn, Version 12.4.4 build 137 -- Difficulty ${HARDGAME}`);
+    updateLog(`JS Larn, Version 12.4.4 build 158 -- Difficulty ${HARDGAME}`);
     if (wizard) updateLog(" Wizard");
     if (cheat) updateLog(" Cheater");
     return;

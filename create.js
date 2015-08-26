@@ -37,6 +37,12 @@ function newcavelevel(depth) {
     for (var j = 0; j < MAXY; j++)
       for (var i = 0; i < MAXX; i++)
         player.level.know[i][j] = KNOWALL;
+
+
+    /* save a checkpoint file to prevent a different random
+    level from being created */
+    saveGame(true);
+
 }
 
 

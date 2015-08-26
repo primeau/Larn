@@ -16,7 +16,10 @@
 
 
 
-function saveGame() {
+function saveGame(isCheckPoint) {
+
+  var saveName = isCheckPoint ? 'checkpoint' : logname;
+
   // var hmac = forge.random.getBytesSync(128);
   // localStorage.setItem('hmac', hmac);
 
@@ -27,14 +30,20 @@ function saveGame() {
   var state = new GameState();
   var bytes;
 
-  localStorage.setObject(logname, state);
+  localStorage.setObject(saveName, state);
   var hash = forge.md.sha512.create();
   hash.update(bytes = JSON.stringify(state));
 
   player.level = x;
   // END HACK TODO to not store player.level
 
-  updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
+  if (isCheckPoint) {
+    var pad = 67 - LOG[LOG.length - 1].length;
+
+    appendLog(padString('*', pad));
+  } else {
+    updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
+  }
 
   console.log("saved hash: " + hash.digest().toHex());
   localStorage.setItem('hmac', hash.digest().toHex());
@@ -42,16 +51,15 @@ function saveGame() {
 
 
 
-function loadSavedGame() {
+function loadSavedGame(savedState, isCheckPoint) {
   // var hmac = localStorage.getItem('hmac');
   // console.log(forge.util.bytesToHex(hmac));
-
-  var savedState = localStorage.getObject(logname);
 
   if (!savedState) {
     updateLog("Sorry, I can't find your save game file!");
     return;
   }
+
   loadState(savedState);
 
   // check for cheaters:
@@ -69,7 +77,12 @@ function loadSavedGame() {
   cheat = hash.digest().toHex() != savedHash;
   console.log("cheater? " + cheat);
 
-  updateLog("Welcome back.");
+  if (isCheckPoint) {
+      updateLog("Welcome back. I saved your game for you.");
+  }
+  else {
+      updateLog("Welcome back. ");
+  }
 
   if (cheat) {
     updateLog("Have you been cheating?");
@@ -78,6 +91,7 @@ function loadSavedGame() {
 
   /* clear the saved game file */
   localStorage.removeItem(logname);
+  localStorage.removeItem('checkpoint');
 
 }
 

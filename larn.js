@@ -25,6 +25,9 @@ var Larn = {
     Mousetrap.bind('alt+7', eventToggleDebugImmortal);
     Mousetrap.bind('alt+8', eventToggleDebugProximity);
 
+
+    //Mousetrap.bind('i', eventShowInventory); // kills the i key for everything else 
+
     document.onkeypress = this.keyPress;
     document.onkeydown = this.keyDown;
     //document.onkeyup = this.keyUp;
@@ -140,3 +143,7 @@ function eventToggleDebugProximity() {
   updateLog("DEBUG: PROXIMITY: " + DEBUG_PROXIMITY);
   paint();
 }
+
+// function eventShowInventory() {
+//     showinventory(false, parse_inventory, showall, true, true);
+// }

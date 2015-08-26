@@ -128,29 +128,6 @@ function hashewon() {
 
 
 
-function checkmail() {
-  // int i;
-  // int gold, taxes;
-  //
-  // if (readboard() < 0)
-  // 	return;         /* can't find scoreboard */
-  // for (i = 0; i < SCORESIZE; i++) /* search through winners scoreboard */
-  // 	if (strcmp(winr[i].who, logname) == 0  &&  winr[i].score > 0  &&  winr[i].hasmail) {
-  // 		winr[i].hasmail = 0;
-  // 		gold = taxes = winr[i].taxes;
-  // 		writeboard();
-  //
-  // 		/* Intuit the amount of gold -- should have changed
-  // 		* the score file, but ...  TAXRATE is an fraction.
-  // 		*/
-  // 		while ((gold * TAXRATE) < taxes)
-  // 			gold += taxes;
-  // 		readmail(gold);
-  // 	}
-}
-
-
-
 /*
  *  int paytaxes(x)         Function to pay taxes if any are due
  *
@@ -179,10 +156,6 @@ function paytaxes(x) {
   // 		}
   // 		return(0L); /* couldn't find user on winning scoreboard */
 }
-
-
-
-
 
 
 
@@ -276,6 +249,7 @@ function canProtect(reason) {
  *
  * 283     annihilated in a sphere
  * 286     a quitter
+ * 287     saved game -- shouldn't go on scoreboard!
  */
 function died(reason, slain) {
 
@@ -300,6 +274,9 @@ function died(reason, slain) {
   paint();
   nomove = 1;
   dropflag = 1;
+
+  /* delete the checkpoint file */
+  localStorage.removeItem('checkpoint');
 
   // show scoreboard unless they saved the game
   if (reason != 287) {
