@@ -18,6 +18,18 @@
 
 function saveGame(isCheckPoint) {
 
+  if (wizard || cheat) {
+    if (isCheckPoint) {
+      console.log("not saving wizard/cheater checkpoint");
+      return;
+    }
+    else {
+        //updateLog("Wizards and cheaters don't get to save their games");
+        //return;
+    }
+  }
+
+
   var saveName = isCheckPoint ? 'checkpoint' : logname;
 
   // var hmac = forge.random.getBytesSync(128);
@@ -82,10 +94,9 @@ function loadSavedGame(savedState, isCheckPoint) {
   console.log("cheater? " + cheat);
 
   if (isCheckPoint) {
-      updateLog("Welcome back. I saved your game for you. (Your backup file has now been deleted)");
-  }
-  else {
-      updateLog("Welcome back. (Your save file has now been been deleted)");
+    updateLog("Welcome back. I saved your game for you. (Your backup file has now been deleted)");
+  } else {
+    updateLog("Welcome back. (Your save file has now been been deleted)");
   }
 
   if (cheat) {

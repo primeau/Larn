@@ -70,15 +70,14 @@ function enableDebug() {
   Mousetrap.bind('alt+8', eventToggleDebugProximity);
 }
 
-
 // toggle between hack-like and original objects
 function eventToggleOriginalObjects() {
   nomove = 1;
   original_objects = !original_objects;
   if (original_objects)
-    document.getElementById("toggleObjects").value = "Hack Style Objects";
+    document.getElementById("toggleObjects").value = "  Hack Style Objects  ";
   else
-    document.getElementById("toggleObjects").value = "Larn Style Objects";
+    document.getElementById("toggleObjects").value = "  Larn Style Objects  ";
 
   updateLog(`hack-style objects: ${original_objects ? "off" : "on"}`);
   paint();
