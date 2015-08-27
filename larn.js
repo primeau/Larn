@@ -75,7 +75,13 @@ function enableDebug() {
 function eventToggleOriginalObjects() {
   nomove = 1;
   original_objects = !original_objects;
-  updateLog(`hack-like objects: ${original_objects ? "off" : "on"}`);
+  if (original_objects)
+    document.getElementById("toggleObjects").value = "Hack Style Objects";
+  else
+    document.getElementById("toggleObjects").value = "Larn Style Objects";
+
+  updateLog(`hack-style objects: ${original_objects ? "off" : "on"}`);
+  paint();
 }
 
 function eventToggleDebugStats() {

@@ -3,29 +3,29 @@
 var scoreBoard = [];
 
 var ScoreBoardEntry = function() {
+  this.who = logname; /* the name of the character */
   this.hardlev = HARDGAME; /* the level of difficulty player played at */
+  this.winner = lastmonst == 263;
   this.score = player.GOLD; /* the score of the player */
   this.timeused = Math.round(gtime / 100); /* the time used in mobuls to win the game */
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
   this.level = levelnames[level]; /* the level player was on when he died */
-  this.who = logname; /* the name of the character */
-  this.winner = lastmonst == 263;
 
   if (this.winner) {
-    player.score += 100000 * this.hardlev;
+    this.score += 100000 * this.hardlev;
   }
 
   this.taxes = 0; /* taxes he owes to LRS */
 
-  // // TODO HACK
-  // var x = player.level;
-  // player.level = null;
-  // this.player = player;
-  // player.level = x;
+  // TODO HACK
+  var x = player.level;
+  player.level = null;
+  this.player = JSON.stringify(player);
+  player.level = x;
 
-  this.knownPotions = knownPotions;
-  this.knownScrolls = knownScrolls;
-  this.knownSpells = knownSpells;
+  // this.knownPotions = knownPotions;
+  // this.knownScrolls = knownScrolls;
+  // this.knownSpells = knownSpells;
 }
 
 

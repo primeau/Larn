@@ -979,7 +979,7 @@ function spattack(x, xx, yy) {
         if (player.GOLD < 0) player.GOLD = 0;
       } else updateLog(`The ${monster} couldn't find any gold to steal`);
       player.level.monsters[xx][yy] = null;
-      player.level.know[xx][yy] = 0;
+      player.level.know[xx][yy] &= ~KNOWHERE;
       return 1;
 
     case 9:
@@ -1030,7 +1030,7 @@ function spattack(x, xx, yy) {
       updateLog(`The ${monster} picks your pocket and takes: `);
       if (stealsomething() == 0) updateLog("  nothing");
       player.level.monsters[xx][yy] = null;
-      player.level.know[xx][yy] = 0;
+      player.level.know[xx][yy] &= ~KNOWHERE;
       recalc();
       return 1;
 

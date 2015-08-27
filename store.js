@@ -196,9 +196,9 @@ function dnd_parse(key) {
       var boughtItem = createObject(dnd_item[i].item);
       take(boughtItem);
       var invindex = getCharFromIndex(player.inventory.indexOf(boughtItem));
-      storemessage(`  You pick up: ${invindex}) ${boughtItem}`, 1000);
       if (boughtItem.matches(OSCROLL)) learnScroll(boughtItem);
       if (boughtItem.matches(OPOTION)) learnPotion(boughtItem);
+      storemessage(`  You pick up: ${invindex}) ${boughtItem}`, 1000);
       if (dnd_item[i].qty == 0) dnditem(i);
       updategold();
       lprc(key); /* echo the byte */
