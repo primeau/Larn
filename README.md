@@ -43,10 +43,10 @@ get magic mapping, everlasting expanded awareness and one of every object in
 the game.
 
 Since it's easy to lose your game due to a browser crash, accidental back
-button press, or tab closure, there are 2 new 'wizard' passwords. Using the
+button press, or closed tab, there are 2 new 'wizard' passwords. Using the
 password "checkpoint" will load a backup of a checkpoint file, and "savegame"
-will resurrect a previously saved game. Obviously this can be used to cheat,
-but it was already pretty easy to cheat before. Be honorable.
+will resurrect a previous save game. Obviously this can be used to cheat,
+but it was already pretty easy to cheat before. Be honorable, always.
 
 
 License

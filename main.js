@@ -556,7 +556,49 @@ function parse(e) {
   // show scores
   //
   if (key == 'z') {
-    showscores();
+
+      Parse.initialize("ZG6aY4DKdkKn39YGogG0WFhqk089WTqVWprNfijo", "Ioo0zvIxR5xvkf6lQQDW9A7YHaNyOItSDFb756Um");
+
+      var gamescore = new GameScore();
+    //   console.log(gamescore.who);
+    //   console.log(gamescore.score);
+      //
+      gamescore.write();
+      gamescore.save(null, {
+        success: function(gameScore) {
+          // Execute any logic that should take place after the object is saved.
+          console.log('New object created with objectId: ' + gameScore.id);
+
+
+          var query = new Parse.Query(GameScore);
+          query.limit(10); // limit to at most 10 results
+          query.descending("hardlev", "score", "level", "timeused");
+          query.find({
+            success: function(results) {
+                showscores();
+              console.log("Successfully retrieved " + results.length + " scores.");
+              // Do something with the returned Parse.Object values
+              for (var i = 0; i < results.length; i++) {
+                var object = results[i];
+                console.log(object.id + ' - ' + object.get('score'));
+              }
+            },
+            error: function(error) {
+              console.log("Error: " + error.code + " " + error.message);
+            }
+          });
+
+
+        },
+        error: function(gameScore, error) {
+          // Execute any logic that should take place if the save fails.
+          // error is a Parse.Error with an error code and message.
+          console.log('Failed to create new object, with error code: ' + error.message);
+        }
+      });
+
+
+    //showscores();
   }
 
 

@@ -2,6 +2,47 @@
 
 var scoreBoard = [];
 
+var GameScore = Parse.Object.extend({
+  className: "GameScore",
+  who: "",
+
+  initialize: function() {
+    this.who = logname; /* the name of the character */
+    this.hardlev = HARDGAME; /* the level of difficulty player played at */
+    this.winner = lastmonst == 263;
+    this.score = player.GOLD; /* the score of the player */
+    this.timeused = Math.round(gtime / 100); /* the time used in mobuls to win the game */
+    this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
+    this.level = levelnames[level]; /* the level player was on when he died */
+
+    if (this.winner) {
+      this.score += 100000 * this.hardlev;
+    }
+
+    this.taxes = 0; /* taxes he owes to LRS */
+
+    // TODO HACK
+    var x = player.level;
+    player.level = null;
+    this.player = JSON.stringify(player);
+    player.level = x;
+  },
+
+  write: function() {
+    this.set("who", this.who);
+    this.set("hardlev", this.hardlev);
+    this.set("winner", this.winner);
+    this.set("score", this.score);
+    this.set("timeused", this.timeused);
+    this.set("what", this.what);
+    this.set("level", this.level);
+    this.set("taxes", this.taxes);
+    this.set("player", this.player);
+},
+
+});
+
+
 var ScoreBoardEntry = function() {
   this.who = logname; /* the name of the character */
   this.hardlev = HARDGAME; /* the level of difficulty player played at */
@@ -22,10 +63,6 @@ var ScoreBoardEntry = function() {
   player.level = null;
   this.player = JSON.stringify(player);
   player.level = x;
-
-  // this.knownPotions = knownPotions;
-  // this.knownScrolls = knownScrolls;
-  // this.knownSpells = knownSpells;
 }
 
 
