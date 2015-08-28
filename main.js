@@ -532,6 +532,7 @@ function parse(e) {
   // version
   //
   if (key == 'v') {
+    nomove = true;
     updateLog(`JS Larn, Version 12.4.4 build 158 -- Difficulty ${HARDGAME}`);
     if (wizard) updateLog(" Wizard");
     if (cheat) updateLog(" Cheater");
@@ -850,9 +851,9 @@ function wizardmode(password) {
   }
 
   if (password === 'debug') {
-      updateLog("debugging shortcuts enabled");
-      enableDebug();
-      return 1;
+    updateLog("debugging shortcuts enabled");
+    enableDebug();
+    return 1;
   }
 
   //  if (password !== 'pvnert(x)') {

@@ -5,6 +5,7 @@ todo:
 - use mousetrap to parse special keys, parse() for the rest
 - update build number in version commmand
 - allow spaces in lognname
+- allow ) in pvnert(x)
 - look for TODO/HACK
 - checkpoints are choppy
   - save checkpoint in a thread?
@@ -25,14 +26,10 @@ extras:
 - global scoreboard, use hmac to secure?
 - put platinum dragon beside eye of larn
 - secure save game (save hash key in a cookie)
-- document different wizard passwords to:
-  - restore backup save file
-  - restore save file created when window closed
-  - enable debugging keys
 - highlight changed attributes
 - color (mcolor/ocolor)
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
-- add larn 12.4 to repo
+- add larn 12.4.4 to repo
   - https://sites.google.com/site/edenicholas/roguelikes/win32-larn
   - patch pit bug // BUGFIX
   - patch smart monster movement // UPGRADE
