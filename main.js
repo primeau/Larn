@@ -204,7 +204,7 @@ function makeplayer() {
   since we're running in a event-driven system we need to
   turn the original main loop a little bit inside-out
 */
-function mainloop(e) {
+function mainloop(key, code) {
 
   if (napping) {
     debug("napping");
@@ -213,7 +213,7 @@ function mainloop(e) {
 
   nomove = 0;
 
-  parse(e);
+  parse(key, code);
 
   if (nomove == 1) {
     paint();
@@ -273,7 +273,7 @@ function mainloop(e) {
   bot_linex(); /* update bottom line */
 
 
-  if (gtime >= 400 && gtime % 100 == 0) {
+  if (gtime >= 400 && gtime % 400 == 0) {
     saveGame(true);
   }
 
@@ -290,14 +290,19 @@ function mainloop(e) {
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
-function parse(e) {
+function parse(key, code) {
+  key = ""+key;
+  var shiftKey = key.indexOf('shift+') >= 0;
+  if (shiftKey)
+    key = key.substring(6);
 
-  var code = e.which;
-  var key = String.fromCharCode(code);
 
-  if (e.which == undefined) {
-    key = e;
-  }
+  // var code = e.which;
+  // var key = String.fromCharCode(code);
+  //
+  // if (e.which == undefined) {
+  //   key = e;
+  // }
 
   // if (blocking_callback != null)
   // debug("blocking: " + blocking_callback.name);
@@ -308,12 +313,12 @@ function parse(e) {
   //
   //console.log(`parse(): got: ${code}: ${key}`);
 
-  if (code == ENTER) {
-    key = ENTER;
-  }
-  if (code == DEL_CODE) {
-    key = DEL;
-  }
+  // if (code == ENTER) {
+  //   key = ENTER;
+  // }
+  // if (code == DEL_CODE) {
+  //   key = DEL;
+  // }
 
   if (blocking_callback != null) {
     //debug(blocking_callback.name + ": ");
@@ -349,7 +354,8 @@ function parse(e) {
   //
   var dir = parseDirectionKeys(key, code);
   if (dir > 0) {
-    if (e.shiftKey) {
+    //    if (e.shiftKey) {
+    if (shiftKey) {
       run(dir);
     } else {
       moveplayer(dir);
@@ -533,7 +539,7 @@ function parse(e) {
   //
   if (key == 'v') {
     nomove = 1;
-    updateLog(`JS Larn, Version 12.4.4 build 158 -- Difficulty ${HARDGAME}`);
+    updateLog(`JS Larn, Version 12.4.5 build 166 -- Difficulty ${HARDGAME}`);
     if (wizard) updateLog(" Wizard");
     if (cheat) updateLog(" Cheater");
     return;
@@ -721,9 +727,7 @@ function parse(e) {
     cursors();
     updateLog("As yet, you don't have enough experience to use teleportation");
     return;
-  }
-
-  else if (key == '<') { // UP STAIRS
+  } else if (key == '<') { // UP STAIRS
 
     if (DEBUG_STAIRS_EVERYWHERE) {
       if (level == 11)
@@ -738,9 +742,7 @@ function parse(e) {
     up_stairs();
 
     return;
-  }
-
-  else if (key == '>') { // DOWN STAIRS
+  } else if (key == '>') { // DOWN STAIRS
 
     if (DEBUG_STAIRS_EVERYWHERE) {
       if (!item.matches(OVOLDOWN) && level == 0) {
@@ -814,7 +816,7 @@ function parse(e) {
   if (key == '_') {
     nomove = 1;
     updateLog("Enter Password: ");
-    setTextCallback(wizardmode, true);
+    setTextCallback(wizardmode);
     return;
   }
 
@@ -847,8 +849,7 @@ function wizardmode(password) {
     return 1;
   }
 
-  //  if (password !== 'pvnert(x)') {
-  if (password !== 'pvnert') {
+  if (password !== 'pvnert(x)') {
     updateLog("Sorry");
     return 1;
   }

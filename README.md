@@ -38,7 +38,7 @@ WIZARD mode
 -----------
 There is a WIZARD mode for testing features of the game.  To get into WIZARD
 mode, type in an underscore "_" and answer the prompt for the password with
-"pvnert" (do not enter the quotes).  Wizards are non-scoring characters that
+"pvnert(x)" (do not enter the quotes).  Wizards are non-scoring characters that
 get magic mapping, everlasting expanded awareness and one of every object in
 the game.
 

@@ -1,10 +1,12 @@
 todo:
-* firefox / ie / safari support http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
+- wall spacing is different on different browsers:
+  - detect browser? http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
+- walls look ugly on windows
+- closed window alert is a bit annoying
+  - check for gameover
 - use mousetrap to parse special keys, parse() for the rest
 - update build number in version commmand
 - minify
-- allow spaces in lognname
-- allow ) in pvnert(x)
 - look for TODO/HACK
 - checkpoints are choppy
   - save checkpoint in a thread?
@@ -17,10 +19,18 @@ todo:
 
 
 bugs:
++ disable home/end/pgup/pgdown default
++ shift+numpad doesn't work
++ bank, deposit, escape -> nothing happens
++ altar, pray, escape -> nothing happens
+* drop gold, escape -> NaN gold!
+
 + hitting ESC on game start/deposit/withdrawal prints 27, backspace deletes one too many chars
 - rothe/poltergeist/vampire should be born awake -> should they move during stealth?
-~ casting sph twice in the same direction will always kill the player
-~ parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
+- casting sph twice in the same direction will always kill the player
+- parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
+- multiple 'you have been slain' messages if you get killed by more than 1 monster
+- ie & safari don't like the '`' character
 
 
 extras:

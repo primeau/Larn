@@ -8,6 +8,7 @@ function rnd(value) {
 }
 
 
+
 /*
  * generate random numbers 0<=rund(N)<=N-1
  */
@@ -89,25 +90,27 @@ function echo(key) {
 
 
 
-function gettextinput(key) {
+function getTextInput(key) {
   var match = function(key) {
-    return isalpha(key) || isnum(key);
+    //return isalpha(key) || isnum(key);
+    return isextra(key);
   }
-  return getinput(key, match);
+  return getInput(key, match);
 }
 
 
 
-function getonlynumberinput(key) {
+function getNumberInput(key) {
   var match = function(key) {
-    return isalpha(key) || isnum(key);
+    //return isalpha(key) || isnum(key);
+    return isnum(key);
   }
-  return getinput(key, match);
+  return getInput(key, match);
 }
 
 
 
-function getnumberinput(key) {
+function getNumberOrAsterisk(key) {
   var match = function(key) {
     return isnum(key);
   }
@@ -115,20 +118,23 @@ function getnumberinput(key) {
     if (key == '*' && KEYBOARD_INPUT.length == 0) { // only if it's the first char
       KEYBOARD_INPUT = key;
       echo(key);
-      return getinput_done();
-    }
-    else {
-        return 0;
+      return getInput_done();
+    } else {
+      return 0;
     }
   }
-  return getinput(key, match, extra);
+  return getInput(key, match, extra);
 }
 
 
 
-function getinput(key, match, extra) {
+function getInput(key, match, extra) {
+  if (key == ESC) {
+    KEYBOARD_INPUT = key;
+    return getInput_done();
+  }
   if (key == ENTER) {
-    return getinput_done();
+    return getInput_done();
   }
   if (key == DEL) {
     if (KEYBOARD_INPUT.length > 0) {
@@ -149,7 +155,7 @@ function getinput(key, match, extra) {
 
 
 
-function getinput_done() {
+function getInput_done() {
   var done = 0;
   if (keyboard_input_callback != null) {
     done = keyboard_input_callback(KEYBOARD_INPUT);
@@ -209,14 +215,21 @@ function timeleft() {
 
 function isalpha(str) {
   str = String(str);
-  return str.match(/^[A-Za-z]+$/);
+  return str.length == 1 && str.match(/^[A-Za-z]+$/);
+}
+
+
+
+function isextra(str) {
+  str = String(str);
+  return str.length == 1; // allow anything?
 }
 
 
 
 function isnum(str) {
   str = String(str);
-  return str.match(/^[0-9]+$/);
+  return str.length == 1 && str.match(/^[0-9]+$/);
 }
 
 
@@ -235,7 +248,7 @@ Storage.prototype.getObject = function(key) {
 
 
 function pad(str, width) {
-    return padString(""+str, width);
+  return padString("" + str, width);
 }
 
 

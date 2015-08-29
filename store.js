@@ -412,6 +412,11 @@ function bankmessage(str, duration) { //TODO convert to storemessage?
 
 
 function bank_deposit(amt) {
+  if (amt == ESC) {
+    bankmessage("  cancelled", 700);
+    return 0;
+  }
+
   if (amt == '*') {
     amt = player.GOLD;
   }
@@ -433,6 +438,11 @@ function bank_deposit(amt) {
 
 
 function bank_withdraw(amt) {
+  if (amt == ESC) {
+    bankmessage("  cancelled", 700);
+    return 0;
+  }
+
   if (amt == '*') {
     amt = player.BANKACCOUNT;
   }
@@ -455,7 +465,7 @@ function bank_withdraw(amt) {
 
 function bank_sell(key) {
   if (key == ESC) {
-    bankmessage("", 700);
+    bankmessage("  cancelled", 700);
   } else if (key == '*') {
     var gems_sold = false;
     for (i = 0; i < 26; i++) {
@@ -1072,8 +1082,8 @@ function storemessage(str, duration) {
   napping = false;
 
   if (duration != null && duration != 0) {
-  napping = true;
-  setTimeout(storemessage, duration, "", 0);
+    napping = true;
+    setTimeout(storemessage, duration, "", 0);
   }
 }
 

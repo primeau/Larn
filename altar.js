@@ -38,6 +38,12 @@ function act_donation_pray(k) {
   // cursor(1, 23);
   // cltoeoln();
 
+  if (k == ESC) {
+      appendLog(" cancelled");
+      prayed = 0;
+      return 1;
+  }
+
   if (k == '*') {
     debug(k = player.GOLD);
   }

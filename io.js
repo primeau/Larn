@@ -3,10 +3,9 @@
 var cursorx = 1;
 var cursory = 1;
 
-var current_attr = null;
-
-
 var display = initGrid(80, 24);
+
+
 
 function lprintf(str, width) {
   if (width != null) {
@@ -25,10 +24,6 @@ function lprcat(str, width) {
     return;
   }
   DEBUG_LPRCAT++;
-
-  // if (messages_on && cursory == 24) play_message_sound(str);
-  // int save_attr = current_attr;
-  // if (messages_on && cursory >= 20 && cursory <= 24) current_attr = MESSAGE_ATTR;
 
   var len = str.length;
   var tag = false;
@@ -56,7 +51,7 @@ function lprcat(str, width) {
     } else {
       lprc(str[i]);
     }
-  } // current_attr = save_attr;
+  }
 }
 
 
@@ -73,7 +68,6 @@ function cursors() {
 }
 
 
-var messages_on = false;
 
 function lprc(ch) {
 
@@ -81,11 +75,13 @@ function lprc(ch) {
 
   if (ch == '\b') {
     cursorx--;
-    os_put_font(' ', current_attr, cursorx - 1, cursory - 1);
+    os_put_font(' ', cursorx - 1, cursory - 1);
   } else if (ch == '\n') {
     cursorx = 1;
-    if (cursory == 24 && messages_on) os_scroll_down(20 - 1, 24 - 1); //TODO
-    else cursory++;
+    // if (cursory == 24)
+    //     os_scroll_down(20 - 1, 24 - 1); //TODO
+    // else
+    cursory++;
   } else {
     var n = 1;
 
@@ -95,7 +91,7 @@ function lprc(ch) {
     // }
 
     // while (n--) {
-    os_put_font(ch, current_attr, cursorx - 1, cursory - 1);
+    os_put_font(ch, cursorx - 1, cursory - 1);
     cursorx++;
     // }
   }
@@ -108,23 +104,14 @@ function os_scroll_down(x1, x2) {
 
 
 
-function os_put_font(ch, attr, x, y) {
+function os_put_font(ch, x, y) {
   if (x >= 0 && x < 80 && y >= 0 && y < 24)
-  // CharAttr1[80 * y + x] = (ch & 255) | ((attr & 255) << 8);
-  // display[80 * y + x] = ch;
     display[x][y] = ch;
 }
 
 
 
 function clear() {
-  // TODO
-  // if (messages_on) {
-  //   messages_on = 0;
-  //   os_save_restore_area(0, 0, 20 - 1, 80 - 1, 24 - 1);
-  //   messages_saved = 1;
-  // }
-
   for (var y = 1; y <= 24; y++) {
     var n = 80;
     cursor(1, y);

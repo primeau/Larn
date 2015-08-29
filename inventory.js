@@ -280,6 +280,11 @@ function drop_object(index) {
 function drop_object_gold(amount) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
+  if (amount == ESC) {
+      appendLog("  cancelled");
+      return 1;
+  }
+
   if (amount == '*') amount = player.GOLD;
 
   amount = Number(amount);
