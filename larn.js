@@ -13,7 +13,9 @@ var DEBUG_PROXIMITY = false;
 var Larn = {
   run: function() {
 
-    Mousetrap.bind('alt+h', eventToggleOriginalObjects);
+    Parse.initialize("ZG6aY4DKdkKn39YGogG0WFhqk089WTqVWprNfijo", "Ioo0zvIxR5xvkf6lQQDW9A7YHaNyOItSDFb756Um");
+
+    Mousetrap.bind('ctrl+h', eventToggleOriginalObjects);
 
     var host = location.hostname;
     if (host === 'localhost') {
@@ -21,7 +23,6 @@ var Larn = {
     } else {
       window.onbeforeunload = confirmExit;
     }
-    //Mousetrap.bind('i', eventShowInventory); // kills the i key for everything else
 
     document.onkeypress = this.keyPress;
     document.onkeydown = this.keyDown;
@@ -74,11 +75,10 @@ function enableDebug() {
 function eventToggleOriginalObjects() {
   nomove = 1;
   original_objects = !original_objects;
-  if (original_objects)
-    document.getElementById("toggleObjects").value = "  Hack Style Objects  ";
-  else
-    document.getElementById("toggleObjects").value = "  Larn Style Objects  ";
-
+  // if (original_objects)
+  //   document.getElementById("toggleObjects").value = "  Hack Style Objects  ";
+  // else
+  //   document.getElementById("toggleObjects").value = "  Larn Style Objects  ";
   updateLog(`hack-style objects: ${original_objects ? "off" : "on"}`);
   paint();
 }
@@ -165,7 +165,3 @@ function eventToggleDebugProximity() {
   updateLog("DEBUG: PROXIMITY: " + DEBUG_PROXIMITY);
   paint();
 }
-
-// function eventShowInventory() {
-//     showinventory(false, parse_inventory, showall, true, true);
-// }

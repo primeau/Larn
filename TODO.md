@@ -1,9 +1,8 @@
 todo:
 * firefox / ie / safari support http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
-* update documentation
-- nap & show monster movement during when falling asleep
 - use mousetrap to parse special keys, parse() for the rest
 - update build number in version commmand
+- minify
 - allow spaces in lognname
 - allow ) in pvnert(x)
 - look for TODO/HACK
@@ -14,13 +13,15 @@ todo:
 - test haste monsters
 - scoreboard to show inventory, other player info
 - update wikipedia
+- nap & show monster movement during when falling asleep
+
 
 bugs:
-- hitting ESC on game start/deposit/withdrawal prints 27, backspace deletes one too many chars
-- strextra can get out of balance? caused by heroism/giant strength
-- casting sph twice in the same direction will always kill the player
-- parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
++ hitting ESC on game start/deposit/withdrawal prints 27, backspace deletes one too many chars
 - rothe/poltergeist/vampire should be born awake -> should they move during stealth?
+~ casting sph twice in the same direction will always kill the player
+~ parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
+
 
 extras:
 - global scoreboard, use hmac to secure?

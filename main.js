@@ -422,7 +422,7 @@ function parse(e) {
   // PACK WEIGHT
   //
   if (key == 'g') {
-    cursors();
+    nomove = 1;
     updateLog(`The stuff you are carrying presently weighs ${Math.round(packweight())} pounds`);
     return;
   }
@@ -532,7 +532,7 @@ function parse(e) {
   // version
   //
   if (key == 'v') {
-    nomove = true;
+    nomove = 1;
     updateLog(`JS Larn, Version 12.4.4 build 158 -- Difficulty ${HARDGAME}`);
     if (wizard) updateLog(" Wizard");
     if (cheat) updateLog(" Cheater");
@@ -556,52 +556,9 @@ function parse(e) {
   // show scores
   //
   if (key == 'z') {
-
-      Parse.initialize("ZG6aY4DKdkKn39YGogG0WFhqk089WTqVWprNfijo", "Ioo0zvIxR5xvkf6lQQDW9A7YHaNyOItSDFb756Um");
-
-      var gamescore = new GameScore();
-    //   console.log(gamescore.who);
-    //   console.log(gamescore.score);
-      //
-      gamescore.write();
-      gamescore.save(null, {
-        success: function(gameScore) {
-          // Execute any logic that should take place after the object is saved.
-          console.log('New object created with objectId: ' + gameScore.id);
-
-
-          var query = new Parse.Query(GameScore);
-          query.limit(10); // limit to at most 10 results
-          query.descending("hardlev", "score", "level", "timeused");
-          query.find({
-            success: function(results) {
-                showscores();
-              console.log("Successfully retrieved " + results.length + " scores.");
-              // Do something with the returned Parse.Object values
-              for (var i = 0; i < results.length; i++) {
-                var object = results[i];
-                console.log(object.id + ' - ' + object.get('score'));
-              }
-            },
-            error: function(error) {
-              console.log("Error: " + error.code + " " + error.message);
-            }
-          });
-
-
-        },
-        error: function(gameScore, error) {
-          // Execute any logic that should take place if the save fails.
-          // error is a Parse.Error with an error code and message.
-          console.log('Failed to create new object, with error code: ' + error.message);
-        }
-      });
-
-
-    //showscores();
+    nomove = 1;
+    loadScores();
   }
-
-
 
   //
   // DESECRATE
@@ -653,6 +610,7 @@ function parse(e) {
   // list spells and scrolls
   //
   if (key == 'I') {
+    nomove = 1;
     seemagic(false);
     setCharCallback(parse_see_all, true);
     return;
@@ -662,7 +620,6 @@ function parse(e) {
   // outstanding taxes
   //
   if (key == 'P') {
-    cursors();
     nomove = 1;
     if (outstanding_taxes > 0)
       updateLog(`You presently owe ${outstanding_taxes} gold pieces in taxes`);
@@ -731,12 +688,10 @@ function parse(e) {
     if (player.SHIELD) {
       player.SHIELD = null;
       updateLog("Your shield is off");
-      //bottomline();
     } else
     if (player.WEAR) {
       player.WEAR = null;
       updateLog("Your armor is off");
-      //bottomline();
     } else
       updateLog("You aren't wearing anything");
     return;
@@ -768,9 +723,6 @@ function parse(e) {
     return;
   }
 
-  //
-  // UP LEVEL // TODO MAKE LESS COMPLICATED
-  //
   else if (key == '<') { // UP STAIRS
 
     if (DEBUG_STAIRS_EVERYWHERE) {
@@ -788,9 +740,6 @@ function parse(e) {
     return;
   }
 
-  //
-  // DOWN LEVEL // TODO MAKE LESS COMPLICATED
-  //
   else if (key == '>') { // DOWN STAIRS
 
     if (DEBUG_STAIRS_EVERYWHERE) {

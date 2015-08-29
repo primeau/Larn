@@ -56,28 +56,28 @@ journey into these caverns.\n\
 ";
 
 helppages[1] =
-"                      <b>Help File for The Caverns of Larn</b>               \n\
-                                                                              \n\
- y|Y  move|run northwest     k|K  move|run up            u|U  move|run northeast\n\
- h|H  move|run left           .   stay here              l|L  move|run right    \n\
- b|B  move|run southwest     j|J  move|run down          n|N  move|run southeast\n\
-                                                                              \n\
-                              A  desecrate an altar       &lt  go up stairs or\n\
-  c  cast a spell             C  close a door                volcanic shaft   \n\
-  d  drop an item             D  drink at a fountain                          \n\
+"                      <b>Help File for The Caverns of Larn</b>                 \n\
+                                                                                \n\
+ y|Y  move,run northwest     k|K  move|run up            u|U  move|run northeast\n\
+ h|H  move,run left           .   stay here              l|L  move|run right    \n\
+ b|B  move,run southwest     j|J  move|run down          n|N  move|run southeast\n\
+                                                                                \n\
+                              A  desecrate an altar       &lt  go up stairs or  \n\
+  c  cast a spell             C  close a door                volcanic shaft     \n\
+  d  drop an item             D  drink at a fountain                            \n\
   e  eat something            E  enter a store, dungeon   &gt  go down stairs or\n\
-  f  tidy up at a fountain                                   volcanic shaft   \n\
-  g  get present pack weight                                                  \n\
-  i  inventory your pockets   I  list all known items     ^  identify a trap  \n\
-  o  open a door or chest                                                     \n\
-  p  pray at an altar         P  give tax status          :  look at object you\n\
-  q  quaff a potion           Q  quit the game               are standing on  \n\
-  r  read a scroll            R  remove gems from throne                      \n\
-  s  sit on a throne          S  save the game            @  toggle auto-pickup\n\
-  t  take an item             T  take off armor                               \n\
-  v  print program version                                                    \n\
-  w  wield a weapon           W  wear armor                                   \n\
-  z  show scores              Z  teleport yourself        ?  this help screen \n\
+  f  tidy up at a fountain                                   volcanic shaft     \n\
+  g  get present pack weight                                                    \n\
+  i  inventory your pockets   I  list all known items     ^  identify a trap    \n\
+  o  open a door or chest                                                       \n\
+  p  pray at an altar         P  give tax status          :  look at object you \n\
+  q  quaff a potion           Q  quit the game               are standing on    \n\
+  r  read a scroll            R  remove gems from throne                        \n\
+  s  sit on a throne          S  save the game            @  toggle auto-pickup \n\
+,|t  take an item             T  take off armor                                 \n\
+  v  print program version                               ^h  hack-style objects \n\
+  w  wield a weapon           W  wear armor                                     \n\
+  z  show scores              Z  teleport yourself        ?  this help screen   \n\
   ";
 
 
