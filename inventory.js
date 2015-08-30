@@ -11,7 +11,7 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
   IN_STORE = true;
   var srcount = 0;
 
-  setCharCallback(callback, true);
+  setCharCallback(callback);
 
   cursor(1, 1);
 

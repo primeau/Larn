@@ -145,7 +145,7 @@ function dndstore() {
 
   updategold();
 
-  setCharCallback(dnd_parse, true);
+  setCharCallback(dnd_parse);
 }
 
 
@@ -337,7 +337,7 @@ function obanksub() {
   cl_dn(1, 21);
   lprcat("\nYour wish? [(<b>d</b>) deposit, (<b>w</b>) withdraw, (<b>s</b>) sell a stone, or <b>escape</b>] ");
 
-  setCharCallback(bank_parse, true);
+  setCharCallback(bank_parse);
 }
 
 
@@ -378,7 +378,7 @@ function bank_parse(key) {
     lprcat("sell\n");
     cltoeoln();
     lprcat("Which stone would you like to sell? [<b>*</b> for all] ");
-    setCharCallback(bank_sell, true);
+    setCharCallback(bank_sell);
   }
 }
 
@@ -397,7 +397,7 @@ function bankmessage(str, duration) { //TODO convert to storemessage?
   cursor(69, 22);
   cltoeoln();
 
-  setCharCallback(bank_parse, true);
+  setCharCallback(bank_parse);
 
   blt();
 
@@ -567,7 +567,7 @@ function otradiven() {
 
 
 function otradepost() {
-  setCharCallback(parse_tradepost, true);
+  setCharCallback(parse_tradepost);
   initpricelist();
 
   clear();
@@ -669,7 +669,7 @@ function parse_tradepost(key) {
   storemessage(`Item (${key}) is worth ${value} gold pieces to us. Do you want to sell it?`);
 
   itemToSell = new DND_Item(value, item, 1);
-  setCharCallback(parse_sellitem, true);
+  setCharCallback(parse_sellitem);
 }
 
 
@@ -681,7 +681,7 @@ var itemToSell = null; // GLOBAL
 function parse_sellitem(key) {
   if (key == ESC || key == 'N' || key == 'n') {
     cursor(63 + itemToSell.price.toString().length, 24);
-    setCharCallback(parse_tradepost, true);
+    setCharCallback(parse_tradepost);
     lprcat("no thanks");
     //nap(500);
 
@@ -692,7 +692,7 @@ function parse_sellitem(key) {
   }
   if (key == 'Y' || key == 'y') {
     cursor(63 + itemToSell.price.toString().length, 24);
-    setCharCallback(parse_tradepost, true);
+    setCharCallback(parse_tradepost);
     lprcat("yes");
 
     napping = true;
@@ -726,7 +726,7 @@ function parse_sellitem(key) {
 const coursetime = [10, 15, 10, 20, 10, 10, 10, 5];
 
 function oschool() {
-  setCharCallback(parse_class, true);
+  setCharCallback(parse_class);
   napping = false;
 
   printclasses();
@@ -882,7 +882,7 @@ function ohome() {
 
   dropflag = 1;
 
-  setCharCallback(parse_home, true);
+  setCharCallback(parse_home);
 
   for (var i = 0; i < 26; i++) {
     var item = player.inventory[i];
@@ -905,7 +905,7 @@ function ohome() {
 
         updateLog("Press <b>enter</b> to continue: ");
 
-        setCharCallback(win, true);
+        setCharCallback(win);
         return;
       }
     }
@@ -1021,7 +1021,7 @@ function parse_lrs_pay(amount) {
 
 function olrs() {
 
-  setCharCallback(parse_lrs, true);
+  setCharCallback(parse_lrs);
 
   clear();
 

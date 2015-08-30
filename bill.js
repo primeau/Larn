@@ -40,7 +40,7 @@ function letter1(gold) {
 
   cursors();
   lprcat("                --- press <b>space</b> to continue ---\n");
-  setCharCallback(letter2, true);
+  setCharCallback(letter2);
 
   return (1);
 }
@@ -65,7 +65,7 @@ function letter2(key) {
 
   cursors();
   lprcat("                --- press <b>space</b> to continue ---\n");
-  setCharCallback(letter3, true);
+  setCharCallback(letter3);
 
   return (1);
 }
@@ -88,7 +88,7 @@ function letter3(key) {
 
   cursors();
   lprcat("                --- press <b>space</b> to continue ---\n");
-  setCharCallback(letter4, true);
+  setCharCallback(letter4);
 
   return (1);
 }
@@ -113,7 +113,7 @@ function letter4(key) {
 
   cursors();
   lprcat("                --- press <b>space</b> to continue ---\n");
-  setCharCallback(letter5, true);
+  setCharCallback(letter5);
 
   return (1);
 }
@@ -139,7 +139,7 @@ function letter5(key) {
 
   cursors();
   lprcat("                --- press <b>space</b> to continue ---\n");
-  setCharCallback(letter6, true);
+  setCharCallback(letter6);
 
   return (1);
 }
@@ -168,7 +168,7 @@ function letter6(key) {
 
   cursors();
   lprcat("                --- press <b>space</b> to continue ---\n");
-  setCharCallback(startgame, true);
+  setCharCallback(startgame);
 
   return (1);
 }

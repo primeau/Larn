@@ -395,7 +395,7 @@ function parse_see_spells(key) {
   nomove = 1;
   if (key == ESC || key == ' ') {
     PAGE_COUNT = 1;
-    setCharCallback(cast, true);
+    setCharCallback(cast);
     return exitbuilding();
   }
 }

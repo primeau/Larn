@@ -4,6 +4,8 @@
 function regen() {
   var flag;
 
+  player.MOVESMADE++;
+  
   /* for stop time spell */
   if (player.TIMESTOP > 0) {
     if (--player.TIMESTOP <= 0) recalc();

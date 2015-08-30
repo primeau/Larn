@@ -49,7 +49,7 @@ var KEYBOARD_INPUT = "";
 
 
 function prepare_direction_event(direction_event) {
-  setCharCallback(getdirectioninput, true);
+  setCharCallback(getdirectioninput);
   keyboard_input_callback = direction_event;
   updateLog("  In what direction? ");
 }

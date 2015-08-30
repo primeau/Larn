@@ -306,19 +306,11 @@ function parse(key, code) {
 
   // if (blocking_callback != null)
   // debug("blocking: " + blocking_callback.name);
-  // if (non_blocking_callback != null)
-  // debug("non_blocking: " + non_blocking_callback.name);
   // if (keyboard_input_callback != null)
   // debug("keyboard_input_callback: " + keyboard_input_callback.name);
   //
   //console.log(`parse(): got: ${code}: ${key}`);
 
-  // if (code == ENTER) {
-  //   key = ENTER;
-  // }
-  // if (code == DEL_CODE) {
-  //   key = DEL;
-  // }
 
   if (blocking_callback != null) {
     //debug(blocking_callback.name + ": ");
@@ -336,11 +328,6 @@ function parse(key, code) {
       nomove = 1;
     }
     return;
-  }
-
-  if (non_blocking_callback != null) {
-    non_blocking_callback(code == ESC ? ESC : key, code);
-    non_blocking_callback = null;
   }
 
   var item = getItem(player.x, player.y);
@@ -395,7 +382,7 @@ function parse(key, code) {
   if (key == 'd') {
     if (player.TIMESTOP == 0) {
       updateLog("What do you want to drop [<b>space</b> to view] ? ");
-      setCharCallback(drop_object, true);
+      setCharCallback(drop_object);
     }
     return;
   }
@@ -410,7 +397,7 @@ function parse(key, code) {
         forget();
       } else {
         updateLog("What do you want to eat [<b>space</b> to view] ? ");
-        setCharCallback(act_eatcookie, true);
+        setCharCallback(act_eatcookie);
       }
     return;
   }
@@ -486,7 +473,7 @@ function parse(key, code) {
         quaffpotion(item, true);
       } else {
         updateLog("What do you want to quaff [<b>space</b> to view] ? ");
-        setCharCallback(act_quaffpotion, true); // TODO this should fall through?
+        setCharCallback(act_quaffpotion);
       }
     return;
   }
@@ -510,7 +497,7 @@ function parse(key, code) {
         read_scroll(item);
       } else {
         updateLog("What do you want to read [<b>space</b> to view] ? ");
-        setCharCallback(act_read_something, true);
+        setCharCallback(act_read_something);
       }
     }
     return;
@@ -553,7 +540,7 @@ function parse(key, code) {
       wield(item);
     } else {
       updateLog("What do you want to wield (-) for nothing [<b>space</b> to view] ? ");
-      setCharCallback(wield, true);
+      setCharCallback(wield);
     }
     return;
   }
@@ -618,7 +605,7 @@ function parse(key, code) {
   if (key == 'I') {
     nomove = 1;
     seemagic(false);
-    setCharCallback(parse_see_all, true);
+    setCharCallback(parse_see_all);
     return;
   }
 
@@ -639,7 +626,7 @@ function parse(key, code) {
   //
   if (key == 'Q') {
     nomove = 1;
-    setCharCallback(parseQuit, true);
+    setCharCallback(parseQuit);
     updateLog("Do you really want to quit (all progress will be lost) [<b>y</b>/<b>n</b>] ? ")
     return;
   }
@@ -672,7 +659,7 @@ function parse(key, code) {
   // //
   // if (key == 'G') {
   //   nomove = 1;
-  //   setCharCallback(parseLoadSavedGame, true);
+  //   setCharCallback(parseLoadSavedGame);
   //   updateLog("Do you want to load your saved game [<b>y</b>/<b>n</b>] ? ")
   //   return;
   // }
@@ -711,7 +698,7 @@ function parse(key, code) {
       wear(item);
     } else {
       updateLog("What do you want to wear [<b>space</b> to view] ? ");
-      setCharCallback(wear, true);
+      setCharCallback(wear);
     }
     return;
   }
@@ -805,7 +792,7 @@ function parse(key, code) {
   if (key == '?') {
     nomove = 1;
     currentpage = 0;
-    setCharCallback(parse_help, true);
+    setCharCallback(parse_help);
     print_help();
     return;
   }

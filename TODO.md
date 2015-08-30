@@ -3,29 +3,21 @@ todo:
   - detect browser? http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
 - walls look ugly on windows
 - closed window alert is a bit annoying
-  - check for gameover
-- use mousetrap to parse special keys, parse() for the rest
 - update build number in version commmand
 - minify
 - look for TODO/HACK
 - checkpoints are choppy
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
-- test aggravate monster (should disable stealth too?)
-- test haste monsters
 - scoreboard to show inventory, other player info
 - update wikipedia
 - nap & show monster movement during when falling asleep
-
+- store spellscast
 
 bugs:
-+ disable home/end/pgup/pgdown default
 + shift+numpad doesn't work
-+ bank, deposit, escape -> nothing happens
-+ altar, pray, escape -> nothing happens
-* drop gold, escape -> NaN gold!
-
-+ hitting ESC on game start/deposit/withdrawal prints 27, backspace deletes one too many chars
++ test hitting ESC everywhere
++ wield/wear/drop/etc? accepts up/down/left/right
 - rothe/poltergeist/vampire should be born awake -> should they move during stealth?
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
@@ -58,7 +50,6 @@ rename/refactor:
 - monst() -> monster at player.x/y
 - know(var) -> set know[][] at player.x/y
 - getItem(x,y) -> itemAt(x,y)
-- non_blocking isn't used any more
 - callback nomenclature & functions could be improved
 - napping
 - IN_STORE

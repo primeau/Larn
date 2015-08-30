@@ -24,7 +24,7 @@ function pre_cast() {
   if (player.SPELLS > 0) {
     updateLog(eys);
     spell_cast = "";
-    setCharCallback(cast, true);
+    setCharCallback(cast);
   } else {
     updateLog("You don't have any spells!");
   }
@@ -38,7 +38,7 @@ function cast(key) {
 
   if (key == 'I' || key == " ") {
     seemagic(true);
-    setCharCallback(parse_see_spells, true);
+    setCharCallback(parse_see_spells);
     if (spell_cast == null) updateLog(eys);
     return 0;
   }
@@ -60,6 +60,7 @@ function cast(key) {
   }
 
   --player.SPELLS;
+  player.SPELLSCAST++;
 
   var spellnum = knownSpells.indexOf(spell_cast.toLowerCase());
   if (spellnum >= 0) {
@@ -350,7 +351,7 @@ function speldamage(x) {
     case 33:
       /* genocide */
       updateLog("Genocide what monster? ");
-      setCharCallback(genmonst, true);
+      setCharCallback(genmonst);
       if (!wizard)
         forgetSpell(33); /* forget */
       loseint();

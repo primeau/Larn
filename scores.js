@@ -215,7 +215,7 @@ function showScores(newScore, local) {
     // clear the arrays for the next time the scoreboard is loaded
     winners = null;
     losers = null;
-    setCharCallback(exitscores, true);
+    setCharCallback(exitscores);
   } else {
     lprcat("                     ---- Reload your browser to play again  ----");
   }
@@ -534,11 +534,11 @@ function died(reason, slain) {
       appendLog("(sorry, wizard scores are not recorded)");
     else if (cheat)
       appendLog("(sorry, cheater scores are not recorded)");
-    setCharCallback(endgame, true);
+    setCharCallback(endgame);
     paint();
   } else {
     updateLog("---- Reload your browser to play again  ----");
-    setCharCallback(dead, true);
+    setCharCallback(dead);
     paint();
     GAME_OVER = true;
     napping = true;
@@ -553,7 +553,7 @@ function endgame(key) {
     return 0;
   }
 
-  setCharCallback(dead, true);
+  setCharCallback(dead);
   GAME_OVER = true;
   napping = true;
   IN_STORE = true;

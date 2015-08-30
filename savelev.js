@@ -210,6 +210,8 @@ function loadPlayer(saved) {
   player.x = saved.x;
   player.y = saved.y;
 
+  HARDGAME = saved.HARDGAME;
+
   player.STRENGTH = saved.STRENGTH;
   player.INTELLIGENCE = saved.INTELLIGENCE;
   player.WISDOM = saved.WISDOM;
@@ -258,8 +260,6 @@ function loadPlayer(saved) {
   player.FIRERESISTANCE = saved.FIRERESISTANCE;
   player.BESSMANN = saved.BESSMANN;
   player.NOTHEFT = saved.NOTHEFT;
-  HARDGAME = saved.HARDGAME;
-  player.MONSTKILLED = saved.MONSTKILLED;
   player.SPIRITPRO = saved.SPIRITPRO;
   player.UNDEADPRO = saved.UNDEADPRO;
   player.STEALTH = saved.STEALTH;
@@ -273,4 +273,9 @@ function loadPlayer(saved) {
   player.WTW = saved.WTW;
   player.STREXTRA = saved.STREXTRA;
   player.LIFEPROT = saved.LIFEPROT;
+
+  player.MOVESMADE = saved.MOVESMADE;
+  player.SPELLSCAST = saved.SPELLSCAST;
+  player.MONSTKILLED = saved.MONSTKILLED;
+
 }
