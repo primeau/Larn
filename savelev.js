@@ -22,10 +22,9 @@ function saveGame(isCheckPoint) {
     if (isCheckPoint) {
       console.log("not saving wizard/cheater checkpoint");
       return;
-    }
-    else {
-        //updateLog("Wizards and cheaters don't get to save their games");
-        //return;
+    } else {
+      //updateLog("Wizards and cheaters don't get to save their games");
+      //return;
     }
   }
 
@@ -120,7 +119,7 @@ function loadState(state) {
   LOG = savedLog;
 
   var savedPlayer = state.player;
-  loadPlayer(savedPlayer);
+  player = loadPlayer(savedPlayer);
 
   player.level = LEVELS[state.level];
 
@@ -128,9 +127,9 @@ function loadState(state) {
   GAME_OVER = state.GAME_OVER;
   IN_STORE = state.IN_STORE;
   napping = state.napping;
-  knownPotions = state.knownPotions;
-  knownScrolls = state.knownScrolls;
-  knownSpells = state.knownSpells;
+  // knownPotions = state.knownPotions;
+  // knownScrolls = state.knownScrolls;
+  // knownSpells = state.knownSpells;
   original_objects = state.original_objects;
 
   logname = state.logname;
@@ -192,90 +191,98 @@ function loadLevels(savedLevels) {
 
 
 function loadPlayer(saved) {
-  player.WEAR = null;
-  player.WIELD = null;
-  player.SHIELD = null;
+  var newPlayer = new Player();
+
+  newPlayer.WEAR = null;
+  newPlayer.WIELD = null;
+  newPlayer.SHIELD = null;
 
   for (var i = 0; i < 26; i++) {
     var item = saved.inventory[i];
-    player.inventory[i] = item ? createObject(item) : null;
+    newPlayer.inventory[i] = item ? createObject(item) : null;
     if (!item) continue;
-    if (saved.SHIELD && saved.SHIELD.id == item.id && saved.SHIELD.arg == item.arg) player.SHIELD = player.inventory[i];
-    if (saved.WIELD && saved.WIELD.id == item.id && saved.WIELD.arg == item.arg) player.WIELD = player.inventory[i];
-    if (saved.WEAR && saved.WEAR.id == item.id && saved.WEAR.arg == item.arg) player.WEAR = player.inventory[i];
+    if (saved.SHIELD && saved.SHIELD.id == item.id && saved.SHIELD.arg == item.arg) newPlayer.SHIELD = newPlayer.inventory[i];
+    if (saved.WIELD && saved.WIELD.id == item.id && saved.WIELD.arg == item.arg) newPlayer.WIELD = newPlayer.inventory[i];
+    if (saved.WEAR && saved.WEAR.id == item.id && saved.WEAR.arg == item.arg) newPlayer.WEAR = newPlayer.inventory[i];
   }
 
-  player.char = saved.char;
+  newPlayer.knownPotions = saved.knownPotions;
+  newPlayer.knownScrolls = saved.knownScrolls;
+  newPlayer.knownSpells = saved.knownSpells;
 
-  player.x = saved.x;
-  player.y = saved.y;
+
+  newPlayer.char = saved.char;
+
+  newPlayer.x = saved.x;
+  newPlayer.y = saved.y;
 
   HARDGAME = saved.HARDGAME;
 
-  player.STRENGTH = saved.STRENGTH;
-  player.INTELLIGENCE = saved.INTELLIGENCE;
-  player.WISDOM = saved.WISDOM;
-  player.CONSTITUTION = saved.CONSTITUTION;
-  player.DEXTERITY = saved.DEXTERITY;
-  player.CHARISMA = saved.CHARISMA;
-  player.HPMAX = saved.HPMAX;
-  player.HP = saved.HP;
-  player.GOLD = saved.GOLD;
-  player.EXPERIENCE = saved.EXPERIENCE;
-  player.LEVEL = saved.LEVEL;
-  player.REGEN = saved.REGEN;
-  player.WCLASS = saved.WCLASS;
-  player.AC = saved.AC;
-  player.BANKACCOUNT = saved.BANKACCOUNT;
-  player.SPELLMAX = saved.SPELLMAX;
-  player.SPELLS = saved.SPELLS;
-  player.ENERGY = saved.ENERGY;
-  player.ECOUNTER = saved.ECOUNTER;
-  player.MOREDEFENSES = saved.MOREDEFENSES;
-  player.PROTECTIONTIME = saved.PROTECTIONTIME;
-  player.REGENCOUNTER = saved.REGENCOUNTER;
-  player.MOREDAM = saved.MOREDAM;
-  player.DEXCOUNT = saved.DEXCOUNT;
-  player.STRCOUNT = saved.STRCOUNT;
-  player.BLINDCOUNT = saved.BLINDCOUNT;
-  player.CONFUSE = saved.CONFUSE;
-  player.ALTPRO = saved.ALTPRO;
-  player.HERO = saved.HERO;
-  player.CHARMCOUNT = saved.CHARMCOUNT;
-  player.INVISIBILITY = saved.INVISIBILITY;
-  player.CANCELLATION = saved.CANCELLATION;
-  player.HASTESELF = saved.HASTESELF;
-  player.AGGRAVATE = saved.AGGRAVATE;
-  player.GLOBE = saved.GLOBE;
-  player.TELEFLAG = saved.TELEFLAG;
-  player.SLAYING = saved.SLAYING;
-  player.NEGATESPIRIT = saved.NEGATESPIRIT;
-  player.SCAREMONST = saved.SCAREMONST;
-  player.AWARENESS = saved.AWARENESS;
-  player.HOLDMONST = saved.HOLDMONST;
-  player.TIMESTOP = saved.TIMESTOP;
-  player.HASTEMONST = saved.HASTEMONST;
-  player.CUBEofUNDEAD = saved.CUBEofUNDEAD;
-  player.GIANTSTR = saved.GIANTSTR;
-  player.FIRERESISTANCE = saved.FIRERESISTANCE;
-  player.BESSMANN = saved.BESSMANN;
-  player.NOTHEFT = saved.NOTHEFT;
-  player.SPIRITPRO = saved.SPIRITPRO;
-  player.UNDEADPRO = saved.UNDEADPRO;
-  player.STEALTH = saved.STEALTH;
-  player.ITCHING = saved.ITCHING;
-  player.LAUGHING = saved.LAUGHING;
-  player.DRAINSTRENGTH = saved.DRAINSTRENGTH;
-  player.CLUMSINESS = saved.CLUMSINESS;
-  player.INFEEBLEMENT = saved.INFEEBLEMENT;
-  player.HALFDAM = saved.HALFDAM;
-  player.SEEINVISIBLE = saved.SEEINVISIBLE;
-  player.WTW = saved.WTW;
-  player.STREXTRA = saved.STREXTRA;
-  player.LIFEPROT = saved.LIFEPROT;
+  newPlayer.STRENGTH = saved.STRENGTH;
+  newPlayer.INTELLIGENCE = saved.INTELLIGENCE;
+  newPlayer.WISDOM = saved.WISDOM;
+  newPlayer.CONSTITUTION = saved.CONSTITUTION;
+  newPlayer.DEXTERITY = saved.DEXTERITY;
+  newPlayer.CHARISMA = saved.CHARISMA;
+  newPlayer.HPMAX = saved.HPMAX;
+  newPlayer.HP = saved.HP;
+  newPlayer.GOLD = saved.GOLD;
+  newPlayer.EXPERIENCE = saved.EXPERIENCE;
+  newPlayer.LEVEL = saved.LEVEL;
+  newPlayer.REGEN = saved.REGEN;
+  newPlayer.WCLASS = saved.WCLASS;
+  newPlayer.AC = saved.AC;
+  newPlayer.BANKACCOUNT = saved.BANKACCOUNT;
+  newPlayer.SPELLMAX = saved.SPELLMAX;
+  newPlayer.SPELLS = saved.SPELLS;
+  newPlayer.ENERGY = saved.ENERGY;
+  newPlayer.ECOUNTER = saved.ECOUNTER;
+  newPlayer.MOREDEFENSES = saved.MOREDEFENSES;
+  newPlayer.PROTECTIONTIME = saved.PROTECTIONTIME;
+  newPlayer.REGENCOUNTER = saved.REGENCOUNTER;
+  newPlayer.MOREDAM = saved.MOREDAM;
+  newPlayer.DEXCOUNT = saved.DEXCOUNT;
+  newPlayer.STRCOUNT = saved.STRCOUNT;
+  newPlayer.BLINDCOUNT = saved.BLINDCOUNT;
+  newPlayer.CONFUSE = saved.CONFUSE;
+  newPlayer.ALTPRO = saved.ALTPRO;
+  newPlayer.HERO = saved.HERO;
+  newPlayer.CHARMCOUNT = saved.CHARMCOUNT;
+  newPlayer.INVISIBILITY = saved.INVISIBILITY;
+  newPlayer.CANCELLATION = saved.CANCELLATION;
+  newPlayer.HASTESELF = saved.HASTESELF;
+  newPlayer.AGGRAVATE = saved.AGGRAVATE;
+  newPlayer.GLOBE = saved.GLOBE;
+  newPlayer.TELEFLAG = saved.TELEFLAG;
+  newPlayer.SLAYING = saved.SLAYING;
+  newPlayer.NEGATESPIRIT = saved.NEGATESPIRIT;
+  newPlayer.SCAREMONST = saved.SCAREMONST;
+  newPlayer.AWARENESS = saved.AWARENESS;
+  newPlayer.HOLDMONST = saved.HOLDMONST;
+  newPlayer.TIMESTOP = saved.TIMESTOP;
+  newPlayer.HASTEMONST = saved.HASTEMONST;
+  newPlayer.CUBEofUNDEAD = saved.CUBEofUNDEAD;
+  newPlayer.GIANTSTR = saved.GIANTSTR;
+  newPlayer.FIRERESISTANCE = saved.FIRERESISTANCE;
+  newPlayer.BESSMANN = saved.BESSMANN;
+  newPlayer.NOTHEFT = saved.NOTHEFT;
+  newPlayer.SPIRITPRO = saved.SPIRITPRO;
+  newPlayer.UNDEADPRO = saved.UNDEADPRO;
+  newPlayer.STEALTH = saved.STEALTH;
+  newPlayer.ITCHING = saved.ITCHING;
+  newPlayer.LAUGHING = saved.LAUGHING;
+  newPlayer.DRAINSTRENGTH = saved.DRAINSTRENGTH;
+  newPlayer.CLUMSINESS = saved.CLUMSINESS;
+  newPlayer.INFEEBLEMENT = saved.INFEEBLEMENT;
+  newPlayer.HALFDAM = saved.HALFDAM;
+  newPlayer.SEEINVISIBLE = saved.SEEINVISIBLE;
+  newPlayer.WTW = saved.WTW;
+  newPlayer.STREXTRA = saved.STREXTRA;
+  newPlayer.LIFEPROT = saved.LIFEPROT;
 
-  player.MOVESMADE = saved.MOVESMADE;
-  player.SPELLSCAST = saved.SPELLSCAST;
-  player.MONSTKILLED = saved.MONSTKILLED;
+  newPlayer.MOVESMADE = saved.MOVESMADE;
+  newPlayer.SPELLSCAST = saved.SPELLSCAST;
+  newPlayer.MONSTKILLED = saved.MONSTKILLED;
 
+  return newPlayer;
 }

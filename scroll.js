@@ -35,7 +35,7 @@ const scrollname = [
 
 function isKnownScroll(item) {
   if (item.matches(OSCROLL)) {
-    if (knownScrolls[item.arg]) {
+    if (player.knownScrolls[item.arg]) {
       return true;
     }
   }
@@ -44,7 +44,7 @@ function isKnownScroll(item) {
 
 function learnScroll(item) {
   if (item.matches(OSCROLL)) {
-    knownScrolls[item.arg] = item;
+    player.knownScrolls[item.arg] = item;
   }
 }
 

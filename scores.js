@@ -53,7 +53,7 @@ var GlobalScore = Parse.Object.extend({
     this.what = this.get('what');
     this.level = this.get('level');
     this.taxes = this.get('taxes');
-    this.player = this.get('player');
+    this.player = JSON.parse(this.get('player'));
   },
 
   write: function() {
@@ -67,6 +67,23 @@ var GlobalScore = Parse.Object.extend({
     this.set("taxes", this.taxes);
     this.set("player", this.player);
   },
+
+  toString: function() {
+    var stats = "";
+    var tempPlayer = loadPlayer(this.player);
+    stats += this.createdAt + "\n";
+    stats += `Player:     ${this.who}\n`;
+    stats += `Winner:     ${this.winner}\n`;
+    stats += `Difficulty: ${this.hardlev}\n`;
+    stats += `Score:      ${this.score}\n`;
+    stats += `Time used:  ${this.timeused}\n`;
+    if (!this.winner) {
+      stats += `${this.what} on level ${this.level}\n\n`;
+    }
+    stats += game_stats(tempPlayer) + "\n";
+    stats += tempPlayer.getStatString() + "\n";
+    return stats;
+  }
 
 });
 
@@ -228,7 +245,8 @@ function printWinnerScoreBoard(winners, newScore) {
   var header = "\n     Score   Difficulty   Time Needed   Larn Winners List\n";
 
   function printout(p) {
-    lprcat(`${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}  ${padString("" + p.timeused, 5)} Mobuls   ${p.who} \n`);
+    var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}  ${padString("" + p.timeused, 5)} Mobuls   ${p.who}`;
+    lprc(`<a href="javascript:loadScoreStats('${p.id}')">${score}</a> \n`);
   }
   printScoreBoard(winners, newScore, header, printout);
 }
@@ -239,7 +257,8 @@ function printLoserScoreBoard(losers, newScore) {
   var header = ("\n     Score   Difficulty   Larn Visitor Log\n");
 
   function printout(p) {
-    lprcat(`${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level} \n`);
+    var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level}`;
+    lprc(`<a href="javascript:loadScoreStats('${p.id}')">${score}</a> \n`);
   }
   printScoreBoard(losers, newScore, header, printout);
 }
@@ -348,25 +367,30 @@ function isHighestScoreForPlayer(scoreboard, score) {
  *  Returns nothing of value
  */
 function showallscores() {
-  // int i, j;
-  //
-  // lflush();
-  // lcreat((char * ) 0);
-  // if (readboard() < 0)
-  //   return;
-  // cdesc[WEAR] = cdesc[WIELD] = cdesc[SHIELD] = -1; /* not wielding or wearing anything */
-  // for (i = 0; i < MAXPOTION; i++)
-  //   potionname[i][0] = ' ';
-  // for (i = 0; i < MAXSCROLL; i++)
-  //   scrollname[i][0] = ' ';
-  // i = winshou();
-  // j = shou(1);
-  // if (i + j == 0)
-  //   lprcat(esb);
-  // else
-  //   lprc('\n');
-  // lflush();
 }
+
+
+function loadScoreStats(gameId) {
+
+  var query = new Parse.Query(GlobalScore);
+  query.get(gameId, {
+    success: function(globalScore) {
+      globalScore.convertToLocal();
+      var stats = globalScore;
+      console.log(stats);
+
+      document.getElementById("STATS").innerHTML = stats;
+
+    },
+
+    error: function(object, error) {
+      console.log("parse error: " + error);
+      var stats = "Couldn't load game stats " + error;
+      document.getElementById("STATS").innerHTML = stats;
+    }
+  });
+
+};
 
 
 

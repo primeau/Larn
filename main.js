@@ -291,8 +291,8 @@ function mainloop(key, code) {
 /*****************************************************************************/
 /*****************************************************************************/
 function parse(key, code) {
-  key = ""+key;
-  var shiftKey = key.indexOf('shift+') >= 0;
+  key = "" + key;
+  var shiftKey = key.indexOf('shift+') >= 0; // TODO: this is sub-par
   if (shiftKey)
     key = key.substring(6);
 

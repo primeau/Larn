@@ -2,17 +2,19 @@ todo:
 - wall spacing is different on different browsers:
   - detect browser? http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
 - walls look ugly on windows
-- closed window alert is a bit annoying
-- update build number in version commmand
++ closed window alert is a bit annoying
++ update build number in version commmand
 - minify
 - look for TODO/HACK
 - checkpoints are choppy
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
 - scoreboard to show inventory, other player info
+  - still need to log gtime/rmst
 - update wikipedia
 - nap & show monster movement during when falling asleep
-- store spellscast
+- merge hash into saved state
+
 
 bugs:
 + shift+numpad doesn't work

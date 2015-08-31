@@ -304,7 +304,7 @@ function seemagic(onlyspells) {
   IN_STORE = true;
 
   if (onlyspells) {
-    cl_up(79, ((knownSpells.length + 2) / 3 + 4)); /* lines needed for display */
+    cl_up(79, ((player.knownSpells.length + 2) / 3 + 4)); /* lines needed for display */
   } else {
     clear();
   }
@@ -317,20 +317,20 @@ function seemagic(onlyspells) {
   var spellfunc = function(spell, buffer) {
     return padString(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
   }
-  printknown(spellstring, knownSpells, spellfunc, buffer, true);
+  printknown(spellstring, player.knownSpells, spellfunc, buffer, true);
 
   if (!onlyspells) {
     var scrollstring = "  The magic scrolls you have found to date are:";
     var scrollfunc = function(scroll) {
       return padString(`${scrollname[scroll.arg]}`, -26);
     }
-    printknown(scrollstring, knownScrolls, scrollfunc, buffer, true);
+    printknown(scrollstring, player.knownScrolls, scrollfunc, buffer, true);
 
     var potionstring = "  The magic potions you have found to date are:";
     var potionfunc = function(potion) {
       return padString(`${potionname[potion.arg]}`, -26);
     }
-    printknown(potionstring, knownPotions, potionfunc, buffer, false);
+    printknown(potionstring, player.knownPotions, potionfunc, buffer, false);
   }
 
   const max = 20;

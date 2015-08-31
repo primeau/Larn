@@ -2,13 +2,13 @@
 
 function learnSpell(spell) {
   //debug(`learning ${spell} ${spelcode.indexOf(spell)}`)
-  knownSpells[spelcode.indexOf(spell)] = spell;
+  player.knownSpells[spelcode.indexOf(spell)] = spell;
 }
 
 
 
 function forgetSpell(spellnum) {
-  knownSpells[spellnum] = null;
+  player.knownSpells[spellnum] = null;
 }
 
 
@@ -62,7 +62,7 @@ function cast(key) {
   --player.SPELLS;
   player.SPELLSCAST++;
 
-  var spellnum = knownSpells.indexOf(spell_cast.toLowerCase());
+  var spellnum = player.knownSpells.indexOf(spell_cast.toLowerCase());
   if (spellnum >= 0) {
     speldamage(spellnum);
   } else {

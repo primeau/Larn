@@ -1,5 +1,9 @@
 "use strict";
 
+// TODO, make this the canonical source for data?
+// i.e. replace cheat = ... with status.cheat etc.
+
+
 /* additions for JS Larn */
 var LEVELS = [];
 var LOG = [""];
@@ -9,9 +13,6 @@ var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 var GAME_OVER = false;
 var IN_STORE = false;
 var napping = false; /* prevent keyboard input while a nap event is happening */
-var knownPotions = [];
-var knownScrolls = [];
-var knownSpells = [];
 var original_objects = true;
 
 var logname = "";
@@ -54,9 +55,9 @@ function GameState() {
   this.GAME_OVER = GAME_OVER;
   this.IN_STORE = IN_STORE;
   this.napping = napping;
-  this.knownPotions = knownPotions;
-  this.knownScrolls = knownScrolls;
-  this.knownSpells = knownSpells;
+  // this.knownPotions = knownPotions;
+  // this.knownScrolls = knownScrolls;
+  // this.knownSpells = knownSpells;
   this.original_objects = original_objects;
 
   this.logname = logname;

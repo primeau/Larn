@@ -2,35 +2,35 @@
 <html class="no-js" lang="">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <!-- Place favicon.ico in the root directory -->
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- Place favicon.ico in the root directory -->
 
-    <style>
-        section {
-            width: 65%;
-            float: left;
-        }
+  <style>
+    section {
+      width: 65%;
+      float: left;
+    }
 
-        aside {
-            width: 21%;
-            float: right;
-        }
+    aside {
+      width: 21%;
+      float: right;
+    }
 
-        footer {
-            width: 60%;
-            float: left;
-        }
-    </style>
+    footer {
+      width: 60%;
+      float: left;
+    }
+  </style>
 
 
-    <style>
-        /*@font-face {
+  <style>
+    /*@font-face {
         font-family: 'dos';
         src: url('util/clacon.ttf');
         src: url('util/LessPerfectDOSVGA.ttf');
@@ -39,91 +39,127 @@
         src: url('util/Nouveau_IBM_Stretch.ttf');
       }*/
 
-        p.mono {
-            /*font-family: "dos", "Courier New", Courier, monospace;*/
-            font-family: "Courier New", Courier, monospace;
-            //font-family: "Lucida Console", Monaco, monospace;
-            //line-height: 18px;
-            font-size: 100%;
-            color: lightgrey;
-        }
-    </style>
+    /* unvisited link */
+    a:link {
+      color: #FF0000;
+    }
 
-    <script type="text/javascript" src="util/parse-1.5.0.min.js"></script>
-    <script src="util/js.cookie.js"></script>
-    <script src="util/forge.min.js"></script>
-    <script src="util/mousetrap.js"></script>
+    /* visited link */
+    a:visited {
+      color: #00FF00;
+    }
 
-    <script src="larn.js"></script>
-    <script src="player.js"></script>
-    <script src="mazes.js"></script>
-    <script src="level.js"></script>
-    <script src="create.js"></script>
-    <script src="data.js"></script>
-    <script src="object.js"></script>
-    <script src="util.js"></script>
-    <script src="parse.js"></script>
-    <script src="nap.js"></script>
-    <script src="scores.js"></script>
-    <script src="potion.js"></script>
-    <script src="inventory.js"></script>
-    <script src="scroll.js"></script>
-    <script src="monster.js"></script>
-    <script src="movem.js"></script>
-    <script src="moreobj.js"></script>
-    <script src="action.js"></script>
-    <script src="global.js"></script>
-    <script src="io.js"></script>
-    <script src="display.js"></script>
-    <script src="main.js"></script>
-    <script src="altar.js"></script>
-    <script src="store.js"></script>
-    <script src="savelev.js"></script>
-    <script src="spells.js"></script>
-    <script src="spellsinfo.js"></script>
-    <script src="regen.js"></script>
-    <script src="tok.js"></script>
-    <script src="fortune.js"></script>
-    <script src="spheres.js"></script>
-    <script src="help.js"></script>
-    <script src="state.js"></script>
-    <script src="bill.js"></script>
+    /* mouse over link */
+    a:hover {
+      color: #FF00FF;
+    }
+
+    /* selected link */
+    a:active {
+      color: #0000FF;
+    }
+
+    a:link {
+      text-decoration: none;
+    }
+
+    a:visited {
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    a:active {
+      text-decoration: underline;
+    }
+
+    p.mono {
+      /*font-family: "dos", "Courier New", Courier, monospace;*/
+      font-family: "Courier New", Courier, monospace;
+      //font-family: "Lucida Console", Monaco, monospace;
+      //line-height: 18px;
+      font-size: 100%;
+      color: lightgrey;
+    }
+  </style>
+
+  <script type="text/javascript" src="util/parse-1.5.0.min.js"></script>
+  <script src="util/js.cookie.js"></script>
+  <script src="util/forge.min.js"></script>
+  <script src="util/mousetrap.js"></script>
+
+  <script src="larn.js"></script>
+  <script src="player.js"></script>
+  <script src="mazes.js"></script>
+  <script src="level.js"></script>
+  <script src="create.js"></script>
+  <script src="data.js"></script>
+  <script src="object.js"></script>
+  <script src="util.js"></script>
+  <script src="parse.js"></script>
+  <script src="nap.js"></script>
+  <script src="scores.js"></script>
+  <script src="potion.js"></script>
+  <script src="inventory.js"></script>
+  <script src="scroll.js"></script>
+  <script src="monster.js"></script>
+  <script src="movem.js"></script>
+  <script src="moreobj.js"></script>
+  <script src="action.js"></script>
+  <script src="global.js"></script>
+  <script src="io.js"></script>
+  <script src="display.js"></script>
+  <script src="main.js"></script>
+  <script src="altar.js"></script>
+  <script src="store.js"></script>
+  <script src="savelev.js"></script>
+  <script src="spells.js"></script>
+  <script src="spellsinfo.js"></script>
+  <script src="regen.js"></script>
+  <script src="tok.js"></script>
+  <script src="fortune.js"></script>
+  <script src="spheres.js"></script>
+  <script src="help.js"></script>
+  <script src="state.js"></script>
+  <script src="bill.js"></script>
 
 </head>
 
 <body bgcolor="#111111">
-    <!--[if lt IE 8]>
+  <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-    <section>
-        <pre>
-            <p class="mono" id="LARN">Error Loading. (JS Larn currently only works on Chrome, Firefox, and Opera. Sorry...)</p>
+  <section>
+    <pre>
+      <p class="mono" id="LARN">Error Loading. (JS Larn currently only works on Chrome, Firefox, and Opera. Sorry...)</p>
 
-            <script>
-                "use strict";
-                Object.create(Larn).run();
-            </script>
-        </pre>
-    </section>
+      <script>
+        "use strict";
+        Object.create(Larn).run();
+      </script>
+    </pre>
+  </section>
 
-    <aside>
-        <pre>
-            <p class="mono" id="STATS"></p>
-        </pre>
-    </aside>
+  <aside>
+    <pre>
+      <p class="mono" id="STATS"></p>
+    </pre>
+  </aside>
 
-    <footer>
-        <pre>
-            <p class="mono" id="FOOTER">
+  <footer>
+    <pre>
+      <p class="mono" id="FOOTER">
 
-                <!-- <input id="toggleObjects" type="button" value="  Hack Style Objects  " onclick="eventToggleOriginalObjects();" /> Press <b>?</b> for help -->
+        <!-- <input id="toggleObjects" type="button" value="  Hack Style Objects  " onclick="eventToggleOriginalObjects();" /> Press <b>?</b> for help -->
 
-                <a href="https://github.com/primeau/Larn" target="_blank">More information about JS Larn 12.4.5</a>
+        <a href="https://github.com/primeau/Larn" target="_blank">More information about JS Larn 12.4.5</a>
 
-            </p>
-        </pre>
-    </footer>
+      </p>
+    </pre>
+  </footer>
 
 </body>
 

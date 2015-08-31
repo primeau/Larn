@@ -34,7 +34,7 @@ const potionname = [
 
 function isKnownPotion(item) {
   if (item.matches(OPOTION)) {
-    if (knownPotions[item.arg]) {
+    if (player.knownPotions[item.arg]) {
       return true;
     }
   }
@@ -43,7 +43,7 @@ function isKnownPotion(item) {
 
 function learnPotion(item) {
   if (item.matches(OPOTION)) {
-    knownPotions[item.arg] = item;
+    player.knownPotions[item.arg] = item;
   }
 }
 

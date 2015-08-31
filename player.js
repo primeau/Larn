@@ -6,6 +6,11 @@ const TIMELIMIT = 30000; /* maximum number of moves before the game is called */
 
 var Player = function Player() {
   this.inventory = [];
+
+  this.knownPotions = [];
+  this.knownScrolls = [];
+  this.knownSpells = [];
+
   this.x = 0;
   this.y = 0;
   this.level = null;
@@ -277,7 +282,7 @@ var Player = function Player() {
     var output =
       // `Spells: ${pad(this.SPELLS,2)}(${pad(this.SPELLMAX,2)})  AC: ${pad(this.AC,-4)} WC: ${pad(this.WCLASS,-4)} Level ${pad(this.LEVEL,-2)} Exp: ${pad(this.EXPERIENCE,-10)}${this.CLASS()} \n` +
       // `${pad(hpstring,-12)} STR=${pad((this.STRENGTH + this.STREXTRA),-2)} INT=${pad(this.INTELLIGENCE,-2)} WIS=${pad(this.WISDOM,-2)} CON=${pad(this.CONSTITUTION,-2)} DEX=${pad(this.DEXTERITY,-2)} CHA=${pad(this.CHARISMA,-2)} LV: ${pad((player.TELEFLAG ? "?" : levelnames[level]),-2)} Gold: ${Number(this.GOLD).toLocaleString()}`;
-`\
+      `\
 Spells: ${pad(this.SPELLS,2)}(${pad(this.SPELLMAX,2)})  \
 AC: ${pad(this.AC,-4)} \
 WC: ${pad(this.WCLASS,-4)} \
@@ -483,97 +488,101 @@ function wear(index) {
 }
 
 
-function game_stats() {
-  var s = "";
-  s += "X:     " + player.x + "\n";
-  s += "Y:     " + player.y + "\n";
+function game_stats(p) {
+  if (!p) p = player;
 
-  // s += "LV:    " + level + "\n";
-  // s += "STR:   " + player.STRENGTH + "\n";
-  // s += "INT:   " + player.INTELLIGENCE + "\n";
-  // s += "WIS:   " + player.WISDOM + "\n";
-  // s += "CON:   " + player.CONSTITUTION + "\n";
-  // s += "DEX:   " + player.DEXTERITY + "\n";
-  // s += "CHA:   " + player.CHARISMA + "\n";
-  // s += "HPMAX: " + player.HPMAX + "\n";
-  // s += "HP:    " + player.HP + "\n";
-  // s += "SPMAX: " + player.SPELLMAX + "\n";
-  // s += "SPELL: " + player.SPELLS + "\n";
-  // s += "GOLD:  " + player.GOLD + "\n";
-  // s += "EXP:   " + player.EXPERIENCE + "\n";
-  s += "LEVEL: " + player.LEVEL + "\n";
-  // s += "WC:    " + player.WCLASS + "\n";
-  // s += "AC:    " + player.AC + "\n";
+  var s = `LOC:   (${p.x},${p.y})\n`;
 
-  s += "ENER:  " + player.ENERGY + "\n";
-  s += "ENERC: " + player.ECOUNTER + "\n";
-  s += "REGE:  " + player.REGEN + "\n";
-  s += "REGEC: " + player.REGENCOUNTER + "\n";
+  s += `\nCounters:\n`;
   s += "TIME:  " + gtime + "\n";
-
-  s += "WIELD: " + player.WIELD + "\n";
-  s += "WEAR:  " + player.WEAR + "\n";
-  s += "SHLD:  " + player.SHIELD + "\n";
-  s += "+AC:   " + player.MOREDEFENSES + "\n";
-
-  s += "PRO2:  " + player.PROTECTIONTIME + "\n";
-  s += "DEX:   " + player.DEXCOUNT + "\n";
-  s += "CHM:   " + player.CHARMCOUNT + "\n";
-  s += "STR:   " + player.STRCOUNT + "\n";
-  s += "INV:   " + player.INVISIBILITY + "\n";
-  s += "CAN:   " + player.CANCELLATION + "\n";
-  s += "HAS:   " + player.HASTESELF + "\n";
-  s += "GLO:   " + player.GLOBE + "\n";
-  s += "SCA:   " + player.SCAREMONST + "\n";
-  s += "HLD:   " + player.HOLDMONST + "\n";
-  s += "STP:   " + player.TIMESTOP + "\n";
-  s += "WTW:   " + player.WTW + "\n";
-  s += "PRO3:  " + player.ALTPRO + "\n";
-
-  s += "STREX: " + player.STREXTRA + "\n";
-  s += "GIAST: " + player.GIANTSTR + "\n";
-  s += "HERO:  " + player.HERO + "\n";
-
-  s += "AWARE: " + player.AWARENESS + "\n";
-  s += "SEEIN: " + player.SEEINVISIBLE + "\n";
-  s += "SPRO:  " + player.SPIRITPRO + "\n";
-  s += "UPRO:  " + player.UNDEADPRO + "\n";
-  s += "FIRE:  " + player.FIRERESISTANCE + "\n";
-  s += "STEL:  " + player.STEALTH + "\n";
-
-  s += "AGGR:  " + player.AGGRAVATE + "\n";
-  s += "HSTM:  " + player.HASTEMONST + "\n";
-  s += "POIS:  " + player.HALFDAM + "\n";
-  s += "CONF:  " + player.CONFUSE + "\n";
-  s += "BLIND: " + player.BLINDCOUNT + "\n";
-  s += "ITCH:  " + player.ITCHING + "\n";
-  s += "CLMSY: " + player.CLUMSINESS + "\n";
-
-  s += "THEFT: " + player.NOTHEFT + "\n";
-  s += "CUBE:  " + player.CUBEofUNDEAD + "\n";
-  s += "ORB:   " + player.SLAYING + "\n";
-  s += "NEGAT: " + player.NEGATESPIRIT + "\n";
-  s += "LIFE:  " + player.LIFEPROT + "\n";
-
-  s += "KILL:  " + player.MONSTKILLED + "\n";
   s += "RMST:  " + rmst + "\n";
+  s += `ENERG: ${p.ENERGY}, ${p.ECOUNTER}\n`;
+  s += `REGEN: ${p.REGEN}, ${p.REGENCOUNTER}\n`;
 
-  s += "PAINT: " + DEBUG_PAINT + "\n";
-  s += "LPR:   " + DEBUG_LPRCAT + "\n";
-  s += "LPRC:  " + DEBUG_LPRC + "\n";
+  // s += `\nCarrying:\n`;
+  // s += "WIELD: " + p.WIELD + "\n";
+  // s += "WEAR:  " + p.WEAR + "\n";
+  // s += "SHLD:  " + p.SHIELD + "\n";
 
-  s += "\n";
+  s += `\nBonuses:\n`;
+  s += "+AC:   " + p.MOREDEFENSES + "\n";
+  s += "STREX: " + p.STREXTRA + "\n";
+  s += "GIAST: " + p.GIANTSTR + "\n";
+  s += "HERO:  " + p.HERO + "\n";
+  s += "AWARE: " + p.AWARENESS + "\n";
+  s += "SEEIN: " + p.SEEINVISIBLE + "\n";
+  s += "SPRO:  " + p.SPIRITPRO + "\n";
+  s += "UPRO:  " + p.UNDEADPRO + "\n";
+  s += "FIRE:  " + p.FIRERESISTANCE + "\n";
+  s += "STEL:  " + p.STEALTH + "\n";
+  s += "LIFE:  " + p.LIFEPROT + "\n";
+
+  s += `\nMagic:\n`;
+  s += "PRO2:  " + p.PROTECTIONTIME + "\n";
+  s += "DEX:   " + p.DEXCOUNT + "\n";
+  s += "CHM:   " + p.CHARMCOUNT + "\n";
+  s += "STR:   " + p.STRCOUNT + "\n";
+  s += "INV:   " + p.INVISIBILITY + "\n";
+  s += "CAN:   " + p.CANCELLATION + "\n";
+  s += "HAS:   " + p.HASTESELF + "\n";
+  s += "GLO:   " + p.GLOBE + "\n";
+  s += "SCA:   " + p.SCAREMONST + "\n";
+  s += "HLD:   " + p.HOLDMONST + "\n";
+  s += "STP:   " + p.TIMESTOP + "\n";
+  s += "WTW:   " + p.WTW + "\n";
+  s += "PRO3:  " + p.ALTPRO + "\n";
+
+  s += `\nCurses:\n`;
+  s += "AGGR:  " + p.AGGRAVATE + "\n";
+  s += "HSTM:  " + p.HASTEMONST + "\n";
+  s += "POIS:  " + p.HALFDAM + "\n";
+  s += "CONF:  " + p.CONFUSE + "\n";
+  s += "BLIND: " + p.BLINDCOUNT + "\n";
+  s += "ITCH:  " + p.ITCHING + "\n";
+  s += "CLMSY: " + p.CLUMSINESS + "\n";
+
+  s += `\nSpecial Items:\n`;
+  s += "THEFT: " + p.NOTHEFT + "\n";
+  s += "CUBE:  " + p.CUBEofUNDEAD + "\n";
+  s += "ORB:   " + p.SLAYING + "\n";
+  s += "NEGAT: " + p.NEGATESPIRIT + "\n";
+
+  s += `\nStats:\n`;
+  s += "MOVES: " + p.MOVESMADE + "\n";
+  s += "KILL:  " + p.MONSTKILLED + "\n";
+  s += "CAST:  " + p.SPELLSCAST + "\n";
+  // s += "PAINT: " + DEBUG_PAINT + "\n";
+  // s += "LPR:   " + DEBUG_LPRCAT + "\n";
+  // s += "LPRC:  " + DEBUG_LPRC + "\n";
+
+  s += "\nInventory:\n";
   var c = "a";
-  for (var inven = 0; inven < player.inventory.length; inven++) {
-    var item = player.inventory[inven];
-    if (item != null) {
-      s += c.nextChar(inven) + ") " + item + "\n";
+  for (var inven = 0; inven < p.inventory.length; inven++) {
+    var item = p.inventory[inven];
+    if (item) {
+      s += c.nextChar(inven) + ") " + item.toString(true) + "\n";
     }
   }
-  s += "\n";
-  for (var spell = 0; spell < knownSpells.length; spell++) {
-    if (knownSpells[spell] != null)
-      s += knownSpells[spell] + "\n";
+  s += "\nKnown Spells:\n";
+  var count = 0;
+  for (var spell = 0 ; spell < p.knownSpells.length; spell++) {
+    var tmp = p.knownSpells[spell];
+    if (tmp) {
+      s += tmp + " ";
+      if (++count % 3 == 0)
+        s += "\n";
+    }
+  }
+  if (count % 3) s += "\n";
+  s += "\nKnown Scrolls:\n";
+  for (var scroll = 0; scroll < p.knownScrolls.length; scroll++) {
+    var tmp = p.knownScrolls[scroll];
+    if (tmp) s += scrollname[tmp.arg] + "\n";
+  }
+  s += "\nKnown Potions:\n";
+  for (var potion = 0; potion < p.knownPotions.length; potion++) {
+    var tmp = p.knownPotions[potion];
+    if (tmp) s += potionname[tmp.arg] + "\n";
   }
 
   return s;
