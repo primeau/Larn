@@ -14,9 +14,14 @@ todo:
 - update wikipedia
 - nap & show monster movement during when falling asleep
 - merge hash into saved state
-
+- add gzip compression to nginx
+- show game stats for local games
+- separate gold & bankaccount on scoreboard
+- scoreboard instructions on line 23/24 are pushed down too far by 1
+* if a player has more than one top-10 score, the scoreboard will have one too few entries
 
 bugs:
+* local/globalscore: hardlev is occasionally undefined?
 + shift+numpad doesn't work
 + test hitting ESC everywhere
 + wield/wear/drop/etc? accepts up/down/left/right

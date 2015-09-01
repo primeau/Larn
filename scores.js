@@ -72,15 +72,16 @@ var GlobalScore = Parse.Object.extend({
     var stats = "";
     var tempPlayer = loadPlayer(this.player);
     stats += this.createdAt + "\n";
-    stats += `Player:     ${this.who}\n`;
-    stats += `Winner:     ${this.winner}\n`;
-    stats += `Difficulty: ${this.hardlev}\n`;
-    stats += `Score:      ${this.score}\n`;
-    stats += `Time used:  ${this.timeused}\n`;
+    stats += `Player: ${this.who}\n`;
+    stats += `Winner: ${this.winner ? "Yes" : "No"}\n`;
+    stats += `Diff:   ${this.hardlev}\n`;
+    stats += `Score:  ${this.score}\n`;
+    stats += `Mobuls: ${this.timeused}\n`;
     if (!this.winner) {
-      stats += `${this.what} on level ${this.level}\n\n`;
+      stats += `${this.what} on ${this.level}\n`;
     }
-    stats += game_stats(tempPlayer) + "\n";
+    stats += `\n${game_stats(tempPlayer)}\n`;
+    stats += `Bottom Line:\n`;
     stats += tempPlayer.getStatString() + "\n";
     return stats;
   }
@@ -106,6 +107,8 @@ function isEqual(a, b) {
 
 
 function sortScore(a, b) {
+  //console.log(`a: ${a.hardlev}, ${a.score}, ${a.level}, ${a.timeused}`);
+  //console.log(`b: ${b.hardlev}, ${b.score}, ${b.level}, ${b.timeused}`);
   if (a == null && b == null) return 0;
   if (a == null) return -1;
   if (b == null) return 1;
@@ -153,7 +156,7 @@ function readGlobal(loadWinners, newScore, offline) {
   }
 
   var query = new Parse.Query(GlobalScore);
-  query.limit(10); // limit to at most 10 results
+  query.limit(9); // limit to at most 9 results
   query.descending("hardlev", "score", "level", "timeused");
   query.equalTo("winner", loadWinners)
 
@@ -225,8 +228,9 @@ function showScores(newScore, local) {
     lprcat("\n  The scoreboard is empty");
   }
 
-
-  cursor(1, 24);
+  cursor(1, 23);
+  lprcat("                     Click on a score for more information\n");
+  //cursor(1, 24);
   if (!GAME_OVER) {
     lprcat("                        ---- Press <b>escape</b> to exit  ----");
     // clear the arrays for the next time the scoreboard is loaded
@@ -234,7 +238,7 @@ function showScores(newScore, local) {
     losers = null;
     setCharCallback(exitscores);
   } else {
-    lprcat("                     ---- Reload your browser to play again  ----");
+    lprcat("                 ----  Reload your browser to play again  ----");
   }
   blt();
 }
@@ -246,7 +250,10 @@ function printWinnerScoreBoard(winners, newScore) {
 
   function printout(p) {
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}  ${padString("" + p.timeused, 5)} Mobuls   ${p.who}`;
-    lprc(`<a href="javascript:loadScoreStats('${p.id}')">${score}</a> \n`);
+    lprc(`<a href="javascript:loadScoreStats('${p.id}')">`);
+    lprcat(`${score}`);
+    lprc(`</a>`);
+    lprcat(`\n`);
   }
   printScoreBoard(winners, newScore, header, printout);
 }
@@ -258,7 +265,10 @@ function printLoserScoreBoard(losers, newScore) {
 
   function printout(p) {
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level}`;
-    lprc(`<a href="javascript:loadScoreStats('${p.id}')">${score}</a> \n`);
+    lprc(`<a href="javascript:loadScoreStats('${p.id}')">`);
+    lprcat(`${score}`);
+    lprc(`</a>`);
+    lprcat(`\n`);
   }
   printScoreBoard(losers, newScore, header, printout);
 }
@@ -276,6 +286,8 @@ function printScoreBoard(board, newScore, header, printout) {
   for (var i = 0; i < scoreboard.length; i++) {
     var p = scoreboard[i];
 
+    //console.log(i + " " + p.who + ", " + p.score);
+
     if (players.indexOf(p.who) >= 0) continue;
     players.push(p.who);
 
@@ -285,7 +297,6 @@ function printScoreBoard(board, newScore, header, printout) {
     printout(p);
     if (isNewScore) lprc("</b>");
   }
-
 }
 
 
@@ -329,16 +340,16 @@ function writeLocal(newScore) {
 
 function writeGlobal(newScore) {
   var globalScore = new GlobalScore(newScore);
-
+  //console.log(newScore.who + " " + newScore.score + " " + newScore.hardlev);
   globalScore.write();
   globalScore.save(null, {
-    success: function(newScore) {
+    success: function(score) {
       // Execute any logic that should take place after the object is saved.
-      newScore.convertToLocal();
-      //console.log(score.id + " = " + score.who + " " + score.score + " " + score.hardlev);
-      loadScores(newScore);
+      score.convertToLocal();
+      //console.log(newScore.id + " = " + newScore.who + " " + newScore.score + " " + newScore.hardlev);
+      loadScores(score);
     },
-    error: function(newScore, error) {
+    error: function(score, error) {
       // Execute any logic that should take place if the save fails.
       // error is a Parse.Error with an error code and message.
       console.log('Failed to create new object, with error code: ' + error.message);
@@ -361,15 +372,6 @@ function isHighestScoreForPlayer(scoreboard, score) {
 
 
 
-/*
- *  showallscores() Function to show scores and the iven lists that go with them
- *
- *  Returns nothing of value
- */
-function showallscores() {
-}
-
-
 function loadScoreStats(gameId) {
 
   var query = new Parse.Query(GlobalScore);
@@ -377,10 +379,7 @@ function loadScoreStats(gameId) {
     success: function(globalScore) {
       globalScore.convertToLocal();
       var stats = globalScore;
-      console.log(stats);
-
       document.getElementById("STATS").innerHTML = stats;
-
     },
 
     error: function(object, error) {
@@ -561,7 +560,7 @@ function died(reason, slain) {
     setCharCallback(endgame);
     paint();
   } else {
-    updateLog("---- Reload your browser to play again  ----");
+    updateLog("----  Reload your browser to play again  ----");
     setCharCallback(dead);
     paint();
     GAME_OVER = true;

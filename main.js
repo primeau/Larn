@@ -73,7 +73,6 @@ function setname(name) {
 
 
 function startgame(hard) {
-
   if (highestScore) {
     HARDGAME = highestScore.hardlev + 1;
     setdifficulty(HARDGAME);
@@ -109,7 +108,7 @@ function startgame(hard) {
 
 
 function setdifficulty(hard) {
-  if (hard == "") {
+  if (!hard || hard == "") {
     hard = HARDGAME; // use the default we set in setname
   }
 

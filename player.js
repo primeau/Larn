@@ -491,18 +491,17 @@ function wear(index) {
 function game_stats(p) {
   if (!p) p = player;
 
-  var s = `LOC:   (${p.x},${p.y})\n`;
+  var s = "";
 
-  s += `\nCounters:\n`;
-  s += "TIME:  " + gtime + "\n";
-  s += "RMST:  " + rmst + "\n";
-  s += `ENERG: ${p.ENERGY}, ${p.ECOUNTER}\n`;
-  s += `REGEN: ${p.REGEN}, ${p.REGENCOUNTER}\n`;
-
-  // s += `\nCarrying:\n`;
-  // s += "WIELD: " + p.WIELD + "\n";
-  // s += "WEAR:  " + p.WEAR + "\n";
-  // s += "SHLD:  " + p.SHIELD + "\n";
+  s += "Inventory:\n";
+  s += ".) " + Number(p.GOLD).toLocaleString() + " gold pieces\n";
+  var c = "a";
+  for (var inven = 0; inven < p.inventory.length; inven++) {
+    var item = p.inventory[inven];
+    if (item) {
+      s += c.nextChar(inven) + ") " + item.toString(true) + "\n";
+    }
+  }
 
   s += `\nBonuses:\n`;
   s += "+AC:   " + p.MOREDEFENSES + "\n";
@@ -547,22 +546,22 @@ function game_stats(p) {
   s += "ORB:   " + p.SLAYING + "\n";
   s += "NEGAT: " + p.NEGATESPIRIT + "\n";
 
+  s += `\nLocation:\nx,y:   ${p.x},${p.y}\n`;
+
+  s += `\nCounters:\n`;
+  s += "TIME:  " + gtime + "\n";
+  s += "RMST:  " + rmst + "\n";
+  s += `ENERG: ${p.ENERGY}, ${p.ECOUNTER}\n`;
+  s += `REGEN: ${p.REGEN}, ${p.REGENCOUNTER}\n`;
+
   s += `\nStats:\n`;
   s += "MOVES: " + p.MOVESMADE + "\n";
-  s += "KILL:  " + p.MONSTKILLED + "\n";
+  s += "KILLS: " + p.MONSTKILLED + "\n";
   s += "CAST:  " + p.SPELLSCAST + "\n";
   // s += "PAINT: " + DEBUG_PAINT + "\n";
   // s += "LPR:   " + DEBUG_LPRCAT + "\n";
   // s += "LPRC:  " + DEBUG_LPRC + "\n";
 
-  s += "\nInventory:\n";
-  var c = "a";
-  for (var inven = 0; inven < p.inventory.length; inven++) {
-    var item = p.inventory[inven];
-    if (item) {
-      s += c.nextChar(inven) + ") " + item.toString(true) + "\n";
-    }
-  }
   s += "\nKnown Spells:\n";
   var count = 0;
   for (var spell = 0 ; spell < p.knownSpells.length; spell++) {
