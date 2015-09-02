@@ -1,41 +1,39 @@
 todo:
++ if a player has more than one top-10 score, the scoreboard will have one too few entries
 - wall spacing is different on different browsers:
   - detect browser? http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
 - walls look ugly on windows
-+ closed window alert is a bit annoying
++ closed window alert is annoying -> create alert-on-close option?
 + update build number in version commmand
 - minify
 - look for TODO/HACK
 - checkpoints are choppy
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
-- scoreboard to show inventory, other player info
-  - still need to log gtime/rmst
+- log gtime/rmst properly on scoreboard
 - update wikipedia
 - nap & show monster movement during when falling asleep
 - merge hash into saved state
 - add gzip compression to nginx
-- show game stats for local games
 - separate gold & bankaccount on scoreboard
 - scoreboard instructions on line 23/24 are pushed down too far by 1
-* if a player has more than one top-10 score, the scoreboard will have one too few entries
+
 
 bugs:
-* local/globalscore: hardlev is occasionally undefined?
-+ shift+numpad doesn't work
++ shift+numpad doesn't work (with numlock on?)
 + test hitting ESC everywhere
-+ wield/wear/drop/etc? accepts up/down/left/right
 - rothe/poltergeist/vampire should be born awake -> should they move during stealth?
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
 - multiple 'you have been slain' messages if you get killed by more than 1 monster
-- ie & safari don't like the '`' character
+  - or waterlord hitting & getting with gusher
+- ie & safari don't like the '`' character // wontfix
 
 
 extras:
-- global scoreboard, use hmac to secure?
++ cloud save via password
++ nerf the book and chest in the store to only be sellable for purchase price?
 - put platinum dragon beside eye of larn
-- secure save game (save hash key in a cookie)
 - highlight changed attributes
 - color (mcolor/ocolor)
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
@@ -62,3 +60,6 @@ rename/refactor:
 - IN_STORE
 - updateLog
 - oldx, oldy
+- files for item actions (throne, altar, fountain, etc)
+- all data in one file
+- rename object.js to item.js

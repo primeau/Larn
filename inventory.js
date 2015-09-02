@@ -281,7 +281,7 @@ function drop_object_gold(amount) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
   if (amount == ESC) {
-      appendLog("  cancelled");
+      appendLog(" cancelled");
       return 1;
   }
 

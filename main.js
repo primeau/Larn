@@ -18,6 +18,10 @@ function welcome() {
 
 
 function setname(name) {
+
+  if (name == ESC) {
+    name = logname;
+  }
   if (name) {
     logname = name.substring(0, 19);
     localStorage.setObject('logname', logname);
@@ -108,11 +112,12 @@ function startgame(hard) {
 
 
 function setdifficulty(hard) {
-  if (!hard || hard == "") {
+  if (!hard || hard == "" || isNaN(Number(hard))) {
+    console.log("hard == " + hard);
     hard = HARDGAME; // use the default we set in setname
   }
 
-  sethard(Number(hard)); /* set up the desired difficulty */
+  sethard(hard); /* set up the desired difficulty */
 
   localStorage.setObject('difficulty', HARDGAME);
 
@@ -126,6 +131,12 @@ function setdifficulty(hard) {
     enter with hard= -1 for default hardness, else any desired hardness
  */
 function sethard(hard) {
+
+  hard = Number(hard);
+  if (isNaN(hard)) {
+    console.log("error setting difficulty, defaulting to 0");
+    hard = 0;
+  }
 
   HARDGAME = Math.max(0, hard);
 
@@ -291,10 +302,6 @@ function mainloop(key, code) {
 /*****************************************************************************/
 function parse(key, code) {
   key = "" + key;
-  var shiftKey = key.indexOf('shift+') >= 0; // TODO: this is sub-par
-  if (shiftKey)
-    key = key.substring(6);
-
 
   // var code = e.which;
   // var key = String.fromCharCode(code);
@@ -340,8 +347,7 @@ function parse(key, code) {
   //
   var dir = parseDirectionKeys(key, code);
   if (dir > 0) {
-    //    if (e.shiftKey) {
-    if (shiftKey) {
+    if (shouldRun(key)) {
       run(dir);
     } else {
       moveplayer(dir);
@@ -525,7 +531,7 @@ function parse(key, code) {
   //
   if (key == 'v') {
     nomove = 1;
-    updateLog(`JS Larn, Version 12.4.5 build 166 -- Difficulty ${HARDGAME}`);
+    updateLog(`JS Larn, Version 12.4.5 build 169 -- Difficulty ${HARDGAME}`);
     if (wizard) updateLog(" Wizard");
     if (cheat) updateLog(" Cheater");
     return;
@@ -840,6 +846,7 @@ function wizardmode(password) {
     return 1;
   }
 
+  //console.log("disabling wizard mode");
   wizard = 1;
 
   player.STRENGTH = 70;

@@ -193,6 +193,9 @@ function getIndexFromChar(char) {
   if (char == ESC) {
     return -1;
   }
+  if (!isalpha(char)) {
+      return -1;
+  }
   var acode = "a".charCodeAt(0);
   var dropcode = char.charCodeAt(0);
   var dropIndex = dropcode - acode;

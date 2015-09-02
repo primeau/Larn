@@ -21,6 +21,12 @@ var LocalScore = function() {
   player.level = null;
   this.player = JSON.stringify(player);
   player.level = x;
+
+}
+
+LocalScore.prototype.toString = function() {
+  var stats = getStatString(this);
+  return stats;
 }
 
 
@@ -69,24 +75,36 @@ var GlobalScore = Parse.Object.extend({
   },
 
   toString: function() {
-    var stats = "";
-    var tempPlayer = loadPlayer(this.player);
-    stats += this.createdAt + "\n";
-    stats += `Player: ${this.who}\n`;
-    stats += `Winner: ${this.winner ? "Yes" : "No"}\n`;
-    stats += `Diff:   ${this.hardlev}\n`;
-    stats += `Score:  ${this.score}\n`;
-    stats += `Mobuls: ${this.timeused}\n`;
-    if (!this.winner) {
-      stats += `${this.what} on ${this.level}\n`;
-    }
-    stats += `\n${game_stats(tempPlayer)}\n`;
-    stats += `Bottom Line:\n`;
-    stats += tempPlayer.getStatString() + "\n";
+    var stats = this.createdAt + "\n";
+    stats += getStatString(this);
     return stats;
-  }
+  },
 
 });
+
+
+
+function getStatString(score) {
+  var tempPlayer;
+  if (score.player.inventory) {
+    tempPlayer = loadPlayer(score.player);
+  } else {
+    tempPlayer = loadPlayer(JSON.parse(score.player));
+  }
+  var stats = "";
+  stats += `Player: ${score.who}\n`;
+  stats += `Winner: ${score.winner ? "Yes" : "No"}\n`;
+  stats += `Diff:   ${score.hardlev}\n`;
+  stats += `Score:  ${score.score}\n`;
+  stats += `Mobuls: ${score.timeused}\n`;
+  if (!score.winner) {
+    stats += `${score.what} on ${score.level}\n`;
+  }
+  stats += `\n${game_stats(tempPlayer)}\n`;
+  stats += `Bottom Line:\n`;
+  stats += tempPlayer.getStatString() + "\n";
+  return stats;
+}
 
 
 
@@ -132,8 +150,13 @@ function sortScore(a, b) {
 
 
 
+
 var winners = null;
 var losers = null;
+
+
+const MAX_SCORES_TO_QUERY = 15;
+const MAX_SCORES_TO_PRINT = 8;
 
 
 
@@ -156,7 +179,7 @@ function readGlobal(loadWinners, newScore, offline) {
   }
 
   var query = new Parse.Query(GlobalScore);
-  query.limit(9); // limit to at most 9 results
+  query.limit(MAX_SCORES_TO_QUERY);
   query.descending("hardlev", "score", "level", "timeused");
   query.equalTo("winner", loadWinners)
 
@@ -248,9 +271,12 @@ function showScores(newScore, local) {
 function printWinnerScoreBoard(winners, newScore) {
   var header = "\n     Score   Difficulty   Time Needed   Larn Winners List\n";
 
+  // TODO duplication
   function printout(p) {
+    var scoreId = p.id || p.who;
+    var local = p.id == null;
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}  ${padString("" + p.timeused, 5)} Mobuls   ${p.who}`;
-    lprc(`<a href="javascript:loadScoreStats('${p.id}')">`);
+    lprc(`<a href="javascript:loadScoreStats('${scoreId}', ${local}, true)">`);
     lprcat(`${score}`);
     lprc(`</a>`);
     lprcat(`\n`);
@@ -263,9 +289,12 @@ function printWinnerScoreBoard(winners, newScore) {
 function printLoserScoreBoard(losers, newScore) {
   var header = ("\n     Score   Difficulty   Larn Visitor Log\n");
 
+  // TODO duplication
   function printout(p) {
+    var scoreId = p.id || p.who;
+    var local = p.id == null;
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level}`;
-    lprc(`<a href="javascript:loadScoreStats('${p.id}')">`);
+    lprc(`<a href="javascript:loadScoreStats('${scoreId}', ${local}, false)">`);
     lprcat(`${score}`);
     lprc(`</a>`);
     lprcat(`\n`);
@@ -283,7 +312,10 @@ function printScoreBoard(board, newScore, header, printout) {
   var players = [];
 
   lprcat(header);
+
+  var scoresPrinted = 0;
   for (var i = 0; i < scoreboard.length; i++) {
+
     var p = scoreboard[i];
 
     //console.log(i + " " + p.who + ", " + p.score);
@@ -293,11 +325,41 @@ function printScoreBoard(board, newScore, header, printout) {
 
     var isNewScore = newScore ? isEqual(p, newScore) : false;
 
+    if (++scoresPrinted > MAX_SCORES_TO_PRINT) break;
+
     if (isNewScore) lprc("<b>");
     printout(p);
     if (isNewScore) lprc("</b>");
   }
 }
+
+
+
+function loadScoreStats(gameId, local, winner) {
+
+  if (local) {
+    var board = winner ? localStorage.getObject('winners') : localStorage.getObject('losers');
+    var stats = getHighScore(board, gameId);
+    document.getElementById("STATS").innerHTML = getStatString(stats);
+    return;
+  }
+
+  var query = new Parse.Query(GlobalScore);
+  query.get(gameId, {
+    success: function(globalScore) {
+      globalScore.convertToLocal();
+      var stats = globalScore;
+      document.getElementById("STATS").innerHTML = stats;
+    },
+
+    error: function(object, error) {
+      console.log("parse error: " + error);
+      var stats = "Couldn't load game stats " + error;
+      document.getElementById("STATS").innerHTML = stats;
+    }
+  });
+
+};
 
 
 
@@ -316,21 +378,25 @@ function writeLocal(newScore) {
   }
 
   // write high score to board
-  // TODO eventually we should replace the old high score with the new one
+  // TODO there is lots of duplication here...
   if (newScore.winner) {
     var winners = localStorage.getObject('winners') || [];
     if (isHighestScoreForPlayer(winners, newScore)) {
+      var scoreIndex = getHighScoreIndex(winners, newScore.who);
       console.log("writing high score to winners scoreboard");
-      winners.push(newScore);
+      winners[scoreIndex] = newScore;
       localStorage.setObject('winners', winners);
     }
+
     // always write trigger to show mail next time
-    localStorage.setObject(logname, 'winner');
+    localStorage.setObject(newScore.who, 'winner');
+    
   } else {
     var losers = localStorage.getObject('losers') || [];
     if (isHighestScoreForPlayer(losers, newScore)) {
+      var scoreIndex = getHighScoreIndex(losers, newScore.who);
       console.log("writing high score to visitors scoreboard");
-      losers.push(newScore);
+      losers[scoreIndex] = newScore;
       localStorage.setObject('losers', losers);
     }
   }
@@ -360,36 +426,34 @@ function writeGlobal(newScore) {
 
 
 
+function getHighScore(scoreboard, playername) {
+  //console.log(getHighScoreIndex(scoreboard, playername));
+  return scoreboard[getHighScoreIndex(scoreboard, playername)];
+}
+
+
+
+function getHighScoreIndex(scoreboard, playername) {
+  var i = 0;
+  for (i = 0; i < scoreboard.length; i++) {
+    var tmp = scoreboard[i];
+    //console.log("i: " + i + tmp.who + ", " + playername);
+    if (tmp.who == playername) return i;
+  }
+  return i; // no high score found, signal to append at end of array
+}
+
+
+
 function isHighestScoreForPlayer(scoreboard, score) {
   for (var i = 0; i < scoreboard.length; i++) {
     var tmp = scoreboard[i];
-    if (tmp.logname == score.logname && tmp.winner == score.winner) {
+    if (tmp.who == score.who && tmp.winner == score.winner) {
       if (sortScore(tmp, score) < 0) return false;
     }
   }
   return true;
 }
-
-
-
-function loadScoreStats(gameId) {
-
-  var query = new Parse.Query(GlobalScore);
-  query.get(gameId, {
-    success: function(globalScore) {
-      globalScore.convertToLocal();
-      var stats = globalScore;
-      document.getElementById("STATS").innerHTML = stats;
-    },
-
-    error: function(object, error) {
-      console.log("parse error: " + error);
-      var stats = "Couldn't load game stats " + error;
-      document.getElementById("STATS").innerHTML = stats;
-    }
-  });
-
-};
 
 
 

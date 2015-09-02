@@ -4,15 +4,16 @@ const TAXRATE = 1 / 20;
 
 var highestScore;
 
+/*
+BUG: if a player wins at a lower/same difficulty, with a lower
+score, this will indicate more taxes are due. On the other hand,
+taxes don't need to be paid, so I'm ignoring it.
+*/
 function readmail() {
   var scores = localStorage.getObject('winners').sort(sortScore);
-  for (var i = 0; i < scores.length; i++) {
-    if (logname == scores[i].who) {
-      if (sortScore(scores[i].score, highestScore) > 0)
-        highestScore = scores[i];
-    }
-  }
-  var gold = highestScore.score || 0;
+  highestScore = getHighScore(scores, logname);
+  var gold = 0;
+  if (highestScore) gold = highestScore.score;
   letter1(gold);
 }
 
