@@ -5,97 +5,98 @@
 /* number of items in the dnd inventory table   */
 const MAXITM = 83;
 
-var DND_Item = function DND_Item(price, item, qty) {
+var DND_Item = function DND_Item(price, itemId, arg, qty) {
   this.price = price;
-  this.item = item;
+  this.itemId = itemId;
+  this.arg = arg;
   this.qty = qty;
 }
 
 var _itm = [
   /* cost      iven name    iven arg   how
       gp        iven[]      ivenarg[]  many */
-  [20, OLEATHER, 0, 3],
-  [100, OSTUDLEATHER, 0, 2],
-  [400, ORING, 0, 2],
-  [850, OCHAIN, 0, 2],
-  [2200, OSPLINT, 0, 1],
-  [4000, OPLATE, 0, 1],
-  [9000, OPLATEARMOR, 0, 1],
-  [26000, OSSPLATE, 0, 1],
-  [1500, OSHIELD, 0, 1],
-  [20, ODAGGER, 0, 3],
-  [200, OSPEAR, 0, 3],
-  [800, OFLAIL, 0, 2],
-  [1500, OBATTLEAXE, 0, 2],
-  [4500, OLONGSWORD, 0, 2],
-  [10000, O2SWORD, 0, 2],
-  [50000, OSWORD, 0, 1],
-  [165000, OLANCE, 0, 1],
-  [60000, OSWORDofSLASHING, 0, 0],
-  [100000, OHAMMER, 0, 0],
-  [1500, OPROTRING, 1, 1],
-  [850, OSTRRING, 1, 1],
-  [1200, ODEXRING, 1, 1],
-  [1200, OCLEVERRING, 1, 1],
-  [1800, OENERGYRING, 0, 1],
-  [1250, ODAMRING, 0, 1],
-  [2200, OREGENRING, 0, 1],
-  [10000, ORINGOFEXTRA, 0, 1],
-  [2800, OBELT, 0, 1],
-  [4000, OAMULET, 0, 1],
-  [65000, OORBOFDRAGON, 0, 0],
-  [55000, OSPIRITSCARAB, 0, 0],
-  [50000, OCUBEofUNDEAD, 0, 0],
-  [60000, ONOTHEFT, 0, 0],
-  [5900, OCHEST, 6, 1],
-  [2000, OBOOK, 8, 1],
-  [100, OCOOKIE, 0, 3],
-  [200, OPOTION, 0, 6],
-  [900, OPOTION, 1, 5],
-  [5200, OPOTION, 2, 1],
-  [1000, OPOTION, 3, 2],
-  [500, OPOTION, 4, 2],
-  [1500, OPOTION, 5, 2],
-  [700, OPOTION, 6, 1],
-  [300, OPOTION, 7, 7],
-  [2000, OPOTION, 8, 1],
-  [500, OPOTION, 9, 1],
-  [800, OPOTION, 10, 1],
-  [300, OPOTION, 11, 3],
-  [200, OPOTION, 12, 5],
-  [400, OPOTION, 13, 3],
-  [350, OPOTION, 14, 2],
-  [5200, OPOTION, 15, 1],
-  [900, OPOTION, 16, 2],
-  [2000, OPOTION, 17, 2],
-  [2200, OPOTION, 18, 4],
-  [800, OPOTION, 19, 6],
-  [3700, OPOTION, 20, 3],
-  [500, OPOTION, 22, 1],
-  [1500, OPOTION, 23, 3],
-  [1000, OSCROLL, 0, 2],
-  [1250, OSCROLL, 1, 2],
-  [600, OSCROLL, 2, 4],
-  [100, OSCROLL, 3, 4],
-  [1000, OSCROLL, 4, 3],
-  [2000, OSCROLL, 5, 2],
-  [1100, OSCROLL, 6, 1],
-  [5000, OSCROLL, 7, 2],
-  [2000, OSCROLL, 8, 2],
-  [2500, OSCROLL, 9, 4],
-  [200, OSCROLL, 10, 5],
-  [300, OSCROLL, 11, 3],
-  [3400, OSCROLL, 12, 1],
-  [3400, OSCROLL, 13, 1],
-  [3000, OSCROLL, 14, 2],
-  [4000, OSCROLL, 15, 2],
-  [5000, OSCROLL, 16, 2],
-  [10000, OSCROLL, 17, 1],
-  [5000, OSCROLL, 18, 1],
-  [3400, OSCROLL, 19, 2],
-  [2200, OSCROLL, 20, 3],
-  [39000, OSCROLL, 21, 0],
-  [6100, OSCROLL, 22, 1],
+  [20, OLEATHER.id, 0, 3],
+  [100, OSTUDLEATHER.id, 0, 2],
+  [400, ORING.id, 0, 2],
+  [850, OCHAIN.id, 0, 2],
+  [2200, OSPLINT.id, 0, 1],
+  [4000, OPLATE.id, 0, 1],
+  [9000, OPLATEARMOR.id, 0, 1],
+  [26000, OSSPLATE.id, 0, 1],
+  [1500, OSHIELD.id, 0, 1],
+  [20, ODAGGER.id, 0, 3],
+  [200, OSPEAR.id, 0, 3],
+  [800, OFLAIL.id, 0, 2],
+  [1500, OBATTLEAXE.id, 0, 2],
+  [4500, OLONGSWORD.id, 0, 2],
+  [10000, O2SWORD.id, 0, 2],
+  [50000, OSWORD.id, 0, 1],
+  [165000, OLANCE.id, 0, 1],
+  [60000, OSWORDofSLASHING.id, 0, 0],
+  [100000, OHAMMER.id, 0, 0],
+  [1500, OPROTRING.id, 1, 1],
+  [850, OSTRRING.id, 1, 1],
+  [1200, ODEXRING.id, 1, 1],
+  [1200, OCLEVERRING.id, 1, 1],
+  [1800, OENERGYRING.id, 0, 1],
+  [1250, ODAMRING.id, 0, 1],
+  [2200, OREGENRING.id, 0, 1],
+  [10000, ORINGOFEXTRA.id, 0, 1],
+  [2800, OBELT.id, 0, 1],
+  [4000, OAMULET.id, 0, 1],
+  [65000, OORBOFDRAGON.id, 0, 0],
+  [55000, OSPIRITSCARAB.id, 0, 0],
+  [50000, OCUBEofUNDEAD.id, 0, 0],
+  [60000, ONOTHEFT.id, 0, 0],
+  [5900, OCHEST.id, 6, 1],
+  [2000, OBOOK.id, 8, 1],
+  [100, OCOOKIE.id, 0, 3],
+  [200, OPOTION.id, 0, 6],
+  [900, OPOTION.id, 1, 5],
+  [5200, OPOTION.id, 2, 1],
+  [1000, OPOTION.id, 3, 2],
+  [500, OPOTION.id, 4, 2],
+  [1500, OPOTION.id, 5, 2],
+  [700, OPOTION.id, 6, 1],
+  [300, OPOTION.id, 7, 7],
+  [2000, OPOTION.id, 8, 1],
+  [500, OPOTION.id, 9, 1],
+  [800, OPOTION.id, 10, 1],
+  [300, OPOTION.id, 11, 3],
+  [200, OPOTION.id, 12, 5],
+  [400, OPOTION.id, 13, 3],
+  [350, OPOTION.id, 14, 2],
+  [5200, OPOTION.id, 15, 1],
+  [900, OPOTION.id, 16, 2],
+  [2000, OPOTION.id, 17, 2],
+  [2200, OPOTION.id, 18, 4],
+  [800, OPOTION.id, 19, 6],
+  [3700, OPOTION.id, 20, 3],
+  [500, OPOTION.id, 22, 1],
+  [1500, OPOTION.id, 23, 3],
+  [1000, OSCROLL.id, 0, 2],
+  [1250, OSCROLL.id, 1, 2],
+  [600, OSCROLL.id, 2, 4],
+  [100, OSCROLL.id, 3, 4],
+  [1000, OSCROLL.id, 4, 3],
+  [2000, OSCROLL.id, 5, 2],
+  [1100, OSCROLL.id, 6, 1],
+  [5000, OSCROLL.id, 7, 2],
+  [2000, OSCROLL.id, 8, 2],
+  [2500, OSCROLL.id, 9, 4],
+  [200, OSCROLL.id, 10, 5],
+  [300, OSCROLL.id, 11, 3],
+  [3400, OSCROLL.id, 12, 1],
+  [3400, OSCROLL.id, 13, 1],
+  [3000, OSCROLL.id, 14, 2],
+  [4000, OSCROLL.id, 15, 2],
+  [5000, OSCROLL.id, 16, 2],
+  [10000, OSCROLL.id, 17, 1],
+  [5000, OSCROLL.id, 18, 1],
+  [3400, OSCROLL.id, 19, 2],
+  [2200, OSCROLL.id, 20, 3],
+  [39000, OSCROLL.id, 21, 0],
+  [6100, OSCROLL.id, 22, 1],
   [30000, OSCROLL, 23, 0]
 ];
 
@@ -193,7 +194,7 @@ function dnd_parse(key) {
     } else {
       player.GOLD -= dnd_item[i].price;
       dnd_item[i].qty--;
-      var boughtItem = createObject(dnd_item[i].item);
+      var boughtItem = createObject(dnd_item[i].itemId, dnd_item[i].arg);
       take(boughtItem);
       var invindex = getCharFromIndex(player.inventory.indexOf(boughtItem));
       if (boughtItem.matches(OSCROLL)) learnScroll(boughtItem);
@@ -228,12 +229,12 @@ function dnditem(i) {
     return;
   }
 
-  var item = dnd_item[i].item;
+  var item = createObject(dnd_item[i].itemId, dnd_item[i].arg);
   lprcat(`${getCharFromIndex(i%26)}) `);
 
   if (item.matches(OPOTION)) lprintf(`${item.toString(true).substring(8)}`);
   else if (item.matches(OSCROLL)) lprintf(`${item.toString(true).substring(8)}`);
-  else lprcat(`${dnd_item[i].item.toString(true)}`);
+  else lprcat(`${item.toString(true)}`);
 
   cursor(j + 31, k);
 
@@ -635,7 +636,7 @@ function parse_tradepost(key) {
     else {
       var found = MAXITM;
       for (var j = 0; j < MAXITM; j++) {
-        if (dnd_item[j].item.matches(item)) {
+        if (dnd_item[j].itemId == item.id) {
           found = j;
           break;
         }
@@ -668,19 +669,23 @@ function parse_tradepost(key) {
   value = Math.floor(value);
   storemessage(`Item (${key}) is worth ${value} gold pieces to us. Do you want to sell it?`);
 
-  itemToSell = new DND_Item(value, item, 1);
+  itemToSell = [];
+  itemToSell[SELL_PRICE] = value;
+  itemToSell[SELL_ITEM] = item;
+
   setCharCallback(parse_sellitem);
 }
 
 
 
 var itemToSell = null; // GLOBAL
-
+const SELL_PRICE = 0;
+const SELL_ITEM = 1;
 
 
 function parse_sellitem(key) {
   if (key == ESC || key == 'N' || key == 'n') {
-    cursor(63 + itemToSell.price.toString().length, 24);
+    cursor(63 + itemToSell[SELL_PRICE].toString().length, 24);
     setCharCallback(parse_tradepost);
     lprcat("no thanks");
     //nap(500);
@@ -691,18 +696,18 @@ function parse_sellitem(key) {
     return 1;
   }
   if (key == 'Y' || key == 'y') {
-    cursor(63 + itemToSell.price.toString().length, 24);
+    cursor(63 + itemToSell[SELL_PRICE].toString().length, 24);
     setCharCallback(parse_tradepost);
     lprcat("yes");
 
     napping = true;
     setTimeout(storemessage, 700, "");
-    player.GOLD += itemToSell.price;
-    if (player.WEAR === itemToSell.item) player.WEAR = null;
-    if (player.WIELD === itemToSell.item) player.WIELD = null;
-    if (player.SHIELD === itemToSell.item) player.SHIELD = null;
-    player.adjustcvalues(itemToSell.item, false);
-    var index = player.inventory.indexOf(itemToSell.item);
+    player.GOLD += itemToSell[SELL_PRICE];
+    if (player.WEAR === itemToSell[SELL_ITEM]) player.WEAR = null;
+    if (player.WIELD === itemToSell[SELL_ITEM]) player.WIELD = null;
+    if (player.SHIELD === itemToSell[SELL_ITEM]) player.SHIELD = null;
+    player.adjustcvalues(itemToSell[SELL_ITEM], false);
+    var index = player.inventory.indexOf(itemToSell[SELL_ITEM]);
     player.inventory[index] = null;
     cleartradiven(index);
     itemToSell = null;
@@ -1069,6 +1074,8 @@ function exitbuilding() {
   return 1;
 }
 
+
+
 function storemessage(str, duration) {
   if (!IN_STORE) return;
 
@@ -1087,13 +1094,13 @@ function storemessage(str, duration) {
   }
 }
 
-var dnd_item = null;
+
 
 function initpricelist() {
   if (dnd_item == null) {
     dnd_item = [];
     for (var i = 0; i < _itm.length; i++) {
-      dnd_item[i] = new DND_Item(_itm[i][0], createObject(_itm[i][1], _itm[i][2]), _itm[i][3]);
+      dnd_item[i] = new DND_Item(_itm[i][0], _itm[i][1], _itm[i][2], _itm[i][3]);
     }
   }
 }

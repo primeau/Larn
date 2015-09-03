@@ -20,15 +20,14 @@ todo:
 
 
 bugs:
-+ shift+numpad doesn't work (with numlock on?)
-+ test hitting ESC everywhere
++ genocided monster list not saved
 - rothe/poltergeist/vampire should be born awake -> should they move during stealth?
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
 - multiple 'you have been slain' messages if you get killed by more than 1 monster
   - or waterlord hitting & getting with gusher
 - ie & safari don't like the '`' character // wontfix
-
+- readmail() can reports wrong gold/tax status
 
 extras:
 + cloud save via password

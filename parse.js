@@ -58,20 +58,20 @@ function parseDirectionKeys(key, code) {
   var dir = 0;
   if (key == 'y' || key == 'Y' || key.indexOf('home') >= 0) { // UP,LEFT
     dir = 6;
+  } else if (key == 'u' || key == 'U' || key.indexOf('pageup') >= 0) { // UP,RIGHT 
+    dir = 5;
   } else if (key == 'k' || key == 'K' || key.indexOf('up') >= 0) { // NORTH
     dir = 3;
-  } else if (key == 'u' || key == 'U' || key.indexOf('pageup') >= 0) { // UP,RIGHT
-    dir = 5;
   } else if (key == 'h' || key == 'H' || key.indexOf('left') >= 0) { // LEFT
     dir = 4;
   } else if (key == 'l' || key == 'L' || key.indexOf('right') >= 0) { // RIGHT
     dir = 2;
   } else if (key == 'b' || key == 'B' || key.indexOf('end') >= 0) { // DOWN,LEFT
     dir = 8;
-  } else if (key == 'j' || key == 'J' || key.indexOf('down') >= 0) { // DOWN
-    dir = 1;
   } else if (key == 'n' || key == 'N' || key.indexOf('pagedown') >= 0) { // DOWN, RIGHT
     dir = 7;
+  } else if (key == 'j' || key == 'J' || key.indexOf('down') >= 0) { // DOWN
+    dir = 1;
   }
   return dir;
 }

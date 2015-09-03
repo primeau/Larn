@@ -25,6 +25,12 @@ function createObject(item, arg) {
 
   if (!item) return null;
 
+  // create item via an ID (used in dnd_store)
+  // otherwise the item passed in is already an item to be duplicated
+  if (!isNaN(Number(item))) {
+    item = itemlist[item];
+  }
+
   var newItem = new Item(item.id, item.char, item.desc, item.carry);
 
   if (arg) {

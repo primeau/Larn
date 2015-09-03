@@ -25,6 +25,7 @@ var Larn = {
     Mousetrap.bind('ctrl+h', eventToggleOriginalObjects);
     Mousetrap.bind('?', mousetrap);
     Mousetrap.bind('_', mousetrap);
+    Mousetrap.bind('-', mousetrap);
 
     Mousetrap.bind(['(', ')'], mousetrap); // allow () for pvnert(x)
 

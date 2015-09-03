@@ -1,21 +1,5 @@
 "use strict";
 
-// function parseLoadSavedGame(key) {
-//   nomove = 1;
-//   if (key == ESC || key == 'n' || key == 'N') {
-//     appendLog(" cancelled");
-//     return 1;
-//   }
-//   if (key == 'y' || key == 'Y') {
-//     loadSavedGame();
-//     return 1;
-//   } else {
-//     return 0;
-//   }
-// }
-
-
-
 function saveGame(isCheckPoint) {
 
   if (wizard || cheat) {
@@ -27,7 +11,6 @@ function saveGame(isCheckPoint) {
       //return;
     }
   }
-
 
   var saveName = isCheckPoint ? 'checkpoint' : logname;
 
@@ -127,10 +110,8 @@ function loadState(state) {
   GAME_OVER = state.GAME_OVER;
   IN_STORE = state.IN_STORE;
   napping = state.napping;
-  // knownPotions = state.knownPotions;
-  // knownScrolls = state.knownScrolls;
-  // knownSpells = state.knownSpells;
   original_objects = state.original_objects;
+  dnd_item = state.dnd_item;
 
   logname = state.logname;
   cheat = state.cheat;
@@ -209,7 +190,6 @@ function loadPlayer(saved) {
   newPlayer.knownPotions = saved.knownPotions;
   newPlayer.knownScrolls = saved.knownScrolls;
   newPlayer.knownSpells = saved.knownSpells;
-
 
   newPlayer.char = saved.char;
 
