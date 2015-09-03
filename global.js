@@ -268,7 +268,7 @@ function makemonst(lev) {
     tmp = rnd(x) + monstlevel[lev - 4];
   }
 
-  while (monsterlist[tmp].genocided && tmp < monsterlist.length - 1)
+  while (isGenocided(tmp) && tmp < monsterlist.length - 1)
     tmp++; /* genocided? */
   return (tmp);
 }

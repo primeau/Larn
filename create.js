@@ -547,7 +547,7 @@ function checkgen() {
   for (var y = 0; y < MAXY; y++) {
     for (var x = 0; x < MAXX; x++) {
       var monster = player.level.monsters[x][y];
-      if (monster && monsterlist[monster.arg].genocided) {
+      if (monster && isGenocided(monster.arg)) {
         player.level.monsters[x][y] = null;
       }
     }

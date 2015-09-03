@@ -15,6 +15,7 @@ var IN_STORE = false;
 var napping = false; /* prevent keyboard input while a nap event is happening */
 var original_objects = true;
 var dnd_item = null;
+var genocide = [];
 
 var logname = "";
 var cheat = 0; /* 1 if the player has fudged save file */
@@ -58,6 +59,7 @@ function GameState() {
   this.napping = napping;
   this.original_objects = original_objects;
   this.dnd_item = dnd_item;
+  this.genocide = genocide;
 
   this.logname = logname;
   this.cheat = cheat;

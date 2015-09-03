@@ -19,8 +19,18 @@ todo:
 - scoreboard instructions on line 23/24 are pushed down too far by 1
 
 
+build:
+- install homebrew:  # ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+- install npm/node:  # brew install node
+- install babel:     # npm install -g babel
+- install jslint:    # npm install -g jslint
+- watch files:       # babel --watch JLarn/ --out-dir JLarn-lib/
+- copy files:        # scp -P 1911 *.js ../JLarn/*.html jay@prim.io:/usr/share/nginx/html/larn
+- commit changes:    # git commit -a -m "Our Hero has a nicer scoreboard"
+- push to github     # git push origin master
+
+
 bugs:
-+ genocided monster list not saved
 - rothe/poltergeist/vampire should be born awake -> should they move during stealth?
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL

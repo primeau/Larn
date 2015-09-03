@@ -549,7 +549,6 @@ function spell_polymorph(direction) {
   ifblind(x, y);
 
   if (nospell(16 /*polymorph*/ , monster) == 0) {
-    //while (monster[m = mitem[x][y] = rnd(MAXMONST + 7)].genocided);
     player.level.monsters[x][y] = null;
     createmonster(rnd(monsterlist.length - 1), x, y);
     show1cell(x, y); /* show the new monster */
@@ -606,7 +605,7 @@ function create_guardian(monst, x, y) {
     y += diroffy[k];
   }
   player.level.know[x][y] = 0;
-  if (!monsterlist[monst].genocided)
+  if (!isGenocided(monst))
     createmonster(monst, x, y);
 
   // not in original, but maybe a good idea?
@@ -1009,6 +1008,19 @@ function annihilate() {
 
 
 
+function isGenocided(monsterId) {
+  return genocide.indexOf(monsterId) >= 0;
+}
+
+
+
+
+function setGenocide(monsterId) {
+  genocide.push(monsterId);
+}
+
+
+
 /* Function to ask for monster and genocide from game */
 function genmonst(key) {
 
@@ -1023,7 +1035,7 @@ function genmonst(key) {
   for (var j = 0; j < monsterlist.length; j++)
     if (monsterlist[j].char == key) {
       var monstname;
-      monsterlist[j].genocided = 1;
+      if (j != LAMANOBE) setGenocide(j); // JRP see below
       switch (j) {
         case JACULI:
           monstname = "jaculi";
@@ -1045,7 +1057,6 @@ function genmonst(key) {
           break;
         case LAMANOBE:
           // JRP: Everyone gets an easter egg. This one is mine.
-          monsterlist[j].genocided = 0;
           updateLog("  Lawless resists!");
           return 1;
         default:

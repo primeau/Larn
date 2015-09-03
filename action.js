@@ -18,7 +18,7 @@ function act_remove_gems(arg) {
     }
     player.level.items[player.x][player.y] = createObject(ODEADTHRONE, getItem(player.x, player.y).arg);
     player.level.know[player.x][player.y] = 0;
-  } else if (k < 40 && arg == 0 && monsterlist[GNOMEKING].genocided == 0) {
+  } else if (k < 40 && arg == 0 && !isGenocided(GNOMEKING)) {
     createmonster(GNOMEKING);
     player.level.items[player.x][player.y].arg = 1;
     player.level.know[player.x][player.y] = 0;
@@ -41,7 +41,7 @@ function act_remove_gems(arg) {
 */
 function act_sit_throne(arg) {
   var k = rnd(101);
-  if (k < 30 && arg == 0 && monsterlist[GNOMEKING].genocided == 0) {
+  if (k < 30 && arg == 0 && !isGenocided(GNOMEKING)) {
     createmonster(GNOMEKING);
     player.level.items[player.x][player.y].arg = 1;
     player.level.know[player.x][player.y] = 0;
@@ -142,7 +142,7 @@ function act_wash_fountain() {
     updateLog("  You got the dirt off!");
   } else if (rnd(100) < 31) {
     updateLog("  This water seems to be hard water!  The dirt didn't come off!");
-  } else if (rnd(100) < 34 && monsterlist[WATERLORD].genocided == 0) {
+  } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {
     createmonster(WATERLORD); /*    make water lord     */
   } else {
     updateLog("  Nothing seems to have happened");

@@ -112,6 +112,7 @@ function loadState(state) {
   napping = state.napping;
   original_objects = state.original_objects;
   dnd_item = state.dnd_item;
+  genocide = state.genocide;
 
   logname = state.logname;
   cheat = state.cheat;

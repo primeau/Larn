@@ -1,6 +1,6 @@
 "use strict";
 
-var Monster = function Monster(char, desc, level, armorclass, damage, attack, defence, genocided, intelligence, gold, hitpoints, experience, awake) {
+var Monster = function Monster(char, desc, level, armorclass, damage, attack, defence, intelligence, gold, hitpoints, experience, awake) {
   this.char = char;
   this.desc = desc;
   this.level = level;
@@ -8,7 +8,6 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, de
   this.damage = damage;
   this.attack = attack;
   this.defence = defence;
-  this.genocided = genocided;
   this.intelligence = intelligence;
   this.gold = gold;
   this.hitpoints = hitpoints;
@@ -29,8 +28,9 @@ function createMonster(monst) {
   }
 
   var monster = new Monster(monst.char, monst.desc, monst.level,
-    monst.armorclass, monst.damage, monst.attack, monst.defence, monst.genocided,
-    monst.intelligence, monst.gold, monst.hitpoints, monst.experience, monst.awake);
+    monst.armorclass, monst.damage, monst.attack, monst.defence,
+    monst.intelligence, monst.gold, monst.hitpoints, monst.experience,
+    monst.awake);
 
   monster.arg = arg;
 
@@ -46,7 +46,6 @@ Monster.prototype = {
     damage: 0,
     attack: 0,
     defense: 0,
-    genocided: 0,
     intelligence: 0,
     gold: 0,
     hitpoints: 0,
@@ -342,7 +341,7 @@ function createmonster(mon, x, y) {
     nap(3000);
     return;
   }
-  while (monsterlist[mon].genocided && mon < monsterlist.length - 1) mon++; /* genocided? */
+  while (isGenocided(mon) && mon < monsterlist.length - 1) mon++; /* genocided? */
 
   // JRP force creation and use exact co-ordinates if they are given
   if (x != null && y != null) {
