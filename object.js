@@ -25,7 +25,7 @@ function createObject(item, arg) {
 
   if (!item) return null;
 
-  // create item via an ID (used in dnd_store)
+  // create item via an ID (used in dnd_store, wizard mode)
   // otherwise the item passed in is already an item to be duplicated
   if (!isNaN(Number(item))) {
     item = itemlist[item];

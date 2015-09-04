@@ -33,8 +33,6 @@ var lastpy = 0;
 var lasthx = 0; /* location of monster last hit by player */
 var lasthy = 0; /* location of monster last hit by player */
 var prayed = 1; /* did player pray at an altar?  */
-var oldx = 0;
-var oldy = 0;
 var course = []; /* the list of courses taken */
 var outstanding_taxes = 0; /* present tax bill from score file */
 var dropflag = 0; /* if 1 then don't lookforobject() next round */
@@ -77,8 +75,6 @@ function GameState() {
   this.lasthx = lasthx;
   this.lasthy = lasthy;
   this.prayed = prayed;
-  this.oldx = oldx;
-  this.oldy = oldy;
   this.course = course;
   this.outstanding_taxes = outstanding_taxes;
   this.dropflag = dropflag;

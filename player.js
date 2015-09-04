@@ -503,6 +503,9 @@ function game_stats(p) {
     }
   }
 
+  s += `\nBank Account:\n`;
+  s += Number(p.BANKACCOUNT).toLocaleString() + " gold pieces\n";
+
   s += `\nBonuses:\n`;
   s += "+AC:   " + p.MOREDEFENSES + "\n";
   s += "STREX: " + p.STREXTRA + "\n";

@@ -99,13 +99,6 @@ function startgame(hard) {
   //drawscreen(); /*  show the initial dungeon */
   paint();
 
-  /*
-   * init previous player position to be current position, so we don't
-   * reveal any stuff on the screen prematurely.
-   */
-  oldx = player.x;
-  oldy = player.y;
-
   return 1;
 }
 
@@ -885,84 +878,18 @@ function wizardmode(password) {
   }
 
   var ix = 0;
-  var iy = 1;
-  player.level.items[ix][iy++] = createObject(OEMPTY);
-  player.level.items[ix][iy++] = createObject(OALTAR);
-  player.level.items[ix][iy++] = createObject(OTHRONE);
-  player.level.items[ix][iy++] = createObject(OPIT);
-  player.level.items[ix][iy++] = createObject(OSTAIRSUP);
-  player.level.items[ix][iy++] = createObject(OFOUNTAIN);
-  player.level.items[ix][iy++] = createObject(OTELEPORTER);
-  player.level.items[ix][iy++] = createObject(OSCHOOL);
-  player.level.items[ix][iy++] = createObject(OMIRROR);
-  player.level.items[ix][iy++] = createObject(ODNDSTORE);
-  player.level.items[ix][iy++] = createObject(OSTAIRSDOWN);
-  player.level.items[ix][iy++] = createObject(OBANK2);
-  player.level.items[ix][iy++] = createObject(OBANK);
-  player.level.items[ix][iy++] = createObject(ODEADFOUNTAIN);
-  player.level.items[ix][iy++] = createObject(OGOLDPILE);
-  player.level.items[ix][iy++] = createObject(OHOMEENTRANCE);
-
-  ix = 1
-  iy = MAXY - 1;
-  player.level.items[ix++][iy] = createObject(OOPENDOOR);
-  player.level.items[ix++][iy] = createObject(OCLOSEDDOOR);
-  player.level.items[ix++][iy] = createObject(OWALL);
-  player.level.items[ix++][iy] = createObject(OLARNEYE);
-  player.level.items[ix++][iy] = createObject(OPLATE);
-  player.level.items[ix++][iy] = createObject(OCHAIN);
-  player.level.items[ix++][iy] = createObject(OLEATHER);
-  player.level.items[ix++][iy] = createObject(OSWORDofSLASHING);
-  player.level.items[ix++][iy] = createObject(OHAMMER);
-  player.level.items[ix++][iy] = createObject(OSWORD);
-  player.level.items[ix++][iy] = createObject(O2SWORD);
-  player.level.items[ix++][iy] = createObject(OSPEAR);
-  player.level.items[ix++][iy] = createObject(ODAGGER);
-  player.level.items[ix++][iy] = createObject(ORINGOFEXTRA);
-  player.level.items[ix++][iy] = createObject(OREGENRING);
-  player.level.items[ix++][iy] = createObject(OPROTRING);
-  player.level.items[ix++][iy] = createObject(OENERGYRING);
-  player.level.items[ix++][iy] = createObject(ODEXRING);
-  player.level.items[ix++][iy] = createObject(OSTRRING);
-  player.level.items[ix++][iy] = createObject(OCLEVERRING);
-  player.level.items[ix++][iy] = createObject(ODAMRING);
-  player.level.items[ix++][iy] = createObject(OBELT);
-  player.level.items[ix++][iy] = createObject(OBOOK);
-  player.level.items[ix++][iy] = createObject(OCHEST);
-  player.level.items[ix++][iy] = createObject(OAMULET);
-  player.level.items[ix++][iy] = createObject(OORBOFDRAGON);
-  player.level.items[ix++][iy] = createObject(OSPIRITSCARAB);
-  player.level.items[ix++][iy] = createObject(OCUBEofUNDEAD);
-  player.level.items[ix++][iy] = createObject(ONOTHEFT);
-  player.level.items[ix++][iy] = createObject(ODIAMOND);
-  player.level.items[ix++][iy] = createObject(ORUBY);
-  player.level.items[ix++][iy] = createObject(OEMERALD);
-  player.level.items[ix++][iy] = createObject(OSAPPHIRE);
-  player.level.items[ix++][iy] = createObject(OENTRANCE);
-  player.level.items[ix++][iy] = createObject(OVOLDOWN);
-  player.level.items[ix++][iy] = createObject(OVOLUP);
-  player.level.items[ix++][iy] = createObject(OBATTLEAXE);
-  player.level.items[ix++][iy] = createObject(OLONGSWORD);
-  player.level.items[ix++][iy] = createObject(OFLAIL);
-  player.level.items[ix++][iy] = createObject(ORING);
-  player.level.items[ix++][iy] = createObject(OSTUDLEATHER);
-  player.level.items[ix++][iy] = createObject(OSPLINT);
-  player.level.items[ix++][iy] = createObject(OSSPLATE);
-  player.level.items[ix++][iy] = createObject(OLANCE);
-  player.level.items[ix++][iy] = createObject(OTRAPARROW);
-  player.level.items[ix++][iy] = createObject(OTRAPARROWIV);
-  player.level.items[ix++][iy] = createObject(OSHIELD);
-  player.level.items[ix++][iy] = createObject(OHOME);
-  player.level.items[ix++][iy] = createObject(OIVDARTRAP);
-  player.level.items[ix++][iy] = createObject(ODARTRAP);
-  player.level.items[ix++][iy] = createObject(OTRAPDOOR);
-  player.level.items[ix++][iy] = createObject(OIVTRAPDOOR);
-  player.level.items[ix++][iy] = createObject(OTRADEPOST);
-  player.level.items[ix++][iy] = createObject(OIVTELETRAP);
-  player.level.items[ix++][iy] = createObject(ODEADTHRONE);
-  player.level.items[ix++][iy] = createObject(OLRS);
-  player.level.items[ix++][iy] = createObject(OANNIHILATION);
-  player.level.items[ix++][iy] = createObject(OCOOKIE);
+  var iy = 0;
+  var xmod = 0;
+  var ymod = 1;
+  for (var i = 0; i < itemlist.length; i++) {
+    if (itemlist[i]) player.level.items[ix += xmod][iy += ymod] = createObject(itemlist[i]);
+    if (i == MAXY - 1) {
+      ix = 1
+      iy = MAXY - 1;
+      xmod = 1;
+      ymod = 0;
+    }
+  }
 
   player.GOLD = 250000;
   return 1;

@@ -10,7 +10,7 @@ var LocalScore = function() {
   this.who = logname; /* the name of the character */
   this.hardlev = HARDGAME; /* the level of difficulty player played at */
   this.winner = isWinner;
-  this.score = player.GOLD + winBonus; /* the score of the player */
+  this.score = player.GOLD + player.BANKACCOUNT + winBonus; /* the score of the player */
   this.timeused = Math.round(gtime / 100); /* the time used in mobuls to win the game */
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
   this.level = levelnames[level]; /* the level player was on when he died */
@@ -390,7 +390,7 @@ function writeLocal(newScore) {
 
     // always write trigger to show mail next time
     localStorage.setObject(newScore.who, 'winner');
-    
+
   } else {
     var losers = localStorage.getObject('losers') || [];
     if (isHighestScoreForPlayer(losers, newScore)) {
@@ -645,8 +645,8 @@ function endgame(key) {
   napping = true;
   IN_STORE = true;
 
-  player.GOLD += player.BANKACCOUNT;
-  player.BANKACCOUNT = 0;
+  //player.GOLD += player.BANKACCOUNT;
+  //player.BANKACCOUNT = 0;
 
   var newScore = new LocalScore();
 

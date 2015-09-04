@@ -14,9 +14,6 @@ function saveGame(isCheckPoint) {
 
   var saveName = isCheckPoint ? 'checkpoint' : logname;
 
-  // var hmac = forge.random.getBytesSync(128);
-  // localStorage.setItem('hmac', hmac);
-
   // START HACK TODO to not store player.level
   var x = player.level;
   player.level = null;
@@ -44,15 +41,12 @@ function saveGame(isCheckPoint) {
   }
 
   console.log("saved hash: " + hash.digest().toHex());
-  localStorage.setItem('hmac', hash.digest().toHex());
+  localStorage.setItem('hash', hash.digest().toHex());
 }
 
 
 
 function loadSavedGame(savedState, isCheckPoint) {
-  // var hmac = localStorage.getItem('hmac');
-  // console.log(forge.util.bytesToHex(hmac));
-
   if (!savedState) {
     updateLog("Sorry, I can't find your save game file!");
     return;
@@ -69,7 +63,7 @@ function loadSavedGame(savedState, isCheckPoint) {
 
   console.log("computed hash: " + hash.digest().toHex());
 
-  var savedHash = localStorage.getItem('hmac', hash);
+  var savedHash = localStorage.getItem('hash', hash);
   console.log("saved hash: " + savedHash);
 
   cheat = hash.digest().toHex() != savedHash;
@@ -130,8 +124,6 @@ function loadState(state) {
   lasthx = state.lasthx;
   lasthy = state.lasthy;
   prayed = state.prayed;
-  oldx = state.oldx;
-  oldy = state.oldy;
   course = state.course;
   outstanding_taxes = state.outstanding_taxes;
   dropflag = state.dropflag;

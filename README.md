@@ -33,6 +33,8 @@ the 12.4.4 codebase, and includes a couple of small fixes.
 
 I hope you enjoy this version of LARN.
 
+[Larn's version history can be found here](https://github.com/primeau/Larn/blob/master/history.md "Larn's version history can be found here")
+
 
 WIZARD mode
 -----------

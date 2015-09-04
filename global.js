@@ -16,10 +16,6 @@ function positionplayer(x, y, exact) {
     player.y = y;
     //debug("positionplayer: (" + distance + ") got " + xy(x, y));
     player.level.know[player.x][player.y] = KNOWALL;
-
-    oldx = player.x;
-    oldy = player.y;
-
     return true;
   }
 
@@ -38,10 +34,6 @@ function positionplayer(x, y, exact) {
           player.y = newy;
           player.level.know[player.x][player.y] = KNOWALL;
           //debug("positionplayer: (" + distance + ") got " + newx + "," + newy);
-
-          oldx = player.x;
-          oldy = player.y;
-
           return true;
         }
       }
@@ -51,10 +43,6 @@ function positionplayer(x, y, exact) {
   }
 
   debug("positionplayer: couldn't place player");
-
-  oldx = player.x;
-  oldy = player.y;
-
   return false;
 }
 
