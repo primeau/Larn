@@ -371,7 +371,7 @@ function isItemAt(x, y) {
 function setWallArg(x, y) {
   var wall = getItem(x, y);
   if (!wall || !wall.matches(OWALL)) return;
-  wall.arg = 1;
+  wall.arg = 0;
   var item;
   item = getItem(x, y - 1);
   if (item && item.matches(OWALL)) wall.arg += 2; // up

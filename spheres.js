@@ -68,6 +68,9 @@ function newsphere(x, y, dir, life) {
     died(258, false);
   }
   setItem(x, y, createObject(OANNIHILATION));
+
+  updateWalls(x, y, 1);
+
   player.level.monsters[x][y] = null;
   player.level.know[x][y] = 1;
   show1cell(x, y); /* show the new sphere */
@@ -132,6 +135,7 @@ function sphboom(x, y) {
       }
     }
   }
+  updateWalls(x, y, 3);
 }
 
 

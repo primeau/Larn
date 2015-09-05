@@ -36,6 +36,7 @@ atom:
 
 
 bugs:
++ sph does crazy things when you go up/down stairs
 + if a player has more than one top-10 score, the scoreboard will have one too few entries
 - rothe/poltergeist/vampire should be born awake -> should they move during stealth?
 - gtime/rmst isn't properly displayed on scoreboard
@@ -46,7 +47,6 @@ bugs:
   - or waterlord hitting & getting with gusher
 - readmail() can report wrong gold/tax status
 - player depth isn't reported correctly in the save game details printout
-
 
 extras:
 - cloud save via password
