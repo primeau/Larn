@@ -22,7 +22,8 @@ var Larn = {
     Mousetrap.bind('^', mousetrap);
     Mousetrap.bind(':', mousetrap);
     Mousetrap.bind('@', mousetrap);
-    Mousetrap.bind('ctrl+h', eventToggleOriginalObjects);
+    Mousetrap.bind('{', eventToggleOriginalObjects);
+    Mousetrap.bind('}', eventToggleAmigaMode);
     Mousetrap.bind('?', mousetrap);
     Mousetrap.bind('_', mousetrap);
     Mousetrap.bind('-', mousetrap);
@@ -115,6 +116,14 @@ function eventToggleOriginalObjects() {
   // else
   //   document.getElementById("toggleObjects").value = "  Larn Style Objects  ";
   updateLog(`hack-style objects: ${original_objects ? "off" : "on"}`);
+  paint();
+}
+
+// toggle between hack-like and original objects
+function eventToggleAmigaMode() {
+  nomove = 1;
+  amiga_mode = !amiga_mode;
+  updateLog(`amiga_mode: ${amiga_mode ? "on" : "off"}`);
   paint();
 }
 

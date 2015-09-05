@@ -241,7 +241,7 @@ function speldamage(x) {
           if (item.matches(OWALL)) {
             if (level < MAXLEVEL + MAXVLEVEL - 1)
             //* p = * kn = 0;
-              setItem(i, j, createObject(OEMPTY));
+              setItem(i, j, OEMPTY);
           } else if (item.matches(OSTATUE)) {
             if (HARDGAME < 3) {
               setItem(i, j, createObject(OBOOK, level));
@@ -382,8 +382,8 @@ function speldamage(x) {
       var savemon = [];
       var saveitm = [];
       var i, j;
-      var wall = createObject(OWALL);
-      var empty = createObject(OEMPTY);
+      var wall = OWALL; //createObject(OWALL);
+      var empty = OEMPTY; //createObject(OEMPTY);
       for (j = 0; j < MAXY; j++) {
         for (i = 0; i < MAXX; i++) /* save all items and monsters */ {
           var item = getItem(i, j);
@@ -847,7 +847,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       x < MAXX - 1 && y < MAXY - 1 &&
       x != 0 && y != 0) {
       updateLog("  The wall crumbles");
-      player.level.items[x][y] = createObject(OEMPTY);
+      player.level.items[x][y] = OEMPTY;
       player.level.know[x][y] = 0;
       show1cell(x, y);
     }
@@ -857,7 +857,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     updateLog(str("door"));
     if (dam >= 40) {
       updateLog("  The door is blasted apart");
-      player.level.items[x][y] = createObject(OEMPTY);
+      player.level.items[x][y] = OEMPTY;
       player.level.know[x][y] = 0;
       show1cell(x, y);
     }

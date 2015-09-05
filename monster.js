@@ -65,7 +65,10 @@ Monster.prototype = {
     },
 
     getChar: function() {
-      return monsterlist[this.arg].char;
+      if (amiga_mode)
+        return `${divstart}M${this.arg}${divend}`;
+      else
+        return monsterlist[this.arg].char;
     },
 
     /*
@@ -748,6 +751,7 @@ function hitmonster(x, y) {
   var flag = 0;
 
   var tmp = monster.armorclass + player.LEVEL + player.DEXTERITY + player.WCLASS / 4 - 12;
+  //console.log(`${monster.armorclass}, ${player.LEVEL}, ${player.DEXTERITY}, ${player.WCLASS}, ${HARDGAME}, ${tmp}`);
   if ((rnd(20) < tmp - HARDGAME) || (rnd(71) < 5)) /* need at least random chance to hit */ {
     updateLog("You hit the " + (blind ? "monster" : monster));
     flag = 1;

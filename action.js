@@ -240,7 +240,7 @@ function act_open_chest(x, y) {
         updateLog("  A sickness engulfs you!");
         break;
     };
-    player.level.items[x][y] = createObject(OEMPTY); /* destroy the chest */
+    player.level.items[x][y] = OEMPTY; /* destroy the chest */
     player.level.know[x][y] = 0;
     if (rnd(100) < 69) {
       creategem(); /* gems from the chest */

@@ -101,11 +101,12 @@ function drawscreen() {
     cursor(1, 1 + j);
 
     for (var i = 0; i < MAXX; i++) {
+
       if (know[i][j] == 0) {
-        lprc(' ');
+        lprc(OUNKNOWN.getChar());
       } else if (know[i][j] & HAVESEEN) {
         if (i == player.x && j == player.y) {
-          lprc(player.char);
+          lprc(player.getChar());
           continue;
         }
         var monster = monsterAt(i, j);
@@ -122,7 +123,7 @@ function drawscreen() {
             lprc(item.getChar());
         }
       } else {
-        lprc(' ');
+        lprc(OUNKNOWN.getChar());
         //mitem[i][j] = item[i][j] = 0;
       }
     }

@@ -300,7 +300,7 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
 
   if (DEBUG_PROXIMITY) {
     cursor(player.x + 1, player.y + 1);
-    lprc(player.char);
+    lprc(player.getChar());
     blt();
   }
 
@@ -547,7 +547,7 @@ function mmove(aa, bb, cc, dd) {
       rmsphere(cc, dd); /* delete the sphere */
     } else {
       player.level.monsters[cc][dd] = null;
-      setItem(cc, dd, createObject(OEMPTY));
+      setItem(cc, dd, OEMPTY);
       // TODO? delete item too?
     }
   }
@@ -556,7 +556,7 @@ function mmove(aa, bb, cc, dd) {
   player.level.monsters[aa][bb] = null;
 
   if (monster.matches(LEPRECHAUN) && (item.matches(OGOLDPILE) || item.isGem())) {
-    player.level.items[cc][dd] = createObject(OEMPTY); /* leprechaun takes gold */
+    player.level.items[cc][dd] = OEMPTY; /* leprechaun takes gold */
   }
 
   if (monster.matches(TROLL)) { /* if a troll regenerate him */

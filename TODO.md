@@ -3,17 +3,19 @@ todo:
   - detect browser? http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
 - walls look ugly on windows
 + closed window alert is annoying -> create alert-on-close option?
++ switch to github pages?
 + build process
   + update build number in version commmand
   + minify
   + babel
+- add gzip compression to nginx
+- update wikipedia
 - look for TODO/HACK
 - checkpoints are choppy
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
-- update wikipedia
-- add gzip compression to nginx
 - scoreboard instructions on line 23/24 are pushed down too far by 1
+- allow 5 key to stand still
 
 
 build:
@@ -27,6 +29,12 @@ build:
 - push to github     # git push origin master
 
 
+atom:
+'.editor':
+  'ctrl-alt-cmd-down': 'git-diff:move-to-next-diff'
+  'ctrl-alt-cmd-up': 'git-diff:move-to-previous-diff'
+
+
 bugs:
 + if a player has more than one top-10 score, the scoreboard will have one too few entries
 - rothe/poltergeist/vampire should be born awake -> should they move during stealth?
@@ -37,10 +45,14 @@ bugs:
 - multiple 'you have been slain' messages if you get killed by more than 1 monster
   - or waterlord hitting & getting with gusher
 - readmail() can report wrong gold/tax status
+- player depth isn't reported correctly in the save game details printout
 
 
 extras:
 - cloud save via password
+- amiga-style images
+- start new game without reloading
+- copy local scores to global
 - nerf the book and chest in the store to only be sellable for purchase price?
 - put platinum dragon beside eye of larn
 - highlight changed attributes

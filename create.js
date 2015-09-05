@@ -82,8 +82,8 @@ function cannedlevel(depth) {
   var items = player.level.items;
   var monsters = player.level.monsters;
 
-  var wall = createObject(OWALL); // TODO THIS IS BECAUSE I AM DUMB AND DON'T UNDERSTAND OBJECTS
-  var empty = createObject(OEMPTY); // TODO THIS IS BECAUSE I AM DUMB AND DON'T UNDERSTAND OBJECTS
+  var wall = OWALL; //createObject(OWALL);
+  var empty = OEMPTY; //createObject(OEMPTY);
 
   var pt = 0;
   for (var y = 0; y < MAXY; y++) {
@@ -91,8 +91,7 @@ function cannedlevel(depth) {
       //var pt = MAXX * y + x;
       switch (canned[pt++]) {
         case '#':
-          //this.items[x][y] = OWALL; // TODO: this is what I should do
-          items[x][y] = wall; // TODO
+          items[x][y] = wall;
           break;
         case 'D':
           items[x][y] = createObject(OCLOSEDDOOR, rnd(30));
@@ -116,8 +115,7 @@ function cannedlevel(depth) {
           break;
       } // switch
       if (items[x][y] == null) {
-        //this.items[x][y] = OEMPTY; // TODO
-        items[x][y] = empty; // TODO
+        items[x][y] = empty;
       }
     } // for
   } // for
@@ -135,8 +133,8 @@ function makemaze(k) {
     return;
   }
 
-  var wall = createObject(OWALL);
-  var empty = createObject(OEMPTY);
+  var wall = OWALL; //createObject(OWALL);
+  var empty = OEMPTY; //createObject(OEMPTY);
   var item = player.level.items;
   var mitem = player.level.monsters;
 
@@ -201,7 +199,7 @@ function eat(xx, yy) {
   var dir = rnd(4);
   var tries = 2;
 
-  var empty = createObject(OEMPTY);
+  var empty = OEMPTY; //createObject(OEMPTY);
   var item = player.level.items;
 
   while (tries) {
@@ -277,8 +275,8 @@ function treasureroom(lv) {
 function troom(lv, xsize, ysize, tx, ty, glyph) {
   var i, j, tp1, tp2;
 
-  var empty = createObject(OEMPTY);
-  var wall = createObject(OWALL);
+  var wall = OWALL; //createObject(OWALL);
+  var empty = OEMPTY; //createObject(OEMPTY);
   var item = player.level.items;
   var mitem = player.level.monsters;
 

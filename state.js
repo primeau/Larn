@@ -5,7 +5,7 @@
 
 
 /* additions for JS Larn */
-var LEVELS = [];
+var LEVELS = [null, null, null, null, null, null, null, null, null, null, null, null, null, null];
 var LOG = [""];
 var player;
 
@@ -16,6 +16,7 @@ var napping = false; /* prevent keyboard input while a nap event is happening */
 var original_objects = true;
 var dnd_item = null;
 var genocide = [];
+var amiga_mode = false;
 
 var logname = "";
 var cheat = 0; /* 1 if the player has fudged save file */
@@ -58,6 +59,7 @@ function GameState() {
   this.original_objects = original_objects;
   this.dnd_item = dnd_item;
   this.genocide = genocide;
+  this.amiga_mode = amiga_mode;
 
   this.logname = logname;
   this.cheat = cheat;

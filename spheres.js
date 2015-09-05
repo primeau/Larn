@@ -94,7 +94,7 @@ function rmsphere(x, y) {
     if (!sp) continue;
     if (sp.level == level) { /* is sphere on this level? */
       if (x == sp.x && y == sp.y) /* locate sphere at this location */ {
-        setItem(x, y, createObject(OEMPTY));
+        setItem(x, y, OEMPTY);
         player.level.monsters[x][y] = null;
         player.level.know[x][y] = 1;
         show1cell(x, y); /* show the now missing sphere */
@@ -121,7 +121,7 @@ function sphboom(x, y) {
   if (player.CANCELLATION) player.CANCELLATION = 1;
   for (var j = Math.max(1, x - 2); j < Math.min(x + 3, MAXX - 1); j++) {
     for (var i = Math.max(1, y - 2); i < Math.min(y + 3, MAXY - 1); i++) {
-      setItem(j, i, createObject(OEMPTY));
+      setItem(j, i, OEMPTY);
       player.level.monsters[j][i] = null;
       show1cell(j, i);
       if (player.x == j && player.y == i) {

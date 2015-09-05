@@ -6,6 +6,9 @@ const TIMELIMIT = 30000; /* maximum number of moves before the game is called */
 
 var Player = function Player() {
   this.inventory = [];
+  for (var i = 0; i < MAXINVEN; i++) {
+    this.inventory[i] = null;
+  }
 
   this.knownPotions = [];
   this.knownScrolls = [];
@@ -98,10 +101,12 @@ var Player = function Player() {
   this.LIFEPROT = 0;
   /* life protection counter */
 
-  this.CLASS = function() {
-    return CLASSES[this.LEVEL - 1];
+  this.getChar = function() {
+    if (amiga_mode)
+      return `${divstart}PLAYER${divend}`;
+    else
+      return this.char;
   };
-
 
   /*
       losehp(x)
@@ -277,17 +282,14 @@ var Player = function Player() {
   //  Spells:  1( 1)  AC: 2    WC: 3    Level 1  Exp: 0           novice explorer
   // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
   this.getStatString = function() {
-    if (level == 0) player.TELEFLAG = 0;
+    if (level == 0) this.TELEFLAG = 0;
     var hpstring = `HP: ${pad(this.HP,2)}(${pad(this.HPMAX, 2)})`;
     var output =
-      // `Spells: ${pad(this.SPELLS,2)}(${pad(this.SPELLMAX,2)})  AC: ${pad(this.AC,-4)} WC: ${pad(this.WCLASS,-4)} Level ${pad(this.LEVEL,-2)} Exp: ${pad(this.EXPERIENCE,-10)}${this.CLASS()} \n` +
-      // `${pad(hpstring,-12)} STR=${pad((this.STRENGTH + this.STREXTRA),-2)} INT=${pad(this.INTELLIGENCE,-2)} WIS=${pad(this.WISDOM,-2)} CON=${pad(this.CONSTITUTION,-2)} DEX=${pad(this.DEXTERITY,-2)} CHA=${pad(this.CHARISMA,-2)} LV: ${pad((player.TELEFLAG ? "?" : levelnames[level]),-2)} Gold: ${Number(this.GOLD).toLocaleString()}`;
-      `\
-Spells: ${pad(this.SPELLS,2)}(${pad(this.SPELLMAX,2)})  \
+      `Spells: ${pad(this.SPELLS,2)}(${pad(this.SPELLMAX,2)})  \
 AC: ${pad(this.AC,-4)} \
 WC: ${pad(this.WCLASS,-4)} \
 Level ${pad(this.LEVEL,-2)} \
-Exp: ${pad(this.EXPERIENCE,-10)}${this.CLASS()}\n\
+Exp: ${pad(this.EXPERIENCE,-10)}${CLASSES[this.LEVEL - 1]}\n\
 ${pad(hpstring,-12)} \
 STR=${pad((this.STRENGTH + this.STREXTRA),-2)} \
 INT=${pad(this.INTELLIGENCE,-2)} \
@@ -295,15 +297,12 @@ WIS=${pad(this.WISDOM,-2)} \
 CON=${pad(this.CONSTITUTION,-2)} \
 DEX=${pad(this.DEXTERITY,-2)} \
 CHA=${pad(this.CHARISMA,-2)} \
-LV: ${pad((player.TELEFLAG ? "?" : levelnames[level]),-2)} \
+LV: ${pad((this.TELEFLAG ? "?" : levelnames[level]),-2)} \
 Gold: ${Number(this.GOLD).toLocaleString()}`;
     return output;
   }; //
 
 };
-
-
-const levelnames = ["H", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "V1", "V2", "V3"];
 
 
 
@@ -567,7 +566,7 @@ function game_stats(p) {
 
   s += "\nKnown Spells:\n";
   var count = 0;
-  for (var spell = 0 ; spell < p.knownSpells.length; spell++) {
+  for (var spell = 0; spell < p.knownSpells.length; spell++) {
     var tmp = p.knownSpells[spell];
     if (tmp) {
       s += tmp + " ";

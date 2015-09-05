@@ -506,7 +506,7 @@ function bank_sell(key) {
 
 
 /* function to put interest on your bank account */
-function ointerest() { // TODO IS THIS WORKING?
+function ointerest() {
   if (player.BANKACCOUNT < 0) player.BANKACCOUNT = 0;
 
   if (player.BANKACCOUNT > 0 && player.BANKACCOUNT < 500000) {
@@ -557,7 +557,7 @@ function otradiven() {
         continue;
       }
       tradorder[i] = j++; /* will display only if identified */
-      var fancy = !item.isRing();
+      var fancy = !item.isRing() && item != player.WIELD && item != player.WEAR && item != player.SHIELD;
       lprcat(`${getCharFromIndex(i)}) ${item.toString(fancy)}`);
 
     } else {

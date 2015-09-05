@@ -2,7 +2,7 @@
 
 const itemlist = [];
 
-const hack_objnamelist = "·:\\_^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~****899)))[[[[[)^·[1$$$·^^·3·/4\\0,_________8";
+const hack_objnamelist = "·:\\_^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~****899)))[[[[[)^·[1$$$·^^·3·/4\\0,_________8 ";
 
 
 
@@ -14,6 +14,8 @@ var Item = function Item(id, char, desc, carry, arg) {
   this.carry = carry;
   this.arg = arg;
 
+  if (!arg) this.arg = 0;
+
   if (!itemlist[id])
     itemlist[id] = this;
 
@@ -22,6 +24,8 @@ var Item = function Item(id, char, desc, carry, arg) {
 
 
 function createObject(item, arg) {
+
+  //console.log(item);
 
   if (!item) return null;
 
@@ -46,6 +50,27 @@ function createObject(item, arg) {
 
 
 
+const divstart =
+  `<div style='\
+vertical-align: middle; \
+display: inline-block; \
+width: 9px; \
+height: 18px; \
+margin: -5px; \
+background-image: url(img/`;
+
+const divend = `.png);'></div> `;
+
+
+// <div style=
+// vertical-align: bottom;
+// display: inline-block;
+// width: 9.598px;
+// height: 17.7143px;
+// background-image: url(images/
+
+
+
 Item.prototype = {
     id: null,
     char: "💩",
@@ -54,14 +79,19 @@ Item.prototype = {
     arg: 0,
 
     getChar: function() {
-      if (!original_objects) {
+
+      if (amiga_mode) {
+        return `${divstart}O${this.id}${divend}`;
+      }
+      //
+      else if (!original_objects) {
         if (this.id == OWALL.id || this.id == OEMPTY.id) {
           return hack_objnamelist[this.id];
-        }
-        else {
+        } else {
           return `<b>${hack_objnamelist[this.id]}</b>`;
         }
       }
+      //
       else return this.char;
 
       // making walls/empty bold screws up horizontal spacing
@@ -191,6 +221,7 @@ Item.prototype = {
 
 const OEMPTY = new Item(0, "·", "empty space", false); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
 const OHOMEENTRANCE = new Item(93, OEMPTY.char, "exit to home level", false);
+const OUNKNOWN = new Item(94, ' ', "", false);
 const OALTAR = new Item(1, "<b>A</b>", "a holy altar", false);
 const OTHRONE = new Item(2, "<b>T</b>", "a handsome jewel encrusted throne", false);
 //#define OORB 3
@@ -560,7 +591,7 @@ function obottomless() {
 
 
 function forget() {
-  player.level.items[player.x][player.y] = createObject(OEMPTY);
+  player.level.items[player.x][player.y] = OEMPTY;
 }
 
 

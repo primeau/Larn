@@ -22,6 +22,7 @@ var LocalScore = function() {
   this.player = JSON.stringify(player);
   player.level = x;
 
+  this.browser = `${navigator.userAgent} (${navigator.vendor})`;
 }
 
 LocalScore.prototype.toString = function() {
@@ -48,6 +49,7 @@ var GlobalScore = Parse.Object.extend({
     this.level = local.level;
     this.taxes = local.taxes;
     this.player = local.player;
+    this.browser = local.browser;
   },
 
   convertToLocal: function() {
@@ -60,6 +62,7 @@ var GlobalScore = Parse.Object.extend({
     this.level = this.get('level');
     this.taxes = this.get('taxes');
     this.player = JSON.parse(this.get('player'));
+    this.browser = this.get('browser');
   },
 
   write: function() {
@@ -72,6 +75,7 @@ var GlobalScore = Parse.Object.extend({
     this.set("level", this.level);
     this.set("taxes", this.taxes);
     this.set("player", this.player);
+    this.set("browser", this.browser);
   },
 
   toString: function() {
@@ -103,6 +107,7 @@ function getStatString(score) {
   stats += `\n${game_stats(tempPlayer)}\n`;
   stats += `Bottom Line:\n`;
   stats += tempPlayer.getStatString() + "\n";
+  if (score.browser) stats += `\nBrowser: ${score.browser}\n`;
   return stats;
 }
 

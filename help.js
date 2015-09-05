@@ -75,8 +75,8 @@ helppages[1] =
   r  read a scroll            R  remove gems from throne                        \n\
   s  sit on a throne          S  save the game            @  toggle auto-pickup \n\
 ,|t  take an item             T  take off armor                                 \n\
-  v  print program version                               ^h  hack-style objects \n\
-  w  wield a weapon           W  wear armor                                     \n\
+  v  print program version                                {  hack-style objects \n\
+  w  wield a weapon           W  wear armor               }  amiga-style objects\n\
   z  show scores              Z  teleport yourself        ?  this help screen   \n\
   ";
 

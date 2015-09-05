@@ -4,6 +4,8 @@ const MAXLEVEL = 11; /*  max # levels in the dungeon         */
 const MAXVLEVEL = 3; /*  max # of levels in the temple of the luran  */
 var LOG_SIZE = 5;
 
+const levelnames = ["H", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "V1", "V2", "V3"];
+
 /*
     table of experience needed to be a certain level of player
     skill[c[LEVEL]] is the experience required to attain the next level

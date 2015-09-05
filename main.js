@@ -1,5 +1,7 @@
 "use strict";
 
+var no_intro = false;
+
 /* create new game */
 function welcome() {
   IN_STORE = true;
@@ -11,7 +13,14 @@ function welcome() {
   logname = localStorage.getObject('logname') || "Adventurer";
 
   lprcat(`Welcome to Larn. Please enter your name [<b>${logname}</b>]: `);
-  setTextCallback(setname);
+
+  if (!no_intro) {
+    setTextCallback(setname);
+  }
+  else {
+    setname(logname);
+  }
+
   blt();
 }
 
@@ -52,6 +61,11 @@ function setname(name) {
   console.log("checkpoint == " + (checkpoint != null));
 
   HARDGAME = localStorage.getObject('difficulty') || 0;
+
+  if (no_intro) {
+    startgame(HARDGAME);
+    return 0;
+  }
 
   if (winner) {
     // force difficulty to be one harder
@@ -361,7 +375,7 @@ function parse(key, code) {
   //
   // STAY HERE
   //
-  if (key == '.') {
+  if (key == '.' || key == '5') {
     viewflag = 1;
     return;
   }
@@ -524,7 +538,7 @@ function parse(key, code) {
   //
   if (key == 'v') {
     nomove = 1;
-    updateLog(`JS Larn, Version 12.4.5 build 169 -- Difficulty ${HARDGAME}`);
+    updateLog(`JS Larn, Version 12.4.5 build 175 -- Difficulty ${HARDGAME}`);
     if (wizard) updateLog(" Wizard");
     if (cheat) updateLog(" Cheater");
     return;
