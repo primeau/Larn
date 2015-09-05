@@ -28,6 +28,9 @@ function newcavelevel(depth) {
 
   initNewLevel(depth);
   makemaze(depth);
+
+  updateWalls();
+
   makeobject(depth);
   sethp(true);
   positionplayer(player.x, player.y, true);
@@ -39,11 +42,11 @@ function newcavelevel(depth) {
         player.level.know[i][j] = KNOWALL;
 
 
-    /* save a checkpoint file to prevent a different random
-    level from being created */
-    if (depth > 0) {
-      saveGame(true);
-    }
+  /* save a checkpoint file to prevent a different random
+  level from being created */
+  if (depth > 0) {
+    saveGame(true);
+  }
 
 }
 
@@ -82,7 +85,6 @@ function cannedlevel(depth) {
   var items = player.level.items;
   var monsters = player.level.monsters;
 
-  var wall = OWALL; //createObject(OWALL);
   var empty = OEMPTY; //createObject(OEMPTY);
 
   var pt = 0;
@@ -91,7 +93,7 @@ function cannedlevel(depth) {
       //var pt = MAXX * y + x;
       switch (canned[pt++]) {
         case '#':
-          items[x][y] = wall;
+          items[x][y] = createObject(OWALL);
           break;
         case 'D':
           items[x][y] = createObject(OCLOSEDDOOR, rnd(30));
@@ -133,17 +135,13 @@ function makemaze(k) {
     return;
   }
 
-  var wall = OWALL; //createObject(OWALL);
   var empty = OEMPTY; //createObject(OEMPTY);
   var item = player.level.items;
   var mitem = player.level.monsters;
 
-  if (k == 0) tmp = empty;
-  else tmp = wall;
-
   for (i = 0; i < MAXY; i++)
     for (j = 0; j < MAXX; j++)
-      item[j][i] = tmp;
+      item[j][i] = (k == 0) ? empty : createObject(OWALL);
 
   if (k == 0) return;
 
@@ -155,6 +153,7 @@ function makemaze(k) {
   if (k != MAXLEVEL - 1) {
     tmp2 = rnd(3) + 3;
 
+    var tmp;
     for (tmp = 0; tmp < tmp2; tmp++) {
       my = rnd(11) + 2;
       myl = my - rnd(2);
@@ -190,6 +189,26 @@ function makemaze(k) {
     treasureroom(k);
   }
 
+}
+
+
+
+function updateWalls(x, y, dist) {
+  var x1, x2, y1, y2;
+  if (!x) {
+    x1 = 0;
+    x2 = MAXX - 1;
+    y1 = 0;
+    y2 = MAXY - 1;
+  } else {
+    x1 = x - dist;
+    x2 = x + dist;
+    y1 = y - dist;
+    y2 = y + dist;
+  }
+  for (y = y1 ; y <= y2; y++)
+    for (x = x1 ; x <= x2; x++)
+      setWallArg(x, y);
 }
 
 
@@ -275,7 +294,6 @@ function treasureroom(lv) {
 function troom(lv, xsize, ysize, tx, ty, glyph) {
   var i, j, tp1, tp2;
 
-  var wall = OWALL; //createObject(OWALL);
   var empty = OEMPTY; //createObject(OEMPTY);
   var item = player.level.items;
   var mitem = player.level.monsters;
@@ -287,7 +305,7 @@ function troom(lv, xsize, ysize, tx, ty, glyph) {
   /* now put in the walls */
   for (j = ty; j < ty + ysize; j++)
     for (i = tx; i < tx + xsize; i++) {
-      item[i][j] = wall;
+      item[i][j] = createObject(OWALL);
       mitem[i][j] = null;
     }
 

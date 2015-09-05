@@ -51,25 +51,14 @@ function createObject(item, arg) {
 
 const divstart =
   `<div style='\
-vertical-align: middle; \
+vertical-align: bottom; \
 display: inline-block; \
 width: 9px; \
 height: 18px; \
 margin: 0px; \
-background-image: url(img/`;
+background: #000000 url(img/`;
 
-const divend = `.png);'></div>`;
-
-// font-size: 0; \
-// float: left; \
-// padding: 0px; \
-
-// <div style=
-// vertical-align: bottom;
-// display: inline-block;
-// width: 9.598px;
-// height: 17.7143px;
-// background-image: url(images/
+const divend = `.png) no-repeat left center;'></div>`;
 
 
 
@@ -83,7 +72,11 @@ Item.prototype = {
     getChar: function() {
 
       if (amiga_mode) {
-        return `${divstart}O${this.id}${divend}`;
+        if (this.id == OWALL.id) {
+          return `${divstart}w${this.arg}${divend}`;
+        } else {
+          return `${divstart}o${this.id}${divend}`;
+        }
       }
       //
       else if (!original_objects) {
@@ -371,6 +364,23 @@ function setItem(x, y, item) {
 function isItemAt(x, y) {
   var item = player.level.items[x][y];
   return (item != null && !item.matches(OEMPTY));
+}
+
+
+
+function setWallArg(x, y) {
+  var wall = getItem(x, y);
+  if (!wall || !wall.matches(OWALL)) return;
+  wall.arg = 1;
+  var item;
+  item = getItem(x, y - 1);
+  if (item && item.matches(OWALL)) wall.arg += 2; // up
+  item = getItem(x + 1, y);
+  if (item && item.matches(OWALL)) wall.arg += 4; // right
+  item = getItem(x, y + 1);
+  if (item && item.matches(OWALL)) wall.arg += 8; // down
+  item = getItem(x - 1, y);
+  if (item && item.matches(OWALL)) wall.arg += 16; // left
 }
 
 

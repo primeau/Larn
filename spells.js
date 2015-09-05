@@ -263,6 +263,9 @@ function speldamage(x) {
           player.level.know[i][j] = KNOWALL; // HACK fix for black tile
         }
       }
+
+      updateWalls(player.x, player.y, 2);
+
       return;
 
       /* ----- LEVEL 4 SPELLS ----- */
@@ -382,7 +385,6 @@ function speldamage(x) {
       var savemon = [];
       var saveitm = [];
       var i, j;
-      var wall = OWALL; //createObject(OWALL);
       var empty = OEMPTY; //createObject(OEMPTY);
       for (j = 0; j < MAXY; j++) {
         for (i = 0; i < MAXX; i++) /* save all items and monsters */ {
@@ -395,7 +397,7 @@ function speldamage(x) {
           if (monster) {
             savemon.push(monster);
           }
-          player.level.items[i][j] = wall;
+          player.level.items[i][j] = createObject(OWALL);
           player.level.monsters[i][j] = null;
           if (wizard)
             player.level.know[i][j] = KNOWALL;
@@ -424,6 +426,9 @@ function speldamage(x) {
       if (!wizard)
         spelknow[36] = 0;
       positionplayer();
+
+      updateWalls();
+
       return;
 
     case 37:
@@ -850,6 +855,9 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       player.level.items[x][y] = OEMPTY;
       player.level.know[x][y] = 0;
       show1cell(x, y);
+
+      updateWalls(x, y, 1);
+
     }
     dam = 0;
   } else if (item.matches(OCLOSEDDOOR)) {

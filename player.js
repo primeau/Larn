@@ -103,7 +103,7 @@ var Player = function Player() {
 
   this.getChar = function() {
     if (amiga_mode)
-      return `${divstart}PLAYER${divend}`;
+      return `${divstart}player${divend}`;
     else
       return this.char;
   };

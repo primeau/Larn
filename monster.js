@@ -66,7 +66,7 @@ Monster.prototype = {
 
     getChar: function() {
       if (amiga_mode)
-        return `${divstart}M${this.arg}${divend}`;
+        return `${divstart}m${this.arg}${divend}`;
       else
         return monsterlist[this.arg].char;
     },
