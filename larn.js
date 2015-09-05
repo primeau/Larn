@@ -123,7 +123,7 @@ function eventToggleOriginalObjects() {
 function eventToggleAmigaMode() {
   nomove = 1;
   amiga_mode = !amiga_mode;
-  updateLog(`amiga_mode: ${amiga_mode ? "on" : "off"}`);
+  updateLog(`amiga-style objects: ${amiga_mode ? "on" : "off"}`);
   paint();
 }
 

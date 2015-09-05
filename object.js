@@ -25,13 +25,12 @@ var Item = function Item(id, char, desc, carry, arg) {
 
 function createObject(item, arg) {
 
-  //console.log(item);
-
   if (!item) return null;
 
   // create item via an ID (used in dnd_store, wizard mode)
   // otherwise the item passed in is already an item to be duplicated
-  if (!isNaN(Number(item))) {
+  //if (!isNaN(Number(item)) && item != "") {
+  if (typeof item == 'number') {
     item = itemlist[item];
   }
 
@@ -56,11 +55,14 @@ vertical-align: middle; \
 display: inline-block; \
 width: 9px; \
 height: 18px; \
-margin: -5px; \
+margin: 0px; \
 background-image: url(img/`;
 
-const divend = `.png);'></div> `;
+const divend = `.png);'></div>`;
 
+// font-size: 0; \
+// float: left; \
+// padding: 0px; \
 
 // <div style=
 // vertical-align: bottom;
@@ -221,7 +223,7 @@ Item.prototype = {
 
 const OEMPTY = new Item(0, "·", "empty space", false); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
 const OHOMEENTRANCE = new Item(93, OEMPTY.char, "exit to home level", false);
-const OUNKNOWN = new Item(94, ' ', "", false);
+const OUNKNOWN = new Item(94, ' ', "... nothing", false);
 const OALTAR = new Item(1, "<b>A</b>", "a holy altar", false);
 const OTHRONE = new Item(2, "<b>T</b>", "a handsome jewel encrusted throne", false);
 //#define OORB 3
