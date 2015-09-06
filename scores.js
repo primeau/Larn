@@ -377,6 +377,8 @@ function loadScoreStats(gameId, local, winner) {
 
 
 function writeLocal(newScore) {
+  console.log("writeLocal: " + newScore);
+
   // don't write 0 scores
   if (newScore.score <= 0) {
     return;
@@ -410,19 +412,18 @@ function writeLocal(newScore) {
 
 
 function writeGlobal(newScore) {
+  console.log("writeGlobal: " + newScore);
+
   var globalScore = new GlobalScore(newScore);
   //console.log(newScore.who + " " + newScore.score + " " + newScore.hardlev);
   globalScore.write();
   globalScore.save(null, {
     success: function(score) {
-      // Execute any logic that should take place after the object is saved.
+      console.log("writeGlobal: success: " + newScore.who + " " + newScore.score + " " + newScore.hardlev);
       score.convertToLocal();
-      //console.log(newScore.id + " = " + newScore.who + " " + newScore.score + " " + newScore.hardlev);
       loadScores(score);
     },
     error: function(score, error) {
-      // Execute any logic that should take place if the save fails.
-      // error is a Parse.Error with an error code and message.
       console.log('Failed to create new object, with error code: ' + error.message);
       loadScores(newScore);
     }
@@ -657,6 +658,7 @@ function endgame(key) {
 
   console.log("wizard == " + wizard);
   console.log("cheater == " + cheat);
+  console.log("newscore.score == " + newScore.score);
 
   if (newScore.score > 0 && !wizard && !cheat) {
     writeLocal(newScore);

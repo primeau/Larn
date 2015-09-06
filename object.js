@@ -49,18 +49,20 @@ function createObject(item, arg) {
 
 
 
-const divstart =
-  `<div style='\
-vertical-align: bottom; \
-display: inline-block; \
-width: 9px; \
-height: 18px; \
-margin: 0px; \
-background: #000000 url(img/`;
+// const divstart =
+//   `<div style='\
+// vertical-align: bottom; \
+// display: inline-block; \
+// width: 9px; \
+// height: 18px; \
+// margin: 0px; \
+// background: #000000 url(img/`;
+//
+// const divend = `.png) no-repeat left center;'></div>`;
 
-const divend = `.png) no-repeat left center;'></div>`;
 
-
+const divstart = `img/`;
+const divend = `.png`;
 
 Item.prototype = {
     id: null,
@@ -97,16 +99,16 @@ Item.prototype = {
       return (this.id == item.id);
     },
 
-    toString: function(in_store) {
+    toString: function(inStore, showAll) {
       var description = this.desc;
       if (this.matches(OPOTION)) {
-        if (isKnownPotion(this) || in_store) {
+        if (isKnownPotion(this) || inStore || showAll) {
           description += " of " + potionname[this.arg];
         }
       }
       //
       else if (this.matches(OSCROLL)) {
-        if (isKnownScroll(this) || in_store) {
+        if (isKnownScroll(this) || inStore || showAll) {
           description += " of " + scrollname[this.arg];
         }
       }
@@ -117,7 +119,7 @@ Item.prototype = {
         this.matches(ODEADTHRONE) ||
         this.matches(OBOOK) ||
         this.matches(OCHEST) ||
-        (this.isRing() && in_store) ||
+        (this.isRing() && inStore && !showAll) ||
         this.isGem()) {
         // do nothing
       }
@@ -129,10 +131,10 @@ Item.prototype = {
           description += " " + this.arg;
         }
       }
-      if ((this === player.WEAR || this === player.SHIELD) && !in_store) {
+      if ((this === player.WEAR || this === player.SHIELD) && !inStore) {
         description += " (being worn)"
       }
-      if (this === player.WIELD && !in_store) {
+      if (this === player.WIELD && !inStore) {
         description += " (weapon in hand)"
       }
       return description;

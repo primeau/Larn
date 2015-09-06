@@ -1,7 +1,6 @@
 todo:
-- wall spacing is different on different browsers:
-  - detect browser? http://stackoverflow.com/questions/14633947/alternative-css-font-settings-for-different-browsers
-- walls look ugly on windows
+- wall spacing is different on different browsers
+  - use canvas instead?
 + closed window alert is annoying -> create alert-on-close option?
 + switch to github pages?
 + build process
@@ -36,17 +35,20 @@ atom:
 
 
 bugs:
+* demon II with 75k hp???
+* winning score not recorded??
 + sph does crazy things when you go up/down stairs
 + if a player has more than one top-10 score, the scoreboard will have one too few entries
 - rothe/poltergeist/vampire should be born awake -> should they move during stealth?
 - gtime/rmst isn't properly displayed on scoreboard
-- monster movement isn't shown falling asleep
+- monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
 - multiple 'you have been slain' messages if you get killed by more than 1 monster
   - or waterlord hitting & getting with gusher
 - readmail() can report wrong gold/tax status
 - player depth isn't reported correctly in the save game details printout
+
 
 extras:
 - cloud save via password

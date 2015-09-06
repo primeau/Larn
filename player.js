@@ -498,7 +498,7 @@ function game_stats(p) {
   for (var inven = 0; inven < p.inventory.length; inven++) {
     var item = p.inventory[inven];
     if (item) {
-      s += c.nextChar(inven) + ") " + item.toString(true) + "\n";
+      s += c.nextChar(inven) + ") " + item.toString(true, true) + "\n";
     }
   }
 
