@@ -26,7 +26,6 @@
       width: 60%;
       float: left;
     }
-
     /*@font-face {
         font-family: 'dos';
         src: url('util/clacon.ttf');
@@ -78,8 +77,6 @@
       font-size: 100%;
       /*margin: 0;*/
     }
-
-
   </style>
 
   <script type="text/javascript" src="util/parse-1.5.0.min.js"></script>
@@ -130,17 +127,18 @@
         <![endif]-->
 
   <section>
-    <pre>
-
-      <!-- <canvas id="lCanvas" width="720" height="432" style="border:1px solid #DF0000;"> -->
-
-      <p class="mono" id="LARN">Error Loading. (JS Larn currently only works on Chrome, Firefox, and Opera. Sorry...)</p>
-
-      <script>
-        "use strict";
-        Object.create(Larn).run();
-      </script>
-    </pre>
+    <div>
+      <pre>
+        <p class="mono" id="LARN">Error Loading. (JS Larn currently only works on Chrome, Firefox, and Opera. Sorry...)</p>
+        <script>
+          "use strict";
+          Object.create(Larn).run();
+        </script>
+      </pre>
+    </div>
+    <!-- <div>
+      <canvas id="lCanvas" width="720" height="432" style="border:1px solid #555555;">
+    </div> -->
   </section>
 
   <aside>

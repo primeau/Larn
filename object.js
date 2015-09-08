@@ -49,20 +49,18 @@ function createObject(item, arg) {
 
 
 
-// const divstart =
-//   `<div style='\
-// vertical-align: bottom; \
-// display: inline-block; \
-// width: 9px; \
-// height: 18px; \
-// margin: 0px; \
-// background: #000000 url(img/`;
-//
-// const divend = `.png) no-repeat left center;'></div>`;
+var CANVAS_MODE = false;
 
-
-const divstart = `img/`;
-const divend = `.png`;
+const divstart = !CANVAS_MODE ? `<div style='\
+vertical-align: bottom; \
+display: inline-block; \
+width: 9px; \
+height: 18px; \
+margin: 0px; \
+background: #000000 url(img/`
+  :
+`img/`;
+const divend = !CANVAS_MODE ? `.png) no-repeat left center;'></div>` : `.png`;
 
 Item.prototype = {
     id: null,
