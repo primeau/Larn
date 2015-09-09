@@ -329,7 +329,7 @@ function ifblind(x, y) {
     function to wield a weapon
  */
 function wield(index) {
-  var item = getItem(player.x, player.y);
+  var item = itemAt(player.x, player.y);
 
   // player is over a weapon
   if (item.canWield()) {
@@ -409,7 +409,7 @@ function wield(index) {
     function to wear armor
  */
 function wear(index) {
-  var item = getItem(player.x, player.y);
+  var item = itemAt(player.x, player.y);
 
   // player is over some armor
   if (item.isArmor()) {

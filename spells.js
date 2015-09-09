@@ -13,8 +13,7 @@ function forgetSpell(spellnum) {
 
 
 
-const eys = "Enter your spell: ";
-var spell_cast = null;
+var spellToCast = null;
 
 
 
@@ -22,8 +21,8 @@ function pre_cast() {
   cursors();
   nomove = 1;
   if (player.SPELLS > 0) {
-    updateLog(eys);
-    spell_cast = "";
+    updateLog("Enter your spell: ");
+    spellToCast = "";
     setCharCallback(cast);
   } else {
     updateLog("You don't have any spells!");
@@ -39,7 +38,7 @@ function cast(key) {
   if (key == 'I' || key == " ") {
     seemagic(true);
     setCharCallback(parse_see_spells);
-    if (!spell_cast) updateLog(eys);
+    if (!spellToCast) updateLog("Enter your spell: ");
     return 0;
   }
 
@@ -52,17 +51,17 @@ function cast(key) {
     return 0;
   }
 
-  spell_cast += key;
+  spellToCast += key;
   appendLog(key);
 
-  if (spell_cast.length < 3) {
+  if (spellToCast.length < 3) {
     return 0;
   }
 
   --player.SPELLS;
   player.SPELLSCAST++;
 
-  var spellnum = player.knownSpells.indexOf(spell_cast.toLowerCase());
+  var spellnum = player.knownSpells.indexOf(spellToCast.toLowerCase());
   if (spellnum >= 0) {
     speldamage(spellnum);
   } else {
@@ -168,7 +167,7 @@ function speldamage(x) {
 
     case 9:
       /* healing */
-      raisehp(20 + (clev << 1));
+      player.raisehp(20 + (clev << 1));
       return;
 
     case 10:
@@ -237,7 +236,7 @@ function speldamage(x) {
       for (var i = Math.max(player.x - 1, 1); i <= xh; i++) {
         for (var j = Math.max(player.y - 1, 1); j <= yh; j++) {
           // kn = & know[i][j];
-          var item = getItem(i, j);
+          var item = itemAt(i, j);
           if (item.matches(OWALL)) {
             if (level < MAXLEVEL + MAXVLEVEL - 1)
             //* p = * kn = 0;
@@ -388,7 +387,7 @@ function speldamage(x) {
       var empty = OEMPTY; //createObject(OEMPTY);
       for (j = 0; j < MAXY; j++) {
         for (i = 0; i < MAXX; i++) /* save all items and monsters */ {
-          var item = getItem(i, j);
+          var item = itemAt(i, j);
           var monster = monsterAt(i, j);
           if (!item.matches(OEMPTY) && !item.matches(OWALL) &&
             !item.matches(OANNIHILATION) && !item.matches(OHOMEENTRANCE)) {
@@ -786,7 +785,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
   if (x != player.x || y != player.y) {
     cursor(x + 1, y + 1);
-    lprc(getItem(x, y).getChar());
+    lprc(itemAt(x, y).getChar());
   }
 
   x += dx;
@@ -803,8 +802,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     updateLog("  You are hit by your own magic!");
 
     if ((player.HP -= dam) <= 0) {
-      //updateLog("  You have been slain");
-      //nap(1000);
       died(278, true);
     }
     exitspell();
@@ -820,7 +817,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   }
 
   var monster = monsterAt(x, y);
-  var item = getItem(x, y);
+  var item = itemAt(x, y);
   var str = stroverride || attackmessage[spnum];
 
   /* is there a monster there? */

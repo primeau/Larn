@@ -53,7 +53,7 @@ function canMove(x, y) {
   if (x >= MAXX) return false;
   if (y < 0) return false;
   if (y >= MAXY) return false;
-  var item = getItem(x,y);
+  var item = itemAt(x,y);
   return (!item.matches(OWALL) && !item.matches(OCLOSEDDOOR) && !monsterAt(x, y));
 }
 

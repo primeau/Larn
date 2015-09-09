@@ -53,7 +53,7 @@ function newsphere(x, y, dir, life) {
     rmsphere(x, y); /* remove any spheres that are here */
     return;
   }
-  if (getItem(x, y).matches(OANNIHILATION)) /* collision of spheres detonates spheres */ {
+  if (itemAt(x, y).matches(OANNIHILATION)) /* collision of spheres detonates spheres */ {
     cursors();
     updateLog("Two spheres of annihilation collide! You hear a great earth shaking blast!");
     sphboom(x, y); /* blow up stuff around sphere */
@@ -154,7 +154,7 @@ function movsphere() {
   for (var i = spheres.length; i >= 0; --i) /* look through sphere list */ {
     var sp = spheres[i];
     if (!sp) continue;
-    //if (!getItem(sp.x, sp.y).matches(OANNIHILATION)) continue; /* not really there */
+    //if (!itemAt(sp.x, sp.y).matches(OANNIHILATION)) continue; /* not really there */
     if (--sp.lifetime < 0) /* has sphere run out of gas? */ {
       rmsphere(sp.x, sp.y); /* delete sphere */
       continue;

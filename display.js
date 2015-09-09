@@ -110,7 +110,7 @@ function drawscreen() {
           continue;
         }
         var monster = monsterAt(i, j);
-        var item = getItem(i, j);
+        var item = itemAt(i, j);
         if (monster && know[i][j] & KNOWHERE) {
           if (blind)
             lprc(item.getChar())
@@ -254,7 +254,7 @@ function moveplayer(dir) {
 
   /* check for the player ignoring an altar when in command mode.
    */
-  if (getItem(player.x, player.y).matches(OALTAR) && !prayed) {
+  if (itemAt(player.x, player.y).matches(OALTAR) && !prayed) {
     updateLog("  You have ignored the altar!");
     act_ignore_altar();
   }

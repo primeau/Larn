@@ -14,7 +14,7 @@ function open_something(direction) {
   var x = player.x + diroffx[direction];
   var y = player.y + diroffy[direction];
 
-  var item = getItem(x, y);
+  var item = itemAt(x, y);
 
   if (!item) {
     updateLog("  There is nothing to open!");
@@ -49,7 +49,7 @@ function open_something(direction) {
     Assumptions:  cursors() has been called previously
 */
 function act_open_chest(x, y) {
-  var chest = getItem(x, y);
+  var chest = itemAt(x, y);
   if (!chest.matches(OCHEST)) {
     return;
   }
@@ -106,7 +106,7 @@ function act_open_chest(x, y) {
     Return value:   TRUE if successful in opening the door, false if not.
 */
 function act_open_door(x, y) {
-  var door = getItem(x, y);
+  var door = itemAt(x, y);
   if (!door.matches(OCLOSEDDOOR)) {
     return;
   }
@@ -152,17 +152,12 @@ function act_open_door(x, y) {
     For command mode.  Perform the action of closing something (door).
 */
 function close_something(direction) {
-  // if (direction == 0) {
-  //   updateLog("");
-  //   return 1;
-  // }
-
   cursors();
 
   var x = player.x + diroffx[direction];
   var y = player.y + diroffy[direction];
 
-  var item = getItem(x, y);
+  var item = itemAt(x, y);
 
   if (!item) {
     updateLog("  There is nothing to close!");

@@ -107,7 +107,7 @@ function getStatString(score) {
   stats += `\n${game_stats(tempPlayer)}\n`;
   stats += `Bottom Line:\n`;
   stats += tempPlayer.getStatString() + "\n";
-  if (score.browser) stats += `\nBrowser: ${score.browser}\n`;
+  //if (score.browser) stats += `\nBrowser: ${score.browser}\n`;
   return stats;
 }
 

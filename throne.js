@@ -4,7 +4,7 @@
 /* For command mode. Perform removal of gems from a jeweled throne */
 function remove_gems() {
   cursors();
-  var item = getItem(player.x, player.y);
+  var item = itemAt(player.x, player.y);
   if (item.matches(ODEADTHRONE)) {
     updateLog("There are no gems to remove!");
   } else if (item.matches(OTHRONE)) {
@@ -32,7 +32,7 @@ function act_remove_gems(arg) {
     for (var i = 0; i < rnd(4); i++) {
       creategem(); /* gems pop off the throne */
     }
-    player.level.items[player.x][player.y] = createObject(ODEADTHRONE, getItem(player.x, player.y).arg);
+    player.level.items[player.x][player.y] = createObject(ODEADTHRONE, itemAt(player.x, player.y).arg);
     player.level.know[player.x][player.y] = 0;
   } else if (k < 40 && arg == 0 && !isGenocided(GNOMEKING)) {
     createmonster(GNOMEKING);
@@ -51,7 +51,7 @@ function act_remove_gems(arg) {
 */
 function sit_on_throne() {
   cursors();
-  var item = getItem(player.x, player.y);
+  var item = itemAt(player.x, player.y);
   if (item.matches(OTHRONE) || item.matches(ODEADTHRONE)) {
     act_sit_throne(item.arg);
   } else {

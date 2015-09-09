@@ -406,7 +406,7 @@ function cgood(x, y, itm, monst) {
      - closed door
      - dungeon entrance
   */
-  var item = getItem(x, y);
+  var item = itemAt(x, y);
   if (((y < 0) || (y > MAXY - 1) || (x < 0) || (x > MAXX - 1)) ||
     (item.matches(OWALL)) ||
     (item.matches(OCLOSEDDOOR)) ||

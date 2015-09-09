@@ -6,7 +6,7 @@ For command mode.  Checks that player is actually standing at a set up
 up stairs or volcanic shaft.
 */
 function up_stairs() {
-  var item = getItem(player.x, player.y);
+  var item = itemAt(player.x, player.y);
 
   if (item.matches(OSTAIRSDOWN)) {
     updateLog("The stairs don't go up!");
@@ -32,7 +32,7 @@ For command mode.  Checks that player is actually standing at a set of
 down stairs or volcanic shaft.
 */
 function down_stairs() {
-  var item = getItem(player.x, player.y);
+  var item = itemAt(player.x, player.y);
 
   if (item.matches(OSTAIRSUP)) {
     updateLog("The stairs don't go down!");
@@ -139,7 +139,7 @@ function act_up_shaft() {
     Assumptions:  cursors() has been called previously
 */
 function act_open_chest(x, y) {
-  var chest = getItem(x, y);
+  var chest = itemAt(x, y);
   if (!chest.matches(OCHEST)) {
     return;
   }
@@ -196,7 +196,7 @@ function act_open_chest(x, y) {
     Return value:   TRUE if successful in opening the door, false if not.
 */
 function act_open_door(x, y) {
-  var door = getItem(x, y);
+  var door = itemAt(x, y);
   if (!door.matches(OCLOSEDDOOR)) {
     return;
   }

@@ -169,7 +169,7 @@ function quaffpotion(potion, set_known) {
         return;
       for (var i = 0; i < MAXX; i++)
         for (var j = 0; j < MAXY; j++) {
-          var item = getItem(i, j);
+          var item = itemAt(i, j);
           if (item.carry &&
             !item.isGem() &&
             !item.matches(OLARNEYE) &&
@@ -259,7 +259,7 @@ function quaffpotion(potion, set_known) {
         return;
       for (var i = 0; i < MAXX; i++)
         for (var j = 0; j < MAXY; j++) {
-          var item = getItem(i, j);
+          var item = itemAt(i, j);
           if (item.isGem() || item.matches(OLARNEYE) || item.matches(OGOLDPILE)) {
             player.level.know[i][j] = HAVESEEN;
             show1cell(i, j);

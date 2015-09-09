@@ -343,7 +343,7 @@ function parse(key, code) {
     return;
   }
 
-  var item = getItem(player.x, player.y);
+  var item = itemAt(player.x, player.y);
 
 
 
@@ -666,16 +666,6 @@ function parse(key, code) {
     return;
   }
 
-  // //
-  // // load saved game
-  // //
-  // if (key == 'G') {
-  //   nomove = 1;
-  //   setCharCallback(parseLoadSavedGame);
-  //   updateLog("Do you want to load your saved game [<b>y</b>/<b>n</b>] ? ")
-  //   return;
-  // }
-
   //
   // S - save game
   //
@@ -763,7 +753,7 @@ function parse(key, code) {
     var flag = 0;
     for (var j = vy(player.y - 1); j < vy(player.y + 2); j++) {
       for (var i = vx(player.x - 1); i < vx(player.x + 2); i++) {
-        var trap = getItem(i, j);
+        var trap = itemAt(i, j);
         switch (trap.id) {
           case OTRAPDOOR.id:
           case ODARTRAP.id:
@@ -830,15 +820,15 @@ function wizardmode(password) {
 
   if (password === 'checkpoint') {
     updateLog("reload to restart from backup checkpoint");
-    var checkpoint = localStorage.getItem('checkpointbackup');
-    localStorage.setItem('checkpoint', checkpoint);
+    var checkpoint = localStorage.getObject('checkpointbackup');
+    localStorage.setObject('checkpoint', checkpoint);
     return 1;
   }
 
   if (password === 'savegame') {
     updateLog("reload to restart from backup save game");
-    var savegame = localStorage.getItem(logname + 'backup');
-    localStorage.setItem(logname, savegame);
+    var savegame = localStorage.getObject(logname + 'backup');
+    localStorage.setObject(logname, savegame);
     return 1;
   }
 

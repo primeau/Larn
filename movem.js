@@ -216,7 +216,7 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
 
   for (k = yl; k <= yh; k++)
     for (m = xl; m <= xh; m++) {
-      switch (getItem(m, k).id) {
+      switch (itemAt(m, k).id) {
         case OWALL.id:
         case OPIT.id:
         case OCLOSEDDOOR.id:
@@ -329,7 +329,7 @@ function move_scared(i, j) {
   var xl = vx(i + rnd(3) - 2);
   var yl = vy(j + rnd(3) - 2);
 
-  var item = getItem(xl, yl);
+  var item = itemAt(xl, yl);
 
   if (!item.matches(OWALL) && !item.matches(OCLOSEDDOOR) && !monsterAt(xl, yl)) {
     if ((!monster.matches(VAMPIRE)) || (!item.matches(OMIRROR))) {
@@ -390,7 +390,7 @@ function move_smart(i, j) {
       for (z = 1; z < 9; z++) /* go around in a circle */ {
       x = i + diroffx[z];
       y = j + diroffy[z];
-      if ((ripple[x][y] < ripple[i][j]) && !(getItem(x, y).matches(OMIRROR)))
+      if ((ripple[x][y] < ripple[i][j]) && !(itemAt(x, y).matches(OMIRROR)))
         if (!monsterAt(x, y)) {
           w1x = x;
           w1y = y;
@@ -466,7 +466,7 @@ function move_dumb(i, j) {
         break; /* exitloop */
       } //
       else {
-        var item = getItem(k, m);
+        var item = itemAt(k, m);
         //if (k < 0 || k >= MAXX || m < 0 || m >= MAXY) continue; // JRP fix for edge of home level
         if (!item.matches(OWALL) && //
           !item.matches(OCLOSEDDOOR) && //
@@ -513,7 +513,7 @@ function mmove(aa, bb, cc, dd) {
     return;
   }
 
-  var item = getItem(cc, dd);
+  var item = itemAt(cc, dd);
   var monster = player.level.monsters[aa][bb];
 
   player.level.monsters[cc][dd] = monster;

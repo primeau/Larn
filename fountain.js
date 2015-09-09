@@ -194,7 +194,7 @@ function fch(how) {
 */
 function drink_fountain() {
   //cursors();
-  var item = getItem(player.x, player.y);
+  var item = itemAt(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
     updateLog("There is no water to drink!");
   } else if (!item.matches(OFOUNTAIN)) {
@@ -212,7 +212,7 @@ function drink_fountain() {
 */
 function wash_fountain() {
   //cursors();
-  var item = getItem(player.x, player.y);
+  var item = itemAt(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
     updateLog("There is no water to wash in!");
   } else if (!item.matches(OFOUNTAIN)) {

@@ -95,7 +95,7 @@ function regen() {
   if (player.CLUMSINESS > 0) {
     if (player.WIELD)
       if (player.CLUMSINESS > 1)
-        if (getItem(player.x, player.y).matches(OEMPTY)) /* only if nothing there */
+        if (itemAt(player.x, player.y).matches(OEMPTY)) /* only if nothing there */
           if (rnd(100) < 33) {/* drop your weapon due to clumsiness */
             var dropindex = getCharFromIndex(player.inventory.indexOf(player.WIELD));
             drop_object(dropindex);

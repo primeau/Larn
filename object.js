@@ -326,12 +326,12 @@ function isItem(x, y, compareItem) {
 function getItemDir(direction) {
   var x = player.x + diroffx[direction];
   var y = player.y + diroffy[direction];
-  return getItem(x, y);
+  return itemAt(x, y);
 }
 
 
 
-function getItem(x, y) {
+function itemAt(x, y) {
   if (x == null || y == null) {
     return null;
   }
@@ -369,17 +369,17 @@ function isItemAt(x, y) {
 
 
 function setWallArg(x, y) {
-  var wall = getItem(x, y);
+  var wall = itemAt(x, y);
   if (!wall || !wall.matches(OWALL)) return;
   wall.arg = 0;
   var item;
-  item = getItem(x, y - 1);
+  item = itemAt(x, y - 1);
   if (item && item.matches(OWALL)) wall.arg += 2; // up
-  item = getItem(x + 1, y);
+  item = itemAt(x + 1, y);
   if (item && item.matches(OWALL)) wall.arg += 4; // right
-  item = getItem(x, y + 1);
+  item = itemAt(x, y + 1);
   if (item && item.matches(OWALL)) wall.arg += 8; // down
-  item = getItem(x - 1, y);
+  item = itemAt(x - 1, y);
   if (item && item.matches(OWALL)) wall.arg += 16; // left
 }
 

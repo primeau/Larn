@@ -9,7 +9,7 @@ function enter() {
   debug("enter(): entering a building");
   IN_STORE = true;
 
-  var building = getItem(player.x, player.y);
+  var building = itemAt(player.x, player.y);
   if (building.matches(OSCHOOL)) {
     oschool();
     return;

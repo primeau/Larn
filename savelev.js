@@ -6,9 +6,6 @@ function saveGame(isCheckPoint) {
     if (isCheckPoint) {
       console.log("not saving wizard/cheater checkpoint");
       return;
-    } else {
-      //updateLog("Wizards and cheaters don't get to save their games");
-      //return;
     }
   }
 
@@ -41,7 +38,7 @@ function saveGame(isCheckPoint) {
   }
 
   console.log("saved hash: " + hash.digest().toHex());
-  localStorage.setItem('hash', hash.digest().toHex());
+  localStorage.setObject('hash', hash.digest().toHex());
 }
 
 
@@ -63,7 +60,7 @@ function loadSavedGame(savedState, isCheckPoint) {
 
   console.log("computed hash: " + hash.digest().toHex());
 
-  var savedHash = localStorage.getItem('hash', hash);
+  var savedHash = localStorage.getObject('hash', hash);
   console.log("saved hash: " + savedHash);
 
   cheat = hash.digest().toHex() != savedHash;

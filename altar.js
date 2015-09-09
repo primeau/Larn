@@ -4,7 +4,7 @@
 /* For command mode. Perform the act of descecrating an altar */
 function desecrate_altar() {
   cursors();
-  if (getItem(player.x, player.y).matches(OALTAR)) {
+  if (itemAt(player.x, player.y).matches(OALTAR)) {
     act_desecrate_altar();
   } else {
     updateLog("I see no altar to desecrate here!");
@@ -16,7 +16,7 @@ function desecrate_altar() {
 /* For command mode. Perform the act of praying at an altar */
 function pray_at_altar() {
   cursors();
-  if (!getItem(player.x, player.y).matches(OALTAR)) {
+  if (!itemAt(player.x, player.y).matches(OALTAR)) {
     updateLog("I see no altar to pray at here!");
   } else {
     updateLog("  How much do you donate? ");
@@ -32,12 +32,6 @@ function pray_at_altar() {
     donation.
 */
 function act_donation_pray(k) {
-  // updateLog("\n");
-  // cursor(1, 24);
-  // cltoeoln();
-  // cursor(1, 23);
-  // cltoeoln();
-
   if (k == ESC) {
       appendLog(" cancelled");
       prayed = 0;
