@@ -70,7 +70,7 @@ function getdirectioninput(key, code) {
     return 0;
   }
   //debug(`getdirectioninput: ${direction}`);
-  if (keyboard_input_callback != null) {
+  if (keyboard_input_callback) {
     //debug(`getdirectioninput: ${keyboard_input_callback.name}`);
     keyboard_input_callback(direction);
   }
@@ -157,7 +157,7 @@ function getInput(key, match, extra) {
 
 function getInput_done() {
   var done = 0;
-  if (keyboard_input_callback != null) {
+  if (keyboard_input_callback) {
     done = keyboard_input_callback(KEYBOARD_INPUT);
     if (done == 1) {
       keyboard_input_callback = null;
@@ -258,7 +258,7 @@ function pad(str, width) {
 
 // left align with -width, otherwise right align
 function padString(str, width) {
-  if (width == null || width == 0) return str;
+  if (!width || width == 0) return str;
   var numspaces = Math.max(0, Math.abs(width) + 1 - str.length);
   var spaces = Array(numspaces).join(" ");
   if (width < 0) {

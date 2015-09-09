@@ -64,7 +64,7 @@ function newsphere(x, y, dir, life) {
     cursors();
     updateLog("You have been enveloped by the zone of nothingness!");
     rmsphere(x, y); /* remove any spheres that are here */
-    nap(2000);
+    //nap(2000);
     died(258, false);
   }
   setItem(x, y, createObject(OANNIHILATION));
@@ -130,7 +130,7 @@ function sphboom(x, y) {
       if (player.x == j && player.y == i) {
         cursors();
         updateLog("You were too close to the sphere!");
-        nap(2000);
+        //nap(2000);
         died(283, false); /* player killed in explosion */
       }
     }

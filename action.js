@@ -1,202 +1,44 @@
 "use strict";
 
+
 /*
-    act_remove_gems
-
-    Remove gems from a throne.
-
-    arg is zero if there is a gnome king associated with the throne
-
-    Assumes that cursors() has been called previously, and that a check
-    has been made that the throne actually has gems.
+    For command mode.  Perform opening an object (door, chest).
 */
-function act_remove_gems(arg) {
-  var k = rnd(101);
-  if (k < 25) {
-    for (var i = 0; i < rnd(4); i++) {
-      creategem(); /* gems pop off the throne */
-    }
-    player.level.items[player.x][player.y] = createObject(ODEADTHRONE, getItem(player.x, player.y).arg);
-    player.level.know[player.x][player.y] = 0;
-  } else if (k < 40 && arg == 0 && !isGenocided(GNOMEKING)) {
-    createmonster(GNOMEKING);
-    player.level.items[player.x][player.y].arg = 1;
-    player.level.know[player.x][player.y] = 0;
-  } else {
-    updateLog("  Nothing happens");
+function open_something(direction) {
+
+  if (direction == 0) {
+    updateLog("");
+    return 1;
   }
-  return;
-}
 
+  var x = player.x + diroffx[direction];
+  var y = player.y + diroffy[direction];
 
+  var item = getItem(x, y);
 
-/*
-    act_sit_throne
+  if (!item) {
+    updateLog("  There is nothing to open!");
+    return 1;
+  }
 
-    Sit on a throne.
-
-    arg is zero if there is a gnome king associated with the throne
-
-    Assumes that cursors() has been called previously.
-*/
-function act_sit_throne(arg) {
-  var k = rnd(101);
-  if (k < 30 && arg == 0 && !isGenocided(GNOMEKING)) {
-    createmonster(GNOMEKING);
-    player.level.items[player.x][player.y].arg = 1;
-    player.level.know[player.x][player.y] = 0;
-  } else if (k < 35) {
-    updateLog("  Zaaaappp!  You've been teleported!");
+  if (item.matches(OOPENDOOR)) {
+    updateLog("  The door is already open!");
     beep();
-    oteleport(0);
+    return 1;
+  } else if (item.matches(OCHEST)) {
+    act_open_chest(x, y);
+    return 1;
+  } else if (item.matches(OCLOSEDDOOR)) {
+    act_open_door(x, y);
+    return 1;
   } else {
-    updateLog("  Nothing happens");
-  }
-  return;
-}
-
-
-
-/*
-assumes that cursors() has been called and that a check has been made that
-the user is actually standing at a set of up stairs.
-*/
-function act_up_stairs() {
-  if (level >= 2 && level != 11) {
-    newcavelevel(level - 1);
-  } else {
-    updateLog("The stairs lead to a dead end!");
-    dropflag = 1;
-  }
-}
-
-
-
-/*
-assumes that cursors() has been called and that a check has been made that
-the user is actually standing at a set of down stairs.
-*/
-function act_down_stairs() {
-  if (level != 0 && level != 10 && level != 13) {
-    newcavelevel(level + 1);
-  } else {
-    updateLog("The stairs lead to a dead end!");
-    dropflag = 1;
-  }
-}
-
-
-
-/*
-    Code to perform the action of drinking at a fountian.  Assumes that
-    cursors() has already been called, and that a check has been made that
-    the player is actually standing at a live fountain.
-*/
-function act_drink_fountain() {
-  if (rnd(1501) < 2) {
-    updateLog("  Oops! You seem to have caught the dreadful sleep!");
+    updateLog("  You can't open that!");
     beep();
-    died(280, false);
-    return;
+    return 1;
   }
-
-  var x = rnd(100);
-  if (x < 7) {
-    player.HALFDAM += 200 + rnd(200);
-    updateLog("  You feel a sickness coming on");
-  } else if (x < 13)
-    quaffpotion(createObject(OPOTION, 23), false); /* see invisible,but don't know the potion */
-
-  else if (x < 45)
-    updateLog("  Nothing seems to have happened");
-
-  else if (rnd(3) != 2)
-    fntchange(1); /*  change char levels upward   */
-
-  else
-    fntchange(-1); /*  change char levels downward */
-
-  if (rnd(12) < 3) {
-    updateLog("  The fountains bubbling slowly quiets");
-    setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
-    player.level.know[player.x][player.y] = 0;
-  }
-  return;
-}
-
-
-/*
-    Code to perform the action of washing at a fountain.  Assumes that
-    cursors() has already been called and that a check has been made that
-    the player is actually standing at a live fountain.
-*/
-function act_wash_fountain() {
-  if (rnd(100) < 11) {
-    var x = rnd((level << 2) + 2);
-    updateLog(`  Oh no!  The water was foul!  You suffer ${x} hit points!`);
-    lastnum = 273;
-    player.losehp(x);
-    // bottomline();
-    // cursors();
-  } else if (rnd(100) < 29) {
-    updateLog("  You got the dirt off!");
-  } else if (rnd(100) < 31) {
-    updateLog("  This water seems to be hard water!  The dirt didn't come off!");
-  } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {
-    createmonster(WATERLORD); /*    make water lord     */
-  } else {
-    updateLog("  Nothing seems to have happened");
-  }
-  return;
-}
-
-
-
-/*
-Perform the act of climbing down the volcanic shaft.  Assumes
-cursors() has been called and that a check has been made that
-are actually at a down shaft.
-*/
-function act_down_shaft() {
-  if (level != 0) {
-    updateLog("The shaft only extends 5 feet downward!");
-    return;
-  }
-
-  if (packweight() > 45 + 3 * (player.STRENGTH + player.STREXTRA)) {
-    updateLog("You slip and fall down the shaft");
-    lastnum = 275;
-    player.losehp(30 + rnd(20));
-  }
-
-  newcavelevel(MAXLEVEL);
-  // moveNear(OVOLUP, false); // this is a larn 12.0 "feature"
 
 }
 
-
-
-/*
-Perform the action of climbing up the volcanic shaft. Assumes
-cursors() has been called and that a check has been made that
-are actually at an up shaft.
-*/
-function act_up_shaft() {
-  if (level != 11) {
-    updateLog("The shaft only extends 8 feet upwards before you find a blockage!");
-    return;
-  }
-
-  if (packweight() > 45 + 5 * (player.STRENGTH + player.STREXTRA)) {
-    updateLog("You slip and fall down the shaft");
-    lastnum = 275;
-    player.losehp(15 + rnd(20));
-    return;
-  }
-
-  newcavelevel(0);
-  moveNear(OVOLDOWN, false);
-}
 
 
 
@@ -302,4 +144,101 @@ function act_open_door(x, y) {
     player.level.items[x][y] = createObject(OOPENDOOR);
     return (1);
   }
+}
+
+
+
+/*
+    For command mode.  Perform the action of closing something (door).
+*/
+function close_something(direction) {
+  // if (direction == 0) {
+  //   updateLog("");
+  //   return 1;
+  // }
+
+  cursors();
+
+  var x = player.x + diroffx[direction];
+  var y = player.y + diroffy[direction];
+
+  var item = getItem(x, y);
+
+  if (!item) {
+    updateLog("  There is nothing to close!");
+    return 1;
+  }
+
+  /* get direction of object to close.  test 'closeability' of object
+     indicated.
+  */
+  if (item.matches(OCLOSEDDOOR)) {
+    updateLog("  The door is already closed!");
+    beep();
+  } else if (item.matches(OOPENDOOR)) {
+    if (monsterAt(x, y)) {
+      updateLog("  There's a monster in the way!");
+      return;
+    }
+    player.level.items[x][y] = createObject(OCLOSEDDOOR, 0);
+    player.level.know[x][y] = 0;
+    if (direction == 0) {
+      player.x = lastpx;
+      player.y = lastpy;
+    }
+
+  } else {
+    updateLog("  You can't close that!");
+    beep();
+  }
+  return 1;
+}
+
+
+
+function outfortune() {
+  updateLog("The cookie was delicious.");
+  if (player.BLINDCOUNT)
+    return;
+  var fortune = FORTUNES[rund(FORTUNES.length)];
+  updateLog("Inside you find a scrap of paper that says:");
+  updateLog(`  ${fortune}`);
+}
+
+
+// TODO  quaffpotion, readscroll, eatcookie are all very similar
+function act_eatcookie(index) {
+  var useindex = getIndexFromChar(index);
+  var item = player.inventory[useindex];
+  if (item && item.matches(OCOOKIE)) {
+    player.inventory[useindex] = null;
+    outfortune();
+  } else {
+    if (!item) {
+      //debug(useindex);
+
+      if (index == '*' || index == ' ' || index == 'I') {
+        if (!IN_STORE) {
+          showinventory(true, act_eatcookie, showeat, false, false);
+        }
+        else {
+          IN_STORE = false;
+          paint();
+        }
+        nomove = 1;
+        return;
+      }
+
+      if (useindex >= 0 && useindex < 26) {
+        updateLog(`  You don't have item ${index}!`);
+      }
+      if (useindex <= -1) {
+          appendLog(` cancelled`);
+      }
+    } else {
+      updateLog(`  You can't eat that!`);
+    }
+  }
+  IN_STORE = false;
+  return 1;
 }

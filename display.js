@@ -34,7 +34,7 @@ function bottomline() {
   }
 
   var doc = document.getElementById("STATS");
-  if (doc != null)
+  if (doc)
     document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
 }
 
@@ -323,13 +323,13 @@ function seemagic(onlyspells) {
   if (!onlyspells) {
     var scrollstring = "  The magic scrolls you have found to date are:";
     var scrollfunc = function(scroll) {
-      return padString(`${scrollname[scroll.arg]}`, -26);
+      return padString(`${SCROLL_NAMES[scroll.arg]}`, -26);
     }
     printknown(scrollstring, player.knownScrolls, scrollfunc, buffer, true);
 
     var potionstring = "  The magic potions you have found to date are:";
     var potionfunc = function(potion) {
-      return padString(`${potionname[potion.arg]}`, -26);
+      return padString(`${POTION_NAMES[potion.arg]}`, -26);
     }
     printknown(potionstring, player.knownPotions, potionfunc, buffer, false);
   }

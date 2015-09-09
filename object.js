@@ -101,13 +101,13 @@ Item.prototype = {
       var description = this.desc;
       if (this.matches(OPOTION)) {
         if (isKnownPotion(this) || inStore || showAll) {
-          description += " of " + potionname[this.arg];
+          description += " of " + POTION_NAMES[this.arg];
         }
       }
       //
       else if (this.matches(OSCROLL)) {
         if (isKnownScroll(this) || inStore || showAll) {
-          description += " of " + scrollname[this.arg];
+          description += " of " + SCROLL_NAMES[this.arg];
         }
       }
       //
@@ -363,7 +363,7 @@ function setItem(x, y, item) {
 
 function isItemAt(x, y) {
   var item = player.level.items[x][y];
-  return (item != null && !item.matches(OEMPTY));
+  return (item && !item.matches(OEMPTY));
 }
 
 
@@ -473,7 +473,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OTELEPORTER)) {
     updateLog("Zaaaappp!  You've been teleported!");
-    nap(2000);
+    //nap(2000);
     oteleport(0);
   }
   //
@@ -530,13 +530,13 @@ function lookforobject(do_ident, do_pickup, do_action) {
     lastnum = 272; /* a trap door */
     if ((level == MAXLEVEL - 1) || (level == MAXLEVEL + MAXVLEVEL - 1)) {
       updateLog("You fell through a bottomless trap door!");
-      nap(2000);
+      //nap(2000);
       died(271, false);
     }
     var dmg = rnd(5 + level);
     updateLog(`You fall through a trap door!  You lose ${dmg} hit points`);
     player.losehp(dmg);
-    nap(2000);
+    //nap(2000);
     newcavelevel(level + 1);
     return;
   }
@@ -586,7 +586,7 @@ function opit() {
       /* if hero dies scoreboard will say so */
     }
     player.losehp(damage);
-    nap(2000);
+    //nap(2000);
     newcavelevel(level + 1);
   }
 }
@@ -596,7 +596,7 @@ function opit() {
 function obottomless() {
   updateLog("You fell into a bottomless pit!");
   beep();
-  nap(3000);
+  //nap(3000);
   died(262, false);
 }
 

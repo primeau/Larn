@@ -1,6 +1,7 @@
 todo:
 - wall spacing is different on different browsers
   - use canvas instead?
+  - webGL?!
 + closed window alert is annoying -> create alert-on-close option?
 + switch to github pages?
 + build process
@@ -17,9 +18,27 @@ todo:
 - allow 5 key to stand still
 
 
+bugs:
+* winning score not recorded??
+* does haste monster work?
++ sph does crazy things when you go up/down stairs
++ if a player has more than one top-10 score, the scoreboard will have one too few entries
+- rothe/poltergeist/vampire should be born awake -> should they move during stealth?
+- gtime/rmst isn't properly displayed on scoreboard
+- monster movement isn't shown after falling asleep
+- casting sph twice in the same direction will always kill the player
+- parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
+- multiple 'you have been slain' messages if you get killed by more than 1 monster
+  - or waterlord hitting & getting with gusher
+- readmail() can report wrong gold/tax status
+- player depth isn't reported correctly in the save game details printout
+
+
+
 build:
-- install homebrew:  # ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-- install npm/node:  # brew install node
+- install homebrew:  # (no) ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+- install npm/node:  # (no) brew install node
+- install npm/node:  # (yes) https://nodejs.org/en/
 - install babel:     # npm install -g babel
 - install jslint:    # npm install -g jslint
 - watch files:       # babel --watch JLarn/ --out-dir JLarn-lib/
@@ -34,28 +53,13 @@ atom:
   'ctrl-alt-cmd-up': 'git-diff:move-to-previous-diff'
 
 
-bugs:
-* demon II with 75k hp???
-* winning score not recorded??
-+ sph does crazy things when you go up/down stairs
-+ if a player has more than one top-10 score, the scoreboard will have one too few entries
-- rothe/poltergeist/vampire should be born awake -> should they move during stealth?
-- gtime/rmst isn't properly displayed on scoreboard
-- monster movement isn't shown after falling asleep
-- casting sph twice in the same direction will always kill the player
-- parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
-- multiple 'you have been slain' messages if you get killed by more than 1 monster
-  - or waterlord hitting & getting with gusher
-- readmail() can report wrong gold/tax status
-- player depth isn't reported correctly in the save game details printout
-
-
 extras:
 - cloud save via password
 - amiga-style images
 - start new game without reloading
 - copy local scores to global
 - nerf the book and chest in the store to only be sellable for purchase price?
+  - use negative arg special case to give book,chest same level
 - put platinum dragon beside eye of larn
 - highlight changed attributes
 - color (mcolor/ocolor)
@@ -82,6 +86,4 @@ rename/refactor:
 - napping
 - IN_STORE
 - updateLog
-- files for item actions (throne, altar, fountain, etc)
-- move all consts to data.js
 - rename object.js to item.js

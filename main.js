@@ -317,15 +317,15 @@ function parse(key, code) {
   //   key = e;
   // }
 
-  // if (blocking_callback != null)
+  // if (blocking_callback)
   // debug("blocking: " + blocking_callback.name);
-  // if (keyboard_input_callback != null)
+  // if (keyboard_input_callback)
   // debug("keyboard_input_callback: " + keyboard_input_callback.name);
   //
   //console.log(`parse(): got: ${code}: ${key}`);
 
 
-  if (blocking_callback != null) {
+  if (blocking_callback) {
     //debug(blocking_callback.name + ": ");
     var before = blocking_callback.name;
     var done = blocking_callback(code == ESC ? ESC : key, code);
@@ -879,13 +879,13 @@ function wizardmode(password) {
     learnSpell(spelcode[i]);
   }
 
-  for (var scrolli = 0; scrolli < scrollname.length; scrolli++) {
+  for (var scrolli = 0; scrolli < SCROLL_NAMES.length; scrolli++) {
     var scroll = createObject(OSCROLL, scrolli);
     learnScroll(scroll);
     player.level.items[scrolli][0] = scroll;
   }
 
-  for (var potioni = MAXX - 1; potioni > MAXX - 1 - potionname.length; potioni--) {
+  for (var potioni = MAXX - 1; potioni > MAXX - 1 - POTION_NAMES.length; potioni--) {
     var potion = createObject(OPOTION, MAXX - 1 - potioni);
     learnPotion(potion);
     player.level.items[potioni][0] = potion;

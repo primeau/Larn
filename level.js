@@ -1,8 +1,5 @@
 "use strict";
 
-const MAXX = 67;
-const MAXY = 17;
-
 var Level = {
   items: [],
   monsters: [],
@@ -144,6 +141,6 @@ function bltAmiga() {
 
 function drawstore() {
   var doc = document.getElementById("STATS");
-  if (doc != null)
+  if (doc)
     document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
 }

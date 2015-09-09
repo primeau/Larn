@@ -116,7 +116,7 @@ function cannedlevel(depth) {
           monsters[x][y] = createMonster(DEMONPRINCE);
           break;
       } // switch
-      if (items[x][y] == null) {
+      if (!items[x][y]) {
         items[x][y] = empty;
       }
     } // for
@@ -195,7 +195,7 @@ function makemaze(k) {
 
 function updateWalls(x, y, dist) {
   var x1, x2, y1, y2;
-  if (!x) {
+  if (x == null) {
     x1 = 0;
     x2 = MAXX - 1;
     y1 = 0;
@@ -511,7 +511,7 @@ function fillmonst(what) {
     var y = rnd(MAXY - 2);
     //debug(`fillmonst: ${x},${y} ${player.level.items[x][y]}`);
     if ((player.level.items[x][y].matches(OEMPTY)) && //
-      (player.level.monsters[x][y] == null) && //
+      (!player.level.monsters[x][y]) && //
       ((player.x != x) || (player.y != y))) {
       player.level.monsters[x][y] = monster;
       player.level.know[x][y] &= ~KNOWHERE;

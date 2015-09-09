@@ -1,6 +1,9 @@
 "use strict";
 
-// never, ever, never use a code formatter here
+
+/************************************************/
+/* never, ever, never use a code formatter here */
+/************************************************/
 
 
 const splev = [1, 4, 9, 14, 18, 22, 26, 29, 32, 35, 37, 37, 37, 37, 37];
@@ -8,31 +11,37 @@ const splev = [1, 4, 9, 14, 18, 22, 26, 29, 32, 35, 37, 37, 37, 37, 37];
 
 
 const spelcode = [
-  "pro", "mle", "dex", "sle", "chm", "ssp",
-  "web", "str", "enl", "hel", "cbl", "cre", "pha", "inv",
-  "bal", "cld", "ply", "can", "has", "ckl", "vpr",
-  "dry", "lit", "drl", "glo", "flo", "fgr",
-  "sca", "hld", "stp", "tel", "mfi", /* 31 */
-  "sph", "gen", "sum", "wtw", "alt", "per"
+  "pro", "mle", "dex",
+  "sle", "chm", "ssp",
+  "web", "str", "enl",
+  "hel", "cbl", "cre",
+  "pha", "inv", "bal",
+  "cld", "ply", "can",
+  "has", "ckl", "vpr",
+  "dry", "lit", "drl",
+  "glo", "flo", "fgr",
+  "sca", "hld", "stp",
+  "tel", "mfi", "sph",
+  "gen", "sum", "wtw",
+  "alt", "per"
 ];
 
 
 
 const spelname = [
-  "protection", "magic missile", "dexterity",
-  "sleep", "charm monster", "sonic spear",
-  "web", "strength", "enlightenment",
-  "healing", "cure blindness", "create monster",
-  "phantasmal forces", "invisibility",
-  "fireball", "cold", "polymorph",
-  "cancellation", "haste self", "cloud kill",
-  "vaporize rock",
-  "dehydration", "lightning", "drain life",
-  "invulnerability", "flood", "finger of death",
-  "scare monster", "hold monster", "time stop",
-  "teleport away", "magic fire",
-  "sphere of annihilation", "genocide", "summon demon",
-  "walk through walls", "alter reality", "permanence",
+  "protection",             "magic missile",    "dexterity",
+  "sleep",                  "charm monster",    "sonic spear",
+  "web",                    "strength",         "enlightenment",
+  "healing",                "cure blindness",   "create monster",
+  "phantasmal forces",      "invisibility",     "fireball",
+  "cold",                   "polymorph",        "cancellation",
+  "haste self",             "cloud kill",       "vaporize rock",
+  "dehydration",            "lightning",        "drain life",
+  "invulnerability",        "flood",            "finger of death",
+  "scare monster",          "hold monster",     "time stop",
+  "teleport away",          "magic fire",       "sphere of annihilation",
+  "genocide",               "summon demon",     "walk through walls",
+  "alter reality",          "permanence",
 ];
 
 
@@ -198,18 +207,20 @@ var spelmes = [ ``,
 
 
 
- const MLE = 1;
- const SLE = 3;
- const SSP = 5;
- const WEB = 6;
- const PHA = 12;
- const BAL = 14;
- const CLD = 15;
- const DRY = 21;
- const LIT = 22;
- const DRL = 23;
- const FGR = 26;
- const SUM = 34;
+const MLE = 1;
+const SLE = 3;
+const SSP = 5;
+const WEB = 6;
+const PHA = 12;
+const BAL = 14;
+const CLD = 15;
+const DRY = 21;
+const LIT = 22;
+const DRL = 23;
+const FGR = 26;
+const SUM = 34;
+
+
 
 const attackmessage = [];
 attackmessage[MLE] = function(monster, i) { return `  Your missile${(player.LEVEL >= 2) ? "s" : ""} hit the ${monster}`; };

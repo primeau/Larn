@@ -13,7 +13,7 @@ var LocalScore = function() {
   this.score = player.GOLD + player.BANKACCOUNT + winBonus; /* the score of the player */
   this.timeused = Math.round(gtime / 100); /* the time used in mobuls to win the game */
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
-  this.level = levelnames[level]; /* the level player was on when he died */
+  this.level = LEVELNAMES[level]; /* the level player was on when he died */
   this.taxes = 0; /* taxes he owes to LRS */
 
   // TODO HACK -- we don't want to save the level
@@ -132,9 +132,9 @@ function isEqual(a, b) {
 function sortScore(a, b) {
   //console.log(`a: ${a.hardlev}, ${a.score}, ${a.level}, ${a.timeused}`);
   //console.log(`b: ${b.hardlev}, ${b.score}, ${b.level}, ${b.timeused}`);
-  if (a == null && b == null) return 0;
-  if (a == null) return -1;
-  if (b == null) return 1;
+  if (!a && !b) return 0;
+  if (!a) return -1;
+  if (!b) return 1;
   if (a.hardlev != b.hardlev) {
     return b.hardlev - a.hardlev;
   } else if (a.score != b.score) {
@@ -527,7 +527,7 @@ function paytaxes(x) {
 function getWhyDead(reason) {
   var cause = "";
   if (typeof reason === "number") {
-    cause += whydead[(Number(reason) - 256)];
+    cause += DEATH_REASONS[(Number(reason) - 256)];
   } //
   else {
     cause += `killed by a ${lastmonst}`;
@@ -601,7 +601,7 @@ function died(reason, slain) {
       if (player.CONSTITUTION < 3) player.CONSTITUTION = 3;
       player.HP = 1;
       updateLog("You feel wiiieeeeerrrrrd all over!");
-      nap(2000); // TODO
+      //nap(2000); // TODO
       return;
     }
   }

@@ -1,9 +1,5 @@
 "use strict";
 
-
-const MAXPLEVEL = 100; /* maximum player level allowed        */
-const TIMELIMIT = 30000; /* maximum number of moves before the game is called */
-
 var Player = function Player() {
   this.inventory = [];
   for (var i = 0; i < MAXINVEN; i++) {
@@ -121,7 +117,7 @@ var Player = function Player() {
     this.HP -= damage;
     if (this.HP <= 0) {
       beep();
-      nap(3000);
+      //nap(3000);
       died(lastnum, true);
     }
   };
@@ -178,12 +174,12 @@ var Player = function Player() {
       raiselevel()
 
       subroutine to raise the player one level
-      uses the skill[] array to find level boundarys
+      uses the SKILL[] array to find level boundarys
       uses c[EXPERIENCE]  c[LEVEL]
    */
   this.raiselevel = function() {
     if (player.LEVEL < MAXPLEVEL) {
-      player.raiseexperience(skill[player.LEVEL] - player.EXPERIENCE);
+      player.raiseexperience(SKILL[player.LEVEL] - player.EXPERIENCE);
     }
   };
 
@@ -194,7 +190,7 @@ var Player = function Player() {
       subroutine to lower the players character level by one
    */
   this.loselevel = function() {
-    if (player.LEVEL > 1) player.loseexperience((player.EXPERIENCE - skill[player.LEVEL - 1] + 1));
+    if (player.LEVEL > 1) player.loseexperience((player.EXPERIENCE - SKILL[player.LEVEL - 1] + 1));
   };
 
 
@@ -205,7 +201,7 @@ var Player = function Player() {
   this.raiseexperience = function(x) {
     var i = player.LEVEL;
     player.EXPERIENCE += x;
-    while (player.EXPERIENCE >= skill[player.LEVEL] && (player.LEVEL < MAXPLEVEL)) {
+    while (player.EXPERIENCE >= SKILL[player.LEVEL] && (player.LEVEL < MAXPLEVEL)) {
       var tmp = (player.CONSTITUTION - HARDGAME) >> 1;
       player.LEVEL++;
       player.raisemhp((rnd(3) + rnd((tmp > 0) ? tmp : 1)));
@@ -229,7 +225,7 @@ var Player = function Player() {
   this.loseexperience = function(x) {
     var i = player.LEVEL;
     player.EXPERIENCE = Math.max(0, player.EXPERIENCE - x);
-    while (player.EXPERIENCE < skill[player.LEVEL - 1]) {
+    while (player.EXPERIENCE < SKILL[player.LEVEL - 1]) {
       if (--player.LEVEL <= 1) {
         player.LEVEL = 1; /*  down one level      */
       }
@@ -297,7 +293,7 @@ WIS=${pad(this.WISDOM,-2)} \
 CON=${pad(this.CONSTITUTION,-2)} \
 DEX=${pad(this.DEXTERITY,-2)} \
 CHA=${pad(this.CHARISMA,-2)} \
-LV: ${pad((this.TELEFLAG ? "?" : levelnames[level]),-2)} \
+LV: ${pad((this.TELEFLAG ? "?" : LEVELNAMES[level]),-2)} \
 Gold: ${Number(this.GOLD).toLocaleString()}`;
     return output;
   }; //
@@ -370,7 +366,7 @@ function wield(index) {
     var useindex = getIndexFromChar(index);
     item = player.inventory[useindex];
 
-    if (item == null) {
+    if (!item) {
       if (useindex >= 0 && useindex < 26) {
         updateLog(`  You don't have item ${index}!`);
       }
@@ -440,7 +436,7 @@ function wear(index) {
     var useindex = getIndexFromChar(index);
     item = player.inventory[useindex];
 
-    if (item == null) {
+    if (!item) {
       if (useindex >= 0 && useindex < 26) {
         updateLog(`  You don't have item ${index}!`);
       }
@@ -578,12 +574,12 @@ function game_stats(p) {
   s += "\nKnown Scrolls:\n";
   for (var scroll = 0; scroll < p.knownScrolls.length; scroll++) {
     var tmp = p.knownScrolls[scroll];
-    if (tmp) s += scrollname[tmp.arg] + "\n";
+    if (tmp) s += SCROLL_NAMES[tmp.arg] + "\n";
   }
   s += "\nKnown Potions:\n";
   for (var potion = 0; potion < p.knownPotions.length; potion++) {
     var tmp = p.knownPotions[potion];
-    if (tmp) s += potionname[tmp.arg] + "\n";
+    if (tmp) s += POTION_NAMES[tmp.arg] + "\n";
   }
 
   return s;

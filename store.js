@@ -1,116 +1,102 @@
 "use strict";
 
+/*
+    For command mode.  Perform entering a building.
+*/
+function enter() {
+  // cursors() ;
 
+  debug("enter(): entering a building");
+  IN_STORE = true;
 
-/* number of items in the dnd inventory table   */
-const MAXITM = 83;
+  var building = getItem(player.x, player.y);
+  if (building.matches(OSCHOOL)) {
+    oschool();
+    return;
+  }
+  if (building.matches(OBANK)) {
+    obank();
+    return;
+  }
+  if (building.matches(OBANK2)) {
+    obank2();
+    return;
+  }
+  if (building.matches(ODNDSTORE)) {
+    dndstore();
+    return;
+  }
+  if (building.matches(OENTRANCE)) {
+    dungeon();
+    return;
+  }
+  if (building.matches(OTRADEPOST)) {
+    otradepost();
+    return;
+  }
+  if (building.matches(OLRS)) {
+    olrs();
+    return;
+  }
+  if (building.matches(OHOME)) {
+    ohome();
+    return;
+  }
 
-var DND_Item = function DND_Item(price, itemId, arg, qty) {
-  this.price = price;
-  this.itemId = itemId;
-  this.arg = arg;
-  this.qty = qty;
+  debug("enter(): no building here");
+  IN_STORE = false;
+
+  updateLog("There is no place to enter here!");
+
 }
 
-var _itm = [
-  /* cost      iven name    iven arg   how
-      gp        iven[]      ivenarg[]  many */
-  [20, OLEATHER.id, 0, 3],
-  [100, OSTUDLEATHER.id, 0, 2],
-  [400, ORING.id, 0, 2],
-  [850, OCHAIN.id, 0, 2],
-  [2200, OSPLINT.id, 0, 1],
-  [4000, OPLATE.id, 0, 1],
-  [9000, OPLATEARMOR.id, 0, 1],
-  [26000, OSSPLATE.id, 0, 1],
-  [1500, OSHIELD.id, 0, 1],
-  [20, ODAGGER.id, 0, 3],
-  [200, OSPEAR.id, 0, 3],
-  [800, OFLAIL.id, 0, 2],
-  [1500, OBATTLEAXE.id, 0, 2],
-  [4500, OLONGSWORD.id, 0, 2],
-  [10000, O2SWORD.id, 0, 2],
-  [50000, OSWORD.id, 0, 1],
-  [165000, OLANCE.id, 0, 1],
-  [60000, OSWORDofSLASHING.id, 0, 0],
-  [100000, OHAMMER.id, 0, 0],
-  [1500, OPROTRING.id, 1, 1],
-  [850, OSTRRING.id, 1, 1],
-  [1200, ODEXRING.id, 1, 1],
-  [1200, OCLEVERRING.id, 1, 1],
-  [1800, OENERGYRING.id, 0, 1],
-  [1250, ODAMRING.id, 0, 1],
-  [2200, OREGENRING.id, 0, 1],
-  [10000, ORINGOFEXTRA.id, 0, 1],
-  [2800, OBELT.id, 0, 1],
-  [4000, OAMULET.id, 0, 1],
-  [65000, OORBOFDRAGON.id, 0, 0],
-  [55000, OSPIRITSCARAB.id, 0, 0],
-  [50000, OCUBEofUNDEAD.id, 0, 0],
-  [60000, ONOTHEFT.id, 0, 0],
-  [5900, OCHEST.id, 6, 1],
-  [2000, OBOOK.id, 8, 1],
-  [100, OCOOKIE.id, 0, 3],
-  [200, OPOTION.id, 0, 6],
-  [900, OPOTION.id, 1, 5],
-  [5200, OPOTION.id, 2, 1],
-  [1000, OPOTION.id, 3, 2],
-  [500, OPOTION.id, 4, 2],
-  [1500, OPOTION.id, 5, 2],
-  [700, OPOTION.id, 6, 1],
-  [300, OPOTION.id, 7, 7],
-  [2000, OPOTION.id, 8, 1],
-  [500, OPOTION.id, 9, 1],
-  [800, OPOTION.id, 10, 1],
-  [300, OPOTION.id, 11, 3],
-  [200, OPOTION.id, 12, 5],
-  [400, OPOTION.id, 13, 3],
-  [350, OPOTION.id, 14, 2],
-  [5200, OPOTION.id, 15, 1],
-  [900, OPOTION.id, 16, 2],
-  [2000, OPOTION.id, 17, 2],
-  [2200, OPOTION.id, 18, 4],
-  [800, OPOTION.id, 19, 6],
-  [3700, OPOTION.id, 20, 3],
-  [500, OPOTION.id, 22, 1],
-  [1500, OPOTION.id, 23, 3],
-  [1000, OSCROLL.id, 0, 2],
-  [1250, OSCROLL.id, 1, 2],
-  [600, OSCROLL.id, 2, 4],
-  [100, OSCROLL.id, 3, 4],
-  [1000, OSCROLL.id, 4, 3],
-  [2000, OSCROLL.id, 5, 2],
-  [1100, OSCROLL.id, 6, 1],
-  [5000, OSCROLL.id, 7, 2],
-  [2000, OSCROLL.id, 8, 2],
-  [2500, OSCROLL.id, 9, 4],
-  [200, OSCROLL.id, 10, 5],
-  [300, OSCROLL.id, 11, 3],
-  [3400, OSCROLL.id, 12, 1],
-  [3400, OSCROLL.id, 13, 1],
-  [3000, OSCROLL.id, 14, 2],
-  [4000, OSCROLL.id, 15, 2],
-  [5000, OSCROLL.id, 16, 2],
-  [10000, OSCROLL.id, 17, 1],
-  [5000, OSCROLL.id, 18, 1],
-  [3400, OSCROLL.id, 19, 2],
-  [2200, OSCROLL.id, 20, 3],
-  [39000, OSCROLL.id, 21, 0],
-  [6100, OSCROLL.id, 22, 1],
-  [30000, OSCROLL, 23, 0]
-];
+
+
+
+
 
 
 
 /*
  *
  *
- * DND STORE
+ * Dungeon Entrance
  *
  *
  */
+function dungeon() {
+  IN_STORE = false;
+  /* place player in front of entrance on level 1.  newcavelevel()
+     prevents player from landing on a monster/object.
+  */
+  player.x = 33;
+  player.y = MAXY - 2;
+  newcavelevel(1);
+  player.level.know[33][MAXY - 1] = KNOWALL;
+  player.level.monsters[33][MAXY - 1] = null;
+  //draws( 0, MAXX, 0, MAXY );
+  showcell(player.x, player.y); /* to show around player */
+  bot_linex();
+}
 
-var dndindex = 0;
+
+
+
+
+
+
+
+
+
+
+/*
+ *
+ *
+ * DnD Store
+ *
+ *
+ */
+ var dndindex = 0;
 
 function dndstore() {
 
@@ -203,7 +189,7 @@ function dnd_parse(key) {
       if (dnd_item[i].qty == 0) dnditem(i);
       updategold();
       lprc(key); /* echo the byte */
-      nap(1001);
+      //nap(1001);
       return 0;
     }
   } else {
@@ -245,21 +231,22 @@ function dnditem(i) {
 
 
 
+
+
+
+
+
+
+
+
 /*
  *
  *
- * BANK
+ * The Bank of Larn
  *
  *
  */
-
-
-
-/*
- *  for the first national bank of Larn
- */
-
-function obank() {
+ function obank() {
   banktitle("Welcome to the First National Bank of Larn.");
 }
 
@@ -314,7 +301,7 @@ function obanksub() {
   var i, k;
   for (i = 0, k = 0; i < 26; i++) {
     var item = player.inventory[i];
-    if (item != null && (item.isGem() || item.matches(OLARNEYE))) {
+    if (item && (item.isGem() || item.matches(OLARNEYE))) {
       if (item.matches(OLARNEYE)) {
         gemvalue[i] = Math.max(50000, 250000 - ((gtime * 7) / 100) * 100);
       } else {
@@ -404,7 +391,7 @@ function bankmessage(str, duration) { //TODO convert to storemessage?
 
   napping = false;
 
-  if (duration != null && duration != 0) {
+  if (duration && duration != 0) {
     napping = true;
     setTimeout(bankmessage, duration, "", 0);
   }
@@ -533,11 +520,10 @@ function ointerest() {
 /*
  *
  *
- * TRADING POST
+ * Trading Post
  *
  *
  */
-
 var tradorder = [];
 
 function otradiven() {
@@ -616,7 +602,7 @@ function parse_tradepost(key) {
 
   if (i >= 0 && i <= 26) {
     var item = player.inventory[i];
-    if (item == null) {
+    if (!item) {
       storemessage(`You don't have item ${key}!`, 700);
       //nap(2000);
       return 0;
@@ -720,14 +706,16 @@ function parse_sellitem(key) {
 
 
 
+
+
+
 /*
  *
  *
- * SCHOOL
+ * College of Larn
  *
  *
  */
-
 const coursetime = [10, 15, 10, 20, 10, 10, 10, 5];
 
 function oschool() {
@@ -752,21 +740,21 @@ function printclasses() {
   lprcat("all inhabitants of the caves. Here is the class schedule:\n\n\n");
   lprcat("\t\t    Course Name               Time Needed\n\n");
 
-  if (course[0] == null) lprcat("\t\ta)  Fighter Training I          10 mobuls");
+  if (!course[0]) lprcat("\t\ta)  Fighter Training I          10 mobuls");
   lprc('\n');
-  if (course[1] == null) lprcat("\t\tb)  Fighter Training II         15 mobuls");
+  if (!course[1]) lprcat("\t\tb)  Fighter Training II         15 mobuls");
   lprc('\n');
-  if (course[2] == null) lprcat("\t\tc)  Introduction to Wizardry    10 mobuls");
+  if (!course[2]) lprcat("\t\tc)  Introduction to Wizardry    10 mobuls");
   lprc('\n');
-  if (course[3] == null) lprcat("\t\td)  Applied Wizardry            20 mobuls");
+  if (!course[3]) lprcat("\t\td)  Applied Wizardry            20 mobuls");
   lprc('\n');
-  if (course[4] == null) lprcat("\t\te)  Behavioral Psychology       10 mobuls");
+  if (!course[4]) lprcat("\t\te)  Behavioral Psychology       10 mobuls");
   lprc('\n');
-  if (course[5] == null) lprcat("\t\tf)  Faith for Today             10 mobuls");
+  if (!course[5]) lprcat("\t\tf)  Faith for Today             10 mobuls");
   lprc('\n');
-  if (course[6] == null) lprcat("\t\tg)  Contemporary Dance          10 mobuls");
+  if (!course[6]) lprcat("\t\tg)  Contemporary Dance          10 mobuls");
   lprc('\n');
-  if (course[7] == null) lprcat("\t\th)  History of Larn              5 mobuls");
+  if (!course[7]) lprcat("\t\th)  History of Larn              5 mobuls");
 
   lprcat("\n\n\t\tAll courses cost 250 gold pieces");
   cursor(30, 18);
@@ -790,7 +778,7 @@ function parse_class(key) {
 
   cursor(1, 21);
 
-  if (i < 0 || i >= 8 || course[i] != null) {
+  if (i < 0 || i >= 8 || course[i]) {
     lprcat("\nSorry, but that class is filled");
   } else if (player.GOLD < 250) {
     lprcat("\nYou don't have enough gold to pay for that!");
@@ -806,7 +794,7 @@ function parse_class(key) {
         break;
 
       case 'b':
-        if (course[0] == null) {
+        if (!course[0]) {
           player.GOLD += 250;
           time_used = -10000;
           lprcat("\nSorry, but this class has a prerequisite of Fighter Training I");
@@ -823,7 +811,7 @@ function parse_class(key) {
         break;
 
       case 'd':
-        if (course[2] == null) {
+        if (!course[2]) {
           player.GOLD += 250;
           time_used = -10000;
           lprcat("\nSorry, but this class has a prerequisite of Introduction to Wizardry");
@@ -883,6 +871,14 @@ function parse_class(key) {
 
 
 
+
+/*
+ *
+ *
+ * Home
+ *
+ *
+ */
 function ohome() {
 
   dropflag = 1;
@@ -891,7 +887,7 @@ function ohome() {
 
   for (var i = 0; i < 26; i++) {
     var item = player.inventory[i];
-    if (item != null && item.matches(OPOTION) && item.arg == 21) {
+    if (item && item.matches(OPOTION) && item.arg == 21) {
       //iven[i] = 0; /* remove from inventory */
       if (gtime > TIMELIMIT) {
         IN_STORE = false; // HACK?
@@ -987,6 +983,9 @@ function win(key) {
 
 
 
+
+
+
 /*
  *
  *
@@ -994,8 +993,6 @@ function win(key) {
  *
  *
  */
-
-
 function parse_lrs(key) {
   if (key == ESC) {
     return exitbuilding();
@@ -1059,6 +1056,7 @@ function olrs() {
 
 
 
+
 /*
  *
  *
@@ -1069,7 +1067,6 @@ function olrs() {
 function exitbuilding() {
   IN_STORE = false;
   clear();
-  //drawscreen();
   paint();
   return 1;
 }
@@ -1078,17 +1075,13 @@ function exitbuilding() {
 
 function storemessage(str, duration) {
   if (!IN_STORE) return;
-
   cursors();
   cltoeoln();
   lprcat(str);
   cursor(59, 21);
-
   blt();
-
   napping = false;
-
-  if (duration != null && duration != 0) {
+  if (duration && duration != 0) {
     napping = true;
     setTimeout(storemessage, duration, "", 0);
   }
@@ -1097,10 +1090,11 @@ function storemessage(str, duration) {
 
 
 function initpricelist() {
-  if (dnd_item == null) {
+  if (!dnd_item) {
     dnd_item = [];
-    for (var i = 0; i < _itm.length; i++) {
-      dnd_item[i] = new DND_Item(_itm[i][0], _itm[i][1], _itm[i][2], _itm[i][3]);
+    for (var i = 0; i < STORE_INVENTORY.length; i++) {
+      var tmp = STORE_INVENTORY[i];
+      dnd_item[i] = new DNDItem(tmp[0], tmp[1], tmp[2], tmp[3]);
     }
   }
 }

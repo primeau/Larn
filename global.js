@@ -67,7 +67,7 @@ function recalc() {
   player.AC = 0;
 
   var armor, weapon, extra;
-  if (player.WEAR != null) {
+  if (player.WEAR) {
     armor = player.WEAR;
     extra = armor.arg;
     if (armor.matches(OSHIELD)) player.AC = 2 + extra;
@@ -80,12 +80,12 @@ function recalc() {
     if (armor.matches(OPLATEARMOR)) player.AC = 10 + extra;
     if (armor.matches(OSSPLATE)) player.AC = 12 + extra;
   }
-  if (player.SHIELD != null && player.SHIELD.matches(OSHIELD)) {
+  if (player.SHIELD && player.SHIELD.matches(OSHIELD)) {
     player.AC += 2 + player.SHIELD.arg;
   }
   player.AC += player.MOREDEFENSES;
 
-  if (player.WIELD != null) {
+  if (player.WIELD) {
     weapon = player.WIELD;
     extra = weapon.arg;
     if (weapon.matches(ODAGGER)) player.WCLASS = 3 + extra;
@@ -172,20 +172,20 @@ function more(select_allowed) {
     function to enchant armor player is currently wearing
  */
 function enchantarmor() {
-  var tmp;
+  var armor;
 
-  if (player.WEAR != null) {
-    tmp = player.WEAR;
-  } else if (player.SHIELD != null) {
-    tmp = player.SHIELD;
+  if (player.WEAR) {
+    armor = player.WEAR;
+  } else if (player.SHIELD) {
+    armor = player.SHIELD;
   } else {
     cursors();
     beep();
     updateLog("  You feel a sense of loss");
     return false;
   }
-  if (!tmp.matches(OSCROLL) && !tmp.matches(OPOTION)) {
-    tmp.arg++;
+  if (!armor.matches(OSCROLL) && !armor.matches(OPOTION)) {
+    armor.arg++;
     bottomline();
     return true;
   }
@@ -196,22 +196,22 @@ function enchantarmor() {
     function to enchant a weapon presently being wielded
  */
 function enchweapon() {
-  var tmp = player.WIELD;
-  if (tmp == null) {
+  var weapon = player.WIELD;
+  if (!weapon) {
     cursors();
     beep();
     updateLog("  You feel a sense of loss");
     return false;
   }
-  if (!tmp.matches(OSCROLL) && !tmp.matches(OPOTION)) {
-    tmp.arg++;
-    if (tmp.matches(OCLEVERRING))
+  if (!weapon.matches(OSCROLL) && !weapon.matches(OPOTION)) {
+    weapon.arg++;
+    if (weapon.matches(OCLEVERRING))
       player.INTELLIGENCE++;
     else
-    if (tmp.matches(OSTRRING))
+    if (weapon.matches(OSTRRING))
       player.STREXTRA++;
     else
-    if (tmp.matches(ODEXRING))
+    if (weapon.matches(ODEXRING))
       player.DEXTERITY++;
     bottomline();
     return true;
@@ -226,7 +226,7 @@ function enchweapon() {
 function nearbymonst() {
   for (var tmp = player.x - 1; tmp < player.x + 2; tmp++)
     for (var tmp2 = player.y - 1; tmp2 < player.y + 2; tmp2++)
-      if (monsterAt(tmp, tmp2) != null) return (true); /* if monster nearby */
+      if (monsterAt(tmp, tmp2)) return (true); /* if monster nearby */
   return (false);
 }
 
@@ -305,7 +305,7 @@ function packweight() {
   var weight = player.GOLD / 1000;
   for (var i = 0; i < player.inventory.length; i++) {
     var item = player.inventory[i];
-    if (item == null) continue;
+    if (!item) continue;
     switch (item.id) {
       case OSSPLATE.id:
       case OPLATEARMOR.id:

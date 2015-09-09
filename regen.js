@@ -5,7 +5,7 @@ function regen() {
   var flag;
 
   player.MOVESMADE++;
-  
+
   /* for stop time spell */
   if (player.TIMESTOP > 0) {
     if (--player.TIMESTOP <= 0) recalc();
@@ -78,7 +78,7 @@ function regen() {
 
   if (player.ITCHING > 0) {
     if (player.ITCHING > 1)
-      if ((player.WEAR != null) || (player.SHIELD != null))
+      if ((player.WEAR) || (player.SHIELD))
         if (rnd(100) < 50) {
           player.WEAR = null;
           player.SHIELD = null;
@@ -93,7 +93,7 @@ function regen() {
 
 
   if (player.CLUMSINESS > 0) {
-    if (player.WIELD != null)
+    if (player.WIELD)
       if (player.CLUMSINESS > 1)
         if (getItem(player.x, player.y).matches(OEMPTY)) /* only if nothing there */
           if (rnd(100) < 33) {/* drop your weapon due to clumsiness */

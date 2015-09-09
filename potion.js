@@ -1,35 +1,4 @@
 "use strict";
-/*
- *  function to return a potion number created with appropriate probability
- *  of occurrence
- *
- *  0 - sleep               1 - healing                 2 - raise level
- *  3 - increase ability    4 - gain wisdom             5 - gain strength
- *  6 - increase charisma   7 - dizziness               8 - learning
- *  9 - object detection    10 - monster detection      11 - forgetfulness
- *  12 - water              13 - blindness              14 - confusion
- *  15 - heroism            16 - sturdiness             17 - giant strength
- *  18 - fire resistance    19 - treasure finding       20 - instant healing
- *  21 - cure dianthroritis 22 - poison                 23 - see invisible
- */
-const potprob = [
-  0, 0, 1, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 9, 9, 9,
-  10, 10, 10, 11, 11, 12, 12, 13, 14, 15, 16, 17, 18, 19, 19, 19,
-  20, 20, 22, 22, 23, 23
-];
-
-/*  name array for magic potions    */
-const potionname = [
-  "sleep", "healing", "raise level",
-  "increase ability", "wisdom", "strength",
-  "raise charisma", "dizziness", "learning",
-  "object detection", "monster detection", "forgetfulness",
-  "water", "blindness", "confusion",
-  "heroism", "sturdiness", "giant strength",
-  "fire resistance", "treasure finding", "instant healing",
-  "cure dianthroritis", "poison", "see invisible"
-];
-
 
 
 function isKnownPotion(item) {
@@ -41,28 +10,26 @@ function isKnownPotion(item) {
   return false;
 }
 
+
+
 function learnPotion(item) {
   if (item.matches(OPOTION)) {
     player.knownPotions[item.arg] = item;
   }
 }
 
-function newpotion() {
-  var potion = rund(41);
-  debug("newpotion(): created: " + potionname[potprob[potion]]);
-  return potprob[potion];
-}
+
 
 
 // TODO  quaffpotion, readscroll, eatcookie are all very similar
 function act_quaffpotion(index) {
   var useindex = getIndexFromChar(index);
   var item = player.inventory[useindex];
-  if (item != null && item.matches(OPOTION)) {
+  if (item && item.matches(OPOTION)) {
     player.inventory[useindex] = null;
     quaffpotion(item);
   } else {
-    if (item == null) {
+    if (!item) {
       //debug(useindex);
       if (index == '*' || index == ' ' || index == 'I') {
         if (!IN_STORE) {
@@ -99,7 +66,7 @@ function act_quaffpotion(index) {
  */
 function quaffpotion(potion, set_known) {
   /* check for within bounds */
-  if (potion == null)
+  if (!potion)
     return;
 
   /*
@@ -117,7 +84,7 @@ function quaffpotion(potion, set_known) {
       var sleeplen = rnd(11) - (player.CONSTITUTION >> 2) + 2;
       while (--sleeplen > 0) {
         parse2();
-        nap(1000);
+        //nap(1000);
       }
       updateLog("  You woke up!");
       break;
@@ -197,7 +164,7 @@ function quaffpotion(potion, set_known) {
     case 9:
       /* object detection */
       updateLog("  You sense the presence of objects!");
-      nap(1000);
+      //nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
       for (var i = 0; i < MAXX; i++)
@@ -216,13 +183,13 @@ function quaffpotion(potion, set_known) {
     case 10:
       /* monster detection */
       updateLog("  You detect the presence of monsters!");
-      nap(1000);
+      //nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
       for (var i = 0; i < MAXX; i++)
         for (var j = 0; j < MAXY; j++) {
           var monster = monsterAt(i, j);
-          if (monster != null && (monster.getChar() != OEMPTY.getChar())) {
+          if (monster && (monster.getChar() != OEMPTY.getChar())) {
             player.level.know[i][j] = HAVESEEN;
             show1cell(i, j);
           }
@@ -235,7 +202,7 @@ function quaffpotion(potion, set_known) {
       for (var i = 0; i < MAXX; i++)
         for (var j = 0; j < MAXY; j++) {
           player.level.know[i][j] = 0;
-          nap(1000);
+          //nap(1000);
         }
       break;
 
@@ -287,7 +254,7 @@ function quaffpotion(potion, set_known) {
 
     case 19:
       updateLog("  You feel greedy . . .");
-      nap(1000);
+      //nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
       for (var i = 0; i < MAXX; i++)

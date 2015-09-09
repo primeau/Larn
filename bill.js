@@ -1,6 +1,5 @@
 "use strict";
 
-const TAXRATE = 1 / 20;
 
 var highestScore;
 

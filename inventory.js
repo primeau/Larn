@@ -1,8 +1,5 @@
 "use strict";
 
-const MAXINVEN = 26;
-
-
 /* show character's inventory */
 function showinventory(select_allowed, callback, inv_filter, show_gold, show_time) {
 
@@ -147,9 +144,9 @@ const sortorder = [
 
 
 function inv_sort(a, b) {
-  if (a == null && b == null) return 0;
-  if (a == null) return 1;
-  if (b == null) return -1;
+  if (!a && b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
   var asort = sortorder.indexOf(a.id); // JRP we could cache this in the item object
   var bsort = sortorder.indexOf(b.id); // but it's not enough of a perf issue
   if (asort != bsort) {
@@ -185,7 +182,7 @@ function take(item) {
   }
   var limit = Math.min(15 + (player.LEVEL >> 1), MAXINVEN);
   for (var i = 0; i < limit; i++) {
-    if (player.inventory[i] == null) {
+    if (!player.inventory[i]) {
       player.inventory[i] = item;
       debug("take(): " + item);
       limit = 0;
@@ -232,7 +229,7 @@ function drop_object(index) {
   var useindex = getIndexFromChar(index);
   var item = player.inventory[useindex];
 
-  if (item == null) {
+  if (!item) {
     if (useindex >= 0 && useindex < 26) {
       updateLog(`  You don't have item ${index}!`);
     }
@@ -318,7 +315,7 @@ function drop_object_gold(amount) {
 function pocketfull() {
   var limit = Math.min(15 + (player.LEVEL >> 1), MAXINVEN);
   for (var i = 0; i < limit; i++) {
-    if (player.inventory[i] == null) {
+    if (!player.inventory[i]) {
       return (false);
     }
   }

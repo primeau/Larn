@@ -355,6 +355,7 @@ function move_smart(i, j) {
      done in the monster list build.
   */
   var monster = monsterAt(i, j);
+
   switch (monster.arg) {
     case TROGLODYTE:
     case HOBGOBLIN:
@@ -376,7 +377,7 @@ function move_smart(i, j) {
       x = i + diroffx[z];
       y = j + diroffy[z];
       if (ripple[x][y] < ripple[i][j])
-        if (monsterAt(x, y) == null) {
+        if (!monsterAt(x, y)) {
           w1x = x;
           w1y = y;
           didmove = true; // UPGRADE
@@ -390,7 +391,7 @@ function move_smart(i, j) {
       x = i + diroffx[z];
       y = j + diroffy[z];
       if ((ripple[x][y] < ripple[i][j]) && !(getItem(x, y).matches(OMIRROR)))
-        if (monsterAt(x, y) == null) {
+        if (!monsterAt(x, y)) {
           w1x = x;
           w1y = y;
           didmove = true; // UPGRADE
@@ -400,7 +401,9 @@ function move_smart(i, j) {
     }
 
     // UPGRADE
-    if (!didmove) {
+    // make all monsters move in closed rooms, except demons, who should
+    // alway guard the eye / potion
+    if (!didmove && !monster.isDemon()) {
         move_dumb(i,j);
     }
 }
@@ -467,7 +470,7 @@ function move_dumb(i, j) {
         //if (k < 0 || k >= MAXX || m < 0 || m >= MAXY) continue; // JRP fix for edge of home level
         if (!item.matches(OWALL) && //
           !item.matches(OCLOSEDDOOR) && //
-          (player.level.monsters[k][m] == null || (k == i) && (m == j)) &&
+          (!player.level.monsters[k][m] || (k == i) && (m == j)) &&
           (!player.level.monsters[i][j].matches(VAMPIRE) || !item.matches(OMIRROR))
         ) {
           var tmp = (player.x - k) * (player.x - k) + (player.y - m) * (player.y - m);

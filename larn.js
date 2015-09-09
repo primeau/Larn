@@ -161,10 +161,10 @@ function eventToggleDebugKnowAll() {
   for (var i = 0; i < spelcode.length; i++) {
     learnSpell(spelcode[i]);
   }
-  for (var i = 0; i < scrollname.length; i++) {
+  for (var i = 0; i < SCROLL_NAMES.length; i++) {
     learnScroll(createObject(OSCROLL, i));
   }
-  for (var i = 0; i < potionname.length; i++) {
+  for (var i = 0; i < POTION_NAMES.length; i++) {
     learnPotion(createObject(OPOTION, i));
   }
   updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);

@@ -39,7 +39,7 @@ function cast(key) {
   if (key == 'I' || key == " ") {
     seemagic(true);
     setCharCallback(parse_see_spells);
-    if (spell_cast == null) updateLog(eys);
+    if (!spell_cast) updateLog(eys);
     return 0;
   }
 
@@ -191,7 +191,7 @@ function speldamage(x) {
       var amuletmodifier = 0;
       for (var i = 0; i < 26; i++) {
         /* if he has the amulet of invisibility then add more time */
-        if (player.inventory[i] != null && player.inventory[i].matches(OAMULET)) {
+        if (player.inventory[i] && player.inventory[i].matches(OAMULET)) {
           amuletmodifier += 1 + player.inventory[i].arg;
         }
       }
@@ -256,7 +256,7 @@ function speldamage(x) {
             create_guardian(DEMONPRINCE, i, j);
           } else if (item.matches(OFOUNTAIN)) {
             create_guardian(WATERLORD, i, j);
-          } else if (monsterAt(i, j) != null && monsterAt(i, j).matches(XORN)) {
+          } else if (monsterAt(i, j) && monsterAt(i, j).matches(XORN)) {
             ifblind(i, j);
             hitm(i, j, 200);
           }
@@ -304,7 +304,7 @@ function speldamage(x) {
       } else {
         beep();
         updateLog("  Your heart stopped!");
-        nap(4000);
+        //nap(4000);
         died(270, false);
       }
       return;
@@ -343,7 +343,7 @@ function speldamage(x) {
       if ((rnd(23) == 5) && (wizard == 0)) {
         //beep();
         updateLog("You have been enveloped by the zone of nothingness!");
-        nap(4000);
+        //nap(4000);
         died(258, false);
         return;
       }
@@ -580,7 +580,7 @@ function spell_teleport(direction) {
   var x = player.x + diroffx[direction];
   var y = player.y + diroffy[direction];
   var monster = getMonster(direction);
-  if (monster == null) {
+  if (!monster) {
     updateLog("  There wasn't anything there!");
     return;
   }
@@ -605,7 +605,7 @@ function spell_teleport(direction) {
 function create_guardian(monst, x, y) {
   /* prevent the guardian from being created on top of the player */
   if ((x == player.x) && (y == player.y)) {
-    k = rnd(8);
+    var k = rnd(8);
     x += diroffx[k];
     y += diroffy[k];
   }
@@ -678,7 +678,7 @@ function nospell(x, monst) {
  */
 function fullhit(xx) {
   if (xx < 0 || xx > 20) return (0); /* fullhits are out of range */
-  if (player.WIELD != null && player.WIELD.matches(OLANCE)) return (10000); /* lance of death */
+  if (player.WIELD && player.WIELD.matches(OLANCE)) return (10000); /* lance of death */
   var i = xx * ((player.WCLASS >> 1) + player.STRENGTH + player.STREXTRA - HARDGAME - 12 + player.MOREDAM);
   return ((i >= 1) ? i : xx);
 }
@@ -707,21 +707,21 @@ function direct(spnum, direction, dam, arg) {
   var monster = getMonster(direction);
   var item = getItemDir(direction);
 
-  if (monster == null && !item.matches(OMIRROR)) {
+  if (!monster && !item.matches(OMIRROR)) {
     updateLog("  There wasn't anything there!");
     return;
   }
 
   var str = attackmessage[spnum];
 
-  if (item.matches(OMIRROR) && monster == null) {
+  if (item.matches(OMIRROR) && !monster) {
     if (spnum == 3) /* sleep */ {
       updateLog("  You fall asleep! ");
       beep();
       arg += 2;
       while (arg-- > 0) {
         parse2();
-        nap(1000);
+        //nap(1000);
       }
       return;
     } else if (spnum == 6) /* web */ {
@@ -730,7 +730,7 @@ function direct(spnum, direction, dam, arg) {
       arg += 2;
       while (arg-- > 0) {
         parse2();
-        nap(1000);
+        //nap(1000);
       }
       return;
     } else {
@@ -804,7 +804,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
     if ((player.HP -= dam) <= 0) {
       //updateLog("  You have been slain");
-      nap(1000);
+      //nap(1000);
       died(278, true);
     }
     exitspell();
@@ -815,7 +815,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   if (player.BLINDCOUNT == 0) {
     cursor(x + 1, y + 1);
     lprc(cshow);
-    nap(delay);
+    //nap(delay);
     show1cell(x, y);
   }
 
@@ -824,7 +824,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   var str = stroverride || attackmessage[spnum];
 
   /* is there a monster there? */
-  if (monster != null) {
+  if (monster) {
     ifblind(x, y);
 
     if (nospell(spnum, monster)) {
@@ -838,7 +838,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     updateLog(str(monster));
     dam -= hitm(x, y, dam);
     show1cell(x, y);
-    nap(1000);
+    //nap(1000);
 
     x -= dx;
     y -= dy;
@@ -972,7 +972,7 @@ function omnidirect(spnum, dam, str) {
           updateLog(`  The ${monster} ${str}`);
           hitm(x, y, dam);
           //player.level.know[x][y] = KNOWALL; // TODO HACK FIX FOR BLACK TILE IF KNOW = 0 in HITM()
-          nap(800);
+          //nap(800);
         } else {
           lasthx = x;
           lasthy = y;
@@ -995,7 +995,7 @@ function annihilate() {
   for (var i = player.x - 1; i <= player.x + 1; i++) {
     for (var j = player.y - 1; j <= player.y + 1; j++) {
       var monster = monsterAt(i, j);
-      if (monster != null) { /* if a monster there */
+      if (monster) { /* if a monster there */
         if (monster.arg < DEMONLORD + 2) {
           k += monster.experience;
           player.level.monsters[i][j] = null;

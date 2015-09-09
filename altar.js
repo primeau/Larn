@@ -80,13 +80,13 @@ function act_donation_pray(k) {
       return 1;
     }
     if (rnd(43) == 5) {
-      if (player.WEAR != null)
+      if (player.WEAR)
         updateLog("  You feel your armor vibrate for a moment");
       enchantarmor();
       return 1;
     }
     if (rnd(43) == 8) {
-      if (player.WIELD != null)
+      if (player.WIELD)
         updateLog("  You feel your weapon vibrate for a moment");
       enchweapon();
       return 1;
@@ -110,24 +110,22 @@ function act_donation_pray(k) {
 }
 
 
+
 /*
     Performs the actions associated with 'just praying' at the altar.  Called
     when the user responds 'just pray' when in prompt mode, or enters 0 to
     the money prompt when praying.
-
-    Assumes cursors(), and that any leading \n have been printed (to get
-    around VMS echo mode problem.
 */
 function act_just_pray() {
   if (rnd(100) < 75)
     updateLog("  Nothing happens");
   else if (rnd(43) == 10) {
-    if (player.WEAR != null)
+    if (player.WEAR)
       updateLog("  You feel your armor vibrate for a moment");
     enchantarmor();
     return;
   } else if (rnd(43) == 10) {
-    if (player.WIELD != null)
+    if (player.WIELD)
       updateLog("  You feel your weapon vibrate for a moment");
     enchweapon();
     return;
@@ -135,6 +133,7 @@ function act_just_pray() {
     createmonster(makemonst(level + 1));
   return;
 }
+
 
 
 /*
@@ -153,6 +152,7 @@ function act_desecrate_altar() {
 }
 
 
+
 /*
     Performs the act of ignoring an altar.
 
@@ -166,6 +166,7 @@ function act_ignore_altar() {
     updateLog("  Nothing happens");
   return;
 }
+
 
 
 /*
