@@ -32,14 +32,14 @@ function act_quaffpotion(index) {
     if (!item) {
       //debug(useindex);
       if (index == '*' || index == ' ' || index == 'I') {
-        if (!IN_STORE) {
+        if (mazeMode) {
           showinventory(true, act_quaffpotion, showquaff, false, false);
         } else {
-          IN_STORE = false;
+          mazeMode = true;
           paint();
         }
         nomove = 1;
-        return;
+        return 0;
       }
 
       if (useindex >= 0 && useindex < 26) {
@@ -47,12 +47,13 @@ function act_quaffpotion(index) {
       }
       if (useindex <= -1) {
         appendLog(` cancelled`);
+        nomove = 1;
       }
     } else {
       updateLog(`  You can't quaff that!`);
     }
   }
-  IN_STORE = false;
+  mazeMode = true;
   return 1;
 }
 
@@ -218,11 +219,13 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 14:
+      /* confusion */
       player.CONFUSE += 20 + rnd(9);
       updateLog("  You feel confused");
       break;
 
     case 15:
+      /* heroism */
       if (player.HERO == 0) {
         player.STRENGTH += 11;
         player.INTELLIGENCE += 11;
@@ -236,11 +239,13 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 16:
+      /* sturdiness */
       player.CONSTITUTION++;
       updateLog("  You have a greater intestinal constitude!");
       break;
 
     case 17:
+      /* giant strength */
       if (player.GIANTSTR == 0)
         player.STREXTRA += 21;
       player.GIANTSTR += 700;
@@ -248,11 +253,13 @@ function quaffpotion(potion, set_known) {
       break;
 
     case 18:
+      /* fire resistance */
       player.FIRERESISTANCE += 1000;
       updateLog("  You feel a chill run up your spine!");
       break;
 
     case 19:
+      /* treasure finding */
       updateLog("  You feel greedy . . .");
       //nap(1000);
       if (player.BLINDCOUNT > 0)

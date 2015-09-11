@@ -1,12 +1,15 @@
 "use strict";
 
+
 var no_intro = false;
+
+
 
 /* create new game */
 function welcome() {
-  IN_STORE = true;
+
   clear();
-  cursor(1, 1);
+
   lprcat(helppages[0]);
   cursors();
 
@@ -102,15 +105,13 @@ function startgame(hard) {
 
   newcavelevel(0); /*  make the dungeon */
 
-  IN_STORE = false;
-
   updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
-
-  // regen();
 
   showcell(player.x, player.y);
 
-  //drawscreen(); /*  show the initial dungeon */
+  GAMEOVER = false;
+  mazeMode = true;
+
   paint();
 
   return 1;
@@ -127,8 +128,6 @@ function setdifficulty(hard) {
   sethard(hard); /* set up the desired difficulty */
 
   localStorage.setObject('difficulty', HARDGAME);
-
-  return 1;
 }
 
 
@@ -148,8 +147,6 @@ function sethard(hard) {
   HARDGAME = Math.max(0, hard);
 
   console.log("setting difficulty: " + HARDGAME);
-
-  // hashewon(); TODO
 
   var i;
   var k = HARDGAME;
@@ -237,17 +234,16 @@ function mainloop(key, code) {
     return;
   }
 
-  regen(); /*  regenerate hp and spells            */
+  regen(); /* regenerate hp and spells */
   randmonst();
 
-  // JRP: this is the end of the old main loop
 
-  /* see if there is an object here.
+  /*
+   * JRP: this is the end of the old main loop
+   */
 
-     If in prompt mode, identify and prompt; else
-     identify, pickup if ( auto pickup and not move-no-pickup ),
-     never prompt.
-  */
+
+  /* see if there is an object here.  */
   if (dropflag == 0) {
     lookforobject(true, auto_pickup, false);
   } else {
@@ -279,21 +275,18 @@ function mainloop(key, code) {
   }
 
   /* show stuff around the player */
-  // TODO
-  // if (viewflag == 0)
-  showcell(player.x, player.y);
-  //else
-  //   viewflag = 0;
+  if (viewflag == 0)
+    showcell(player.x, player.y);
+  else
+    viewflag = 0;
 
   hitflag = 0;
-  hit3flag = 0;
-  bot_linex(); /* update bottom line */
-
 
   if (gtime >= 400 && gtime % 400 == 0) {
     saveGame(true);
   }
 
+  recalc();
 
   paint();
 }
@@ -309,13 +302,6 @@ function mainloop(key, code) {
 /*****************************************************************************/
 function parse(key, code) {
   key = "" + key;
-
-  // var code = e.which;
-  // var key = String.fromCharCode(code);
-  //
-  // if (e.which == undefined) {
-  //   key = e;
-  // }
 
   // if (blocking_callback)
   // debug("blocking: " + blocking_callback.name);
@@ -538,7 +524,7 @@ function parse(key, code) {
   //
   if (key == 'v') {
     nomove = 1;
-    updateLog(`JS Larn, Version 12.4.5 build 175 -- Difficulty ${HARDGAME}`);
+    updateLog(`JS Larn, Version 12.4.5 build 184 -- Difficulty ${HARDGAME}`);
     if (wizard) updateLog(" Wizard");
     if (cheat) updateLog(" Cheater");
     return;
@@ -651,7 +637,7 @@ function parse(key, code) {
     }
     if (key == 'y' || key == 'Y') {
       appendLog(" yes");
-      died(286, false);
+      died(286, false); /* a quitter */
       return 1;
     }
     return 0;
@@ -672,7 +658,7 @@ function parse(key, code) {
   if (key == 'S') {
     nomove = 1;
     saveGame();
-    died(287, false);
+    died(287, false); /* saved game */
     return;
   }
 
@@ -846,6 +832,8 @@ function wizardmode(password) {
   //console.log("disabling wizard mode");
   wizard = 1;
 
+  player.TELEFLAG = 0;
+
   player.STRENGTH = 70;
   player.INTELLIGENCE = 70;
   player.WISDOM = 70;
@@ -900,8 +888,9 @@ function wizardmode(password) {
 }
 
 
+
 function parse2() {
-  if (player.HASTEMONST > 0) {
+  if (player.HASTEMONST) {
     movemonst();
   }
   movemonst(); /* move the monsters */

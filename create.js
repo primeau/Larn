@@ -12,11 +12,6 @@
     Note that it is here we remove genocided monsters from the present level.
  */
 function newcavelevel(depth) {
-  // if (player.level) {
-  // TODO? save current level
-  // savelevel(level); /* put the level back into storage  */
-  // }
-
   if (LEVELS[depth]) { // if we have visited this level before
     player.level = LEVELS[depth];
     level = depth;

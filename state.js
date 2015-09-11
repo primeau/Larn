@@ -6,12 +6,12 @@
 
 /* additions for JS Larn */
 var LEVELS = [null, null, null, null, null, null, null, null, null, null, null, null, null, null];
-var LOG = [""];
+var LOG = ["", "", "", "", ""];
 var player;
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
-var GAME_OVER = false;
-var IN_STORE = false;
+var GAMEOVER = true;
+var mazeMode = false;
 var napping = false; /* prevent keyboard input while a nap event is happening */
 var original_objects = true;
 var dnd_item = null;
@@ -27,8 +27,6 @@ var HARDGAME = 0;
 var lastmonst = "";
 var lastnum = 0; /* the number of the monster last hitting player */
 var hitflag = 0; /* flag for if player has been hit when running */
-var hit2flag = 0; /* flag for if player has been hit when running */
-var hit3flag = 0; /* flag for if player has been hit flush input */
 var lastpx = 0;
 var lastpy = 0;
 var lasthx = 0; /* location of monster last hit by player */
@@ -47,14 +45,15 @@ var spheres = [];
 var auto_pickup = false;
 
 
+
 function GameState() {
   this.LEVELS = LEVELS;
   this.LOG = LOG;
   this.player = player;
 
   this.newsphereflag = newsphereflag;
-  this.GAME_OVER = GAME_OVER;
-  this.IN_STORE = IN_STORE;
+  this.GAMEOVER = GAMEOVER;
+  this.mazeMode = mazeMode;
   this.napping = napping;
   this.original_objects = original_objects;
   this.dnd_item = dnd_item;
@@ -70,8 +69,6 @@ function GameState() {
   this.lastmonst = lastmonst;
   this.lastnum = lastnum;
   this.hitflag = hitflag;
-  this.hit2flag = hit2flag;
-  this.hit3flag = hit3flag;
   this.lastpx = lastpx;
   this.lastpy = lastpy;
   this.lasthx = lasthx;

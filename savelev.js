@@ -98,8 +98,8 @@ function loadState(state) {
   player.level = LEVELS[state.level];
 
   newsphereflag = state.newsphereflag;
-  GAME_OVER = state.GAME_OVER;
-  IN_STORE = state.IN_STORE;
+  GAMEOVER = state.GAMEOVER;
+  mazeMode = state.mazeMode;
   napping = state.napping;
   original_objects = state.original_objects;
   dnd_item = state.dnd_item;
@@ -115,8 +115,6 @@ function loadState(state) {
   lastmonst = state.lastmonst;
   lastnum = state.lastnum;
   hitflag = state.hitflag;
-  hit2flag = state.hit2flag;
-  hit3flag = state.hit3flag;
   lastpx = state.lastpx;
   lastpy = state.lastpy;
   lasthx = state.lasthx;

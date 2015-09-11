@@ -34,6 +34,7 @@ function pray_at_altar() {
 function act_donation_pray(k) {
   if (k == ESC) {
       appendLog(" cancelled");
+      nomove = 1;
       prayed = 0;
       return 1;
   }
@@ -60,7 +61,6 @@ function act_donation_pray(k) {
 
     var temp = player.GOLD / 10;
     player.GOLD -= k;
-    bottomline();
 
     /* if player gave less than 10% of _original_ gold, make a monster
      */
@@ -96,11 +96,8 @@ function act_donation_pray(k) {
   updateLog("  You don't have that much!");
   prayed = 0;
   dropflag = 1;
-
   return 1;
-  // case ESC:
-  //   lookforobject(true, false, true); // re-find the altar
-  //   return 0;
+
 }
 
 
@@ -171,5 +168,4 @@ function act_prayer_heard() {
   if (player.ALTPRO == 0)
     player.MOREDEFENSES += 3;
   player.ALTPRO += 500; /* protection field */
-  bottomline();
 }

@@ -5,7 +5,7 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
 
   nomove = 1;
 
-  IN_STORE = true;
+  mazeMode = false;
   var srcount = 0;
 
   setCharCallback(callback);
@@ -144,9 +144,9 @@ const sortorder = [
 
 
 function inv_sort(a, b) {
-  if (!a && b) return 0;
-  if (!a) return 1;
-  if (!b) return -1;
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
   var asort = sortorder.indexOf(a.id); // JRP we could cache this in the item object
   var bsort = sortorder.indexOf(b.id); // but it's not enough of a perf issue
   if (asort != bsort) {
@@ -163,7 +163,7 @@ function inv_sort(a, b) {
 function parse_inventory(key) {
   nomove = 1;
   if (key == ESC || key == ' ') {
-    IN_STORE = false;
+    mazeMode = true;
     return 1;
   } else {
     return 0;
@@ -187,12 +187,9 @@ function take(item) {
       debug("take(): " + item);
       limit = 0;
       player.adjustcvalues(item, true);
-      if (!IN_STORE) {
+      if (mazeMode) {
         updateLog(`  You pick up:`);
         updateLog(`${getCharFromIndex(i)}) ${item}`);
-      }
-      if (limit) {
-        //bottomline();  //TODO?
       }
       return (true);
     }
@@ -209,10 +206,10 @@ function take(item) {
 function drop_object(index) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
   if (index == '*' || index == ' ' || index == 'I') {
-    if (!IN_STORE) {
+    if (mazeMode) {
       showinventory(true, drop_object, showall, false, false);
     } else {
-      IN_STORE = false;
+      mazeMode = true;
       paint();
     }
     nomove = 1;
@@ -235,15 +232,16 @@ function drop_object(index) {
     }
     if (useindex <= -1) {
       appendLog(` cancelled`);
+      nomove = 1;
     }
-    IN_STORE = false;
+    mazeMode = true;
     return 1;
   }
 
   if (isItemAt(player.x, player.y)) {
     beep();
     updateLog("  There's something here already");
-    IN_STORE = false;
+    mazeMode = true;
     return 1;
   }
 
@@ -268,7 +266,7 @@ function drop_object(index) {
   }
   player.adjustcvalues(item, false);
 
-  IN_STORE = false;
+  mazeMode = true;
   return 1;
 }
 
@@ -279,6 +277,7 @@ function drop_object_gold(amount) {
 
   if (amount == ESC) {
       appendLog(" cancelled");
+      nomove = 1;
       return 1;
   }
 

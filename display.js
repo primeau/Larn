@@ -8,52 +8,67 @@ const KNOWALL = (HAVESEEN | KNOWHERE);
 
 
 
-
-
-// TODO!
-function bot_linex() {}
-
-/*
-    bottomline()
-
-    now for the bottom line of the display
- */
-// TODO!
-function bottomline() {
-  recalc();
-  // TODO: lots
-
-  cursor(1, 18);
-
-  lprcat(player.getStatString());
-  lprc("\n");
-
-  for (var logindex = 0; logindex < LOG.length; logindex++) {
-    cltoeoln();
-    lprcat(LOG[logindex] + "\n");
+function paint() {
+  if (mazeMode) {
+    drawmaze();
+    botside();
+    bottomline();
   }
 
+  printStats();
+  blt();
+
+  DEBUG_PAINT++;
+}
+
+
+
+function blt() {
+  if (amiga_mode && CANVAS_MODE) {
+    if (!images) {
+      loadImages();
+    }
+    document.getElementById("LARN").innerHTML = "";
+    return bltAmiga();
+  }
+
+  var output = "";
+  for (var y = 0; y < 24; y++) {
+    for (var x = 0; x < 80; x++) {
+      output += display[x][y] != null ? display[x][y] : ' ';
+    } // inner for
+    output += "\n";
+  } // outer for
+  document.getElementById("LARN").innerHTML = output;
+}
+
+
+
+function printStats() {
   var doc = document.getElementById("STATS");
   if (doc)
     document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
 }
 
 
-const blank = "          ";
 
-// TODO!
-function botsideline(stat, name, line) {
-  cursor(70, line + 1);
-  if (stat > 0) lprcat(name);
-  else lprcat(blank);
+function bottomline() {
+  cursor(1, 18);
+  lprcat(`${player.getStatString()}\n`);
+
+  for (var logindex = 0; logindex < LOG.length; logindex++) {
+    cltoeoln();
+    lprcat(`${LOG[logindex]}\n`);
+  }
 }
 
-// TODO!
+
+
 function botside() {
   var line = 0;
-  botsideline(player.STEALTH, "stealth", line++);
-  botsideline(player.UNDEADPRO, "undead pro", line++);
-  botsideline(player.SPIRITPRO, "spirit pro", line++);
+  botsideline(player.STEALTH, "Stealth", line++);
+  botsideline(player.UNDEADPRO, "Undead Pro", line++);
+  botsideline(player.SPIRITPRO, "Spirit Pro", line++);
   botsideline(player.CHARMCOUNT, "Charm", line++);
   botsideline(player.TIMESTOP, "Time Stop", line++);
   botsideline(player.HOLDMONST, "Hold Monst", line++);
@@ -71,6 +86,17 @@ function botside() {
 }
 
 
+
+const blank = "          ";
+
+function botsideline(stat, name, line) {
+  cursor(70, line + 1);
+  if (stat > 0) lprcat(name);
+  else lprcat(blank);
+}
+
+
+
 /*
 JRP this is very different from the original code
 I was lazy when it came to only partially drawing the screen
@@ -78,7 +104,7 @@ and relied on fully repainting everything every move, which
 breaks how blindness works. I actually like this behaviour
 better, so you're stuck with it.
 */
-function drawscreen() {
+function drawmaze() {
 
   clear();
 
@@ -133,9 +159,9 @@ function drawscreen() {
 
 
 /* subroutine to display a cell location on the screen */
-/* JRP this is quite different from the original, see drawscreen */
+/* JRP this is quite different from the original, see drawmaze */
 function showcell(x, y) {
-  if (IN_STORE) return; // TODO HACK
+  if (!mazeMode) return;
 
   var blind = player.BLINDCOUNT > 0;
 
@@ -188,7 +214,7 @@ function showcell(x, y) {
     these coordinated are not shown
     used in godirect() in monster.c for missile weapons display
  */
-/* JRP this is quite different from the original, see drawscreen */
+/* JRP this is quite different from the original, see drawmaze */
 function show1cell(x, y) {
   player.level.know[x][y] = KNOWALL;
 }
@@ -245,15 +271,13 @@ function moveplayer(dir) {
     return 0;
   }
 
-  /* hit a monster
-   */
+  /* hit a monster */
   if (monster) {
     hitmonster(k, m);
     return (0);
   }
 
-  /* check for the player ignoring an altar when in command mode.
-   */
+  /* check for the player ignoring an altar when in command mode. */
   if (itemAt(player.x, player.y).matches(OALTAR) && !prayed) {
     updateLog("  You have ignored the altar!");
     act_ignore_altar();
@@ -290,7 +314,7 @@ function moveNear(item, exact) {
   }
   debug("movenear: NOT FOUND: " + item.id);
   return false;
-} // movenear
+}
 
 
 
@@ -302,7 +326,7 @@ const NO_MORE = "nomore";
  *  enter with -1 for just spells, anything else will give scrolls & potions
  */
 function seemagic(onlyspells) {
-  IN_STORE = true;
+  mazeMode = false;
 
   if (onlyspells) {
     cl_up(79, ((player.knownSpells.length + 2) / 3 + 4)); /* lines needed for display */

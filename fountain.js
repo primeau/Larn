@@ -10,7 +10,7 @@ function act_drink_fountain() {
   if (rnd(1501) < 2) {
     updateLog("  Oops! You seem to have caught the dreadful sleep!");
     beep();
-    died(280, false);
+    died(280, false); /* fell into the dreadful sleep */
     return;
   }
 
@@ -49,10 +49,8 @@ function act_wash_fountain() {
   if (rnd(100) < 11) {
     var x = rnd((level << 2) + 2);
     updateLog(`  Oh no!  The water was foul!  You suffer ${x} hit points!`);
-    lastnum = 273;
+    lastnum = 273; /* drank some poisonous water */
     player.losehp(x);
-    // bottomline();
-    // cursors();
   } else if (rnd(100) < 29) {
     updateLog("  You got the dirt off!");
   } else if (rnd(100) < 31) {
@@ -124,7 +122,6 @@ function fntchange(how) {
         }
         player.raisemhp(j);
       }
-      //bottomline();
       break;
 
     case 8:
@@ -146,7 +143,6 @@ function fntchange(how) {
         }
         player.losemspells(j);
       }
-      //bottomline();
       break;
 
     case 9:
@@ -170,7 +166,6 @@ function fntchange(how) {
       }
       break;
   }
-  //cursors();
 }
 
 
@@ -184,7 +179,6 @@ function fch(how) {
   } else {
     appendLog(" went up by one!");
   }
-  //bottomline();
 }
 
 
@@ -193,7 +187,6 @@ function fch(how) {
     For command mode.  Perform drinking at a fountain.
 */
 function drink_fountain() {
-  //cursors();
   var item = itemAt(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
     updateLog("There is no water to drink!");
@@ -211,7 +204,6 @@ function drink_fountain() {
     For command mode.  Perform washing (tidying up) at a fountain.
 */
 function wash_fountain() {
-  //cursors();
   var item = itemAt(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
     updateLog("There is no water to wash in!");

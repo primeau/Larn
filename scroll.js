@@ -34,14 +34,14 @@ function act_read_something(index) {
     if (!item) {
 
       if (index == '*' || index == ' ' || index == 'I') {
-        if (!IN_STORE) {
+        if (mazeMode) {
           showinventory(true, act_read_something, showread, false, false);
         } else {
-          IN_STORE = false;
+          mazeMode = true;
           paint();
         }
         nomove = 1;
-        return;
+        return 0;
       }
 
       if (useindex >= 0 && useindex < 26) {
@@ -49,12 +49,13 @@ function act_read_something(index) {
       }
       if (useindex <= -1) {
         appendLog(` cancelled`);
+        nomove = 1;
       }
     } else {
       updateLog(`  You can't read that!`);
     }
   }
-  IN_STORE = false;
+  mazeMode = true;
   return 1;
 }
 
@@ -96,16 +97,17 @@ function read_scroll(scroll) {
       break;
 
     case 3:
+      /* blank paper */
       updateLog("  This scroll seems to be blank");
       break;
 
     case 4:
-      /* this one creates a monster  */
+      /* this one creates a monster */
       createmonster(makemonst(level + 1));
       break;
 
     case 5:
-      /* create artifact     */
+      /* create artifact */
       something(level);
       break;
 
@@ -119,7 +121,7 @@ function read_scroll(scroll) {
       /* time warp */
       var i = rnd(1000) - 850;
       gtime += i;
-      var mobuls = Math.abs(Math.floor((i + 99) / 100));
+      var mobuls = Math.abs(Math.round(i / 100));
       if (i >= 0)
         updateLog(`  You went forward in time by ${mobuls} mobuls`);
       else
@@ -134,7 +136,7 @@ function read_scroll(scroll) {
       break;
 
     case 9:
-      /* expanded awareness   */
+      /* expanded awareness */
       updateLog("  You feel extra alert");
       player.AWARENESS += 1800;
       break;

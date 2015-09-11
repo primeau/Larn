@@ -16,11 +16,12 @@ var LocalScore = function() {
   this.level = LEVELNAMES[level]; /* the level player was on when he died */
   this.taxes = 0; /* taxes he owes to LRS */
 
-  // TODO HACK -- we don't want to save the level
+  // TODO START HACK -- we don't want to save the level
   var x = player.level;
   player.level = null;
   this.player = JSON.stringify(player);
   player.level = x;
+  // TODO END HACK -- we don't want to save the level
 
   this.browser = `${navigator.userAgent} (${navigator.vendor})`;
 }
@@ -166,7 +167,7 @@ const MAX_SCORES_TO_PRINT = 8;
 
 
 function loadScores(newScore) {
-  IN_STORE = true;
+  mazeMode = false;
   clear();
   lprcat("Loading Global Scoreboard...\n");
 
@@ -238,7 +239,7 @@ function showScores(newScore, local) {
     }
   }
 
-  IN_STORE = true;
+  mazeMode = false;
   clear();
 
   if (local) {
@@ -259,7 +260,7 @@ function showScores(newScore, local) {
   cursor(1, 23);
   lprcat("                     Click on a score for more information\n");
   //cursor(1, 24);
-  if (!GAME_OVER) {
+  if (!GAMEOVER) {
     lprcat("                        ---- Press <b>escape</b> to exit  ----");
     // clear the arrays for the next time the scoreboard is loaded
     winners = null;
@@ -590,6 +591,8 @@ function canProtect(reason) {
  * 286     a quitter
  * 287     saved game -- shouldn't go on scoreboard!
  */
+var playerHasBeenKilledAlreadySoDoNotSlayAgain = false;
+
 function died(reason, slain) {
 
   var winner = reason == 263;
@@ -607,9 +610,12 @@ function died(reason, slain) {
   }
 
   if (!winner) {
-    if (slain)
+    if (slain && !playerHasBeenKilledAlreadySoDoNotSlayAgain) {
       updateLog(`You have been slain!`);
+      playerHasBeenKilledAlreadySoDoNotSlayAgain = true;
+    }
   }
+
   paint();
   nomove = 1;
   dropflag = 1;
@@ -633,9 +639,9 @@ function died(reason, slain) {
     updateLog("----  Reload your browser to play again  ----");
     setCharCallback(dead);
     paint();
-    GAME_OVER = true;
+    GAMEOVER = true;
     napping = true;
-    IN_STORE = true;
+    mazeMode = false;
   }
 }
 
@@ -647,9 +653,9 @@ function endgame(key) {
   }
 
   setCharCallback(dead);
-  GAME_OVER = true;
+  GAMEOVER = true;
   napping = true;
-  IN_STORE = true;
+  mazeMode = false;
 
   //player.GOLD += player.BANKACCOUNT;
   //player.BANKACCOUNT = 0;

@@ -172,7 +172,7 @@ function speldamage(x) {
 
     case 10:
       /* cure blindness */
-      player.BLINDCOUNT = 0;
+      player.BLINDCOUNT = 1;
       return;
 
     case 11:
@@ -304,7 +304,7 @@ function speldamage(x) {
         beep();
         updateLog("  Your heart stopped!");
         //nap(4000);
-        died(270, false);
+        died(270, false); /* erased by a wayward finger */
       }
       return;
 
@@ -343,7 +343,7 @@ function speldamage(x) {
         //beep();
         updateLog("You have been enveloped by the zone of nothingness!");
         //nap(4000);
-        died(258, false);
+        died(258, false); /* self - annihilated */
         return;
       }
       loseint();
@@ -369,8 +369,8 @@ function speldamage(x) {
         updateLog("  The demon turned on you and vanished!");
         beep();
         var i = rnd(40) + 30;
-        lastnum = 277;
-        player.losehp(i); /* must say killed by a demon */
+        lastnum = 277; /* attacked by a revolting demon */
+        player.losehp(i);
       }
       return;
 
@@ -733,7 +733,7 @@ function direct(spnum, direction, dam, arg) {
       }
       return;
     } else {
-      lastnum = 278;
+      lastnum = 278; /* hit by own magic */
       updateLog(str("spell caster (that's you)"));
       beep();
       player.losehp(dam);
@@ -802,7 +802,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     updateLog("  You are hit by your own magic!");
 
     if ((player.HP -= dam) <= 0) {
-      died(278, true);
+      died(278, true); /* hit by own magic */
     }
     exitspell();
     return;
@@ -936,6 +936,8 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   }
 
 }
+
+
 
 function exitspell() {
   napping = false;

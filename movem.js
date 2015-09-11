@@ -250,10 +250,10 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
   ripple[player.x][player.y] = 1;
   queue.push(new QueueEntry(player.x, player.y, 1));
 
-  IN_STORE = false; // TODO ACTUALLY PART OF DEBUG_PROXIMITY
+  mazeMode = true; // TODO ACTUALLY PART OF DEBUG_PROXIMITY
   if (DEBUG_PROXIMITY) {
     paint();
-    IN_STORE = true;
+    mazeMode = false;
   }
 
   do {

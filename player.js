@@ -118,7 +118,7 @@ var Player = function Player() {
     if (this.HP <= 0) {
       beep();
       //nap(3000);
-      died(lastnum, true);
+      died(lastnum, true); /* slain by something */
     }
   };
 
@@ -241,7 +241,6 @@ var Player = function Player() {
       beep();
       updateLog(`  You went down to level ${player.LEVEL}!`);
     }
-    bottomline();
   };
 
 
@@ -313,7 +312,7 @@ Gold: ${Number(this.GOLD).toLocaleString()}`;
 function ifblind(x, y) {
   // TODO: make this work for when monster hit/miss the player, and die
   if (player.BLINDCOUNT > 0) {
-    lastnum = 279;
+    lastnum = 279; /* demolished by an unseen attacker */
     lastmonst = "monster";
     return true;
   } else {
@@ -337,29 +336,28 @@ function wield(index) {
     if (take(item)) {
       forget(); // remove from board
     } else {
-      IN_STORE = false;
+      mazeMode = true;
       return 1;
     }
   }
   // wield from inventory
   else {
     if (index == '*' || index == ' ' || index == 'I') {
-      if (!IN_STORE) {
+      if (mazeMode) {
         showinventory(true, wield, showwield, false, false);
       } else {
-        IN_STORE = false;
+        mazeMode = true;
         paint();
       }
       nomove = 1;
-      return;
+      return 0;
     }
     if (index == '-') {
       if (player.WIELD) {
         updateLog("You weapon is sheathed");
         player.WIELD = null;
-        bottomline();
-        recalc(); // JRP added
       }
+      mazeMode = true;
       return 1;
     }
 
@@ -372,15 +370,16 @@ function wield(index) {
       }
       if (useindex <= -1) {
         appendLog(` cancelled`);
+        nomove = 1;
       }
       debug(useindex);
-      IN_STORE = false;
+      mazeMode = true;
       return 1;
     }
 
     if (!item.canWield()) {
       updateLog("  You can't wield that!");
-      IN_STORE = false;
+      mazeMode = true;
       return 1;
     }
   }
@@ -388,7 +387,7 @@ function wield(index) {
   // common cases for both
   if (player.SHIELD && item.matches(O2SWORD)) {
     updateLog("  But one arm is busy with your shield!");
-    IN_STORE = false;
+    mazeMode = true;
     return 1;
   }
 
@@ -399,7 +398,7 @@ function wield(index) {
   updateLog(`${index}) ${item.toString(true)}`);
   player.WIELD = item;
 
-  IN_STORE = false;
+  mazeMode = true;
   return 1;
 }
 
@@ -417,20 +416,20 @@ function wear(index) {
     if (take(item)) {
       forget(); // remove from board
     } else {
-      IN_STORE = false;
+      mazeMode = true;
       return 1;
     }
   } // wear from inventory
   else {
     if (index == '*' || index == ' ' || index == 'I') {
-      if (!IN_STORE) {
+      if (mazeMode) {
         showinventory(true, wear, showwear, false, false);
       } else {
-        IN_STORE = false;
+        mazeMode = true;
         paint();
       }
       nomove = 1;
-      return;
+      return 0;
     }
 
     var useindex = getIndexFromChar(index);
@@ -442,8 +441,9 @@ function wear(index) {
       }
       if (useindex <= -1) {
         appendLog(` cancelled`);
+        nomove = 1;
       }
-      IN_STORE = false;
+      mazeMode = true;
       return 1;
     }
   }
@@ -461,14 +461,14 @@ function wear(index) {
   } else if (item.matches(OSHIELD)) {
     if (player.WIELD && player.WIELD.matches(O2SWORD)) {
       updateLog("  Your hands are busy with the two handed sword!");
-      IN_STORE = false;
+      mazeMode = true;
       return 1;
     } else {
       player.SHIELD = item;
     }
   } else {
     updateLog("  You can't wear that!");
-    IN_STORE = false;
+    mazeMode = true;
     return 1;
   }
 
@@ -478,9 +478,10 @@ function wear(index) {
   updateLog(`  You wear:`);
   updateLog(`${index}) ${item.toString(true)}`);
 
-  IN_STORE = false;
+  mazeMode = true;
   return 1;
 }
+
 
 
 function game_stats(p) {

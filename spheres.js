@@ -65,7 +65,7 @@ function newsphere(x, y, dir, life) {
     updateLog("You have been enveloped by the zone of nothingness!");
     rmsphere(x, y); /* remove any spheres that are here */
     //nap(2000);
-    died(258, false);
+    died(258, false); /* self - annihilated */
   }
   setItem(x, y, createObject(OANNIHILATION));
 

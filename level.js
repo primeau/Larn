@@ -1,5 +1,6 @@
 "use strict";
 
+
 var Level = {
   items: [],
   monsters: [],
@@ -7,48 +8,23 @@ var Level = {
 }; // Level
 
 
-
-function paint() {
-
-  DEBUG_PAINT++;
-
-  //if (!amiga_mode) amiga_mode = true;
-
-  if (IN_STORE) {
-    drawstore();
-  } else {
-    drawscreen();
-    botside();
-    bottomline();
-  }
-
-  blt();
-
-}
+/*
+ *
+ *
+ *
+ *
+ *
+ *  everything below is highly experimental
+ *
+ *
+ *
+ *
+ *
+ */
 
 
-var images = null;
+var images = null; // used for 'amiga_mode'
 
-
-
-function blt() {
-  if (amiga_mode && CANVAS_MODE) {
-    if (!images) {
-      loadImages();
-    }
-    document.getElementById("LARN").innerHTML = "";
-    return bltAmiga();
-  }
-
-  var output = "";
-  for (var y = 0; y < 24; y++) {
-    for (var x = 0; x < 80; x++) {
-      output += display[x][y] != null ? display[x][y] : ' ';
-    } // inner for
-    output += "\n";
-  } // outer for
-  document.getElementById("LARN").innerHTML = output;
-}
 
 
 function loadImages() {
@@ -73,6 +49,8 @@ function loadImages() {
   images[img] = createImage(img);
 }
 
+
+
 function createImage(src) {
   //console.log("loading: " + src);
   var image = new Image();
@@ -84,9 +62,16 @@ function createImage(src) {
 }
 
 
+
 var IS_BOLD;
+var adjust = 0;
+
+
 
 function bltAmiga() {
+
+  adjust++;
+
   var canvas = document.getElementById("lCanvas");
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -122,10 +107,10 @@ function bltAmiga() {
           output = output.substring(4);
         }
         if (IS_BOLD) {
-          ctx.font = `bold 12px monospace`;
+          ctx.font = `bold 12px Courier New, Courier, monospace`;
           ctx.fillStyle = "white";
         } else {
-          ctx.font = `12px monospace`;
+          ctx.font = `12px Courier New, Courier, monospace`;
           ctx.fillStyle = "lightgrey";
         }
         ctx.textBaseline = "top";
@@ -135,12 +120,4 @@ function bltAmiga() {
     } // inner for
   } // outer for
 
-}
-
-
-
-function drawstore() {
-  var doc = document.getElementById("STATS");
-  if (doc)
-    document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
 }

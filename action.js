@@ -57,7 +57,7 @@ function act_open_chest(x, y) {
     updateLog("  The chest explodes as you open it");
     beep();
     var i = rnd(10);
-    lastnum = 281; /* in case he dies */
+    lastnum = 281; /* killed by an exploding chest */
     updateLog(`  You suffer ${i} hit points damage!`);
     if (i > 0) {
       player.losehp(i);
@@ -119,7 +119,7 @@ function act_open_door(x, y) {
 
       case 7:
         updateLog("  You are jolted by an electric shock ");
-        lastnum = 274;
+        lastnum = 274; /* fried by an electric shock */
         player.losehp(rnd(20));
         break;
 
@@ -213,11 +213,11 @@ function act_eatcookie(index) {
       //debug(useindex);
 
       if (index == '*' || index == ' ' || index == 'I') {
-        if (!IN_STORE) {
+        if (mazeMode) {
           showinventory(true, act_eatcookie, showeat, false, false);
         }
         else {
-          IN_STORE = false;
+          mazeMode = true;
           paint();
         }
         nomove = 1;
@@ -229,11 +229,12 @@ function act_eatcookie(index) {
       }
       if (useindex <= -1) {
           appendLog(` cancelled`);
+          nomove = 1;
       }
     } else {
       updateLog(`  You can't eat that!`);
     }
   }
-  IN_STORE = false;
+  mazeMode = true;
   return 1;
 }

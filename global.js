@@ -53,7 +53,7 @@ function canMove(x, y) {
   if (x >= MAXX) return false;
   if (y < 0) return false;
   if (y >= MAXY) return false;
-  var item = itemAt(x,y);
+  var item = itemAt(x, y);
   return (!item.matches(OWALL) && !item.matches(OCLOSEDDOOR) && !monsterAt(x, y));
 }
 
@@ -186,7 +186,6 @@ function enchantarmor() {
   }
   if (!armor.matches(OSCROLL) && !armor.matches(OPOTION)) {
     armor.arg++;
-    bottomline();
     return true;
   }
   return false;
@@ -213,11 +212,12 @@ function enchweapon() {
     else
     if (weapon.matches(ODEXRING))
       player.DEXTERITY++;
-    bottomline();
+
     return true;
   }
   return false;
 }
+
 
 
 /*
@@ -229,6 +229,7 @@ function nearbymonst() {
       if (monsterAt(tmp, tmp2)) return (true); /* if monster nearby */
   return (false);
 }
+
 
 
 /*

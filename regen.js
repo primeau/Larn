@@ -2,8 +2,6 @@
 
 /* subroutine to regenerate player hp and spells */
 function regen() {
-  var flag;
-
   player.MOVESMADE++;
 
   /* for stop time spell */
@@ -12,11 +10,8 @@ function regen() {
     return;
   }
 
-  flag = 0;
-
   if (player.STRENGTH < 3) {
     player.STRENGTH = 3;
-    flag = 1;
   }
 
   if (player.HP != player.HPMAX) {
@@ -34,40 +29,43 @@ function regen() {
     }
   }
 
-  if (player.HERO>0)            if (--player.HERO <= 0) {
-    player.STRENGTH -= 10;
-    player.INTELLIGENCE -= 10;
-    player.WISDOM -= 10;
-    player.CONSTITUTION -= 10;
-    player.DEXTERITY -= 10;
-    player.CHARISMA -= 10;
-    flag = 1;
+  if (player.HERO) {
+    if (--player.HERO <= 0) {
+      player.STRENGTH -= 10;
+      player.INTELLIGENCE -= 10;
+      player.WISDOM -= 10;
+      player.CONSTITUTION -= 10;
+      player.DEXTERITY -= 10;
+      player.CHARISMA -= 10;
+    }
   }
-  if (player.ALTPRO>0)          if (--player.ALTPRO <= 0)           {player.MOREDEFENSES -= 3; flag = 1;}
-  if (player.PROTECTIONTIME>0)  if (--player.PROTECTIONTIME <= 0)   {player.MOREDEFENSES -= 2; flag = 1;}
-  if (player.DEXCOUNT>0)        if (--player.DEXCOUNT <= 0)         {player.DEXTERITY -= 3; flag = 1;}
-  if (player.STRCOUNT>0)        if (--player.STRCOUNT <= 0)         {player.STREXTRA -= 3; flag = 1;}
-  if (player.BLINDCOUNT>0)      if (--player.BLINDCOUNT <= 0)       {cursors(); updateLog("The blindness lifts");}
-  if (player.CONFUSE>0)         if (--player.CONFUSE <= 0)          {cursors(); updateLog("You regain your senses");}
-  if (player.GIANTSTR>0)        if (--player.GIANTSTR <= 0)         {player.STREXTRA -= 20; flag = 1;}
-  if (player.CHARMCOUNT>0)      if ((--player.CHARMCOUNT) <= 0)     flag = 1;
-  if (player.INVISIBILITY>0)    if ((--player.INVISIBILITY) <= 0)   flag = 1;
-  if (player.CANCELLATION>0)    if ((--player.CANCELLATION) <= 0)   flag = 1;
-  if (player.WTW>0)             if ((--player.WTW) <= 0)            flag = 1;
-  if (player.HASTESELF>0)       if ((--player.HASTESELF) <= 0)      flag = 1;
-  if (player.AGGRAVATE>0)       --player.AGGRAVATE;
-  if (player.SCAREMONST>0)      if ((--player.SCAREMONST) <= 0)     flag = 1;
-  if (player.STEALTH>0)         if ((--player.STEALTH) <= 0)        flag = 1;
-  if (player.AWARENESS>0)       --player.AWARENESS;
-  if (player.HOLDMONST>0)       if ((--player.HOLDMONST) <= 0)      flag = 1;
-  if (player.HASTEMONST>0)      --player.HASTEMONST;
-  if (player.FIRERESISTANCE>0)  if ((--player.FIRERESISTANCE) <= 0) flag = 1;
-  if (player.GLOBE>0)           if (--player.GLOBE <= 0)            {player.MOREDEFENSES -= 10; flag = 1;}
-  if (player.SPIRITPRO>0)       if (--player.SPIRITPRO <= 0)        flag = 1;
-  if (player.UNDEADPRO>0)       if (--player.UNDEADPRO <= 0)        flag = 1;
-  if (player.HALFDAM>0)         if (--player.HALFDAM <= 0)          {cursors(); updateLog("You now feel better");}
 
-  if (player.SEEINVISIBLE > 0) {
+  if (player.PROTECTIONTIME) if (--player.PROTECTIONTIME <= 0) player.MOREDEFENSES -= 2;
+  if (player.ALTPRO)         if (--player.ALTPRO <= 0)         player.MOREDEFENSES -= 3;
+  if (player.GLOBE)          if (--player.GLOBE <= 0)          player.MOREDEFENSES -= 10;
+  if (player.DEXCOUNT)       if (--player.DEXCOUNT <= 0)       player.DEXTERITY -= 3;
+  if (player.STRCOUNT)       if (--player.STRCOUNT <= 0)       player.STREXTRA -= 3;
+  if (player.GIANTSTR)       if (--player.GIANTSTR <= 0)       player.STREXTRA -= 20;
+  if (player.BLINDCOUNT)     if (--player.BLINDCOUNT <= 0)     updateLog("The blindness lifts");
+  if (player.CONFUSE)        if (--player.CONFUSE <= 0)        updateLog("You regain your senses");
+  if (player.HALFDAM)        if (--player.HALFDAM <= 0)        updateLog("You now feel better");
+
+  if (player.CHARMCOUNT)     --player.CHARMCOUNT;
+  if (player.INVISIBILITY)   --player.INVISIBILITY;
+  if (player.CANCELLATION)   --player.CANCELLATION;
+  if (player.WTW)            --player.WTW;
+  if (player.HASTESELF)      --player.HASTESELF;
+  if (player.AGGRAVATE)      --player.AGGRAVATE;
+  if (player.SCAREMONST)     --player.SCAREMONST;
+  if (player.STEALTH)        --player.STEALTH;
+  if (player.AWARENESS)      --player.AWARENESS;
+  if (player.HOLDMONST)      --player.HOLDMONST;
+  if (player.HASTEMONST)     --player.HASTEMONST;
+  if (player.FIRERESISTANCE) --player.FIRERESISTANCE;
+  if (player.SPIRITPRO)      --player.SPIRITPRO
+  if (player.UNDEADPRO)      --player.UNDEADPRO
+
+  if (player.SEEINVISIBLE) {
     if (--player.SEEINVISIBLE <= 0) {
       monsterlist[INVISIBLESTALKER].char = OEMPTY.char;
       if (!player.BLINDCOUNT) {
@@ -76,23 +74,20 @@ function regen() {
     }
   }
 
-  if (player.ITCHING > 0) {
+  if (player.ITCHING) {
     if (player.ITCHING > 1)
       if ((player.WEAR) || (player.SHIELD))
         if (rnd(100) < 50) {
           player.WEAR = null;
           player.SHIELD = null;
-          //cursors();
           updateLog("The hysteria of itching forces you to remove your armor!");
-          recalc();
         }
     if (--player.ITCHING <= 0) {
       updateLog("You now feel the irritation subside!");
     }
   }
 
-
-  if (player.CLUMSINESS > 0) {
+  if (player.CLUMSINESS) {
     if (player.WIELD)
       if (player.CLUMSINESS > 1)
         if (itemAt(player.x, player.y).matches(OEMPTY)) /* only if nothing there */
@@ -103,10 +98,6 @@ function regen() {
     if (--player.CLUMSINESS <= 0) {
       updateLog("You now feel less awkward!");
     }
-  }
-
-  if (flag) {
-    recalc();
   }
 
 }

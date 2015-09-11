@@ -75,7 +75,7 @@ Monster.prototype = {
     },
 
     isDemon: function() {
-        return this.arg >= 56 /* && this.arg <= 64 */;
+      return this.arg >= 56 /* && this.arg <= 64 */ ;
     },
 
     /*
@@ -476,14 +476,18 @@ function createitem(it, arg) {
  *  Returns nothing of value.
  */
 function hitplayer(x, y) {
-  //console.trace();
+
   var monster = player.level.monsters[x][y];
   if (!monster) {
-    //debug("monster.hitplayer(): no monster at: " + xy(x, y));
     return;
   }
 
-  lastnum = monster;
+  if (playerHasBeenKilledAlreadySoDoNotSlayAgain) {
+    debug('already dead');
+    return;
+  }
+
+  lastnum = monster; /* killed by a ${monstername} */
 
   /*  spirit naga's and poltergeist's do nothing if scarab of negate spirit   */
   if (player.NEGATESPIRIT || player.SPIRITPRO) {
@@ -499,8 +503,6 @@ function hitplayer(x, y) {
 
   var bias = HARDGAME + 1;
   hitflag = 1;
-  hit2flag = 1;
-  hit3flag = 1;
 
   cursors();
   ifblind(x, y);
@@ -599,7 +601,6 @@ function hitmonster(x, y) {
     return;
   }
 
-  hit3flag = 1;
   var blind = ifblind(x, y);
   var damage = 0;
   var flag = 0;

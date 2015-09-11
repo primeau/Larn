@@ -7,7 +7,7 @@ function enter() {
   // cursors() ;
 
   debug("enter(): entering a building");
-  IN_STORE = true;
+  mazeMode = false;
 
   var building = itemAt(player.x, player.y);
   if (building.matches(OSCHOOL)) {
@@ -44,7 +44,7 @@ function enter() {
   }
 
   debug("enter(): no building here");
-  IN_STORE = false;
+  mazeMode = true;
 
   updateLog("There is no place to enter here!");
 
@@ -65,7 +65,7 @@ function enter() {
  *
  */
 function dungeon() {
-  IN_STORE = false;
+  mazeMode = true;
   /* place player in front of entrance on level 1.  newcavelevel()
      prevents player from landing on a monster/object.
   */
@@ -76,7 +76,6 @@ function dungeon() {
   player.level.monsters[33][MAXY - 1] = null;
   //draws( 0, MAXX, 0, MAXY );
   showcell(player.x, player.y); /* to show around player */
-  bot_linex();
 }
 
 
@@ -121,7 +120,7 @@ function dndstore() {
   //   lflush();
   //   i = 0;
   //   while (i != '\33') i = ttgetch();
-  //   drawscreen();
+  //   paint();
   //   nosignal = 0; /* enable signals */
   //   return;
   // }
@@ -278,13 +277,12 @@ function banktitle(str) {
   //   lflush();
   //   i = 0;
   //   while (i != '\33') i = ttgetch();
-  //   drawscreen();
+  //   paint();
   //   nosignal = 0; /* enable signals */
   //   return;
   // }
   lprcat("\n\n   Gemstone                 Appraisal      Gemstone                 Appraisal");
   obanksub();
-  //drawscreen();
   paint();
 }
 
@@ -373,7 +371,7 @@ function bank_parse(key) {
 
 
 function bankmessage(str, duration) { //TODO convert to storemessage?
-  if (!IN_STORE) return;
+  if (mazeMode) return;
 
   if (duration == "")
     cl_dn(1, 23);
@@ -890,15 +888,15 @@ function ohome() {
     if (item && item.matches(OPOTION) && item.arg == 21) {
       //iven[i] = 0; /* remove from inventory */
       if (gtime > TIMELIMIT) {
-        IN_STORE = false; // HACK?
+        mazeMode = true;
         updateLog("Congratulations. You found a potion of cure dianthroritis. Frankly, no one");
         updateLog("thought you could do it. Boy! Did you surprise them! The doctor has the sad");
         updateLog("duty to inform you that your daughter died before your return. There was");
         updateLog("nothing that could be done without the potion.");
-        died(269, false);
+        died(269, false); /* failed */
         return;
       } else {
-        IN_STORE = false; // HACK?
+        mazeMode = true;
         updateLog("Congratulations. You found a potion of cure dianthroritis. Frankly, no one");
         updateLog("thought you could do it. Boy! Did you surprise them! The doctor is now");
         updateLog("administering the potion, and in a few moments your daughter should be well");
@@ -913,12 +911,12 @@ function ohome() {
   }
 
   if (gtime > TIMELIMIT) {
-    IN_STORE = false; // HACK?
+    mazeMode = true;
     updateLog(`Welcome home ${logname}.`);
     updateLog("The latest word from the doctor is not good.");
     updateLog("The doctor has the sad duty to inform you that your daughter died! You didn't");
     updateLog("make it in time. There was nothing that could be done without the potion.");
-    died(269, false);
+    died(269, false); /* failed */
     return;
   }
 
@@ -941,7 +939,7 @@ function ohome() {
 }
 
 function parse_home(key) {
-  if (key == ESC && !GAME_OVER) {
+  if (key == ESC && !GAMEOVER) {
     return exitbuilding();
   }
 }
@@ -971,7 +969,7 @@ function win(key) {
         updateLog("Congratulations!");
         paint();
         napping = false;
-        died(263, false);
+        died(263, false); /* a winner! */
       }, 1000);
     }, 1500);
   }, 2000);
@@ -1065,7 +1063,7 @@ function olrs() {
  *
  */
 function exitbuilding() {
-  IN_STORE = false;
+  mazeMode = true;
   clear();
   paint();
   return 1;
@@ -1074,7 +1072,7 @@ function exitbuilding() {
 
 
 function storemessage(str, duration) {
-  if (!IN_STORE) return;
+  if (mazeMode) return;
   cursors();
   cltoeoln();
   lprcat(str);

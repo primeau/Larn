@@ -99,7 +99,6 @@ function lprc(ch) {
 
 
 function os_scroll_down(x1, x2) {
-  // TODO
 }
 
 
@@ -152,5 +151,5 @@ function cl_dn(x, y) {
 
 
 function lflush() {
-  LOG = [""];
+  LOG = ["", "", "", "", ""];
 }

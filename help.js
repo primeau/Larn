@@ -18,9 +18,10 @@ function parse_help(key) {
 
 
 function print_help() {
-  IN_STORE = true;
+  mazeMode = false;
+
   clear();
-  cursor(1, 1);
+
   if (++currentpage > helppages.length - 1) {
     currentpage = 1;
   }
@@ -75,7 +76,7 @@ helppages[1] =
   r  read a scroll            R  remove gems from throne                        \n\
   s  sit on a throne          S  save the game            @  toggle auto-pickup \n\
 ,|t  take an item             T  take off armor           {  hack-style objects \n\
-  v  print program version                                }  amiga-style objects\n\
+  v  print program version                                <strike>} amiga-style objects</strike> \n\
   w  wield a weapon           W  wear armor                                     \n\
   z  show scores              Z  teleport yourself        ?  this help screen   \n\
   ";

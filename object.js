@@ -490,7 +490,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OTRAPARROW)) {
     updateLog("You are hit by an arrow");
-    lastnum = 259;
+    lastnum = 259; /* shot by an arrow */
     player.losehp(rnd(10) + level);
     return;
   }
@@ -508,7 +508,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(ODARTRAP)) {
     updateLog("You are hit by a dart");
-    lastnum = 260;
+    lastnum = 260; /* hit by a dart */
     player.losehp(rnd(5));
     if ((--player.STRENGTH) < 3)
       player.STRENGTH = 3;
@@ -527,14 +527,14 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OTRAPDOOR)) {
-    lastnum = 272; /* a trap door */
     if ((level == MAXLEVEL - 1) || (level == MAXLEVEL + MAXVLEVEL - 1)) {
       updateLog("You fell through a bottomless trap door!");
       //nap(2000);
-      died(271, false);
+      died(271, false); /* fell through a bottomless trap door */
     }
     var dmg = rnd(5 + level);
     updateLog(`You fall through a trap door!  You lose ${dmg} hit points`);
+    lastnum = 272; /* fell through a trap door */
     player.losehp(dmg);
     //nap(2000);
     newcavelevel(level + 1);
@@ -543,7 +543,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OANNIHILATION)) {
     updateLog("You have been enveloped by the zone of nothingness!");
-    died(283, false); /* annihilated by sphere of annihilation */
+    died(283, false); /* annihilated in a sphere */
     return;
   }
 
@@ -582,8 +582,7 @@ function opit() {
     } else {
       damage = rnd(level * 3 + 3);
       updateLog(`You fell into a pit! You suffer ${damage} hit points damage`);
-      lastnum = 261;
-      /* if hero dies scoreboard will say so */
+      lastnum = 261; /* fell into a pit */
     }
     player.losehp(damage);
     //nap(2000);
@@ -597,7 +596,7 @@ function obottomless() {
   updateLog("You fell into a bottomless pit!");
   beep();
   //nap(3000);
-  died(262, false);
+  died(262, false); /* fell into a bottomless pit */
 }
 
 
@@ -616,7 +615,7 @@ function oteleport(err) {
   if (err) {
     if (rnd(151) < 3) {
       updateLog("You are trapped in solid rock!")
-      died(264, false); /* stuck in a rock */
+      died(264, false); /* trapped in solid rock */
     }
   }
   player.TELEFLAG = 1; /* show ?? on bottomline if been teleported    */
@@ -641,7 +640,6 @@ function oteleport(err) {
   if (level != tmp)
     newcavelevel(tmp);
   positionplayer();
-  bot_linex();
 }
 
 
@@ -662,7 +660,6 @@ function readbook(book) {
   if (rnd(10) == 4) {
     updateLog("  Your intelligence went up by one!");
     player.INTELLIGENCE++;
-    bottomline();
   }
 }
 
@@ -680,7 +677,6 @@ function adjtime(tim) {
   player.CHARMCOUNT = player.CHARMCOUNT > 0 ? Math.max(1, player.CHARMCOUNT - tim) : 0;
   player.INVISIBILITY = player.INVISIBILITY > 0 ? Math.max(1, player.INVISIBILITY - tim) : 0;
   player.CANCELLATION = player.CANCELLATION > 0 ? Math.max(1, player.CANCELLATION - tim) : 0;
-  player.HASTESELF = player.HASTESELF > 0 ? Math.max(1, player.HASTESELF - tim) : 0;
   player.AGGRAVATE = player.AGGRAVATE > 0 ? Math.max(1, player.AGGRAVATE - tim) : 0;
   player.SCAREMONST = player.SCAREMONST > 0 ? Math.max(1, player.SCAREMONST - tim) : 0;
   player.STEALTH = player.STEALTH > 0 ? Math.max(1, player.STEALTH - tim) : 0;

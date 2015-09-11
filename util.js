@@ -62,6 +62,7 @@ function getdirectioninput(key, code) {
   if (key == ESC) {
     // TODO anything else?
     appendLog(" cancelled");
+    nomove = 1;
     keyboard_input_callback = null;
     return 1;
   }
@@ -81,7 +82,7 @@ function getdirectioninput(key, code) {
 
 
 function echo(key) {
-  if (IN_STORE) {
+  if (!mazeMode) {
     lprc(key);
   } else {
     appendLog(key);
