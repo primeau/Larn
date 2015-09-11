@@ -13,6 +13,7 @@ function forgetSpell(spellnum) {
 
 
 
+var eys = "Enter your spell: ";
 var spellToCast = null;
 
 
@@ -21,7 +22,7 @@ function pre_cast() {
   cursors();
   nomove = 1;
   if (player.SPELLS > 0) {
-    updateLog("Enter your spell: ");
+    updateLog(eys);
     spellToCast = "";
     setCharCallback(cast);
   } else {
@@ -38,7 +39,14 @@ function cast(key) {
   if (key == 'I' || key == " ") {
     seemagic(true);
     setCharCallback(parse_see_spells);
-    if (!spellToCast) updateLog("Enter your spell: ");
+    if (!spellToCast) updateLog(eys);
+    return 0;
+  }
+
+  if (key == DEL && spellToCast.length >= 1) {
+    spellToCast = spellToCast.substring(0, spellToCast.length - 1);
+    var line = deleteLog();
+    updateLog(line.substring(0, line.length - 1));
     return 0;
   }
 
@@ -172,7 +180,8 @@ function speldamage(x) {
 
     case 10:
       /* cure blindness */
-      player.BLINDCOUNT = 1;
+      if (player.BLINDCOUNT)
+        player.BLINDCOUNT = 1;
       return;
 
     case 11:

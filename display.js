@@ -443,10 +443,16 @@ function updateLog(text) {
 function appendLog(text) {
   var newText;
   if (text == DEL) {
-    newText = LOG.pop();
+    var newText = deleteLog();
     newText = newText.substring(0, newText.length - 1);
   } else {
-    newText = LOG.pop() + text;
+    newText = deleteLog() + text;
   }
   updateLog(newText);
+}
+
+
+
+function deleteLog() {
+  return LOG.pop();
 }
