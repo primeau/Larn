@@ -35,7 +35,7 @@ function setname(name) {
     name = logname;
   }
   if (name) {
-    logname = name.substring(0, 19);
+    logname = name.substring(0, 24);
     localStorage.setObject('logname', logname);
   }
 

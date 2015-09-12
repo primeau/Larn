@@ -1,6 +1,8 @@
 todo:
+- google analytics
 - wall spacing is different on different browsers
   - use canvas or webgl instead?
+  - flexbox?
 + closed window alert is annoying -> create alert-on-close option?
 + switch to github pages?
 + build process
@@ -19,7 +21,6 @@ todo:
 
 bugs:
 * winning score not recorded??
-+ backspace on cast doesn't work
 + sph does crazy things when you go up/down stairs
 + if a player has more than one top-10 score, the scoreboard will have one too few entries
 + when blind, a monster from an unknown tile will reveal the tile its standing on during attack
@@ -54,6 +55,8 @@ atom:
 
 
 extras:
+- view data on current / finished game
+- game start/end stats
 - cloud save via password
 - amiga-style images
 - start new game without reloading

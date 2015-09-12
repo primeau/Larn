@@ -30,9 +30,8 @@ function saveGame(isCheckPoint) {
   // END HACK TODO to not store player.level
 
   if (isCheckPoint) {
-    var pad = 67 - LOG[LOG.length - 1].length;
-
-    appendLog(padString('*', pad));
+    //var pad = 67 - LOG[LOG.length - 1].length;
+    //appendLog(padString('*', pad));
   } else {
     updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
   }

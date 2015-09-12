@@ -107,19 +107,11 @@ function fntchange(how) {
       var j = rnd(level + 1);
       if (how < 0) {
         updateLog(`  You lose ${j} hit point`);
-        if (j > 1) {
-          appendLog("s!");
-        } else {
-          appendLog('!');
-        }
+        exclaim(j);
         player.losemhp(j);
       } else {
         updateLog(`  You gain ${j} hit point`);
-        if (j > 1) {
-          appendLog("s!");
-        } else {
-          appendLog('!');
-        }
+        exclaim(j);
         player.raisemhp(j);
       }
       break;
@@ -128,19 +120,11 @@ function fntchange(how) {
       var j = rnd(level + 1);
       if (how > 0) {
         updateLog(`  You just gained ${j} spell`);
-        if (j > 1) {
-          appendLog("s!");
-        } else {
-          appendLog('!');
-        }
+        exclaim(j);
         player.raisemspells(j);
       } else {
         updateLog(`  You just lost ${j} spell`);
-        if (j > 1) {
-          appendLog("s!");
-        } else {
-          appendLog('!');
-        }
+        exclaim(j);
         player.losemspells(j);
       }
       break;
@@ -149,19 +133,11 @@ function fntchange(how) {
       var j = 5 * rnd((level + 1) * (level + 1));
       if (how < 0) {
         updateLog(`  You just lost ${j} experience point`);
-        if (j > 1) {
-          appendLog("s!");
-        } else {
-          appendLog('!');
-        }
+        exclaim(j);
         player.loseexperience(j);
       } else {
         updateLog(`  You just gained ${j} experience point`);
-        if (j > 1) {
-          appendLog("s!");
-        } else {
-          appendLog('!');
-        }
+        exclaim(j);
         player.raiseexperience(j);
       }
       break;
@@ -179,6 +155,16 @@ function fch(how) {
   } else {
     appendLog(" went up by one!");
   }
+}
+
+
+
+function exclaim(num) {
+    if (num > 1) {
+      appendLog("s!");
+    } else {
+      appendLog('!');
+    }
 }
 
 
