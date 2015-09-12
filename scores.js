@@ -161,7 +161,7 @@ var winners = null;
 var losers = null;
 
 
-const MAX_SCORES_TO_QUERY = 15;
+const MAX_SCORES_TO_QUERY = 25;
 const MAX_SCORES_TO_PRINT = 8;
 
 

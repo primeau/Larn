@@ -477,13 +477,13 @@ function createitem(it, arg) {
  */
 function hitplayer(x, y) {
 
-  var monster = player.level.monsters[x][y];
-  if (!monster) {
+  if (player.HP <= 0) {
+    debug('already dead');
     return;
   }
 
-  if (playerHasBeenKilledAlreadySoDoNotSlayAgain) {
-    debug('already dead');
+  var monster = player.level.monsters[x][y];
+  if (!monster) {
     return;
   }
 
@@ -752,6 +752,11 @@ const rustarm = [
 function spattack(x, xx, yy) {
 
   if (player.CANCELLATION) return 0;
+
+  if (player.HP <= 0) {
+    debug('already dead');
+    return 0;
+  }
 
   //vxy( & xx, & yy); /* verify x & y coordinates */
 
