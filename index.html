@@ -4,12 +4,11 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title></title>
-  <meta name="description" content="">
+  <title>Larn</title>
+  <meta name="description" content="Welcome to JS Larn - A web version of a classic roguelike">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <!-- Place favicon.ico in the root directory -->
+  <!-- <link rel="apple-touch-icon" href="apple-touch-icon.png"> -->
 
   <style>
     section {
@@ -26,17 +25,8 @@
       width: 60%;
       float: left;
     }
-    /*@font-face {
-        font-family: 'dos';
-        src: url('util/clacon.ttf');
-        src: url('util/LessPerfectDOSVGA.ttf');
-        src: url('util/MorePerfectDOSVGA.ttf');
-        src: url('util/Nouveau_IBM.ttf');
-        src: url('util/Nouveau_IBM_Stretch.ttf');
-      }*/
 
     a:link {
-      /*color: #0000EE;*/
       color: #bbbbbb;
     }
 
@@ -69,13 +59,9 @@
     }
 
     p.mono {
-      /*font-family: "dos", "Courier New", Courier, monospace;*/
       font-family: "Courier New", Courier, monospace;
-      /*font-family: "Lucida Console", Monaco, monospace;*/
-      /*line-height: 18px;*/
       color: lightgrey;
-      font-size: 150%;
-      /*margin: 0;*/
+      font-size: 125%;
     }
   </style>
 
@@ -128,10 +114,18 @@
   <section>
     <div>
       <pre>
-        <p class="mono" id="LARN">Error Loading. (JS Larn currently only works on Chrome, Firefox, and Opera. Sorry...)</p>
+        <p class="mono" id="LARN">
+LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or
+MORIA, but with a different feel and winning criteria.
+
+Unfortunately if you're seeing this page, there was an error loading the game.
+Please submit an issue via the link below and I'll get to the bottom of it!
+
+-- Jason Primeau
+        </p>
         <script>
           "use strict";
-          play();
+        play();
         </script>
       </pre>
     </div>
@@ -154,6 +148,22 @@
     </pre>
   </footer>
 
-</body>
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
+    ga('create', 'UA-67478429-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+</body>
 </html>

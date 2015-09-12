@@ -39,9 +39,11 @@ function down_stairs() {
     dropflag = 1;
   }
 
-
   else if (item.matches(OVOLDOWN))
     act_down_shaft();
+
+  else if (item.matches(OENTRANCE))
+    enter();
 
   else if (!item.matches(OSTAIRSDOWN)) {
     updateLog("I see no way to go down here!");

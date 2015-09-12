@@ -42,6 +42,10 @@ function enter() {
     ohome();
     return;
   }
+  if (building.matches(OVOLDOWN)) {
+    act_down_shaft();
+    return;
+  }
 
   debug("enter(): no building here");
   mazeMode = true;
@@ -86,8 +90,6 @@ function dungeon() {
 
 
 
-
-
 /*
  *
  *
@@ -95,7 +97,7 @@ function dungeon() {
  *
  *
  */
- var dndindex = 0;
+var dndindex = 0;
 
 function dndstore() {
 
@@ -236,8 +238,6 @@ function dnditem(i) {
 
 
 
-
-
 /*
  *
  *
@@ -245,7 +245,7 @@ function dnditem(i) {
  *
  *
  */
- function obank() {
+function obank() {
   banktitle("Welcome to the First National Bank of Larn.");
 }
 
