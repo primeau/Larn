@@ -187,7 +187,8 @@ function readGlobal(loadWinners, newScore, offline) {
 
   Parse.Cloud.run('highscores', {
     winner: loadWinners,
-    limit: MAX_SCORES_TO_PRINT
+    limit: MAX_SCORES_TO_PRINT,
+    logname: logname,
   }, {
     success: function(results) {
       /* populate an empty array in case there are no results */
@@ -197,8 +198,7 @@ function readGlobal(loadWinners, newScore, offline) {
       for (var i = 0; i < results.length; i++) {
         var object = results[i];
         object.convertToLocal();
-        //console.log(object.id + ' - ' + object.who + " " + object.hardlev + " " + object.score);
-        console.log(`${object.id} - ${object.get('winner')} ${object.get('hardlev')} ${object.get('score')} ${object.get('who')}`);
+        //console.log(`${object.id} - ${object.get('winner')} ${object.get('hardlev')} ${object.get('score')} ${object.get('who')}`);
       }
 
       if (loadWinners) {
