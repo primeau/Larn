@@ -189,6 +189,7 @@ function readGlobal(loadWinners, newScore, offline) {
     winner: loadWinners,
     limit: MAX_SCORES_TO_PRINT,
     logname: logname,
+    gameover: GAMEOVER, 
   }, {
     success: function(results) {
       /* populate an empty array in case there are no results */

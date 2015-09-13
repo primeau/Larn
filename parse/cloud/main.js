@@ -4,7 +4,7 @@ Parse.Cloud.define('highscores', function(request, response) {
   query.descending('hardlev', 'score', 'level', 'timeused');
   query.equalTo('winner', request.params.winner);
 
-  console.log('scoreboard request from: ' + request.params.logname);
+  console.log((request.params.gameover ? 'gameover ' : '') + 'scoreboard request from: ' + request.params.logname);
 
   query.find({
     success: function(scores) {
