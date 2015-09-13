@@ -658,16 +658,13 @@ function endgame(key) {
   napping = true;
   mazeMode = false;
 
-  //player.GOLD += player.BANKACCOUNT;
-  //player.BANKACCOUNT = 0;
-
   var newScore = new LocalScore();
 
   console.log("wizard == " + wizard);
   console.log("cheater == " + cheat);
   console.log("newscore.score == " + newScore.score);
 
-  if (newScore.score > 0 && !wizard && !cheat) {
+  if ((newScore.score > 0 || newScore.winner) && !wizard && !cheat) {
     writeLocal(newScore);
     writeGlobal(newScore);
   } else {

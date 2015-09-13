@@ -22,7 +22,7 @@ Parse.Cloud.define('highscores', function(request, response) {
         if (players.indexOf(who) >= 0) continue;
         players.push(who);
 
-        console.log(object.id + ' - ' + object.get('winner') + ' ' + object.get('hardlev') + ' ' + object.get('score') + ' ' + object.get('who'));
+        //console.log(object.id + ' - ' + object.get('winner') + ' ' + object.get('hardlev') + ' ' + object.get('score') + ' ' + object.get('who'));
         // parse doesn't understand templates...
         //console.log(`${object.id} - ${object.get('winner')} ${object.get('hardlev')} ${object.get('score')} ${object.get('who')}`);
 
