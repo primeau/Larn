@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "_default": {
+      "link": "larn"
+    },
+    "larn": {
+      "applicationId": "ZG6aY4DKdkKn39YGogG0WFhqk089WTqVWprNfijo"
+    }
+  }
+}

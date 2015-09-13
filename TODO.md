@@ -23,7 +23,6 @@ todo:
 bugs:
 * winning score not recorded??
 + sph does crazy things when you go up/down stairs
-+ if a player has more than one top-10 score, the scoreboard will have one too few entries
 + when blind, a monster from an unknown tile will reveal the tile its standing on during attack
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - gtime/rmst isn't properly displayed on scoreboard
@@ -47,6 +46,14 @@ build:
 - copy files:        # scp -P 1911 *.js ../JLarn/*.html jay@prim.io:/usr/share/nginx/html/larn
 - commit changes:    # git commit -a -m "Our Hero has a nicer scoreboard"
 - push to github     # git push origin master
+
+
+parse:
+- set up account key on parse.com
+- install parse developer CLI:  # curl -s https://www.parse.com/downloads/cloud_code/installer.sh
+- install account key:          # parse configure accountkey -d
+- initialize:                   # parse new (they select 'e'xisting)
+- start auto-deply tool         # parse develop larn
 
 
 atom:

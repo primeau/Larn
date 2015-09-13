@@ -161,8 +161,7 @@ var winners = null;
 var losers = null;
 
 
-const MAX_SCORES_TO_QUERY = 25;
-const MAX_SCORES_TO_PRINT = 8;
+const MAX_SCORES_TO_PRINT = 17;
 
 
 
@@ -170,6 +169,8 @@ function loadScores(newScore) {
   mazeMode = false;
   clear();
   lprcat("Loading Global Scoreboard...\n");
+
+  scoresPrinted = 0; // reset scores list
 
   readGlobal(true, newScore); // load winners
   readGlobal(false, newScore); // load losers
@@ -184,12 +185,10 @@ function readGlobal(loadWinners, newScore, offline) {
     return;
   }
 
-  var query = new Parse.Query(GlobalScore);
-  query.limit(MAX_SCORES_TO_QUERY);
-  query.descending("hardlev", "score", "level", "timeused");
-  query.equalTo("winner", loadWinners)
-
-  query.find({
+  Parse.Cloud.run('highscores', {
+    winner: loadWinners,
+    limit: MAX_SCORES_TO_PRINT
+  }, {
     success: function(results) {
       /* populate an empty array in case there are no results */
       loadWinners ? winners = [] : losers = [];
@@ -199,6 +198,7 @@ function readGlobal(loadWinners, newScore, offline) {
         var object = results[i];
         object.convertToLocal();
         //console.log(object.id + ' - ' + object.who + " " + object.hardlev + " " + object.score);
+        console.log(`${object.id} - ${object.get('winner')} ${object.get('hardlev')} ${object.get('score')} ${object.get('who')}`);
       }
 
       if (loadWinners) {
@@ -210,12 +210,12 @@ function readGlobal(loadWinners, newScore, offline) {
       if (winners && losers) // wait for both to load before showing
         showGlobalScores(newScore);
     },
-
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
       showLocalScores(newScore);
     }
   });
+
 }
 
 
@@ -310,6 +310,8 @@ function printLoserScoreBoard(losers, newScore) {
 
 
 
+var scoresPrinted = 0; // made global to be able to print more high scores
+
 function printScoreBoard(board, newScore, header, printout) {
   var scoreboard = board.sort(sortScore);
 
@@ -319,7 +321,6 @@ function printScoreBoard(board, newScore, header, printout) {
 
   lprcat(header);
 
-  var scoresPrinted = 0;
   for (var i = 0; i < scoreboard.length; i++) {
 
     var p = scoreboard[i];
