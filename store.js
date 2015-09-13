@@ -42,6 +42,10 @@ function enter() {
     ohome();
     return;
   }
+  if (building.matches(OVOLUP)) {
+    act_up_shaft();
+    return;
+  }
   if (building.matches(OVOLDOWN)) {
     act_down_shaft();
     return;

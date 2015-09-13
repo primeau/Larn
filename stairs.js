@@ -92,6 +92,8 @@ cursors() has been called and that a check has been made that
 are actually at a down shaft.
 */
 function act_down_shaft() {
+  mazeMode = true;
+
   if (level != 0) {
     updateLog("The shaft only extends 5 feet downward!");
     return;
@@ -116,6 +118,8 @@ cursors() has been called and that a check has been made that
 are actually at an up shaft.
 */
 function act_up_shaft() {
+  mazeMode = true;
+
   if (level != 11) {
     updateLog("The shaft only extends 8 feet upwards before you find a blockage!");
     return;

@@ -702,7 +702,12 @@ function parse(key, code) {
     cursors();
     updateLog("As yet, you don't have enough experience to use teleportation");
     return;
-  } else if (key == '<') { // UP STAIRS
+  }
+
+  //
+  // UP STAIRS
+  //
+  if (key == '<') {
 
     if (DEBUG_STAIRS_EVERYWHERE) {
       if (level == 11)
@@ -717,7 +722,12 @@ function parse(key, code) {
     up_stairs();
 
     return;
-  } else if (key == '>') { // DOWN STAIRS
+  }
+
+  //
+  // DOWN STAIRS
+  //
+  if (key == '>') {
 
     if (DEBUG_STAIRS_EVERYWHERE) {
       if (!item.matches(OVOLDOWN) && level == 0) {

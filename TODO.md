@@ -17,6 +17,7 @@ todo:
   - break LEVELS into 14 sections & only save on level change
 - scoreboard instructions on line 23/24 are pushed down too far by 1
 - allow 5 key to stand still
+- record levels visited on scoreboard
 
 
 bugs:
