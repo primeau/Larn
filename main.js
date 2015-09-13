@@ -1,7 +1,7 @@
 "use strict";
 
 
-var no_intro = true;
+var no_intro = false;
 
 
 

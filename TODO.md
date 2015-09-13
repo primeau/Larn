@@ -25,7 +25,6 @@ bugs:
 + sph does crazy things when you go up/down stairs
 + when blind, a monster from an unknown tile will reveal the tile its standing on during attack
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
-- gtime/rmst isn't properly displayed on scoreboard
 - monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
@@ -33,7 +32,36 @@ bugs:
   - or waterlord hitting & getting with gusher (or other special attacks)
 - readmail() can report wrong gold/tax status
 - player depth isn't reported correctly in the save game details printout
+  - also gtime/rmst
 
+
+  extras:
+  - view data on current / finished game 
+  - game start/end stats
+  - cloud save via password
+  - amiga-style images
+  - start new game without reloading
+  - copy local scores to global
+  - nerf the book and chest in the store to only be sellable for purchase price?
+    - use negative arg special case to give book,chest same level
+  - put platinum dragon beside eye of larn
+  - highlight changed attributes
+  - color (mcolor/ocolor)
+  - improve smart monster movement beyond existing algorithm which gets stuck sometimes
+  - add larn 12.4.4 to repo
+    - https://sites.google.com/site/edenicholas/roguelikes/win32-larn
+    - patch pit bug // BUGFIX
+    - patch smart monster movement // UPGRADE
+  - ipad support
+  - more authentic font
+  - shift-arrow to open door?
+
+
+  rename/refactor:
+  - remove player.level
+  - callback nomenclature & functions could be improved
+  - code variable in parse(), mainloop() is vestigal
+  - rename object.js to item.js
 
 
 build:
@@ -60,32 +88,3 @@ atom:
 '.editor':
   'ctrl-alt-cmd-down': 'git-diff:move-to-next-diff'
   'ctrl-alt-cmd-up': 'git-diff:move-to-previous-diff'
-
-
-extras:
-- view data on current / finished game
-- game start/end stats
-- cloud save via password
-- amiga-style images
-- start new game without reloading
-- copy local scores to global
-- nerf the book and chest in the store to only be sellable for purchase price?
-  - use negative arg special case to give book,chest same level
-- put platinum dragon beside eye of larn
-- highlight changed attributes
-- color (mcolor/ocolor)
-- improve smart monster movement beyond existing algorithm which gets stuck sometimes
-- add larn 12.4.4 to repo
-  - https://sites.google.com/site/edenicholas/roguelikes/win32-larn
-  - patch pit bug // BUGFIX
-  - patch smart monster movement // UPGRADE
-- ipad support
-- more authentic font
-- shift-arrow to open door?
-
-
-rename/refactor:
-- remove player.level
-- callback nomenclature & functions could be improved
-- code variable in parse(), mainloop() is vestigal
-- rename object.js to item.js
