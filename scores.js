@@ -162,6 +162,7 @@ var losers = null;
 
 
 const MAX_SCORES_TO_PRINT = 17;
+const MIN_TIME_PLAYED = 5;
 
 
 
@@ -189,7 +190,8 @@ function readGlobal(loadWinners, newScore, offline) {
     winner: loadWinners,
     limit: MAX_SCORES_TO_PRINT,
     logname: logname,
-    gameover: GAMEOVER, 
+    gameover: GAMEOVER,
+    timeused: MIN_TIME_PLAYED,
   }, {
     success: function(results) {
       /* populate an empty array in case there are no results */
@@ -259,7 +261,7 @@ function showScores(newScore, local) {
   }
 
   cursor(1, 23);
-  lprcat("                     Click on a score for more information\n");
+  lprcat(`         Click on a score for more information (only games > ${MIN_TIME_PLAYED} mobuls)\n`);
   //cursor(1, 24);
   if (!GAMEOVER) {
     lprcat("                        ---- Press <b>escape</b> to exit  ----");
@@ -319,17 +321,18 @@ function printScoreBoard(board, newScore, header, printout) {
   /* the scoreboard has multiple games per player in it,
   we only want to show one result per player */
   var players = [];
+  var winners = false;
 
   lprcat(header);
+  var newScorePrinted = false;
 
   for (var i = 0; i < scoreboard.length; i++) {
-
     var p = scoreboard[i];
-
     //console.log(i + " " + p.who + ", " + p.score);
-
     if (players.indexOf(p.who) >= 0) continue;
     players.push(p.who);
+
+    winners = p.winner;
 
     var isNewScore = newScore ? isEqual(p, newScore) : false;
 
@@ -337,7 +340,16 @@ function printScoreBoard(board, newScore, header, printout) {
 
     if (isNewScore) lprc("<b>");
     printout(p);
-    if (isNewScore) lprc("</b>");
+    if (isNewScore) {
+      newScorePrinted = true;
+      lprc("</b>");
+    }
+  }
+
+  if (!newScorePrinted && newScore && newScore.winner == winners) {
+    lprc("<b>");
+    printout(newScore);
+    lprc("</b>");
   }
 }
 
@@ -351,6 +363,11 @@ function loadScoreStats(gameId, local, winner) {
     document.getElementById("STATS").innerHTML = getStatString(stats);
     return;
   }
+  // else if (gameId == logname) { // it's non-local game that didn't make the scoreboard
+  //   var stats = new LocalScore();
+  //   document.getElementById("STATS").innerHTML = getStatString(stats);
+  //   return;
+  // }
 
   var query = new Parse.Query(GlobalScore);
   query.get(gameId, {
@@ -380,7 +397,7 @@ function loadScoreStats(gameId, local, winner) {
 
 
 function writeLocal(newScore) {
-  console.log("writeLocal: " + newScore);
+  //console.log("writeLocal: " + newScore);
 
   // don't write 0 scores
   if (newScore.score <= 0) {
@@ -415,7 +432,7 @@ function writeLocal(newScore) {
 
 
 function writeGlobal(newScore) {
-  console.log("writeGlobal: " + newScore);
+  //console.log("writeGlobal: " + newScore);
 
   var globalScore = new GlobalScore(newScore);
   //console.log(newScore.who + " " + newScore.score + " " + newScore.hardlev);

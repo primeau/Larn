@@ -17,6 +17,12 @@ Noah Morgan originally created LARN 12.0 and released the UNIX
 version to the USENET in 1986.  Don Kneller ported the UNIX
 version to MSDOS (both IBM PCs and DEC Rainbows).
 
+Other contributors from this era include:
+James McNamara: UNIX install notes, source and patch distribution
+Fred Fish: Termcap support for VMS port
+Daniel Kegel: Enhanced ansi terminal decoding for DOS
+Alexander Perry: Port for Linux 2.x kernel and GCC 3.x
+
 Kevin Routley contributed various LARN enhancements. Version 12.1 had
 a limited distribution. Version 12.2 was distributed to the Usenet
 community. Version 12.3 was the last version released by Kevin.
@@ -29,7 +35,8 @@ Other editions of Larn have been distributed by others, namely
 LARN13, Ultra-Larn, and NLarn.
 
 This is a JavaScript port of Larn, by Jason Primeau. It primarily uses
-the 12.4.4 codebase, and includes a couple of small fixes.
+the 12.4.4 codebase, and includes a couple of small fixes, and a global
+scoreboard, bumping the version number to 12.4.5.
 
 I hope you enjoy this version of LARN.
 

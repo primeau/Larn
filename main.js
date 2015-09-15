@@ -93,32 +93,6 @@ function setname(name) {
 
 
 
-function startgame(hard) {
-  if (highestScore) {
-    HARDGAME = highestScore.hardlev + 1;
-    setdifficulty(HARDGAME);
-  } else {
-    setdifficulty(hard);
-  }
-
-  makeplayer(); /*  make the character that will play  */
-
-  newcavelevel(0); /*  make the dungeon */
-
-  updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
-
-  showcell(player.x, player.y);
-
-  GAMEOVER = false;
-  mazeMode = true;
-
-  paint();
-
-  return 1;
-}
-
-
-
 function setdifficulty(hard) {
   if (!hard || hard == "" || isNaN(Number(hard))) {
     console.log("hard == " + hard);
@@ -213,12 +187,44 @@ function makeplayer() {
 
 
 
+function startgame(hard) {
+  if (highestScore) {
+    HARDGAME = highestScore.hardlev + 1;
+    setdifficulty(HARDGAME);
+  } else {
+    setdifficulty(hard);
+  }
+
+  makeplayer(); /*  make the character that will play  */
+
+  newcavelevel(0); /*  make the dungeon */
+
+  updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
+
+  showcell(player.x, player.y);
+
+  GAMEOVER = false;
+  mazeMode = true;
+
+  paint();
+
+  return 1;
+}
+
+
+
+/*****************************************************************************/
+/*****************************************************************************/
+/*****************************************************************************/
+
+
+
 /*
   JRP
   since we're running in a event-driven system we need to
   turn the original main loop a little bit inside-out
 */
-function mainloop(key, code) {
+function mainloop(key) {
 
   if (napping) {
     debug("napping");
@@ -227,7 +233,7 @@ function mainloop(key, code) {
 
   nomove = 0;
 
-  parse(key, code);
+  parse(key);
 
   if (nomove == 1) {
     paint();
@@ -239,11 +245,11 @@ function mainloop(key, code) {
 
 
   /*
-   * JRP: this is the end of the old main loop
+   * JRP: this is where the old main loop starts and end
    */
 
 
-  /* see if there is an object here.  */
+  /* see if there is an object here. */
   if (dropflag == 0) {
     lookforobject(true, auto_pickup, false);
   } else {
@@ -277,9 +283,8 @@ function mainloop(key, code) {
   /* show stuff around the player */
   if (viewflag == 0)
     showcell(player.x, player.y);
-  else
-    viewflag = 0;
 
+  viewflag = 0;
   hitflag = 0;
 
   if (gtime >= 400 && gtime % 400 == 0) {
@@ -293,522 +298,38 @@ function mainloop(key, code) {
 
 
 
-
-
-
-
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
-function parse(key, code) {
-  key = "" + key;
-
-  // if (blocking_callback)
-  // debug("blocking: " + blocking_callback.name);
-  // if (keyboard_input_callback)
-  // debug("keyboard_input_callback: " + keyboard_input_callback.name);
-  //
-  //console.log(`parse(): got: ${code}: ${key}`);
 
 
-  if (blocking_callback) {
-    //debug(blocking_callback.name + ": ");
-    var before = blocking_callback.name;
-    var done = blocking_callback(code == ESC ? ESC : key, code);
-    var after = blocking_callback.name;
-    //debug(blocking_callback.name + ": " + done);
 
-    // if a blocking callback assigns a new one, we're not done yet
-    // i think i have created my own special callback hell
-    if (before == after && done) {
-      blocking_callback = null;
+function parse2() {
+  if (player.HASTEMONST) {
+    movemonst();
+  }
+  movemonst(); /* move the monsters */
+  randmonst();
+  regen();
+}
+
+
+
+function run(dir) {
+  var i = 1;
+  while (i == 1) {
+    i = moveplayer(dir);
+    if (i > 0) {
+      parse2();
     }
-    if (!done) {
-      nomove = 1;
+    if (hitflag == 1) {
+      i = 0;
     }
-    return;
-  }
-
-  var item = itemAt(player.x, player.y);
-
-
-
-
-
-  //
-  // MOVE PLAYER
-  //
-  var dir = parseDirectionKeys(key, code);
-  if (dir > 0) {
-    if (shouldRun(key)) {
-      run(dir);
-    } else {
-      moveplayer(dir);
-    }
-    return;
-  }
-
-
-
-  //
-  // DO NOTHING
-  //
-  if (key == ' ' || code == ESC) {
-    nomove = 1;
-    return;
-  }
-
-  //
-  // STAY HERE
-  //
-  if (key == '.' || key == '5') {
-    viewflag = 1;
-    return;
-  }
-
-  //
-  // CAST A SPELL
-  //
-  if (key == 'c') {
-    pre_cast();
-    return;
-  }
-
-  //
-  // DROP
-  //
-  if (key == 'd') {
-    if (player.TIMESTOP == 0) {
-      updateLog("What do you want to drop [<b>space</b> to view] ? ");
-      setCharCallback(drop_object);
-    }
-    return;
-  }
-
-  //
-  // EAT COOKIE
-  //
-  if (key == 'e') {
-    if (player.TIMESTOP == 0)
-      if (item.matches(OCOOKIE)) {
-        outfortune();
-        forget();
-      } else {
-        updateLog("What do you want to eat [<b>space</b> to view] ? ");
-        setCharCallback(act_eatcookie);
-      }
-    return;
-  }
-
-  //
-  // TIDY UP AT FOUNTAIN
-  //
-  if (key == 'f') {
-    wash_fountain(null);
-    dropflag = 1;
-    return;
-  }
-
-  //
-  // PACK WEIGHT
-  //
-  if (key == 'g') {
-    nomove = 1;
-    updateLog(`The stuff you are carrying presently weighs ${Math.round(packweight())} pounds`);
-    return;
-  }
-
-  //
-  // INVENTORY
-  //
-  if (key == 'i') {
-    nomove = 1;
-    showinventory(false, parse_inventory, showall, true, true);
-    return;
-  }
-
-  //
-  // OPEN (in a direction)
-  //
-  if (key == 'o' || key == 'O') {
-    /* check for confusion. */
-    if (player.CONFUSE > 0) {
-      updateLog("You're too confused!");
-      beep();
-      return;
-    }
-    /* check for player standing on a chest.  If he is, prompt for and
-       let him open it.  If player ESCs from prompt, quit the Open
-       command.
-    */
-    if (item.matches(OCHEST)) {
-      act_open_chest(player.x, player.y);
-      dropflag = 1; /* prevent player from picking back up if fail */
-      return;
-    } else {
-      prepare_direction_event(open_something, true);
-    }
-    return;
-  }
-
-  //
-  // PRAY
-  //
-  if (key == 'p') {
-    pray_at_altar();
-    dropflag = 1;
-    prayed = 1;
-    return;
-  }
-
-  //
-  // quaff
-  //
-  if (key == 'q') {
-    if (player.TIMESTOP == 0)
-      if (item.matches(OPOTION)) {
-        forget();
-        quaffpotion(item, true);
-      } else {
-        updateLog("What do you want to quaff [<b>space</b> to view] ? ");
-        setCharCallback(act_quaffpotion);
-      }
-    return;
-  }
-
-  //
-  // read
-  //
-  if (key == 'r') {
-    if (player.BLINDCOUNT > 0) {
-      cursors();
-      updateLog("You can't read anything when you're blind!");
-      dropflag = 1;
-    }
-    //
-    else if (player.TIMESTOP == 0) {
-      if (item.matches(OBOOK)) {
-        readbook(item);
-        forget();
-      } else if (item.matches(OSCROLL)) {
-        forget();
-        read_scroll(item);
-      } else {
-        updateLog("What do you want to read [<b>space</b> to view] ? ");
-        setCharCallback(act_read_something);
-      }
-    }
-    return;
-  }
-
-  //
-  // sit on throne
-  //
-  if (key == 's') {
-    sit_on_throne();
-    dropflag = 1;
-    return;
-  }
-
-  //
-  // PICK UP
-  //
-  if (key == 't' || key == ',') {
-    /* pickup, don't identify or prompt for action */
-    lookforobject(false, true, false);
-    return;
-  }
-
-  //
-  // version
-  //
-  if (key == 'v') {
-    nomove = 1;
-    updateLog(`JS Larn, Version 12.4.5 build 188 -- Difficulty ${HARDGAME}`);
-    if (wizard) updateLog(" Wizard");
-    if (cheat) updateLog(" Cheater");
-    return;
-  }
-
-  //
-  // WIELD
-  //
-  if (key == 'w') {
-    if (item.canWield()) {
-      wield(item);
-    } else {
-      updateLog("What do you want to wield (-) for nothing [<b>space</b> to view] ? ");
-      setCharCallback(wield);
-    }
-    return;
-  }
-
-  //
-  // show scores
-  //
-  if (key == 'z') {
-    nomove = 1;
-    loadScores();
-  }
-
-  //
-  // DESECRATE
-  //
-  if (key == 'A') {
-    desecrate_altar();
-    dropflag = 1;
-    return;
-  }
-
-  //
-  // CLOSE DOOR
-  //
-  if (key == 'C') {
-    /* check for confusion. */
-    if (player.CONFUSE > 0) {
-      updateLog("You're too confused!");
-      beep();
-      return;
-    }
-    if (item.matches(OOPENDOOR)) {
-      close_something(0);
-      return;
-    } else {
-      prepare_direction_event(close_something, true);
-      dropflag = 1;
-      return;
+    if (i != 0) {
+      showcell(player.x, player.y);
     }
   }
-
-  //
-  // DRINK FROM FOUNTAIN
-  //
-  if (key == 'D') {
-    drink_fountain(null);
-    dropflag = 1;
-    return;
-  }
-
-  //
-  // ENTER A BUILDING
-  //
-  if (key == 'E') {
-    enter();
-    return;
-  }
-
-  //
-  // list spells and scrolls
-  //
-  if (key == 'I') {
-    nomove = 1;
-    seemagic(false);
-    setCharCallback(parse_see_all);
-    return;
-  }
-
-  //
-  // outstanding taxes
-  //
-  if (key == 'P') {
-    nomove = 1;
-    if (outstanding_taxes > 0)
-      updateLog(`You presently owe ${outstanding_taxes} gold pieces in taxes`);
-    else
-      updateLog("You do not owe any taxes");
-    return;
-  }
-
-  //
-  // Q - quit
-  //
-  if (key == 'Q') {
-    nomove = 1;
-    setCharCallback(parseQuit);
-    updateLog("Do you really want to quit (all progress will be lost) [<b>y</b>/<b>n</b>] ? ")
-    return;
-  }
-
-  function parseQuit(key) {
-    nomove = 1;
-    if (key == ESC || key == 'n' || key == 'N') {
-      appendLog(" no");
-      return 1;
-    }
-    if (key == 'y' || key == 'Y') {
-      appendLog(" yes");
-      died(286, false); /* a quitter */
-      return 1;
-    }
-    return 0;
-  }
-
-  //
-  // REMOVE GEMS
-  //
-  if (key == 'R') {
-    remove_gems();
-    dropflag = 1;
-    return;
-  }
-
-  //
-  // S - save game
-  //
-  if (key == 'S') {
-    nomove = 1;
-    saveGame();
-    died(287, false); /* saved game */
-    return;
-  }
-
-  //
-  // take off armor
-  //
-  if (key == 'T') {
-    if (player.SHIELD) {
-      player.SHIELD = null;
-      updateLog("Your shield is off");
-    } else
-    if (player.WEAR) {
-      player.WEAR = null;
-      updateLog("Your armor is off");
-    } else
-      updateLog("You aren't wearing anything");
-    return;
-  }
-
-  //
-  // WEAR
-  //
-  if (key == 'W') {
-    if (item.isArmor()) {
-      wear(item);
-    } else {
-      updateLog("What do you want to wear [<b>space</b> to view] ? ");
-      setCharCallback(wear);
-    }
-    return;
-  }
-
-  //
-  // TELEPORT
-  //
-  if (key == 'Z') {
-    if (player.LEVEL > 9) {
-      oteleport(1);
-      return;
-    }
-    cursors();
-    updateLog("As yet, you don't have enough experience to use teleportation");
-    return;
-  }
-
-  //
-  // UP STAIRS
-  //
-  if (key == '<') {
-
-    if (DEBUG_STAIRS_EVERYWHERE) {
-      if (level == 11)
-        moveNear(OVOLUP, true)
-      else if (level == 1) {
-        newcavelevel(0);
-        moveNear(OENTRANCE, true);
-      } else if (level != 0)
-        moveNear(OSTAIRSUP, true);
-    }
-
-    up_stairs();
-
-    return;
-  }
-
-  //
-  // DOWN STAIRS
-  //
-  if (key == '>') {
-
-    if (DEBUG_STAIRS_EVERYWHERE) {
-      if (!item.matches(OVOLDOWN) && level == 0) {
-        moveNear(OENTRANCE, true);
-        enter();
-      } else if (level != 0 && level != 10 && level != 13)
-        moveNear(OSTAIRSDOWN, true)
-    }
-
-    down_stairs();
-
-    return;
-  }
-
-  //
-  // identify traps
-  //
-  if (key == '^') {
-    var flag = 0;
-    for (var j = vy(player.y - 1); j < vy(player.y + 2); j++) {
-      for (var i = vx(player.x - 1); i < vx(player.x + 2); i++) {
-        var trap = itemAt(i, j);
-        switch (trap.id) {
-          case OTRAPDOOR.id:
-          case ODARTRAP.id:
-          case OTRAPARROW.id:
-          case OTELEPORTER.id:
-          case OPIT.id:
-            updateLog(`It's ${trap}`);
-            flag++;
-        };
-      }
-    }
-    if (flag == 0)
-      updateLog("No traps are visible");
-    return;
-  }
-
-  //
-  // look at object
-  //
-  if (key == ':') {
-    nomove = 1; /* assumes look takes no time */
-    /* identify, don't pick up or prompt for action */
-    lookforobject(true, false, false);
-    return;
-  }
-
-  // toggle auto pickup
-  if (key == '@') {
-    nomove = 1;
-    auto_pickup = !auto_pickup;
-    updateLog(`Auto-pickup: ${auto_pickup ? "on" : "off"}`);
-    return;
-  }
-
-  //
-  // help screen
-  //
-  if (key == '?') {
-    nomove = 1;
-    currentpage = 0;
-    setCharCallback(parse_help);
-    print_help();
-    return;
-  }
-
-  //
-  // wizard mode
-  //
-  if (key == '_') {
-    nomove = 1;
-    updateLog("Enter Password: ");
-    setTextCallback(wizardmode);
-    return;
-  }
-
-} // parse
-/*****************************************************************************/
-/*****************************************************************************/
-/*****************************************************************************/
+}
 
 
 
@@ -895,46 +416,4 @@ function wizardmode(password) {
 
   player.GOLD = 250000;
   return 1;
-}
-
-
-
-function parse2() {
-  if (player.HASTEMONST) {
-    movemonst();
-  }
-  movemonst(); /* move the monsters */
-  randmonst();
-  regen();
-}
-
-
-
-function run(dir) {
-  var i = 1;
-  while (i == 1) {
-    i = moveplayer(dir);
-    if (i > 0) {
-      parse2();
-    }
-    if (hitflag == 1) {
-      i = 0;
-    }
-    if (i != 0) {
-      showcell(player.x, player.y);
-    }
-  }
-}
-
-
-
-/*
-    subroutine to randomly create monsters if needed
- */
-function randmonst() {
-  if (player.TIMESTOP) return; /*  don't make monsters if time is stopped  */
-  if (--rmst <= 0) {
-    rmst = 120 - (level << 2);
-    fillmonst(makemonst(level));
-  }
 }

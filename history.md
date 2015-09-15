@@ -6,13 +6,16 @@ with the following updates:
 1. It's possible to fall into a pit again. This was broken in 12.4.
 
 2. 'Smart' monsters in a closed room never moved. Now they follow player
-movement, except for demons, who stay put to protect the Eye of Larn and potion
-of cure Dianthroritis.
+movement, except for demons, who stand guard to protect the Eye of Larn and
+potion of cure Dianthroritis.
 
 3. The LRS is still present, but it's no longer neccessary to pay taxes because
 it was so easy to work around in the original game.
 
 4. Added an amiga-style objects option with help of Christoper Yewchuck.
+
+5. A global scoreboard has been added within the game. The local scoreboard is
+also available for offline games.
 
 
 Larn 12.4.4

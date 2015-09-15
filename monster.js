@@ -40,6 +40,8 @@ function createMonster(monst) {
   return monster;
 }
 
+
+
 Monster.prototype = {
     arg: 0,
     char: "💩",
@@ -108,9 +110,20 @@ Monster.prototype = {
       }
     },
 
-
   } // monster class
 
+
+
+  /*
+      subroutine to randomly create monsters if needed
+   */
+  function randmonst() {
+    if (player.TIMESTOP) return; /*  don't make monsters if time is stopped  */
+    if (--rmst <= 0) {
+      rmst = 120 - (level << 2);
+      fillmonst(makemonst(level));
+    }
+  }
 
 
 

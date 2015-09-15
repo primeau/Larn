@@ -1,27 +1,29 @@
 todo:
-- google analytics
 - wall spacing is different on different browsers
   - use canvas or webgl instead?
-  - flexbox?
+  - react/flexbox?
 + closed window alert is annoying -> create alert-on-close option?
 + switch to github pages?
 + build process
   + update build number in version commmand
   + minify
   + babel
+  + parse cloud code
 - add gzip compression to nginx
-- update wikipedia
+- update wikipedia, roguebasin
 - look for TODO/HACK
 - checkpoints are choppy
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
-- scoreboard instructions on line 23/24 are pushed down too far by 1
 - allow 5 key to stand still
 - record levels visited on scoreboard
+- url for scoreboard
+- stats on most dangerous monster, level, moves/kills/spells ratio
+- hall of fame and bad luck scoreboards
+- scoreboard request from parse can probably be done as one request
 
 
 bugs:
-* winning score not recorded??
 + sph does crazy things when you go up/down stairs
 + when blind, a monster from an unknown tile will reveal the tile its standing on during attack
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
@@ -35,33 +37,27 @@ bugs:
   - also gtime/rmst
 
 
-  extras:
-  - view data on current / finished game 
-  - game start/end stats
-  - cloud save via password
-  - amiga-style images
-  - start new game without reloading
-  - copy local scores to global
-  - nerf the book and chest in the store to only be sellable for purchase price?
-    - use negative arg special case to give book,chest same level
-  - put platinum dragon beside eye of larn
-  - highlight changed attributes
-  - color (mcolor/ocolor)
-  - improve smart monster movement beyond existing algorithm which gets stuck sometimes
-  - add larn 12.4.4 to repo
-    - https://sites.google.com/site/edenicholas/roguelikes/win32-larn
-    - patch pit bug // BUGFIX
-    - patch smart monster movement // UPGRADE
-  - ipad support
-  - more authentic font
-  - shift-arrow to open door?
+extras:
+- game start/end stats
+- cloud save via password
+- amiga-style images
+- start new game without reloading
+- copy local scores to global
+- nerf the book and chest in the store to only be sellable for purchase price?
+  - use negative arg special case to give book,chest same level
+- put platinum dragon beside eye of larn
+- highlight changed attributes
+- color (mcolor/ocolor)
+- improve smart monster movement beyond existing algorithm which gets stuck sometimes
+- ipad support
+- more authentic font
 
 
-  rename/refactor:
-  - remove player.level
-  - callback nomenclature & functions could be improved
-  - code variable in parse(), mainloop() is vestigal
-  - rename object.js to item.js
+rename/refactor:
+- remove player.level
+- callback nomenclature & functions could be improved
+- vestigal code variable in parse(), mainloop()
+- rename object.js to item.js
 
 
 build:
