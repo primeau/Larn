@@ -7,6 +7,7 @@ var Sphere = function(x, y, dir, lifetime, lev) {
   this.level = lev;
   this.direction = dir; /* direction sphere is going in */
   this.lifetime = lifetime; /* duration of the sphere */
+  //console.log(`${x} ${y} ${this.level} ${lifetime}`)
 };
 
 
@@ -20,9 +21,9 @@ var Sphere = function(x, y, dir, lifetime, lev) {
  *    sphere in lifetime (in turns)
  *  Returns the number of spheres currently in existence
  */
-function newsphere(x, y, dir, life) {
+function newsphere(x, y, dir, life, lev) {
   if (dir >= 9) dir = 0; /* no movement if direction not found */
-  if (level == 0) { /* don't go out of bounds */
+  if (lev == 0) { /* don't go out of bounds */
     x = vx(x);
     y = vy(y);
   } else {
@@ -67,6 +68,7 @@ function newsphere(x, y, dir, life) {
     //nap(2000);
     died(258, false); /* self - annihilated */
   }
+
   setItem(x, y, createObject(OANNIHILATION));
 
   updateWalls(x, y, 1);
@@ -76,7 +78,7 @@ function newsphere(x, y, dir, life) {
   show1cell(x, y); /* show the new sphere */
 
   /* one more sphere in the world */
-  var sp = new Sphere(x, y, dir, life, level);
+  var sp = new Sphere(x, y, dir, life, lev);
   spheres.push(sp);
 
   return;
@@ -154,7 +156,8 @@ function movsphere() {
   for (var i = spheres.length; i >= 0; --i) /* look through sphere list */ {
     var sp = spheres[i];
     if (!sp) continue;
-    //if (!itemAt(sp.x, sp.y).matches(OANNIHILATION)) continue; /* not really there */
+    if (sp.level != level) continue;
+    // if (!itemAt(sp.x, sp.y).matches(OANNIHILATION)) continue; /* not really there */
     if (--sp.lifetime < 0) /* has sphere run out of gas? */ {
       rmsphere(sp.x, sp.y); /* delete sphere */
       continue;
@@ -167,7 +170,7 @@ function movsphere() {
       default:
         /* move in normal direction */
         rmsphere(sp.x, sp.y);
-        newsphere(sp.x + diroffx[sp.direction], sp.y + diroffy[sp.direction], sp.direction, sp.lifetime);
+        newsphere(sp.x + diroffx[sp.direction], sp.y + diroffy[sp.direction], sp.direction, sp.lifetime, sp.level);
     };
   }
 }

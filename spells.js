@@ -525,7 +525,7 @@ function spell_finger(direction) {
 function spell_sphere(direction) {
   var x = player.x + diroffx[direction];
   var y = player.y + diroffy[direction];
-  newsphere(x, y, direction, rnd(20) + 11); /* make a sphere */
+  newsphere(x, y, direction, rnd(20) + 11, level); /* make a sphere */
   newsphereflag = true;
 }
 

@@ -2,11 +2,11 @@ Parse.Cloud.define('highscores', function(request, response) {
   var query = new Parse.Query('GlobalScore');
 
   /* prioritize fast games for winners, high scores for visitors */
-  if (request.params.winner)
-    query.descending('hardlev', 'timeused', 'score');
-  else
+  if (request.params.winner) {
+    query.descending('hardlev'/*, 'timeused'*/);
+  } else {
     query.descending('hardlev', 'score', 'level', 'timeused');
-
+  }
   query.equalTo('winner', request.params.winner);
 
   /*

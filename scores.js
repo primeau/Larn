@@ -15,6 +15,7 @@ var LocalScore = function() {
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
   this.level = LEVELNAMES[level]; /* the level player was on when he died */
   this.taxes = 0; /* taxes he owes to LRS */
+  this.hof = false; /* hall of fame candidate? */
 
   // TODO START HACK -- we don't want to save the level
   var x = player.level;
@@ -49,6 +50,7 @@ var GlobalScore = Parse.Object.extend({
     this.what = local.what;
     this.level = local.level;
     this.taxes = local.taxes;
+    this.hof = local.hof;
     this.player = local.player;
     this.browser = local.browser;
   },
@@ -62,6 +64,7 @@ var GlobalScore = Parse.Object.extend({
     this.what = this.get('what');
     this.level = this.get('level');
     this.taxes = this.get('taxes');
+    this.hof = this.get('hof');
     this.player = JSON.parse(this.get('player'));
     this.browser = this.get('browser');
   },
@@ -75,6 +78,7 @@ var GlobalScore = Parse.Object.extend({
     this.set("what", this.what);
     this.set("level", this.level);
     this.set("taxes", this.taxes);
+    this.set("hof", this.hof);
     this.set("player", this.player);
     this.set("browser", this.browser);
   },
@@ -124,6 +128,7 @@ function isEqual(a, b) {
   equal &= (a.what == b.what);
   equal &= (a.level == b.level);
   equal &= (a.taxes == b.taxes);
+  equal &= (a.hof == b.hof);
   equal &= (JSON.stringify(a.player) == JSON.stringify(b.player));
   return equal;
 }

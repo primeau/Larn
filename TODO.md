@@ -1,4 +1,5 @@
 todo:
++ prevent stairs/shaft from being in treasure rooms
 - wall spacing is different on different browsers
   - use canvas or webgl instead?
   - react/flexbox?
@@ -24,7 +25,7 @@ todo:
 
 
 bugs:
-+ sph does crazy things when you go up/down stairs
+* hardlev can still be undefined
 + when blind, a monster from an unknown tile will reveal the tile its standing on during attack
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
@@ -56,7 +57,6 @@ extras:
 rename/refactor:
 - remove player.level
 - callback nomenclature & functions could be improved
-- vestigal code variable in parse(), mainloop()
 - rename object.js to item.js
 
 
