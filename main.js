@@ -34,6 +34,7 @@ function setname(name) {
   if (name == ESC) {
     name = logname;
   }
+
   if (name) {
     logname = name.substring(0, 24);
     localStorage.setObject('logname', logname);
@@ -64,6 +65,10 @@ function setname(name) {
   console.log("checkpoint == " + (checkpoint != null));
 
   HARDGAME = localStorage.getObject('difficulty') || 0;
+  if (HARDGAME == null || HARDGAME == "" || isNaN(Number(HARDGAME))) {
+    console.log(`HARDGAME == ${HARDGAME}, setting to 0`);
+    HARDGAME = 0;
+  }
 
   if (no_intro) {
     startgame(HARDGAME);
@@ -94,8 +99,8 @@ function setname(name) {
 
 
 function setdifficulty(hard) {
-  if (!hard || hard == "" || isNaN(Number(hard))) {
-    console.log("hard == " + hard);
+  if (hard == null || hard == "" || isNaN(Number(hard))) {
+    console.log(`hard == ${hard}, setting to ${HARDGAME}`);
     hard = HARDGAME; // use the default we set in setname
   }
 
