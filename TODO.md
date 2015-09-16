@@ -17,7 +17,6 @@ todo:
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
 - allow 5 key to stand still
-- record levels visited on scoreboard
 - url for scoreboard
 - stats on most dangerous monster, level, moves/kills/spells ratio
 - hall of fame and bad luck scoreboards

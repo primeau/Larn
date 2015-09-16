@@ -17,6 +17,11 @@ var LocalScore = function() {
   this.taxes = 0; /* taxes he owes to LRS */
   this.hof = false; /* hall of fame candidate? */
 
+  this.explored = "";
+  for (var i = 0; i < LEVELS.length; i++) {
+    this.explored += LEVELS[i] ? `${LEVELNAMES[i]} ` : `. `;
+  }
+
   // TODO START HACK -- we don't want to save the level
   var x = player.level;
   player.level = null;
@@ -51,6 +56,7 @@ var GlobalScore = Parse.Object.extend({
     this.level = local.level;
     this.taxes = local.taxes;
     this.hof = local.hof;
+    this.explored = local.explored;
     this.player = local.player;
     this.browser = local.browser;
   },
@@ -65,6 +71,7 @@ var GlobalScore = Parse.Object.extend({
     this.level = this.get('level');
     this.taxes = this.get('taxes');
     this.hof = this.get('hof');
+    this.explored = this.get('explored');
     this.player = JSON.parse(this.get('player'));
     this.browser = this.get('browser');
   },
@@ -79,6 +86,7 @@ var GlobalScore = Parse.Object.extend({
     this.set("level", this.level);
     this.set("taxes", this.taxes);
     this.set("hof", this.hof);
+    this.set("explored", this.explored);
     this.set("player", this.player);
     this.set("browser", this.browser);
   },
@@ -110,6 +118,10 @@ function getStatString(score) {
     stats += `${score.what} on ${score.level}\n`;
   }
   stats += `\n${game_stats(tempPlayer)}\n`;
+  if (score.explored) {
+    stats += `Levels Visited:\n`;
+    stats += `${score.explored}\n\n`;
+  }
   stats += `Bottom Line:\n`;
   stats += tempPlayer.getStatString() + "\n";
   //if (score.browser) stats += `\nBrowser: ${score.browser}\n`;
@@ -128,6 +140,7 @@ function isEqual(a, b) {
   equal &= (a.what == b.what);
   equal &= (a.level == b.level);
   equal &= (a.taxes == b.taxes);
+  equal &= (a.explored == b.explored);
   equal &= (a.hof == b.hof);
   equal &= (JSON.stringify(a.player) == JSON.stringify(b.player));
   return equal;
