@@ -16,7 +16,7 @@ function regen() {
 
   if (player.HP != player.HPMAX) {
     if (player.REGENCOUNTER-- <= 0) /* regenerate hit points */ {
-      player.REGENCOUNTER = 22 + (HARDGAME << 1) - player.LEVEL;
+      player.REGENCOUNTER = 22 + (getDifficulty() << 1) - player.LEVEL;
       if ((player.HP += player.REGEN) > player.HPMAX) player.HP = player.HPMAX;
     }
   }
@@ -24,7 +24,7 @@ function regen() {
   /* regenerate spells */
   if (player.SPELLS < player.SPELLMAX) {
     if (player.ECOUNTER-- <= 0) {
-      player.ECOUNTER = 100 + 4 * (HARDGAME - player.LEVEL - player.ENERGY);
+      player.ECOUNTER = 100 + 4 * (getDifficulty() - player.LEVEL - player.ENERGY);
       player.SPELLS++;
     }
   }

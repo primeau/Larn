@@ -330,7 +330,7 @@ function troom(lv, xsize, ysize, tx, ty, glyph) {
 
   player.y = ty + (ysize >> 1);
 
-  if (HARDGAME < 2) {
+  if (getDifficulty() < 2) {
     for (player.x = tx + 1; player.x <= tx + xsize - 2; player.x += 2) {
       for (i = 0, j = rnd(6); i <= j; i++) {
         something(lv + 2);
@@ -435,7 +435,7 @@ function makeobject(depth) {
     player.BESSMANN = 1;
   }
 
-  if (HARDGAME < 3 || (rnd(4) == 3)) {
+  if (getDifficulty() < 3 || (rnd(4) == 3)) {
     if (depth > 3) {
       froom(3, OSWORD, 3); /* sunsword + 3 */
       froom(5, O2SWORD, rnd(4)); /* a two handed sword */

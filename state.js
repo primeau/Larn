@@ -23,8 +23,27 @@ var cheat = 0; /* 1 if the player has fudged save file */
 var level = 0; /* cavelevel player is on = cdesc[CAVELEVEL] */
 var wizard = 0; /* the wizard mode flag */
 var gtime = -1; /* the clock for the game */
-var HARDGAME = 0;
-var lastmonst = "";
+var HARDGAME = 0; /* game difficulty */
+
+/* these function were added as a defensive measure to find a pesky bug,
+   and now it's easier to just leave them here
+*/
+function getDifficulty() {
+    if (HARDGAME == null || HARDGAME == "" || isNaN(Number(HARDGAME))) {
+        console.log('get: invalid difficulty: ' + HARDGAME);
+        console.trace();
+    }
+    return HARDGAME;
+}
+function setDifficulty(diff) {
+    if (diff == null || diff == "" || isNaN(Number(diff))) {
+        console.log('set: invalid difficulty: ' + diff);
+        console.trace();
+    }
+    HARDGAME = diff;
+}
+
+var lastmonst = ""; /* name of the last monster to hit the player */
 var lastnum = 0; /* the number of the monster last hitting player */
 var hitflag = 0; /* flag for if player has been hit when running */
 var lastpx = 0;
@@ -65,7 +84,7 @@ function GameState() {
   this.level = level;
   this.wizard = wizard;
   this.gtime = gtime;
-  this.HARDGAME = HARDGAME;
+  this.HARDGAME = getDifficulty();
   this.lastmonst = lastmonst;
   this.lastnum = lastnum;
   this.hitflag = hitflag;

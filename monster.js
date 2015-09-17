@@ -305,7 +305,7 @@ function newpotion() {
 }
 /* macro to return the + points on created leather armor */
 function newleather() {
-  return (nlpts[rund(HARDGAME ? 13 : 15)]);
+  return (nlpts[rund(getDifficulty() ? 13 : 15)]);
 }
 /* macro to return the + points on chain armor */
 function newchain() {
@@ -313,7 +313,7 @@ function newchain() {
 }
 /* macro to return + points on plate armor */
 function newplate() {
-  return (nplt[rund(HARDGAME ? 4 : 12)]);
+  return (nplt[rund(getDifficulty() ? 4 : 12)]);
 }
 /* macro to return + points on new daggers */
 function newdagger() {
@@ -321,7 +321,7 @@ function newdagger() {
 }
 /* macro to return + points on new swords */
 function newsword() {
-  return (nsw[rund(HARDGAME ? 6 : 13)]);
+  return (nsw[rund(getDifficulty() ? 6 : 13)]);
 }
 
 
@@ -514,7 +514,7 @@ function hitplayer(x, y) {
   if ((player.level.know[x][y] & KNOWHERE) == 0)
     show1cell(x, y);
 
-  var bias = HARDGAME + 1;
+  var bias = getDifficulty() + 1;
   hitflag = 1;
 
   cursors();
@@ -619,8 +619,8 @@ function hitmonster(x, y) {
   var flag = 0;
 
   var tmp = monster.armorclass + player.LEVEL + player.DEXTERITY + player.WCLASS / 4 - 12;
-  //console.log(`${monster.armorclass}, ${player.LEVEL}, ${player.DEXTERITY}, ${player.WCLASS}, ${HARDGAME}, ${tmp}`);
-  if ((rnd(20) < tmp - HARDGAME) || (rnd(71) < 5)) /* need at least random chance to hit */ {
+  //console.log(`${monster.armorclass}, ${player.LEVEL}, ${player.DEXTERITY}, ${player.WCLASS}, ${getDifficulty()}, ${tmp}`);
+  if ((rnd(20) < tmp - getDifficulty()) || (rnd(71) < 5)) /* need at least random chance to hit */ {
     updateLog("You hit the " + (blind ? "monster" : monster));
     flag = 1;
     damage = fullhit(1);

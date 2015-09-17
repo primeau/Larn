@@ -19,8 +19,7 @@ function welcome() {
 
   if (!no_intro) {
     setTextCallback(setname);
-  }
-  else {
+  } else {
     setname(logname);
   }
 
@@ -64,33 +63,38 @@ function setname(name) {
   console.log("savegame == " + savegame);
   console.log("checkpoint == " + (checkpoint != null));
 
-  HARDGAME = localStorage.getObject('difficulty') || 0;
-  if (HARDGAME == null || HARDGAME == "" || isNaN(Number(HARDGAME))) {
-    console.log(`HARDGAME == ${HARDGAME}, setting to 0`);
-    HARDGAME = 0;
+  var diff = Number(localStorage.getObject('difficulty') || 0);
+  setDifficulty(diff);
+
+  if (getDifficulty() == null || getDifficulty() == "" || isNaN(Number(getDifficulty()))) {
+    console.log(`HARDGAME == ${getDifficulty()}, setting to 0`);
+    setDifficulty(0);
   }
 
   if (no_intro) {
-    startgame(HARDGAME);
+    startgame(getDifficulty());
     return 0;
   }
 
   if (winner) {
     // force difficulty to be one harder
-    HARDGAME += 1;
+    setDifficulty(getDifficulty() + 1);
     readmail();
     // clear the mail flag
     localStorage.removeItem(logname);
   } else if (savegame || checkpoint) {
     player = new Player();
-    if (savegame)
+    if (savegame) {
       loadSavedGame(saveddata, false);
-    else
+    } else {
       loadSavedGame(checkpoint, true);
-    setdifficulty(HARDGAME);
+    }
+
+    setGameDifficulty(getDifficulty());
+
     return 1;
   } else {
-    lprcat(`What difficulty would you like to play? [<b>${HARDGAME}</b>] `);
+    lprcat(`What difficulty would you like to play? [<b>${getDifficulty()}</b>] `);
     setNumberCallback(startgame, false);
   }
   return 0;
@@ -98,15 +102,15 @@ function setname(name) {
 
 
 
-function setdifficulty(hard) {
+function setGameDifficulty(hard) {
   if (hard == null || hard == "" || isNaN(Number(hard))) {
-    console.log(`hard == ${hard}, setting to ${HARDGAME}`);
-    hard = HARDGAME; // use the default we set in setname
+    console.log(`hard == ${hard}, setting to ${getDifficulty()}`);
+    hard = getDifficulty(); // use the default we set in setname
   }
 
   sethard(hard); /* set up the desired difficulty */
 
-  localStorage.setObject('difficulty', HARDGAME);
+  localStorage.setObject('difficulty', getDifficulty());
 }
 
 
@@ -123,13 +127,13 @@ function sethard(hard) {
     hard = 0;
   }
 
-  HARDGAME = Math.max(0, hard);
+  setDifficulty(Math.max(0, hard));
 
-  console.log("setting difficulty: " + HARDGAME);
+  console.log("setting difficulty: " + getDifficulty());
 
   var i;
-  var k = HARDGAME;
-  if (HARDGAME)
+  var k = getDifficulty();
+  if (getDifficulty() > 0)
     for (var j = 0; j < monsterlist.length; j++) {
       var monster = monsterlist[j];
 
@@ -177,7 +181,7 @@ function makeplayer() {
   /* always know cure dianthroritis */
   learnPotion(createObject(OPOTION, 21));
 
-  if (HARDGAME <= 0) {
+  if (getDifficulty() <= 0) {
     player.inventory[0] = createObject(OLEATHER);
     player.inventory[1] = createObject(ODAGGER);
     player.WEAR = player.inventory[0];
@@ -194,10 +198,11 @@ function makeplayer() {
 
 function startgame(hard) {
   if (highestScore) {
-    HARDGAME = highestScore.hardlev + 1;
-    setdifficulty(HARDGAME);
+    /* these are very ambiguous method names -- sorry. */
+    setDifficulty(highestScore.hardlev + 1);
+    setGameDifficulty(getDifficulty());
   } else {
-    setdifficulty(hard);
+    setGameDifficulty(hard);
   }
 
   makeplayer(); /*  make the character that will play  */

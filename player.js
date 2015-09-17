@@ -202,11 +202,11 @@ var Player = function Player() {
     var i = player.LEVEL;
     player.EXPERIENCE += x;
     while (player.EXPERIENCE >= SKILL[player.LEVEL] && (player.LEVEL < MAXPLEVEL)) {
-      var tmp = (player.CONSTITUTION - HARDGAME) >> 1;
+      var tmp = (player.CONSTITUTION - getDifficulty()) >> 1;
       player.LEVEL++;
       player.raisemhp((rnd(3) + rnd((tmp > 0) ? tmp : 1)));
       player.raisemspells(rund(3));
-      if (player.LEVEL < 7 - HARDGAME) {
+      if (player.LEVEL < 7 - getDifficulty()) {
         player.raisemhp((player.CONSTITUTION >> 2));
       }
     }
@@ -229,9 +229,9 @@ var Player = function Player() {
       if (--player.LEVEL <= 1) {
         player.LEVEL = 1; /*  down one level      */
       }
-      var tmp = (player.CONSTITUTION - HARDGAME) >> 1; /* lose hpoints */
+      var tmp = (player.CONSTITUTION - getDifficulty()) >> 1; /* lose hpoints */
       player.losemhp(rnd((tmp > 0) ? tmp : 1)); /* lose hpoints */
-      if (player.LEVEL < 7 - HARDGAME) {
+      if (player.LEVEL < 7 - getDifficulty()) {
         player.losemhp((player.CONSTITUTION >> 2));
       }
       player.losemspells(rund(3)); /*  lose spells     */

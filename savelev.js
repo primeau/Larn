@@ -110,7 +110,7 @@ function loadState(state) {
   level = state.level;
   wizard = state.wizard;
   gtime = state.gtime;
-  HARDGAME = state.HARDGAME;
+  setDifficulty(state.HARDGAME);
   lastmonst = state.lastmonst;
   lastnum = state.lastnum;
   hitflag = state.hitflag;
@@ -184,7 +184,7 @@ function loadPlayer(saved) {
   newPlayer.x = saved.x;
   newPlayer.y = saved.y;
 
-  HARDGAME = saved.HARDGAME;
+  //setDifficulty(saved.HARDGAME);
 
   newPlayer.STRENGTH = saved.STRENGTH;
   newPlayer.INTELLIGENCE = saved.INTELLIGENCE;

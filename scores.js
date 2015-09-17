@@ -5,10 +5,10 @@ var scoreBoard = [];
 
 var LocalScore = function() {
   var isWinner = lastmonst == 263;
-  var winBonus = isWinner ? 100000 * HARDGAME : 0;
+  var winBonus = isWinner ? 100000 * getDifficulty() : 0;
 
   this.who = logname; /* the name of the character */
-  this.hardlev = HARDGAME; /* the level of difficulty player played at */
+  this.hardlev = getDifficulty(); /* the level of difficulty player played at */
   this.winner = isWinner;
   this.score = player.GOLD + player.BANKACCOUNT + winBonus; /* the score of the player */
   this.timeused = Math.round(gtime / 100); /* the time used in mobuls to win the game */
