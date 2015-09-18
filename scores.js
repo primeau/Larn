@@ -19,7 +19,8 @@ var LocalScore = function() {
 
   this.explored = "";
   for (var i = 0; i < LEVELS.length; i++) {
-    this.explored += LEVELS[i] ? `${LEVELNAMES[i]} ` : `. `;
+    this.explored += LEVELS[i] ? `${LEVELNAMES[i]}` : `.`;
+    this.explored += (i == level) ? 'x' : ' ';
   }
 
   // TODO START HACK -- we don't want to save the level

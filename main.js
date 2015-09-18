@@ -365,10 +365,18 @@ function wizardmode(password) {
     return 1;
   }
 
+  if (password.length == 10) {
+    updateLog("trying to load game " + password);
+    loadScoreStats(password);
+    return 1;
+  }
+  //3EMJ7LXrKO
+
   if (password !== 'pvnert(x)') {
     updateLog("Sorry");
     return 1;
   }
+
 
   //console.log("disabling wizard mode");
   wizard = 1;

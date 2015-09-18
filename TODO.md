@@ -21,10 +21,11 @@ todo:
 - stats on most dangerous monster, level, moves/kills/spells ratio
 - hall of fame and bad luck scoreboards
 - scoreboard request from parse can probably be done as one request
+- track version played
 
 
 bugs:
-* hardlev can still be undefined
+* no recovery if scoreboard hangs when loading 
 + when blind, a monster from an unknown tile will reveal the tile its standing on during attack
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
