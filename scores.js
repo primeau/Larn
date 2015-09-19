@@ -638,9 +638,8 @@ function died(reason, slain) {
   if (player.LIFEPROT > 0) {
     if (canProtect(reason)) {
       --player.LIFEPROT;
-      --player.CONSTITUTION;
-      if (player.CONSTITUTION < 3) player.CONSTITUTION = 3;
-      player.HP = 1;
+      player.setConstitution(player.CONSTITUTION - 1);
+      player.setHP(1);
       updateLog("You feel wiiieeeeerrrrrd all over!");
       //nap(2000); // TODO
       return;

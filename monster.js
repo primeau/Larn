@@ -114,16 +114,16 @@ Monster.prototype = {
 
 
 
-  /*
-      subroutine to randomly create monsters if needed
-   */
-  function randmonst() {
-    if (player.TIMESTOP) return; /*  don't make monsters if time is stopped  */
-    if (--rmst <= 0) {
-      rmst = 120 - (level << 2);
-      fillmonst(makemonst(level));
-    }
+/*
+    subroutine to randomly create monsters if needed
+ */
+function randmonst() {
+  if (player.TIMESTOP) return; /*  don't make monsters if time is stopped  */
+  if (--rmst <= 0) {
+    rmst = 120 - (level << 2);
+    fillmonst(makemonst(level));
   }
+}
 
 
 
@@ -641,11 +641,11 @@ function hitmonster(x, y) {
              bug.
           */
           if (player.WIELD.matches(ODEXRING))
-            player.DEXTERITY--;
+            player.setDexterity(player.DEXTERITY - 1);
           if (player.WIELD.matches(OSTRRING))
-            player.STREXTRA--;
+            player.setStrExtra(player.STREXTRA - 1);
           if (player.WIELD.matches(OCLEVERRING))
-            player.INTELLIGENCE--;
+            player.setIntelligence(player.INTELLIGENCE - 1);
         }
       }
     }
@@ -825,7 +825,7 @@ function spattack(x, xx, yy) {
     case 4:
       if (player.STRENGTH > 3) {
         updateLog(`The ${monster} stung you! You feel weaker`);
-        --player.STRENGTH;
+        player.setStrength(player.STRENGTH - 1);
       } else updateLog(`The ${monster} stung you!`);
       break;
 
@@ -850,9 +850,10 @@ function spattack(x, xx, yy) {
       if (player.NOTHEFT) return 0; /* he has a device of no theft */
       if (player.GOLD) {
         updateLog(`The ${monster} hit you -- your purse feels lighter`);
-        if (player.GOLD > 32767) player.GOLD >>= 1;
-        else player.GOLD -= rnd(1 + (player.GOLD >> 1));
-        if (player.GOLD < 0) player.GOLD = 0;
+        if (player.GOLD > 32767)
+          player.setGold(player.GOLD >> 1);
+        else
+          player.setGold(player.GOLD - rnd(1 + (player.GOLD >> 1)));
       } else updateLog(`The ${monster} couldn't find any gold to steal`);
       player.level.monsters[xx][yy] = null;
       player.level.know[xx][yy] &= ~KNOWHERE;

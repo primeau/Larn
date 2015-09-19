@@ -66,7 +66,7 @@ function cast(key) {
     return 0;
   }
 
-  --player.SPELLS;
+  player.setSpells(player.SPELLS - 1);
   player.SPELLSCAST++;
 
   var spellnum = player.knownSpells.indexOf(spellToCast.toLowerCase());
@@ -119,7 +119,7 @@ function speldamage(x) {
 
     case 0:
       /* protection field +2 */
-      if (player.PROTECTIONTIME == 0) player.MOREDEFENSES += 2;
+      if (player.PROTECTIONTIME == 0) player.setMoreDefenses(player.MOREDEFENSES + 2);
       player.PROTECTIONTIME += 250;
       return;
 
@@ -130,7 +130,7 @@ function speldamage(x) {
 
     case 2:
       /* dexterity   */
-      if (player.DEXCOUNT == 0) player.DEXTERITY += 3;
+      if (player.DEXCOUNT == 0) player.setDexterity(player.DEXTERITY + 3);
       player.DEXCOUNT += 400;
       return;
 
@@ -158,7 +158,7 @@ function speldamage(x) {
 
     case 7:
       /* strength */
-      if (player.STRCOUNT == 0) player.STREXTRA += 3;
+      if (player.STRCOUNT == 0) player.setStrExtra(player.STREXTRA + 3);
       player.STRCOUNT += 150 + rnd(100);
       return;
 
@@ -295,7 +295,7 @@ function speldamage(x) {
 
     case 24:
       /* globe of invulnerability */
-      if (player.GLOBE == 0) player.MOREDEFENSES += 10;
+      if (player.GLOBE == 0) player.setMoreDefenses(player.MOREDEFENSES + 10);
       player.GLOBE += 200;
       loseint();
       return;
@@ -511,7 +511,7 @@ function spell_lightning(direction) {
 function spell_drain(direction) {
   var damage = Math.min(player.HP - 1, player.HPMAX / 2);
   direct(DRL, direction, damage + damage, 0);
-  player.HP -= Math.round(damage);
+  player.losehp(Math.round(damage));
 }
 
 function spell_finger(direction) {
@@ -635,7 +635,7 @@ function create_guardian(monst, x, y) {
  *  No arguments and no return value
  */
 function loseint() {
-  player.INTELLIGENCE = Math.max(player.INTELLIGENCE - 1, 3);
+  player.setIntelligence(player.INTELLIGENCE - 1);
 }
 
 
@@ -810,9 +810,11 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     cursors();
     updateLog("  You are hit by your own magic!");
 
-    if ((player.HP -= dam) <= 0) {
-      died(278, true); /* hit by own magic */
-    }
+    lastnum = 278;
+    player.losehp(dam);
+    // if (player.HP <= 0) {
+    //   died(278, true); /* hit by own magic */
+    // }
     exitspell();
     return;
   }

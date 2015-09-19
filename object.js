@@ -57,9 +57,8 @@ display: inline-block; \
 width: 9px; \
 height: 18px; \
 margin: 0px; \
-background: #000000 url(img/`
-  :
-`img/`;
+background: #000000 url(img/` :
+  `img/`;
 const divend = !CANVAS_MODE ? `.png) no-repeat left center;'></div>` : `.png`;
 
 Item.prototype = {
@@ -407,7 +406,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   else if (item.matches(OGOLDPILE)) {
     updateLog(`You have found some gold!`);
     updateLog(`  It is worth ${item.arg}!`);
-    player.GOLD += item.arg;
+    player.setGold(player.GOLD + item.arg);
     forget();
     return;
   }
@@ -510,8 +509,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
     updateLog("You are hit by a dart");
     lastnum = 260; /* hit by a dart */
     player.losehp(rnd(5));
-    if ((--player.STRENGTH) < 3)
-      player.STRENGTH = 3;
+    player.setStrength(player.STRENGTH - 1);
     return;
   }
   //
@@ -618,11 +616,10 @@ function oteleport(err) {
       died(264, false); /* trapped in solid rock */
     }
   }
-  player.TELEFLAG = 1; /* show ?? on bottomline if been teleported    */
-  if (level == 0)
+  player.TELEFLAG = 1; /* show ? on bottomline if been teleported */
+  if (level == 0) {
     tmp = 0;
-  else
-  if (level < MAXLEVEL) {
+  } else if (level < MAXLEVEL) {
     tmp = rnd(5) + level - 3;
     if (tmp >= MAXLEVEL)
       tmp = MAXLEVEL - 1;
@@ -637,8 +634,9 @@ function oteleport(err) {
   }
   player.x = rnd(MAXX - 2);
   player.y = rnd(MAXY - 2);
-  if (level != tmp)
+  if (level != tmp) {
     newcavelevel(tmp);
+  }
   positionplayer();
 }
 
@@ -659,7 +657,7 @@ function readbook(book) {
   updateLog(`  ${speldescript[i]}`);
   if (rnd(10) == 4) {
     updateLog("  Your intelligence went up by one!");
-    player.INTELLIGENCE++;
+    player.setIntelligence(player.INTELLIGENCE + 1);
   }
 }
 

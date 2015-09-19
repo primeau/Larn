@@ -60,7 +60,7 @@ function act_donation_pray(k) {
     dropflag = 1;
 
     var temp = player.GOLD / 10;
-    player.GOLD -= k;
+    player.setGold(player.GOLD - k);
 
     /* if player gave less than 10% of _original_ gold, make a monster
      */

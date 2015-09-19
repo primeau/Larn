@@ -112,7 +112,8 @@ var Player = function Player() {
       warning -- will kill player if hp goes to zero
    */
   this.losehp = function(damage) {
-    if (damage < 0) return;
+    if (damage <= 0) return;
+    changedHP = true;
     debug(`losehp: ${lastmonst}:${damage}`);
     this.HP -= damage;
     if (this.HP <= 0) {
@@ -123,7 +124,9 @@ var Player = function Player() {
   };
 
   this.losemhp = function(x) {
-    if (x < 0) return;
+    if (x <= 0) return;
+    changedHP = true;
+    changedHPMax = true;
     this.HP = Math.max(1, this.HP - x);
     this.HPMAX = Math.max(1, this.HPMAX - x);
   };
@@ -135,12 +138,15 @@ var Player = function Player() {
       subroutine to gain maximum hit points
    */
   this.raisehp = function(x) {
-    if (x < 0) return;
+    if (x <= 0) return;
+    changedHP = true;
     this.HP = Math.min(this.HP + x, this.HPMAX);
   };
 
   this.raisemhp = function(x) {
-    if (x < 0) return;
+    if (x <= 0) return;
+    changedHP = true;
+    changedHPMax = true;
     this.HP += x;
     this.HPMAX += x;
   };
@@ -152,7 +158,9 @@ var Player = function Player() {
       subroutine to gain maximum spells
   */
   this.raisemspells = function(x) {
-    if (x < 0) return;
+    if (x <= 0) return;
+    changedSpells = true;
+    changedSpellsMax = true;
     this.SPELLMAX += x;
     player.SPELLS += x;
   };
@@ -164,9 +172,11 @@ var Player = function Player() {
       subroutine to lose maximum spells
   */
   this.losemspells = function(x) {
-    if (x < 0) return;
-    player.SPELLMAX = Math.max(0, player.SPELLMAX - x);
-    player.SPELLS = Math.max(0, player.SPELLS - x);
+    if (x <= 0) return;
+    changedSpells = true;
+    changedSpellsMax = true;
+    player.SPELLMAX = Math.max(1, player.SPELLMAX - x);
+    player.SPELLS = Math.max(1, player.SPELLS - x);
   };
 
 
@@ -179,6 +189,7 @@ var Player = function Player() {
    */
   this.raiselevel = function() {
     if (player.LEVEL < MAXPLEVEL) {
+      changedLevel = true;
       player.raiseexperience(SKILL[player.LEVEL] - player.EXPERIENCE);
     }
   };
@@ -190,7 +201,10 @@ var Player = function Player() {
       subroutine to lower the players character level by one
    */
   this.loselevel = function() {
-    if (player.LEVEL > 1) player.loseexperience((player.EXPERIENCE - SKILL[player.LEVEL - 1] + 1));
+    if (player.LEVEL > 1) {
+      changedLevel = true;
+      player.loseexperience((player.EXPERIENCE - SKILL[player.LEVEL - 1] + 1));
+    }
   };
 
 
@@ -199,7 +213,8 @@ var Player = function Player() {
       subroutine to increase experience points
    */
   this.raiseexperience = function(x) {
-    var i = player.LEVEL;
+    changedExp = true;
+    var oldLevel = player.LEVEL;
     player.EXPERIENCE += x;
     while (player.EXPERIENCE >= SKILL[player.LEVEL] && (player.LEVEL < MAXPLEVEL)) {
       var tmp = (player.CONSTITUTION - getDifficulty()) >> 1;
@@ -210,8 +225,9 @@ var Player = function Player() {
         player.raisemhp((player.CONSTITUTION >> 2));
       }
     }
-    if (player.LEVEL != i) {
+    if (player.LEVEL != oldLevel) {
       beep();
+      changedLevel = true;
       updateLog("Welcome to level " + player.LEVEL); /* if we changed levels */
     }
   };
@@ -223,7 +239,8 @@ var Player = function Player() {
       subroutine to lose experience points
    */
   this.loseexperience = function(x) {
-    var i = player.LEVEL;
+    changedExp = true;
+    var oldLevel = player.LEVEL;
     player.EXPERIENCE = Math.max(0, player.EXPERIENCE - x);
     while (player.EXPERIENCE < SKILL[player.LEVEL - 1]) {
       if (--player.LEVEL <= 1) {
@@ -236,9 +253,10 @@ var Player = function Player() {
       }
       player.losemspells(rund(3)); /*  lose spells     */
     }
-    if (i != player.LEVEL) {
+    if (oldLevel != player.LEVEL) {
       cursors();
       beep();
+      changedLevel = true;
       updateLog(`  You went down to level ${player.LEVEL}!`);
     }
   };
@@ -249,19 +267,23 @@ var Player = function Player() {
       that affects these characteristics
    */
   this.adjustcvalues = function(item, pickup) {
+    var oldDex = player.DEXTERITY;
+    var oldStr = player.STREXTRA;
+    var oldInt = player.INTELLIGENCE;
+
     if (item.matches(ODEXRING))
-      player.DEXTERITY += pickup ? item.arg + 1 : (item.arg + 1) * -1;
+      player.setDexterity(player.DEXTERITY + (pickup ? item.arg + 1 : (item.arg + 1) * -1));
     if (item.matches(OSTRRING))
-      player.STREXTRA += pickup ? item.arg + 1 : (item.arg + 1) * -1;
+      player.setStrExtra(player.STREXTRA + (pickup ? item.arg + 1 : (item.arg + 1) * -1));
     if (item.matches(OCLEVERRING))
-      player.INTELLIGENCE += pickup ? item.arg + 1 : (item.arg + 1) * -1;
+      player.setIntelligence(player.INTELLIGENCE + (pickup ? item.arg + 1 : (item.arg + 1) * -1));
     if (item.matches(OHAMMER)) {
-      player.DEXTERITY += pickup ? 10 : -10;
-      player.STREXTRA += pickup ? 10 : -10;
-      player.INTELLIGENCE += pickup ? -10 : 10;
+      player.setDexterity(player.DEXTERITY + (pickup ? 10 : -10));
+      player.setStrExtra(player.STREXTRA + (pickup ? 10 : -10));
+      player.setIntelligence(player.INTELLIGENCE + (pickup ? -10 : 10));
     }
     if (item.matches(OSWORDofSLASHING)) {
-      player.DEXTERITY += pickup ? 5 : -5;
+      player.setDexterity(player.DEXTERITY + (pickup ? 5 : -5));
     }
     if (item.matches(OORBOFDRAGON))
       pickup ? player.SLAYING++ : player.SLAYING--;
@@ -271,35 +293,144 @@ var Player = function Player() {
       pickup ? player.CUBEofUNDEAD++ : player.CUBEofUNDEAD--;
     if (item.matches(ONOTHEFT))
       pickup ? player.NOTHEFT++ : player.NOTHEFT--;
+
+    changedDEX = oldDex != player.DEXTERITY;
+    changedSTR = oldStr != player.STREXTRA;
+    changedINT = oldInt != player.INTELLIGENCE;
   };
 
 
   //  Spells:  1( 1)  AC: 2    WC: 3    Level 1  Exp: 0           novice explorer
   // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
   this.getStatString = function() {
+
     if (level == 0) this.TELEFLAG = 0;
-    var hpstring = `HP: ${pad(this.HP,2)}(${pad(this.HPMAX, 2)})`;
+    var hpstring = `${pad(this.HP,2,changedHP)}(${pad(this.HPMAX, 2,changedHPMax)})`;
     var output =
-      `Spells: ${pad(this.SPELLS,2)}(${pad(this.SPELLMAX,2)})  \
-AC: ${pad(this.AC,-4)} \
-WC: ${pad(this.WCLASS,-4)} \
-Level ${pad(this.LEVEL,-2)} \
-Exp: ${pad(this.EXPERIENCE,-10)}${CLASSES[this.LEVEL - 1]}\n\
-${pad(hpstring,-12)} \
-STR=${pad((this.STRENGTH + this.STREXTRA),-2)} \
-INT=${pad(this.INTELLIGENCE,-2)} \
-WIS=${pad(this.WISDOM,-2)} \
-CON=${pad(this.CONSTITUTION,-2)} \
-DEX=${pad(this.DEXTERITY,-2)} \
-CHA=${pad(this.CHARISMA,-2)} \
-LV: ${pad((this.TELEFLAG ? "?" : LEVELNAMES[level]),-2)} \
-Gold: ${Number(this.GOLD).toLocaleString()}`;
+      `Spells: ${pad(this.SPELLS,2,changedSpells)}(${pad(this.SPELLMAX,2,changedSpellsMax)})  \
+AC: ${pad(this.AC,-4,changedAC)} \
+WC: ${pad(this.WCLASS,-4,changedWC)} \
+Level ${pad(this.LEVEL,-2,changedLevel)} \
+Exp: ${pad(this.EXPERIENCE,-10,changedExp)}${pad(CLASSES[this.LEVEL - 1],0,changedLevel)}\n\
+HP: ${pad(hpstring,-1)} \
+STR=${pad((this.STRENGTH + this.STREXTRA),-2,changedSTR)} \
+INT=${pad(this.INTELLIGENCE,-2,changedINT)} \
+WIS=${pad(this.WISDOM,-2, changedWIS)} \
+CON=${pad(this.CONSTITUTION,-2,changedCON)} \
+DEX=${pad(this.DEXTERITY,-2,changedDEX)} \
+CHA=${pad(this.CHARISMA,-2,changedCHA)} \
+LV: ${pad((this.TELEFLAG ? "?" : LEVELNAMES[level]),-2,changedDepth)} \
+Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}`;
+
+
+    changedSpells = false;
+    changedSpellsMax = false;
+    changedAC = false;
+    changedWC = false;
+    changedLevel = false;
+    changedExp = false;
+    changedHP = false;
+    changedHPMax = false;
+    changedSTR = false;
+    changedINT = false;
+    changedWIS = false;
+    changedCON = false;
+    changedDEX = false;
+    changedCHA = false;
+    changedDepth = false;
+    changedGold = false;
+
     return output;
   }; //
 
-};
+
+  this.setStrExtra = function(x) {
+    changedSTR = true;
+    this.STREXTRA = x;
+  };
+  this.setMoreDefenses = function(x) {
+    changedAC = true;
+    this.MOREDEFENSES = x;
+  };
+
+  this.setHP = function(x) {
+    changedHP = true;
+    this.HP = x;
+  };
+  this.setSpells = function(x) {
+    changedSpells = true;
+    this.SPELLS = x;
+  };
 
 
+  this.setStrength = function(x) {
+    changedSTR = true;
+    this.STRENGTH = Math.max(3, x);
+  };
+  this.setIntelligence = function(x) {
+    changedINT = true;
+    this.INTELLIGENCE = Math.max(3, x);
+  };
+  this.setWisdom = function(x) {
+    changedWIS = true;
+    this.WISDOM = Math.max(3, x);
+  };
+  this.setConstitution = function(x) {
+    changedCON = true;
+    this.CONSTITUTION = Math.max(3, x);
+  };
+  this.setDexterity = function(x) {
+    changedDEX = true;
+    this.DEXTERITY = Math.max(3, x);
+  };
+  this.setCharisma = function(x) {
+    changedCHA = true;
+    this.CHARISMA = Math.max(3, x);
+  };
+
+  this.setGold = function(x) {
+    changedGold = true;
+    this.GOLD = Math.max(0, x);
+  };
+
+}; // END PLAYER
+
+
+
+
+
+
+
+
+
+var changedHP = false;
+var changedHPMax = false;
+var changedSpells = false;
+var changedSpellsMax = false;
+var changedAC = false;
+var changedWC = false;
+var changedLevel = false;
+var changedExp = false;
+var changedHP = false;
+var changedHPMax = false;
+var changedSTR = false;
+var changedINT = false;
+var changedWIS = false;
+var changedCON = false;
+var changedDEX = false;
+var changedCHA = false;
+var changedDepth = false;
+var changedGold = false;
+
+
+
+function getStat(val, padding, bold) {
+  var info = "";
+  if (bold) info += `<mark>`;
+  info += pad(val, padding);
+  if (bold) info += `</mark>`;
+  return info;
+}
 
 /*
  *  ifblind(x,y)    Routine to put "monster" or the monster name into lastmosnt

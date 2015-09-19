@@ -130,7 +130,7 @@ function act_open_door(x, y) {
 
       case 9:
         updateLog("  You suddenly feel weaker ");
-        player.STRENGTH = Math.max(3, player.STRENGTH - 1);
+        player.setStrength(player.STRENGTH - 1);
         break;
 
       default:

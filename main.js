@@ -370,25 +370,23 @@ function wizardmode(password) {
     loadScoreStats(password);
     return 1;
   }
-  //3EMJ7LXrKO
 
   if (password !== 'pvnert(x)') {
     updateLog("Sorry");
     return 1;
   }
 
-
   //console.log("disabling wizard mode");
   wizard = 1;
 
   player.TELEFLAG = 0;
 
-  player.STRENGTH = 70;
-  player.INTELLIGENCE = 70;
-  player.WISDOM = 70;
-  player.CONSTITUTION = 70;
-  player.DEXTERITY = 70;
-  player.CHARISMA = 70;
+  player.setStrength(70);
+  player.setIntelligence(70);
+  player.setWisdom(70);
+  player.setConstitution(70);
+  player.setDexterity(70);
+  player.setCharisma(70);
 
   player.WEAR = null;
   player.inventory[0] = createObject(OLANCE, 25);
@@ -432,6 +430,7 @@ function wizardmode(password) {
     }
   }
 
-  player.GOLD = 250000;
+  player.setGold(250000);
+
   return 1;
 }

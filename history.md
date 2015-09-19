@@ -9,13 +9,13 @@ with the following updates:
 movement, except for demons, who stand guard to protect the Eye of Larn and
 potion of cure Dianthroritis.
 
-3. The LRS is still present, but it's no longer neccessary to pay taxes because
+3. A global scoreboard has been added to the game. A local scoreboard is also
+available for offline games.
+
+4. The LRS is still present, but it's no longer neccessary to pay taxes because
 it was so easy to work around in the original game.
 
-4. Added an amiga-style objects option with help of Christoper Yewchuck.
-
-5. A global scoreboard has been added within the game. The local scoreboard is
-also available for offline games.
+5. Added an amiga-style objects option with help of Christoper Yewchuck.
 
 
 Larn 12.4.4

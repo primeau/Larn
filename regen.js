@@ -11,13 +11,13 @@ function regen() {
   }
 
   if (player.STRENGTH < 3) {
-    player.STRENGTH = 3;
+    player.setStrength(3);
   }
 
   if (player.HP != player.HPMAX) {
     if (player.REGENCOUNTER-- <= 0) /* regenerate hit points */ {
       player.REGENCOUNTER = 22 + (getDifficulty() << 1) - player.LEVEL;
-      if ((player.HP += player.REGEN) > player.HPMAX) player.HP = player.HPMAX;
+      player.raisehp(player.REGEN);
     }
   }
 
@@ -25,27 +25,27 @@ function regen() {
   if (player.SPELLS < player.SPELLMAX) {
     if (player.ECOUNTER-- <= 0) {
       player.ECOUNTER = 100 + 4 * (getDifficulty() - player.LEVEL - player.ENERGY);
-      player.SPELLS++;
+      player.setSpells(player.SPELLS + 1);
     }
   }
 
   if (player.HERO) {
     if (--player.HERO <= 0) {
-      player.STRENGTH -= 10;
-      player.INTELLIGENCE -= 10;
-      player.WISDOM -= 10;
-      player.CONSTITUTION -= 10;
-      player.DEXTERITY -= 10;
-      player.CHARISMA -= 10;
+      player.setStrength(player.STRENGTH - 10);
+      player.setIntelligence(player.INTELLIGENCE - 10);
+      player.setWisdom(player.WISDOM - 10);
+      player.setConstitution(player.CONSTITUTION - 10);
+      player.setDexterity(player.DEXTERITY - 10);
+      player.setCharisma(player.CHARISMA - 10);
     }
   }
 
-  if (player.PROTECTIONTIME) if (--player.PROTECTIONTIME <= 0) player.MOREDEFENSES -= 2;
-  if (player.ALTPRO)         if (--player.ALTPRO <= 0)         player.MOREDEFENSES -= 3;
-  if (player.GLOBE)          if (--player.GLOBE <= 0)          player.MOREDEFENSES -= 10;
-  if (player.DEXCOUNT)       if (--player.DEXCOUNT <= 0)       player.DEXTERITY -= 3;
-  if (player.STRCOUNT)       if (--player.STRCOUNT <= 0)       player.STREXTRA -= 3;
-  if (player.GIANTSTR)       if (--player.GIANTSTR <= 0)       player.STREXTRA -= 20;
+  if (player.PROTECTIONTIME) if (--player.PROTECTIONTIME <= 0) player.setMoreDefenses(player.MOREDEFENSES - 2);
+  if (player.ALTPRO)         if (--player.ALTPRO <= 0)         player.setMoreDefenses(player.MOREDEFENSES - 3);
+  if (player.GLOBE)          if (--player.GLOBE <= 0)          player.setMoreDefenses(player.MOREDEFENSES - 10);
+  if (player.DEXCOUNT)       if (--player.DEXCOUNT <= 0)       player.setDexterity(player.DEXTERITY - 3);
+  if (player.STRCOUNT)       if (--player.STRCOUNT <= 0)       player.setStrExtra(player.STREXTRA - 3);
+  if (player.GIANTSTR)       if (--player.GIANTSTR <= 0)       player.setStrExtra(STREXTRA - 20);
   if (player.BLINDCOUNT)     if (--player.BLINDCOUNT <= 0)     updateLog("The blindness lifts");
   if (player.CONFUSE)        if (--player.CONFUSE <= 0)        updateLog("You regain your senses");
   if (player.HALFDAM)        if (--player.HALFDAM <= 0)        updateLog("You now feel better");

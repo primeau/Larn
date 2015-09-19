@@ -18,10 +18,10 @@ version to the USENET in 1986.  Don Kneller ported the UNIX
 version to MSDOS (both IBM PCs and DEC Rainbows).
 
 Other contributors from this era include:
-James McNamara: UNIX install notes, source and patch distribution
-Fred Fish: Termcap support for VMS port
-Daniel Kegel: Enhanced ansi terminal decoding for DOS
-Alexander Perry: Port for Linux 2.x kernel and GCC 3.x
+- James McNamara: UNIX install notes, source and patch distribution
+- Fred Fish: Termcap support for VMS port
+- Daniel Kegel: Enhanced ansi terminal decoding for DOS
+- Alexander Perry: Port for Linux 2.x kernel and GCC 3.x
 
 Kevin Routley contributed various LARN enhancements. Version 12.1 had
 a limited distribution. Version 12.2 was distributed to the Usenet

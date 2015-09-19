@@ -63,6 +63,9 @@ function canMove(x, y) {
     recalc()    function to recalculate the weapon and armor class of the player
  */
 function recalc() {
+  var oldAC = player.AC;
+  var oldWC = player.WCLASS;
+
   player.WCLASS = 0;
   player.AC = 0;
 
@@ -120,6 +123,9 @@ function recalc() {
     if (item.matches(ORINGOFEXTRA)) player.REGEN += 5 * (item.arg + 1);
     if (item.matches(OENERGYRING)) player.ENERGY += item.arg + 1;
   }
+
+  changedAC = oldAC != player.AC;
+  changedWC = oldWC != player.WCLASS;
 }
 
 
@@ -205,13 +211,13 @@ function enchweapon() {
   if (!weapon.matches(OSCROLL) && !weapon.matches(OPOTION)) {
     weapon.arg++;
     if (weapon.matches(OCLEVERRING))
-      player.INTELLIGENCE++;
+      player.setIntelligence(player.INTELLIGENCE + 1);
     else
     if (weapon.matches(OSTRRING))
-      player.STREXTRA++;
+      player.setStrExtra(player.STREXTRA + 1);
     else
     if (weapon.matches(ODEXRING))
-      player.DEXTERITY++;
+      player.setDexterity(player.DEXTERITY + 1);
 
     return true;
   }

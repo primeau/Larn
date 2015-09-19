@@ -75,32 +75,32 @@ function fntchange(how) {
   switch (rnd(9)) {
     case 1:
       updateLog("  Your strength");
-      player.STRENGTH = Math.max(3, player.STRENGTH + how);
+      player.setStrength(player.STRENGTH + how);
       fch(how);
       break;
     case 2:
       updateLog("  Your intelligence");
-      player.INTELLIGENCE = Math.max(3, player.INTELLIGENCE + how);
+      player.setIntelligence(player.INTELLIGENCE + how);
       fch(how);
       break;
     case 3:
       updateLog("  Your wisdom");
-      player.WISDOM = Math.max(3, player.WISDOM + how);
+      player.setWisdom(player.WISDOM + how);
       fch(how);
       break;
     case 4:
       updateLog("  Your constitution");
-      player.CONSTITUTION = Math.max(3, player.CONSTITUTION + how);
+      player.setConstitution(player.CONSTITUTION + how);
       fch(how);
       break;
     case 5:
       updateLog("  Your dexterity");
-      player.DEXTERITY = Math.max(3, player.DEXTERITY + how);
+      player.setDexterity(player.DEXTERITY + how);
       fch(how);
       break;
     case 6:
       updateLog("Your charm");
-      player.CHARISMA = Math.max(3, player.CHARISMA + how);
+      player.setCharisma(player.CHARISMA + how);
       fch(how);
       break;
     case 7:

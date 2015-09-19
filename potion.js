@@ -111,22 +111,22 @@ function quaffpotion(potion, set_known) {
       /* increase ability */
       switch (rund(6)) {
         case 0:
-          player.STRENGTH++;
+          player.setStrength(player.STRENGTH + 1);
           break;
         case 1:
-          player.INTELLIGENCE++;
+          player.setIntelligence(player.INTELLIGENCE + 1);
           break;
         case 2:
-          player.WISDOM++;
+          player.setWisdom(player.WISDOM + 1);
           break;
         case 3:
-          player.CONSTITUTION++;
+          player.setConstitution(player.CONSTITUTION + 1);
           break;
         case 4:
-          player.DEXTERITY++;
+          player.setDexterity(player.DEXTERITY + 1);
           break;
         case 5:
-          player.CHARISMA++;
+          player.setCharisma(player.CHARISMA + 1);
           break;
       };
       updateLog("  You feel strange for a moment");
@@ -134,31 +134,31 @@ function quaffpotion(potion, set_known) {
 
     case 4:
       /* wisdom */
-      player.WISDOM += rnd(2);
+      player.setWisdom(player.WISDOM + rnd(2));
       updateLog("  You feel more self confident!");
       break;
 
     case 5:
       /* strength */
-      player.STRENGTH = Math.max(12, player.STRENGTH + 1);
+      player.setStrength(Math.max(12, player.STRENGTH + 1));
       updateLog("  Wow!  You feel great!");
       break;
 
     case 6:
       /* charisma */
-      player.CHARISMA++;
+      player.setCharisma(player.CHARISMA);
       updateLog("  Your charm went up by one!");
       break;
 
     case 7:
       /* dizziness */
-      player.STRENGTH = Math.max(3, player.STRENGTH - 1);
+      player.setStrength(player.STRENGTH - 1);
       updateLog("  You become dizzy!");
       break;
 
     case 8:
       /* intelligence */
-      player.INTELLIGENCE++;
+      player.setIntelligence(player.INTELLIGENCE + 1);
       updateLog("  Your intelligence went up by one!");
       break;
 
@@ -227,12 +227,12 @@ function quaffpotion(potion, set_known) {
     case 15:
       /* heroism */
       if (player.HERO == 0) {
-        player.STRENGTH += 11;
-        player.INTELLIGENCE += 11;
-        player.WISDOM += 11;
-        player.CONSTITUTION += 11;
-        player.DEXTERITY += 11;
-        player.CHARISMA += 11;
+        player.setStrength(player.STRENGTH + 11);
+        player.setIntelligence(player.INTELLIGENCE + 11);
+        player.setWisdom(player.WISDOM + 11);
+        player.setConstitution(player.CONSTITUTION + 11);
+        player.setDexterity(player.DEXTERITY + 11);
+        player.setCharisma(player.CHARISMA + 11);
       }
       player.HERO += 250;
       updateLog("  WOW!!!  You feel Super-fantastic!!!");
@@ -240,14 +240,16 @@ function quaffpotion(potion, set_known) {
 
     case 16:
       /* sturdiness */
-      player.CONSTITUTION++;
+      player.setConstitution(player.CONSTITUTION + 1);
       updateLog("  You have a greater intestinal constitude!");
       break;
 
     case 17:
       /* giant strength */
-      if (player.GIANTSTR == 0)
+      if (player.GIANTSTR == 0) {
         player.STREXTRA += 21;
+        changedSTR = true;
+      }
       player.GIANTSTR += 700;
       updateLog("  You now have incredibly bulging muscles!!!");
       break;
@@ -277,7 +279,7 @@ function quaffpotion(potion, set_known) {
     case 20:
       /* instant healing */
       updateLog("  You feel all better now!");
-      player.HP = player.HPMAX;
+      player.raisehp(player.HPMAX - player.HP);
       break;
 
     case 21:

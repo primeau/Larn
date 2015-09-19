@@ -376,7 +376,7 @@ function move_smart(i, j) {
     for (z = 1; z < 9; z++) /* go around in a circle */ {
       x = i + diroffx[z];
       y = j + diroffy[z];
-      if (ripple[x][y] < ripple[i][j])
+      if (ripple[x] && ripple[i] && ripple[x][y] < ripple[i][j])
         if (!monsterAt(x, y)) {
           w1x = x;
           w1y = y;

@@ -251,20 +251,22 @@ Storage.prototype.getObject = function(key) {
 
 
 
-function pad(str, width) {
-  return padString("" + str, width);
+function pad(str, width, bold) {
+  return padString("" + str, width, bold);
 }
 
 
 
 // left align with -width, otherwise right align
-function padString(str, width) {
+function padString(str, width, bold) {
   if (!width || width == 0) return str;
   var numspaces = Math.max(0, Math.abs(width) + 1 - str.length);
   var spaces = Array(numspaces).join(" ");
+  var boldStart = bold ? `<mark>` : ``;
+  var boldEnd = bold ? `</mark>` : ``;
   if (width < 0) {
-    return str + spaces;
+    return `${boldStart}${str}${boldEnd}${spaces}`;
   } else {
-    return spaces + str;
+    return `${spaces}${boldStart}${str}${boldEnd}`;
   }
 }

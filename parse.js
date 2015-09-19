@@ -303,7 +303,7 @@ function parse(key) {
   //
   if (key == 'v') {
     nomove = 1;
-    updateLog(`JS Larn, Version 12.4.5 build 201 -- Difficulty ${getDifficulty()}`);
+    updateLog(`JS Larn, Version 12.4.5 build 202 -- Difficulty ${getDifficulty()}`);
     if (wizard) updateLog(" Wizard");
     if (cheat) updateLog(" Cheater");
     return;

@@ -183,7 +183,7 @@ function dnd_parse(key) {
     } else if (player.GOLD < dnd_item[i].price) {
       storemessage("You don't have enough gold to pay for that!", 700);
     } else {
-      player.GOLD -= dnd_item[i].price;
+      player.setGold(player.GOLD - dnd_item[i].price);
       dnd_item[i].qty--;
       var boughtItem = createObject(dnd_item[i].itemId, dnd_item[i].arg);
       take(boughtItem);
@@ -418,7 +418,7 @@ function bank_deposit(amt) {
   } else if (amt > player.GOLD) {
     bankmessage("You don't have that much.", 700);
   } else {
-    player.GOLD -= amt;
+    player.setGold(player.GOLD - amt);
     player.BANKACCOUNT += amt;
     bankmessage("", 700);
   }
@@ -444,7 +444,7 @@ function bank_withdraw(amt) {
   } else if (amt > player.BANKACCOUNT) {
     bankmessage("You don't have that much in the bank!", 700);
   } else {
-    player.GOLD += amt;
+    player.setGold(player.GOLD + amt);
     player.BANKACCOUNT -= amt;
     bankmessage("", 700);
   }
@@ -461,7 +461,7 @@ function bank_sell(key) {
     for (i = 0; i < 26; i++) {
       if (gemvalue[i]) {
         gems_sold = true;
-        player.GOLD += gemvalue[i];
+        player.setGold(player.GOLD + gemvalue[i]);
         player.inventory[i] = null;
         gemvalue[i] = 0;
         var k = gemorder[i];
@@ -479,7 +479,7 @@ function bank_sell(key) {
       if (gemvalue[i] == 0) {
         bankmessage(`Item ${getCharFromIndex(i)} is not a gemstone!`, 700);
       } else {
-        player.GOLD += gemvalue[i];
+        player.setGold(player.GOLD + gemvalue[i]);
         player.inventory[i] = null;
         gemvalue[i] = 0;
         var k = gemorder[i];
@@ -690,7 +690,7 @@ function parse_sellitem(key) {
 
     napping = true;
     setTimeout(storemessage, 700, "");
-    player.GOLD += itemToSell[SELL_PRICE];
+    player.setGold(player.GOLD + itemToSell[SELL_PRICE]);
     if (player.WEAR === itemToSell[SELL_ITEM]) player.WEAR = null;
     if (player.WIELD === itemToSell[SELL_ITEM]) player.WIELD = null;
     if (player.SHIELD === itemToSell[SELL_ITEM]) player.SHIELD = null;
@@ -785,61 +785,61 @@ function parse_class(key) {
   } else if (player.GOLD < 250) {
     lprcat("\nYou don't have enough gold to pay for that!");
   } else {
-    player.GOLD -= 250;
+    player.setGold(player.GOLD - 250);
     var time_used = 0;
 
     switch (key) {
       case 'a':
-        player.STRENGTH += 2;
-        player.CONSTITUTION++;
+        player.setStrength(player.STRENGTH + 2);
+        player.setConstitution(player.CONSTITUTION + 1);
         lprcat("\nYou feel stronger!");
         break;
 
       case 'b':
         if (!course[0]) {
-          player.GOLD += 250;
+          player.setGold(player.GOLD + 250);
           time_used = -10000;
           lprcat("\nSorry, but this class has a prerequisite of Fighter Training I");
           break;
         }
-        player.STRENGTH += 2;
-        player.CONSTITUTION += 2;
+        player.setStrength(player.STRENGTH + 2);
+        player.setConstitution(player.CONSTITUTION + 2);
         lprcat("\nYou feel much stronger!");
         break;
 
       case 'c':
-        player.INTELLIGENCE += 2;
+        player.setIntelligence(player.INTELLIGENCE + 2);
         lprcat("\nThe task before you now seems more attainable!");
         break;
 
       case 'd':
         if (!course[2]) {
-          player.GOLD += 250;
+          player.setGold(player.GOLD + 250);
           time_used = -10000;
           lprcat("\nSorry, but this class has a prerequisite of Introduction to Wizardry");
           break;
         }
-        player.INTELLIGENCE += 2;
+        player.setIntelligence(player.INTELLIGENCE + 2);
         lprcat("\nThe task before you now seems very attainable!");
         break;
 
       case 'e':
-        player.CHARISMA += 3;
+        player.setCharisma(player.CHARISMA + 3);
         lprcat("\nYou now feel like a born leader!");
         break;
 
       case 'f':
-        player.WISDOM += 2;
+        player.setWisdom(player.WISDOM + 2);
         lprcat("\nYou now feel more confident that you can find the potion in time!");
         break;
 
       case 'g':
-        player.DEXTERITY += 3;
+        player.setDexterity(player.DEXTERITY + 3);
         lprcat("\nYou feel like dancing!");
         break;
 
       case 'h':
-        player.INTELLIGENCE++;
+        player.setIntelligence(player.INTELLIGENCE + 1);
         lprcat("\nYour instructor told you that the Eye of Larn is rumored to be guarded");
         lprcat("\nby a platinum dragon who possesses psionic abilities");
         break;
@@ -850,8 +850,8 @@ function parse_class(key) {
     if (time_used > 0) {
       gtime += time_used;
       course[i] = 1; /* remember that he has taken that course */
-      player.HP = player.HPMAX;
-      player.SPELLS = player.SPELLMAX; /* he regenerated */
+      player.raisehp(player.HPMAX - player.HP);
+      player.setSpells(player.SPELLMAX); /* he regenerated */
       if (player.BLINDCOUNT) player.BLINDCOUNT = 1; /* cure blindness too! */
       if (player.CONFUSE) player.CONFUSE = 1; /* end confusion */
       adjtime(time_used); /* adjust parameters for time change */
@@ -1014,7 +1014,7 @@ function parse_lrs_pay(amount) {
     lprcat("\n  You don't have that much\n");
   } else {
     amount = paytaxes(amount);
-    player.GOLD -= amount;
+    player.setGold(player.GOLD - amount);
     lprcat(`\n  You pay ${amount} gold pieces\n`);
   }
 

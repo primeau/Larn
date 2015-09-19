@@ -22,10 +22,14 @@ todo:
 - hall of fame and bad luck scoreboards
 - scoreboard request from parse can probably be done as one request
 - track version played
+- highlight changed player experience level name
+- H isn't highlighted when moving to home level
+- highlight changed to rightside
 
 
 bugs:
-* no recovery if scoreboard hangs when loading 
+* invalid difficulty warning on diff 0
+* no recovery if scoreboard hangs when loading
 + when blind, a monster from an unknown tile will reveal the tile its standing on during attack
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
@@ -52,6 +56,7 @@ extras:
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - ipad support
 - more authentic font
+- 'you got the dirt off!' should remove negative armor class for armor / shield
 
 
 rename/refactor:
