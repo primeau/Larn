@@ -300,50 +300,6 @@ var Player = function Player() {
   };
 
 
-  //  Spells:  1( 1)  AC: 2    WC: 3    Level 1  Exp: 0           novice explorer
-  // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
-  this.getStatString = function() {
-
-    if (level == 0) this.TELEFLAG = 0;
-    var hpstring = `${pad(this.HP,2,changedHP)}(${pad(this.HPMAX, 2,changedHPMax)})`;
-    var output =
-      `Spells: ${pad(this.SPELLS,2,changedSpells)}(${pad(this.SPELLMAX,2,changedSpellsMax)})  \
-AC: ${pad(this.AC,-4,changedAC)} \
-WC: ${pad(this.WCLASS,-4,changedWC)} \
-Level ${pad(this.LEVEL,-2,changedLevel)} \
-Exp: ${pad(this.EXPERIENCE,-10,changedExp)}${pad(CLASSES[this.LEVEL - 1],0,changedLevel)}\n\
-HP: ${pad(hpstring,-1)} \
-STR=${pad((this.STRENGTH + this.STREXTRA),-2,changedSTR)} \
-INT=${pad(this.INTELLIGENCE,-2,changedINT)} \
-WIS=${pad(this.WISDOM,-2, changedWIS)} \
-CON=${pad(this.CONSTITUTION,-2,changedCON)} \
-DEX=${pad(this.DEXTERITY,-2,changedDEX)} \
-CHA=${pad(this.CHARISMA,-2,changedCHA)} \
-LV: ${pad((this.TELEFLAG ? "?" : LEVELNAMES[level]),-2,changedDepth)} \
-Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}`;
-
-
-    changedSpells = false;
-    changedSpellsMax = false;
-    changedAC = false;
-    changedWC = false;
-    changedLevel = false;
-    changedExp = false;
-    changedHP = false;
-    changedHPMax = false;
-    changedSTR = false;
-    changedINT = false;
-    changedWIS = false;
-    changedCON = false;
-    changedDEX = false;
-    changedCHA = false;
-    changedDepth = false;
-    changedGold = false;
-
-    return output;
-  }; //
-
-
   this.setStrExtra = function(x) {
     changedSTR = true;
     this.STREXTRA = x;
@@ -353,6 +309,8 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}`;
     this.MOREDEFENSES = x;
   };
 
+
+
   this.setHP = function(x) {
     changedHP = true;
     this.HP = x;
@@ -361,6 +319,7 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}`;
     changedSpells = true;
     this.SPELLS = x;
   };
+
 
 
   this.setStrength = function(x) {
@@ -388,16 +347,62 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}`;
     this.CHARISMA = Math.max(3, x);
   };
 
+
+
   this.setGold = function(x) {
     changedGold = true;
     this.GOLD = Math.max(0, x);
   };
 
+
+
+  //  Spells:  1( 1)  AC: 2    WC: 3    Level 1  Exp: 0           novice explorer
+  // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
+  this.getStatString = function() {
+
+    if (level == 0) this.TELEFLAG = 0;
+    var hpstring = `${pad(this.HP,2,changedHP)}(${pad(this.HPMAX, 2,changedHPMax)})`;
+    var output =
+      `Spells: ${pad(this.SPELLS,2,changedSpells)}(${pad(this.SPELLMAX,2,changedSpellsMax)})  \
+AC: ${pad(this.AC,-4,changedAC)} \
+WC: ${pad(this.WCLASS,-4,changedWC)} \
+Level ${pad(this.LEVEL,-2,changedLevel)} \
+Exp: ${pad(this.EXPERIENCE,-10,changedExp)}${pad(CLASSES[this.LEVEL - 1],0,changedLevel)}\n\
+HP: ${pad(hpstring,-1)} \
+STR=${pad((this.STRENGTH + this.STREXTRA),-2,changedSTR)} \
+INT=${pad(this.INTELLIGENCE,-2,changedINT)} \
+WIS=${pad(this.WISDOM,-2, changedWIS)} \
+CON=${pad(this.CONSTITUTION,-2,changedCON)} \
+DEX=${pad(this.DEXTERITY,-2,changedDEX)} \
+CHA=${pad(this.CHARISMA,-2,changedCHA)} \
+LV: ${pad((this.TELEFLAG ? "?" : LEVELNAMES[level]),-2,changedDepth)} \
+Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}`;
+
+    changedSpells = false;
+    changedSpellsMax = false;
+    changedAC = false;
+    changedWC = false;
+    changedLevel = false;
+    changedExp = false;
+    changedHP = false;
+    changedHPMax = false;
+    changedSTR = false;
+    changedINT = false;
+    changedWIS = false;
+    changedCON = false;
+    changedDEX = false;
+    changedCHA = false;
+    changedDepth = false;
+    changedGold = false;
+
+    return output;
+  }; //
+
+
+
+
+
 }; // END PLAYER
-
-
-
-
 
 
 
@@ -424,13 +429,9 @@ var changedGold = false;
 
 
 
-function getStat(val, padding, bold) {
-  var info = "";
-  if (bold) info += `<mark>`;
-  info += pad(val, padding);
-  if (bold) info += `</mark>`;
-  return info;
-}
+
+
+
 
 /*
  *  ifblind(x,y)    Routine to put "monster" or the monster name into lastmosnt
