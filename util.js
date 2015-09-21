@@ -195,7 +195,7 @@ function getIndexFromChar(char) {
     return -1;
   }
   if (!isalpha(char)) {
-      return -1;
+    return -1;
   }
   var acode = "a".charCodeAt(0);
   var dropcode = char.charCodeAt(0);
@@ -257,13 +257,14 @@ function pad(str, width, bold) {
 
 
 
-// left align with -width, otherwise right align
-function padString(str, width, bold) {
+const BOLDDELAY = 700; // left align with -width, otherwise right align
+function padString(str, width, lastBoldTime) {
   if (!width || width == 0) return str;
+  var now = millis();
   var numspaces = Math.max(0, Math.abs(width) + 1 - str.length);
   var spaces = Array(numspaces).join(" ");
-  var boldStart = bold ? `<mark>` : ``;
-  var boldEnd = bold ? `</mark>` : ``;
+  var boldStart = ((now - lastBoldTime) < BOLDDELAY) ? `<mark>` : ``;
+  var boldEnd = ((now - lastBoldTime) < BOLDDELAY) ? `</mark>` : ``;
   if (width < 0) {
     return `${boldStart}${str}${boldEnd}${spaces}`;
   } else {

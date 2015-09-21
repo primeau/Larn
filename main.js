@@ -192,6 +192,8 @@ function makeplayer() {
   player.y = rnd(MAXY - 2);
 
   recalc();
+  changedWC = 0; // don't highlight AC & WC on game start
+  changedAC = 0;
 }
 
 

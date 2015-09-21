@@ -280,7 +280,7 @@ function moveplayer(dir) {
   /* check for the player ignoring an altar when in command mode. */
   if (itemAt(player.x, player.y).matches(OALTAR) && !prayed) {
     updateLog("  You have ignored the altar!");
-    act_ignore_altar();
+    act_ignore_altar(player.x, player.y);
   }
   prayed = 0;
 

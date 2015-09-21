@@ -126,7 +126,7 @@ var Player = function Player() {
   this.losemhp = function(x) {
     if (x <= 0) return;
     changedHP = millis();
-    changedHPMax = true;
+    changedHPMax = millis();
     this.HP = Math.max(1, this.HP - x);
     this.HPMAX = Math.max(1, this.HPMAX - x);
   };
@@ -146,7 +146,7 @@ var Player = function Player() {
   this.raisemhp = function(x) {
     if (x <= 0) return;
     changedHP = millis();
-    changedHPMax = true;
+    changedHPMax = millis();
     this.HP += x;
     this.HPMAX += x;
   };
@@ -159,8 +159,8 @@ var Player = function Player() {
   */
   this.raisemspells = function(x) {
     if (x <= 0) return;
-    changedSpells = true;
-    changedSpellsMax = true;
+    changedSpells = millis();
+    changedSpellsMax = millis();
     this.SPELLMAX += x;
     player.SPELLS += x;
   };
@@ -173,8 +173,8 @@ var Player = function Player() {
   */
   this.losemspells = function(x) {
     if (x <= 0) return;
-    changedSpells = true;
-    changedSpellsMax = true;
+    changedSpells = millis();
+    changedSpellsMax = millis();
     player.SPELLMAX = Math.max(1, player.SPELLMAX - x);
     player.SPELLS = Math.max(1, player.SPELLS - x);
   };
@@ -189,7 +189,7 @@ var Player = function Player() {
    */
   this.raiselevel = function() {
     if (player.LEVEL < MAXPLEVEL) {
-      changedLevel = true;
+      changedLevel = millis();
       player.raiseexperience(SKILL[player.LEVEL] - player.EXPERIENCE);
     }
   };
@@ -202,7 +202,7 @@ var Player = function Player() {
    */
   this.loselevel = function() {
     if (player.LEVEL > 1) {
-      changedLevel = true;
+      changedLevel = millis();
       player.loseexperience((player.EXPERIENCE - SKILL[player.LEVEL - 1] + 1));
     }
   };
@@ -213,7 +213,7 @@ var Player = function Player() {
       subroutine to increase experience points
    */
   this.raiseexperience = function(x) {
-    changedExp = true;
+    changedExp = millis();
     var oldLevel = player.LEVEL;
     player.EXPERIENCE += x;
     while (player.EXPERIENCE >= SKILL[player.LEVEL] && (player.LEVEL < MAXPLEVEL)) {
@@ -227,7 +227,7 @@ var Player = function Player() {
     }
     if (player.LEVEL != oldLevel) {
       beep();
-      changedLevel = true;
+      changedLevel = millis();
       updateLog("Welcome to level " + player.LEVEL); /* if we changed levels */
     }
   };
@@ -239,7 +239,7 @@ var Player = function Player() {
       subroutine to lose experience points
    */
   this.loseexperience = function(x) {
-    changedExp = true;
+    changedExp = millis();
     var oldLevel = player.LEVEL;
     player.EXPERIENCE = Math.max(0, player.EXPERIENCE - x);
     while (player.EXPERIENCE < SKILL[player.LEVEL - 1]) {
@@ -256,7 +256,7 @@ var Player = function Player() {
     if (oldLevel != player.LEVEL) {
       cursors();
       beep();
-      changedLevel = true;
+      changedLevel = millis();
       updateLog(`  You went down to level ${player.LEVEL}!`);
     }
   };
@@ -294,18 +294,18 @@ var Player = function Player() {
     if (item.matches(ONOTHEFT))
       pickup ? player.NOTHEFT++ : player.NOTHEFT--;
 
-    changedDEX = oldDex != player.DEXTERITY;
-    changedSTR = oldStr != player.STREXTRA;
-    changedINT = oldInt != player.INTELLIGENCE;
+    if (oldDex != player.DEXTERITY) changedDEX = millis();
+    if (oldStr != player.STREXTRA) changedSTR = millis();
+    if (oldInt != player.INTELLIGENCE) changedINT = millis();
   };
 
 
   this.setStrExtra = function(x) {
-    changedSTR = true;
+    changedSTR = millis();
     this.STREXTRA = x;
   };
   this.setMoreDefenses = function(x) {
-    changedAC = true;
+    changedAC = millis();
     this.MOREDEFENSES = x;
   };
 
@@ -316,41 +316,41 @@ var Player = function Player() {
     this.HP = x;
   };
   this.setSpells = function(x) {
-    changedSpells = true;
+    changedSpells = millis();
     this.SPELLS = x;
   };
 
 
 
   this.setStrength = function(x) {
-    changedSTR = true;
+    changedSTR = millis();
     this.STRENGTH = Math.max(3, x);
   };
   this.setIntelligence = function(x) {
-    changedINT = true;
+    changedINT = millis();
     this.INTELLIGENCE = Math.max(3, x);
   };
   this.setWisdom = function(x) {
-    changedWIS = true;
+    changedWIS = millis();
     this.WISDOM = Math.max(3, x);
   };
   this.setConstitution = function(x) {
-    changedCON = true;
+    changedCON = millis();
     this.CONSTITUTION = Math.max(3, x);
   };
   this.setDexterity = function(x) {
-    changedDEX = true;
+    changedDEX = millis();
     this.DEXTERITY = Math.max(3, x);
   };
   this.setCharisma = function(x) {
-    changedCHA = true;
+    changedCHA = millis();
     this.CHARISMA = Math.max(3, x);
   };
 
 
 
   this.setGold = function(x) {
-    changedGold = true;
+    changedGold = millis();
     this.GOLD = Math.max(0, x);
   };
 
@@ -367,7 +367,7 @@ var Player = function Player() {
 AC: ${pad(this.AC,-4,changedAC)} \
 WC: ${pad(this.WCLASS,-4,changedWC)} \
 Level ${pad(this.LEVEL,-2,changedLevel)} \
-Exp: ${pad(this.EXPERIENCE,-10,changedExp)}${pad(CLASSES[this.LEVEL - 1],0,changedLevel)}\n\
+Exp: ${pad(this.EXPERIENCE,-10,changedExp)}${pad(CLASSES[this.LEVEL - 1],16,changedLevel)} \n\
 HP: ${pad(hpstring,-1)} \
 STR=${pad((this.STRENGTH + this.STREXTRA),-2,changedSTR)} \
 INT=${pad(this.INTELLIGENCE,-2,changedINT)} \
@@ -376,24 +376,7 @@ CON=${pad(this.CONSTITUTION,-2,changedCON)} \
 DEX=${pad(this.DEXTERITY,-2,changedDEX)} \
 CHA=${pad(this.CHARISMA,-2,changedCHA)} \
 LV: ${pad((this.TELEFLAG ? "?" : LEVELNAMES[level]),-2,changedDepth)} \
-Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}`;
-
-    changedSpells = false;
-    changedSpellsMax = false;
-    changedAC = false;
-    changedWC = false;
-    changedLevel = false;
-    changedExp = false;
-    changedHP = false;
-    changedHPMax = false;
-    changedSTR = false;
-    changedINT = false;
-    changedWIS = false;
-    changedCON = false;
-    changedDEX = false;
-    changedCHA = false;
-    changedDepth = false;
-    changedGold = false;
+Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)} `;
 
     return output;
   }; //
@@ -408,24 +391,24 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}`;
 
 
 
-var changedHP = false;
-var changedHPMax = false;
-var changedSpells = false;
-var changedSpellsMax = false;
-var changedAC = false;
-var changedWC = false;
-var changedLevel = false;
-var changedExp = false;
-var changedHP = false;
-var changedHPMax = false;
-var changedSTR = false;
-var changedINT = false;
-var changedWIS = false;
-var changedCON = false;
-var changedDEX = false;
-var changedCHA = false;
-var changedDepth = false;
-var changedGold = false;
+var changedHP = 0;
+var changedHPMax = 0;
+var changedSpells = 0;
+var changedSpellsMax = 0;
+var changedAC = 0;
+var changedWC = 0;
+var changedLevel = 0;
+var changedExp = 0;
+var changedHP = 0;
+var changedHPMax = 0;
+var changedSTR = 0;
+var changedINT = 0;
+var changedWIS = 0;
+var changedCON = 0;
+var changedDEX = 0;
+var changedCHA = 0;
+var changedDepth = 0;
+var changedGold = 0;
 
 
 

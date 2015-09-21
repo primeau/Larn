@@ -124,8 +124,8 @@ function recalc() {
     if (item.matches(OENERGYRING)) player.ENERGY += item.arg + 1;
   }
 
-  changedAC = oldAC != player.AC;
-  changedWC = oldWC != player.WCLASS;
+  if (oldAC != player.AC) changedAC = millis();
+  if (oldWC != player.WCLASS) changedWC = millis();
 }
 
 

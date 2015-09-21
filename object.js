@@ -616,6 +616,11 @@ function oteleport(err) {
       died(264, false); /* trapped in solid rock */
     }
   }
+  
+  if (player.TELEFLAG == 0 && level != 0) {
+    changedDepth = millis(); // notify when depth changes to '?'
+  }
+
   player.TELEFLAG = 1; /* show ? on bottomline if been teleported */
   if (level == 0) {
     tmp = 0;

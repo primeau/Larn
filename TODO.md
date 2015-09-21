@@ -22,12 +22,7 @@ todo:
 - hall of fame and bad luck scoreboards
 - scoreboard request from parse can probably be done as one request
 - track version played
-- highlighting
-  - highlight changed player experience level name
-  - H isn't highlighted when moving to home level
-  - highlight changes to rightside
-  - highlighted stats should stay lit for n seconds
-    - change '= true' to current time in millis
+- add highlighting to changes to rightside
 
 
 bugs:

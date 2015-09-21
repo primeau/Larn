@@ -149,9 +149,9 @@ function act_desecrate_altar() {
 
     Assumptions:  cursors() has been called.
 */
-function act_ignore_altar() {
+function act_ignore_altar(x, y) {
   if (rnd(100) < 30) {
-    createmonster(makemonst(level + 1));
+    createmonster(makemonst(level + 1), x, y);
     player.AGGRAVATE += rnd(450);
   } else
     updateLog("  Nothing happens");

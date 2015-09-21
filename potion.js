@@ -248,7 +248,7 @@ function quaffpotion(potion, set_known) {
       /* giant strength */
       if (player.GIANTSTR == 0) {
         player.STREXTRA += 21;
-        changedSTR = true;
+        changedSTR = millis();
       }
       player.GIANTSTR += 700;
       updateLog("  You now have incredibly bulging muscles!!!");

@@ -45,6 +45,7 @@ function lprcat(str, width) {
       if (endtag) {
         endtag = false;
         tag = false;
+        //console.log(tagstring);
         lprc(tagstring);
         tagstring = "";
       }
