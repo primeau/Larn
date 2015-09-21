@@ -45,7 +45,7 @@ function regen() {
   if (player.GLOBE)          if (--player.GLOBE <= 0)          player.setMoreDefenses(player.MOREDEFENSES - 10);
   if (player.DEXCOUNT)       if (--player.DEXCOUNT <= 0)       player.setDexterity(player.DEXTERITY - 3);
   if (player.STRCOUNT)       if (--player.STRCOUNT <= 0)       player.setStrExtra(player.STREXTRA - 3);
-  if (player.GIANTSTR)       if (--player.GIANTSTR <= 0)       player.setStrExtra(STREXTRA - 20);
+  if (player.GIANTSTR)       if (--player.GIANTSTR <= 0)       player.setStrExtra(player.STREXTRA - 20);
   if (player.BLINDCOUNT)     if (--player.BLINDCOUNT <= 0)     updateLog("The blindness lifts");
   if (player.CONFUSE)        if (--player.CONFUSE <= 0)        updateLog("You regain your senses");
   if (player.HALFDAM)        if (--player.HALFDAM <= 0)        updateLog("You now feel better");

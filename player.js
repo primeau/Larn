@@ -113,7 +113,7 @@ var Player = function Player() {
    */
   this.losehp = function(damage) {
     if (damage <= 0) return;
-    changedHP = true;
+    changedHP = millis();
     debug(`losehp: ${lastmonst}:${damage}`);
     this.HP -= damage;
     if (this.HP <= 0) {
@@ -125,7 +125,7 @@ var Player = function Player() {
 
   this.losemhp = function(x) {
     if (x <= 0) return;
-    changedHP = true;
+    changedHP = millis();
     changedHPMax = true;
     this.HP = Math.max(1, this.HP - x);
     this.HPMAX = Math.max(1, this.HPMAX - x);
@@ -139,13 +139,13 @@ var Player = function Player() {
    */
   this.raisehp = function(x) {
     if (x <= 0) return;
-    changedHP = true;
+    changedHP = millis();
     this.HP = Math.min(this.HP + x, this.HPMAX);
   };
 
   this.raisemhp = function(x) {
     if (x <= 0) return;
-    changedHP = true;
+    changedHP = millis();
     changedHPMax = true;
     this.HP += x;
     this.HPMAX += x;
@@ -312,7 +312,7 @@ var Player = function Player() {
 
 
   this.setHP = function(x) {
-    changedHP = true;
+    changedHP = millis();
     this.HP = x;
   };
   this.setSpells = function(x) {

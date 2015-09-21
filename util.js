@@ -270,3 +270,9 @@ function padString(str, width, bold) {
     return `${spaces}${boldStart}${str}${boldEnd}`;
   }
 }
+
+
+
+function millis() {
+  return new Date().getTime();
+}

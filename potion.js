@@ -146,7 +146,7 @@ function quaffpotion(potion, set_known) {
 
     case 6:
       /* charisma */
-      player.setCharisma(player.CHARISMA);
+      player.setCharisma(player.CHARISMA + 1);
       updateLog("  Your charm went up by one!");
       break;
 

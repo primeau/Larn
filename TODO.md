@@ -22,13 +22,15 @@ todo:
 - hall of fame and bad luck scoreboards
 - scoreboard request from parse can probably be done as one request
 - track version played
-- highlight changed player experience level name
-- H isn't highlighted when moving to home level
-- highlight changed to rightside
+- highlighting
+  - highlight changed player experience level name
+  - H isn't highlighted when moving to home level
+  - highlight changes to rightside
+  - highlighted stats should stay lit for n seconds
+    - change '= true' to current time in millis
 
 
 bugs:
-* invalid difficulty warning on diff 0
 * no recovery if scoreboard hangs when loading
 + when blind, a monster from an unknown tile will reveal the tile its standing on during attack
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
@@ -51,7 +53,6 @@ extras:
 - nerf the book and chest in the store to only be sellable for purchase price?
   - use negative arg special case to give book,chest same level
 - put platinum dragon beside eye of larn
-- highlight changed attributes
 - color (mcolor/ocolor)
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - ipad support
