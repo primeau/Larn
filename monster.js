@@ -684,7 +684,7 @@ function hitm(x, y, damage) {
   lasthx = x;
   lasthy = y;
   monster.awake = true; /* make sure hitting monst breaks stealth condition */
-  player.HOLDMONST = 0; /* hit a monster breaks hold monster spell  */
+  plater.updateHoldMonst(-player.HOLDMONST); /* hit a monster breaks hold monster spell  */
   switch (monster.arg) { /* if a dragon and orb(s) of dragon slaying   */
     case WHITEDRAGON:
     case REDDRAGON:

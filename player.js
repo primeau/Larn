@@ -356,6 +356,130 @@ var Player = function Player() {
 
 
 
+  this.updateStealth = function(x) {
+    var prev = this.STEALTH;
+    this.STEALTH = Math.max(0, this.STEALTH + x);
+    changedStealth = getUpdateTime(prev, x, this.STEALTH, changedStealth);
+    return this.STEALTH;
+  };
+  this.updateUndeadPro = function(x) {
+    var prev = this.UNDEADPRO;
+    this.UNDEADPRO = Math.max(0, this.UNDEADPRO + x);
+    changedUndeadPro = getUpdateTime(prev, x, this.UNDEADPRO, changedUndeadPro);
+    return this.UNDEADPRO;
+  };
+  this.updateSpiritPro = function(x) {
+    var prev = this.SPIRITPRO;
+    this.SPIRITPRO = Math.max(0, this.SPIRITPRO + x);
+    changedSpiritPro = getUpdateTime(prev, x, this.SPIRITPRO, changedSpiritPro);
+    return this.SPIRITPRO;
+  };
+  this.updateCharmCount = function(x) {
+    var prev = this.CHARMCOUNT;
+    this.CHARMCOUNT = Math.max(0, this.CHARMCOUNT + x);
+    changedCharmCount = getUpdateTime(prev, x, this.CHARMCOUNT, changedCharmCount);
+    return this.CHARMCOUNT;
+  };
+  this.updateTimeStop = function(x) {
+    var prev = this.TIMESTOP;
+    this.TIMESTOP = Math.max(0, this.TIMESTOP + x);
+    changedTimeStop = getUpdateTime(prev, x, this.TIMESTOP, changedTimeStop);
+    return this.TIMESTOP;
+  };
+  this.updateHoldMonst = function(x) {
+    var prev = this.HOLDMONST;
+    this.HOLDMONST = Math.max(0, this.HOLDMONST + x);
+    changedHoldMonst = getUpdateTime(prev, x, this.HOLDMONST, changedHoldMonst);
+    return this.HOLDMONST;
+  };
+  this.updateGiantStr = function(x) {
+    var prev = this.GIANTSTR;
+    this.GIANTSTR = Math.max(0, this.GIANTSTR + x);
+    changedGiantStr = getUpdateTime(prev, x, this.GIANTSTR, changedGiantStr);
+    return this.GIANTSTR;
+  };
+  this.updateFireResistance = function(x) {
+    var prev = this.FIRERESISTANCE;
+    this.FIRERESISTANCE = Math.max(0, this.FIRERESISTANCE + x);
+    changedFireResistance = getUpdateTime(prev, x, this.FIRERESISTANCE, changedFireResistance);
+    return this.FIRERESISTANCE;
+  };
+  this.updateDexCount = function(x) {
+    var prev = this.DEXCOUNT;
+    this.DEXCOUNT = Math.max(0, this.DEXCOUNT + x);
+    changedDexCount = getUpdateTime(prev, x, this.DEXCOUNT, changedDexCount);
+    return this.DEXCOUNT;
+  };
+  this.updateStrCount = function(x) {
+    var prev = this.STRCOUNT;
+    this.STRCOUNT = Math.max(0, this.STRCOUNT + x);
+    changedStrCount = getUpdateTime(prev, x, this.STRCOUNT, changedStrCount);
+    return this.STRCOUNT;
+  };
+  this.updateScareMonst = function(x) {
+    var prev = this.SCAREMONST;
+    this.SCAREMONST = Math.max(0, this.SCAREMONST + x);
+    changedScareMonst = getUpdateTime(prev, x, this.SCAREMONST, changedScareMonst);
+    return this.SCAREMONST;
+  };
+  this.updateHasteSelf = function(x) {
+    var prev = this.HASTESELF;
+    this.HASTESELF = Math.max(0, this.HASTESELF + x);
+    changedHasteSelf = getUpdateTime(prev, x, this.HASTESELF, changedHasteSelf);
+    return this.HASTESELF;
+  };
+  this.updateCancellation = function(x) {
+    var prev = this.CANCELLATION;
+    this.CANCELLATION = Math.max(0, this.CANCELLATION + x);
+    changedCancellation = getUpdateTime(prev, x, this.CANCELLATION, changedCancellation);
+    return this.CANCELLATION;
+  };
+  this.updateInvisibility = function(x) {
+    var prev = this.INVISIBILITY;
+    this.INVISIBILITY = Math.max(0, this.INVISIBILITY + x);
+    changedInvisibility = getUpdateTime(prev, x, this.INVISIBILITY, changedInvisibility);
+    return this.INVISIBILITY;
+  };
+  this.updateAltPro = function(x) {
+    var prev = this.ALTPRO;
+    this.ALTPRO = Math.max(0, this.ALTPRO + x);
+    changedAltPro = getUpdateTime(prev, x, this.ALTPRO, changedAltPro);
+    return this.ALTPRO;
+  };
+  this.updateProtectionTime = function(x) {
+    var prev = this.PROTECTIONTIME;
+    this.PROTECTIONTIME = Math.max(0, this.PROTECTIONTIME + x);
+    changedProtectionTime = getUpdateTime(prev, x, this.PROTECTIONTIME, changedProtectionTime);
+    return this.PROTECTIONTIME;
+  };
+  this.updateWTW = function(x) {
+    var prev = this.WTW;
+    this.WTW = Math.max(0, this.WTW + x);
+    changedWTW = getUpdateTime(prev, x, this.WTW, changedWTW);
+    return this.WTW;
+  };
+
+
+
+  /* I'd like to do something like this, but it's ES6 only and not supported
+  by chrome yet, and I don't want to deal with the transpile step every time */
+  /*
+  this.updateProtectionTime = function(x) {
+    ({this.PROTECTIONTIME, changedProtectionTime} = this.updateStat(this.PROTECTIONTIME, changedProtectionTime, x));
+    return this.PROTECTIONTIME;
+  };
+
+  this.updateStat = function(stat, changetime, x) {
+    var prev = stat;
+    stat = Math.max(0, stat + x);
+    if (x > 0 || prev != 0 && stat <= 0)
+      changetime = millis();
+    return {stat, changetime};
+  };
+  */
+
+
+
   //  Spells:  1( 1)  AC: 2    WC: 3    Level 1  Exp: 0           novice explorer
   // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
   this.getStatString = function() {
@@ -389,7 +513,13 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)} `;
 
 
 
-
+function getUpdateTime(prevVal, change, newVal, prevTime) {
+  if (change > 0 || prevVal != 0 && newVal <= 0) {
+    return millis();
+  } else {
+    return prevTime;
+  }
+}
 
 var changedHP = 0;
 var changedHPMax = 0;
@@ -410,11 +540,23 @@ var changedCHA = 0;
 var changedDepth = 0;
 var changedGold = 0;
 
-
-
-
-
-
+var changedStealth = 0;
+var changedUndeadPro = 0;
+var changedSpiritPro = 0;
+var changedCharmCount = 0;
+var changedTimeStop = 0;
+var changedHoldMonst = 0;
+var changedGiantStr = 0;
+var changedFireResistance = 0;
+var changedDexCount = 0;
+var changedStrCount = 0;
+var changedScareMonst = 0;
+var changedHasteSelf = 0;
+var changedCancellation = 0;
+var changedInvisibility = 0;
+var changedAltPro = 0;
+var changedProtectionTime = 0;
+var changedWTW = 0;
 
 /*
  *  ifblind(x,y)    Routine to put "monster" or the monster name into lastmosnt

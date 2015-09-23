@@ -122,8 +122,8 @@ function rmsphere(x, y) {
  *  Enter with the coordinates of the blast, Returns no value
  */
 function sphboom(x, y) {
-  if (player.HOLDMONST) player.HOLDMONST = 1;
-  if (player.CANCELLATION) player.CANCELLATION = 1;
+  if (player.HOLDMONST) player.updateHoldMonst(-player.HOLDMONST); // set to 0
+  if (player.CANCELLATION) player.updateCancellation(-player.CANCELLATION); // set to 0
   for (var j = Math.max(1, x - 2); j < Math.min(x + 3, MAXX - 1); j++) {
     for (var i = Math.max(1, y - 2); i < Math.min(y + 3, MAXY - 1); i++) {
       setItem(j, i, OEMPTY);

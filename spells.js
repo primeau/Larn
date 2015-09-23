@@ -120,7 +120,7 @@ function speldamage(x) {
     case 0:
       /* protection field +2 */
       if (player.PROTECTIONTIME == 0) player.setMoreDefenses(player.MOREDEFENSES + 2);
-      player.PROTECTIONTIME += 250;
+      player.updateProtectionTime(250);
       return;
 
     case 1:
@@ -141,7 +141,7 @@ function speldamage(x) {
 
     case 4:
       /* charm monster */
-      player.CHARMCOUNT += player.CHARISMA << 1;
+      player.updateCharmCount(player.CHARISMA << 1);
       return;
 
     case 5:
@@ -321,17 +321,17 @@ function speldamage(x) {
 
     case 27:
       /* scare monster */
-      player.SCAREMONST += rnd(10) + clev;
+      player.updateScareMonst(rnd(10) + clev);
       return;
 
     case 28:
       /* hold monster */
-      player.HOLDMONST += rnd(10) + clev;
+      player.updateHoldMonst(rnd(10) + clev);
       return;
 
     case 29:
       /* time stop */
-      player.TIMESTOP += rnd(20) + (clev << 1);
+      player.updateTimeStop(rnd(20) + (clev << 1));
       return;
 
     case 30:

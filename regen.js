@@ -6,7 +6,7 @@ function regen() {
 
   /* for stop time spell */
   if (player.TIMESTOP > 0) {
-    if (--player.TIMESTOP <= 0) recalc();
+    if (player.updateTimeStop(-1) <= 0) recalc();
     return;
   }
 
@@ -40,30 +40,32 @@ function regen() {
     }
   }
 
-  if (player.PROTECTIONTIME) if (--player.PROTECTIONTIME <= 0) player.setMoreDefenses(player.MOREDEFENSES - 2);
-  if (player.ALTPRO)         if (--player.ALTPRO <= 0)         player.setMoreDefenses(player.MOREDEFENSES - 3);
+  if (player.STEALTH)        player.updateStealth(-1);
+  if (player.UNDEADPRO)      player.updateUndeadPro(-1);
+  if (player.SPIRITPRO)      player.updateSpiritPro(-1);
+  if (player.CHARMCOUNT)     player.updateCharmCount(-1);
+  if (player.HOLDMONST)      player.updateHoldMonst(-1);
+  if (player.FIRERESISTANCE) player.updateFireResistance(-1);
+  if (player.SCAREMONST)     player.updateScareMonst(-1);
+  if (player.HASTESELF)      player.updateHasteSelf(-1);
+  if (player.CANCELLATION)   player.updateCancellation(-1);
+  if (player.INVISIBILITY)   player.updateInvisibility(-1);
+  if (player.WTW)            player.updateWTW(-1);
+
+  if (player.GIANTSTR)       if (player.updateGiantStr(-1) <= 0)       player.setStrExtra(player.STREXTRA - 20);
+  if (player.DEXCOUNT)       if (player.updateDexCount(-1) <= 0)       player.setDexterity(player.DEXTERITY - 3);
+  if (player.STRCOUNT)       if (player.updateStrCount(-1) <= 0)       player.setStrExtra(player.STREXTRA - 3);
+  if (player.ALTPRO)         if (player.updateAltPro(-1) <= 0)         player.setMoreDefenses(player.MOREDEFENSES - 3);
+  if (player.PROTECTIONTIME) if (player.updateProtectionTime(-1) <= 0) player.setMoreDefenses(player.MOREDEFENSES - 2);
+
   if (player.GLOBE)          if (--player.GLOBE <= 0)          player.setMoreDefenses(player.MOREDEFENSES - 10);
-  if (player.DEXCOUNT)       if (--player.DEXCOUNT <= 0)       player.setDexterity(player.DEXTERITY - 3);
-  if (player.STRCOUNT)       if (--player.STRCOUNT <= 0)       player.setStrExtra(player.STREXTRA - 3);
-  if (player.GIANTSTR)       if (--player.GIANTSTR <= 0)       player.setStrExtra(player.STREXTRA - 20);
   if (player.BLINDCOUNT)     if (--player.BLINDCOUNT <= 0)     updateLog("The blindness lifts");
   if (player.CONFUSE)        if (--player.CONFUSE <= 0)        updateLog("You regain your senses");
   if (player.HALFDAM)        if (--player.HALFDAM <= 0)        updateLog("You now feel better");
 
-  if (player.CHARMCOUNT)     --player.CHARMCOUNT;
-  if (player.INVISIBILITY)   --player.INVISIBILITY;
-  if (player.CANCELLATION)   --player.CANCELLATION;
-  if (player.WTW)            --player.WTW;
-  if (player.HASTESELF)      --player.HASTESELF;
   if (player.AGGRAVATE)      --player.AGGRAVATE;
-  if (player.SCAREMONST)     --player.SCAREMONST;
-  if (player.STEALTH)        --player.STEALTH;
   if (player.AWARENESS)      --player.AWARENESS;
-  if (player.HOLDMONST)      --player.HOLDMONST;
   if (player.HASTEMONST)     --player.HASTEMONST;
-  if (player.FIRERESISTANCE) --player.FIRERESISTANCE;
-  if (player.SPIRITPRO)      --player.SPIRITPRO
-  if (player.UNDEADPRO)      --player.UNDEADPRO
 
   if (player.SEEINVISIBLE) {
     if (--player.SEEINVISIBLE <= 0) {

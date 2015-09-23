@@ -158,17 +158,17 @@ function read_scroll(scroll) {
 
     case 12:
       /* spirit protection */
-      player.SPIRITPRO += 300 + rnd(200);
+      player.updateSpiritPro(300 + rnd(200));
       break;
 
     case 13:
       /* undead protection */
-      player.UNDEADPRO += 300 + rnd(200);
+      player.updateUndeadPro(300 + rnd(200));
       break;
 
     case 14:
       /* stealth */
-      player.STEALTH += 250 + rnd(250);
+      player.updateStealth(250 + rnd(250));
       break;
 
     case 15:
@@ -182,7 +182,7 @@ function read_scroll(scroll) {
 
     case 16:
       /* hold monster */
-      player.HOLDMONST += 30;
+      player.updateHoldMonst(30);
       break;
 
     case 17:
@@ -201,17 +201,18 @@ function read_scroll(scroll) {
     case 18:
       /* spell extension */
       updateLog("  You feel a twitch at the base of your skull");
-      player.PROTECTIONTIME <<= 1;
-      player.DEXCOUNT <<= 1;
-      player.STRCOUNT <<= 1;
-      player.CHARMCOUNT <<= 1;
-      player.INVISIBILITY <<= 1;
-      player.CANCELLATION <<= 1;
-      player.HASTESELF <<= 1;
+      player.updateCharmCount(player.CHARMCOUNT);
+      player.updateTimeStop(player.TIMESTOP);
+      player.updateHoldMonst(player.HOLDMONST);
+      player.updateDexCount(player.DEXCOUNT);
+      player.updateStrCount(player.STRCOUNT);
+      player.updateScareMonst(player.SCAREMONST);
+      player.updateHasteSelf(player.HASTESELF);
+      player.updateCancellation(player.CANCELLATION);
+      player.updateInvisibility(player.INVISIBILITY);
+      player.updateProtectionTime(player.PROTECTIONTIME);
+      // WTW???
       player.GLOBE <<= 1;
-      player.SCAREMONST <<= 1;
-      player.HOLDMONST <<= 1;
-      player.TIMESTOP <<= 1;
       break;
 
     case 19:

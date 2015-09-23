@@ -53,6 +53,7 @@ extras:
 - ipad support
 - more authentic font
 - 'you got the dirt off!' should remove negative armor class for armor / shield
+- beep support
 
 
 rename/refactor:

@@ -13,21 +13,21 @@ var DEBUG_PROXIMITY = false;
 
 function play() {
 
-    Parse.initialize("ZG6aY4DKdkKn39YGogG0WFhqk089WTqVWprNfijo", "Ioo0zvIxR5xvkf6lQQDW9A7YHaNyOItSDFb756Um");
+  Parse.initialize("ZG6aY4DKdkKn39YGogG0WFhqk089WTqVWprNfijo", "Ioo0zvIxR5xvkf6lQQDW9A7YHaNyOItSDFb756Um");
 
-    initKeyBindings();
+  initKeyBindings();
 
-    /* warn the player that closing their window will kill the game.
-       this is a bit annoying, and I'm tempted to get rid of it now
-       that there are checkpoints in place */
-    var host = location.hostname;
-    if (host === 'localhost') {
-      enableDebug();
-    } else {
-      window.onbeforeunload = confirmExit;
-    }
+  /* warn the player that closing their window will kill the game.
+     this is a bit annoying, and I'm tempted to get rid of it now
+     that there are checkpoints in place */
+  var host = location.hostname;
+  if (host === 'localhost') {
+    enableDebug();
+  } else {
+    window.onbeforeunload = confirmExit;
+  }
 
-    welcome(); // show welcome screen, start the game
+  welcome(); // show welcome screen, start the game
 
 }
 
@@ -180,12 +180,12 @@ function eventToggleDebugKnowAll() {
 function eventToggleDebugStealth() {
   nomove = 1;
   if (player.STEALTH <= 0) {
-    player.HOLDMONST = 100000;
-    player.STEALTH = 100000;
+    player.updateHoldMonst(100000);
+    player.updateStealth(100000);
     updateLog("DEBUG: FREEZING MONSTERS");
   } else {
-    player.HOLDMONST = 0;
-    player.STEALTH = 0;
+    player.updateHoldMonst(-player.HOLDMONST);
+    player.updateStealth(-player.STEALTH);
     updateLog("DEBUG: UNFREEZING MONSTERS");
   }
   paint();

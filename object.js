@@ -616,7 +616,7 @@ function oteleport(err) {
       died(264, false); /* trapped in solid rock */
     }
   }
-  
+
   if (player.TELEFLAG == 0 && level != 0) {
     changedDepth = millis(); // notify when depth changes to '?'
   }
@@ -670,31 +670,36 @@ function readbook(book) {
 
 /* function to adjust time when time warping and taking courses in school */
 function adjtime(tim) {
-  player.HASTESELF = player.HASTESELF > 0 ? Math.max(1, player.HASTESELF - tim) : 0;
+  if (player.STEALTH) player.updateStealth(-tim);
+  if (player.UNDEADPRO) player.updateUndeadPro(-tim);
+  if (player.SPIRITPRO) player.updateSpiritPro(-tim);
+  if (player.CHARMCOUNT) player.updateCharmCount(-tim);
+  // stop time
+  if (player.HOLDMONST) player.updateHoldMonst(-tim);
+  if (player.GIANTSTR) player.updateGiantStr(-tim);
+  if (player.FIRERESISTANCE) player.updateFireResistance(-tim);
+  if (player.DEXCOUNT) player.updateDexCount(-tim);
+  if (player.STRCOUNT) player.updateStrCount(-tim);
+  if (player.SCAREMONST) player.updateScareMonst(-tim);
+  if (player.HASTESELF) player.updateHasteSelf(-tim);
+  if (player.CANCELLATION) player.updateCancellation(-tim);
+  if (player.INVISIBILITY) player.updateInvisibility(-tim);
+  if (player.ALTPRO) player.updateAltPro(-tim);
+  if (player.PROTECTIONTIME) player.updateProtectionTime(-tim);
+  if (player.WTW) player.updateWTW(-tim);
+
   player.HERO = player.HERO > 0 ? Math.max(1, player.HERO - tim) : 0;
-  player.ALTPRO = player.ALTPRO > 0 ? Math.max(1, player.ALTPRO - tim) : 0;
-  player.PROTECTIONTIME = player.PROTECTIONTIME > 0 ? Math.max(1, player.PROTECTIONTIME - tim) : 0;
-  player.DEXCOUNT = player.DEXCOUNT > 0 ? Math.max(1, player.DEXCOUNT - tim) : 0;
-  player.STRCOUNT = player.STRCOUNT > 0 ? Math.max(1, player.STRCOUNT - tim) : 0;
-  player.GIANTSTR = player.GIANTSTR > 0 ? Math.max(1, player.GIANTSTR - tim) : 0;
-  player.CHARMCOUNT = player.CHARMCOUNT > 0 ? Math.max(1, player.CHARMCOUNT - tim) : 0;
-  player.INVISIBILITY = player.INVISIBILITY > 0 ? Math.max(1, player.INVISIBILITY - tim) : 0;
-  player.CANCELLATION = player.CANCELLATION > 0 ? Math.max(1, player.CANCELLATION - tim) : 0;
-  player.AGGRAVATE = player.AGGRAVATE > 0 ? Math.max(1, player.AGGRAVATE - tim) : 0;
-  player.SCAREMONST = player.SCAREMONST > 0 ? Math.max(1, player.SCAREMONST - tim) : 0;
-  player.STEALTH = player.STEALTH > 0 ? Math.max(1, player.STEALTH - tim) : 0;
-  player.AWARENESS = player.AWARENESS > 0 ? Math.max(1, player.AWARENESS - tim) : 0;
-  player.HOLDMONST = player.HOLDMONST > 0 ? Math.max(1, player.HOLDMONST - tim) : 0;
-  player.HASTEMONST = player.HASTEMONST > 0 ? Math.max(1, player.HASTEMONST - tim) : 0;
-  player.FIRERESISTANCE = player.FIRERESISTANCE > 0 ? Math.max(1, player.FIRERESISTANCE - tim) : 0;
   player.GLOBE = player.GLOBE > 0 ? Math.max(1, player.GLOBE - tim) : 0;
-  player.SPIRITPRO = player.SPIRITPRO > 0 ? Math.max(1, player.SPIRITPRO - tim) : 0;
-  player.UNDEADPRO = player.UNDEADPRO > 0 ? Math.max(1, player.UNDEADPRO - tim) : 0;
-  player.HALFDAM = player.HALFDAM > 0 ? Math.max(1, player.HALFDAM - tim) : 0;
+  player.AWARENESS = player.AWARENESS > 0 ? Math.max(1, player.AWARENESS - tim) : 0;
   player.SEEINVISIBLE = player.SEEINVISIBLE > 0 ? Math.max(1, player.SEEINVISIBLE - tim) : 0;
+
+  player.AGGRAVATE = player.AGGRAVATE > 0 ? Math.max(1, player.AGGRAVATE - tim) : 0;
+  player.HASTEMONST = player.HASTEMONST > 0 ? Math.max(1, player.HASTEMONST - tim) : 0;
+  player.HALFDAM = player.HALFDAM > 0 ? Math.max(1, player.HALFDAM - tim) : 0;
   player.ITCHING = player.ITCHING > 0 ? Math.max(1, player.ITCHING - tim) : 0;
   player.CLUMSINESS = player.CLUMSINESS > 0 ? Math.max(1, player.CLUMSINESS - tim) : 0;
-  player.WTW = player.WTW > 0 ? Math.max(1, player.WTW - tim) : 0;
-
+  // confusion?
+  // blindness?
+  
   regen();
 }
