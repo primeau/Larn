@@ -211,7 +211,7 @@ function read_scroll(scroll) {
       player.updateCancellation(player.CANCELLATION);
       player.updateInvisibility(player.INVISIBILITY);
       player.updateProtectionTime(player.PROTECTIONTIME);
-      // WTW???
+      player.updateWTW(player.WTW); // UPGRADE in v12.4.5
       player.GLOBE <<= 1;
       break;
 

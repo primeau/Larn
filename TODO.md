@@ -22,7 +22,6 @@ todo:
 - hall of fame and bad luck scoreboards
 - scoreboard request from parse can probably be done as one request
 - track version played
-- add highlighting to changes to rightside
 
 
 bugs:

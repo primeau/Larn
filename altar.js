@@ -167,5 +167,5 @@ function act_prayer_heard() {
   updateLog("  You have been heard!");
   if (player.ALTPRO == 0)
     player.MOREDEFENSES += 3;
-  player.ALTPRO += 500; /* protection field */
+  player.updateAltPro(500); /* protection field */
 }

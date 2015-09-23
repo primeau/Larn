@@ -143,7 +143,7 @@ function eventToggleDebugOutput() {
 
 function eventToggleDebugWTW() {
   nomove = 1;
-  player.WTW = player.WTW == 0 ? 100000 : 0;
+  player.updateWTW(player.WTW == 0 ? 100000 : -player.WTW);
   updateLog("DEBUG_WALK_THROUGH_WALLS: " + (player.WTW > 0));
   paint();
 }

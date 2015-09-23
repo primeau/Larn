@@ -250,13 +250,13 @@ function quaffpotion(potion, set_known) {
         player.STREXTRA += 21;
         changedSTR = millis();
       }
-      player.GIANTSTR += 700;
+      player.updateGiantStr(700);
       updateLog("  You now have incredibly bulging muscles!!!");
       break;
 
     case 18:
       /* fire resistance */
-      player.FIRERESISTANCE += 1000;
+      player.updateFireResistance(1000);
       updateLog("  You feel a chill run up your spine!");
       break;
 

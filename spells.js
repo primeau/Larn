@@ -131,7 +131,7 @@ function speldamage(x) {
     case 2:
       /* dexterity   */
       if (player.DEXCOUNT == 0) player.setDexterity(player.DEXTERITY + 3);
-      player.DEXCOUNT += 400;
+      player.updateDexCount(400);
       return;
 
     case 3:
@@ -159,7 +159,7 @@ function speldamage(x) {
     case 7:
       /* strength */
       if (player.STRCOUNT == 0) player.setStrExtra(player.STREXTRA + 3);
-      player.STRCOUNT += 150 + rnd(100);
+      player.updateStrCount(150 + rnd(100));
       return;
 
     case 8:
@@ -203,7 +203,7 @@ function speldamage(x) {
           amuletmodifier += 1 + player.inventory[i].arg;
         }
       }
-      player.INVISIBILITY += (amuletmodifier << 7) + 12;
+      player.updateInvisibility((amuletmodifier << 7) + 12);
       return;
 
       /* ----- LEVEL 3 SPELLS ----- */
@@ -225,12 +225,12 @@ function speldamage(x) {
 
     case 17:
       /* cancellation */
-      player.CANCELLATION += 5 + clev;
+      player.updateCancellation(5 + clev);
       return;
 
     case 18:
       /* haste self */
-      player.HASTESELF += 7 + clev;
+      player.updateHasteSelf(7 + clev);
       return;
 
     case 19:
@@ -385,7 +385,7 @@ function speldamage(x) {
 
     case 35:
       /* walk through walls */
-      player.WTW += rnd(10) + 5;
+      player.updateWTW(rnd(10) + 5);
       return;
 
     case 36:
