@@ -58,21 +58,21 @@ function shouldRun(key) {
 //const diroffy = { 0,  1, 0, -1,  0, -1, -1, 1,  1 };
 function parseDirectionKeys(key) {
   var dir = 0;
-  if (key == 'y' || key == 'Y' || key.indexOf('home') >= 0) { // UP,LEFT
+  if (key == 7 || key == 'y' || key == 'Y' || key.indexOf('home') >= 0) { // UP,LEFT
     dir = 6;
-  } else if (key == 'u' || key == 'U' || key.indexOf('pageup') >= 0) { // UP,RIGHT
+  } else if (key == 9 || key == 'u' || key == 'U' || key.indexOf('pageup') >= 0) { // UP,RIGHT
     dir = 5;
-  } else if (key == 'k' || key == 'K' || key.indexOf('up') >= 0) { // NORTH
+  } else if (key == 8 || key == 'k' || key == 'K' || key.indexOf('up') >= 0) { // NORTH
     dir = 3;
-  } else if (key == 'h' || key == 'H' || key.indexOf('left') >= 0) { // LEFT
+  } else if (key == 4 || key == 'h' || key == 'H' || key.indexOf('left') >= 0) { // LEFT
     dir = 4;
-  } else if (key == 'l' || key == 'L' || key.indexOf('right') >= 0) { // RIGHT
+  } else if (key == 6 || key == 'l' || key == 'L' || key.indexOf('right') >= 0) { // RIGHT
     dir = 2;
-  } else if (key == 'b' || key == 'B' || key.indexOf('end') >= 0) { // DOWN,LEFT
+  } else if (key == 1 || key == 'b' || key == 'B' || key.indexOf('end') >= 0) { // DOWN,LEFT
     dir = 8;
-  } else if (key == 'n' || key == 'N' || key.indexOf('pagedown') >= 0) { // DOWN, RIGHT
+  } else if (key == 3 || key == 'n' || key == 'N' || key.indexOf('pagedown') >= 0) { // DOWN, RIGHT
     dir = 7;
-  } else if (key == 'j' || key == 'J' || key.indexOf('down') >= 0) { // DOWN
+  } else if (key == 2 || key == 'j' || key == 'J' || key.indexOf('down') >= 0) { // DOWN
     dir = 1;
   }
   return dir;
