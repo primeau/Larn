@@ -125,6 +125,7 @@ function eventToggleAmigaMode() {
 
 function eventToggleDebugStats() {
   nomove = 1;
+  debug_used = 1;
   DEBUG_STATS = !DEBUG_STATS;
   updateLog("DEBUG_STATS: " + DEBUG_STATS);
   paint();
@@ -134,6 +135,7 @@ function eventToggleDebugStats() {
 
 function eventToggleDebugOutput() {
   nomove = 1;
+  debug_used = 1;
   DEBUG_OUTPUT = !DEBUG_OUTPUT;
   updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
   paint();
@@ -143,6 +145,7 @@ function eventToggleDebugOutput() {
 
 function eventToggleDebugWTW() {
   nomove = 1;
+  debug_used = 1;
   player.updateWTW(player.WTW == 0 ? 100000 : -player.WTW);
   updateLog("DEBUG_WALK_THROUGH_WALLS: " + (player.WTW > 0));
   paint();
@@ -152,6 +155,7 @@ function eventToggleDebugWTW() {
 
 function eventToggleDebugStairs() {
   nomove = 1;
+  debug_used = 1;
   DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
   updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
   paint();
@@ -161,6 +165,7 @@ function eventToggleDebugStairs() {
 
 function eventToggleDebugKnowAll() {
   nomove = 1;
+  debug_used = 1;
   DEBUG_KNOW_ALL = true;
   for (var i = 0; i < spelcode.length; i++) {
     learnSpell(spelcode[i]);
@@ -179,6 +184,7 @@ function eventToggleDebugKnowAll() {
 
 function eventToggleDebugStealth() {
   nomove = 1;
+  debug_used = 1;
   if (player.STEALTH <= 0) {
     player.updateHoldMonst(100000);
     player.updateStealth(100000);
@@ -195,6 +201,7 @@ function eventToggleDebugStealth() {
 
 function eventToggleDebugAwareness() {
   nomove = 1;
+  debug_used = 1;
   if (player.AWARENESS <= 0) {
     player.AWARENESS = 100000;
     updateLog("DEBUG: EXPANDED AWARENESS++");
@@ -209,6 +216,7 @@ function eventToggleDebugAwareness() {
 
 function eventToggleDebugImmortal() {
   nomove = 1;
+  debug_used = 1;
   if (player.LIFEPROT <= 0) {
     player.LIFEPROT = 100000;
     updateLog("DEBUG: LIFE PROTECTION++");
@@ -223,6 +231,7 @@ function eventToggleDebugImmortal() {
 
 function eventToggleDebugProximity() {
   nomove = 1;
+  debug_used = 1;
   DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
   if (!DEBUG_PROXIMITY) mazeMode = true;
   updateLog("DEBUG: PROXIMITY: " + DEBUG_PROXIMITY);

@@ -1,5 +1,4 @@
 todo:
-+ prevent stairs/shaft from being in treasure rooms
 - wall spacing is different on different browsers
   - use canvas or webgl instead?
   - react/flexbox?
@@ -9,9 +8,10 @@ todo:
   + update build number in version commmand
   + minify
   + babel
+  + jshint
   + parse cloud code
 - add gzip compression to nginx
-- update wikipedia, roguebasin
+- update wikipedia, roguebasin, temple of the roguelike
 - look for TODO/HACK
 - checkpoints are choppy
   - save checkpoint in a thread?
@@ -39,6 +39,7 @@ bugs:
 
 
 extras:
++ prevent stairs/shaft from being in treasure rooms
 - game start/end stats
 - cloud save via password
 - amiga-style images
@@ -46,6 +47,7 @@ extras:
 - copy local scores to global
 - nerf the book and chest in the store to only be sellable for purchase price?
   - use negative arg special case to give book,chest same level
+- nerf stealth based on difficulty?
 - put platinum dragon beside eye of larn
 - color (mcolor/ocolor)
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes

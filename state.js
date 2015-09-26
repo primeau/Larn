@@ -17,6 +17,7 @@ var original_objects = true;
 var dnd_item = null;
 var genocide = [];
 var amiga_mode = false;
+var debug_used = 0;
 
 var logname = "";
 var cheat = 0; /* 1 if the player has fudged save file */
@@ -78,6 +79,7 @@ function GameState() {
   this.dnd_item = dnd_item;
   this.genocide = genocide;
   this.amiga_mode = amiga_mode;
+  this.debug_used = debug_used;
 
   this.logname = logname;
   this.cheat = cheat;

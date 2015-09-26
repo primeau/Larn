@@ -104,7 +104,8 @@ function loadState(state) {
   dnd_item = state.dnd_item;
   genocide = state.genocide;
   amiga_mode = state.amiga_mode;
-
+  debug_used = state.debug_used;
+  
   logname = state.logname;
   cheat = state.cheat;
   level = state.level;

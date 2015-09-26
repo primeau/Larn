@@ -16,6 +16,9 @@ var LocalScore = function() {
   this.level = LEVELNAMES[level]; /* the level player was on when he died */
   this.taxes = 0; /* taxes he owes to LRS */
   this.hof = false; /* hall of fame candidate? */
+  this.debug = debug_used; /* did the player use debug mode? */
+
+  console.log("DEBUG_USED: " + debug_used);
 
   this.explored = "";
   for (var i = 0; i < LEVELS.length; i++) {
@@ -60,6 +63,7 @@ var GlobalScore = Parse.Object.extend({
     this.explored = local.explored;
     this.player = local.player;
     this.browser = local.browser;
+    this.debug = local.debug;
   },
 
   convertToLocal: function() {
@@ -75,6 +79,7 @@ var GlobalScore = Parse.Object.extend({
     this.explored = this.get('explored');
     this.player = JSON.parse(this.get('player'));
     this.browser = this.get('browser');
+    this.debug = this.get('debug');
   },
 
   write: function() {
@@ -90,6 +95,7 @@ var GlobalScore = Parse.Object.extend({
     this.set("explored", this.explored);
     this.set("player", this.player);
     this.set("browser", this.browser);
+    this.set("debug", this.debug);
   },
 
   toString: function() {
@@ -123,6 +129,10 @@ function getStatString(score) {
     stats += `Levels Visited:\n`;
     stats += `${score.explored}\n\n`;
   }
+  if (score.debug) {
+    stats += `Debug mode used!\n\n`;
+  }
+
   stats += `Bottom Line:\n`;
   stats += tempPlayer.getStatString() + "\n";
   //if (score.browser) stats += `\nBrowser: ${score.browser}\n`;
@@ -143,6 +153,7 @@ function isEqual(a, b) {
   equal &= (a.taxes == b.taxes);
   equal &= (a.explored == b.explored);
   equal &= (a.hof == b.hof);
+  equal &= (a.debug == b.debug);
   equal &= (JSON.stringify(a.player) == JSON.stringify(b.player));
   return equal;
 }
@@ -305,9 +316,8 @@ function printWinnerScoreBoard(winners, newScore) {
     var local = p.id == null;
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}  ${padString("" + p.timeused, 5)} Mobuls   ${p.who}`;
     lprc(`<a href="javascript:loadScoreStats('${scoreId}', ${local}, true)">`);
-    lprcat(`${score}`);
+    lprc(`${score}`);
     lprc(`</a>`);
-    lprcat(`\n`);
   }
   printScoreBoard(winners, newScore, header, printout);
 }
@@ -323,9 +333,8 @@ function printLoserScoreBoard(losers, newScore) {
     var local = p.id == null;
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(""+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level}`;
     lprc(`<a href="javascript:loadScoreStats('${scoreId}', ${local}, false)">`);
-    lprcat(`${score}`);
+    lprc(`${score}`);
     lprc(`</a>`);
-    lprcat(`\n`);
   }
   printScoreBoard(losers, newScore, header, printout);
 }
@@ -357,18 +366,26 @@ function printScoreBoard(board, newScore, header, printout) {
 
     if (++scoresPrinted > MAX_SCORES_TO_PRINT) break;
 
-    if (isNewScore) lprc("<b>");
-    printout(p);
     if (isNewScore) {
-      newScorePrinted = true;
-      lprc("</b>");
+      lprc(`<b>`);
     }
-  }
 
+    printout(p);
+
+    if (isNewScore) {
+      lprc(`</b>`);
+      newScorePrinted = true;
+    }
+    lprcat(`\n`);
+
+  } // end for
+
+  /* if this score didn't make the high score board, print it out at the bottom  */
   if (!newScorePrinted && newScore && newScore.winner == winners) {
-    lprc("<b>");
+    lprc(`<b>`);
     printout(newScore);
-    lprc("</b>");
+    lprc(`</b>`);
+    lprcat(`\n`);
   }
 }
 
