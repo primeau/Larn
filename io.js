@@ -79,13 +79,11 @@ function lprc(ch) {
     os_put_font(' ', cursorx - 1, cursory - 1);
   } else if (ch == '\n') {
     cursorx = 1;
-    // if (cursory == 24)
-    //     os_scroll_down(20 - 1, 24 - 1); //TODO
-    // else
     cursory++;
   } else {
     var n = 1;
 
+    //
     // if (ch == '\t') {
     //   ch = ' ';
     //   n = 4;
@@ -96,10 +94,6 @@ function lprc(ch) {
     cursorx++;
     // }
   }
-}
-
-
-function os_scroll_down(x1, x2) {
 }
 
 

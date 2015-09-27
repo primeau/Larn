@@ -939,7 +939,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
   if (dam > 0) {
     nomove = 1;
-    blt(); // TODO use paint()? -> no because it doesn't show missile trail
+    blt(); // don't use paint() because it doesn't show missile trail
     setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, delay, cshow, stroverride);
   } else {
     exitspell();
@@ -981,7 +981,7 @@ function omnidirect(spnum, dam, str) {
           cursors();
           updateLog(`  The ${monster} ${str}`);
           hitm(x, y, dam);
-          //player.level.know[x][y] = KNOWALL; // TODO HACK FIX FOR BLACK TILE IF KNOW = 0 in HITM()
+          //player.level.know[x][y] = KNOWALL; // HACK FIX FOR BLACK TILE IF KNOW = 0 in HITM()
           //nap(800);
         } else {
           lasthx = x;

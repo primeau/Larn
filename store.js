@@ -113,7 +113,7 @@ function dndstore() {
   lprcat("in their adventures.  Feel free to browse to your hearts content.\n");
   lprcat("Also be advised, if you break 'em, you pay for 'em.");
 
-  // TODO
+  // TODO, maybe
   // if (outstanding_taxes > 0) {
   //   lprcat("\n\nThe Larn Revenue Service has ordered us to not do business with tax evaders.\n");
   //   beep();
@@ -266,7 +266,7 @@ function obank2() {
 function banktitle(str) {
   clear();
   lprcat(str);
-  // TODO
+  // TODO, maybe
   // if (outstanding_taxes > 0) {
   //   register int i;
   //   lprcat("\n\nThe Larn Revenue Service has ordered that your account be frozen until all\n");
@@ -374,7 +374,7 @@ function bank_parse(key) {
 
 
 
-function bankmessage(str, duration) { //TODO convert to storemessage?
+function bankmessage(str, duration) {
   if (mazeMode) return;
 
   if (duration == "")

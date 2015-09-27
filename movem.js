@@ -250,7 +250,7 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
   ripple[player.x][player.y] = 1;
   queue.push(new QueueEntry(player.x, player.y, 1));
 
-  mazeMode = true; // TODO ACTUALLY PART OF DEBUG_PROXIMITY
+  mazeMode = true; // THIS IS ACTUALLY FOR DEBUG_PROXIMITY
   if (DEBUG_PROXIMITY) {
     paint();
     mazeMode = false;
@@ -551,7 +551,6 @@ function mmove(aa, bb, cc, dd) {
     } else {
       player.level.monsters[cc][dd] = null;
       setItem(cc, dd, OEMPTY);
-      // TODO? delete item too?
     }
   }
 

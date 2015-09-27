@@ -567,7 +567,6 @@ var changedWTW = 0;
  *  Returns true or false.
  */
 function ifblind(x, y) {
-  // TODO: make this work for when monster hit/miss the player, and die
   if (player.BLINDCOUNT > 0) {
     lastnum = 279; /* demolished by an unseen attacker */
     lastmonst = "monster";

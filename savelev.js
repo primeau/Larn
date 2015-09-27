@@ -11,7 +11,7 @@ function saveGame(isCheckPoint) {
 
   var saveName = isCheckPoint ? 'checkpoint' : logname;
 
-  // START HACK TODO to not store player.level
+  // START HACK to not store player.level
   var x = player.level;
   player.level = null;
 
@@ -27,7 +27,7 @@ function saveGame(isCheckPoint) {
   hash.update(bytes = JSON.stringify(state));
 
   player.level = x;
-  // END HACK TODO to not store player.level
+  // END HACK to not store player.level
 
   if (isCheckPoint) {
     //var pad = 67 - LOG[LOG.length - 1].length;
@@ -73,7 +73,6 @@ function loadSavedGame(savedState, isCheckPoint) {
 
   if (cheat) {
     updateLog("Have you been cheating?");
-    // TODO enforce this
   }
 
   /* clear the saved game file */
@@ -105,7 +104,7 @@ function loadState(state) {
   genocide = state.genocide;
   amiga_mode = state.amiga_mode;
   debug_used = state.debug_used;
-  
+
   logname = state.logname;
   cheat = state.cheat;
   level = state.level;

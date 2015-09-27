@@ -19,7 +19,7 @@ function rund(value) {
 
 
 function beep() {
-  //debug("TODO: util.beep()");
+  // TODO
 }
 
 
@@ -60,7 +60,6 @@ function prepare_direction_event(direction_event) {
 function getdirectioninput(key, code) {
   //debug(`getdirectioninput: ${key} ${code}`);
   if (key == ESC) {
-    // TODO anything else?
     appendLog(" cancelled");
     nomove = 1;
     keyboard_input_callback = null;

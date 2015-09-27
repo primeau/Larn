@@ -654,7 +654,7 @@ function hitmonster(x, y) {
     hitm(x, y, damage);
   }
   if (monster.matches(VAMPIRE)) {
-    //if (monster.hitpoints < 25) { // TODO this is original code?
+    //if (monster.hitpoints < 25) { // UPDATE this is original code
     if (monster.hitpoints > 0 && monster.hitpoints < 25) {
       player.level.monsters[x][y] = createMonster(BAT);
       player.level.know[x][y] = 0;

@@ -2,9 +2,6 @@
 
 
 function positionplayer(x, y, exact) {
-
-  // TODO update with larn code? this is actually more random
-
   if (x == null) x = player.x;
   if (y == null) y = player.y;
   if (exact == null) exact = false;

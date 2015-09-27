@@ -26,12 +26,12 @@ var LocalScore = function() {
     this.explored += (i == level) ? 'x' : ' ';
   }
 
-  // TODO START HACK -- we don't want to save the level
+  // START HACK -- we don't want to save the level
   var x = player.level;
   player.level = null;
   this.player = JSON.stringify(player);
   player.level = x;
-  // TODO END HACK -- we don't want to save the level
+  // END HACK -- we don't want to save the level
 
   this.browser = `${navigator.userAgent} (${navigator.vendor})`;
 }
@@ -658,7 +658,7 @@ function died(reason, slain) {
       player.setConstitution(player.CONSTITUTION - 1);
       player.setHP(1);
       updateLog("You feel wiiieeeeerrrrrd all over!");
-      //nap(2000); // TODO
+      //nap(2000);
       return;
     }
   }
