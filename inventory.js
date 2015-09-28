@@ -149,14 +149,22 @@ function inv_sort(a, b) {
   if (b == null) return -1;
   var asort = sortorder.indexOf(a.id); // JRP we could cache this in the item object
   var bsort = sortorder.indexOf(b.id); // but it's not enough of a perf issue
+
+  // if the sort order is obvious
   if (asort != bsort) {
     return asort - bsort;
   } else {
-    return a.arg - b.arg;
-  }
-  //return sortorder.indexOf(a.id) - sortorder.indexOf(b.id);
-}
+    // sort scrolls and potions alphabetically by name, not arg to
+    // prevent guessing based on arg (i.e. pulverize/annihilation/lifeprotect would always be last)
+    if (a.matches(OSCROLL) && b.matches(OSCROLL) || a.matches(OPOTION) && b.matches(OPOTION)) {
+        return a.toString().localeCompare(b.toString());
+    } else {
+      // otherwise, sort by arg
+      return a.arg - b.arg;
+    }
 
+  }
+}
 
 
 
@@ -276,9 +284,9 @@ function drop_object_gold(amount) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
   if (amount == ESC) {
-      appendLog(" cancelled");
-      nomove = 1;
-      return 1;
+    appendLog(" cancelled");
+    nomove = 1;
+    return 1;
   }
 
   if (amount == '*') amount = player.GOLD;
