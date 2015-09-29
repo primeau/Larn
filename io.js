@@ -146,5 +146,5 @@ function cl_dn(x, y) {
 
 
 function lflush() {
-  LOG = ["", "", "", "", ""];
+  LOG = Array(LOG_SAVE_SIZE).join(' ').split('');
 }

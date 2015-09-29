@@ -17,9 +17,7 @@ var LocalScore = function() {
   this.taxes = 0; /* taxes he owes to LRS */
   this.hof = false; /* hall of fame candidate? */
   this.debug = debug_used; /* did the player use debug mode? */
-
-  console.log("DEBUG_USED: " + debug_used);
-
+  
   this.explored = "";
   for (var i = 0; i < LEVELS.length; i++) {
     this.explored += LEVELS[i] ? `${LEVELNAMES[i]}` : `.`;
@@ -33,7 +31,7 @@ var LocalScore = function() {
   player.level = x;
   // END HACK -- we don't want to save the level
 
-  this.browser = `${navigator.userAgent} (${navigator.vendor})`;
+  this.browser = `${navigator.vendor} (${navigator.userAgent})`;
 }
 
 LocalScore.prototype.toString = function() {
@@ -83,19 +81,19 @@ var GlobalScore = Parse.Object.extend({
   },
 
   write: function() {
-    this.set("who", this.who);
-    this.set("hardlev", this.hardlev);
-    this.set("winner", this.winner);
-    this.set("score", this.score);
-    this.set("timeused", this.timeused);
-    this.set("what", this.what);
-    this.set("level", this.level);
-    this.set("taxes", this.taxes);
-    this.set("hof", this.hof);
-    this.set("explored", this.explored);
-    this.set("player", this.player);
-    this.set("browser", this.browser);
-    this.set("debug", this.debug);
+    this.set('who', this.who);
+    this.set('hardlev', this.hardlev);
+    this.set('winner', this.winner);
+    this.set('score', this.score);
+    this.set('timeused', this.timeused);
+    this.set('what', this.what);
+    this.set('level', this.level);
+    this.set('taxes', this.taxes);
+    this.set('hof', this.hof);
+    this.set('explored', this.explored);
+    this.set('player', this.player);
+    this.set('browser', this.browser);
+    this.set('debug', this.debug);
   },
 
   toString: function() {
@@ -117,7 +115,7 @@ function getStatString(score) {
   }
   var stats = "";
   stats += `Player: ${score.who}\n`;
-  stats += `Winner: ${score.winner ? "Yes" : "No"}\n`;
+  stats += `Winner: ${score.winner ? 'Yes' : 'No'}\n`;
   stats += `Diff:   ${score.hardlev}\n`;
   stats += `Score:  ${score.score}\n`;
   stats += `Mobuls: ${score.timeused}\n`;

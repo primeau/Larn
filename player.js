@@ -461,8 +461,11 @@ var Player = function Player() {
 
 
 
-  /* I'd like to do something like this, but it's ES6 only and not supported
-  by chrome yet, and I don't want to deal with the transpile step every time */
+  /*
+  I'd like to do something like this, but it's ES6 only and not supported
+  by chrome yet, and I don't want to deal with the transpile step every time
+  see: https://github.com/airbnb/javascript#destructuring
+  */
   /*
   this.updateProtectionTime = function(x) {
     ({this.PROTECTIONTIME, changedProtectionTime} = this.updateStat(this.PROTECTIONTIME, changedProtectionTime, x));

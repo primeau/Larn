@@ -211,6 +211,7 @@ function startgame(hard) {
 
   newcavelevel(0); /*  make the dungeon */
 
+  lflush();
   updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
 
   showcell(player.x, player.y);

@@ -56,7 +56,7 @@ function bottomline() {
   cursor(1, 18);
   lprcat(`${player.getStatString()}\n`);
 
-  for (var logindex = 0; logindex < LOG.length; logindex++) {
+  for (var logindex = LOG_SAVE_SIZE - LOG_SIZE; logindex < LOG.length; logindex++) {
     cltoeoln();
     lprcat(`${LOG[logindex]}\n`);
   }
@@ -433,7 +433,7 @@ function updateLog(text) {
     //console.log(`LARN: ${text}`);
   }
   LOG.push(text);
-  if (LOG.length > LOG_SIZE) {
+  if (LOG.length > LOG_SAVE_SIZE) {
     LOG.shift();
   }
 }

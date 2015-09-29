@@ -5,8 +5,8 @@
 
 
 /* additions for JS Larn */
-var LEVELS = [null, null, null, null, null, null, null, null, null, null, null, null, null, null];
-var LOG = ["", "", "", "", ""];
+var LEVELS = new Array(14);
+var LOG;
 var player;
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */

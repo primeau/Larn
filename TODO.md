@@ -39,6 +39,7 @@ bugs:
 
 
 extras:
++ save 10 lines of log on scoreboard
 + prevent stairs/shaft from being in treasure rooms
 - game start/end stats
 - cloud save via password
