@@ -17,7 +17,8 @@ var LocalScore = function() {
   this.taxes = 0; /* taxes he owes to LRS */
   this.hof = false; /* hall of fame candidate? */
   this.debug = debug_used; /* did the player use debug mode? */
-  
+  this.gamelog = LOG; /* the last few lines of what happened */
+
   this.explored = "";
   for (var i = 0; i < LEVELS.length; i++) {
     this.explored += LEVELS[i] ? `${LEVELNAMES[i]}` : `.`;
@@ -62,6 +63,7 @@ var GlobalScore = Parse.Object.extend({
     this.player = local.player;
     this.browser = local.browser;
     this.debug = local.debug;
+    this.gamelog = local.gamelog;
   },
 
   convertToLocal: function() {
@@ -78,6 +80,7 @@ var GlobalScore = Parse.Object.extend({
     this.player = JSON.parse(this.get('player'));
     this.browser = this.get('browser');
     this.debug = this.get('debug');
+    this.gamelog = this.get('gamelog');
   },
 
   write: function() {
@@ -94,6 +97,7 @@ var GlobalScore = Parse.Object.extend({
     this.set('player', this.player);
     this.set('browser', this.browser);
     this.set('debug', this.debug);
+    this.set('gamelog', this.gamelog);
   },
 
   toString: function() {
@@ -127,13 +131,19 @@ function getStatString(score) {
     stats += `Levels Visited:\n`;
     stats += `${score.explored}\n\n`;
   }
+
+  if (score.gamelog) {
+    var logString = score.gamelog.join('\n').trim();
+    stats += `Final Moments: \n${logString}\n\n`;
+  }
+
+  stats += `Bottom Line:\n`;
+  stats += tempPlayer.getStatString() + '\n\n';
+
   if (score.debug) {
     stats += `Debug mode used!\n\n`;
   }
 
-  stats += `Bottom Line:\n`;
-  stats += tempPlayer.getStatString() + "\n";
-  //if (score.browser) stats += `\nBrowser: ${score.browser}\n`;
   return stats;
 }
 
@@ -152,6 +162,7 @@ function isEqual(a, b) {
   equal &= (a.explored == b.explored);
   equal &= (a.hof == b.hof);
   equal &= (a.debug == b.debug);
+  equal &= (a.gamelog == b.gamelog);
   equal &= (JSON.stringify(a.player) == JSON.stringify(b.player));
   return equal;
 }
