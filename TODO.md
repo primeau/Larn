@@ -21,7 +21,6 @@ todo:
 - stats on most dangerous monster, level, moves/kills/spells ratio
 - hall of fame and bad luck scoreboards
 - scoreboard request from parse can probably be done as one request
-- track version played
 
 
 bugs:
@@ -34,12 +33,9 @@ bugs:
 - multiple 'you have been slain' messages if you get killed by more than 1 monster
   - or waterlord hitting & getting with gusher (or other special attacks)
 - readmail() can report wrong gold/tax status
-- player depth isn't reported correctly in the save game details printout
-  - also gtime/rmst
 
 
 extras:
-+ save 10 lines of log on scoreboard
 + prevent stairs/shaft from being in treasure rooms
 - game start/end stats
 - cloud save via password
@@ -80,7 +76,7 @@ parse:
 - set up account key on parse.com
 - install parse developer CLI:  # curl -s https://www.parse.com/downloads/cloud_code/installer.sh
 - install account key:          # parse configure accountkey -d
-- initialize:                   # parse new (they select 'e'xisting)
+- initialize:                   # parse new (then select 'e'xisting)
 - start auto-deply tool         # parse develop larn
 
 

@@ -1,6 +1,10 @@
 "use strict";
 
 var scoreBoard = [];
+const EXTRA_VERSION = 0;
+const EXTRA_BUILD = 1;
+const EXTRA_RMST = 2;
+const EXTRA_GTIME = 3;
 
 
 var LocalScore = function() {
@@ -14,10 +18,14 @@ var LocalScore = function() {
   this.timeused = Math.round(gtime / 100); /* the time used in mobuls to win the game */
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
   this.level = LEVELNAMES[level]; /* the level player was on when he died */
-  this.taxes = 0; /* taxes he owes to LRS */
   this.hof = false; /* hall of fame candidate? */
   this.debug = debug_used; /* did the player use debug mode? */
   this.gamelog = LOG; /* the last few lines of what happened */
+  this.extra = [];
+  this.extra[EXTRA_VERSION] = VERSION;
+  this.extra[EXTRA_BUILD] = BUILD;
+  this.extra[EXTRA_RMST] = rmst;
+  this.extra[EXTRA_GTIME] = gtime;
 
   this.explored = "";
   for (var i = 0; i < LEVELS.length; i++) {
@@ -57,13 +65,13 @@ var GlobalScore = Parse.Object.extend({
     this.timeused = local.timeused;
     this.what = local.what;
     this.level = local.level;
-    this.taxes = local.taxes;
     this.hof = local.hof;
     this.explored = local.explored;
     this.player = local.player;
     this.browser = local.browser;
     this.debug = local.debug;
     this.gamelog = local.gamelog;
+    this.extra = local.extra;
   },
 
   convertToLocal: function() {
@@ -74,13 +82,13 @@ var GlobalScore = Parse.Object.extend({
     this.timeused = this.get('timeused');
     this.what = this.get('what');
     this.level = this.get('level');
-    this.taxes = this.get('taxes');
     this.hof = this.get('hof');
     this.explored = this.get('explored');
     this.player = JSON.parse(this.get('player'));
     this.browser = this.get('browser');
     this.debug = this.get('debug');
     this.gamelog = this.get('gamelog');
+    this.extra = this.get('extra');
   },
 
   write: function() {
@@ -91,13 +99,13 @@ var GlobalScore = Parse.Object.extend({
     this.set('timeused', this.timeused);
     this.set('what', this.what);
     this.set('level', this.level);
-    this.set('taxes', this.taxes);
     this.set('hof', this.hof);
     this.set('explored', this.explored);
     this.set('player', this.player);
     this.set('browser', this.browser);
     this.set('debug', this.debug);
     this.set('gamelog', this.gamelog);
+    this.set('extra', this.extra);
   },
 
   toString: function() {
@@ -126,7 +134,7 @@ function getStatString(score) {
   if (!score.winner) {
     stats += `${score.what} on ${score.level}\n`;
   }
-  stats += `\n${game_stats(tempPlayer)}\n`;
+  stats += `\n${game_stats(tempPlayer, score)}\n`;
   if (score.explored) {
     stats += `Levels Visited:\n`;
     stats += `${score.explored}\n\n`;
@@ -138,7 +146,11 @@ function getStatString(score) {
   }
 
   stats += `Bottom Line:\n`;
-  stats += tempPlayer.getStatString() + '\n\n';
+  var lev = level;
+  if (score.extra && score.extra[EXTRA_LEVEL])
+    lev = score.extra[EXTRA_LEVEL];
+
+  stats += tempPlayer.getStatString(lev) + '\n\n';
 
   if (score.debug) {
     stats += `Debug mode used!\n\n`;
@@ -158,7 +170,6 @@ function isEqual(a, b) {
   equal &= (a.timeused == b.timeused);
   equal &= (a.what == b.what);
   equal &= (a.level == b.level);
-  equal &= (a.taxes == b.taxes);
   equal &= (a.explored == b.explored);
   equal &= (a.hof == b.hof);
   equal &= (a.debug == b.debug);
