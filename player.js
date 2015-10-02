@@ -486,10 +486,10 @@ var Player = function Player() {
   //  Spells:  1( 1)  AC: 2    WC: 3    Level 1  Exp: 0           novice explorer
   // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
   this.getStatString = function(lev) {
-    var templevel = level;
+    var templevel = LEVELNAMES[level];
     if (lev) templevel = lev;
 
-    if (templevel == 0) this.TELEFLAG = 0;
+    if (level == 0) this.TELEFLAG = 0;
     var hpstring = `${pad(this.HP,2,changedHP)}(${pad(this.HPMAX, 2,changedHPMax)})`;
     var output =
       `Spells: ${pad(this.SPELLS,2,changedSpells)}(${pad(this.SPELLMAX,2,changedSpellsMax)})  \
@@ -504,7 +504,7 @@ WIS=${pad(this.WISDOM,-2, changedWIS)} \
 CON=${pad(this.CONSTITUTION,-2,changedCON)} \
 DEX=${pad(this.DEXTERITY,-2,changedDEX)} \
 CHA=${pad(this.CHARISMA,-2,changedCHA)} \
-LV: ${pad((this.TELEFLAG ? "?" : LEVELNAMES[templevel]),-2,changedDepth)} \
+LV: ${pad((this.TELEFLAG ? "?" : templevel),-2,changedDepth)} \
 Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)} `;
 
     return output;

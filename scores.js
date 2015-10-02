@@ -146,11 +146,7 @@ function getStatString(score) {
   }
 
   stats += `Bottom Line:\n`;
-  var lev = level;
-  if (score.extra && score.extra[EXTRA_LEVEL])
-    lev = score.extra[EXTRA_LEVEL];
-
-  stats += tempPlayer.getStatString(lev) + '\n\n';
+  stats += tempPlayer.getStatString(score.level) + '\n\n';
 
   if (score.debug) {
     stats += `Debug mode used!\n\n`;
