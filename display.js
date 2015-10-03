@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 const KNOWNOT = 0x00;
@@ -28,26 +28,26 @@ function blt() {
     if (!images) {
       loadImages();
     }
-    document.getElementById("LARN").innerHTML = "";
+    document.getElementById(`LARN`).innerHTML = ``;
     return bltAmiga();
   }
 
-  var output = "";
+  var output = ``;
   for (var y = 0; y < 24; y++) {
     for (var x = 0; x < 80; x++) {
       output += display[x][y] != null ? display[x][y] : ' ';
     } // inner for
-    output += "\n";
+    output += `\n`;
   } // outer for
-  document.getElementById("LARN").innerHTML = output;
+  document.getElementById(`LARN`).innerHTML = output;
 }
 
 
 
 function printStats() {
-  var doc = document.getElementById("STATS");
+  var doc = document.getElementById(`STATS`);
   if (doc)
-    document.getElementById("STATS").innerHTML = DEBUG_STATS ? game_stats() : "";
+    document.getElementById(`STATS`).innerHTML = DEBUG_STATS ? game_stats() : ``;
 }
 
 
@@ -66,33 +66,33 @@ function bottomline() {
 
 function botside() {
   var line = 0;
-  botsideline(player.STEALTH, "Stealth", line++, changedStealth);
-  botsideline(player.UNDEADPRO, "Undead Pro", line++, changedUndeadPro);
-  botsideline(player.SPIRITPRO, "Spirit Pro", line++, changedSpiritPro);
-  botsideline(player.CHARMCOUNT, "Charm", line++, changedCharmCount);
-  botsideline(player.TIMESTOP, "Time Stop", line++, changedTimeStop);
-  botsideline(player.HOLDMONST, "Hold Monst", line++, changedHoldMonst);
-  botsideline(player.GIANTSTR, "Giant Str", line++, changedGiantStr);
-  botsideline(player.FIRERESISTANCE, "Fire Resit", line++, changedFireResistance);
-  botsideline(player.DEXCOUNT, "Dexterity", line++, changedDexCount);
-  botsideline(player.STRCOUNT, "Strength", line++, changedStrCount);
-  botsideline(player.SCAREMONST, "Scare", line++, changedScareMonst);
-  botsideline(player.HASTESELF, "Haste Self", line++, changedHasteSelf);
-  botsideline(player.CANCELLATION, "Cancel", line++, changedCancellation);
-  botsideline(player.INVISIBILITY, "Invisible", line++, changedInvisibility);
-  botsideline(player.ALTPRO, "Protect 3", line++, changedAltPro);
-  botsideline(player.PROTECTIONTIME, "Protect 2", line++, changedProtectionTime);
-  botsideline(player.WTW, "Wall-Walk", line++, changedWTW);
+  botsideline(player.STEALTH, `Stealth`, line++, changedStealth);
+  botsideline(player.UNDEADPRO, `Undead Pro`, line++, changedUndeadPro);
+  botsideline(player.SPIRITPRO, `Spirit Pro`, line++, changedSpiritPro);
+  botsideline(player.CHARMCOUNT, `Charm`, line++, changedCharmCount);
+  botsideline(player.TIMESTOP, `Time Stop`, line++, changedTimeStop);
+  botsideline(player.HOLDMONST, `Hold Monst`, line++, changedHoldMonst);
+  botsideline(player.GIANTSTR, `Giant Str`, line++, changedGiantStr);
+  botsideline(player.FIRERESISTANCE, `Fire Resit`, line++, changedFireResistance);
+  botsideline(player.DEXCOUNT, `Dexterity`, line++, changedDexCount);
+  botsideline(player.STRCOUNT, `Strength`, line++, changedStrCount);
+  botsideline(player.SCAREMONST, `Scare`, line++, changedScareMonst);
+  botsideline(player.HASTESELF, `Haste Self`, line++, changedHasteSelf);
+  botsideline(player.CANCELLATION, `Cancel`, line++, changedCancellation);
+  botsideline(player.INVISIBILITY, `Invisible`, line++, changedInvisibility);
+  botsideline(player.ALTPRO, `Protect 3`, line++, changedAltPro);
+  botsideline(player.PROTECTIONTIME, `Protect 2`, line++, changedProtectionTime);
+  botsideline(player.WTW, `Wall-Walk`, line++, changedWTW);
 }
 
 
 
-const blank = "          ";
+const blank = `          `;
 
 function botsideline(stat, name, line, bold) {
   cursor(70, line + 1);
   var str = padString(stat > 0 ? name : blank, -1, bold);
-  lprcat(str + " ");
+  lprcat(str + ` `);
 }
 
 
@@ -279,7 +279,7 @@ function moveplayer(dir) {
 
   /* check for the player ignoring an altar when in command mode. */
   if (itemAt(player.x, player.y).matches(OALTAR) && !prayed) {
-    updateLog("  You have ignored the altar!");
+    updateLog(`  You have ignored the altar!`);
     act_ignore_altar(player.x, player.y);
   }
   prayed = 0;
@@ -306,20 +306,20 @@ function moveNear(item, exact) {
   for (var x = 0; x < MAXX; x++) {
     for (var y = 0; y < MAXY; y++) {
       if (isItem(x, y, item)) {
-        //debug("movenear: found: " + item.id + " at " + xy(x, y));
+        //debug(`movenear: found: ` + item.id + ` at ` + xy(x, y));
         positionplayer(x, y, exact);
         return true;
       }
     }
   }
-  debug("movenear: NOT FOUND: " + item.id);
+  debug(`movenear: NOT FOUND: ` + item.id);
   return false;
 }
 
 
 
 var PAGE_COUNT = 1;
-const NO_MORE = "nomore";
+const NO_MORE = `nomore`;
 
 /*
  *  function to show what magic items have been discovered thus far
@@ -338,20 +338,20 @@ function seemagic(onlyspells) {
 
   var buffer = [];
 
-  var spellstring = "  The magic spells you have discovered thus far:";
+  var spellstring = `  The magic spells you have discovered thus far:`;
   var spellfunc = function(spell, buffer) {
     return padString(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
   }
   printknown(spellstring, player.knownSpells, spellfunc, buffer, true);
 
   if (!onlyspells) {
-    var scrollstring = "  The magic scrolls you have found to date are:";
+    var scrollstring = `  The magic scrolls you have found to date are:`;
     var scrollfunc = function(scroll) {
       return padString(`${SCROLL_NAMES[scroll.arg]}`, -26);
     }
     printknown(scrollstring, player.knownScrolls, scrollfunc, buffer, true);
 
-    var potionstring = "  The magic potions you have found to date are:";
+    var potionstring = `  The magic potions you have found to date are:`;
     var potionfunc = function(potion) {
       return padString(`${POTION_NAMES[potion.arg]}`, -26);
     }
@@ -369,7 +369,7 @@ function seemagic(onlyspells) {
     PAGE_COUNT = NO_MORE;
   }
   if (!onlyspells) lprcat('\n');
-  lprcat("Press <b>space</b> to continue \n");
+  lprcat(`Press <b>space</b> to continue \n`);
 }
 
 
@@ -377,8 +377,8 @@ function seemagic(onlyspells) {
 function printknown(firstline, itemlist, printfunc, buffer, extra) {
   var sorted_list = itemlist.slice().sort();
   buffer.push(firstline);
-  buffer.push("");
-  var line = "";
+  buffer.push(``);
+  var line = ``;
   var count = 0;
   for (var i = 0; i < sorted_list.length; i++) {
     var item = sorted_list[i];
@@ -386,7 +386,7 @@ function printknown(firstline, itemlist, printfunc, buffer, extra) {
       line += printfunc(item);
       if (++count % 3 == 0) {
         buffer.push(line);
-        line = "";
+        line = ``;
       }
     }
   }
@@ -394,9 +394,9 @@ function printknown(firstline, itemlist, printfunc, buffer, extra) {
     buffer.push(line);
   }
   if (count == 0) {
-    buffer.push("...");
+    buffer.push(`...`);
   }
-  if (extra) buffer.push("");
+  if (extra) buffer.push(``);
 }
 
 

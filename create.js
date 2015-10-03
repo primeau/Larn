@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 /*
@@ -69,7 +69,7 @@ function loadcanned() {
     mazeindex = rund(MAZES.length);
   } while (USED_MAZES.indexOf(mazeindex) > -1);
   USED_MAZES.push(mazeindex);
-  //debug("loadcanned: used: " + USED_MAZES);
+  //debug(`loadcanned: used: ` + USED_MAZES);
   return MAZES[mazeindex];
 }
 
@@ -486,7 +486,7 @@ function fillroom(what, arg) {
     if (y > MAXY - 2) y = 1;
     if (y < 1) y = MAXY - 2;
     if (safe-- == 0) {
-      debug("fillroom: SAFETY!");
+      debug(`fillroom: SAFETY!`);
       break;
     }
   }

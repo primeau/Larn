@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 /*
@@ -7,7 +7,7 @@
 function open_something(direction) {
 
   if (direction == 0) {
-    updateLog("");
+    updateLog(``);
     return 1;
   }
 
@@ -17,12 +17,12 @@ function open_something(direction) {
   var item = itemAt(x, y);
 
   if (!item) {
-    updateLog("  There is nothing to open!");
+    updateLog(`  There is nothing to open!`);
     return 1;
   }
 
   if (item.matches(OOPENDOOR)) {
-    updateLog("  The door is already open!");
+    updateLog(`  The door is already open!`);
     beep();
     return 1;
   } else if (item.matches(OCHEST)) {
@@ -32,7 +32,7 @@ function open_something(direction) {
     act_open_door(x, y);
     return 1;
   } else {
-    updateLog("  You can't open that!");
+    updateLog(`  You can't open that!`);
     beep();
     return 1;
   }
@@ -54,7 +54,7 @@ function act_open_chest(x, y) {
     return;
   }
   if (rnd(101) < 40) {
-    updateLog("  The chest explodes as you open it");
+    updateLog(`  The chest explodes as you open it`);
     beep();
     var i = rnd(10);
     lastnum = 281; /* killed by an exploding chest */
@@ -66,20 +66,20 @@ function act_open_chest(x, y) {
     switch (rnd(10)) /* see if he gets a curse */ {
       case 1:
         player.ITCHING += rnd(1000) + 100;
-        updateLog("  You feel an irritation spread over your skin!");
+        updateLog(`  You feel an irritation spread over your skin!`);
         beep();
         break;
 
       case 2:
         player.CLUMSINESS += rnd(1600) + 200;
-        updateLog("  You begin to lose hand to eye coordination!");
+        updateLog(`  You begin to lose hand to eye coordination!`);
         beep();
         break;
 
       case 3:
         player.HALFDAM += rnd(1600) + 200;
         beep();
-        updateLog("  A sickness engulfs you!");
+        updateLog(`  A sickness engulfs you!`);
         break;
     };
     player.level.items[x][y] = OEMPTY; /* destroy the chest */
@@ -92,7 +92,7 @@ function act_open_chest(x, y) {
       something(chest.arg + 2);
     }
   } else
-    updateLog("  Nothing happens");
+    updateLog(`  Nothing happens`);
   return;
 }
 
@@ -113,33 +113,33 @@ function act_open_door(x, y) {
   if (rnd(11) < 7) {
     switch (door.arg) {
       case 6:
-        updateLog("  The door makes an awful groan, but remains stuck");
+        updateLog(`  The door makes an awful groan, but remains stuck`);
         player.AGGRAVATE += rnd(400);
         break;
 
       case 7:
-        updateLog("  You are jolted by an electric shock ");
+        updateLog(`  You are jolted by an electric shock `);
         lastnum = 274; /* fried by an electric shock */
         player.losehp(rnd(20));
         break;
 
       case 8:
-        updateLog("  You feel drained");
+        updateLog(`  You feel drained`);
         player.loselevel();
         break;
 
       case 9:
-        updateLog("  You suddenly feel weaker ");
+        updateLog(`  You suddenly feel weaker `);
         player.setStrength(player.STRENGTH - 1);
         break;
 
       default:
-        updateLog("  The door doesn't budge");
+        updateLog(`  The door doesn't budge`);
         return (0);
         break;
     }
   } else {
-    updateLog("  The door opens");
+    updateLog(`  The door opens`);
     player.level.know[x][y] = 0;
     player.level.items[x][y] = createObject(OOPENDOOR);
     return (1);
@@ -160,7 +160,7 @@ function close_something(direction) {
   var item = itemAt(x, y);
 
   if (!item) {
-    updateLog("  There is nothing to close!");
+    updateLog(`  There is nothing to close!`);
     return 1;
   }
 
@@ -168,11 +168,11 @@ function close_something(direction) {
      indicated.
   */
   if (item.matches(OCLOSEDDOOR)) {
-    updateLog("  The door is already closed!");
+    updateLog(`  The door is already closed!`);
     beep();
   } else if (item.matches(OOPENDOOR)) {
     if (monsterAt(x, y)) {
-      updateLog("  There's a monster in the way!");
+      updateLog(`  There's a monster in the way!`);
       return;
     }
     player.level.items[x][y] = createObject(OCLOSEDDOOR, 0);
@@ -183,7 +183,7 @@ function close_something(direction) {
     }
 
   } else {
-    updateLog("  You can't close that!");
+    updateLog(`  You can't close that!`);
     beep();
   }
   return 1;
@@ -192,11 +192,11 @@ function close_something(direction) {
 
 
 function outfortune() {
-  updateLog("The cookie was delicious.");
+  updateLog(`The cookie was delicious.`);
   if (player.BLINDCOUNT)
     return;
   var fortune = FORTUNES[rund(FORTUNES.length)];
-  updateLog("Inside you find a scrap of paper that says:");
+  updateLog(`Inside you find a scrap of paper that says:`);
   updateLog(`  ${fortune}`);
 }
 

@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 /************************************************/
@@ -19,7 +19,7 @@ const TIMELIMIT = 30000;  /* maximum number of moves before the game is called *
 
 
 
-const LEVELNAMES = ["H", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "V1", "V2", "V3"];
+const LEVELNAMES = [`H`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `V1`, `V2`, `V3`];
 
 
 
@@ -56,76 +56,76 @@ const SKILL = [
 
 
 const CLASSES = [
-"novice explorer",      "apprentice explorer",  "practiced explorer",   /*  -3*/
-"expert explorer",      "novice adventurer",    "adventurer",           /*  -6*/
-"apprentice conjurer",  "conjurer",             "master conjurer",      /*  -9*/
-"apprentice mage",      "mage",                 "experienced mage",     /* -12*/
-"master mage",          "apprentice warlord",   "novice warlord",       /* -15*/
-"expert warlord",       "master warlord",       "apprentice gorgon",    /* -18*/
-"gorgon",               "practiced gorgon",     "master gorgon",        /* -21*/
-"demi-gorgon",          "evil master",          "great evil master",    /* -24*/
-"mighty evil master",   "mighty evil master",   "mighty evil master",   /* -27*/
-"mighty evil master",   "mighty evil master",   "mighty evil master",   /* -30*/
-"mighty evil master",   "mighty evil master",   "mighty evil master",   /* -33*/
-"mighty evil master",   "mighty evil master",   "mighty evil master",   /* -36*/
-"mighty evil master",   "mighty evil master",   "mighty evil master",   /* -39*/
-"apprentice demi-god",  "apprentice demi-god",  "apprentice demi-god",  /* -42*/
-"apprentice demi-god",  "apprentice demi-god",  "apprentice demi-god",  /* -45*/
-"apprentice demi-god",  "apprentice demi-god",  "apprentice demi-god",  /* -48*/
-"minor demi-god",       "minor demi-god",       "minor demi-god",       /* -51*/
-"minor demi-god",       "minor demi-god",       "minor demi-god",       /* -54*/
-"minor demi-god",       "minor demi-god",       "minor demi-god",       /* -57*/
-"major demi-god",       "major demi-god",       "major demi-god",       /* -60*/
-"major demi-god",       "major demi-god",       "major demi-god",       /* -63*/
-"major demi-god",       "major demi-god",       "major demi-god",       /* -66*/
-"minor deity",          "minor deity",          "minor deity",          /* -69*/
-"minor deity",          "minor deity",          "minor deity",          /* -72*/
-"minor deity",          "minor deity",          "minor deity",          /* -75*/
-"major deity",          "major deity",          "major deity",          /* -78*/
-"major deity",          "major deity",          "major deity",          /* -81*/
-"major deity",          "major deity",          "major deity",          /* -84*/
-"novice guardian",      "novice guardian",      "novice guardian",      /* -87*/
-"apprentice guardian",  "apprentice guardian",  "apprentice guardian",  /* -90*/
-"apprentice guardian",  "apprentice guardian",  "apprentice guardian",  /* -93*/
-"earth guardian",       "air guardian",         "fire guardian",        /* -96*/
-"water guardian",       "time guardian",        "ethereal guardian",    /* -99*/
-"The Creator",          "The Creator",          "The Creator",         /* -102*/
+`novice explorer`,      `apprentice explorer`,  `practiced explorer`,   /*  -3*/
+`expert explorer`,      `novice adventurer`,    `adventurer`,           /*  -6*/
+`apprentice conjurer`,  `conjurer`,             `master conjurer`,      /*  -9*/
+`apprentice mage`,      `mage`,                 `experienced mage`,     /* -12*/
+`master mage`,          `apprentice warlord`,   `novice warlord`,       /* -15*/
+`expert warlord`,       `master warlord`,       `apprentice gorgon`,    /* -18*/
+`gorgon`,               `practiced gorgon`,     `master gorgon`,        /* -21*/
+`demi-gorgon`,          `evil master`,          `great evil master`,    /* -24*/
+`mighty evil master`,   `mighty evil master`,   `mighty evil master`,   /* -27*/
+`mighty evil master`,   `mighty evil master`,   `mighty evil master`,   /* -30*/
+`mighty evil master`,   `mighty evil master`,   `mighty evil master`,   /* -33*/
+`mighty evil master`,   `mighty evil master`,   `mighty evil master`,   /* -36*/
+`mighty evil master`,   `mighty evil master`,   `mighty evil master`,   /* -39*/
+`apprentice demi-god`,  `apprentice demi-god`,  `apprentice demi-god`,  /* -42*/
+`apprentice demi-god`,  `apprentice demi-god`,  `apprentice demi-god`,  /* -45*/
+`apprentice demi-god`,  `apprentice demi-god`,  `apprentice demi-god`,  /* -48*/
+`minor demi-god`,       `minor demi-god`,       `minor demi-god`,       /* -51*/
+`minor demi-god`,       `minor demi-god`,       `minor demi-god`,       /* -54*/
+`minor demi-god`,       `minor demi-god`,       `minor demi-god`,       /* -57*/
+`major demi-god`,       `major demi-god`,       `major demi-god`,       /* -60*/
+`major demi-god`,       `major demi-god`,       `major demi-god`,       /* -63*/
+`major demi-god`,       `major demi-god`,       `major demi-god`,       /* -66*/
+`minor deity`,          `minor deity`,          `minor deity`,          /* -69*/
+`minor deity`,          `minor deity`,          `minor deity`,          /* -72*/
+`minor deity`,          `minor deity`,          `minor deity`,          /* -75*/
+`major deity`,          `major deity`,          `major deity`,          /* -78*/
+`major deity`,          `major deity`,          `major deity`,          /* -81*/
+`major deity`,          `major deity`,          `major deity`,          /* -84*/
+`novice guardian`,      `novice guardian`,      `novice guardian`,      /* -87*/
+`apprentice guardian`,  `apprentice guardian`,  `apprentice guardian`,  /* -90*/
+`apprentice guardian`,  `apprentice guardian`,  `apprentice guardian`,  /* -93*/
+`earth guardian`,       `air guardian`,         `fire guardian`,        /* -96*/
+`water guardian`,       `time guardian`,        `ethereal guardian`,    /* -99*/
+`The Creator`,          `The Creator`,          `The Creator`,         /* -102*/
 ];
 
 
 
 const DEATH_REASONS = [
-  "",
-  "",
-  "self - annihilated",
-  "shot by an arrow",
-  "hit by a dart",
-  "fell into a pit",
-  "fell into a bottomless pit",
-  "a winner",
-  "trapped in solid rock",
-  "",
-  "",
-  "",
-  "",
-  "failed",
-  "erased by a wayward finger",
-  "fell through a bottomless trap door",
-  "fell through a trap door",
-  "drank some poisonous water",
-  "fried by an electric shock",
-  "slipped on a volcano shaft",
-  "",
-  "attacked by a revolting demon",
-  "hit by own magic",
-  "demolished by an unseen attacker",
-  "fell into the dreadful sleep",
-  "killed by an exploding chest",
-  "",
-  "annihilated in a sphere",
-  "",
-  "",
-  "a quitter",
+  ``,
+  ``,
+  `self - annihilated`,
+  `shot by an arrow`,
+  `hit by a dart`,
+  `fell into a pit`,
+  `fell into a bottomless pit`,
+  `a winner`,
+  `trapped in solid rock`,
+  ``,
+  ``,
+  ``,
+  ``,
+  `failed`,
+  `erased by a wayward finger`,
+  `fell through a bottomless trap door`,
+  `fell through a trap door`,
+  `drank some poisonous water`,
+  `fried by an electric shock`,
+  `slipped on a volcano shaft`,
+  ``,
+  `attacked by a revolting demon`,
+  `hit by own magic`,
+  `demolished by an unseen attacker`,
+  `fell into the dreadful sleep`,
+  `killed by an exploding chest`,
+  ``,
+  `annihilated in a sphere`,
+  ``,
+  ``,
+  `a quitter`,
 ];
 
 
@@ -181,28 +181,28 @@ const POTION_PROBABILITY = [
 
 /*  name array for magic scrolls */
 const SCROLL_NAMES = [
-  "enchant armor", "enchant weapon", "enlightenment",
-  "blank paper", "create monster", "create artifact",
-  "aggravate monsters", "time warp", "teleportation",
-  "expanded awareness", "haste monsters", "monster healing",
-  "spirit protection", "undead protection", "stealth",
-  "magic mapping", "hold monsters", "gem perfection",
-  "spell extension", "identify", "remove curse",
-  "annihilation", "pulverization", "life protection"
+  `enchant armor`, `enchant weapon`, `enlightenment`,
+  `blank paper`, `create monster`, `create artifact`,
+  `aggravate monsters`, `time warp`, `teleportation`,
+  `expanded awareness`, `haste monsters`, `monster healing`,
+  `spirit protection`, `undead protection`, `stealth`,
+  `magic mapping`, `hold monsters`, `gem perfection`,
+  `spell extension`, `identify`, `remove curse`,
+  `annihilation`, `pulverization`, `life protection`
 ];
 
 
 
 /*  name array for magic potions */
 const POTION_NAMES = [
-  "sleep", "healing", "raise level",
-  "increase ability", "wisdom", "strength",
-  "raise charisma", "dizziness", "learning",
-  "object detection", "monster detection", "forgetfulness",
-  "water", "blindness", "confusion",
-  "heroism", "sturdiness", "giant strength",
-  "fire resistance", "treasure finding", "instant healing",
-  "cure dianthroritis", "poison", "see invisible"
+  `sleep`, `healing`, `raise level`,
+  `increase ability`, `wisdom`, `strength`,
+  `raise charisma`, `dizziness`, `learning`,
+  `object detection`, `monster detection`, `forgetfulness`,
+  `water`, `blindness`, `confusion`,
+  `heroism`, `sturdiness`, `giant strength`,
+  `fire resistance`, `treasure finding`, `instant healing`,
+  `cure dianthroritis`, `poison`, `see invisible`
 ];
 
 
