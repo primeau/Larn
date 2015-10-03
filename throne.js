@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 /* For command mode. Perform removal of gems from a jeweled throne */
@@ -6,11 +6,11 @@ function remove_gems() {
   cursors();
   var item = itemAt(player.x, player.y);
   if (item.matches(ODEADTHRONE)) {
-    updateLog("There are no gems to remove!");
+    updateLog(`There are no gems to remove!`);
   } else if (item.matches(OTHRONE)) {
     act_remove_gems(item.arg);
   } else {
-    updateLog("I see no throne here to remove gems from!");
+    updateLog(`I see no throne here to remove gems from!`);
   }
 }
 
@@ -39,7 +39,7 @@ function act_remove_gems(arg) {
     player.level.items[player.x][player.y].arg = 1;
     player.level.know[player.x][player.y] = 0;
   } else {
-    updateLog("  Nothing happens");
+    updateLog(`  Nothing happens`);
   }
   return;
 }
@@ -55,7 +55,7 @@ function sit_on_throne() {
   if (item.matches(OTHRONE) || item.matches(ODEADTHRONE)) {
     act_sit_throne(item.arg);
   } else {
-    updateLog("I see no throne to sit on here!");
+    updateLog(`I see no throne to sit on here!`);
   }
 }
 
@@ -77,11 +77,11 @@ function act_sit_throne(arg) {
     player.level.items[player.x][player.y].arg = 1;
     player.level.know[player.x][player.y] = 0;
   } else if (k < 35) {
-    updateLog("  Zaaaappp!  You've been teleported!");
+    updateLog(`  Zaaaappp!  You've been teleported!`);
     beep();
     oteleport(0);
   } else {
-    updateLog("  Nothing happens");
+    updateLog(`  Nothing happens`);
   }
   return;
 }

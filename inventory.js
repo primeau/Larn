@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 /* show character's inventory */
 function showinventory(select_allowed, callback, inv_filter, show_gold, show_time) {
@@ -192,7 +192,7 @@ function take(item) {
   for (var i = 0; i < limit; i++) {
     if (!player.inventory[i]) {
       player.inventory[i] = item;
-      debug("take(): " + item);
+      debug(`take(): ` + item);
       limit = 0;
       player.adjustcvalues(item, true);
       if (mazeMode) {
@@ -202,7 +202,7 @@ function take(item) {
       return (true);
     }
   }
-  updateLog("You can't carry anything else");
+  updateLog(`You can't carry anything else`);
   return false;
 }
 
@@ -226,7 +226,7 @@ function drop_object(index) {
 
   if (index == '.') {
     nomove = 1;
-    updateLog("How much gold will you drop? ");
+    updateLog(`How much gold will you drop? `);
     setNumberCallback(drop_object_gold, true);
     return 1;
   }
@@ -248,7 +248,7 @@ function drop_object(index) {
 
   if (isItemAt(player.x, player.y)) {
     beep();
-    updateLog("  There's something here already");
+    updateLog(`  There's something here already`);
     mazeMode = true;
     return 1;
   }
@@ -284,7 +284,7 @@ function drop_object_gold(amount) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
 
   if (amount == ESC) {
-    appendLog(" cancelled");
+    appendLog(` cancelled`);
     nomove = 1;
     return 1;
   }
@@ -296,13 +296,13 @@ function drop_object_gold(amount) {
   if (amount == 0) return 1;
 
   if (amount > player.GOLD) {
-    updateLog("  You don't have that much!");
+    updateLog(`  You don't have that much!`);
     return 1;
   }
 
   if (isItemAt(player.x, player.y)) {
     beep();
-    updateLog("  There's something here already");
+    updateLog(`  There's something here already`);
     return 1;
   }
 

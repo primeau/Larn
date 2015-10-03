@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 /* this is the structure for maintaining & moving the spheres of annihilation */
 var Sphere = function(x, y, dir, lifetime, lev) {
@@ -49,21 +49,21 @@ function newsphere(x, y, dir, life, lev) {
   }
   if (player.CANCELLATION) /* cancellation cancels spheres */ {
     cursors();
-    updateLog("As the cancellation takes effect, you hear a great earth shaking blast!");
+    updateLog(`As the cancellation takes effect, you hear a great earth shaking blast!`);
     sphboom(x, y); /* blow up stuff around sphere */
     rmsphere(x, y); /* remove any spheres that are here */
     return;
   }
   if (itemAt(x, y).matches(OANNIHILATION)) /* collision of spheres detonates spheres */ {
     cursors();
-    updateLog("Two spheres of annihilation collide! You hear a great earth shaking blast!");
+    updateLog(`Two spheres of annihilation collide! You hear a great earth shaking blast!`);
     sphboom(x, y); /* blow up stuff around sphere */
     rmsphere(x, y); /* remove any spheres that are here */
     return;
   }
   if (player.x == x && player.y == y) /* collision of sphere and player! */ {
     cursors();
-    updateLog("You have been enveloped by the zone of nothingness!");
+    updateLog(`You have been enveloped by the zone of nothingness!`);
     rmsphere(x, y); /* remove any spheres that are here */
     //nap(2000);
     died(258, false); /* self - annihilated */
@@ -131,7 +131,7 @@ function sphboom(x, y) {
       show1cell(j, i);
       if (player.x == j && player.y == i) {
         cursors();
-        updateLog("You were too close to the sphere!");
+        updateLog(`You were too close to the sphere!`);
         //nap(2000);
         died(283, false); /* player killed in explosion */
       }

@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 var MonsterLocation = {
   x: 0,
@@ -569,14 +569,14 @@ function mmove(aa, bb, cc, dd) {
   var what;
   var flag = 0; /* set to 1 if monster hit by arrow trap */
   if (item.matches(OTRAPARROW)) /* arrow hits monster */ {
-    what = "An arrow";
+    what = `An arrow`;
     if ((monster.hitpoints -= rnd(10) + level) <= 0) {
       player.level.monsters[cc][dd] = null;
       flag = 2;
     } else flag = 1;
   }
   if (item.matches(ODARTRAP)) /* dart hits monster */ {
-    what = "A dart";
+    what = `A dart`;
     if ((monster.hitpoints -= rnd(6)) <= 0) {
       player.level.monsters[cc][dd] = null;
       flag = 2;

@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 function isKnownScroll(item) {
@@ -74,18 +74,18 @@ function read_scroll(scroll) {
     case 0:
       /* enchant armor */
       if (enchantarmor())
-        updateLog("  Your armor glows for a moment");
+        updateLog(`  Your armor glows for a moment`);
       break;
 
     case 1:
       /* enchant weapon */
       if (enchweapon())
-        updateLog("  Your weapon glows for a moment");
+        updateLog(`  Your weapon glows for a moment`);
       break;
 
     case 2:
       /* enlightenment */
-      updateLog("  You have been granted enlightenment!");
+      updateLog(`  You have been granted enlightenment!`);
       var yh = Math.min(player.y + 7, MAXY);
       var xh = Math.min(player.x + 25, MAXX);
       var yl = Math.max(player.y - 7, 0);
@@ -98,7 +98,7 @@ function read_scroll(scroll) {
 
     case 3:
       /* blank paper */
-      updateLog("  This scroll seems to be blank");
+      updateLog(`  This scroll seems to be blank`);
       break;
 
     case 4:
@@ -113,7 +113,7 @@ function read_scroll(scroll) {
 
     case 6:
       /* aggravate monsters */
-      updateLog("  Something isn't right...");
+      updateLog(`  Something isn't right...`);
       player.AGGRAVATE += 800;
       break;
 
@@ -131,25 +131,25 @@ function read_scroll(scroll) {
 
     case 8:
       /* teleportation */
-      updateLog("  Your surroundings change");
+      updateLog(`  Your surroundings change`);
       oteleport(0);
       break;
 
     case 9:
       /* expanded awareness */
-      updateLog("  You feel extra alert");
+      updateLog(`  You feel extra alert`);
       player.AWARENESS += 1800;
       break;
 
     case 10:
       /* haste monster */
-      updateLog("  Something isn't right...");
+      updateLog(`  Something isn't right...`);
       player.HASTEMONST += rnd(55) + 12;
       break;
 
     case 11:
       /* monster healing */
-      updateLog("  Something isn't right...");
+      updateLog(`  Something isn't right...`);
       for (var j = 0; j < MAXY; j++)
         for (var i = 0; i < MAXX; i++)
           if (player.level.monsters[i][j])
@@ -173,7 +173,7 @@ function read_scroll(scroll) {
 
     case 15:
       /* magic mapping */
-      updateLog("  You have been granted enlightenment!");
+      updateLog(`  You have been granted enlightenment!`);
       for (var i = 0; i < MAXX; i++)
         for (var j = 0; j < MAXY; j++)
           player.level.know[i][j] = KNOWALL;
@@ -187,7 +187,7 @@ function read_scroll(scroll) {
 
     case 17:
       /* gem perfection */
-      updateLog("  You feel someone eyeing your belongings");
+      updateLog(`  You feel someone eyeing your belongings`);
       for (var i = 0; i < 26; i++) {
         var item = player.inventory[i];
         if (item && item.isGem()) {
@@ -200,7 +200,7 @@ function read_scroll(scroll) {
 
     case 18:
       /* spell extension */
-      updateLog("  You feel a twitch at the base of your skull");
+      updateLog(`  You feel a twitch at the base of your skull`);
       player.updateCharmCount(player.CHARMCOUNT);
       player.updateTimeStop(player.TIMESTOP);
       player.updateHoldMonst(player.HOLDMONST);
@@ -217,7 +217,7 @@ function read_scroll(scroll) {
 
     case 19:
       /* identify */
-      updateLog("  You feel someone eyeing your belongings");
+      updateLog(`  You feel someone eyeing your belongings`);
       for (var i = 0; i < player.inventory.length; i++) {
         var item = player.inventory[i];
         if (item) {
@@ -231,7 +231,7 @@ function read_scroll(scroll) {
 
     case 20:
       /* remove curse */
-      updateLog("  You sense a benign presence");
+      updateLog(`  You sense a benign presence`);
       if (player.BLINDCOUNT > 0) player.BLINDCOUNT = 1;
       if (player.CONFUSE > 0) player.CONFUSE = 1;
       if (player.AGGRAVATE > 0) player.AGGRAVATE = 1;
@@ -262,7 +262,7 @@ function read_scroll(scroll) {
 
     case 23:
       /* life protection */
-      updateLog("  You sense a benign presence");
+      updateLog(`  You sense a benign presence`);
       player.LIFEPROT++;
       break;
   };

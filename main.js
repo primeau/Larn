@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 var no_intro = false;
@@ -13,7 +13,7 @@ function welcome() {
   lprcat(helppages[0]);
   cursors();
 
-  logname = localStorage.getObject('logname') || "Adventurer";
+  logname = localStorage.getObject('logname') || `Adventurer`;
 
   lprcat(`Welcome to Larn. Please enter your name [<b>${logname}</b>]: `);
 
@@ -51,7 +51,7 @@ function setname(name) {
   /* if saveddata == winner, player won last time around */
   /* otherwise if saveddata exits, it's the save game file */
   if (saveddata != null) {
-    winner = saveddata == "winner";
+    winner = saveddata == `winner`;
     savegame = !winner;
   }
   /* check for a checkpoint file */
@@ -59,14 +59,14 @@ function setname(name) {
     checkpoint = localStorage.getObject('checkpoint');
   }
 
-  console.log("winner == " + winner);
-  console.log("savegame == " + savegame);
-  console.log("checkpoint == " + (checkpoint != null));
+  console.log(`winner == ` + winner);
+  console.log(`savegame == ` + savegame);
+  console.log(`checkpoint == ` + (checkpoint != null));
 
   var diff = Number(localStorage.getObject('difficulty') || 0);
   setDifficulty(diff);
 
-  if (getDifficulty() == null || getDifficulty() == "" || isNaN(Number(getDifficulty()))) {
+  if (getDifficulty() == null || getDifficulty() == `` || isNaN(Number(getDifficulty()))) {
     console.log(`HARDGAME == ${getDifficulty()}, setting to 0`);
     setDifficulty(0);
   }
@@ -103,7 +103,7 @@ function setname(name) {
 
 
 function setGameDifficulty(hard) {
-  if (hard == null || hard == "" || isNaN(Number(hard))) {
+  if (hard == null || hard == `` || isNaN(Number(hard))) {
     console.log(`hard == ${hard}, setting to ${getDifficulty()}`);
     hard = getDifficulty(); // use the default we set in setname
   }
@@ -123,13 +123,13 @@ function sethard(hard) {
 
   hard = Number(hard);
   if (isNaN(hard)) {
-    console.log("error setting difficulty, defaulting to 0");
+    console.log(`error setting difficulty, defaulting to 0`);
     hard = 0;
   }
 
   setDifficulty(Math.max(0, hard));
 
-  console.log("setting difficulty: " + getDifficulty());
+  console.log(`setting difficulty: ` + getDifficulty());
 
   var i;
   var k = getDifficulty();
@@ -175,8 +175,8 @@ function makeplayer() {
   player = new Player();
 
   /* he knows protection, magic missile */
-  learnSpell("pro");
-  learnSpell("mle");
+  learnSpell(`pro`);
+  learnSpell(`mle`);
 
   /* always know cure dianthroritis */
   learnPotion(createObject(OPOTION, 21));
@@ -240,7 +240,7 @@ function startgame(hard) {
 function mainloop(key) {
 
   if (napping) {
-    debug("napping");
+    debug(`napping`);
     return;
   }
 
@@ -349,37 +349,37 @@ function run(dir) {
 function wizardmode(password) {
 
   if (password === 'checkpoint') {
-    updateLog("reload to restart from backup checkpoint");
+    updateLog(`reload to restart from backup checkpoint`);
     var checkpoint = localStorage.getObject('checkpointbackup');
     localStorage.setObject('checkpoint', checkpoint);
     return 1;
   }
 
   if (password === 'savegame') {
-    updateLog("reload to restart from backup save game");
+    updateLog(`reload to restart from backup save game`);
     var savegame = localStorage.getObject(logname + 'backup');
     localStorage.setObject(logname, savegame);
     return 1;
   }
 
   if (password === 'debug') {
-    updateLog("debugging shortcuts enabled");
+    updateLog(`debugging shortcuts enabled`);
     enableDebug();
     return 1;
   }
 
   if (password.length == 10) {
-    updateLog("trying to load game " + password);
+    updateLog(`trying to load game ` + password);
     loadScoreStats(password);
     return 1;
   }
 
   if (password !== 'pvnert(x)') {
-    updateLog("Sorry");
+    updateLog(`Sorry`);
     return 1;
   }
 
-  //console.log("disabling wizard mode");
+  //console.log(`disabling wizard mode`);
   wizard = 1;
 
   player.TELEFLAG = 0;

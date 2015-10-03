@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 const helppages = [];
 
@@ -27,7 +27,7 @@ function print_help() {
   }
   lprcat(helppages[currentpage]);
   cursors();
-  lprcat("              ---- Press <b>space</b> for more help, <b>escape</b> to exit  ----");
+  lprcat(`              ---- Press <b>space</b> for more help, <b>escape</b> to exit  ----`);
 
   blt();
 }
@@ -35,7 +35,7 @@ function print_help() {
 
 
 helppages[0] =
-    "Welcome to the game of Larn.  At this moment, you face a great problem.\n\
+    `Welcome to the game of Larn.  At this moment, you face a great problem.\n\
 Your daughter has contracted a strange disease, and none of your home remedies\n\
 seem to have any effect.  You sense that she is in mortal danger, and you must\n\
 try to save her.  Time ago you heard of a land of great danger and opportunity.\n\
@@ -54,10 +54,10 @@ journey into these caverns.\n\
 \n\
 \n\
     Good Luck!  You're going to need it!\n\
-";
+`;
 
 helppages[1] =
-"                      <b>Help File for The Caverns of Larn</b>                 \n\
+`                      <b>Help File for The Caverns of Larn</b>                 \n\
                                                                                 \n\
  y|Y  move,run northwest     k|K  move|run up            u|U  move|run northeast\n\
  h|H  move,run left           .   stay here              l|L  move|run right    \n\
@@ -79,11 +79,11 @@ helppages[1] =
   v  print program version                                <strike>} amiga-style objects</strike> \n\
   w  wield a weapon           W  wear armor                                     \n\
   z  show scores              Z  teleport yourself        ?  this help screen   \n\
-  ";
+  `;
 
 
 helppages[2] =
-"                                <b>Special Notes</b> \n\
+`                                <b>Special Notes</b> \n\
 \n\
 When dropping gold, if you type '<b>*</b>' as your amount, all your gold gets dropped.\n\
 In general, typing in '<b>*</b>' means all of what your interested in.  This is true\n\
@@ -100,12 +100,12 @@ without having to type a space to get back to the prompt.\n\
 \n\
 If NumLock is off, the Keypad functions in the obvious way for movement. Hold\n\
 Shift when pressing any direction on the Keypad to run in that direction. The\n\
-5 key on the Keypad is the same as \"stay here\", which really means skip your\n\
+5 key on the Keypad is the same as \`stay here\`, which really means skip your\n\
 turn.\n\
-";
+`;
 
 helppages[3] =
-"                     <b>Background Information for Larn</b> \n\
+`                     <b>Background Information for Larn</b> \n\
 \n\
     Welcome to the game of Larn.  At this moment, you face a great problem.\n\
 Your daughter has contracted a strange disease, and none of your home remedies\n\
@@ -125,10 +125,10 @@ and contain much magic and treasure.  One option you have is to undertake a\n\
 journey into these caverns.\n\
 \n\
     Good Luck!  You're going to need it!\n\
-";
+`;
 
 helppages[4] =
-"                 <b>Explanation of the Larn scoreboard facility</b> \n\
+`                 <b>Explanation of the Larn scoreboard facility</b> \n\
 \n\
     Larn supports TWO scoreboards, one for winners, and one for deceased\n\
 characters.  Each player (by the name entered when you start the game)\n\
@@ -137,9 +137,9 @@ that scoreboard.  This design helps insure that frequent players of Larn\n\
 do not hog the scoreboard, and gives more players a chance for glory.  Level\n\
 of difficulty is also noted on the scoreboards, and this takes precedence\n\
 over score for determining what entry is on the scoreboard.  For example:\n\
-if \"Yar, the Bug Slayer\" has a score of 128003 on the scoreboard at diff 0,\n\
+if \`Yar, the Bug Slayer\` has a score of 128003 on the scoreboard at diff 0,\n\
 then a game at diff 1 and a score of 4112 would replace the previous\n\
 entry on the scoreboard.  Note that when a player dies, the inventory is\n\
 stored in the scoreboard so that everyone can see what items the player had\n\
 at the time of death.\n\
-";
+`;

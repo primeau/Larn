@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 var Monster = function Monster(char, desc, level, armorclass, damage, attack, defence, intelligence, gold, hitpoints, experience, awake) {
@@ -44,7 +44,7 @@ function createMonster(monst) {
 
 Monster.prototype = {
     arg: 0,
-    char: "💩",
+    char: `💩`,
     desc: null,
     level: 0,
     armorclass: 0,
@@ -66,7 +66,7 @@ Monster.prototype = {
       if (player.BLINDCOUNT == 0)
         return this.desc;
       else
-        return "monster";
+        return `monster`;
     },
 
     getChar: function() {
@@ -610,7 +610,7 @@ function hitmonster(x, y) {
   var monster = player.level.monsters[x][y];
 
   if (!monster) {
-    //debug("monster.hitmonster(): no monster at: " + xy(x, y));
+    //debug(`monster.hitmonster(): no monster at: ` + xy(x, y));
     return;
   }
 
@@ -621,12 +621,12 @@ function hitmonster(x, y) {
   var tmp = monster.armorclass + player.LEVEL + player.DEXTERITY + player.WCLASS / 4 - 12;
   //console.log(`${monster.armorclass}, ${player.LEVEL}, ${player.DEXTERITY}, ${player.WCLASS}, ${getDifficulty()}, ${tmp}`);
   if ((rnd(20) < tmp - getDifficulty()) || (rnd(71) < 5)) /* need at least random chance to hit */ {
-    updateLog("You hit the " + (blind ? "monster" : monster));
+    updateLog(`You hit the ` + (blind ? `monster` : monster));
     flag = 1;
     damage = fullhit(1);
     if (damage < 9999) damage = rnd(damage) + 1;
   } else {
-    updateLog("You missed the " + (blind ? "monster" : monster));
+    updateLog(`You missed the ` + (blind ? `monster` : monster));
     flag = 0;
   }
   if (flag == 1) { /* if the monster was hit */
@@ -905,7 +905,7 @@ function spattack(x, xx, yy) {
         break;
       }
       updateLog(`The ${monster} picks your pocket and takes: `);
-      if (stealsomething() == 0) updateLog("  nothing");
+      if (stealsomething() == 0) updateLog(`  nothing`);
       player.level.monsters[xx][yy] = null;
       player.level.know[xx][yy] &= ~KNOWHERE;
       recalc();

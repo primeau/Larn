@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 /*
  * generate random numbers 1<=rnd(N)<=N
@@ -44,14 +44,14 @@ function debug(text) {
 
 
 
-var KEYBOARD_INPUT = "";
+var KEYBOARD_INPUT = ``;
 
 
 
 function prepare_direction_event(direction_event) {
   setCharCallback(getdirectioninput);
   keyboard_input_callback = direction_event;
-  updateLog("  In what direction? ");
+  updateLog(`  In what direction? `);
 }
 
 
@@ -60,7 +60,7 @@ function prepare_direction_event(direction_event) {
 function getdirectioninput(key, code) {
   //debug(`getdirectioninput: ${key} ${code}`);
   if (key == ESC) {
-    appendLog(" cancelled");
+    appendLog(` cancelled`);
     nomove = 1;
     keyboard_input_callback = null;
     return 1;
@@ -163,7 +163,7 @@ function getInput_done() {
       keyboard_input_callback = null;
     }
   }
-  KEYBOARD_INPUT = "";
+  KEYBOARD_INPUT = ``;
   return done;
 }
 
@@ -196,7 +196,7 @@ function getIndexFromChar(char) {
   if (!isalpha(char)) {
     return -1;
   }
-  var acode = "a".charCodeAt(0);
+  var acode = `a`.charCodeAt(0);
   var dropcode = char.charCodeAt(0);
   var dropIndex = dropcode - acode;
   return dropIndex;
@@ -251,7 +251,7 @@ Storage.prototype.getObject = function(key) {
 
 
 function pad(str, width, bold) {
-  return padString("" + str, width, bold);
+  return padString(`` + str, width, bold);
 }
 
 
@@ -261,7 +261,7 @@ function padString(str, width, lastBoldTime) {
   if (!width || width == 0) return str;
   var now = millis();
   var numspaces = Math.max(0, Math.abs(width) + 1 - str.length);
-  var spaces = Array(numspaces).join(" ");
+  var spaces = Array(numspaces).join(` `);
   var boldStart = ((now - lastBoldTime) < BOLDDELAY) ? `<mark>` : ``;
   var boldEnd = ((now - lastBoldTime) < BOLDDELAY) ? `</mark>` : ``;
   if (width < 0) {

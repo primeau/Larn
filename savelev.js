@@ -1,10 +1,10 @@
-"use strict";
+`use strict`;
 
 function saveGame(isCheckPoint) {
 
   if (wizard || cheat) {
     if (isCheckPoint) {
-      console.log("not saving wizard/cheater checkpoint");
+      console.log(`not saving wizard/cheater checkpoint`);
       return;
     }
   }
@@ -36,7 +36,7 @@ function saveGame(isCheckPoint) {
     updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
   }
 
-  console.log("saved hash: " + hash.digest().toHex());
+  console.log(`saved hash: ` + hash.digest().toHex());
   localStorage.setObject('hash', hash.digest().toHex());
 }
 
@@ -44,7 +44,7 @@ function saveGame(isCheckPoint) {
 
 function loadSavedGame(savedState, isCheckPoint) {
   if (!savedState) {
-    updateLog("Sorry, I can't find your save game file!");
+    updateLog(`Sorry, I can't find your save game file!`);
     return;
   }
 
@@ -57,22 +57,22 @@ function loadSavedGame(savedState, isCheckPoint) {
   var hash = forge.md.sha512.create();
   hash.update(JSON.stringify(savedState));
 
-  console.log("computed hash: " + hash.digest().toHex());
+  console.log(`computed hash: ` + hash.digest().toHex());
 
   var savedHash = localStorage.getObject('hash', hash);
-  console.log("saved hash: " + savedHash);
+  console.log(`saved hash: ` + savedHash);
 
   cheat = hash.digest().toHex() != savedHash;
-  console.log("cheater? " + cheat);
+  console.log(`cheater? ` + cheat);
 
   if (isCheckPoint) {
-    updateLog("Welcome back. I saved your game for you. (Your backup file has now been deleted)");
+    updateLog(`Welcome back. I saved your game for you. (Your backup file has now been deleted)`);
   } else {
-    updateLog("Welcome back. (Your save file has now been been deleted)");
+    updateLog(`Welcome back. (Your save file has now been been deleted)`);
   }
 
   if (cheat) {
-    updateLog("Have you been cheating?");
+    updateLog(`Have you been cheating?`);
   }
 
   /* clear the saved game file */

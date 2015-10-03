@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 /*
@@ -8,7 +8,7 @@
 */
 function act_drink_fountain() {
   if (rnd(1501) < 2) {
-    updateLog("  Oops! You seem to have caught the dreadful sleep!");
+    updateLog(`  Oops! You seem to have caught the dreadful sleep!`);
     beep();
     died(280, false); /* fell into the dreadful sleep */
     return;
@@ -17,12 +17,12 @@ function act_drink_fountain() {
   var x = rnd(100);
   if (x < 7) {
     player.HALFDAM += 200 + rnd(200);
-    updateLog("  You feel a sickness coming on");
+    updateLog(`  You feel a sickness coming on`);
   } else if (x < 13)
     quaffpotion(createObject(OPOTION, 23), false); /* see invisible,but don't know the potion */
 
   else if (x < 45)
-    updateLog("  Nothing seems to have happened");
+    updateLog(`  Nothing seems to have happened`);
 
   else if (rnd(3) != 2)
     fntchange(1); /*  change char levels upward   */
@@ -31,7 +31,7 @@ function act_drink_fountain() {
     fntchange(-1); /*  change char levels downward */
 
   if (rnd(12) < 3) {
-    updateLog("  The fountains bubbling slowly quiets");
+    updateLog(`  The fountains bubbling slowly quiets`);
     setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
     player.level.know[player.x][player.y] = 0;
   }
@@ -52,13 +52,13 @@ function act_wash_fountain() {
     lastnum = 273; /* drank some poisonous water */
     player.losehp(x);
   } else if (rnd(100) < 29) {
-    updateLog("  You got the dirt off!");
+    updateLog(`  You got the dirt off!`);
   } else if (rnd(100) < 31) {
-    updateLog("  This water seems to be hard water!  The dirt didn't come off!");
+    updateLog(`  This water seems to be hard water!  The dirt didn't come off!`);
   } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {
     createmonster(WATERLORD); /*    make water lord     */
   } else {
-    updateLog("  Nothing seems to have happened");
+    updateLog(`  Nothing seems to have happened`);
   }
   return;
 }
@@ -74,32 +74,32 @@ function fntchange(how) {
   how = how / Math.abs(how);
   switch (rnd(9)) {
     case 1:
-      updateLog("  Your strength");
+      updateLog(`  Your strength`);
       player.setStrength(player.STRENGTH + how);
       fch(how);
       break;
     case 2:
-      updateLog("  Your intelligence");
+      updateLog(`  Your intelligence`);
       player.setIntelligence(player.INTELLIGENCE + how);
       fch(how);
       break;
     case 3:
-      updateLog("  Your wisdom");
+      updateLog(`  Your wisdom`);
       player.setWisdom(player.WISDOM + how);
       fch(how);
       break;
     case 4:
-      updateLog("  Your constitution");
+      updateLog(`  Your constitution`);
       player.setConstitution(player.CONSTITUTION + how);
       fch(how);
       break;
     case 5:
-      updateLog("  Your dexterity");
+      updateLog(`  Your dexterity`);
       player.setDexterity(player.DEXTERITY + how);
       fch(how);
       break;
     case 6:
-      updateLog("Your charm");
+      updateLog(`Your charm`);
       player.setCharisma(player.CHARISMA + how);
       fch(how);
       break;
@@ -151,9 +151,9 @@ function fntchange(how) {
 */
 function fch(how) {
   if (how < 0) {
-    appendLog(" went down by one!");
+    appendLog(` went down by one!`);
   } else {
-    appendLog(" went up by one!");
+    appendLog(` went up by one!`);
   }
 }
 
@@ -161,7 +161,7 @@ function fch(how) {
 
 function exclaim(num) {
     if (num > 1) {
-      appendLog("s!");
+      appendLog(`s!`);
     } else {
       appendLog('!');
     }
@@ -175,9 +175,9 @@ function exclaim(num) {
 function drink_fountain() {
   var item = itemAt(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
-    updateLog("There is no water to drink!");
+    updateLog(`There is no water to drink!`);
   } else if (!item.matches(OFOUNTAIN)) {
-    updateLog("I see no fountain to drink from here!");
+    updateLog(`I see no fountain to drink from here!`);
   } else {
     act_drink_fountain();
   }
@@ -192,9 +192,9 @@ function drink_fountain() {
 function wash_fountain() {
   var item = itemAt(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
-    updateLog("There is no water to wash in!");
+    updateLog(`There is no water to wash in!`);
   } else if (!item.matches(OFOUNTAIN)) {
-    updateLog("I see no fountain to wash at here!");
+    updateLog(`I see no fountain to wash at here!`);
   } else {
     act_wash_fountain();
   }

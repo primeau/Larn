@@ -1,10 +1,10 @@
-"use strict";
+`use strict`;
 
 const ESC = 'escape';
 const ENTER = 'return';
 const SPACE = 'space';
 const TAB = 'tab';
-const DEL = "backspace";
+const DEL = `backspace`;
 
 
 
@@ -14,7 +14,7 @@ var keyboard_input_callback;
 
 
 function mousetrap(e, key) {
-  //console.log("mousetrap: " + key);
+  //console.log(`mousetrap: ` + key);
   if (key == SPACE) key = ' ';
   if (key == TAB) return false;
   mainloop(key);
@@ -90,14 +90,14 @@ function parse(key) {
   // console.log(`parse(): got: ${key}`);
 
   // if (keyboard_input_callback)
-  // debug("keyboard_input_callback: " + keyboard_input_callback.name);
+  // debug(`keyboard_input_callback: ` + keyboard_input_callback.name);
 
   if (blocking_callback) {
-    // debug(blocking_callback.name + ": ");
+    // debug(blocking_callback.name + `: `);
     var before = blocking_callback.name;
     var done = blocking_callback(key);
     var after = blocking_callback.name;
-    // debug(blocking_callback.name + ": " + done);
+    // debug(blocking_callback.name + `: ` + done);
 
     // if a blocking callback assigns a new one, we're not done yet
     // i think i have created my own special callback hell
@@ -158,7 +158,7 @@ function parse(key) {
   //
   if (key == 'd') {
     if (player.TIMESTOP == 0) {
-      updateLog("What do you want to drop [<b>space</b> to view] ? ");
+      updateLog(`What do you want to drop [<b>space</b> to view] ? `);
       setCharCallback(drop_object);
     }
     return;
@@ -173,7 +173,7 @@ function parse(key) {
         outfortune();
         forget();
       } else {
-        updateLog("What do you want to eat [<b>space</b> to view] ? ");
+        updateLog(`What do you want to eat [<b>space</b> to view] ? `);
         setCharCallback(act_eatcookie);
       }
     return;
@@ -212,7 +212,7 @@ function parse(key) {
   if (key == 'o' || key == 'O') {
     /* check for confusion. */
     if (player.CONFUSE > 0) {
-      updateLog("You're too confused!");
+      updateLog(`You're too confused!`);
       beep();
       return;
     }
@@ -249,7 +249,7 @@ function parse(key) {
         forget();
         quaffpotion(item, true);
       } else {
-        updateLog("What do you want to quaff [<b>space</b> to view] ? ");
+        updateLog(`What do you want to quaff [<b>space</b> to view] ? `);
         setCharCallback(act_quaffpotion);
       }
     return;
@@ -261,7 +261,7 @@ function parse(key) {
   if (key == 'r') {
     if (player.BLINDCOUNT > 0) {
       cursors();
-      updateLog("You can't read anything when you're blind!");
+      updateLog(`You can't read anything when you're blind!`);
       dropflag = 1;
     }
     //
@@ -273,7 +273,7 @@ function parse(key) {
         forget();
         read_scroll(item);
       } else {
-        updateLog("What do you want to read [<b>space</b> to view] ? ");
+        updateLog(`What do you want to read [<b>space</b> to view] ? `);
         setCharCallback(act_read_something);
       }
     }
@@ -304,8 +304,8 @@ function parse(key) {
   if (key == 'v') {
     nomove = 1;
     updateLog(`JS Larn, Version ${VERSION} build ${BUILD} -- Difficulty ${getDifficulty()}`);
-    if (wizard) updateLog(" Wizard");
-    if (cheat) updateLog(" Cheater");
+    if (wizard) updateLog(` Wizard`);
+    if (cheat) updateLog(` Cheater`);
     return;
   }
 
@@ -316,7 +316,7 @@ function parse(key) {
     if (item.canWield()) {
       wield(item);
     } else {
-      updateLog("What do you want to wield (-) for nothing [<b>space</b> to view] ? ");
+      updateLog(`What do you want to wield (-) for nothing [<b>space</b> to view] ? `);
       setCharCallback(wield);
     }
     return;
@@ -345,7 +345,7 @@ function parse(key) {
   if (key == 'C') {
     /* check for confusion. */
     if (player.CONFUSE > 0) {
-      updateLog("You're too confused!");
+      updateLog(`You're too confused!`);
       beep();
       return;
     }
@@ -394,7 +394,7 @@ function parse(key) {
     if (outstanding_taxes > 0)
       updateLog(`You presently owe ${outstanding_taxes} gold pieces in taxes`);
     else
-      updateLog("You do not owe any taxes");
+      updateLog(`You do not owe any taxes`);
     return;
   }
 
@@ -404,18 +404,18 @@ function parse(key) {
   if (key == 'Q') {
     nomove = 1;
     setCharCallback(parseQuit);
-    updateLog("Do you really want to quit (all progress will be lost) [<b>y</b>/<b>n</b>] ? ")
+    updateLog(`Do you really want to quit (all progress will be lost) [<b>y</b>/<b>n</b>] ? `)
     return;
   }
 
   function parseQuit(key) {
     nomove = 1;
     if (key == ESC || key == 'n' || key == 'N') {
-      appendLog(" no");
+      appendLog(` no`);
       return 1;
     }
     if (key == 'y' || key == 'Y') {
-      appendLog(" yes");
+      appendLog(` yes`);
       died(286, false); /* a quitter */
       return 1;
     }
@@ -447,13 +447,13 @@ function parse(key) {
   if (key == 'T') {
     if (player.SHIELD) {
       player.SHIELD = null;
-      updateLog("Your shield is off");
+      updateLog(`Your shield is off`);
     } else
     if (player.WEAR) {
       player.WEAR = null;
-      updateLog("Your armor is off");
+      updateLog(`Your armor is off`);
     } else
-      updateLog("You aren't wearing anything");
+      updateLog(`You aren't wearing anything`);
     return;
   }
 
@@ -464,7 +464,7 @@ function parse(key) {
     if (item.isArmor()) {
       wear(item);
     } else {
-      updateLog("What do you want to wear [<b>space</b> to view] ? ");
+      updateLog(`What do you want to wear [<b>space</b> to view] ? `);
       setCharCallback(wear);
     }
     return;
@@ -479,7 +479,7 @@ function parse(key) {
       return;
     }
     cursors();
-    updateLog("As yet, you don't have enough experience to use teleportation");
+    updateLog(`As yet, you don't have enough experience to use teleportation`);
     return;
   }
 
@@ -541,7 +541,7 @@ function parse(key) {
       }
     }
     if (flag == 0)
-      updateLog("No traps are visible");
+      updateLog(`No traps are visible`);
     return;
   }
 
@@ -559,7 +559,7 @@ function parse(key) {
   if (key == '@') {
     nomove = 1;
     auto_pickup = !auto_pickup;
-    updateLog(`Auto-pickup: ${auto_pickup ? "on" : "off"}`);
+    updateLog(`Auto-pickup: ${auto_pickup ? `on` : `off`}`);
     return;
   }
 
@@ -579,7 +579,7 @@ function parse(key) {
   //
   if (key == '_') {
     nomove = 1;
-    updateLog("Enter Password: ");
+    updateLog(`Enter Password: `);
     setTextCallback(wizardmode);
     return;
   }

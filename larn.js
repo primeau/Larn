@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 const VERSION = '12.4.5';
 const BUILD = '216';
@@ -15,7 +15,7 @@ var DEBUG_PROXIMITY = false;
 
 function play() {
 
-  Parse.initialize("ZG6aY4DKdkKn39YGogG0WFhqk089WTqVWprNfijo", "Ioo0zvIxR5xvkf6lQQDW9A7YHaNyOItSDFb756Um");
+  Parse.initialize(`ZG6aY4DKdkKn39YGogG0WFhqk089WTqVWprNfijo`, `Ioo0zvIxR5xvkf6lQQDW9A7YHaNyOItSDFb756Um`);
 
   initKeyBindings();
 
@@ -37,7 +37,7 @@ function play() {
 
 function confirmExit() {
   if (!GAMEOVER)
-    return "Are you sure? Your game will be lost!";
+    return `Are you sure? Your game will be lost!`;
 }
 
 
@@ -106,10 +106,10 @@ function eventToggleOriginalObjects() {
   nomove = 1;
   original_objects = !original_objects;
   // if (original_objects)
-  //   document.getElementById("toggleObjects").value = "  Hack Style Objects  ";
+  //   document.getElementById(`toggleObjects`).value = `  Hack Style Objects  `;
   // else
-  //   document.getElementById("toggleObjects").value = "  Larn Style Objects  ";
-  updateLog(`hack-style objects: ${original_objects ? "off" : "on"}`);
+  //   document.getElementById(`toggleObjects`).value = `  Larn Style Objects  `;
+  updateLog(`hack-style objects: ${original_objects ? `off` : `on`}`);
   paint();
 }
 
@@ -119,7 +119,7 @@ function eventToggleOriginalObjects() {
 function eventToggleAmigaMode() {
   nomove = 1;
   amiga_mode = !amiga_mode;
-  updateLog(`amiga-style objects: ${amiga_mode ? "on" : "off"}`);
+  updateLog(`amiga-style objects: ${amiga_mode ? `on` : `off`}`);
   paint();
 }
 
@@ -129,7 +129,7 @@ function eventToggleDebugStats() {
   nomove = 1;
   debug_used = 1;
   DEBUG_STATS = !DEBUG_STATS;
-  updateLog("DEBUG_STATS: " + DEBUG_STATS);
+  updateLog(`DEBUG_STATS: ` + DEBUG_STATS);
   paint();
 }
 
@@ -139,7 +139,7 @@ function eventToggleDebugOutput() {
   nomove = 1;
   debug_used = 1;
   DEBUG_OUTPUT = !DEBUG_OUTPUT;
-  updateLog("DEBUG_OUTPUT: " + DEBUG_OUTPUT);
+  updateLog(`DEBUG_OUTPUT: ` + DEBUG_OUTPUT);
   paint();
 }
 
@@ -149,7 +149,7 @@ function eventToggleDebugWTW() {
   nomove = 1;
   debug_used = 1;
   player.updateWTW(player.WTW == 0 ? 100000 : -player.WTW);
-  updateLog("DEBUG_WALK_THROUGH_WALLS: " + (player.WTW > 0));
+  updateLog(`DEBUG_WALK_THROUGH_WALLS: ` + (player.WTW > 0));
   paint();
 }
 
@@ -159,7 +159,7 @@ function eventToggleDebugStairs() {
   nomove = 1;
   debug_used = 1;
   DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
-  updateLog("DEBUG_STAIRS_EVERYWHERE: " + DEBUG_STAIRS_EVERYWHERE);
+  updateLog(`DEBUG_STAIRS_EVERYWHERE: ` + DEBUG_STAIRS_EVERYWHERE);
   paint();
 }
 
@@ -178,7 +178,7 @@ function eventToggleDebugKnowAll() {
   for (var i = 0; i < POTION_NAMES.length; i++) {
     learnPotion(createObject(OPOTION, i));
   }
-  updateLog("DEBUG_KNOW_ALL: " + DEBUG_KNOW_ALL);
+  updateLog(`DEBUG_KNOW_ALL: ` + DEBUG_KNOW_ALL);
   paint();
 }
 
@@ -190,11 +190,11 @@ function eventToggleDebugStealth() {
   if (player.STEALTH <= 0) {
     player.updateHoldMonst(100000);
     player.updateStealth(100000);
-    updateLog("DEBUG: FREEZING MONSTERS");
+    updateLog(`DEBUG: FREEZING MONSTERS`);
   } else {
     player.updateHoldMonst(-player.HOLDMONST);
     player.updateStealth(-player.STEALTH);
-    updateLog("DEBUG: UNFREEZING MONSTERS");
+    updateLog(`DEBUG: UNFREEZING MONSTERS`);
   }
   paint();
 }
@@ -206,10 +206,10 @@ function eventToggleDebugAwareness() {
   debug_used = 1;
   if (player.AWARENESS <= 0) {
     player.AWARENESS = 100000;
-    updateLog("DEBUG: EXPANDED AWARENESS++");
+    updateLog(`DEBUG: EXPANDED AWARENESS++`);
   } else {
     player.AWARENESS = 0;
-    updateLog("DEBUG: EXPANDED AWARENESS--");
+    updateLog(`DEBUG: EXPANDED AWARENESS--`);
   }
   paint();
 }
@@ -221,10 +221,10 @@ function eventToggleDebugImmortal() {
   debug_used = 1;
   if (player.LIFEPROT <= 0) {
     player.LIFEPROT = 100000;
-    updateLog("DEBUG: LIFE PROTECTION++");
+    updateLog(`DEBUG: LIFE PROTECTION++`);
   } else {
     player.LIFEPROT = 0;
-    updateLog("DEBUG: LIFE PROTECTION--");
+    updateLog(`DEBUG: LIFE PROTECTION--`);
   }
   paint();
 }
@@ -236,6 +236,6 @@ function eventToggleDebugProximity() {
   debug_used = 1;
   DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
   if (!DEBUG_PROXIMITY) mazeMode = true;
-  updateLog("DEBUG: PROXIMITY: " + DEBUG_PROXIMITY);
+  updateLog(`DEBUG: PROXIMITY: ` + DEBUG_PROXIMITY);
   paint();
 }

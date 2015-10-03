@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 var Player = function Player() {
   this.inventory = [];
@@ -228,7 +228,7 @@ var Player = function Player() {
     if (player.LEVEL != oldLevel) {
       beep();
       changedLevel = millis();
-      updateLog("Welcome to level " + player.LEVEL); /* if we changed levels */
+      updateLog(`Welcome to level ` + player.LEVEL); /* if we changed levels */
     }
   };
 
@@ -504,7 +504,7 @@ WIS=${pad(this.WISDOM,-2, changedWIS)} \
 CON=${pad(this.CONSTITUTION,-2,changedCON)} \
 DEX=${pad(this.DEXTERITY,-2,changedDEX)} \
 CHA=${pad(this.CHARISMA,-2,changedCHA)} \
-LV: ${pad((this.TELEFLAG ? "?" : templevel),-2,changedDepth)} \
+LV: ${pad((this.TELEFLAG ? `?` : templevel),-2,changedDepth)} \
 Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)} `;
 
     return output;
@@ -564,17 +564,17 @@ var changedProtectionTime = 0;
 var changedWTW = 0;
 
 /*
- *  ifblind(x,y)    Routine to put "monster" or the monster name into lastmosnt
+ *  ifblind(x,y)    Routine to put `monster` or the monster name into lastmosnt
  *      int x,y;
  *
- *  Subroutine to copy the word "monster" into lastmonst if the player is blind
+ *  Subroutine to copy the word `monster` into lastmonst if the player is blind
  *  Enter with the coordinates (x,y) of the monster
  *  Returns true or false.
  */
 function ifblind(x, y) {
   if (player.BLINDCOUNT > 0) {
     lastnum = 279; /* demolished by an unseen attacker */
-    lastmonst = "monster";
+    lastmonst = `monster`;
     return true;
   } else {
     lastnum = player.level.monsters[x][y];
@@ -593,7 +593,7 @@ function wield(index) {
 
   // player is over a weapon
   if (item.canWield()) {
-    appendLog(" wield");
+    appendLog(` wield`);
     if (take(item)) {
       forget(); // remove from board
     } else {
@@ -615,7 +615,7 @@ function wield(index) {
     }
     if (index == '-') {
       if (player.WIELD) {
-        updateLog("You weapon is sheathed");
+        updateLog(`You weapon is sheathed`);
         player.WIELD = null;
       }
       mazeMode = true;
@@ -639,7 +639,7 @@ function wield(index) {
     }
 
     if (!item.canWield()) {
-      updateLog("  You can't wield that!");
+      updateLog(`  You can't wield that!`);
       mazeMode = true;
       return 1;
     }
@@ -647,7 +647,7 @@ function wield(index) {
 
   // common cases for both
   if (player.SHIELD && item.matches(O2SWORD)) {
-    updateLog("  But one arm is busy with your shield!");
+    updateLog(`  But one arm is busy with your shield!`);
     mazeMode = true;
     return 1;
   }
@@ -673,7 +673,7 @@ function wear(index) {
 
   // player is over some armor
   if (item.isArmor()) {
-    appendLog(" wear");
+    appendLog(` wear`);
     if (take(item)) {
       forget(); // remove from board
     } else {
@@ -721,14 +721,14 @@ function wear(index) {
     player.WEAR = item;
   } else if (item.matches(OSHIELD)) {
     if (player.WIELD && player.WIELD.matches(O2SWORD)) {
-      updateLog("  Your hands are busy with the two handed sword!");
+      updateLog(`  Your hands are busy with the two handed sword!`);
       mazeMode = true;
       return 1;
     } else {
       player.SHIELD = item;
     }
   } else {
-    updateLog("  You can't wear that!");
+    updateLog(`  You can't wear that!`);
     mazeMode = true;
     return 1;
   }
@@ -755,100 +755,100 @@ function game_stats(p, score) {
     tmprmst = score.extra[EXTRA_RMST];
   }
 
-  var s = "";
+  var s = ``;
 
-  s += "Inventory:\n";
-  s += ".) " + Number(p.GOLD).toLocaleString() + " gold pieces\n";
-  var c = "a";
+  s += `Inventory:\n`;
+  s += `.) ` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
+  var c = `a`;
   for (var inven = 0; inven < p.inventory.length; inven++) {
     var item = p.inventory[inven];
     if (item) {
-      s += c.nextChar(inven) + ") " + item.toString(true, true) + "\n";
+      s += c.nextChar(inven) + `) ` + item.toString(true, true) + `\n`;
     }
   }
 
   s += `\nBank Account:\n`;
-  s += Number(p.BANKACCOUNT).toLocaleString() + " gold pieces\n";
+  s += Number(p.BANKACCOUNT).toLocaleString() + ` gold pieces\n`;
 
   s += `\nBonuses:\n`;
-  s += "+AC:   " + p.MOREDEFENSES + "\n";
-  s += "STREX: " + p.STREXTRA + "\n";
-  s += "GIAST: " + p.GIANTSTR + "\n";
-  s += "HERO:  " + p.HERO + "\n";
-  s += "AWARE: " + p.AWARENESS + "\n";
-  s += "SEEIN: " + p.SEEINVISIBLE + "\n";
-  s += "SPRO:  " + p.SPIRITPRO + "\n";
-  s += "UPRO:  " + p.UNDEADPRO + "\n";
-  s += "FIRE:  " + p.FIRERESISTANCE + "\n";
-  s += "STEL:  " + p.STEALTH + "\n";
-  s += "LIFE:  " + p.LIFEPROT + "\n";
+  s += `+AC:   ` + p.MOREDEFENSES + `\n`;
+  s += `STREX: ` + p.STREXTRA + `\n`;
+  s += `GIAST: ` + p.GIANTSTR + `\n`;
+  s += `HERO:  ` + p.HERO + `\n`;
+  s += `AWARE: ` + p.AWARENESS + `\n`;
+  s += `SEEIN: ` + p.SEEINVISIBLE + `\n`;
+  s += `SPRO:  ` + p.SPIRITPRO + `\n`;
+  s += `UPRO:  ` + p.UNDEADPRO + `\n`;
+  s += `FIRE:  ` + p.FIRERESISTANCE + `\n`;
+  s += `STEL:  ` + p.STEALTH + `\n`;
+  s += `LIFE:  ` + p.LIFEPROT + `\n`;
 
   s += `\nMagic:\n`;
-  s += "PRO2:  " + p.PROTECTIONTIME + "\n";
-  s += "DEX:   " + p.DEXCOUNT + "\n";
-  s += "CHM:   " + p.CHARMCOUNT + "\n";
-  s += "STR:   " + p.STRCOUNT + "\n";
-  s += "INV:   " + p.INVISIBILITY + "\n";
-  s += "CAN:   " + p.CANCELLATION + "\n";
-  s += "HAS:   " + p.HASTESELF + "\n";
-  s += "GLO:   " + p.GLOBE + "\n";
-  s += "SCA:   " + p.SCAREMONST + "\n";
-  s += "HLD:   " + p.HOLDMONST + "\n";
-  s += "STP:   " + p.TIMESTOP + "\n";
-  s += "WTW:   " + p.WTW + "\n";
-  s += "PRO3:  " + p.ALTPRO + "\n";
+  s += `PRO2:  ` + p.PROTECTIONTIME + `\n`;
+  s += `DEX:   ` + p.DEXCOUNT + `\n`;
+  s += `CHM:   ` + p.CHARMCOUNT + `\n`;
+  s += `STR:   ` + p.STRCOUNT + `\n`;
+  s += `INV:   ` + p.INVISIBILITY + `\n`;
+  s += `CAN:   ` + p.CANCELLATION + `\n`;
+  s += `HAS:   ` + p.HASTESELF + `\n`;
+  s += `GLO:   ` + p.GLOBE + `\n`;
+  s += `SCA:   ` + p.SCAREMONST + `\n`;
+  s += `HLD:   ` + p.HOLDMONST + `\n`;
+  s += `STP:   ` + p.TIMESTOP + `\n`;
+  s += `WTW:   ` + p.WTW + `\n`;
+  s += `PRO3:  ` + p.ALTPRO + `\n`;
 
   s += `\nCurses:\n`;
-  s += "AGGR:  " + p.AGGRAVATE + "\n";
-  s += "HSTM:  " + p.HASTEMONST + "\n";
-  s += "POIS:  " + p.HALFDAM + "\n";
-  s += "CONF:  " + p.CONFUSE + "\n";
-  s += "BLIND: " + p.BLINDCOUNT + "\n";
-  s += "ITCH:  " + p.ITCHING + "\n";
-  s += "CLMSY: " + p.CLUMSINESS + "\n";
+  s += `AGGR:  ` + p.AGGRAVATE + `\n`;
+  s += `HSTM:  ` + p.HASTEMONST + `\n`;
+  s += `POIS:  ` + p.HALFDAM + `\n`;
+  s += `CONF:  ` + p.CONFUSE + `\n`;
+  s += `BLIND: ` + p.BLINDCOUNT + `\n`;
+  s += `ITCH:  ` + p.ITCHING + `\n`;
+  s += `CLMSY: ` + p.CLUMSINESS + `\n`;
 
   s += `\nSpecial Items:\n`;
-  s += "THEFT: " + p.NOTHEFT + "\n";
-  s += "CUBE:  " + p.CUBEofUNDEAD + "\n";
-  s += "ORB:   " + p.SLAYING + "\n";
-  s += "NEGAT: " + p.NEGATESPIRIT + "\n";
+  s += `THEFT: ` + p.NOTHEFT + `\n`;
+  s += `CUBE:  ` + p.CUBEofUNDEAD + `\n`;
+  s += `ORB:   ` + p.SLAYING + `\n`;
+  s += `NEGAT: ` + p.NEGATESPIRIT + `\n`;
 
   s += `\nLocation:\nx,y:   ${p.x},${p.y}\n`;
 
   s += `\nCounters:\n`;
-  s += "TIME:  " + tmpgtime + "\n";
-  s += "RMST:  " + tmprmst + "\n";
+  s += `TIME:  ` + tmpgtime + `\n`;
+  s += `RMST:  ` + tmprmst + `\n`;
   s += `ENERG: ${p.ENERGY}, ${p.ECOUNTER}\n`;
   s += `REGEN: ${p.REGEN}, ${p.REGENCOUNTER}\n`;
 
   s += `\nStats:\n`;
-  s += "MOVES: " + p.MOVESMADE + "\n";
-  s += "KILLS: " + p.MONSTKILLED + "\n";
-  s += "CAST:  " + p.SPELLSCAST + "\n";
-  // s += "PAINT: " + DEBUG_PAINT + "\n";
-  // s += "LPR:   " + DEBUG_LPRCAT + "\n";
-  // s += "LPRC:  " + DEBUG_LPRC + "\n";
+  s += `MOVES: ` + p.MOVESMADE + `\n`;
+  s += `KILLS: ` + p.MONSTKILLED + `\n`;
+  s += `CAST:  ` + p.SPELLSCAST + `\n`;
+  // s += `PAINT: ` + DEBUG_PAINT + `\n`;
+  // s += `LPR:   ` + DEBUG_LPRCAT + `\n`;
+  // s += `LPRC:  ` + DEBUG_LPRC + `\n`;
 
-  s += "\nKnown Spells:\n";
+  s += `\nKnown Spells:\n`;
   var count = 0;
   for (var spell = 0; spell < p.knownSpells.length; spell++) {
     var tmp = p.knownSpells[spell];
     if (tmp) {
-      s += tmp + " ";
+      s += tmp + ` `;
       if (++count % 3 == 0)
-        s += "\n";
+        s += `\n`;
     }
   }
-  if (count % 3) s += "\n";
-  s += "\nKnown Scrolls:\n";
+  if (count % 3) s += `\n`;
+  s += `\nKnown Scrolls:\n`;
   for (var scroll = 0; scroll < p.knownScrolls.length; scroll++) {
     var tmp = p.knownScrolls[scroll];
-    if (tmp) s += SCROLL_NAMES[tmp.arg] + "\n";
+    if (tmp) s += SCROLL_NAMES[tmp.arg] + `\n`;
   }
-  s += "\nKnown Potions:\n";
+  s += `\nKnown Potions:\n`;
   for (var potion = 0; potion < p.knownPotions.length; potion++) {
     var tmp = p.knownPotions[potion];
-    if (tmp) s += POTION_NAMES[tmp.arg] + "\n";
+    if (tmp) s += POTION_NAMES[tmp.arg] + `\n`;
   }
 
   return s;

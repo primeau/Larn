@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 function learnSpell(spell) {
   //debug(`learning ${spell} ${spelcode.indexOf(spell)}`)
@@ -13,7 +13,7 @@ function forgetSpell(spellnum) {
 
 
 
-var eys = "Enter your spell: ";
+var eys = `Enter your spell: `;
 var spellToCast = null;
 
 
@@ -23,10 +23,10 @@ function pre_cast() {
   nomove = 1;
   if (player.SPELLS > 0) {
     updateLog(eys);
-    spellToCast = "";
+    spellToCast = ``;
     setCharCallback(cast);
   } else {
-    updateLog("You don't have any spells!");
+    updateLog(`You don't have any spells!`);
   }
 }
 
@@ -36,7 +36,7 @@ function cast(key) {
 
   nomove = 1;
 
-  if (key == 'I' || key == " ") {
+  if (key == 'I' || key == ` `) {
     seemagic(true);
     setCharCallback(parse_see_spells);
     if (!spellToCast) updateLog(eys);
@@ -74,7 +74,7 @@ function cast(key) {
     speldamage(spellnum);
   } else {
     nomove = 0;
-    updateLog("  Nothing Happened ");
+    updateLog(`  Nothing Happened `);
     //bottomline();
   }
 
@@ -96,19 +96,19 @@ function speldamage(x) {
 
   /* not if time stopped */
   if (player.TIMESTOP) {
-    updateLog("  It didn't seem to work");
+    updateLog(`  It didn't seem to work`);
     return;
   }
 
   var clev = player.LEVEL;
   if ((rnd(23) == 7) || (rnd(18) > player.INTELLIGENCE)) {
     nomove = 0;
-    updateLog("  It didn't work!");
+    updateLog(`  It didn't work!`);
     return;
   }
   if (clev * 3 + 2 < x) {
     nomove = 0;
-    updateLog("  Nothing happens.  You seem inexperienced at this");
+    updateLog(`  Nothing happens.  You seem inexperienced at this`);
     return;
   }
 
@@ -235,7 +235,7 @@ function speldamage(x) {
 
     case 19:
       /* cloud kill */
-      omnidirect(x, 30 + rnd(10), "gasps for air");
+      omnidirect(x, 30 + rnd(10), `gasps for air`);
       return;
 
     case 20:
@@ -302,7 +302,7 @@ function speldamage(x) {
 
     case 25:
       /* flood */
-      omnidirect(x, 32 + clev, "struggles for air in your flood!");
+      omnidirect(x, 32 + clev, `struggles for air in your flood!`);
       return;
 
     case 26:
@@ -311,7 +311,7 @@ function speldamage(x) {
         prepare_direction_event(spell_finger);
       } else {
         beep();
-        updateLog("  Your heart stopped!");
+        updateLog(`  Your heart stopped!`);
         //nap(4000);
         died(270, false); /* erased by a wayward finger */
       }
@@ -341,7 +341,7 @@ function speldamage(x) {
 
     case 31:
       /* magic fire */
-      omnidirect(x, 35 + rnd(10) + clev, "cringes from the flame");
+      omnidirect(x, 35 + rnd(10) + clev, `cringes from the flame`);
       return;
 
       /* ----- LEVEL 6 SPELLS ----- */
@@ -350,7 +350,7 @@ function speldamage(x) {
       /* sphere of annihilation */
       if ((rnd(23) == 5) && (wizard == 0)) {
         //beep();
-        updateLog("You have been enveloped by the zone of nothingness!");
+        updateLog(`You have been enveloped by the zone of nothingness!`);
         //nap(4000);
         died(258, false); /* self - annihilated */
         return;
@@ -361,7 +361,7 @@ function speldamage(x) {
       //
     case 33:
       /* genocide */
-      updateLog("Genocide what monster? ");
+      updateLog(`Genocide what monster? `);
       setCharCallback(genmonst);
       if (!wizard)
         forgetSpell(33); /* forget */
@@ -373,9 +373,9 @@ function speldamage(x) {
       if (rnd(100) > 30) {
         prepare_direction_event(spell_summon);
       } else if (rnd(100) > 15) {
-        updateLog("  Nothing seems to have happened");
+        updateLog(`  Nothing seems to have happened`);
       } else {
-        updateLog("  The demon turned on you and vanished!");
+        updateLog(`  The demon turned on you and vanished!`);
         beep();
         var i = rnd(40) + 30;
         lastnum = 277; /* attacked by a revolting demon */
@@ -485,7 +485,7 @@ function spell_phantasmal(direction) {
   if (rnd(11) + 7 <= player.WISDOM) {
     direct(PHA, direction, rnd(20) + 20 + player.LEVEL, 0)
   } else {
-    updateLog("  It didn't believe the illusions!");
+    updateLog(`  It didn't believe the illusions!`);
   }
 }
 
@@ -518,7 +518,7 @@ function spell_finger(direction) {
   if (player.WISDOM > rnd(10) + 10) {
     direct(FGR, direction, 2000, 0);
   } else {
-    updateLog("  It didn't work");
+    updateLog(`  It didn't work`);
   }
 }
 
@@ -555,7 +555,7 @@ function spell_polymorph(direction) {
 
   var monster = getMonster(direction);
   if (!monster) {
-    updateLog("  There wasn't anything there!");
+    updateLog(`  There wasn't anything there!`);
     return;
   }
 
@@ -589,7 +589,7 @@ function spell_teleport(direction) {
   var y = player.y + diroffy[direction];
   var monster = getMonster(direction);
   if (!monster) {
-    updateLog("  There wasn't anything there!");
+    updateLog(`  There wasn't anything there!`);
     return;
   }
   ifblind(x, y);
@@ -643,12 +643,12 @@ function loseint() {
 /*
  *  isconfuse()         Routine to check to see if player is confused
  *
- *  This routine prints out a message saying "You can't aim your magic!"
+ *  This routine prints out a message saying `You can't aim your magic!`
  *  returns 0 if not confused, non-zero (time remaining confused) if confused
  */
 function isconfuse() {
   if (player.CONFUSE) {
-    updateLog("  You can't aim your magic!");
+    updateLog(`  You can't aim your magic!`);
     beep();
   }
   return (player.CONFUSE > 0);
@@ -716,7 +716,7 @@ function direct(spnum, direction, dam, arg) {
   var item = getItemDir(direction);
 
   if (!monster && !item.matches(OMIRROR)) {
-    updateLog("  There wasn't anything there!");
+    updateLog(`  There wasn't anything there!`);
     return;
   }
 
@@ -724,7 +724,7 @@ function direct(spnum, direction, dam, arg) {
 
   if (item.matches(OMIRROR) && !monster) {
     if (spnum == 3) /* sleep */ {
-      updateLog("  You fall asleep! ");
+      updateLog(`  You fall asleep! `);
       beep();
       arg += 2;
       while (arg-- > 0) {
@@ -733,7 +733,7 @@ function direct(spnum, direction, dam, arg) {
       }
       return;
     } else if (spnum == 6) /* web */ {
-      updateLog("  You get stuck in your own web! ");
+      updateLog(`  You get stuck in your own web! `);
       beep();
       arg += 2;
       while (arg-- > 0) {
@@ -743,7 +743,7 @@ function direct(spnum, direction, dam, arg) {
       return;
     } else {
       lastnum = 278; /* hit by own magic */
-      updateLog(str("spell caster (that's you)"));
+      updateLog(str(`spell caster (that's you)`));
       beep();
       player.losehp(dam);
       return;
@@ -808,7 +808,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   /* if energy hits player */
   if (x == player.x && y == player.y) {
     cursors();
-    updateLog("  You are hit by your own magic!");
+    updateLog(`  You are hit by your own magic!`);
 
     lastnum = 278;
     player.losehp(dam);
@@ -852,14 +852,14 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     y -= dy;
   } else if (item.matches(OWALL)) {
     cursors();
-    updateLog(str("wall"));
+    updateLog(str(`wall`));
     if ( /* enough damage? */
       dam >= 50 + getDifficulty() &&
       /* not on V3 */
       level < MAXLEVEL + MAXVLEVEL - 1 &&
       x < MAXX - 1 && y < MAXY - 1 &&
       x != 0 && y != 0) {
-      updateLog("  The wall crumbles");
+      updateLog(`  The wall crumbles`);
       player.level.items[x][y] = OEMPTY;
       player.level.know[x][y] = 0;
       show1cell(x, y);
@@ -870,9 +870,9 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     dam = 0;
   } else if (item.matches(OCLOSEDDOOR)) {
     cursors();
-    updateLog(str("door"));
+    updateLog(str(`door`));
     if (dam >= 40) {
-      updateLog("  The door is blasted apart");
+      updateLog(`  The door is blasted apart`);
       player.level.items[x][y] = OEMPTY;
       player.level.know[x][y] = 0;
       show1cell(x, y);
@@ -880,10 +880,10 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     dam = 0;
   } else if (item.matches(OSTATUE)) {
     cursors();
-    updateLog(str("statue"));
+    updateLog(str(`statue`));
     if (getDifficulty() < 3)
       if (dam > 44) {
-        updateLog("  The statue crumbles");
+        updateLog(`  The statue crumbles`);
         player.level.items[x][y] = createObject(OBOOK, level);
         player.level.know[x][y] = 0;
         show1cell(x, y);
@@ -891,7 +891,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     dam = 0;
   } else if (item.matches(OTHRONE)) {
     cursors();
-    updateLog(str("throne"));
+    updateLog(str(`throne`));
     if (dam > 39 && item.arg == 0) {
       create_guardian(GNOMEKING, x, y);
       item.arg = 1; // nullify the throne
@@ -900,7 +900,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     dam = 0;
   } else if (item.matches(OALTAR)) {
     cursors();
-    updateLog(str("altar"));
+    updateLog(str(`altar`));
     if (dam > 75 - (getDifficulty() >> 2)) {
       create_guardian(DEMONPRINCE, x, y);
       show1cell(x, y);
@@ -908,7 +908,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     dam = 0;
   } else if (item.matches(OFOUNTAIN)) {
     cursors();
-    updateLog(str("fountain"));
+    updateLog(str(`fountain`));
     if (dam > 55) {
       create_guardian(WATERLORD, x, y);
       show1cell(x, y);
@@ -1018,7 +1018,7 @@ function annihilate() {
     }
   }
   if (k > 0) {
-    updateLog("  You hear loud screams of agony!");
+    updateLog(`  You hear loud screams of agony!`);
     player.raiseexperience(k);
   }
   return k;
@@ -1056,29 +1056,29 @@ function genmonst(key) {
       if (j != LAMANOBE) setGenocide(j); // JRP see below
       switch (j) {
         case JACULI:
-          monstname = "jaculi";
+          monstname = `jaculi`;
           break;
         case YETI:
-          monstname = "yeti";
+          monstname = `yeti`;
           break;
         case ELF:
-          monstname = "elves";
+          monstname = `elves`;
           break;
         case VORTEX:
-          monstname = "vortexes";
+          monstname = `vortexes`;
           break;
         case VIOLETFUNGI:
-          monstname = "violet fungi";
+          monstname = `violet fungi`;
           break;
         case DISENCHANTRESS:
-          monstname = "disenchantresses";
+          monstname = `disenchantresses`;
           break;
         case LAMANOBE:
           // JRP: Everyone gets an easter egg. This one is mine.
-          updateLog("  Lawless resists!");
+          updateLog(`  Lawless resists!`);
           return 1;
         default:
-          monstname = monsterlist[j] + "s";
+          monstname = monsterlist[j] + `s`;
           break;
       }
 
@@ -1089,6 +1089,6 @@ function genmonst(key) {
       return 1;
     }
 
-  updateLog("  You sense failure!");
+  updateLog(`  You sense failure!`);
   return 1;
 }

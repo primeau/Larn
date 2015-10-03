@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 function positionplayer(x, y, exact) {
@@ -11,7 +11,7 @@ function positionplayer(x, y, exact) {
   if (exact && canMove(x, y)) {
     player.x = x;
     player.y = y;
-    //debug("positionplayer: (" + distance + ") got " + xy(x, y));
+    //debug(`positionplayer: (` + distance + `) got ` + xy(x, y));
     player.level.know[player.x][player.y] = KNOWALL;
     return true;
   }
@@ -24,13 +24,13 @@ function positionplayer(x, y, exact) {
     while (numTries-- > 0) {
       var newx = x + (rnd(3) - 2) * distance;
       var newy = y + (rnd(3) - 2) * distance;
-      debug("positionplayer: (" + distance + ") try " + newx + "," + newy);
+      debug(`positionplayer: (` + distance + `) try ` + newx + `,` + newy);
       if ((newx != x || newy != y)) {
         if (canMove(newx, newy)) {
           player.x = newx;
           player.y = newy;
           player.level.know[player.x][player.y] = KNOWALL;
-          //debug("positionplayer: (" + distance + ") got " + newx + "," + newy);
+          //debug(`positionplayer: (` + distance + `) got ` + newx + `,` + newy);
           return true;
         }
       }
@@ -39,7 +39,7 @@ function positionplayer(x, y, exact) {
     distance++;
   }
 
-  debug("positionplayer: couldn't place player");
+  debug(`positionplayer: couldn't place player`);
   return false;
 }
 
@@ -162,10 +162,10 @@ function creategem() {
  */
 function more(select_allowed) {
   cltoeoln();
-  lprcat("Press <b>space</b> to continue");
+  lprcat(`Press <b>space</b> to continue`);
 
   if (select_allowed) {
-    lprcat(", <b>escape</b> to cancel, letter to select: ");
+    lprcat(`, <b>escape</b> to cancel, letter to select: `);
   }
 }
 
@@ -184,7 +184,7 @@ function enchantarmor() {
   } else {
     cursors();
     beep();
-    updateLog("  You feel a sense of loss");
+    updateLog(`  You feel a sense of loss`);
     return false;
   }
   if (!armor.matches(OSCROLL) && !armor.matches(OPOTION)) {
@@ -202,7 +202,7 @@ function enchweapon() {
   if (!weapon) {
     cursors();
     beep();
-    updateLog("  You feel a sense of loss");
+    updateLog(`  You feel a sense of loss`);
     return false;
   }
   if (!weapon.matches(OSCROLL) && !weapon.matches(OPOTION)) {

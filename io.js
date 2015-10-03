@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 var cursorx = 1;
 var cursory = 1;
@@ -27,7 +27,7 @@ function lprcat(str, width) {
 
   var len = str.length;
   var tag = false;
-  var tagstring = "";
+  var tagstring = ``;
   var endtag = false;
   for (var i = 0; i < len; i++) {
     var c = str[i];
@@ -47,7 +47,7 @@ function lprcat(str, width) {
         tag = false;
         //console.log(tagstring);
         lprc(tagstring);
-        tagstring = "";
+        tagstring = ``;
       }
     } else {
       lprc(str[i]);

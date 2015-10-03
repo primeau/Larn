@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 /************************************************/
@@ -11,86 +11,86 @@ const splev = [1, 4, 9, 14, 18, 22, 26, 29, 32, 35, 37, 37, 37, 37, 37];
 
 
 const spelcode = [
-  "pro", "mle", "dex",
-  "sle", "chm", "ssp",
-  "web", "str", "enl",
-  "hel", "cbl", "cre",
-  "pha", "inv", "bal",
-  "cld", "ply", "can",
-  "has", "ckl", "vpr",
-  "dry", "lit", "drl",
-  "glo", "flo", "fgr",
-  "sca", "hld", "stp",
-  "tel", "mfi", "sph",
-  "gen", "sum", "wtw",
-  "alt", "per"
+  `pro`, `mle`, `dex`,
+  `sle`, `chm`, `ssp`,
+  `web`, `str`, `enl`,
+  `hel`, `cbl`, `cre`,
+  `pha`, `inv`, `bal`,
+  `cld`, `ply`, `can`,
+  `has`, `ckl`, `vpr`,
+  `dry`, `lit`, `drl`,
+  `glo`, `flo`, `fgr`,
+  `sca`, `hld`, `stp`,
+  `tel`, `mfi`, `sph`,
+  `gen`, `sum`, `wtw`,
+  `alt`, `per`
 ];
 
 
 
 const spelname = [
-  "protection",             "magic missile",    "dexterity",
-  "sleep",                  "charm monster",    "sonic spear",
-  "web",                    "strength",         "enlightenment",
-  "healing",                "cure blindness",   "create monster",
-  "phantasmal forces",      "invisibility",     "fireball",
-  "cold",                   "polymorph",        "cancellation",
-  "haste self",             "cloud kill",       "vaporize rock",
-  "dehydration",            "lightning",        "drain life",
-  "invulnerability",        "flood",            "finger of death",
-  "scare monster",          "hold monster",     "time stop",
-  "teleport away",          "magic fire",       "sphere of annihilation",
-  "genocide",               "summon demon",     "walk through walls",
-  "alter reality",          "permanence",
+  `protection`,             `magic missile`,    `dexterity`,
+  `sleep`,                  `charm monster`,    `sonic spear`,
+  `web`,                    `strength`,         `enlightenment`,
+  `healing`,                `cure blindness`,   `create monster`,
+  `phantasmal forces`,      `invisibility`,     `fireball`,
+  `cold`,                   `polymorph`,        `cancellation`,
+  `haste self`,             `cloud kill`,       `vaporize rock`,
+  `dehydration`,            `lightning`,        `drain life`,
+  `invulnerability`,        `flood`,            `finger of death`,
+  `scare monster`,          `hold monster`,     `time stop`,
+  `teleport away`,          `magic fire`,       `sphere of annihilation`,
+  `genocide`,               `summon demon`,     `walk through walls`,
+  `alter reality`,          `permanence`,
 ];
 
 
 
 const speldescript = [
   /* 1 */
-  "Generates a +2 protection field",
-  "Creates and hurls a magic missile equivalent to a +1 magic arrow",
-  "Adds +2 to the caster's dexterity",
-  "Causes some monsters to go to sleep",
-  "Some monsters may be awed at your magnificence",
-  "Causes your hands to emit a screeching sound toward what they point",
+  `Generates a +2 protection field`,
+  `Creates and hurls a magic missile equivalent to a +1 magic arrow`,
+  `Adds +2 to the caster's dexterity`,
+  `Causes some monsters to go to sleep`,
+  `Some monsters may be awed at your magnificence`,
+  `Causes your hands to emit a screeching sound toward what they point`,
   /* 7 */
-  "Causes strands of sticky thread to entangle an enemy",
-  "Adds +2 to the caster's strength for a short term",
-  "The caster becomes aware of things in the vicinity",
-  "Restores some HP to the caster",
-  "Restores sight to one so unfortunate as to be blinded",
-  "Creates a monster near the caster appropriate for the location",
-  "Creates illusions, and if believed, monsters die",
-  "The caster becomes invisible",
+  `Causes strands of sticky thread to entangle an enemy`,
+  `Adds +2 to the caster's strength for a short term`,
+  `The caster becomes aware of things in the vicinity`,
+  `Restores some HP to the caster`,
+  `Restores sight to one so unfortunate as to be blinded`,
+  `Creates a monster near the caster appropriate for the location`,
+  `Creates illusions, and if believed, monsters die`,
+  `The caster becomes invisible`,
   /* 15 */
-  "Makes a ball of fire that burns what it hits",
-  "Sends forth a cone of cold which freezes what it touches",
-  "You can find out what this does for yourself",
-  "Negates the ability of a monster to use its special abilities",
-  "Speeds up the caster's movements",
-  "Creates a fog of poisonous gas which kills all that is within it",
-  "This changes rock to air",
+  `Makes a ball of fire that burns what it hits`,
+  `Sends forth a cone of cold which freezes what it touches`,
+  `You can find out what this does for yourself`,
+  `Negates the ability of a monster to use its special abilities`,
+  `Speeds up the caster's movements`,
+  `Creates a fog of poisonous gas which kills all that is within it`,
+  `This changes rock to air`,
   /* 22 */
-  "Dries up water in the immediate vicinity",
-  "Your finger will emit a lightning bolt when this spell is cast",
-  "Subtracts hit points from both you and a monster",
-  "This globe helps to protect the player from physical attack",
-  "This creates an avalanche of H2O to flood the immediate chamber",
-  "This is a holy spell and calls upon your god to back you up",
+  `Dries up water in the immediate vicinity`,
+  `Your finger will emit a lightning bolt when this spell is cast`,
+  `Subtracts hit points from both you and a monster`,
+  `This globe helps to protect the player from physical attack`,
+  `This creates an avalanche of H2O to flood the immediate chamber`,
+  `This is a holy spell and calls upon your god to back you up`,
   /* 28 */
-  "Terrifies the monster so that hopefully it won't hit the magic user",
-  "The monster is frozen in its tracks if this is successful",
-  "All movement in the caverns ceases for a limited duration",
-  "Moves a particular monster around in the dungeon (hopefully away from you)",
-  "This causes a curtain of fire to appear all around you",
+  `Terrifies the monster so that hopefully it won't hit the magic user`,
+  `The monster is frozen in its tracks if this is successful`,
+  `All movement in the caverns ceases for a limited duration`,
+  `Moves a particular monster around in the dungeon (hopefully away from you)`,
+  `This causes a curtain of fire to appear all around you`,
   /* 33 */
-  "Anything caught in this sphere is instantly killed. Warning: dangerous",
-  "Eliminates a species of monster from the game -- use sparingly",
-  "Summons a demon who hopefully helps you out",
-  "Allows the player to walk through walls for a short period of time",
-  "God only knows what this will do",
-  "Makes a character's spell permanent, i.e. protection, strength, etc.",
+  `Anything caught in this sphere is instantly killed. Warning: dangerous`,
+  `Eliminates a species of monster from the game -- use sparingly`,
+  `Summons a demon who hopefully helps you out`,
+  `Allows the player to walk through walls for a short period of time`,
+  `God only knows what this will do`,
+  `Makes a character's spell permanent, i.e. protection, strength, etc.`,
 ];
 
 
@@ -223,7 +223,7 @@ const SUM = 34;
 
 
 const attackmessage = [];
-attackmessage[MLE] = function(monster, i) { return `  Your missile${(player.LEVEL >= 2) ? "s" : ""} hit the ${monster}`; };
+attackmessage[MLE] = function(monster, i) { return `  Your missile${(player.LEVEL >= 2) ? `s` : ``} hit the ${monster}`; };
 attackmessage[SLE] = function(monster, i) { return `  While the ${monster} slept, you smashed it ${i} times`; };
 attackmessage[SSP] = function(monster, i) { return `  The sound damages the ${monster}`; };
 attackmessage[WEB] = function(monster, i) { return `  While the ${monster} is entangled, you hit ${i} times`; };

@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 
 var Level = {
@@ -30,7 +30,7 @@ var images = null; // used for 'amiga_mode'
 function loadImages() {
   images = [];
 
-  console.log("loading images");
+  console.log(`loading images`);
 
   var img;
   for (var i = 0; i <= 67; i++) {
@@ -52,10 +52,10 @@ function loadImages() {
 
 
 function createImage(src) {
-  //console.log("loading: " + src);
+  //console.log(`loading: ` + src);
   var image = new Image();
   image.onload = function() {
-    //console.log("loaded: " + src);
+    //console.log(`loaded: ` + src);
   }
   image.src = src;
   return image;
@@ -72,8 +72,8 @@ function bltAmiga() {
 
   adjust++;
 
-  var canvas = document.getElementById("lCanvas");
-  var ctx = canvas.getContext("2d");
+  var canvas = document.getElementById(`lCanvas`);
+  var ctx = canvas.getContext(`2d`);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   IS_BOLD = false;
@@ -108,12 +108,12 @@ function bltAmiga() {
         }
         if (IS_BOLD) {
           ctx.font = `bold 12px Courier New, Courier, monospace`;
-          ctx.fillStyle = "white";
+          ctx.fillStyle = `white`;
         } else {
           ctx.font = `12px Courier New, Courier, monospace`;
-          ctx.fillStyle = "lightgrey";
+          ctx.fillStyle = `lightgrey`;
         }
-        ctx.textBaseline = "top";
+        ctx.textBaseline = `top`;
         ctx.fillText(output, 1 + x * 9, 1 + y * 18);
       }
 

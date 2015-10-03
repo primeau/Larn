@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 /*
     For command mode.  Perform entering a building.
@@ -6,7 +6,7 @@
 function enter() {
   // cursors() ;
 
-  debug("enter(): entering a building");
+  debug(`enter(): entering a building`);
   mazeMode = false;
 
   var building = itemAt(player.x, player.y);
@@ -51,10 +51,10 @@ function enter() {
     return;
   }
 
-  debug("enter(): no building here");
+  debug(`enter(): no building here`);
   mazeMode = true;
 
-  updateLog("There is no place to enter here!");
+  updateLog(`There is no place to enter here!`);
 
 }
 
@@ -109,20 +109,20 @@ function dndstore() {
 
   clear();
 
-  lprcat("Welcome to the Larn Thrift Shoppe.  We stock many items explorers find useful\n");
-  lprcat("in their adventures.  Feel free to browse to your hearts content.\n");
-  lprcat("Also be advised, if you break 'em, you pay for 'em.");
+  lprcat(`Welcome to the Larn Thrift Shoppe.  We stock many items explorers find useful\n`);
+  lprcat(`in their adventures.  Feel free to browse to your hearts content.\n`);
+  lprcat(`Also be advised, if you break 'em, you pay for 'em.`);
 
   // TODO, maybe
   // if (outstanding_taxes > 0) {
-  //   lprcat("\n\nThe Larn Revenue Service has ordered us to not do business with tax evaders.\n");
+  //   lprcat(`\n\nThe Larn Revenue Service has ordered us to not do business with tax evaders.\n`);
   //   beep();
-  //   lprintf("They have also told us that you owe %d gp in back taxes, and as we must\n", (long) outstanding_taxes);
-  //   lprcat("comply with the law, we cannot serve you at this time.  Soo Sorry.\n");
+  //   lprintf(`They have also told us that you owe %d gp in back taxes, and as we must\n`, (long) outstanding_taxes);
+  //   lprcat(`comply with the law, we cannot serve you at this time.  Soo Sorry.\n`);
   //   cursors();
-  //   lprcat("\nPress ");
-  //   standout("escape");
-  //   lprcat(" to leave: ");
+  //   lprcat(`\nPress `);
+  //   standout(`escape`);
+  //   lprcat(` to leave: `);
   //   lflush();
   //   i = 0;
   //   while (i != '\33') i = ttgetch();
@@ -147,7 +147,7 @@ function updategold() {
   lprcat(`You have ${Number(player.GOLD).toLocaleString()} gold pieces`);
   cltoeoln();
   //cl_dn(1, 20); /* erase to eod */
-  lprcat("\n\nEnter your transaction [<b>space</b> for more, <b>escape</b> to leave] ");
+  lprcat(`\n\nEnter your transaction [<b>space</b> for more, <b>escape</b> to leave] `);
 }
 
 
@@ -175,13 +175,13 @@ function dnd_parse(key) {
   if (i >= 0 && i <= 26) {
     i += dndindex;
     if (i >= MAXITM) {
-      storemessage("Sorry, but we are out of that item.", 700);
+      storemessage(`Sorry, but we are out of that item.`, 700);
     } else if (dnd_item[i].qty <= 0) {
-      storemessage("Sorry, but we are out of that item.", 700);
+      storemessage(`Sorry, but we are out of that item.`, 700);
     } else if (pocketfull()) {
-      storemessage("You can't carry anything more!", 700);
+      storemessage(`You can't carry anything more!`, 700);
     } else if (player.GOLD < dnd_item[i].price) {
-      storemessage("You don't have enough gold to pay for that!", 700);
+      storemessage(`You don't have enough gold to pay for that!`, 700);
     } else {
       player.setGold(player.GOLD - dnd_item[i].price);
       dnd_item[i].qty--;
@@ -216,7 +216,7 @@ function dnditem(i) {
   cursor((j = (i & 1) * 40 + 1), (k = ((i % 26) >> 1) + 5));
 
   if (dnd_item[i].qty == 0) {
-    lprintf("", 39);
+    lprintf(``, 39);
     return;
   }
 
@@ -250,12 +250,12 @@ function dnditem(i) {
  *
  */
 function obank() {
-  banktitle("Welcome to the First National Bank of Larn.");
+  banktitle(`Welcome to the First National Bank of Larn.`);
 }
 
 
 function obank2() {
-  banktitle("Welcome to the 5th level branch office of the First National Bank of Larn.");
+  banktitle(`Welcome to the 5th level branch office of the First National Bank of Larn.`);
   /* because we state the level in the title, clear the '?' in the
      level display at the bottom, if the user teleported.
   */
@@ -269,15 +269,15 @@ function banktitle(str) {
   // TODO, maybe
   // if (outstanding_taxes > 0) {
   //   register int i;
-  //   lprcat("\n\nThe Larn Revenue Service has ordered that your account be frozen until all\n");
+  //   lprcat(`\n\nThe Larn Revenue Service has ordered that your account be frozen until all\n`);
   //   beep();
-  //   lprintf("levied taxes have been paid.  They have also told us that you owe %d gp in\n", (long) outstanding_taxes);
-  //   lprcat("taxes, and we must comply with them. We cannot serve you at this time.  Sorry.\n");
-  //   lprcat("We suggest you go to the LRS office and pay your taxes.\n");
+  //   lprintf(`levied taxes have been paid.  They have also told us that you owe %d gp in\n`, (long) outstanding_taxes);
+  //   lprcat(`taxes, and we must comply with them. We cannot serve you at this time.  Sorry.\n`);
+  //   lprcat(`We suggest you go to the LRS office and pay your taxes.\n`);
   //   cursors();
-  //   lprcat("\nPress ");
-  //   standout("escape");
-  //   lprcat(" to leave: ");
+  //   lprcat(`\nPress `);
+  //   standout(`escape`);
+  //   lprcat(` to leave: `);
   //   lflush();
   //   i = 0;
   //   while (i != '\33') i = ttgetch();
@@ -285,7 +285,7 @@ function banktitle(str) {
   //   nosignal = 0; /* enable signals */
   //   return;
   // }
-  lprcat("\n\n   Gemstone                 Appraisal      Gemstone                 Appraisal");
+  lprcat(`\n\n   Gemstone                 Appraisal      Gemstone                 Appraisal`);
   obanksub();
   paint();
 }
@@ -325,7 +325,7 @@ function obanksub() {
   bank_print_gold();
 
   cl_dn(1, 21);
-  lprcat("\nYour wish? [(<b>d</b>) deposit, (<b>w</b>) withdraw, (<b>s</b>) sell a stone, or <b>escape</b>] ");
+  lprcat(`\nYour wish? [(<b>d</b>) deposit, (<b>w</b>) withdraw, (<b>s</b>) sell a stone, or <b>escape</b>] `);
 
   setCharCallback(bank_parse);
 }
@@ -340,7 +340,7 @@ function bank_print_gold() {
   cltoeoln();
   lprcat(`You have ${Number(player.GOLD).toLocaleString()} gold pieces`);
   if (player.BANKACCOUNT + player.GOLD >= 500000)
-    lprcat("\n\nNote: Larndom law states that only deposits under 500,000gp can earn interest");
+    lprcat(`\n\nNote: Larndom law states that only deposits under 500,000gp can earn interest`);
 }
 
 
@@ -351,23 +351,23 @@ function bank_parse(key) {
   }
 
   if (key == 'd') {
-    lprcat("deposit\n");
+    lprcat(`deposit\n`);
     cltoeoln();
-    lprcat("How much? [<b>*</b> for all] ");
+    lprcat(`How much? [<b>*</b> for all] `);
     setNumberCallback(bank_deposit, true);
   }
 
   if (key == 'w') {
-    lprcat("withdraw\n");
+    lprcat(`withdraw\n`);
     cltoeoln();
-    lprcat("How much? [<b>*</b> for all] ");
+    lprcat(`How much? [<b>*</b> for all] `);
     setNumberCallback(bank_withdraw, true);
   }
 
   if (key == 's') {
-    lprcat("sell\n");
+    lprcat(`sell\n`);
     cltoeoln();
-    lprcat("Which stone would you like to sell? [<b>*</b> for all] ");
+    lprcat(`Which stone would you like to sell? [<b>*</b> for all] `);
     setCharCallback(bank_sell);
   }
 }
@@ -377,7 +377,7 @@ function bank_parse(key) {
 function bankmessage(str, duration) {
   if (mazeMode) return;
 
-  if (duration == "")
+  if (duration == ``)
     cl_dn(1, 23);
   else
     cl_dn(1, 24);
@@ -395,7 +395,7 @@ function bankmessage(str, duration) {
 
   if (duration && duration != 0) {
     napping = true;
-    setTimeout(bankmessage, duration, "", 0);
+    setTimeout(bankmessage, duration, ``, 0);
   }
 }
 
@@ -403,7 +403,7 @@ function bankmessage(str, duration) {
 
 function bank_deposit(amt) {
   if (amt == ESC) {
-    bankmessage("  cancelled", 700);
+    bankmessage(`  cancelled`, 700);
     return 0;
   }
 
@@ -414,13 +414,13 @@ function bank_deposit(amt) {
   amt = Number(amt);
 
   if (amt < 0) {
-    bankmessage("Sorry, but we can't take negative gold!", 700);
+    bankmessage(`Sorry, but we can't take negative gold!`, 700);
   } else if (amt > player.GOLD) {
-    bankmessage("You don't have that much.", 700);
+    bankmessage(`You don't have that much.`, 700);
   } else {
     player.setGold(player.GOLD - amt);
     player.BANKACCOUNT += amt;
-    bankmessage("", 700);
+    bankmessage(``, 700);
   }
   return 0;
 }
@@ -429,7 +429,7 @@ function bank_deposit(amt) {
 
 function bank_withdraw(amt) {
   if (amt == ESC) {
-    bankmessage("  cancelled", 700);
+    bankmessage(`  cancelled`, 700);
     return 0;
   }
 
@@ -440,13 +440,13 @@ function bank_withdraw(amt) {
   amt = Number(amt);
 
   if (amt < 0) {
-    bankmessage("Sorry, but we don't have any negative gold!", 700);
+    bankmessage(`Sorry, but we don't have any negative gold!`, 700);
   } else if (amt > player.BANKACCOUNT) {
-    bankmessage("You don't have that much in the bank!", 700);
+    bankmessage(`You don't have that much in the bank!`, 700);
   } else {
     player.setGold(player.GOLD + amt);
     player.BANKACCOUNT -= amt;
-    bankmessage("", 700);
+    bankmessage(``, 700);
   }
   return 0;
 }
@@ -455,7 +455,7 @@ function bank_withdraw(amt) {
 
 function bank_sell(key) {
   if (key == ESC) {
-    bankmessage("  cancelled", 700);
+    bankmessage(`  cancelled`, 700);
   } else if (key == '*') {
     var gems_sold = false;
     for (i = 0; i < 26; i++) {
@@ -466,12 +466,12 @@ function bank_sell(key) {
         gemvalue[i] = 0;
         var k = gemorder[i];
         cursor((k % 2) * 40 + 1, (k >> 1) + 4);
-        lprintf("", 39);
-        bankmessage("", 700);
+        lprintf(``, 39);
+        bankmessage(``, 700);
       }
     }
     if (!gems_sold) {
-      bankmessage("You have no gems to sell!", 700);
+      bankmessage(`You have no gems to sell!`, 700);
     }
   } else {
     var i = getIndexFromChar(key);
@@ -484,8 +484,8 @@ function bank_sell(key) {
         gemvalue[i] = 0;
         var k = gemorder[i];
         cursor((k % 2) * 40 + 1, (k >> 1) + 4);
-        lprintf("", 39);
-        bankmessage("", 700);
+        lprintf(``, 39);
+        bankmessage(``, 700);
       }
     }
   }
@@ -561,19 +561,19 @@ function otradepost() {
 
   clear();
 
-  lprcat("Welcome to the Larn Trading Post. We buy items that explorers no longer find\n");
-  lprcat("useful. Since the condition of the items you bring in is not certain,\n");
-  lprcat("and we incur great expense in reconditioning the items, we usually pay\n");
-  lprcat("only 20% of their value were they to be new. If the items are badly\n");
-  lprcat("damaged, we will pay only 10% of their new value.\n\n");
+  lprcat(`Welcome to the Larn Trading Post. We buy items that explorers no longer find\n`);
+  lprcat(`useful. Since the condition of the items you bring in is not certain,\n`);
+  lprcat(`and we incur great expense in reconditioning the items, we usually pay\n`);
+  lprcat(`only 20% of their value were they to be new. If the items are badly\n`);
+  lprcat(`damaged, we will pay only 10% of their new value.\n\n`);
 
-  lprcat("Here are the items we would be willing to buy from you:\n");
+  lprcat(`Here are the items we would be willing to buy from you:\n`);
 
   otradiven();
 
   cl_dn(1, 21);
 
-  lprcat("\nWhat item do you want to sell to us? [Press <b>escape</b> to leave] ");
+  lprcat(`\nWhat item do you want to sell to us? [Press <b>escape</b> to leave] `);
 }
 
 
@@ -581,7 +581,7 @@ function otradepost() {
 function cleartradiven(i) {
   var j = tradorder[i];
   cursor((j % 2) * 40 + 1, (j >> 1) + 8);
-  lprintf(" ", 39);
+  lprintf(` `, 39);
   tradorder[i] = 0;
 }
 
@@ -611,7 +611,7 @@ function parse_tradepost(key) {
     }
     if (item.matches(OSCROLL) && !isKnownScroll(item) ||
       item.matches(OPOTION) && !isKnownPotion(item)) {
-      storemessage("Sorry, we can't accept unidentified objects", 700);
+      storemessage(`Sorry, we can't accept unidentified objects`, 700);
       //nap(2000);
       return 0;
     }
@@ -630,7 +630,7 @@ function parse_tradepost(key) {
         }
       }
       if (found == MAXITM) {
-        storemessage("Sorry, we can't accept unidentified objects", 700);
+        storemessage(`Sorry, we can't accept unidentified objects`, 700);
         //nap(2000);
         return 0;
       }
@@ -648,7 +648,7 @@ function parse_tradepost(key) {
       }
     }
   } else {
-    storemessage("Sorry, but we are not authorized to accept that item", 700);
+    storemessage(`Sorry, but we are not authorized to accept that item`, 700);
     return 0;
   }
 
@@ -675,21 +675,21 @@ function parse_sellitem(key) {
   if (key == ESC || key == 'N' || key == 'n') {
     cursor(63 + itemToSell[SELL_PRICE].toString().length, 24);
     setCharCallback(parse_tradepost);
-    lprcat("no thanks");
+    lprcat(`no thanks`);
     //nap(500);
 
     napping = true;
-    setTimeout(storemessage, 700, "");
+    setTimeout(storemessage, 700, ``);
     itemToSell = null;
     return 1;
   }
   if (key == 'Y' || key == 'y') {
     cursor(63 + itemToSell[SELL_PRICE].toString().length, 24);
     setCharCallback(parse_tradepost);
-    lprcat("yes");
+    lprcat(`yes`);
 
     napping = true;
-    setTimeout(storemessage, 700, "");
+    setTimeout(storemessage, 700, ``);
     player.setGold(player.GOLD + itemToSell[SELL_PRICE]);
     if (player.WEAR === itemToSell[SELL_ITEM]) player.WEAR = null;
     if (player.WIELD === itemToSell[SELL_ITEM]) player.WIELD = null;
@@ -728,7 +728,7 @@ function oschool() {
 
   cl_dn(1, 19);
   cursor(1, 20);
-  lprcat("What is your choice? [Press <b>escape</b> to leave] ");
+  lprcat(`What is your choice? [Press <b>escape</b> to leave] `);
 
   blt();
 }
@@ -738,27 +738,27 @@ function oschool() {
 function printclasses() {
   cl_up(1, 18);
   cursor(1, 1);
-  lprcat("The College of Larn offers the exciting opportunity of higher education to\n");
-  lprcat("all inhabitants of the caves. Here is the class schedule:\n\n\n");
-  lprcat("\t\t    Course Name               Time Needed\n\n");
+  lprcat(`The College of Larn offers the exciting opportunity of higher education to\n`);
+  lprcat(`all inhabitants of the caves. Here is the class schedule:\n\n\n`);
+  lprcat(`\t\t    Course Name               Time Needed\n\n`);
 
-  if (!course[0]) lprcat("\t\ta)  Fighter Training I          10 mobuls");
+  if (!course[0]) lprcat(`\t\ta)  Fighter Training I          10 mobuls`);
   lprc('\n');
-  if (!course[1]) lprcat("\t\tb)  Fighter Training II         15 mobuls");
+  if (!course[1]) lprcat(`\t\tb)  Fighter Training II         15 mobuls`);
   lprc('\n');
-  if (!course[2]) lprcat("\t\tc)  Introduction to Wizardry    10 mobuls");
+  if (!course[2]) lprcat(`\t\tc)  Introduction to Wizardry    10 mobuls`);
   lprc('\n');
-  if (!course[3]) lprcat("\t\td)  Applied Wizardry            20 mobuls");
+  if (!course[3]) lprcat(`\t\td)  Applied Wizardry            20 mobuls`);
   lprc('\n');
-  if (!course[4]) lprcat("\t\te)  Behavioral Psychology       10 mobuls");
+  if (!course[4]) lprcat(`\t\te)  Behavioral Psychology       10 mobuls`);
   lprc('\n');
-  if (!course[5]) lprcat("\t\tf)  Faith for Today             10 mobuls");
+  if (!course[5]) lprcat(`\t\tf)  Faith for Today             10 mobuls`);
   lprc('\n');
-  if (!course[6]) lprcat("\t\tg)  Contemporary Dance          10 mobuls");
+  if (!course[6]) lprcat(`\t\tg)  Contemporary Dance          10 mobuls`);
   lprc('\n');
-  if (!course[7]) lprcat("\t\th)  History of Larn              5 mobuls");
+  if (!course[7]) lprcat(`\t\th)  History of Larn              5 mobuls`);
 
-  lprcat("\n\n\t\tAll courses cost 250 gold pieces");
+  lprcat(`\n\n\t\tAll courses cost 250 gold pieces`);
   cursor(30, 18);
   lprcat(`You are presently carrying ${Number(player.GOLD).toLocaleString()} gold pieces`);
 }
@@ -781,9 +781,9 @@ function parse_class(key) {
   cursor(1, 21);
 
   if (i < 0 || i >= 8 || course[i]) {
-    lprcat("\nSorry, but that class is filled");
+    lprcat(`\nSorry, but that class is filled`);
   } else if (player.GOLD < 250) {
-    lprcat("\nYou don't have enough gold to pay for that!");
+    lprcat(`\nYou don't have enough gold to pay for that!`);
   } else {
     player.setGold(player.GOLD - 250);
     var time_used = 0;
@@ -792,56 +792,56 @@ function parse_class(key) {
       case 'a':
         player.setStrength(player.STRENGTH + 2);
         player.setConstitution(player.CONSTITUTION + 1);
-        lprcat("\nYou feel stronger!");
+        lprcat(`\nYou feel stronger!`);
         break;
 
       case 'b':
         if (!course[0]) {
           player.setGold(player.GOLD + 250);
           time_used = -10000;
-          lprcat("\nSorry, but this class has a prerequisite of Fighter Training I");
+          lprcat(`\nSorry, but this class has a prerequisite of Fighter Training I`);
           break;
         }
         player.setStrength(player.STRENGTH + 2);
         player.setConstitution(player.CONSTITUTION + 2);
-        lprcat("\nYou feel much stronger!");
+        lprcat(`\nYou feel much stronger!`);
         break;
 
       case 'c':
         player.setIntelligence(player.INTELLIGENCE + 2);
-        lprcat("\nThe task before you now seems more attainable!");
+        lprcat(`\nThe task before you now seems more attainable!`);
         break;
 
       case 'd':
         if (!course[2]) {
           player.setGold(player.GOLD + 250);
           time_used = -10000;
-          lprcat("\nSorry, but this class has a prerequisite of Introduction to Wizardry");
+          lprcat(`\nSorry, but this class has a prerequisite of Introduction to Wizardry`);
           break;
         }
         player.setIntelligence(player.INTELLIGENCE + 2);
-        lprcat("\nThe task before you now seems very attainable!");
+        lprcat(`\nThe task before you now seems very attainable!`);
         break;
 
       case 'e':
         player.setCharisma(player.CHARISMA + 3);
-        lprcat("\nYou now feel like a born leader!");
+        lprcat(`\nYou now feel like a born leader!`);
         break;
 
       case 'f':
         player.setWisdom(player.WISDOM + 2);
-        lprcat("\nYou now feel more confident that you can find the potion in time!");
+        lprcat(`\nYou now feel more confident that you can find the potion in time!`);
         break;
 
       case 'g':
         player.setDexterity(player.DEXTERITY + 3);
-        lprcat("\nYou feel like dancing!");
+        lprcat(`\nYou feel like dancing!`);
         break;
 
       case 'h':
         player.setIntelligence(player.INTELLIGENCE + 1);
-        lprcat("\nYour instructor told you that the Eye of Larn is rumored to be guarded");
-        lprcat("\nby a platinum dragon who possesses psionic abilities");
+        lprcat(`\nYour instructor told you that the Eye of Larn is rumored to be guarded`);
+        lprcat(`\nby a platinum dragon who possesses psionic abilities`);
         break;
     }
 
@@ -893,20 +893,20 @@ function ohome() {
       //iven[i] = 0; /* remove from inventory */
       if (gtime > TIMELIMIT) {
         mazeMode = true;
-        updateLog("Congratulations. You found a potion of cure dianthroritis. Frankly, no one");
-        updateLog("thought you could do it. Boy! Did you surprise them! The doctor has the sad");
-        updateLog("duty to inform you that your daughter died before your return. There was");
-        updateLog("nothing that could be done without the potion.");
+        updateLog(`Congratulations. You found a potion of cure dianthroritis. Frankly, no one`);
+        updateLog(`thought you could do it. Boy! Did you surprise them! The doctor has the sad`);
+        updateLog(`duty to inform you that your daughter died before your return. There was`);
+        updateLog(`nothing that could be done without the potion.`);
         died(269, false); /* failed */
         return;
       } else {
         mazeMode = true;
-        updateLog("Congratulations. You found a potion of cure dianthroritis. Frankly, no one");
-        updateLog("thought you could do it. Boy! Did you surprise them! The doctor is now");
-        updateLog("administering the potion, and in a few moments your daughter should be well");
-        updateLog("on her way to recovery.");
+        updateLog(`Congratulations. You found a potion of cure dianthroritis. Frankly, no one`);
+        updateLog(`thought you could do it. Boy! Did you surprise them! The doctor is now`);
+        updateLog(`administering the potion, and in a few moments your daughter should be well`);
+        updateLog(`on her way to recovery.`);
 
-        updateLog("Press <b>enter</b> to continue: ");
+        updateLog(`Press <b>enter</b> to continue: `);
 
         setCharCallback(win);
         return;
@@ -917,9 +917,9 @@ function ohome() {
   if (gtime > TIMELIMIT) {
     mazeMode = true;
     updateLog(`Welcome home ${logname}.`);
-    updateLog("The latest word from the doctor is not good.");
-    updateLog("The doctor has the sad duty to inform you that your daughter died! You didn't");
-    updateLog("make it in time. There was nothing that could be done without the potion.");
+    updateLog(`The latest word from the doctor is not good.`);
+    updateLog(`The doctor has the sad duty to inform you that your daughter died! You didn't`);
+    updateLog(`make it in time. There was nothing that could be done without the potion.`);
     died(269, false); /* failed */
     return;
   }
@@ -929,14 +929,14 @@ function ohome() {
   cursor(1, 7);
 
   lprcat(`\tWelcome home ${logname}.`);
-  lprcat("\n\n\tThe latest word from the doctor is not good.");
-  lprcat("\n\n\tThe diagnosis is confirmed as dianthroritis. The doctor guesses that");
+  lprcat(`\n\n\tThe latest word from the doctor is not good.`);
+  lprcat(`\n\n\tThe diagnosis is confirmed as dianthroritis. The doctor guesses that`);
   lprcat(`\n\tyour daughter has only ${timeleft()} mobuls left in this world. It's up to you,`);
   lprcat(`\n\t${logname}, to find the only hope for your daughter, the`);
-  lprcat("\n\tvery rare potion of cure dianthroritis. It is rumored that only deep");
-  lprcat("\n\tin the depths of the caves can this potion be found.");
+  lprcat(`\n\tvery rare potion of cure dianthroritis. It is rumored that only deep`);
+  lprcat(`\n\tin the depths of the caves can this potion be found.`);
 
-  lprcat("\n\n\tPress <b>escape</b> to leave: ");
+  lprcat(`\n\n\tPress <b>escape</b> to leave: `);
 
   paint();
 
@@ -954,23 +954,23 @@ function win(key) {
   }
 
   napping = true;
-  updateLog("");
-  updateLog("");
-  updateLog("");
-  updateLog("");
-  updateLog("");
-  updateLog("The potion is ");
+  updateLog(``);
+  updateLog(``);
+  updateLog(``);
+  updateLog(``);
+  updateLog(``);
+  updateLog(`The potion is `);
 
   setTimeout(function() {
-    appendLog("working!");
+    appendLog(`working!`);
     paint();
     setTimeout(function() {
-      updateLog("");
-      updateLog("");
-      updateLog("The doctor thinks that your daughter will recover in a few days.");
+      updateLog(``);
+      updateLog(``);
+      updateLog(`The doctor thinks that your daughter will recover in a few days.`);
       paint();
       setTimeout(function() {
-        updateLog("Congratulations!");
+        updateLog(`Congratulations!`);
         paint();
         napping = false;
         died(263, false); /* a winner! */
@@ -1001,7 +1001,7 @@ function parse_lrs(key) {
   }
   if (key == 'p') {
     setNumberCallback(parse_lrs_pay, true);
-    lprcat("pay taxes\nHow much? ");
+    lprcat(`pay taxes\nHow much? `);
   }
 }
 
@@ -1011,7 +1011,7 @@ function parse_lrs_pay(amount) {
   amount = Number(amount);
 
   if (amount > player.GOLD) {
-    lprcat("\n  You don't have that much\n");
+    lprcat(`\n  You don't have that much\n`);
   } else {
     amount = paytaxes(amount);
     player.setGold(player.GOLD - amount);
@@ -1030,24 +1030,24 @@ function olrs() {
   clear();
 
   cursor(1, 4);
-  lprcat("Welcome to the Larn Revenue Service district office  ");
+  lprcat(`Welcome to the Larn Revenue Service district office  `);
 
   cursor(1, 6);
   if (outstanding_taxes > 0) {
     lprcat(`You presently owe ${outstanding_taxes} gold pieces in taxes  `);
   } else {
-    lprcat("You do not owe us any taxes           ");
+    lprcat(`You do not owe us any taxes           `);
   }
 
   cursor(1, 8);
   if (player.GOLD > 0) {
     lprcat(`You have ${Number(player.GOLD).toLocaleString()} gold pieces    `);
   } else {
-    lprcat("You have no gold pieces  ");
+    lprcat(`You have no gold pieces  `);
   }
 
   cursor(1, 20);
-  lprcat("How can we help you? [(<b>p</b>) pay taxes, or <b>escape</b>] ");
+  lprcat(`How can we help you? [(<b>p</b>) pay taxes, or <b>escape</b>] `);
 
   blt();
 }
@@ -1085,7 +1085,7 @@ function storemessage(str, duration) {
   napping = false;
   if (duration && duration != 0) {
     napping = true;
-    setTimeout(storemessage, duration, "", 0);
+    setTimeout(storemessage, duration, ``, 0);
   }
 }
 

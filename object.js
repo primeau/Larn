@@ -1,8 +1,8 @@
-"use strict";
+`use strict`;
 
 const itemlist = [];
 
-const hack_objnamelist = "·:\\_^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~****899)))[[[[[)^·[1$$$·^^·3·/4\\0,_________8 ";
+const hack_objnamelist = `·:\\_^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~****899)))[[[[[)^·[1$$$·^^·3·/4\\0,_________8 `;
 
 
 
@@ -29,7 +29,7 @@ function createObject(item, arg) {
 
   // create item via an ID (used in dnd_store, wizard mode)
   // otherwise the item passed in is already an item to be duplicated
-  //if (!isNaN(Number(item)) && item != "") {
+  //if (!isNaN(Number(item)) && item != ``) {
   if (typeof item == 'number') {
     item = itemlist[item];
   }
@@ -63,8 +63,8 @@ const divend = !CANVAS_MODE ? `.png) no-repeat left center;'></div>` : `.png`;
 
 Item.prototype = {
     id: null,
-    char: "💩",
-    desc: "",
+    char: `💩`,
+    desc: ``,
     carry: false,
     arg: 0,
 
@@ -100,13 +100,13 @@ Item.prototype = {
       var description = this.desc;
       if (this.matches(OPOTION)) {
         if (isKnownPotion(this) || inStore || showAll) {
-          description += " of " + POTION_NAMES[this.arg];
+          description += ` of ` + POTION_NAMES[this.arg];
         }
       }
       //
       else if (this.matches(OSCROLL)) {
         if (isKnownScroll(this) || inStore || showAll) {
-          description += " of " + SCROLL_NAMES[this.arg];
+          description += ` of ` + SCROLL_NAMES[this.arg];
         }
       }
       //
@@ -123,16 +123,16 @@ Item.prototype = {
       //
       else {
         if (this.arg > 0) {
-          description += " +" + this.arg;
+          description += ` +` + this.arg;
         } else if (this.arg < 0) {
-          description += " " + this.arg;
+          description += ` ` + this.arg;
         }
       }
       if ((this === player.WEAR || this === player.SHIELD) && !inStore) {
-        description += " (being worn)"
+        description += ` (being worn)`
       }
       if (this === player.WIELD && !inStore) {
-        description += " (weapon in hand)"
+        description += ` (weapon in hand)`
       }
       return description;
     },
@@ -213,92 +213,92 @@ Item.prototype = {
 
 
 
-const OEMPTY = new Item(0, "·", "empty space", false); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
-const OHOMEENTRANCE = new Item(93, OEMPTY.char, "exit to home level", false);
-const OUNKNOWN = new Item(94, ' ', "... nothing", false);
-const OALTAR = new Item(1, "<b>A</b>", "a holy altar", false);
-const OTHRONE = new Item(2, "<b>T</b>", "a handsome jewel encrusted throne", false);
+const OEMPTY = new Item(0, `·`, `empty space`, false); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
+const OHOMEENTRANCE = new Item(93, OEMPTY.char, `exit to home level`, false);
+const OUNKNOWN = new Item(94, ' ', `... nothing`, false);
+const OALTAR = new Item(1, `<b>A</b>`, `a holy altar`, false);
+const OTHRONE = new Item(2, `<b>T</b>`, `a handsome jewel encrusted throne`, false);
 //#define OORB 3
-const OPIT = new Item(4, "<b>P</b>", "a pit", false);
-const OSTAIRSUP = new Item(5, "<b>&lt</b>", "a staircase going up", false); // use &lt to prevent bugginess when dropping a ! or ? to the right
+const OPIT = new Item(4, `<b>P</b>`, `a pit`, false);
+const OSTAIRSUP = new Item(5, `<b>&lt</b>`, `a staircase going up`, false); // use &lt to prevent bugginess when dropping a ! or ? to the right
 //#define OELEVATORUP 6
-const OFOUNTAIN = new Item(7, "<b>F</b>", "a bubbling fountain", false);
-const OSTATUE = new Item(8, "<b>&</b>", "a great marble statue", false);
-const OTELEPORTER = new Item(9, "<b>^</b>", "a teleport trap", false);
-const OSCHOOL = new Item(10, "<b>+</b>", "the college of Larn", false);
-const OMIRROR = new Item(11, "<b>M</b>", "a mirror", false);
-const ODNDSTORE = new Item(12, "<b>=</b>", "the DND store", false);
-const OSTAIRSDOWN = new Item(13, "<b>&gt</b>", "a staircase going down", false);
+const OFOUNTAIN = new Item(7, `<b>F</b>`, `a bubbling fountain`, false);
+const OSTATUE = new Item(8, `<b>&</b>`, `a great marble statue`, false);
+const OTELEPORTER = new Item(9, `<b>^</b>`, `a teleport trap`, false);
+const OSCHOOL = new Item(10, `<b>+</b>`, `the college of Larn`, false);
+const OMIRROR = new Item(11, `<b>M</b>`, `a mirror`, false);
+const ODNDSTORE = new Item(12, `<b>=</b>`, `the DND store`, false);
+const OSTAIRSDOWN = new Item(13, `<b>&gt</b>`, `a staircase going down`, false);
 //#define OELEVATORDOWN 14
-const OBANK2 = new Item(15, "<b>$</b>", "the 5th branch of the Bank of Larn", false);
-const OBANK = new Item(16, "<b>$</b>", "the bank of Larn", false);
-const ODEADFOUNTAIN = new Item(17, "<b>f</b>", "a dead fountain", false);
-const OGOLDPILE = new Item(18, "<b>*</b>", "some gold", true, 0);
-const OOPENDOOR = new Item(19, "<b>O</b>", "an open door", false);
-const OCLOSEDDOOR = new Item(20, "<b>D</b>", "a closed door", false);
-const OWALL = new Item(21, "▒", "a wall", false);
-const OLARNEYE = new Item(22, "<b>~</b>", "The Eye of Larn", true);
-const OPLATE = new Item(23, "<b>]</b>", "plate mail", true);
-const OCHAIN = new Item(24, "<b>[</b>", "chain mail", true);
-const OLEATHER = new Item(25, "<b>[</b>", "leather armor", true);
-const OSWORDofSLASHING = new Item(26, "<b>)</b>", "a sword of slashing", true);
-const OHAMMER = new Item(27, "<b>)</b>", "Bessman's flailing hammer", true);
-const OSWORD = new Item(28, "<b>)</b>", "a sunsword", true);
-const O2SWORD = new Item(29, "<b>(</b>", "a two handed sword", true);
-const OSPEAR = new Item(30, "<b>(</b>", "a spear", true);
-const ODAGGER = new Item(31, "<b>(</b>", "a dagger", true);
-const ORINGOFEXTRA = new Item(32, "<b>=</b>", "ring of extra regeneration", true);
-const OREGENRING = new Item(33, "<b>=</b>", "a ring of regeneration", true);
-const OPROTRING = new Item(34, "<b>=</b>", "a ring of protection", true);
-const OENERGYRING = new Item(35, "<b>=</b>", "an energy ring", true);
-const ODEXRING = new Item(36, "<b>=</b>", "a ring of dexterity", true);
-const OSTRRING = new Item(37, "<b>=</b>", "a ring of strength", true);
-const OCLEVERRING = new Item(38, "<b>=</b>", "a ring of cleverness", true);
-const ODAMRING = new Item(39, "<b>=</b>", "a ring of increase damage", true);
-const OBELT = new Item(40, "<b>{</b>", "a belt of striking", true);
-const OSCROLL = new Item(41, "<b>?</b>", "a magic scroll", true);
-const OPOTION = new Item(42, "<b>!</b>", "a magic potion", true);
-const OBOOK = new Item(43, "<b>B</b>", "a book", true);
-const OCHEST = new Item(44, "<b>C</b>", "a chest", true);
-const OAMULET = new Item(45, "<b>}</b>", "an amulet of invisibility", true);
-const OORBOFDRAGON = new Item(46, "<b>o</b>", "an orb of dragon slaying", true);
-const OSPIRITSCARAB = new Item(47, "<b>:</b>", "a scarab of negate spirit", true);
-const OCUBEofUNDEAD = new Item(48, "<b>;</b>", "a cube of undead control", true);
-const ONOTHEFT = new Item(49, "<b>,</b>", "device of theft prevention", true);
-const ODIAMOND = new Item(50, "<b>@</b>", "a brilliant diamond", true);
-const ORUBY = new Item(51, "<b>@</b>", "a ruby", true);
-const OEMERALD = new Item(52, "<b>@</b>", "an enchanting emerald", true);
-const OSAPPHIRE = new Item(53, "<b>@</b>", "a sparkling sapphire", true);
-const OENTRANCE = new Item(54, "<b>E</b>", "the dungeon entrance", false);
-const OVOLDOWN = new Item(55, "<b>V</b>", "a volcanic shaft leaning downward", false);
-const OVOLUP = new Item(56, "<b>V</b>", "the base of a volcanic shaft", false);
-const OBATTLEAXE = new Item(57, "<b>)</b>", "a battle axe", true);
-const OLONGSWORD = new Item(58, "<b>)</b>", "a longsword", true);
-const OFLAIL = new Item(59, "<b>(</b>", "a flail", true);
-const ORING = new Item(60, "<b>[</b>", "ring mail", true);
-const OSTUDLEATHER = new Item(61, "<b>[</b>", "studded leather armor", true);
-const OSPLINT = new Item(62, "<b>]</b>", "splint mail", true);
-const OPLATEARMOR = new Item(63, "<b>]</b>", "plate armor", true);
-const OSSPLATE = new Item(64, "<b>]</b>", "stainless plate armor", true);
-const OLANCE = new Item(65, "<b>)</b>", "a lance of death", true);
-const OTRAPARROW = new Item(66, "<b>^</b>", "an arrow trap", false);
-const OTRAPARROWIV = new Item(67, OEMPTY.char, "an arrow trap", false);
-const OSHIELD = new Item(68, "<b>[</b>", "a shield", true);
-const OHOME = new Item(69, "<b>H</b>", "your home", false);
+const OBANK2 = new Item(15, `<b>$</b>`, `the 5th branch of the Bank of Larn`, false);
+const OBANK = new Item(16, `<b>$</b>`, `the bank of Larn`, false);
+const ODEADFOUNTAIN = new Item(17, `<b>f</b>`, `a dead fountain`, false);
+const OGOLDPILE = new Item(18, `<b>*</b>`, `some gold`, true, 0);
+const OOPENDOOR = new Item(19, `<b>O</b>`, `an open door`, false);
+const OCLOSEDDOOR = new Item(20, `<b>D</b>`, `a closed door`, false);
+const OWALL = new Item(21, `▒`, `a wall`, false);
+const OLARNEYE = new Item(22, `<b>~</b>`, `The Eye of Larn`, true);
+const OPLATE = new Item(23, `<b>]</b>`, `plate mail`, true);
+const OCHAIN = new Item(24, `<b>[</b>`, `chain mail`, true);
+const OLEATHER = new Item(25, `<b>[</b>`, `leather armor`, true);
+const OSWORDofSLASHING = new Item(26, `<b>)</b>`, `a sword of slashing`, true);
+const OHAMMER = new Item(27, `<b>)</b>`, `Bessman's flailing hammer`, true);
+const OSWORD = new Item(28, `<b>)</b>`, `a sunsword`, true);
+const O2SWORD = new Item(29, `<b>(</b>`, `a two handed sword`, true);
+const OSPEAR = new Item(30, `<b>(</b>`, `a spear`, true);
+const ODAGGER = new Item(31, `<b>(</b>`, `a dagger`, true);
+const ORINGOFEXTRA = new Item(32, `<b>=</b>`, `ring of extra regeneration`, true);
+const OREGENRING = new Item(33, `<b>=</b>`, `a ring of regeneration`, true);
+const OPROTRING = new Item(34, `<b>=</b>`, `a ring of protection`, true);
+const OENERGYRING = new Item(35, `<b>=</b>`, `an energy ring`, true);
+const ODEXRING = new Item(36, `<b>=</b>`, `a ring of dexterity`, true);
+const OSTRRING = new Item(37, `<b>=</b>`, `a ring of strength`, true);
+const OCLEVERRING = new Item(38, `<b>=</b>`, `a ring of cleverness`, true);
+const ODAMRING = new Item(39, `<b>=</b>`, `a ring of increase damage`, true);
+const OBELT = new Item(40, `<b>{</b>`, `a belt of striking`, true);
+const OSCROLL = new Item(41, `<b>?</b>`, `a magic scroll`, true);
+const OPOTION = new Item(42, `<b>!</b>`, `a magic potion`, true);
+const OBOOK = new Item(43, `<b>B</b>`, `a book`, true);
+const OCHEST = new Item(44, `<b>C</b>`, `a chest`, true);
+const OAMULET = new Item(45, `<b>}</b>`, `an amulet of invisibility`, true);
+const OORBOFDRAGON = new Item(46, `<b>o</b>`, `an orb of dragon slaying`, true);
+const OSPIRITSCARAB = new Item(47, `<b>:</b>`, `a scarab of negate spirit`, true);
+const OCUBEofUNDEAD = new Item(48, `<b>;</b>`, `a cube of undead control`, true);
+const ONOTHEFT = new Item(49, `<b>,</b>`, `device of theft prevention`, true);
+const ODIAMOND = new Item(50, `<b>@</b>`, `a brilliant diamond`, true);
+const ORUBY = new Item(51, `<b>@</b>`, `a ruby`, true);
+const OEMERALD = new Item(52, `<b>@</b>`, `an enchanting emerald`, true);
+const OSAPPHIRE = new Item(53, `<b>@</b>`, `a sparkling sapphire`, true);
+const OENTRANCE = new Item(54, `<b>E</b>`, `the dungeon entrance`, false);
+const OVOLDOWN = new Item(55, `<b>V</b>`, `a volcanic shaft leaning downward`, false);
+const OVOLUP = new Item(56, `<b>V</b>`, `the base of a volcanic shaft`, false);
+const OBATTLEAXE = new Item(57, `<b>)</b>`, `a battle axe`, true);
+const OLONGSWORD = new Item(58, `<b>)</b>`, `a longsword`, true);
+const OFLAIL = new Item(59, `<b>(</b>`, `a flail`, true);
+const ORING = new Item(60, `<b>[</b>`, `ring mail`, true);
+const OSTUDLEATHER = new Item(61, `<b>[</b>`, `studded leather armor`, true);
+const OSPLINT = new Item(62, `<b>]</b>`, `splint mail`, true);
+const OPLATEARMOR = new Item(63, `<b>]</b>`, `plate armor`, true);
+const OSSPLATE = new Item(64, `<b>]</b>`, `stainless plate armor`, true);
+const OLANCE = new Item(65, `<b>)</b>`, `a lance of death`, true);
+const OTRAPARROW = new Item(66, `<b>^</b>`, `an arrow trap`, false);
+const OTRAPARROWIV = new Item(67, OEMPTY.char, `an arrow trap`, false);
+const OSHIELD = new Item(68, `<b>[</b>`, `a shield`, true);
+const OHOME = new Item(69, `<b>H</b>`, `your home`, false);
 //#define OMAXGOLD 70
 //#define OKGOLD 71
 //#define ODGOLD 72
-const OIVDARTRAP = new Item(73, OEMPTY.char, "a dart trap", false);
-const ODARTRAP = new Item(74, "<b>^</b>", "a dart trap", false);
-const OTRAPDOOR = new Item(75, "<b>^</b>", "a trapdoor", false);
-const OIVTRAPDOOR = new Item(76, OEMPTY.char, "a trapdoor", false);
-const OTRADEPOST = new Item(77, "<b>S</b>", "the local trading post", false);
-const OIVTELETRAP = new Item(78, OEMPTY.char, "a teleport trap", false);
-const ODEADTHRONE = new Item(79, "<b>t</b>", "a massive throne", false);
-const OLRS = new Item(80, "<b>L</b>", "the Larn Revenue Service", false);
+const OIVDARTRAP = new Item(73, OEMPTY.char, `a dart trap`, false);
+const ODARTRAP = new Item(74, `<b>^</b>`, `a dart trap`, false);
+const OTRAPDOOR = new Item(75, `<b>^</b>`, `a trapdoor`, false);
+const OIVTRAPDOOR = new Item(76, OEMPTY.char, `a trapdoor`, false);
+const OTRADEPOST = new Item(77, `<b>S</b>`, `the local trading post`, false);
+const OIVTELETRAP = new Item(78, OEMPTY.char, `a teleport trap`, false);
+const ODEADTHRONE = new Item(79, `<b>t</b>`, `a massive throne`, false);
+const OLRS = new Item(80, `<b>L</b>`, `the Larn Revenue Service`, false);
 //#define OTHRONE2 81
-const OANNIHILATION = new Item(82, "<b>s</b>", "a sphere of annihilation", false);
-const OCOOKIE = new Item(83, "<b>c</b>", "a fortune cookie", true);
+const OANNIHILATION = new Item(82, `<b>s</b>`, `a sphere of annihilation`, false);
+const OCOOKIE = new Item(83, `<b>c</b>`, `a fortune cookie`, true);
 //#define OURN 84
 //#define OBRASSLAMP 85
 //#define OHANDofFEAR 86      /* hand of fear */
@@ -413,7 +413,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OALTAR)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog("There is a Holy Altar here!");
+    if (do_ident) updateLog(`There is a Holy Altar here!`);
   }
   //
   else if (item.matches(OTHRONE) || item.matches(ODEADTHRONE)) {
@@ -422,28 +422,28 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OPIT)) {
-    updateLog("You're standing at the top of a pit");
+    updateLog(`You're standing at the top of a pit`);
     opit();
   }
   //
   else if (item.matches(OMIRROR)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog("There is a mirror here");
+    if (do_ident) updateLog(`There is a mirror here`);
   }
   //
   else if (item.matches(OFOUNTAIN)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog("There is a fountain here");
+    if (do_ident) updateLog(`There is a fountain here`);
   }
   //
   else if (item.matches(ODEADFOUNTAIN)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog("There is a dead fountain here");
+    if (do_ident) updateLog(`There is a dead fountain here`);
   }
   //
   else if (item.matches(ODNDSTORE)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog("There is a DND store here");
+    if (do_ident) updateLog(`There is a DND store here`);
   }
   //
   else if (item.matches(OBANK) || item.matches(OBANK2)) {
@@ -453,12 +453,12 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OSTATUE)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog("You are standing in front of a statue");
+    if (do_ident) updateLog(`You are standing in front of a statue`);
   }
   //
   else if (item.matches(OCHEST)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog("There is a chest here");
+    if (do_ident) updateLog(`There is a chest here`);
   }
   //
   else if (item.matches(OIVTELETRAP)) {
@@ -471,7 +471,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OTELEPORTER)) {
-    updateLog("Zaaaappp!  You've been teleported!");
+    updateLog(`Zaaaappp!  You've been teleported!`);
     //nap(2000);
     oteleport(0);
   }
@@ -488,7 +488,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OTRAPARROW)) {
-    updateLog("You are hit by an arrow");
+    updateLog(`You are hit by an arrow`);
     lastnum = 259; /* shot by an arrow */
     player.losehp(rnd(10) + level);
     return;
@@ -506,7 +506,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(ODARTRAP)) {
-    updateLog("You are hit by a dart");
+    updateLog(`You are hit by a dart`);
     lastnum = 260; /* hit by a dart */
     player.losehp(rnd(5));
     player.setStrength(player.STRENGTH - 1);
@@ -526,7 +526,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OTRAPDOOR)) {
     if ((level == MAXLEVEL - 1) || (level == MAXLEVEL + MAXVLEVEL - 1)) {
-      updateLog("You fell through a bottomless trap door!");
+      updateLog(`You fell through a bottomless trap door!`);
       //nap(2000);
       died(271, false); /* fell through a bottomless trap door */
     }
@@ -540,7 +540,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OANNIHILATION)) {
-    updateLog("You have been enveloped by the zone of nothingness!");
+    updateLog(`You have been enveloped by the zone of nothingness!`);
     died(283, false); /* annihilated in a sphere */
     return;
   }
@@ -576,7 +576,7 @@ function opit() {
   } else {
     var damage = 0;
     if (rnd(101) < 20) {
-      updateLog("You fell into a pit! Your fall is cushioned by an unknown force");
+      updateLog(`You fell into a pit! Your fall is cushioned by an unknown force`);
     } else {
       damage = rnd(level * 3 + 3);
       updateLog(`You fell into a pit! You suffer ${damage} hit points damage`);
@@ -591,7 +591,7 @@ function opit() {
 
 
 function obottomless() {
-  updateLog("You fell into a bottomless pit!");
+  updateLog(`You fell into a bottomless pit!`);
   beep();
   //nap(3000);
   died(262, false); /* fell into a bottomless pit */
@@ -612,7 +612,7 @@ function oteleport(err) {
   var tmp;
   if (err) {
     if (rnd(151) < 3) {
-      updateLog("You are trapped in solid rock!")
+      updateLog(`You are trapped in solid rock!`)
       died(264, false); /* trapped in solid rock */
     }
   }
@@ -658,10 +658,10 @@ function readbook(book) {
   else
     i = rnd((tmp = splev[lev] - 9) ? tmp : 1) + 9;
   learnSpell(spelcode[i]);
-  updateLog(`Spell \"<b>${spelcode[i]}</b>\": ${spelname[i]}`);
+  updateLog(`Spell \`<b>${spelcode[i]}</b>\`: ${spelname[i]}`);
   updateLog(`  ${speldescript[i]}`);
   if (rnd(10) == 4) {
-    updateLog("  Your intelligence went up by one!");
+    updateLog(`  Your intelligence went up by one!`);
     player.setIntelligence(player.INTELLIGENCE + 1);
   }
 }

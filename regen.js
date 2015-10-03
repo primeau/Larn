@@ -1,4 +1,4 @@
-"use strict";
+`use strict`;
 
 /* subroutine to regenerate player hp and spells */
 function regen() {
@@ -59,9 +59,9 @@ function regen() {
   if (player.PROTECTIONTIME) if (player.updateProtectionTime(-1) <= 0) player.setMoreDefenses(player.MOREDEFENSES - 2);
 
   if (player.GLOBE)          if (--player.GLOBE <= 0)          player.setMoreDefenses(player.MOREDEFENSES - 10);
-  if (player.BLINDCOUNT)     if (--player.BLINDCOUNT <= 0)     updateLog("The blindness lifts");
-  if (player.CONFUSE)        if (--player.CONFUSE <= 0)        updateLog("You regain your senses");
-  if (player.HALFDAM)        if (--player.HALFDAM <= 0)        updateLog("You now feel better");
+  if (player.BLINDCOUNT)     if (--player.BLINDCOUNT <= 0)     updateLog(`The blindness lifts`);
+  if (player.CONFUSE)        if (--player.CONFUSE <= 0)        updateLog(`You regain your senses`);
+  if (player.HALFDAM)        if (--player.HALFDAM <= 0)        updateLog(`You now feel better`);
 
   if (player.AGGRAVATE)      --player.AGGRAVATE;
   if (player.AWARENESS)      --player.AWARENESS;
@@ -71,7 +71,7 @@ function regen() {
     if (--player.SEEINVISIBLE <= 0) {
       monsterlist[INVISIBLESTALKER].char = OEMPTY.char;
       if (!player.BLINDCOUNT) {
-        updateLog("You feel your vision return to normal");
+        updateLog(`You feel your vision return to normal`);
       }
     }
   }
@@ -82,10 +82,10 @@ function regen() {
         if (rnd(100) < 50) {
           player.WEAR = null;
           player.SHIELD = null;
-          updateLog("The hysteria of itching forces you to remove your armor!");
+          updateLog(`The hysteria of itching forces you to remove your armor!`);
         }
     if (--player.ITCHING <= 0) {
-      updateLog("You now feel the irritation subside!");
+      updateLog(`You now feel the irritation subside!`);
     }
   }
 
@@ -98,7 +98,7 @@ function regen() {
             drop_object(dropindex);
           }
     if (--player.CLUMSINESS <= 0) {
-      updateLog("You now feel less awkward!");
+      updateLog(`You now feel less awkward!`);
     }
   }
 
