@@ -1,7 +1,7 @@
-`use strict`;
+'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '216';
+const BUILD = '218';
 
 var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
@@ -51,7 +51,10 @@ function initKeyBindings() {
   Mousetrap.bind(':', mousetrap);
   Mousetrap.bind('@', mousetrap);
   Mousetrap.bind('{', eventToggleOriginalObjects);
-  Mousetrap.bind('}', eventToggleAmigaMode);
+  var host = location.hostname;
+  if (host === 'localhost') {
+    Mousetrap.bind('}', eventToggleAmigaMode);
+  }
   Mousetrap.bind('?', mousetrap);
   Mousetrap.bind('_', mousetrap);
   Mousetrap.bind('-', mousetrap);
@@ -105,10 +108,6 @@ function enableDebug() {
 function eventToggleOriginalObjects() {
   nomove = 1;
   original_objects = !original_objects;
-  // if (original_objects)
-  //   document.getElementById(`toggleObjects`).value = `  Hack Style Objects  `;
-  // else
-  //   document.getElementById(`toggleObjects`).value = `  Larn Style Objects  `;
   updateLog(`hack-style objects: ${original_objects ? `off` : `on`}`);
   paint();
 }

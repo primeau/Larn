@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 var cursorx = 1;
 var cursory = 1;

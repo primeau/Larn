@@ -46,14 +46,14 @@ I hope you enjoy this version of LARN.
 WIZARD mode
 -----------
 There is a WIZARD mode for testing features of the game.  To get into WIZARD
-mode, type in an underscore "_" and answer the prompt for the password with
-"pvnert(x)" (do not enter the quotes).  Wizards are non-scoring characters that
+mode, type in an underscore '_' and answer the prompt for the password with
+'pvnert(x)' (do not enter the quotes).  Wizards are non-scoring characters that
 get magic mapping, everlasting expanded awareness and one of every object in
 the game.
 
 Since it's easy to lose your game due to a browser crash, accidental back
 button press, or closed tab, there are 2 new 'wizard' passwords. Using the
-password "checkpoint" will load a backup of a checkpoint file, and "savegame"
+password 'checkpoint' will load a backup of a checkpoint file, and 'savegame'
 will resurrect a previous save game. Obviously this can be used to cheat,
 but it was already pretty easy to cheat before. Be honorable, always.
 

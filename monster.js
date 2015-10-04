@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 
 var Monster = function Monster(char, desc, level, armorclass, damage, attack, defence, intelligence, gold, hitpoints, experience, awake) {

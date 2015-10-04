@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 function learnSpell(spell) {
   //debug(`learning ${spell} ${spelcode.indexOf(spell)}`)

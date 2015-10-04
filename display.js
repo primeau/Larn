@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 
 const KNOWNOT = 0x00;

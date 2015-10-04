@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 /* this is the structure for maintaining & moving the spheres of annihilation */
 var Sphere = function(x, y, dir, lifetime, lev) {

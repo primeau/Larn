@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 /* show character's inventory */
 function showinventory(select_allowed, callback, inv_filter, show_gold, show_time) {

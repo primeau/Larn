@@ -15,7 +15,7 @@ available for offline games.
 4. The LRS is still present, but it's no longer neccessary to pay taxes because
 it was so easy to work around in the original game.
 
-5. Added an amiga-style objects option with help of Christoper Yewchuck.
+5. Added an amiga-style objects option with help of Christoper Yewchuck. (TBD)
 
 
 Larn 12.4.4

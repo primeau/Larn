@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 var scoreBoard = [];
 const EXTRA_VERSION = 0;
@@ -243,7 +243,7 @@ function readGlobal(loadWinners, newScore, offline) {
       /* populate an empty array in case there are no results */
       loadWinners ? winners = [] : losers = [];
 
-      console.log(`Successfully retrieved ` + results.length + ` scores.`);
+      debug(`Successfully retrieved ` + results.length + ` scores.`);
       for (var i = 0; i < results.length; i++) {
         var object = results[i];
         object.convertToLocal();
@@ -331,7 +331,7 @@ function printWinnerScoreBoard(winners, newScore) {
     var scoreId = p.id || p.who;
     var local = p.id == null;
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}  ${padString(`` + p.timeused, 5)} Mobuls   ${p.who}`;
-    lprc(`<a href=`javascript:loadScoreStats('${scoreId}', ${local}, true)`>`);
+    lprc(`<a href='javascript:loadScoreStats("${scoreId}", ${local}, true)'>`);
     lprc(`${score}`);
     lprc(`</a>`);
   }
@@ -348,7 +348,7 @@ function printLoserScoreBoard(losers, newScore) {
     var scoreId = p.id || p.who;
     var local = p.id == null;
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level}`;
-    lprc(`<a href=`javascript:loadScoreStats('${scoreId}', ${local}, false)`>`);
+    lprc(`<a href='javascript:loadScoreStats("${scoreId}", ${local}, false)'>`);
     lprc(`${score}`);
     lprc(`</a>`);
   }

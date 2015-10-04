@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 const itemlist = [];
 
@@ -54,8 +54,8 @@ var CANVAS_MODE = false;
 const divstart = !CANVAS_MODE ? `<div style='\
 vertical-align: bottom; \
 display: inline-block; \
-width: 9px; \
-height: 18px; \
+width: 12px; \
+height: 22px; \
 margin: 0px; \
 background: #000000 url(img/` :
   `img/`;
@@ -700,6 +700,6 @@ function adjtime(tim) {
   player.CLUMSINESS = player.CLUMSINESS > 0 ? Math.max(1, player.CLUMSINESS - tim) : 0;
   // confusion?
   // blindness?
-  
+
   regen();
 }

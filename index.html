@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js" lang="">
+<html class='no-js' lang=''>
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta charset='utf-8'>
+  <meta http-equiv='x-ua-compatible' content='ie=edge'>
   <title>Larn</title>
-  <meta name="description" content="Welcome to JS Larn - A web version of a classic roguelike">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"> -->
+  <meta name='description' content='Welcome to JS Larn - A web version of a classic roguelike'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <!-- <meta name='viewport' content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'> -->
 
-  <!-- <link rel="apple-touch-icon" href="apple-touch-icon.png"> -->
+  <!-- <link rel='apple-touch-icon' href='apple-touch-icon.png'> -->
 
   <style>
     section {
@@ -60,7 +60,7 @@
     }
 
     p.mono {
-      font-family: "Courier New", Courier, monospace;
+      font-family: 'Courier New', Courier, monospace;
       color: lightgrey;
       font-size: 125%;
     }
@@ -69,112 +69,112 @@
       background-color: lightgrey;
       color: black;
     }
-    
+
   </style>
 
-  <script type="text/javascript" src="util/parse-1.5.0.min.js"></script>
-  <script src="util/forge.min.js"></script>
-  <script src="util/mousetrap.js"></script>
+  <script type='text/javascript' src='util/parse-1.6.4.min.js'></script>
+  <script src='util/forge.min.js'></script>
+  <script src='util/mousetrap.min.js'></script>
 
-  <script src="larn.js"></script>
-  <script src="main.js"></script>
-  <script src="object.js"></script>
-  <script src="monster.js"></script>
-  <script src="monsterdata.js"></script>
-  <script src="util.js"></script>
-  <script src="player.js"></script>
-  <script src="mazes.js"></script>
-  <script src="level.js"></script>
-  <script src="create.js"></script>
-  <script src="data.js"></script>
-  <script src="parse.js"></script>
-  <script src="scores.js"></script>
-  <script src="inventory.js"></script>
-  <script src="movem.js"></script>
-  <script src="action.js"></script>
-  <script src="global.js"></script>
-  <script src="io.js"></script>
-  <script src="display.js"></script>
-  <script src="storedata.js"></script>
-  <script src="store.js"></script>
-  <script src="savelev.js"></script>
-  <script src="spells.js"></script>
-  <script src="spellsinfo.js"></script>
-  <script src="regen.js"></script>
-  <script src="spheres.js"></script>
-  <script src="help.js"></script>
-  <script src="state.js"></script>
-  <script src="bill.js"></script>
-  <script src="altar.js"></script>
-  <script src="fountain.js"></script>
-  <script src="potion.js"></script>
-  <script src="scroll.js"></script>
-  <script src="stairs.js"></script>
-  <script src="throne.js"></script>
+  <script src='larn.js'></script>
+  <script src='main.js'></script>
+  <script src='object.js'></script>
+  <script src='monster.js'></script>
+  <script src='monsterdata.js'></script>
+  <script src='util.js'></script>
+  <script src='player.js'></script>
+  <script src='mazes.js'></script>
+  <script src='level.js'></script>
+  <script src='create.js'></script>
+  <script src='data.js'></script>
+  <script src='parse.js'></script>
+  <script src='scores.js'></script>
+  <script src='inventory.js'></script>
+  <script src='movem.js'></script>
+  <script src='action.js'></script>
+  <script src='global.js'></script>
+  <script src='io.js'></script>
+  <script src='display.js'></script>
+  <script src='storedata.js'></script>
+  <script src='store.js'></script>
+  <script src='savelev.js'></script>
+  <script src='spells.js'></script>
+  <script src='spellsinfo.js'></script>
+  <script src='regen.js'></script>
+  <script src='spheres.js'></script>
+  <script src='help.js'></script>
+  <script src='state.js'></script>
+  <script src='bill.js'></script>
+  <script src='altar.js'></script>
+  <script src='fountain.js'></script>
+  <script src='potion.js'></script>
+  <script src='scroll.js'></script>
+  <script src='stairs.js'></script>
+  <script src='throne.js'></script>
 
 </head>
 
-<body bgcolor="#111111">
+<body bgcolor='#111111'>
   <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+            <p class='browserupgrade'>You are using an <strong>outdated</strong> browser. Please <a href='http://browsehappy.com/'>upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
   <section>
     <div>
       <pre>
-        <p class="mono" id="LARN">
+        <p class='mono' id='LARN'>
           LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or MORIA, but with a different feel and winning criteria. Unfortunately if you're seeing this page, there was an error loading the game. Please submit an issue via the link below
           and I'll get to the bottom of it!
         </p>
         <script>
-          "use strict";
+          'use strict';
           play();
         </script>
       </pre>
     </div>
     <!-- <div>
-      <canvas id="lCanvas" width="720" height="432" style="border:1px solid #555555;">
+      <canvas id='lCanvas' width='720' height='432' style='border:1px solid #555555;'>
     </div> -->
 
     <!-- <p>
-      <button onclick="mousetrap(null, 'return')">return</button>
+      <button onclick='mousetrap(null, 'return')'>return</button>
     </p>
 
     <p>
-      <button onclick="mousetrap(null, 'E')">enter</button>
-      <button onclick="mousetrap(null, 'escape')">escape</button>
-      <button onclick="mousetrap(null, 'q')">quaff</button>
-      <button onclick="mousetrap(null, 'r')">read</button>
+      <button onclick='mousetrap(null, 'E')'>enter</button>
+      <button onclick='mousetrap(null, 'escape')'>escape</button>
+      <button onclick='mousetrap(null, 'q')'>quaff</button>
+      <button onclick='mousetrap(null, 'r')'>read</button>
     </p>
 
     <p>
-      <button onclick="mousetrap(null, 'up')">up</button>
+      <button onclick='mousetrap(null, 'up')'>up</button>
     </p>
 
     <p>
-      <button onclick="mousetrap(null, 'left')">left</button>
-      <button onclick="mousetrap(null, 'right')">right</button>
+      <button onclick='mousetrap(null, 'left')'>left</button>
+      <button onclick='mousetrap(null, 'right')'>right</button>
     </p>
 
     <p>
-      <button onclick="mousetrap(null, 'down')">down</button>
+      <button onclick='mousetrap(null, 'down')'>down</button>
     </p>
 
     <p>
-      <button onclick="mousetrap(null, 'z')">scores</button>
+      <button onclick='mousetrap(null, 'z')'>scores</button>
     </p> -->
   </section>
 
 
   <aside>
     <pre>
-      <p class="mono" id="STATS"></p>
+      <p class='mono' id='STATS'></p>
     </pre>
   </aside>
 
   <footer>
     <pre>
-      <p class="mono" id="FOOTER">
-        <a href="https://github.com/primeau/Larn" target="_blank">More information about JS Larn 12.4.5</a>
+      <p class='mono' id='FOOTER'>
+        <a href='https://github.com/primeau/Larn' target='_blank'>More information about JS Larn 12.4.5</a>
       </p>
     </pre>
   </footer>

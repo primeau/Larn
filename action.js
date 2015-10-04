@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 
 /*
@@ -215,8 +215,7 @@ function act_eatcookie(index) {
       if (index == '*' || index == ' ' || index == 'I') {
         if (mazeMode) {
           showinventory(true, act_eatcookie, showeat, false, false);
-        }
-        else {
+        } else {
           mazeMode = true;
           paint();
         }
@@ -228,8 +227,8 @@ function act_eatcookie(index) {
         updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
-          appendLog(` cancelled`);
-          nomove = 1;
+        appendLog(` cancelled`);
+        nomove = 1;
       }
     } else {
       updateLog(`  You can't eat that!`);

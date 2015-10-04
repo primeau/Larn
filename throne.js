@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 
 /* For command mode. Perform removal of gems from a jeweled throne */

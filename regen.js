@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 /* subroutine to regenerate player hp and spells */
 function regen() {

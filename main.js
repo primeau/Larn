@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 
 var no_intro = false;
@@ -59,15 +59,15 @@ function setname(name) {
     checkpoint = localStorage.getObject('checkpoint');
   }
 
-  console.log(`winner == ` + winner);
-  console.log(`savegame == ` + savegame);
-  console.log(`checkpoint == ` + (checkpoint != null));
+  // console.log(`winner == ` + winner);
+  // console.log(`savegame == ` + savegame);
+  // console.log(`checkpoint == ` + (checkpoint != null));
 
   var diff = Number(localStorage.getObject('difficulty') || 0);
   setDifficulty(diff);
 
   if (getDifficulty() == null || getDifficulty() == `` || isNaN(Number(getDifficulty()))) {
-    console.log(`HARDGAME == ${getDifficulty()}, setting to 0`);
+    // console.log(`HARDGAME == ${getDifficulty()}, setting to 0`);
     setDifficulty(0);
   }
 
@@ -104,7 +104,7 @@ function setname(name) {
 
 function setGameDifficulty(hard) {
   if (hard == null || hard == `` || isNaN(Number(hard))) {
-    console.log(`hard == ${hard}, setting to ${getDifficulty()}`);
+    // console.log(`hard == ${hard}, setting to ${getDifficulty()}`);
     hard = getDifficulty(); // use the default we set in setname
   }
 
@@ -129,7 +129,7 @@ function sethard(hard) {
 
   setDifficulty(Math.max(0, hard));
 
-  console.log(`setting difficulty: ` + getDifficulty());
+  // console.log(`setting difficulty: ` + getDifficulty());
 
   var i;
   var k = getDifficulty();

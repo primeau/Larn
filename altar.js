@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 
 /* For command mode. Perform the act of descecrating an altar */

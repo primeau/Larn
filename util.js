@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 /*
  * generate random numbers 1<=rnd(N)<=N

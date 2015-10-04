@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 // TODO, make this the canonical source for data?
 // i.e. replace cheat = ... with status.cheat etc.

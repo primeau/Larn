@@ -8,7 +8,7 @@ todo:
   + update build number in version commmand
   + minify
   + babel
-  + jshint
+  + jshint?
   + parse cloud code
 - add gzip compression to nginx
 - update wikipedia, roguebasin, temple of the roguelike
@@ -16,7 +16,6 @@ todo:
 - checkpoints are choppy
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
-- allow 5 key to stand still
 - url for scoreboard
 - stats on most dangerous monster, level, moves/kills/spells ratio
 - hall of fame and bad luck scoreboards
@@ -65,7 +64,8 @@ build:
 - install npm/node:  # (no) brew install node
 - install npm/node:  # (yes) https://nodejs.org/en/
 - install babel:     # npm install -g babel
-- install jslint:    # npm install -g jslint
+- install eslint:    # npm install -g eslint
+                     # npm install -g babel-eslint
 - watch files:       # babel --watch JLarn/ --out-dir JLarn-lib/
 - copy files:        # scp -P 1911 *.js ../JLarn/*.html jay@prim.io:/usr/share/nginx/html/larn
 - commit changes:    # git commit -a -m "Our Hero has a nicer scoreboard"

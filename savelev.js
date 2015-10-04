@@ -1,10 +1,10 @@
-`use strict`;
+'use strict';
 
 function saveGame(isCheckPoint) {
 
   if (wizard || cheat) {
     if (isCheckPoint) {
-      console.log(`not saving wizard/cheater checkpoint`);
+      // console.log(`not saving wizard/cheater checkpoint`);
       return;
     }
   }
@@ -36,7 +36,7 @@ function saveGame(isCheckPoint) {
     updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
   }
 
-  console.log(`saved hash: ` + hash.digest().toHex());
+  // console.log(`saved hash: ` + hash.digest().toHex());
   localStorage.setObject('hash', hash.digest().toHex());
 }
 
@@ -57,10 +57,10 @@ function loadSavedGame(savedState, isCheckPoint) {
   var hash = forge.md.sha512.create();
   hash.update(JSON.stringify(savedState));
 
-  console.log(`computed hash: ` + hash.digest().toHex());
+  // console.log(`computed hash: ` + hash.digest().toHex());
 
   var savedHash = localStorage.getObject('hash', hash);
-  console.log(`saved hash: ` + savedHash);
+  // console.log(`saved hash: ` + savedHash);
 
   cheat = hash.digest().toHex() != savedHash;
   console.log(`cheater? ` + cheat);
@@ -140,7 +140,7 @@ function loadLevels(savedLevels) {
       LEVELS[lev] = null;
       continue;
     }
-    console.log(`loading: ${lev}`);
+    debug(`loading: ${lev}`);
     var tempLev = savedLevels[lev];
     var items = tempLev.items;
     var monsters = tempLev.monsters;

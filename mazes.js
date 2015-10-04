@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 var USED_MAZES = [];
 const MAZES = [

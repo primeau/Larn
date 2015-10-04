@@ -3,7 +3,11 @@ Parse.Cloud.define('highscores', function(request, response) {
 
   /* prioritize fast games for winners, high scores for visitors */
   if (request.params.winner) {
-    query.descending('hardlev')/*.ascending('timeused')*/; // sorting ascending and descending doesn't work
+    query.descending('hardlev');
+
+    /* sorting ascending and descending doesn't work */
+    // query.descending('hardlev').ascending('timeused');
+
   } else {
     query.descending('hardlev', 'score', 'level', 'timeused');
   }
@@ -16,7 +20,7 @@ Parse.Cloud.define('highscores', function(request, response) {
   if (!request.params.winner && request.params.timeused != null)
     query.greaterThan('timeused', request.params.timeused);
 
-  console.log((request.params.gameover ? 'gameover ' : '') + 'scoreboard request from: ' + request.params.logname);
+  // console.log((request.params.gameover ? 'gameover ' : '') + 'scoreboard request from: ' + request.params.logname);
 
   query.find({
     success: function(scores) {
@@ -29,7 +33,6 @@ Parse.Cloud.define('highscores', function(request, response) {
 
       for (var i = 0; i < scores.length; i++) {
         var object = scores[i];
-        //console.log(object.id + ' - ' + object.get('winner') + ' ' + object.get('hardlev') + ' ' + object.get('score') + ' ' + object.get('who'));
 
         /* filter out lower scores for the same player */
         var who = object.get('who');
