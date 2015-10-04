@@ -1,4 +1,5 @@
 todo:
+- amiga-style images
 - wall spacing is different on different browsers
   - use canvas or webgl instead?
   - react/flexbox?
@@ -38,7 +39,6 @@ extras:
 + prevent stairs/shaft from being in treasure rooms
 - game start/end stats
 - cloud save via password
-- amiga-style images
 - start new game without reloading
 - copy local scores to global
 - nerf the book and chest in the store to only be sellable for purchase price?
