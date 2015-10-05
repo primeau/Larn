@@ -96,12 +96,12 @@ function bltAmiga() {
 
       } else {
         var output = display[x][y];
-        if (output.indexOf('<b>') >= 0) {
+        if (output.indexOf('<b>') >=0 || output.indexOf('<mark>') >= 0) {
           // console.log(output);
           IS_BOLD = true;
           output = output.substring(3);
         }
-        if (output.indexOf('</b>') >= 0) {
+        if (output.indexOf('</b>') >= 0 || output.indexOf('</mark>') >= 0) {
           // console.log(output);
           IS_BOLD = false;
           output = output.substring(4);

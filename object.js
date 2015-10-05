@@ -49,7 +49,7 @@ function createObject(item, arg) {
 
 
 
-var CANVAS_MODE = false;
+var CANVAS_MODE = true;
 
 const divstart = !CANVAS_MODE ? `<div style='\
 vertical-align: bottom; \
