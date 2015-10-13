@@ -457,7 +457,9 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OCHEST)) {
-    if (nearbymonst()) return;
+    if (nearbymonst()) {
+      // do nothing, allow player to pick up chest!
+    }
     if (do_ident) updateLog(`There is a chest here`);
   }
   //
