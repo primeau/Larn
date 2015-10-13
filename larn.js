@@ -1,7 +1,10 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '218';
+const BUILD = '224';
+
+const IMG_HEIGHT = 22;
+const IMG_WIDTH = 12;
 
 var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
@@ -51,10 +54,7 @@ function initKeyBindings() {
   Mousetrap.bind(':', mousetrap);
   Mousetrap.bind('@', mousetrap);
   Mousetrap.bind('{', eventToggleOriginalObjects);
-  var host = location.hostname;
-  if (host === 'localhost') {
-    Mousetrap.bind('}', eventToggleAmigaMode);
-  }
+  Mousetrap.bind('}', eventToggleAmigaMode);
   Mousetrap.bind('?', mousetrap);
   Mousetrap.bind('_', mousetrap);
   Mousetrap.bind('-', mousetrap);
