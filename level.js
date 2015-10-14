@@ -64,19 +64,18 @@ function createImage(src) {
 
 
 var IS_BOLD;
-var adjust = 0;
-
+var IS_MARK;
 
 
 function bltAmiga() {
 
-  adjust++;
-
   var canvas = document.getElementById(`lCanvas`);
+  if (!canvas) return;
   var ctx = canvas.getContext(`2d`);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   IS_BOLD = false;
+  IS_MARK = false;
 
   for (var y = 0; y < 24; y++) {
     for (var x = 0; x < 80; x++) {
@@ -89,32 +88,50 @@ function bltAmiga() {
           image = createImage(display[x][y]);
           continue;
         }
-        image.xx = x * 9;
-        image.yy = y * 18;
+        image.xx = x * IMG_WIDTH;
+        image.yy = y * IMG_HEIGHT;
         image.src = display[x][y];
-        ctx.drawImage(image, image.xx, image.yy, 9, 18);
+        ctx.drawImage(image, image.xx, image.yy, IMG_WIDTH, IMG_HEIGHT);
 
       } else {
         var output = display[x][y];
-        if (output.indexOf('<b>') >=0 || output.indexOf('<mark>') >= 0) {
-          // console.log(output);
+
+        if (output.indexOf('<b>') >= 0) {
           IS_BOLD = true;
           output = output.substring(3);
-        }
-        if (output.indexOf('</b>') >= 0 || output.indexOf('</mark>') >= 0) {
-          // console.log(output);
+        } else if (output.indexOf('<mark>') >= 0) {
+          IS_MARK = true;
+          output = output.substring(6);
+        } else if (output.indexOf('</b>') >= 0) {
           IS_BOLD = false;
           output = output.substring(4);
+        } else if (output.indexOf('</mark>') >= 0) {
+          IS_MARK = false;
+          output = output.substring(7);
         }
+
+        // strip out any other formatted stuff
+        // this is very hacky
+        if (output.indexOf('<') >=0 && output.indexOf('>') >=0) {
+          output = output.split('<')[0] + output.split('>')[1];
+        }
+
         if (IS_BOLD) {
-          ctx.font = `bold 12px Courier New, Courier, monospace`;
+          ctx.font = `bold 18px Courier New, Courier, monospace`;
           ctx.fillStyle = `white`;
+        } else if (IS_MARK) {
+          ctx.beginPath();
+          ctx.rect(x * IMG_WIDTH, y * IMG_HEIGHT, IMG_WIDTH, IMG_HEIGHT);
+          ctx.fillStyle = 'lightgrey';
+          ctx.fill();
+          ctx.font = `20px Courier New, Courier, monospace`;
+          ctx.fillStyle = `black`;
         } else {
-          ctx.font = `12px Courier New, Courier, monospace`;
+          ctx.font = `20px Courier New, Courier, monospace`;
           ctx.fillStyle = `lightgrey`;
         }
         ctx.textBaseline = `top`;
-        ctx.fillText(output, 1 + x * 9, 1 + y * 18);
+        ctx.fillText(output, 1 + x * IMG_WIDTH, 1 + y * IMG_HEIGHT);
       }
 
     } // inner for
