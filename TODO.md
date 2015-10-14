@@ -1,5 +1,4 @@
 todo:
-- amiga-style images
 - wall spacing is different on different browsers
   - use canvas or webgl instead?
   - react/flexbox?
@@ -25,6 +24,13 @@ todo:
 
 bugs:
 * no recovery if scoreboard hangs when loading
++ amiga mode
+ - strikethrough missing on taxes owing after victory
+ - wall graphics are wrong when blind
+ - can't click for details on scoreboard
+ - many font/spacing issues in text
+ - &lt, &gt on help menu
+- after winner (or losing?) with high score, newest score is also shown at bottom of board
 + when blind, a monster from an unknown tile will reveal the tile its standing on during attack
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
