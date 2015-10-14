@@ -27,7 +27,7 @@ function print_help() {
   }
   lprcat(helppages[currentpage]);
   cursors();
-  lprcat(`              ---- Press <b>space</b> for more help, <b>escape</b> to exit  ----`);
+  lprcat(`              ---- Press <b>space</b> for more help, <b>escape</b> to exit ----`);
 
   blt();
 }
@@ -76,7 +76,7 @@ helppages[1] =
   r  read a scroll            R  remove gems from throne                        \n\
   s  sit on a throne          S  save the game            {  hack-style objects \n\
 ,|t  take an item             T  take off armor                                 \n\
-  v  print program version                                <strike>} amiga-style objects</strike> \n\
+  v  print program version                                }  amiga-style objects\n\
   w  wield a weapon           W  wear armor                                     \n\
   z  show scores              Z  teleport yourself        ?  this help screen   \n\
   `;
@@ -100,7 +100,7 @@ without having to type a space to get back to the prompt.\n\
 \n\
 If NumLock is off, the Keypad functions in the obvious way for movement. Hold\n\
 Shift when pressing any direction on the Keypad to run in that direction. The\n\
-5 key on the Keypad is the same as \`stay here\`, which really means skip your\n\
+5 key on the Keypad is the same as \'stay here\', which really means skip your\n\
 turn.\n\
 `;
 
@@ -137,7 +137,7 @@ that scoreboard.  This design helps insure that frequent players of Larn\n\
 do not hog the scoreboard, and gives more players a chance for glory.  Level\n\
 of difficulty is also noted on the scoreboards, and this takes precedence\n\
 over score for determining what entry is on the scoreboard.  For example:\n\
-if \`Yar, the Bug Slayer\` has a score of 128003 on the scoreboard at diff 0,\n\
+if \'Yar, the Bug Slayer\' has a score of 128003 on the scoreboard at diff 0,\n\
 then a game at diff 1 and a score of 4112 would replace the previous\n\
 entry on the scoreboard.  Note that when a player dies, the inventory is\n\
 stored in the scoreboard so that everyone can see what items the player had\n\

@@ -54,8 +54,8 @@ var CANVAS_MODE = false;
 const divstart = !CANVAS_MODE ? `<div style='\
 vertical-align: bottom; \
 display: inline-block; \
-width: 12px; \
-height: 22px; \
+width: ${IMG_WIDTH}px; \
+height: ${IMG_HEIGHT}px; \
 margin: 0px; \
 background: #000000 url(img/` :
   `img/`;
@@ -660,7 +660,7 @@ function readbook(book) {
   else
     i = rnd((tmp = splev[lev] - 9) ? tmp : 1) + 9;
   learnSpell(spelcode[i]);
-  updateLog(`Spell \`<b>${spelcode[i]}</b>\`: ${spelname[i]}`);
+  updateLog(`Spell \'<b>${spelcode[i]}</b>\': ${spelname[i]}`);
   updateLog(`  ${speldescript[i]}`);
   if (rnd(10) == 4) {
     updateLog(`  Your intelligence went up by one!`);
