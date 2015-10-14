@@ -143,9 +143,9 @@ function drawmaze() {
           else
             lprc(monster.getChar());
         } else {
-          if (blind)
-            item.matches(OWALL) ? lprc(OWALL.getChar()) : lprc(item.getChar())
-          else
+          // if (blind)
+          //   item.matches(OWALL) ? lprc(OWALL.getChar()) : lprc(item.getChar())
+          // else
             lprc(item.getChar());
         }
       } else {
