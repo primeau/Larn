@@ -3,7 +3,7 @@ Parse.Cloud.define('highscores', function(request, response) {
 
   /* prioritize fast games for winners, high scores for visitors */
   if (request.params.winner) {
-    query.descending('hardlev');
+    query.descending('hardlev', 'score');
 
     /* sorting ascending and descending doesn't work */
     // query.descending('hardlev').ascending('timeused');

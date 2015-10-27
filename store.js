@@ -107,7 +107,15 @@ function dndstore() {
 
   initpricelist();
 
-  clear();
+  /*
+   * Easter Egg #2 -- recreate the DOS Larn 12.0 experience for Rob
+   */
+  if (logname === 'Rob the Warrior of Doom') {
+    if (dndindex == 0) clear();
+    cursor(1, 1);
+  } else {
+    clear(); // this is the correct behaviour
+  }
 
   lprcat(`Welcome to the Larn Thrift Shoppe.  We stock many items explorers find useful\n`);
   lprcat(`in their adventures.  Feel free to browse to your hearts content.\n`);

@@ -1,10 +1,6 @@
 'use strict';
 
 
-var no_intro = false;
-
-
-
 /* create new game */
 function welcome() {
 
