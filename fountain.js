@@ -2,7 +2,7 @@
 
 
 /*
-    Code to perform the action of drinking at a fountian.  Assumes that
+    Code to perform the action of drinking at a fountain.  Assumes that
     cursors() has already been called, and that a check has been made that
     the player is actually standing at a live fountain.
 */
