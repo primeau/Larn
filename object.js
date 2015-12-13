@@ -153,23 +153,20 @@ Item.prototype = {
     // we can wield more things than we show during wield inventory check
     // this is what we show during an inventory check while wielding
     isWeapon: function() {
-      switch (this.id) {
-        case ODIAMOND.id:
-        case ORUBY.id:
-        case OEMERALD.id:
-        case OSAPPHIRE.id:
-        case OBOOK.id:
-        case OCHEST.id:
-        case OLARNEYE.id:
-        case ONOTHEFT.id:
-        case OSPIRITSCARAB.id:
-        case OCUBEofUNDEAD.id:
-        case OPOTION.id:
-        case OSCROLL.id:
-          return false;
-          break;
-      };
-      return this.carry;
+        var weapon = false;
+        weapon |= this.matches(OSHIELD);
+        weapon |= this.matches(ODAGGER);
+        weapon |= this.matches(OSPEAR);
+        weapon |= this.matches(OFLAIL);
+        weapon |= this.matches(OBATTLEAXE);
+        weapon |= this.matches(OLONGSWORD);
+        weapon |= this.matches(O2SWORD);
+        weapon |= this.matches(OSWORD);
+        weapon |= this.matches(OLANCE);
+        weapon |= this.matches(OSWORDofSLASHING);
+        weapon |= this.matches(OHAMMER);
+        weapon |= this.matches(OBELT);
+        return weapon;
     },
 
     isArmor: function() {

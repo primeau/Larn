@@ -592,7 +592,7 @@ function wield(index) {
   var item = itemAt(player.x, player.y);
 
   // player is over a weapon
-  if (item.canWield()) {
+  if (item.isWeapon()) {
     appendLog(` wield`);
     if (take(item)) {
       forget(); // remove from board

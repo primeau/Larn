@@ -1,4 +1,5 @@
 todo:
+* no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
 - wall spacing is different on different browsers
   - use canvas or webgl instead?
   - react/flexbox?
@@ -24,20 +25,28 @@ todo:
 
 bugs:
 * no recovery if scoreboard hangs when loading
++ no notification when itchiness, clumsyness, haste monsters, etc subsides
++ monsters with special attacks get 2 attacks and can blow through life protection
+- multiple 'you have been slain' messages if you get killed by more than 1 monster
+  - or waterlord hitting & getting with gusher (or other special attacks)
 + amiga mode
+ - m39/65 - invisible stalker
+   - potion line 301: Uncaught TypeError: Cannot read property 'img/m65.png' of null
+   - regen line 73: Uncaught TypeError: Cannot read property 'img/o0.png' of null
+ - walls
  - strikethrough missing on taxes owing after victory
  - wall graphics are wrong when blind
  - can't click for details on scoreboard
  - many font/spacing issues in text
  - &lt, &gt on help menu
+- black tile when opening door when blind
++ smart monsters who can walk over pits stop when standing on them
 - after winner (or losing?) with high score, newest score is also shown at bottom of board
 + when blind, a monster from an unknown tile will reveal the tile its standing on during attack
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
-- multiple 'you have been slain' messages if you get killed by more than 1 monster
-  - or waterlord hitting & getting with gusher (or other special attacks)
 - readmail() can report wrong gold/tax status
 
 
@@ -57,6 +66,7 @@ extras:
 - more authentic font
 - 'you got the dirt off!' should remove negative armor class for armor / shield
 - beep support
+- 'twitch' mode to broadcast and watch games (webrtc?)
 
 
 rename/refactor:
