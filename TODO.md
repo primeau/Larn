@@ -1,12 +1,11 @@
 todo:
-* no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
 - wall spacing is different on different browsers
   - use canvas or webgl instead?
   - react/flexbox?
 + closed window alert is annoying -> create alert-on-close option?
 + switch to github pages?
 + build process
-  + update build number in version commmand
+  + update build number in version command
   + minify
   + babel
   + jshint?
@@ -14,21 +13,12 @@ todo:
 - add gzip compression to nginx
 - update wikipedia, roguebasin, temple of the roguelike
 - look for TODO/HACK
-- checkpoints are choppy
-  - save checkpoint in a thread?
-  - break LEVELS into 14 sections & only save on level change
-- url for scoreboard
-- stats on most dangerous monster, level, moves/kills/spells ratio
-- hall of fame and bad luck scoreboards
 - scoreboard request from parse can probably be done as one request
 
 
 bugs:
+* no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
 * no recovery if scoreboard hangs when loading
-+ no notification when itchiness, clumsyness, haste monsters, etc subsides
-+ monsters with special attacks get 2 attacks and can blow through life protection
-- multiple 'you have been slain' messages if you get killed by more than 1 monster
-  - or waterlord hitting & getting with gusher (or other special attacks)
 + amiga mode
  - m39/65 - invisible stalker
    - potion line 301: Uncaught TypeError: Cannot read property 'img/m65.png' of null
@@ -48,16 +38,20 @@ bugs:
 - casting sph twice in the same direction will always kill the player
 - parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
 - readmail() can report wrong gold/tax status
+- checkpoints are choppy
+  - save checkpoint in a thread?
+  - break LEVELS into 14 sections & only save on level change
 
 
 extras:
 + prevent stairs/shaft from being in treasure rooms
 - game start/end stats
+- no notification when haste monsters, aggravate subsides
 - cloud save via password
 - start new game without reloading
 - copy local scores to global
 - nerf the book and chest in the store to only be sellable for purchase price?
-  - use negative arg special case to give book,chest same level
+  - use negative arg special case to give book, chest same level
 - nerf stealth based on difficulty?
 - put platinum dragon beside eye of larn
 - color (mcolor/ocolor)
@@ -67,6 +61,10 @@ extras:
 - 'you got the dirt off!' should remove negative armor class for armor / shield
 - beep support
 - 'twitch' mode to broadcast and watch games (webrtc?)
+- altars should crumble to dust after too many prayer to prevent too many +AC/WC
+- url for scoreboard
+- stats on most dangerous monster, level, moves/kills/spells ratio
+- hall of fame and bad luck scoreboards
 
 
 rename/refactor:

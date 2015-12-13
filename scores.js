@@ -662,8 +662,6 @@ function canProtect(reason) {
  * 286     a quitter
  * 287     saved game -- shouldn't go on scoreboard!
  */
-var playerHasBeenKilledAlreadySoDoNotSlayAgain = false;
-
 function died(reason, slain) {
 
   var winner = reason == 263;
@@ -680,9 +678,8 @@ function died(reason, slain) {
   }
 
   if (!winner) {
-    if (slain && !playerHasBeenKilledAlreadySoDoNotSlayAgain) {
+    if (slain) {
       updateLog(`You have been slain!`);
-      playerHasBeenKilledAlreadySoDoNotSlayAgain = true;
     }
   }
 

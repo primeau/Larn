@@ -490,11 +490,6 @@ function createitem(it, arg) {
  */
 function hitplayer(x, y) {
 
-  if (player.HP <= 0) {
-    debug('already dead');
-    return;
-  }
-
   var monster = player.level.monsters[x][y];
   if (!monster) {
     return;
@@ -537,27 +532,34 @@ function hitplayer(x, y) {
     dam += rnd(((dam < 1) ? 1 : dam)) + monster.level;
   }
 
-  var tmp = 0;
+  var playerHit = false;
+  var lifeCount = player.LIFEPROT;
 
   if (monster.attack > 0)
     if (((dam + bias + 8) > player.AC) || (rnd(((player.AC > 0) ? player.AC : 1)) == 1)) {
       if (spattack(monster.attack, x, y)) {
+        // spattack returns 1 if the monster disappears (theft)
         return;
       }
-      tmp = 1;
+      playerHit = true;
       bias -= 2;
       //cursors();
     }
 
+    if (player.HP <= 0 || lifeCount != player.LIFEPROT) {
+      debug('already killed');
+      return;
+    }
+
   if (((dam + bias) > player.AC) || (rnd(((player.AC > 0) ? player.AC : 1)) == 1)) {
     updateLog(`  The ${monster} hit you`);
-    tmp = 1;
+    playerHit = true;
     if ((dam -= player.AC) < 0) dam = 0;
     if (dam > 0) {
       player.losehp(dam);
     }
   }
-  if (tmp == 0) updateLog(`  The ${monster} missed `);
+  if (!playerHit) updateLog(`  The ${monster} missed `);
 }
 
 
