@@ -74,7 +74,7 @@ function act_donation_pray(k) {
       return 1;
     }
     if (rnd(43) == 5) {
-      if (player.WEAR)
+      if (player.WEAR || player.SHIELD)
         updateLog(`  You feel your armor vibrate for a moment`);
       enchantarmor();
       return 1;
@@ -111,7 +111,7 @@ function act_just_pray() {
   if (rnd(100) < 75)
     updateLog(`  Nothing happens`);
   else if (rnd(43) == 10) {
-    if (player.WEAR)
+    if (player.WEAR || player.SHIELD)
       updateLog(`  You feel your armor vibrate for a moment`);
     enchantarmor();
     return;
