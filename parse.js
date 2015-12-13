@@ -313,7 +313,7 @@ function parse(key) {
   // WIELD
   //
   if (key == 'w') {
-    if (item.canWield()) {
+    if (item.isWeapon()) {
       wield(item);
     } else {
       updateLog(`What do you want to wield (-) for nothing [<b>space</b> to view] ? `);
