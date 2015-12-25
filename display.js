@@ -29,7 +29,8 @@ function blt() {
       loadImages();
     }
     document.getElementById(`LARN`).innerHTML = ``;
-    return bltAmiga();
+    bltAmiga();
+    return;
   }
 
   var output = ``;

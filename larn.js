@@ -1,10 +1,11 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '224';
+const BUILD = '236';
 
-const IMG_HEIGHT = 22;
-const IMG_WIDTH = 12;
+const IMG_HEIGHT = 16;
+const IMG_WIDTH = 8;
+
 
 var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;

@@ -51,15 +51,18 @@ function createObject(item, arg) {
 
 var CANVAS_MODE = false;
 
-const divstart = !CANVAS_MODE ? `<div style='\
-vertical-align: bottom; \
-display: inline-block; \
-width: ${IMG_WIDTH}px; \
-height: ${IMG_HEIGHT}px; \
-margin: 0px; \
-background: #000000 url(img/` :
-  `img/`;
-const divend = !CANVAS_MODE ? `.png) no-repeat left center;'></div>` : `.png`;
+// const divstart = !CANVAS_MODE ? `<div style='\
+// vertical-align: bottom; \
+// display: inline-block; \
+// width: ${IMG_WIDTH}px; \
+// height: ${IMG_HEIGHT}px; \
+// margin: 0px; \
+// background: #000000 url(img/` :
+//   `img/`;
+// const divend = !CANVAS_MODE ? `.png) no-repeat left center;'></div>` : `.png`;
+
+const divstart = !CANVAS_MODE ? `<div style='height: ${IMG_HEIGHT}px; width: ${IMG_WIDTH}px; margin: 0px; vertical-align: bottom; display: inline-block; background-color: black'><img style='height: 100%; width: 100%; object-fit: contain' src='img/` : `img/`;
+const divend = !CANVAS_MODE ? `.png'/></div>` : `.png`;
 
 Item.prototype = {
     id: null,

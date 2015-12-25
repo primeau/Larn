@@ -1,7 +1,5 @@
 todo:
 - wall spacing is different on different browsers
-  - use canvas or webgl instead?
-  - react/flexbox?
 + closed window alert is annoying -> create alert-on-close option?
 + switch to github pages?
 + build process
@@ -20,15 +18,17 @@ bugs:
 * no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
 * no recovery if scoreboard hangs when loading
 + amiga mode
- - m39/65 - invisible stalker
-   - potion line 301: Uncaught TypeError: Cannot read property 'img/m65.png' of null
-   - regen line 73: Uncaught TypeError: Cannot read property 'img/o0.png' of null
- - walls
- - strikethrough missing on taxes owing after victory
- - wall graphics are wrong when blind
- - can't click for details on scoreboard
- - many font/spacing issues in text
- - &lt, &gt on help menu
+  - wall spacing is different on different browsers
+  - invisible stalker / see invisible is broken
+  - missile spells distort the row the player is on
+  - demons are the wrong sized empty tile
+     - potion line 301: Uncaught TypeError: Cannot read property 'img/m65.png' of null
+     - regen line 73: Uncaught TypeError: Cannot read property 'img/o0.png' of null
+  - strikethrough missing on taxes owing after victory
+  - wall graphics are wrong when blind
+  - can't click for details on scoreboard
+  - many font/spacing issues in text
+  - &lt, &gt on help menu
 - black tile when opening door when blind
 + smart monsters who can walk over pits stop when standing on them
 - after winner (or losing?) with high score, newest score is also shown at bottom of board

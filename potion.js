@@ -297,7 +297,9 @@ function quaffpotion(potion, set_known) {
       /* see invisible */
       player.SEEINVISIBLE += rnd(1000) + 400;
       monsterlist[INVISIBLESTALKER].char = 'I';
+      // images[`img/m${INVISIBLESTALKER}.png`] = images[`img/m${VISIBLESTALKER}.png`];
       updateLog(`  You feel your vision sharpen`);
+      // images[`img/m39.png`] = images[`img/m39.png`];
       break;
   };
 }

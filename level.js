@@ -33,7 +33,7 @@ function loadImages() {
   console.log(`loading images`);
 
   var img;
-  for (var i = 0; i <= 67; i++) {
+  for (var i = 0; i <= 64; i++) {
     img = `img/m${i}.png`;
     images[img] = createImage(img);
   }
