@@ -15,6 +15,7 @@ todo:
 
 
 bugs:
+- having two toggle keys for amiga / classic / hack is confusing
 * no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
 * no recovery if scoreboard hangs when loading
 + amiga mode
@@ -44,7 +45,9 @@ bugs:
 
 
 extras:
+* add store value of inventory to score to save people from having to sell everything at the end of a winning game
 + prevent stairs/shaft from being in treasure rooms
+- prevent volcano access when player level < 10(?)
 - game start/end stats
 - no notification when haste monsters, aggravate subsides
 - cloud save via password

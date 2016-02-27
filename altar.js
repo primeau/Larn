@@ -165,7 +165,5 @@ function act_ignore_altar(x, y) {
  */
 function act_prayer_heard() {
   updateLog(`  You have been heard!`);
-  if (player.ALTPRO == 0)
-    player.MOREDEFENSES += 3;
   player.updateAltPro(500); /* protection field */
 }

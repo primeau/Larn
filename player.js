@@ -396,6 +396,8 @@ var Player = function Player() {
     var prev = this.GIANTSTR;
     this.GIANTSTR = Math.max(0, this.GIANTSTR + x);
     changedGiantStr = getUpdateTime(prev, x, this.GIANTSTR, changedGiantStr);
+    if (prev <= 0 && this.GIANTSTR > 0) this.setStrExtra(this.STREXTRA + 21);
+    if (prev > 0 && this.GIANTSTR <= 0) this.setStrExtra(this.STREXTRA - 20);
     return this.GIANTSTR;
   };
   this.updateFireResistance = function(x) {
@@ -408,12 +410,16 @@ var Player = function Player() {
     var prev = this.DEXCOUNT;
     this.DEXCOUNT = Math.max(0, this.DEXCOUNT + x);
     changedDexCount = getUpdateTime(prev, x, this.DEXCOUNT, changedDexCount);
+    if (prev <= 0 && this.DEXCOUNT > 0) this.setDexterity(this.DEXTERITY + 3);
+    if (prev > 0 && this.DEXCOUNT <= 0) this.setDexterity(this.DEXTERITY - 3);
     return this.DEXCOUNT;
   };
   this.updateStrCount = function(x) {
     var prev = this.STRCOUNT;
     this.STRCOUNT = Math.max(0, this.STRCOUNT + x);
     changedStrCount = getUpdateTime(prev, x, this.STRCOUNT, changedStrCount);
+    if (prev <= 0 && this.STRCOUNT > 0) this.setStrExtra(this.STREXTRA + 3);
+    if (prev > 0 && this.STRCOUNT <= 0) this.setStrExtra(this.STREXTRA - 3);
     return this.STRCOUNT;
   };
   this.updateScareMonst = function(x) {
@@ -444,12 +450,16 @@ var Player = function Player() {
     var prev = this.ALTPRO;
     this.ALTPRO = Math.max(0, this.ALTPRO + x);
     changedAltPro = getUpdateTime(prev, x, this.ALTPRO, changedAltPro);
+    if (prev <= 0 && this.ALTPRO > 0) this.setMoreDefenses(this.MOREDEFENSES + 3);
+    if (prev > 0 && this.ALTPRO <= 0) this.setMoreDefenses(this.MOREDEFENSES - 3);
     return this.ALTPRO;
   };
   this.updateProtectionTime = function(x) {
     var prev = this.PROTECTIONTIME;
     this.PROTECTIONTIME = Math.max(0, this.PROTECTIONTIME + x);
     changedProtectionTime = getUpdateTime(prev, x, this.PROTECTIONTIME, changedProtectionTime);
+    if (prev <= 0 && this.PROTECTIONTIME > 0) this.setMoreDefenses(this.MOREDEFENSES + 2);
+    if (prev > 0 && this.PROTECTIONTIME <= 0) this.setMoreDefenses(this.MOREDEFENSES - 2);
     return this.PROTECTIONTIME;
   };
   this.updateWTW = function(x) {

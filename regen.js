@@ -52,11 +52,11 @@ function regen() {
   if (player.INVISIBILITY)   player.updateInvisibility(-1);
   if (player.WTW)            player.updateWTW(-1);
 
-  if (player.GIANTSTR)       if (player.updateGiantStr(-1) <= 0)       player.setStrExtra(player.STREXTRA - 20);
-  if (player.DEXCOUNT)       if (player.updateDexCount(-1) <= 0)       player.setDexterity(player.DEXTERITY - 3);
-  if (player.STRCOUNT)       if (player.updateStrCount(-1) <= 0)       player.setStrExtra(player.STREXTRA - 3);
-  if (player.ALTPRO)         if (player.updateAltPro(-1) <= 0)         player.setMoreDefenses(player.MOREDEFENSES - 3);
-  if (player.PROTECTIONTIME) if (player.updateProtectionTime(-1) <= 0) player.setMoreDefenses(player.MOREDEFENSES - 2);
+  if (player.GIANTSTR)       player.updateGiantStr(-1);
+  if (player.DEXCOUNT)       player.updateDexCount(-1);
+  if (player.STRCOUNT)       player.updateStrCount(-1);
+  if (player.ALTPRO)         player.updateAltPro(-1);
+  if (player.PROTECTIONTIME) player.updateProtectionTime(-1);
 
   if (player.GLOBE)          if (--player.GLOBE <= 0)          player.setMoreDefenses(player.MOREDEFENSES - 10);
   if (player.BLINDCOUNT)     if (--player.BLINDCOUNT <= 0)     updateLog(`The blindness lifts`);

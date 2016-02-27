@@ -119,7 +119,6 @@ function speldamage(x) {
 
     case 0:
       /* protection field +2 */
-      if (player.PROTECTIONTIME == 0) player.setMoreDefenses(player.MOREDEFENSES + 2);
       player.updateProtectionTime(250);
       return;
 
@@ -130,7 +129,6 @@ function speldamage(x) {
 
     case 2:
       /* dexterity   */
-      if (player.DEXCOUNT == 0) player.setDexterity(player.DEXTERITY + 3);
       player.updateDexCount(400);
       return;
 
@@ -158,7 +156,6 @@ function speldamage(x) {
 
     case 7:
       /* strength */
-      if (player.STRCOUNT == 0) player.setStrExtra(player.STREXTRA + 3);
       player.updateStrCount(150 + rnd(100));
       return;
 

@@ -247,7 +247,6 @@ function quaffpotion(potion, set_known) {
     case 17:
       /* giant strength */
       if (player.GIANTSTR == 0) {
-        player.STREXTRA += 21;
         changedSTR = millis();
       }
       player.updateGiantStr(700);
