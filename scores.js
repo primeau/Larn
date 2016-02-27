@@ -208,7 +208,7 @@ var losers = null;
 
 
 const MAX_SCORES_TO_PRINT = 17;
-const MIN_TIME_PLAYED = 5;
+const MIN_TIME_PLAYED = 50;
 
 
 
