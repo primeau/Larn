@@ -27,7 +27,7 @@ function act_quaffpotion(index) {
   var item = player.inventory[useindex];
   if (item && item.matches(OPOTION)) {
     player.inventory[useindex] = null;
-    quaffpotion(item);
+    quaffpotion(item, true);
   } else {
     if (!item) {
       //debug(useindex);
