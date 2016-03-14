@@ -37,8 +37,7 @@ function act_read_something(index) {
         if (mazeMode) {
           showinventory(true, act_read_something, showread, false, false);
         } else {
-          mazeMode = true;
-          paint();
+          setMazeMode(true);
         }
         nomove = 1;
         return 0;
@@ -55,7 +54,7 @@ function act_read_something(index) {
       updateLog(`  You can't read that!`);
     }
   }
-  mazeMode = true;
+  setMazeMode(true);
   return 1;
 }
 

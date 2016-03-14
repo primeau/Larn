@@ -103,6 +103,14 @@ function loadState(state) {
   dnd_item = state.dnd_item;
   genocide = state.genocide;
   amiga_mode = state.amiga_mode;
+
+  if (amiga_mode) {
+      amiga_mode = false;
+      original_objects = false;
+      console.log(`setting amiga mode?`);
+      eventToggleMode();
+  }
+
   debug_used = state.debug_used;
 
   logname = state.logname;

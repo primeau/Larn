@@ -789,9 +789,15 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
   //debug(`${x}, ${y}: ${dam}`);
 
+  // clear the previous square
   if (x != player.x || y != player.y) {
     cursor(x + 1, y + 1);
-    lprc(itemAt(x, y).getChar());
+    if (amiga_mode) {
+      lprc(` `);
+    }
+    else {
+      lprc(itemAt(x, y).getChar());
+    }
   }
 
   x += dx;

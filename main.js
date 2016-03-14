@@ -213,9 +213,7 @@ function startgame(hard) {
   showcell(player.x, player.y);
 
   GAMEOVER = false;
-  mazeMode = true;
-
-  paint();
+  setMazeMode(true);
 
   return 1;
 }

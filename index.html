@@ -64,11 +64,22 @@
       src: url('fonts/vgasys.otf');
     }*/
 
-    p.mono {
-      font-family: /*'dos',*/ 'Courier New', Courier, monospace;
-      color: lightgrey;
-      font-size: 80%;
+    body {
+        font-size: 14px;
+        color: lightgrey;
     }
+
+    div {
+        font-family: 'dos', 'Courier New', Courier, monospace;
+        color: lightgrey;
+        /*font-size: 1.5em;*/
+    }
+
+    p.mono {
+      font-family: 'dos', 'Courier New', Courier, monospace;
+      color: lightgrey;
+    }
+
 
     mark {
       background-color: lightgrey;
@@ -126,10 +137,13 @@
   <section>
     <div>
       <pre>
-        <p class='mono' id='LARN'>
-          LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or MORIA, but with a different feel and winning criteria. Unfortunately if you're seeing this page, there was an error loading the game. Please submit an issue via the link below
-          and I'll get to the bottom of it!
-        </p>
+        <div class='mono' id='LARN'>
+          LARN is a dungeon type adventure game similar in concept to HACK,
+          ROGUE or MORIA, but with a different feel and winning criteria.
+          Unfortunately if you're seeing this page, there was an error loading
+          the game. Please submit an issue via the link and I'll get to the
+          bottom of it!
+      </div>
         <script>
           'use strict';
           var no_intro = false;
@@ -137,9 +151,6 @@
         </script>
       </pre>
     </div>
-    <!-- <div>
-      <canvas id='lCanvas' width='960' height='528' style='border:1px solid #555555;'>
-    </div> -->
 
     <!-- <p>
       <button onclick='mousetrap(null, 'return')'>return</button>

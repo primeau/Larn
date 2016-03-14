@@ -52,7 +52,7 @@ function enter() {
   }
 
   debug(`enter(): no building here`);
-  mazeMode = true;
+  setMazeMode(true);
 
   updateLog(`There is no place to enter here!`);
 
@@ -73,7 +73,7 @@ function enter() {
  *
  */
 function dungeon() {
-  mazeMode = true;
+  setMazeMode(true);
   /* place player in front of entrance on level 1.  newcavelevel()
      prevents player from landing on a monster/object.
   */
@@ -900,7 +900,7 @@ function ohome() {
     if (item && item.matches(OPOTION) && item.arg == 21) {
       //iven[i] = 0; /* remove from inventory */
       if (gtime > TIMELIMIT) {
-        mazeMode = true;
+        setMazeMode(true);
         updateLog(`Congratulations. You found a potion of cure dianthroritis. Frankly, no one`);
         updateLog(`thought you could do it. Boy! Did you surprise them! The doctor has the sad`);
         updateLog(`duty to inform you that your daughter died before your return. There was`);
@@ -908,7 +908,7 @@ function ohome() {
         died(269, false); /* failed */
         return;
       } else {
-        mazeMode = true;
+        setMazeMode(true);
         updateLog(`Congratulations. You found a potion of cure dianthroritis. Frankly, no one`);
         updateLog(`thought you could do it. Boy! Did you surprise them! The doctor is now`);
         updateLog(`administering the potion, and in a few moments your daughter should be well`);
@@ -923,7 +923,7 @@ function ohome() {
   }
 
   if (gtime > TIMELIMIT) {
-    mazeMode = true;
+    setMazeMode(true);
     updateLog(`Welcome home ${logname}.`);
     updateLog(`The latest word from the doctor is not good.`);
     updateLog(`The doctor has the sad duty to inform you that your daughter died! You didn't`);
@@ -1075,9 +1075,7 @@ function olrs() {
  *
  */
 function exitbuilding() {
-  mazeMode = true;
-  clear();
-  paint();
+  setMazeMode(true);
   return 1;
 }
 

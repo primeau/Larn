@@ -216,8 +216,7 @@ function act_eatcookie(index) {
         if (mazeMode) {
           showinventory(true, act_eatcookie, showeat, false, false);
         } else {
-          mazeMode = true;
-          paint();
+          setMazeMode(true);
         }
         nomove = 1;
         return;
@@ -234,6 +233,6 @@ function act_eatcookie(index) {
       updateLog(`  You can't eat that!`);
     }
   }
-  mazeMode = true;
+  setMazeMode(true);
   return 1;
 }

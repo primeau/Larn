@@ -256,18 +256,20 @@ function pad(str, width, bold) {
 
 
 
-const BOLDDELAY = 700; // left align with -width, otherwise right align
-function padString(str, width, lastBoldTime) {
+const HIGHLIGHT_DELAY = 700; // left align with -width, otherwise right align
+function padString(str, width, lastHighlightTime) {
   if (!width || width == 0) return str;
   var now = millis();
   var numspaces = Math.max(0, Math.abs(width) + 1 - str.length);
   var spaces = Array(numspaces).join(` `);
-  var boldStart = ((now - lastBoldTime) < BOLDDELAY) ? `<mark>` : ``;
-  var boldEnd = ((now - lastBoldTime) < BOLDDELAY) ? `</mark>` : ``;
+  var shouldHighlight = ((now - lastHighlightTime) < HIGHLIGHT_DELAY);
+  var highlightStart = shouldHighlight ? START_MARK : ``;
+  var highlightEnd = shouldHighlight ? END_MARK : ``;
+
   if (width < 0) {
-    return `${boldStart}${str}${boldEnd}${spaces}`;
+    return `${highlightStart}${str}${highlightEnd}${spaces}`;
   } else {
-    return `${spaces}${boldStart}${str}${boldEnd}`;
+    return `${spaces}${highlightStart}${str}${highlightEnd}`;
   }
 }
 

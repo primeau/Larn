@@ -171,7 +171,7 @@ function inv_sort(a, b) {
 function parse_inventory(key) {
   nomove = 1;
   if (key == ESC || key == ' ') {
-    mazeMode = true;
+    setMazeMode(true);
     return 1;
   } else {
     return 0;
@@ -217,8 +217,7 @@ function drop_object(index) {
     if (mazeMode) {
       showinventory(true, drop_object, showall, false, false);
     } else {
-      mazeMode = true;
-      paint();
+      setMazeMode(true);
     }
     nomove = 1;
     return 0;
@@ -242,14 +241,14 @@ function drop_object(index) {
       appendLog(` cancelled`);
       nomove = 1;
     }
-    mazeMode = true;
+    setMazeMode(true);
     return 1;
   }
 
   if (isItemAt(player.x, player.y)) {
     beep();
     updateLog(`  There's something here already`);
-    mazeMode = true;
+    setMazeMode(true);
     return 1;
   }
 
@@ -274,7 +273,7 @@ function drop_object(index) {
   }
   player.adjustcvalues(item, false);
 
-  mazeMode = true;
+  setMazeMode(true);
   return 1;
 }
 

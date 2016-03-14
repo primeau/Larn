@@ -24,15 +24,20 @@ function paint() {
 
 
 function blt() {
-  if (amiga_mode && CANVAS_MODE) {
-    if (!images) {
-      loadImages();
-    }
-    document.getElementById(`LARN`).innerHTML = ``;
-    bltAmiga();
-    return;
+  if (amiga_mode) {
+    // do nithing
   }
+  else {
+    // TODO: setup for not repainting in text mode
+    // TODO: need to update io.js:os_put_font(), display.js:blt(), larn.js:play()
+    // TODO: this will break scoreboard rendering
+    bltDocument();
+  }
+}
 
+
+
+function bltDocument() {
   var output = ``;
   for (var y = 0; y < 24; y++) {
     for (var x = 0; x < 80; x++) {
@@ -40,25 +45,80 @@ function blt() {
     } // inner for
     output += `\n`;
   } // outer for
-  document.getElementById(`LARN`).innerHTML = output;
+  setDiv(`LARN`, output);
+}
+
+
+
+function setMazeMode(mode) {
+  mazeMode = mode;
+  clear();
+  paint();
+}
+
+
+
+function setChar(x, y, c, markup) {
+   setDiv(`${x},${y}`, c, markup);
+}
+
+
+
+function setDiv(id, data, markup) {
+  var doc = document.getElementById(id);
+  if (doc) {
+    doc.innerHTML = data;
+    if (markup == START_BOLD) {
+      doc.style.fontWeight = (markup == START_BOLD) ? 'bold' : 'normal';
+    }
+    else if (markup == START_MARK) {
+      doc.innerHTML = `<mark>${data}</mark>`;
+      // probably would be better to set a different bg and font color
+      // doc.style.color = markup == 'highlight' ? 'green' : 'lightgrey';
+    }
+    else {
+      doc.style.fontWeight = markup == START_BOLD ? 'bold' : 'normal';
+    }
+  }
+  else {
+    console.log(`null document: ${id}`);
+  }
+}
+
+
+
+function setImage(x, y, img) {
+  if (!amiga_mode) return;
+  var doc = document.getElementById(`${x},${y}`);
+  if (doc) {
+    // OPTIMIZATION: don't set bg image if it's the same
+    // currently complicated because the format of the string is different
+    // if (doc.style.backgroundImage === img) {
+    //   console.log(doc.style.backgroundImage, img);
+    //   console.trace();
+    //   return;
+    // }
+   doc.style.backgroundImage=img;
+   doc.innerHTML = ` `;
+  }
+  else {
+    console.log(`setImage: null doc at ${x},${y}`);
+  }
 }
 
 
 
 function printStats() {
-  var doc = document.getElementById(`STATS`);
-  if (doc)
-    document.getElementById(`STATS`).innerHTML = DEBUG_STATS ? game_stats() : ``;
+  setDiv(`STATS`, DEBUG_STATS ? game_stats() : ``);
 }
 
 
 
 function bottomline() {
-  cursor(1, 18);
+  cl_dn(1,18);
   lprcat(`${player.getStatString()}\n`);
 
   for (var logindex = LOG_SAVE_SIZE - LOG_SIZE; logindex < LOG.length; logindex++) {
-    cltoeoln();
     lprcat(`${LOG[logindex]}\n`);
   }
 }
@@ -107,7 +167,8 @@ better, so you're stuck with it.
 */
 function drawmaze() {
 
-  clear();
+  if (!amiga_mode)
+    clear();
 
   var know = player.level.know;
 
@@ -130,27 +191,27 @@ function drawmaze() {
     for (var i = 0; i < MAXX; i++) {
 
       if (know[i][j] == 0) {
-        lprc(OUNKNOWN.getChar());
+        lprc(OUNKNOWN.getChar(), i, j);
       } else if (know[i][j] & HAVESEEN) {
         if (i == player.x && j == player.y) {
-          lprc(player.getChar());
+            lprc(player.getChar(), i, j);
           continue;
         }
         var monster = monsterAt(i, j);
         var item = itemAt(i, j);
         if (monster && know[i][j] & KNOWHERE) {
           if (blind)
-            lprc(item.getChar())
+            lprc(item.getChar(), i, j);
           else
-            lprc(monster.getChar());
+            lprc(monster.getChar(), i, j);
         } else {
           // if (blind)
           //   item.matches(OWALL) ? lprc(OWALL.getChar()) : lprc(item.getChar())
           // else
-            lprc(item.getChar());
+            lprc(item.getChar(), i, j);
         }
       } else {
-        lprc(OUNKNOWN.getChar());
+        lprc(OUNKNOWN.getChar(), i, j);
         //mitem[i][j] = item[i][j] = 0;
       }
     }

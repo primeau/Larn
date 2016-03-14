@@ -99,7 +99,7 @@ var Player = function Player() {
 
   this.getChar = function() {
     if (amiga_mode)
-      return `${divstart}player${divend}`;
+      return `${DIV_START}player${DIV_END}`;
     else
       return this.char;
   };
@@ -607,7 +607,7 @@ function wield(index) {
     if (take(item)) {
       forget(); // remove from board
     } else {
-      mazeMode = true;
+      setMazeMode(true);
       return 1;
     }
   }
@@ -617,8 +617,7 @@ function wield(index) {
       if (mazeMode) {
         showinventory(true, wield, showwield, false, false);
       } else {
-        mazeMode = true;
-        paint();
+        setMazeMode(true);
       }
       nomove = 1;
       return 0;
@@ -628,7 +627,7 @@ function wield(index) {
         updateLog(`You weapon is sheathed`);
         player.WIELD = null;
       }
-      mazeMode = true;
+      setMazeMode(true);
       return 1;
     }
 
@@ -644,13 +643,13 @@ function wield(index) {
         nomove = 1;
       }
       debug(useindex);
-      mazeMode = true;
+      setMazeMode(true);
       return 1;
     }
 
     if (!item.canWield()) {
       updateLog(`  You can't wield that!`);
-      mazeMode = true;
+      setMazeMode(true);
       return 1;
     }
   }
@@ -658,7 +657,7 @@ function wield(index) {
   // common cases for both
   if (player.SHIELD && item.matches(O2SWORD)) {
     updateLog(`  But one arm is busy with your shield!`);
-    mazeMode = true;
+    setMazeMode(true);
     return 1;
   }
 
@@ -669,7 +668,7 @@ function wield(index) {
   updateLog(`${index}) ${item.toString(true)}`);
   player.WIELD = item;
 
-  mazeMode = true;
+  setMazeMode(true);
   return 1;
 }
 
@@ -687,7 +686,7 @@ function wear(index) {
     if (take(item)) {
       forget(); // remove from board
     } else {
-      mazeMode = true;
+      setMazeMode(true);
       return 1;
     }
   } // wear from inventory
@@ -696,8 +695,7 @@ function wear(index) {
       if (mazeMode) {
         showinventory(true, wear, showwear, false, false);
       } else {
-        mazeMode = true;
-        paint();
+        setMazeMode(true);
       }
       nomove = 1;
       return 0;
@@ -714,7 +712,7 @@ function wear(index) {
         appendLog(` cancelled`);
         nomove = 1;
       }
-      mazeMode = true;
+      setMazeMode(true);
       return 1;
     }
   }
@@ -732,14 +730,14 @@ function wear(index) {
   } else if (item.matches(OSHIELD)) {
     if (player.WIELD && player.WIELD.matches(O2SWORD)) {
       updateLog(`  Your hands are busy with the two handed sword!`);
-      mazeMode = true;
+      setMazeMode(true);
       return 1;
     } else {
       player.SHIELD = item;
     }
   } else {
     updateLog(`  You can't wear that!`);
-    mazeMode = true;
+    setMazeMode(true);
     return 1;
   }
 
@@ -749,7 +747,7 @@ function wear(index) {
   updateLog(`  You wear:`);
   updateLog(`${index}) ${item.toString(true)}`);
 
-  mazeMode = true;
+  setMazeMode(true);
   return 1;
 }
 

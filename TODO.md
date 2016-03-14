@@ -15,21 +15,13 @@ todo:
 
 
 bugs:
-- having two toggle keys for amiga / classic / hack is confusing
 * no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
 * no recovery if scoreboard hangs when loading
 + amiga mode
   - wall spacing is different on different browsers
-  - invisible stalker / see invisible is broken
-  - missile spells distort the row the player is on
-  - demons are the wrong sized empty tile
-     - potion line 301: Uncaught TypeError: Cannot read property 'img/m65.png' of null
-     - regen line 73: Uncaught TypeError: Cannot read property 'img/o0.png' of null
   - strikethrough missing on taxes owing after victory
   - wall graphics are wrong when blind
-  - can't click for details on scoreboard
-  - many font/spacing issues in text
-  - &lt, &gt on help menu
+  - viewing scoreboard resets to classic mode
 - black tile when opening door when blind
 + smart monsters who can walk over pits stop when standing on them
 - after winner (or losing?) with high score, newest score is also shown at bottom of board
@@ -46,7 +38,10 @@ bugs:
 
 extras:
 * add store value of inventory to score to save people from having to sell everything at the end of a winning game
+* altars should randomly crumble to dust after too many 'just prays' or donations
+* wielding chest/book and then getting +WC with altar/enchant weapon shouldn't increase store value
 + prevent stairs/shaft from being in treasure rooms
++ adjust probability to hit on harder levels. currently it's nearly impossible to hit monsters on diff > 10
 - prevent volcano access when player level < 10(?)
 - game start/end stats
 - no notification when haste monsters, aggravate subsides
@@ -83,7 +78,7 @@ build:
 - install babel:     # npm install -g babel
 - install eslint:    # npm install -g eslint
                      # npm install -g babel-eslint
-- watch files:       # babel --watch JLarn/ --out-dir JLarn-lib/
+- watch files:       # babel --watch JLarn/ --out-dir JLarn-out/
 - copy files:        # scp -P 1911 *.js ../JLarn/*.html jay@prim.io:/usr/share/nginx/html/larn
 - commit changes:    # git commit -a -m "Our Hero has a nicer scoreboard"
 - push to github     # git push origin master

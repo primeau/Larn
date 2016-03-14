@@ -214,6 +214,7 @@ const MIN_TIME_PLAYED = 50;
 
 function loadScores(newScore) {
   mazeMode = false;
+  amiga_mode = false;
   clear();
   lprcat(`Loading Global Scoreboard...\n`);
 
@@ -412,12 +413,12 @@ function loadScoreStats(gameId, local, winner) {
   if (local) {
     var board = winner ? localStorage.getObject('winners') : localStorage.getObject('losers');
     var stats = getHighScore(board, gameId);
-    document.getElementById(`STATS`).innerHTML = getStatString(stats);
+    setDiv(`STATS`, getStatString(stats));
     return;
   }
   // else if (gameId == logname) { // it's non-local game that didn't make the scoreboard
   //   var stats = new LocalScore();
-  //   document.getElementById(`STATS`).innerHTML = getStatString(stats);
+  //   setDiv(`STATS`, getStatString(stats));
   //   return;
   // }
 
@@ -426,13 +427,13 @@ function loadScoreStats(gameId, local, winner) {
     success: function(globalScore) {
       globalScore.convertToLocal();
       var stats = globalScore;
-      document.getElementById(`STATS`).innerHTML = stats;
+      setDiv(`STATS`, stats);
     },
 
     error: function(object, error) {
       console.log(`parse error: ` + error);
       var stats = `Couldn't load game stats ` + error;
-      document.getElementById(`STATS`).innerHTML = stats;
+      setDiv(`STATS`, stats);
     }
   });
 

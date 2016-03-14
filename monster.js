@@ -70,8 +70,13 @@ Monster.prototype = {
     },
 
     getChar: function() {
-      if (amiga_mode)
-        return `${divstart}m${this.arg}${divend}`;
+      if (amiga_mode) {
+        var monsterarg = this.arg;
+        if (monsterarg == STALKER) {
+          monsterarg = (player.SEEINVISIBLE > 0) ? VISIBLESTALKER : INVISIBLESTALKER;
+        }
+        return `${DIV_START}m${monsterarg}${DIV_END}`;
+      }
       else
         return monsterlist[this.arg].char;
     },
@@ -704,7 +709,7 @@ function hitm(x, y, damage) {
 
   var hpoints = monster.hitpoints;
   monster.hitpoints -= damage;
-  debug(`hitm(): ${monster.getChar()} ${monster.hitpoints} / ${monsterlist[monster.arg].hitpoints}`);
+  debug(`hitm(): ${monster.toString()} ${monster.hitpoints} / ${monsterlist[monster.arg].hitpoints}`);
   if (monster.hitpoints <= 0) {
     player.MONSTKILLED++;
     updateLog(`  The ${monster} died!`);

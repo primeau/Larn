@@ -63,9 +63,9 @@ helppages[1] =
  h|H  move,run left           .   stay here              l|L  move|run right    \n\
  b|B  move,run southwest     j|J  move|run down          n|N  move|run southeast\n\
                                                                                 \n\
-                              A  desecrate an altar       &lt  go up stairs     \n\
+                              A  desecrate an altar       <  go up stairs       \n\
   c  cast a spell             C  close a door                                   \n\
-  d  drop an item             D  drink at a fountain      &gt  go down stairs   \n\
+  d  drop an item             D  drink at a fountain      >  go down stairs     \n\
   e  eat something            E  enter a store, dungeon                         \n\
   f  tidy up at a fountain       or volcanic shaft        ^  identify a trap    \n\
   g  get present pack weight                                                    \n\
@@ -74,9 +74,9 @@ helppages[1] =
   p  pray at an altar         P  give tax status                                \n\
   q  quaff a potion           Q  quit the game            @  toggle auto-pickup \n\
   r  read a scroll            R  remove gems from throne                        \n\
-  s  sit on a throne          S  save the game            {  hack-style objects \n\
-,|t  take an item             T  take off armor                                 \n\
-  v  print program version                                }  amiga-style objects\n\
+  s  sit on a throne          S  save the game            }  toggle between     \n\
+,|t  take an item             T  take off armor              classic, hack,     \n\
+  v  print program version                                   and amiga mode     \n\
   w  wield a weapon           W  wear armor                                     \n\
   z  show scores              Z  teleport yourself        ?  this help screen   \n\
   `;

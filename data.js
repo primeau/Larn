@@ -64,7 +64,7 @@ const CLASSES = [
 `expert warlord`,       `master warlord`,       `apprentice gorgon`,    /* -18*/
 `gorgon`,               `practiced gorgon`,     `master gorgon`,        /* -21*/
 `demi-gorgon`,          `evil master`,          `great evil master`,    /* -24*/
-`mighty evil master`,   `mighty evil master`,   `mighty evil master`,   /* -27*/
+`great evil master`,    `mighty evil master`,   `mighty evil master`,   /* -27*/
 `mighty evil master`,   `mighty evil master`,   `mighty evil master`,   /* -30*/
 `mighty evil master`,   `mighty evil master`,   `mighty evil master`,   /* -33*/
 `mighty evil master`,   `mighty evil master`,   `mighty evil master`,   /* -36*/

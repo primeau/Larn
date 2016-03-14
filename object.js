@@ -6,7 +6,6 @@ const hack_objnamelist = `·:\\_^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~
 
 
 
-
 var Item = function Item(id, char, desc, carry, arg) {
   this.id = id;
   this.char = char;
@@ -48,21 +47,10 @@ function createObject(item, arg) {
 }
 
 
+const DIV_START = `url(img/`;
+const DIV_END = `.png`;
 
-var CANVAS_MODE = false;
 
-// const divstart = !CANVAS_MODE ? `<div style='\
-// vertical-align: bottom; \
-// display: inline-block; \
-// width: ${IMG_WIDTH}px; \
-// height: ${IMG_HEIGHT}px; \
-// margin: 0px; \
-// background: #000000 url(img/` :
-//   `img/`;
-// const divend = !CANVAS_MODE ? `.png) no-repeat left center;'></div>` : `.png`;
-
-const divstart = !CANVAS_MODE ? `<div style='height: ${IMG_HEIGHT}px; width: ${IMG_WIDTH}px; margin: 0px; vertical-align: bottom; display: inline-block; background-color: black'><img style='height: 100%; width: 100%; object-fit: contain' src='img/` : `img/`;
-const divend = !CANVAS_MODE ? `.png'/></div>` : `.png`;
 
 Item.prototype = {
     id: null,
@@ -75,9 +63,9 @@ Item.prototype = {
 
       if (amiga_mode) {
         if (this.id == OWALL.id) {
-          return `${divstart}w${this.arg}${divend}`;
+          return `${DIV_START}w${this.arg}${DIV_END}`;
         } else {
-          return `${divstart}o${this.id}${divend}`;
+          return `${DIV_START}o${this.id}${DIV_END}`;
         }
       }
       //
@@ -225,7 +213,7 @@ const OSTAIRSUP = new Item(5, `<b>&lt</b>`, `a staircase going up`, false); // u
 const OFOUNTAIN = new Item(7, `<b>F</b>`, `a bubbling fountain`, false);
 const OSTATUE = new Item(8, `<b>&</b>`, `a great marble statue`, false);
 const OTELEPORTER = new Item(9, `<b>^</b>`, `a teleport trap`, false);
-const OSCHOOL = new Item(10, `<b>+</b>`, `the college of Larn`, false);
+const OSCHOOL = new Item(10, `<b>+</b>`, `the College of Larn`, false);
 const OMIRROR = new Item(11, `<b>M</b>`, `a mirror`, false);
 const ODNDSTORE = new Item(12, `<b>=</b>`, `the DND store`, false);
 const OSTAIRSDOWN = new Item(13, `<b>&gt</b>`, `a staircase going down`, false);

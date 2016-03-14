@@ -12,10 +12,10 @@ potion of cure Dianthroritis.
 3. A global scoreboard has been added to the game. A local scoreboard is also
 available for offline games.
 
-4. The LRS is still present, but it's no longer neccessary to pay taxes because
+4. The LRS is still present, but it's no longer necessary to pay taxes because
 it was so easy to work around in the original game.
 
-5. Added an amiga-style objects option with help of Christoper Yewchuck. (TBD)
+5. Added an amiga-style objects option with help of Christoper Yewchuck.
 
 
 Larn 12.4.4
