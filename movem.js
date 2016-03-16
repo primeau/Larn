@@ -400,12 +400,12 @@ function move_smart(i, j) {
         }
     }
 
-    // UPGRADE
-    // make all monsters move in closed rooms, except demons, who should
-    // alway guard the eye / potion
-    if (!didmove && !monster.isDemon()) {
-        move_dumb(i,j);
-    }
+  // UPGRADE
+  // make all monsters move in closed rooms, except demons, who should
+  // alway guard the eye / potion
+  if (!didmove && !monster.isDemon()) {
+    move_dumb(i, j);
+  }
 }
 
 /*

@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '241';
+const BUILD = '242';
 
 const IMG_HEIGHT = 16;
 const IMG_WIDTH = 8;
@@ -128,11 +128,12 @@ function eventToggleMode() {
     updateLog(`Switching to Hack mode`);
   }
   // hack mode => amiga
-  else if (!original_objects && !amiga_mode){
+  else if (!original_objects && !amiga_mode) {
     amiga_mode = true;
+    original_objects = true;
     for (var y = 0; y < 24; y++) {
       for (var x = 0; x < 80; x++) {
-        display[x][y] = createDiv(x,y);
+        display[x][y] = createDiv(x, y);
       }
     }
     if (!images) {
@@ -154,7 +155,7 @@ function eventToggleMode() {
 
 
 
-function createDiv(x,y) {
+function createDiv(x, y) {
   return `<div id='${x},${y}' \
 style='height: ${IMG_HEIGHT}px; \
 width: ${IMG_WIDTH}px; \

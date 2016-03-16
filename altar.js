@@ -33,10 +33,10 @@ function pray_at_altar() {
 */
 function act_donation_pray(k) {
   if (k == ESC) {
-      appendLog(` cancelled`);
-      nomove = 1;
-      prayed = 0;
-      return 1;
+    appendLog(` cancelled`);
+    nomove = 1;
+    prayed = 0;
+    return 1;
   }
 
   if (k == '*') {

@@ -47,8 +47,8 @@ function createObject(item, arg) {
 }
 
 
-const DIV_START = `url(img/`;
-const DIV_END = `.png`;
+const DIV_START = `url("img/`;
+const DIV_END = `.png")`;
 
 
 
@@ -59,6 +59,7 @@ Item.prototype = {
     carry: false,
     arg: 0,
 
+    // TODO: cache this
     getChar: function() {
 
       if (amiga_mode) {
@@ -144,20 +145,20 @@ Item.prototype = {
     // we can wield more things than we show during wield inventory check
     // this is what we show during an inventory check while wielding
     isWeapon: function() {
-        var weapon = false;
-        weapon |= this.matches(OSHIELD);
-        weapon |= this.matches(ODAGGER);
-        weapon |= this.matches(OSPEAR);
-        weapon |= this.matches(OFLAIL);
-        weapon |= this.matches(OBATTLEAXE);
-        weapon |= this.matches(OLONGSWORD);
-        weapon |= this.matches(O2SWORD);
-        weapon |= this.matches(OSWORD);
-        weapon |= this.matches(OLANCE);
-        weapon |= this.matches(OSWORDofSLASHING);
-        weapon |= this.matches(OHAMMER);
-        weapon |= this.matches(OBELT);
-        return weapon;
+      var weapon = false;
+      weapon |= this.matches(OSHIELD);
+      weapon |= this.matches(ODAGGER);
+      weapon |= this.matches(OSPEAR);
+      weapon |= this.matches(OFLAIL);
+      weapon |= this.matches(OBATTLEAXE);
+      weapon |= this.matches(OLONGSWORD);
+      weapon |= this.matches(O2SWORD);
+      weapon |= this.matches(OSWORD);
+      weapon |= this.matches(OLANCE);
+      weapon |= this.matches(OSWORDofSLASHING);
+      weapon |= this.matches(OHAMMER);
+      weapon |= this.matches(OBELT);
+      return weapon;
     },
 
     isArmor: function() {

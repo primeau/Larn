@@ -157,7 +157,7 @@ function inv_sort(a, b) {
     // sort scrolls and potions alphabetically by name, not arg to
     // prevent guessing based on arg (i.e. pulverize/annihilation/lifeprotect would always be last)
     if (a.matches(OSCROLL) && b.matches(OSCROLL) || a.matches(OPOTION) && b.matches(OPOTION)) {
-        return a.toString().localeCompare(b.toString());
+      return a.toString().localeCompare(b.toString());
     } else {
       // otherwise, sort by arg
       return a.arg - b.arg;

@@ -26,8 +26,7 @@ function paint() {
 function blt() {
   if (amiga_mode) {
     // do nithing
-  }
-  else {
+  } else {
     // TODO: setup for not repainting in text mode
     // TODO: need to update io.js:os_put_font(), display.js:blt(), larn.js:play()
     // TODO: this will break scoreboard rendering
@@ -59,28 +58,31 @@ function setMazeMode(mode) {
 
 
 function setChar(x, y, c, markup) {
-   setDiv(`${x},${y}`, c, markup);
+  setDiv(`${x},${y}`, c, markup);
 }
 
 
 
 function setDiv(id, data, markup) {
-  var doc = document.getElementById(id);
+  var doc = document.getElementById(id); // CACHE THIS?
   if (doc) {
+    if (data === doc.innerHTML && markup != START_MARK && markup != START_BOLD) {
+      return;
+    }
+    // else {
+    //   console.log(data, doc.innerHTML);
+    // }
     doc.innerHTML = data;
     if (markup == START_BOLD) {
       doc.style.fontWeight = (markup == START_BOLD) ? 'bold' : 'normal';
-    }
-    else if (markup == START_MARK) {
+    } else if (markup == START_MARK) {
       doc.innerHTML = `<mark>${data}</mark>`;
       // probably would be better to set a different bg and font color
       // doc.style.color = markup == 'highlight' ? 'green' : 'lightgrey';
+    } else {
+      doc.style.fontWeight = (markup == START_BOLD) ? 'bold' : 'normal';
     }
-    else {
-      doc.style.fontWeight = markup == START_BOLD ? 'bold' : 'normal';
-    }
-  }
-  else {
+  } else {
     console.log(`null document: ${id}`);
   }
 }
@@ -89,19 +91,21 @@ function setDiv(id, data, markup) {
 
 function setImage(x, y, img) {
   if (!amiga_mode) return;
-  var doc = document.getElementById(`${x},${y}`);
+  var doc = document.getElementById(`${x},${y}`); // CACHE THIS?
   if (doc) {
     // OPTIMIZATION: don't set bg image if it's the same
-    // currently complicated because the format of the string is different
-    // if (doc.style.backgroundImage === img) {
-    //   console.log(doc.style.backgroundImage, img);
-    //   console.trace();
-    //   return;
-    // }
-   doc.style.backgroundImage=img;
-   doc.innerHTML = ` `;
-  }
-  else {
+    // this prevents things from being really slow in firefox
+    if (doc.style.backgroundImage === img) {
+      return;
+    }
+    //  else {
+    //    console.log(doc.style.backgroundImage, img);
+    //  }
+
+    if (img)
+      doc.style.backgroundImage = img;
+    doc.innerHTML = ` `;
+  } else {
     console.log(`setImage: null doc at ${x},${y}`);
   }
 }
@@ -115,11 +119,14 @@ function printStats() {
 
 
 function bottomline() {
-  cl_dn(1,18);
+  cursor(1, 18);
   lprcat(`${player.getStatString()}\n`);
 
   for (var logindex = LOG_SAVE_SIZE - LOG_SIZE; logindex < LOG.length; logindex++) {
-    lprcat(`${LOG[logindex]}\n`);
+    // less pretty code but more efficient for amiga mode, especially in firefox
+    lprcat(`${LOG[logindex]}`);
+    cltoeoln();
+    lprcat(`\n`);
   }
 }
 
@@ -127,23 +134,23 @@ function bottomline() {
 
 function botside() {
   var line = 0;
-  botsideline(player.STEALTH, `Stealth`, line++, changedStealth);
+  botsideline(player.STEALTH, `Stealth   `, line++, changedStealth);
   botsideline(player.UNDEADPRO, `Undead Pro`, line++, changedUndeadPro);
   botsideline(player.SPIRITPRO, `Spirit Pro`, line++, changedSpiritPro);
-  botsideline(player.CHARMCOUNT, `Charm`, line++, changedCharmCount);
-  botsideline(player.TIMESTOP, `Time Stop`, line++, changedTimeStop);
+  botsideline(player.CHARMCOUNT, `Charm     `, line++, changedCharmCount);
+  botsideline(player.TIMESTOP, `Time Stop `, line++, changedTimeStop);
   botsideline(player.HOLDMONST, `Hold Monst`, line++, changedHoldMonst);
-  botsideline(player.GIANTSTR, `Giant Str`, line++, changedGiantStr);
+  botsideline(player.GIANTSTR, `Giant Str `, line++, changedGiantStr);
   botsideline(player.FIRERESISTANCE, `Fire Resit`, line++, changedFireResistance);
-  botsideline(player.DEXCOUNT, `Dexterity`, line++, changedDexCount);
-  botsideline(player.STRCOUNT, `Strength`, line++, changedStrCount);
-  botsideline(player.SCAREMONST, `Scare`, line++, changedScareMonst);
+  botsideline(player.DEXCOUNT, `Dexterity `, line++, changedDexCount);
+  botsideline(player.STRCOUNT, `Strength  `, line++, changedStrCount);
+  botsideline(player.SCAREMONST, `Scare     `, line++, changedScareMonst);
   botsideline(player.HASTESELF, `Haste Self`, line++, changedHasteSelf);
-  botsideline(player.CANCELLATION, `Cancel`, line++, changedCancellation);
-  botsideline(player.INVISIBILITY, `Invisible`, line++, changedInvisibility);
-  botsideline(player.ALTPRO, `Protect 3`, line++, changedAltPro);
-  botsideline(player.PROTECTIONTIME, `Protect 2`, line++, changedProtectionTime);
-  botsideline(player.WTW, `Wall-Walk`, line++, changedWTW);
+  botsideline(player.CANCELLATION, `Cancel    `, line++, changedCancellation);
+  botsideline(player.INVISIBILITY, `Invisible `, line++, changedInvisibility);
+  botsideline(player.ALTPRO, `Protect 3 `, line++, changedAltPro);
+  botsideline(player.PROTECTIONTIME, `Protect 2 `, line++, changedProtectionTime);
+  botsideline(player.WTW, `Wall-Walk `, line++, changedWTW);
 }
 
 
@@ -194,7 +201,7 @@ function drawmaze() {
         lprc(OUNKNOWN.getChar(), i, j);
       } else if (know[i][j] & HAVESEEN) {
         if (i == player.x && j == player.y) {
-            lprc(player.getChar(), i, j);
+          lprc(player.getChar(), i, j);
           continue;
         }
         var monster = monsterAt(i, j);
@@ -208,7 +215,7 @@ function drawmaze() {
           // if (blind)
           //   item.matches(OWALL) ? lprc(OWALL.getChar()) : lprc(item.getChar())
           // else
-            lprc(item.getChar(), i, j);
+          lprc(item.getChar(), i, j);
         }
       } else {
         lprc(OUNKNOWN.getChar(), i, j);

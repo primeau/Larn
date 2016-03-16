@@ -69,6 +69,7 @@ Monster.prototype = {
         return `monster`;
     },
 
+    // TODO: cache this
     getChar: function() {
       if (amiga_mode) {
         var monsterarg = this.arg;
@@ -76,8 +77,7 @@ Monster.prototype = {
           monsterarg = (player.SEEINVISIBLE > 0) ? VISIBLESTALKER : INVISIBLESTALKER;
         }
         return `${DIV_START}m${monsterarg}${DIV_END}`;
-      }
-      else
+      } else
         return monsterlist[this.arg].char;
     },
 
@@ -551,10 +551,10 @@ function hitplayer(x, y) {
       //cursors();
     }
 
-    if (player.HP <= 0 || lifeCount != player.LIFEPROT) {
-      debug('already killed');
-      return;
-    }
+  if (player.HP <= 0 || lifeCount != player.LIFEPROT) {
+    debug('already killed');
+    return;
+  }
 
   if (((dam + bias) > player.AC) || (rnd(((player.AC > 0) ? player.AC : 1)) == 1)) {
     updateLog(`  The ${monster} hit you`);

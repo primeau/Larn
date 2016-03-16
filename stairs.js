@@ -11,17 +11,13 @@ function up_stairs() {
   if (item.matches(OSTAIRSDOWN)) {
     updateLog(`The stairs don't go up!`);
     dropflag = 1;
-  }
-
-  else if (item.matches(OVOLUP))
+  } else if (item.matches(OVOLUP))
     act_up_shaft();
 
   else if (!item.matches(OSTAIRSUP)) {
     updateLog(`I see no way to go up here!`);
     dropflag = 1;
-  }
-
-  else
+  } else
     act_up_stairs();
 }
 
@@ -37,9 +33,7 @@ function down_stairs() {
   if (item.matches(OSTAIRSUP)) {
     updateLog(`The stairs don't go down!`);
     dropflag = 1;
-  }
-
-  else if (item.matches(OVOLDOWN))
+  } else if (item.matches(OVOLDOWN))
     act_down_shaft();
 
   else if (item.matches(OENTRANCE))
@@ -48,9 +42,7 @@ function down_stairs() {
   else if (!item.matches(OSTAIRSDOWN)) {
     updateLog(`I see no way to go down here!`);
     dropflag = 1;
-  }
-
-  else
+  } else
     act_down_stairs();
 }
 

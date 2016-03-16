@@ -48,8 +48,8 @@ function setNumberCallback(func, allowAsterisk) {
 
 
 function shouldRun(key) {
-    var run = key.indexOf('shift+') >= 0 || key.match(/[YKUHLBJN]/);
-    return run;
+  var run = key.indexOf('shift+') >= 0 || key.match(/[YKUHLBJN]/);
+  return run;
 }
 
 

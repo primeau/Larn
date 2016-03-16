@@ -794,8 +794,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     cursor(x + 1, y + 1);
     if (amiga_mode) {
       lprc(` `);
-    }
-    else {
+    } else {
       lprc(itemAt(x, y).getChar());
     }
   }
@@ -945,6 +944,13 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     blt(); // don't use paint() because it doesn't show missile trail
     setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, delay, cshow, stroverride);
   } else {
+
+    // clear the previous square
+    cursor(x + 1, y + 1);
+    if (amiga_mode) {
+      lprc(` `);
+    }
+
     exitspell();
     return;
   }

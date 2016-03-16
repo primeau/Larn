@@ -18,18 +18,18 @@ bugs:
 * no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
 * no recovery if scoreboard hangs when loading
 + amiga mode
+  - mode not saved in cookie
   - wall spacing is different on different browsers
   - strikethrough missing on taxes owing after victory
-  - wall graphics are wrong when blind
   - viewing scoreboard resets to classic mode
-- black tile when opening door when blind
-+ smart monsters who can walk over pits stop when standing on them
++ blindness
+  - black tile when opening door when blind
+  - when blind, a monster from an unknown tile will reveal the tile its standing on during attack
++ smart monsters can walk over pits stop when standing on them
 - after winner (or losing?) with high score, newest score is also shown at bottom of board
-+ when blind, a monster from an unknown tile will reveal the tile its standing on during attack
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
-- parsing < and > in lprcat() isn't perfect, especially with newlines, and tags at EOL
 - readmail() can report wrong gold/tax status
 - checkpoints are choppy
   - save checkpoint in a thread?
@@ -38,18 +38,18 @@ bugs:
 
 extras:
 * add store value of inventory to score to save people from having to sell everything at the end of a winning game
-* altars should randomly crumble to dust after too many 'just prays' or donations
+* altars should randomly crumble to dust after too many 'just prays' or donations to prevent too many +AC/WC
 * wielding chest/book and then getting +WC with altar/enchant weapon shouldn't increase store value
 + prevent stairs/shaft from being in treasure rooms
 + adjust probability to hit on harder levels. currently it's nearly impossible to hit monsters on diff > 10
+- nerf the book and chest in the store to only be sellable for purchase price?
+  - use negative arg special case to give book, chest same level
 - prevent volcano access when player level < 10(?)
 - game start/end stats
 - no notification when haste monsters, aggravate subsides
 - cloud save via password
 - start new game without reloading
 - copy local scores to global
-- nerf the book and chest in the store to only be sellable for purchase price?
-  - use negative arg special case to give book, chest same level
 - nerf stealth based on difficulty?
 - put platinum dragon beside eye of larn
 - color (mcolor/ocolor)
@@ -59,7 +59,6 @@ extras:
 - 'you got the dirt off!' should remove negative armor class for armor / shield
 - beep support
 - 'twitch' mode to broadcast and watch games (webrtc?)
-- altars should crumble to dust after too many prayer to prevent too many +AC/WC
 - url for scoreboard
 - stats on most dangerous monster, level, moves/kills/spells ratio
 - hall of fame and bad luck scoreboards

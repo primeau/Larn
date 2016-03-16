@@ -203,8 +203,8 @@ function updateWalls(x, y, dist) {
     y1 = y - dist;
     y2 = y + dist;
   }
-  for (y = y1 ; y <= y2; y++)
-    for (x = x1 ; x <= x2; x++)
+  for (y = y1; y <= y2; y++)
+    for (x = x1; x <= x2; x++)
       setWallArg(x, y);
 }
 

@@ -28,8 +28,8 @@ function lprcat(str, width) {
     return;
   }
 
-// Some people, when confronted with a problem, think, “I know,
-// I'll use regular expressions.” Now they have two problems.
+  // Some people, when confronted with a problem, think, “I know,
+  // I'll use regular expressions.” Now they have two problems.
 
   var markup = null;
   var len = str.length;
@@ -40,48 +40,41 @@ function lprcat(str, width) {
     if (c === '<') {
       if (str.substr(i, 3).toLowerCase() === START_BOLD) {
         markup = START_BOLD;
-        i+=2;
+        i += 2;
         if (amiga_mode) {
           continue;
-        }
-        else {
+        } else {
           c = START_BOLD;
         }
-      }
-      else if (str.substr(i, 4).toLowerCase() === END_BOLD) {
+      } else if (str.substr(i, 4).toLowerCase() === END_BOLD) {
         markup = null;
-        i+=3;
+        i += 3;
         if (amiga_mode) {
           continue;
-        }
-        else {
+        } else {
           var diff = 1;
           if (cursorx > 80) diff = cursorx - 80;
           cursorx -= diff;
-          c = str.substr(i-3-diff, diff) + END_BOLD;
+          c = str.substr(i - 3 - diff, diff) + END_BOLD;
         }
-      }
-      else if (str.substr(i, 6).toLowerCase() === START_MARK) {
+      } else if (str.substr(i, 6).toLowerCase() === START_MARK) {
         markup = START_MARK;
-        i+=5;
+        i += 5;
         if (amiga_mode) {
           continue;
-        }
-        else {
+        } else {
           c = START_MARK;
         }
-      }
-      else if (str.substr(i, 7).toLowerCase() === END_MARK) {
+      } else if (str.substr(i, 7).toLowerCase() === END_MARK) {
         markup = null;
-        i+=6;
+        i += 6;
         if (amiga_mode) {
           continue;
-        }
-        else {
+        } else {
           var diff = 1;
           if (cursorx > 80) diff = cursorx - 80;
           cursorx -= diff;
-          c = str.substr(i-6-diff, diff) + END_MARK;
+          c = str.substr(i - 6 - diff, diff) + END_MARK;
         }
       }
     }
@@ -130,23 +123,22 @@ function lprc(ch, markup) {
 
 
 var HACK_URL_TEXT = `url`;
+
 function os_put_font(ch, x, y, markup) {
   if (x >= 0 && x < 80 && y >= 0 && y < 24) {
     if (!amiga_mode) {
-     display[x][y] = ch;
+      display[x][y] = ch;
 
       // TODO: setup for not repainting in text mode
       // TODO: need to update io.js:os_put_font(), display.js:blt(), larn.js:play()
       // TODO: this will break scoreboard rendering
       //setChar(x, y, ch, markup);
 
-    }
-    else {
+    } else {
       // HACK HACk HAck Hack hack
-      if (ch.substring(0,3) === HACK_URL_TEXT) {
+      if (ch.substring(0, 3) === HACK_URL_TEXT) {
         setImage(x, y, ch);
-      }
-      else {
+      } else {
         setChar(x, y, ch, markup);
       }
     }
@@ -166,7 +158,7 @@ function cltoeoln() {
   var n = 80 + 1 - x;
   while (n-- > 0) {
     lprc(' ', null);
-    setImage(80-n-1, cursory-1, OUNKNOWN.getChar());
+    setImage(80 - n - 1, cursory - 1, OUNKNOWN.getChar());
   }
   cursorx = x;
 }

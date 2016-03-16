@@ -30,18 +30,19 @@ var HARDGAME = 0; /* game difficulty */
    and now it's easier to just leave them here
 */
 function getDifficulty() {
-    if (HARDGAME == null || HARDGAME === `` || isNaN(Number(HARDGAME))) {
-        console.log('get: invalid difficulty: ' + HARDGAME);
-        console.trace();
-    }
-    return HARDGAME;
+  if (HARDGAME == null || HARDGAME === `` || isNaN(Number(HARDGAME))) {
+    console.log('get: invalid difficulty: ' + HARDGAME);
+    console.trace();
+  }
+  return HARDGAME;
 }
+
 function setDifficulty(diff) {
-    if (diff == null || diff === `` || isNaN(Number(diff))) {
-        console.log('set: invalid difficulty: ' + diff);
-        console.trace();
-    }
-    HARDGAME = diff;
+  if (diff == null || diff === `` || isNaN(Number(diff))) {
+    console.log('set: invalid difficulty: ' + diff);
+    console.trace();
+  }
+  HARDGAME = diff;
 }
 
 var lastmonst = ``; /* name of the last monster to hit the player */

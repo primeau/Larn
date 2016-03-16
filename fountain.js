@@ -160,11 +160,11 @@ function fch(how) {
 
 
 function exclaim(num) {
-    if (num > 1) {
-      appendLog(`s!`);
-    } else {
-      appendLog('!');
-    }
+  if (num > 1) {
+    appendLog(`s!`);
+  } else {
+    appendLog('!');
+  }
 }
 
 
