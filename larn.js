@@ -1,10 +1,10 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '242';
+const BUILD = '244';
 
-const IMG_HEIGHT = 16;
-const IMG_WIDTH = 8;
+const IMG_HEIGHT = 24;
+const IMG_WIDTH = 12;
 
 
 var DEBUG_STATS = false;
@@ -124,11 +124,13 @@ function eventToggleMode() {
   nomove = 1;
   // classic => hack
   if (original_objects && !amiga_mode) {
+    document.body.style.fontSize = '22px';
     original_objects = false;
     updateLog(`Switching to Hack mode`);
   }
   // hack mode => amiga
   else if (!original_objects && !amiga_mode) {
+    document.body.style.fontSize = '20px';
     amiga_mode = true;
     original_objects = true;
     for (var y = 0; y < 24; y++) {
@@ -145,6 +147,7 @@ function eventToggleMode() {
   }
   // amiga mode => classic
   else {
+    document.body.style.fontSize = '22px';
     amiga_mode = false;
     original_objects = true;
     updateLog(`Switching to Classic mode`);
@@ -156,12 +159,7 @@ function eventToggleMode() {
 
 
 function createDiv(x, y) {
-  return `<div id='${x},${y}' \
-style='height: ${IMG_HEIGHT}px; \
-width: ${IMG_WIDTH}px; \
-display: inline-block; \
-background: #000000 url("img/o94.png") no-repeat; \
-'></div>`;
+  return `<div id='${x},${y}' class='image'></div>`;
 }
 
 

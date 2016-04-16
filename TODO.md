@@ -91,6 +91,9 @@ parse:
 - start auto-deply tool         # parse develop larn
 
 
+node / express / mongo
+npm install -g express-generator
+
 atom:
 '.editor':
   'ctrl-alt-cmd-down': 'git-diff:move-to-next-diff'

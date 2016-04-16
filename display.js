@@ -102,8 +102,9 @@ function setImage(x, y, img) {
     //    console.log(doc.style.backgroundImage, img);
     //  }
 
-    if (img)
+    if (img) {
       doc.style.backgroundImage = img;
+    }
     doc.innerHTML = ` `;
   } else {
     console.log(`setImage: null doc at ${x},${y}`);
@@ -485,6 +486,7 @@ function parse_see_all(key) {
 }
 
 
+
 function parse_see_spells(key) {
   nomove = 1;
   if (key == ESC || key == ' ') {
@@ -496,11 +498,11 @@ function parse_see_spells(key) {
 
 
 
-
 function updateLog(text) {
   if (DEBUG_OUTPUT) {
     //console.log(`LARN: ${text}`);
   }
+  if (!LOG) return;
   LOG.push(text);
   if (LOG.length > LOG_SAVE_SIZE) {
     LOG.shift();
