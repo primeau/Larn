@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '244';
+const BUILD = '245';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -120,13 +120,13 @@ function enableDebug() {
 
 
 // toggle between classic, hack and amiga mode
-function eventToggleMode() {
+function eventToggleMode(event, key, quiet) {
   nomove = 1;
   // classic => hack
   if (original_objects && !amiga_mode) {
     document.body.style.fontSize = '22px';
     original_objects = false;
-    updateLog(`Switching to Hack mode`);
+    if (!quiet) updateLog(`Switching to Hack mode`);
   }
   // hack mode => amiga
   else if (!original_objects && !amiga_mode) {
@@ -142,7 +142,7 @@ function eventToggleMode() {
       loadImages();
     }
     bltDocument();
-    updateLog(`Switching to Amiga mode`);
+    if (!quiet) updateLog(`Switching to Amiga mode`);
     clear();
   }
   // amiga mode => classic
@@ -150,7 +150,7 @@ function eventToggleMode() {
     document.body.style.fontSize = '22px';
     amiga_mode = false;
     original_objects = true;
-    updateLog(`Switching to Classic mode`);
+    if (!quiet) updateLog(`Switching to Classic mode`);
   }
 
   paint();

@@ -106,9 +106,8 @@ function loadState(state) {
 
   if (amiga_mode) {
     amiga_mode = false;
-    original_objects = true;
-    console.log(`setting amiga mode?`);
-    eventToggleMode();
+    original_objects = false;
+    eventToggleMode(null, null, true);
   }
 
   debug_used = state.debug_used;

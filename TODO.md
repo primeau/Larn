@@ -1,7 +1,5 @@
 todo:
-- wall spacing is different on different browsers
 + closed window alert is annoying -> create alert-on-close option?
-+ switch to github pages?
 + build process
   + update build number in version command
   + minify
@@ -18,8 +16,6 @@ bugs:
 * no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
 * no recovery if scoreboard hangs when loading
 + amiga mode
-  - mode not saved in cookie
-  - wall spacing is different on different browsers
   - strikethrough missing on taxes owing after victory
   - viewing scoreboard resets to classic mode
 + blindness
@@ -34,6 +30,7 @@ bugs:
 - checkpoints are choppy
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
+- the game won't start in safari private browsing mode
 
 
 extras:
