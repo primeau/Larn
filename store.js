@@ -155,7 +155,7 @@ function updategold() {
   lprcat(`You have ${Number(player.GOLD).toLocaleString()} gold pieces`);
   cltoeoln();
   //cl_dn(1, 20); /* erase to eod */
-  lprcat(`\n\nEnter your transaction [<b>space</b> for more, <b>escape</b> to leave] `);
+  lprcat(`\n\nEnter your transaction [<b>space</b> for next page, <b>escape</b> to leave] `);
 }
 
 
