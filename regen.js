@@ -69,8 +69,7 @@ function regen() {
 
   if (player.SEEINVISIBLE) {
     if (--player.SEEINVISIBLE <= 0) {
-      monsterlist[INVISIBLESTALKER].char = OEMPTY.char;
-      //if (amiga_mode) images[`img/m${STALKER}.png`] = images[`img/m${INVISIBLESTALKER}.png`];
+      monsterlist[STALKER].char = OEMPTY.char;
       if (!player.BLINDCOUNT) {
         updateLog(`You feel your vision return to normal`);
       }

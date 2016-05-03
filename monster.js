@@ -69,14 +69,13 @@ Monster.prototype = {
         return `monster`;
     },
 
-    // TODO: cache this
     getChar: function() {
       if (amiga_mode) {
-        var monsterarg = this.arg;
-        if (monsterarg == STALKER) {
-          monsterarg = (player.SEEINVISIBLE > 0) ? VISIBLESTALKER : INVISIBLESTALKER;
+        var tempMonsterArg = this.arg;
+        if (tempMonsterArg == STALKER) {
+          tempMonsterArg = (player.SEEINVISIBLE > 0) ? STALKER : INVISIBLESTALKER;
         }
-        return `${DIV_START}m${monsterarg}${DIV_END}`;
+        return `${DIV_START}m${tempMonsterArg}${DIV_END}`;
       } else
         return monsterlist[this.arg].char;
     },

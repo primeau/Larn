@@ -294,8 +294,7 @@ function quaffpotion(potion, set_known) {
     case 23:
       /* see invisible */
       player.SEEINVISIBLE += rnd(1000) + 400;
-      monsterlist[INVISIBLESTALKER].char = 'I';
-      //if (amiga_mode) images[`img/m${STALKER}.png`] = images[`img/m${VISIBLESTALKER}.png`];
+      monsterlist[STALKER].char = 'I';
       updateLog(`  You feel your vision sharpen`);
       break;
   };

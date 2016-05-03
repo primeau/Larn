@@ -321,7 +321,7 @@ function move_scared(i, j) {
     case HOBGOBLIN:
     case METAMORPH:
     case XVART:
-    case INVISIBLESTALKER:
+    case STALKER:
     case ICELIZARD:
       if ((gtime & 1) == 1) return;
   };
@@ -361,7 +361,7 @@ function move_smart(i, j) {
     case HOBGOBLIN:
     case METAMORPH:
     case XVART:
-    case INVISIBLESTALKER:
+    case STALKER:
     case ICELIZARD:
       if ((gtime & 1) == 1) return;
   };
@@ -424,7 +424,7 @@ function move_dumb(i, j) {
     case HOBGOBLIN:
     case METAMORPH:
     case XVART:
-    case INVISIBLESTALKER:
+    case STALKER:
     case ICELIZARD:
       if ((gtime & 1) == 1) return;
   };

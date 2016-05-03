@@ -373,7 +373,7 @@ function wizardmode(password) {
     return 1;
   }
 
-  //console.log(`disabling wizard mode`);
+  //updateLog(`disabling wizard mode`);
   wizard = 1;
 
   player.TELEFLAG = 0;

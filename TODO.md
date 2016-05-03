@@ -6,7 +6,6 @@ todo:
   + babel
   + jshint?
   + parse cloud code
-- add gzip compression to nginx
 - update wikipedia, roguebasin, temple of the roguelike
 - look for TODO/HACK
 - scoreboard request from parse can probably be done as one request
@@ -26,7 +25,7 @@ bugs:
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
-- readmail() can report wrong gold/tax status
+- readmail() can report wrong gold/tax status (related to having a higher local score)
 - checkpoints are choppy
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
@@ -35,7 +34,6 @@ bugs:
 
 extras:
 * add store value of inventory to score to save people from having to sell everything at the end of a winning game
-* wielding chest/book and then getting +WC with altar/enchant weapon shouldn't increase store value
 + prevent stairs/shaft from being in treasure rooms
 + adjust probability to hit on harder levels. currently it's nearly impossible to hit monsters on diff > 10
 - nerf the book and chest in the store to only be sellable for purchase price?
