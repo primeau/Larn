@@ -10,7 +10,7 @@ todo:
 - update wikipedia, roguebasin, temple of the roguelike
 - look for TODO/HACK
 - scoreboard request from parse can probably be done as one request
-
+- log all deaths?
 
 bugs:
 * no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
@@ -35,13 +35,13 @@ bugs:
 
 extras:
 * add store value of inventory to score to save people from having to sell everything at the end of a winning game
-* altars should randomly crumble to dust after too many 'just prays' or donations to prevent too many +AC/WC
 * wielding chest/book and then getting +WC with altar/enchant weapon shouldn't increase store value
 + prevent stairs/shaft from being in treasure rooms
 + adjust probability to hit on harder levels. currently it's nearly impossible to hit monsters on diff > 10
 - nerf the book and chest in the store to only be sellable for purchase price?
   - use negative arg special case to give book, chest same level
-- prevent volcano access when player level < 10(?)
+* prevent volcano access when player level < 10(?)
+  - "Alas, descending into the volcanic shaft is too challenging right now"
 - game start/end stats
 - no notification when haste monsters, aggravate subsides
 - cloud save via password
@@ -59,6 +59,7 @@ extras:
 - url for scoreboard
 - stats on most dangerous monster, level, moves/kills/spells ratio
 - hall of fame and bad luck scoreboards
+* theres a way to pvnert, look around, then reload and not be 'cheating'
 
 
 rename/refactor:

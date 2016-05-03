@@ -49,6 +49,14 @@ function act_donation_pray(k) {
      'just pray' in command mode, without having to add yet another command.
   */
   if (k == 0) {
+    // // for testing
+    // var outcome;
+    // var cnt = 0;
+    // while(outcome != 'crumble') {
+    //   outcome = act_just_pray();
+    //   cnt++;
+    //   if (outcome) console.log(cnt, outcome);
+    // }
     act_just_pray();
     dropflag = 1;
     prayed = 1;
@@ -85,6 +93,13 @@ function act_donation_pray(k) {
       enchweapon();
       return 1;
     }
+    /*
+     *  new in 12.4.6 - prevents our hero from buying too many +AC/WC
+     */
+    if (rnd(43) == 13) {
+      crumble_altar();
+      return 1;
+    }
 
     updateLog(`  Thank You.`);
     return 1;
@@ -108,20 +123,29 @@ function act_donation_pray(k) {
     the money prompt when praying.
 */
 function act_just_pray() {
-  if (rnd(100) < 75)
+  if (rnd(100) < 75) {
     updateLog(`  Nothing happens`);
-  else if (rnd(43) == 10) {
-    if (player.WEAR || player.SHIELD)
-      updateLog(`  You feel your armor vibrate for a moment`);
-    enchantarmor();
-    return;
   } else if (rnd(43) == 10) {
-    if (player.WIELD)
+    /*
+     *  new in 12.4.6 - prevents our hero from getting too many free +AC/WC
+     */
+    crumble_altar();
+    return 'crumble';
+  } else if (rnd(43) == 10) {
+    if (player.WEAR || player.SHIELD) {
+      updateLog(`  You feel your armor vibrate for a moment`);
+    }
+    enchantarmor();
+    return 'ac';
+  } else if (rnd(43) == 10) {
+    if (player.WIELD) {
       updateLog(`  You feel your weapon vibrate for a moment`);
+    }
     enchweapon();
-    return;
-  } else
+    return 'wc';
+  } else {
     createmonster(makemonst(level + 1));
+  }
   return;
 }
 
@@ -135,11 +159,19 @@ function act_desecrate_altar() {
     createmonster(makemonst(level + 2) + 8);
     player.AGGRAVATE += 2500;
   } else if (rnd(101) < 30) {
-    updateLog(`  The altar crumbles into a pile of dust before your eyes`);
-    forget(); /*  remember to destroy the altar   */
+    crumble_altar();
   } else
     updateLog(`  Nothing happens`);
   return;
+}
+
+
+/*
+  Destroys the Altar
+*/
+function crumble_altar() {
+  updateLog(`  The altar crumbles into a pile of dust before your eyes`);
+  forget(); /*  remember to destroy the altar   */
 }
 
 

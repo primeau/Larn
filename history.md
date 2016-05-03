@@ -1,21 +1,27 @@
+JS Larn 12.4.6
+--------------
+1. Players could donate or 'just pray' their way into unreasonable WC/AC gains.
+Now altars can randomly crumble to dust.
+
+
 JS Larn 12.4.5
 --------------
 Ported to JavaScript. Gameplay is intended to be identical to version 12.4.4,
 with the following updates:
 
-1. It's possible to fall into a pit again. This was broken in 12.4.
+1. A global scoreboard has been added to the game. A local scoreboard is also
+available for offline games.
 
-2. 'Smart' monsters in a closed room never moved. Now they follow player
+2. Added an amiga-style objects option with help of Christoper Yewchuck.
+
+3. 'Smart' monsters in a closed room never moved. Now they follow player
 movement, except for demons, who stand guard to protect the Eye of Larn and
 potion of cure Dianthroritis.
 
-3. A global scoreboard has been added to the game. A local scoreboard is also
-available for offline games.
+4. It's possible to fall into a pit again. This was broken in 12.4.
 
-4. The LRS is still present, but it's no longer necessary to pay taxes because
+5. The LRS is still present, but it's no longer necessary to pay taxes because
 it was so easy to work around in the original game.
-
-5. Added an amiga-style objects option with help of Christoper Yewchuck.
 
 
 Larn 12.4.4
