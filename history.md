@@ -3,6 +3,8 @@ JS Larn 12.4.6
 1. Players could donate or 'just pray' their way into unreasonable WC/AC gains.
 Now altars can randomly crumble to dust.
 
+2. The list of things the player can wield is considerably shorter.
+
 
 JS Larn 12.4.5
 --------------

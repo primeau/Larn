@@ -132,13 +132,7 @@ Item.prototype = {
     // we can wield more things than we show during wield inventory check
     // this is everything that a player can actually wield
     canWield: function() {
-      switch (this.id) {
-        case OPOTION.id:
-        case OSCROLL.id:
-          return false;
-          break;
-      };
-      return this.carry;
+      return this.isWeapon() || this.isArmor() || this.isRing();
     },
 
 
