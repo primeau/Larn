@@ -311,11 +311,11 @@ const diroffy = [0, 1, 0, -1, 0, -1, -1, 1, 1];
 function moveplayer(dir) {
 
   if (player.CONFUSE) {
-    if (level < rnd(30)) {
+    if (player.LEVEL < rnd(30)) {
       dir = rund(9); /*if confused any dir*/
     }
   }
-
+  
   var k = player.x + diroffx[dir];
   var m = player.y + diroffy[dir];
 
