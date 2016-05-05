@@ -142,7 +142,7 @@ function loadState(state) {
 
 
 function loadLevels(savedLevels) {
-  for (var lev = 0; lev < 14; lev++) {
+  for (var lev = 0; lev < MAXLEVEL + MAXVLEVEL; lev++) {
     if (!savedLevels[lev]) {
       LEVELS[lev] = null;
       continue;

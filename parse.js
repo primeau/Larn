@@ -489,7 +489,7 @@ function parse(key) {
   if (key == '<') {
 
     if (DEBUG_STAIRS_EVERYWHERE) {
-      if (level == 11)
+      if (level == MAXLEVEL)
         moveNear(OVOLUP, true)
       else if (level == 1) {
         newcavelevel(0);
@@ -512,7 +512,7 @@ function parse(key) {
       if (!item.matches(OVOLDOWN) && level == 0) {
         moveNear(OENTRANCE, true);
         enter();
-      } else if (level != 0 && level != 10 && level != 13)
+      } else if (level != 0 && level != MAXLEVEL - 1 && level != MAXLEVEL + MAXVLEVEL - 1)
         moveNear(OSTAIRSDOWN, true)
     }
 

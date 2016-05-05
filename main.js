@@ -6,6 +6,8 @@ function welcome() {
 
   clear();
 
+  createLevelNames();
+
   lprcat(helppages[0]);
   cursors();
 
@@ -20,6 +22,18 @@ function welcome() {
   }
 
   blt();
+}
+
+
+
+function createLevelNames() {
+  LEVELNAMES.push(`H`);
+  for (var i = 1; i < MAXLEVEL; i++) {
+    LEVELNAMES.push(`${i}`);
+  }
+  for (var i = 0; i < MAXVLEVEL; i++) {
+    LEVELNAMES.push(`V${i+1}`);
+  }
 }
 
 

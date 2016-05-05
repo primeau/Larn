@@ -19,7 +19,7 @@ const TIMELIMIT = 30000;  /* maximum number of moves before the game is called *
 
 
 
-const LEVELNAMES = [`H`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `V1`, `V2`, `V3`];
+const LEVELNAMES = [];
 
 
 

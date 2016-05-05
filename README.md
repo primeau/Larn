@@ -35,8 +35,9 @@ Other editions of Larn have been distributed by others, namely
 LARN13, Ultra-Larn, and NLarn.
 
 This is a JavaScript port of Larn, by Jason Primeau. It primarily uses
-the 12.4.4 codebase, and includes a couple of small fixes, and a global
-scoreboard, bumping the version number to 12.4.5.
+the 12.4.4 codebase and includes a couple of small fixes, a global scoreboard,
+and minor updates to balance the game at higher difficulties, bumping the
+version number to 12.4.5.
 
 I hope you enjoy this version of LARN.
 

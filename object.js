@@ -556,7 +556,7 @@ function opit() {
   if (rnd(70) <= 9 * player.DEXTERITY - packweight() && rnd(101) >= 5) { // BUGFIX this is broken in 12.4
     return;
   }
-  if (level == 10 || level >= 13) {
+  if (level == MAXLEVEL - 1 || level >= MAXLEVEL + MAXVLEVEL - 1) {
     obottomless();
   } else {
     var damage = 0;

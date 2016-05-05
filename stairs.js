@@ -53,7 +53,7 @@ assumes that cursors() has been called and that a check has been made that
 the user is actually standing at a set of up stairs.
 */
 function act_up_stairs() {
-  if (level >= 2 && level != 11) {
+  if (level > 1 && level != MAXLEVEL) {
     newcavelevel(level - 1);
   } else {
     updateLog(`The stairs lead to a dead end!`);
@@ -68,7 +68,7 @@ assumes that cursors() has been called and that a check has been made that
 the user is actually standing at a set of down stairs.
 */
 function act_down_stairs() {
-  if (level != 0 && level != 10 && level != 13) {
+  if (level != 0 && level != MAXLEVEL-1 && level != MAXLEVEL+MAXVLEVEL-1) {
     newcavelevel(level + 1);
   } else {
     updateLog(`The stairs lead to a dead end!`);
@@ -112,7 +112,7 @@ are actually at an up shaft.
 function act_up_shaft() {
   setMazeMode(true);
 
-  if (level != 11) {
+  if (level != MAXLEVEL) {
     updateLog(`The shaft only extends 8 feet upwards before you find a blockage!`);
     return;
   }

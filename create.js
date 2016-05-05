@@ -371,8 +371,7 @@ function makeobject(depth) {
   }
 
   if (depth == 1) {
-    var level = LEVELS[depth];
-    level.items[Math.floor(MAXX / 2)][MAXY - 1] = createObject(OHOMEENTRANCE);
+    LEVELS[depth].items[Math.floor(MAXX / 2)][MAXY - 1] = createObject(OHOMEENTRANCE);
   }
 
   if (depth == MAXLEVEL) fillroom(OVOLUP, 0); /* volcano shaft up from the temple */

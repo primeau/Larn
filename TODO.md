@@ -14,14 +14,15 @@ todo:
 bugs:
 * no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
 * no recovery if scoreboard hangs when loading
-+ amiga mode
+- after winner (or losing?) with high score, newest score is also shown at bottom of board
+- the game won't start in safari private browsing mode
+- amiga mode
   - strikethrough missing on taxes owing after victory
   - viewing scoreboard resets to classic mode
-+ blindness
+- blindness
   - black tile when opening door when blind
   - when blind, a monster from an unknown tile will reveal the tile its standing on during attack
-+ smart monsters can walk over pits stop when standing on them
-- after winner (or losing?) with high score, newest score is also shown at bottom of board
++ smart monsters can walk over pits stop when standing on them?
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
@@ -29,7 +30,6 @@ bugs:
 - checkpoints are choppy
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
-- the game won't start in safari private browsing mode
 
 
 extras:
@@ -40,8 +40,9 @@ extras:
   - use negative arg special case to give book, chest same level
 * prevent volcano access when player level < 10(?)
   - "Alas, descending into the volcanic shaft is too challenging right now"
+  - If < level 10 and we go with V0 idea: "you feel like you don't belong here" upon descent
 - game start/end stats
-- no notification when haste monsters, aggravate subsides
+- no notification given when haste monsters, aggravate subsides
 - cloud save via password
 - start new game without reloading
 - copy local scores to global
@@ -51,7 +52,7 @@ extras:
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - ipad support
 - more authentic font
-- 'you got the dirt off!' should remove negative armor class for armor / shield
+- 'you got the dirt off!' should remove 1 negative armor class for armor / shield
 - beep support
 - 'twitch' mode to broadcast and watch games (webrtc?)
 - url for scoreboard
@@ -61,7 +62,7 @@ extras:
 
 
 rename/refactor:
-- remove player.level
+- remove player.level, also very confusing with also having player.LEVEL
 - callback nomenclature & functions could be improved
 - rename object.js to item.js
 
