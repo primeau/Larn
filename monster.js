@@ -624,9 +624,19 @@ function hitmonster(x, y) {
   var damage = 0;
   var flag = 0;
 
-  var tmp = monster.armorclass + player.LEVEL + player.DEXTERITY + player.WCLASS / 4 - 12;
-  //console.log(`${monster.armorclass}, ${player.LEVEL}, ${player.DEXTERITY}, ${player.WCLASS}, ${getDifficulty()}, ${tmp}`);
-  if ((rnd(20) < tmp - getDifficulty()) || (rnd(71) < 5)) /* need at least random chance to hit */ {
+  var hitSkill = monster.armorclass + player.LEVEL + player.DEXTERITY + player.WCLASS / 4 - 12;
+
+  //console.log(`${hitSkill}, ${monster.armorclass}, ${player.LEVEL}, ${player.DEXTERITY}, ${player.WCLASS}, ${getDifficulty()}`);
+
+  /*
+  v12.4.5
+  hitting monsters at higher difficulties was absurdly hard, and
+  with monster.armorclass already increasing with difficulty, the
+  extra modifier is excessive
+  */
+  var difficultyModifier = 0 /* getDifficulty() */;
+
+  if ((rnd(20) < hitSkill - difficultyModifier) || (rnd(71) < 5)) /* need at least random chance to hit */ {
     updateLog(`You hit the ` + (blind ? `monster` : monster));
     flag = 1;
     damage = fullhit(1);
