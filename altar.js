@@ -94,7 +94,7 @@ function act_donation_pray(k) {
       return 1;
     }
     /*
-     *  new in 12.4.6 - prevents our hero from buying too many +AC/WC
+     v12.4.5 - prevents our hero from buying too many +AC/WC
      */
     if (rnd(43) == 13) {
       crumble_altar();
@@ -127,7 +127,7 @@ function act_just_pray() {
     updateLog(`  Nothing happens`);
   } else if (rnd(43) == 10) {
     /*
-     *  new in 12.4.6 - prevents our hero from getting too many free +AC/WC
+     v12.4.5 - prevents our hero from getting too many free +AC/WC
      */
     crumble_altar();
     return 'crumble';

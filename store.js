@@ -198,6 +198,17 @@ function dnd_parse(key) {
       var invindex = getCharFromIndex(player.inventory.indexOf(boughtItem));
       if (boughtItem.matches(OSCROLL)) learnScroll(boughtItem);
       if (boughtItem.matches(OPOTION)) learnPotion(boughtItem);
+
+      /*
+        v12.4.5:
+        to balance the game on higher difficulties the chest and book
+        from the store are special and are reduced in resale value and
+        quality as difficulty goes up
+      */
+      if (boughtItem.matches(OBOOK) || boughtItem.matches(OCHEST)) {
+        boughtItem.arg = Math.max(1, boughtItem.arg - getDifficulty());
+      }
+
       storemessage(`  You pick up: ${invindex}) ${boughtItem}`, 1000);
       if (dnd_item[i].qty == 0) dnditem(i);
       updategold();

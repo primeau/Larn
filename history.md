@@ -9,19 +9,22 @@ is also available for offline games.
 2. [new] Added an amiga-style objects option with help of Christoper
 Yewchuck.
 
-3. [balance] 'Smart' monsters in a closed room never moved. Now they follow
+3. [new] The LRS is still present, but it's no longer necessary to pay taxes
+because it was so easy to work around in the original game.
+
+4. [balance] 'Smart' monsters in a closed room never moved. Now they follow
 player movement, except for demons, who stand guard to protect the Eye of Larn
 and potion of cure Dianthroritis.
 
-4. [balance] Players could donate or 'just pray' their way into unreasonable
+5. [balance] Players could donate or 'just pray' their way into unreasonable
 WC/AC gains. Now altars can randomly crumble to dust.
 
-5. [balance] The list of things the player can wield is considerably shorter.
+6. [balance] The list of things the player can wield is considerably shorter.
 
-6. [new] The LRS is still present, but it's no longer necessary to pay taxes
-because it was so easy to work around in the original game.
+7. [balance] The chest and book at the store decline in quality as difficulty
+goes up.
 
-7. [fix] It's possible to fall into a pit again. This was broken in 12.4.
+8. [fix] It's possible to fall into a pit again. This was broken in 12.4.
 
 
 

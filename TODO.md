@@ -36,8 +36,6 @@ extras:
 * add store value of inventory to score to save people from having to sell everything at the end of a winning game
 + prevent stairs/shaft from being in treasure rooms
 + adjust probability to hit on harder levels. currently it's nearly impossible to hit monsters on diff > 10
-- nerf the book and chest in the store to only be sellable for purchase price?
-  - use negative arg special case to give book, chest same level
 * prevent volcano access when player level < 10(?)
   - "Alas, descending into the volcanic shaft is too challenging right now"
   - If < level 10 and we go with V0 idea: "you feel like you don't belong here" upon descent

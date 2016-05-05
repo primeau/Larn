@@ -132,6 +132,9 @@ Item.prototype = {
     // we can wield more things than we show during wield inventory check
     // this is everything that a player can actually wield
     canWield: function() {
+      /*
+      v12.4.5 - this list is much reduced
+      */
       return this.isWeapon() || this.isArmor() || this.isRing();
     },
 
