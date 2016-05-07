@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '254';
+const BUILD = '255';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -114,7 +114,9 @@ function enableDebug() {
   Mousetrap.bind('alt+5', eventToggleDebugStealth);
   Mousetrap.bind('alt+6', eventToggleDebugAwareness);
   Mousetrap.bind('alt+7', eventToggleDebugImmortal);
-  Mousetrap.bind('alt+8', eventToggleDebugProximity);
+  Mousetrap.bind('alt+8', eventMagicMap);
+  Mousetrap.bind('alt+9', eventEngolden);
+  Mousetrap.bind('alt+0', eventToggleDebugProximity);
 }
 
 
@@ -250,6 +252,24 @@ function eventToggleDebugAwareness() {
     player.AWARENESS = 0;
     updateLog(`DEBUG: EXPANDED AWARENESS--`);
   }
+  paint();
+}
+
+
+
+function eventMagicMap() {
+  nomove = 1;
+  debug_used = 1;
+  read_scroll(createObject(OSCROLL, 15));
+  paint();
+}
+
+
+
+function eventEngolden() {
+  nomove = 1;
+  debug_used = 1;
+  player.GOLD += 250000;
   paint();
 }
 

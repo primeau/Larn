@@ -91,6 +91,19 @@ function act_down_shaft() {
     return;
   }
 
+  /*
+  v12.4.5 - far too many newbie players go into the volcanic shaft, die,
+            and never play again. this seemed like the least restrictive
+            way to prevent that from happening.
+  */
+  // if (gtime < 100) {
+  // if (player.EXPERIENCE < 10) {
+  if (LEVELS[1] == null) {
+    nomove = 1;
+    updateLog(`You feel a foreboding sense of doom, and back away`);
+    return;
+  }
+
   if (packweight() > 45 + 3 * (player.STRENGTH + player.STREXTRA)) {
     updateLog(`You slip and fall down the shaft`);
     lastnum = 275; /* slipped on a volcano shaft */
