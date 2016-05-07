@@ -9,13 +9,13 @@ function up_stairs() {
   var item = itemAt(player.x, player.y);
 
   if (item.matches(OSTAIRSDOWN)) {
-    updateLog(`The stairs don't go up!`);
+    updateLog(`  The stairs don't go up!`);
     dropflag = 1;
   } else if (item.matches(OVOLUP))
     act_up_shaft();
 
   else if (!item.matches(OSTAIRSUP)) {
-    updateLog(`I see no way to go up here!`);
+    updateLog(`  I see no way to go up here!`);
     dropflag = 1;
   } else
     act_up_stairs();
@@ -31,7 +31,7 @@ function down_stairs() {
   var item = itemAt(player.x, player.y);
 
   if (item.matches(OSTAIRSUP)) {
-    updateLog(`The stairs don't go down!`);
+    updateLog(`  The stairs don't go down!`);
     dropflag = 1;
   } else if (item.matches(OVOLDOWN))
     act_down_shaft();
@@ -40,7 +40,7 @@ function down_stairs() {
     enter();
 
   else if (!item.matches(OSTAIRSDOWN)) {
-    updateLog(`I see no way to go down here!`);
+    updateLog(`  I see no way to go down here!`);
     dropflag = 1;
   } else
     act_down_stairs();
@@ -56,7 +56,7 @@ function act_up_stairs() {
   if (level > 1 && level != MAXLEVEL) {
     newcavelevel(level - 1);
   } else {
-    updateLog(`The stairs lead to a dead end!`);
+    updateLog(`  The stairs lead to a dead end!`);
     dropflag = 1;
   }
 }
@@ -71,7 +71,7 @@ function act_down_stairs() {
   if (level != 0 && level != MAXLEVEL-1 && level != MAXLEVEL+MAXVLEVEL-1) {
     newcavelevel(level + 1);
   } else {
-    updateLog(`The stairs lead to a dead end!`);
+    updateLog(`  The stairs lead to a dead end!`);
     dropflag = 1;
   }
 }
@@ -87,7 +87,7 @@ function act_down_shaft() {
   setMazeMode(true);
 
   if (level != 0) {
-    updateLog(`The shaft only extends 5 feet downward!`);
+    updateLog(`  The shaft only extends 5 feet downward!`);
     return;
   }
 
@@ -100,12 +100,12 @@ function act_down_shaft() {
   // if (player.EXPERIENCE < 10) {
   if (LEVELS[1] == null) {
     nomove = 1;
-    updateLog(`You feel a foreboding sense of doom, and back away`);
+    updateLog(`  You feel a foreboding sense of doom, and back away`);
     return;
   }
 
   if (packweight() > 45 + 3 * (player.STRENGTH + player.STREXTRA)) {
-    updateLog(`You slip and fall down the shaft`);
+    updateLog(`  You slip and fall down the shaft`);
     lastnum = 275; /* slipped on a volcano shaft */
     player.losehp(30 + rnd(20));
   }
@@ -126,12 +126,12 @@ function act_up_shaft() {
   setMazeMode(true);
 
   if (level != MAXLEVEL) {
-    updateLog(`The shaft only extends 8 feet upwards before you find a blockage!`);
+    updateLog(`  The shaft only extends 8 feet upwards before you find a blockage!`);
     return;
   }
 
   if (packweight() > 45 + 5 * (player.STRENGTH + player.STREXTRA)) {
-    updateLog(`You slip and fall down the shaft`);
+    updateLog(`  You slip and fall down the shaft`);
     lastnum = 275; /* slipped on a volcano shaft */
     player.losehp(15 + rnd(20));
     return;
