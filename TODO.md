@@ -1,20 +1,9 @@
-todo:
-+ closed window alert is annoying -> create alert-on-close option?
-+ build process
-  + update build number in version command
-  + minify
-  + babel
-  + jshint?
-  + parse cloud code
-- update wikipedia, roguebasin, temple of the roguelike
-- look for TODO/HACK
-- scoreboard request from parse can probably be done as one request
-- log all deaths?
-
 bugs:
 * no recovery if scoreboard hangs when loading
++ closed window alert is annoying -> create alert-on-close option?
 - after winner (or losing?) with high score, newest score is also shown at bottom of board
 - the game won't start in safari private browsing mode
+- scoreboard request from parse can probably be done as one request
 - amiga mode
   - strikethrough missing on taxes owing after victory
   - viewing scoreboard resets to classic mode
@@ -40,6 +29,7 @@ extras:
 - game start/end stats
 - no notification given when haste monsters, aggravate subsides
 - cloud save via password
+- log all deaths?
 - start new game without reloading
 - copy local scores to global
 - nerf stealth based on difficulty?
@@ -57,10 +47,21 @@ extras:
 * theres a way to pvnert, look around, then reload and not be 'cheating'
 
 
+todo:
++ build process
+  + update build number in version command
+  + minify
+  + babel
+  + jshint?
+  + parse cloud code
+- update wikipedia, roguebasin, temple of the roguelike
+
+
 rename/refactor:
 - remove player.level, also very confusing with also having player.LEVEL
 - callback nomenclature & functions could be improved
 - rename object.js to item.js
+- look for TODO/HACK
 
 
 build:
@@ -86,6 +87,7 @@ parse:
 
 node / express / mongo
 npm install -g express-generator
+
 
 atom:
 '.editor':

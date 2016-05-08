@@ -403,7 +403,7 @@ function bankmessage(str, duration) {
   bank_print_gold();
   cursor(1, 24);
   lprcat(str);
-  cursor(69, 22);
+  cursor(73, 22);
   cltoeoln();
 
   setCharCallback(bank_parse);
