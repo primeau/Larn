@@ -584,4 +584,8 @@ function parse(key) {
     return;
   }
 
+  console.log(gtime + " nomove");
+  // if we get here, it's an invalid key, and shouldn't take any time
+  nomove = 1;
+
 }

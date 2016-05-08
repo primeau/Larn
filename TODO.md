@@ -12,7 +12,6 @@ todo:
 - log all deaths?
 
 bugs:
-* no move should register when a non-functional key is pressed (ie 't' on an empty square, or 'm')
 * no recovery if scoreboard hangs when loading
 - after winner (or losing?) with high score, newest score is also shown at bottom of board
 - the game won't start in safari private browsing mode

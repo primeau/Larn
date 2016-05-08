@@ -59,9 +59,9 @@ journey into these caverns.\n\
 helppages[1] =
 `                      <b>Help File for The Caverns of Larn</b>                 \n\
                                                                                 \n\
- y|Y  move,run northwest     k|K  move|run up            u|U  move|run northeast\n\
- h|H  move,run left           .   stay here              l|L  move|run right    \n\
- b|B  move,run southwest     j|J  move|run down          n|N  move|run southeast\n\
+ y|Y  move|run northwest     k|K  move|run up            u|U  move|run northeast\n\
+ h|H  move|run left           .   stay here              l|L  move|run right    \n\
+ b|B  move|run southwest     j|J  move|run down          n|N  move|run southeast\n\
                                                                                 \n\
                               A  desecrate an altar       <  go up stairs       \n\
   c  cast a spell             C  close a door                                   \n\
@@ -75,7 +75,7 @@ helppages[1] =
   q  quaff a potion           Q  quit the game            @  toggle auto-pickup \n\
   r  read a scroll            R  remove gems from throne                        \n\
   s  sit on a throne          S  save the game            }  toggle between     \n\
-,|t  take an item             T  take off armor              classic, hack,     \n\
+ ,|t take an item             T  take off armor              classic, hack,     \n\
   v  print program version                                   and amiga mode     \n\
   w  wield a weapon           W  wear armor                                     \n\
   z  show scores              Z  teleport yourself        ?  this help screen   \n\
