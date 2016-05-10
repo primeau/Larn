@@ -207,7 +207,7 @@ var winners = null;
 var losers = null;
 
 
-const MAX_SCORES_TO_PRINT = 17;
+const MAX_SCORES_TO_PRINT = 25;
 const MIN_TIME_PLAYED = 50;
 
 
@@ -307,7 +307,8 @@ function showScores(newScore, local) {
     lprcat(`\n  The scoreboard is empty`);
   }
 
-  cursor(1, 23);
+  // cursor(1, 23);
+  cursor(1, 7); // this looks weird, but we aren't printing '/n' after each score to make more space
   lprcat(`         Click on a score for more information (only games > ${MIN_TIME_PLAYED} mobuls)\n`);
   //cursor(1, 24);
   if (!GAMEOVER) {
@@ -334,7 +335,7 @@ function printWinnerScoreBoard(winners, newScore) {
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}  ${padString(`` + p.timeused, 5)} Mobuls   ${p.who}`;
     lprc(`<a href='javascript:loadScoreStats("${scoreId}", ${local}, true)'>`);
     lprc(`${score}`);
-    lprc(`</a>`);
+    lprc(`</a><br>`);
   }
   printScoreBoard(winners, newScore, header, printout);
 }
@@ -351,7 +352,7 @@ function printLoserScoreBoard(losers, newScore) {
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level}`;
     lprc(`<a href='javascript:loadScoreStats("${scoreId}", ${local}, false)'>`);
     lprc(`${score}`);
-    lprc(`</a>`);
+    lprc(`</a><br>`);
   }
   printScoreBoard(losers, newScore, header, printout);
 }
@@ -393,7 +394,7 @@ function printScoreBoard(board, newScore, header, printout) {
       lprc(`</b>`);
       newScorePrinted = true;
     }
-    lprcat(`\n`);
+    //lprcat(`\n`);
 
   } // end for
 
@@ -402,7 +403,7 @@ function printScoreBoard(board, newScore, header, printout) {
     lprc(`<b>`);
     printout(newScore);
     lprc(`</b>`);
-    lprcat(`\n`);
+    //lprcat(`\n`);
   }
 }
 
@@ -494,11 +495,11 @@ function writeGlobal(newScore) {
     success: function(score) {
       console.log(`writeGlobal: success: ` + newScore.who + ` ` + newScore.score + ` ` + newScore.hardlev);
       score.convertToLocal();
-      loadScores(score);
+      // loadScores(score);
     },
     error: function(score, error) {
       console.log('Failed to create new object, with error code: ' + error.message);
-      loadScores(newScore);
+      // loadScores(newScore);
     }
   });
 }
@@ -701,7 +702,10 @@ function died(reason, slain) {
       appendLog(`(sorry, wizard scores are not recorded)`);
     else if (cheat)
       appendLog(`(sorry, cheater scores are not recorded)`);
+
+    writeScoreToDatabase();
     setCharCallback(endgame);
+
     paint();
   } else {
     updateLog(`----  Reload your browser to play again  ----`);
@@ -725,6 +729,14 @@ function endgame(key) {
   napping = true;
   mazeMode = false;
 
+  // writeScoreToDatabase(); // moved up
+  loadScores(new LocalScore());
+
+}
+
+
+
+function writeScoreToDatabase() {
   var newScore = new LocalScore();
 
   console.log(`wizard == ` + wizard);
@@ -734,8 +746,6 @@ function endgame(key) {
   if ((newScore.score > 0 || newScore.winner) && !wizard && !cheat) {
     writeLocal(newScore);
     writeGlobal(newScore);
-  } else {
-    loadScores(newScore);
   }
 }
 

@@ -130,14 +130,6 @@ function parse(key) {
 
 
   //
-  // DO NOTHING
-  //
-  if (key == ' ') {
-    nomove = 1;
-    return;
-  }
-
-  //
   // STAY HERE
   //
   if (key == '.' || key == '5') {
@@ -584,7 +576,6 @@ function parse(key) {
     return;
   }
 
-  console.log(gtime + " nomove");
   // if we get here, it's an invalid key, and shouldn't take any time
   nomove = 1;
 
