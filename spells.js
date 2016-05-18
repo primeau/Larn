@@ -1015,7 +1015,9 @@ function annihilate() {
     for (var j = player.y - 1; j <= player.y + 1; j++) {
       var monster = monsterAt(i, j);
       if (monster) { /* if a monster there */
-        if (monster.arg < DEMONLORD + 2) {
+        if (monster.arg < DEMONLORD + 2 &&
+          // JRP: Everyone gets an easter egg. This one is mine.
+          monster.arg != LAMANOBE) {
           k += monster.experience;
           player.level.monsters[i][j] = null;
           player.level.know[i][j] &= ~KNOWHERE;

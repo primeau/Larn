@@ -524,15 +524,15 @@ function fillmonst(what) {
     if sethp(1) then wipe out old monsters else leave them there
  */
 function sethp(flg) {
-  if (flg) {
-    for (var i = 0; i < MAXY; i++) {
-      for (var j = 0; j < MAXX; j++) {
-        var monster = player.level.monsters[j][i];
-        if (monster)
-          monster.awake = false;
-      }
-    }
-  }
+  // if (flg) {
+  //   for (var i = 0; i < MAXY; i++) {
+  //     for (var j = 0; j < MAXX; j++) {
+  //       var monster = player.level.monsters[j][i];
+  //       if (monster)
+  //         monster.awake = false;
+  //     }
+  //   }
+  // }
 
   /* if teleported and found level 1 then know level we are on */
   if (level == 0) {

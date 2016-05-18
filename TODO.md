@@ -1,7 +1,6 @@
 bugs:
 * no recovery if scoreboard hangs when loading
 + closed window alert is annoying -> create alert-on-close option?
-- after winner (or losing?) with high score, newest score is also shown at bottom of board
 - the game won't start in safari private browsing mode
 - scoreboard request from parse can probably be done as one request
 - amiga mode
@@ -29,7 +28,6 @@ extras:
 - game start/end stats
 - no notification given when haste monsters, aggravate subsides
 - cloud save via password
-- log all deaths?
 - start new game without reloading
 - copy local scores to global
 - nerf stealth based on difficulty?

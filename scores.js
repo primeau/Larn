@@ -169,7 +169,7 @@ function isEqual(a, b) {
   equal &= (a.explored == b.explored);
   equal &= (a.hof == b.hof);
   equal &= (a.debug == b.debug);
-  equal &= (a.gamelog == b.gamelog);
+  equal &= compareArrays(a.gamelog, b.gamelog);
   equal &= (JSON.stringify(a.player) == JSON.stringify(b.player));
   return equal;
 }
@@ -495,11 +495,10 @@ function writeGlobal(newScore) {
     success: function(score) {
       console.log(`writeGlobal: success: ` + newScore.who + ` ` + newScore.score + ` ` + newScore.hardlev);
       score.convertToLocal();
-      // loadScores(score);
+      endGameScore = score; // need to record the game id from parse
     },
     error: function(score, error) {
       console.log('Failed to create new object, with error code: ' + error.message);
-      // loadScores(newScore);
     }
   });
 }
@@ -719,6 +718,28 @@ function died(reason, slain) {
 
 
 
+/* this is a bit hacky, but makes life easier */
+var endGameScore;
+
+
+
+function writeScoreToDatabase() {
+  if (!endGameScore) {
+    endGameScore = new LocalScore();
+  }
+
+  console.log(`wizard == ` + wizard);
+  console.log(`cheater == ` + cheat);
+  console.log(`endGameScore.score == ` + endGameScore.score);
+
+  if ((endGameScore.score > 0 || endGameScore.winner) && !wizard && !cheat) {
+    writeLocal(endGameScore);
+    writeGlobal(endGameScore);
+  }
+}
+
+
+
 function endgame(key) {
   if (key != ENTER) {
     return 0;
@@ -729,24 +750,10 @@ function endgame(key) {
   napping = true;
   mazeMode = false;
 
-  // writeScoreToDatabase(); // moved up
-  loadScores(new LocalScore());
-
-}
-
-
-
-function writeScoreToDatabase() {
-  var newScore = new LocalScore();
-
-  console.log(`wizard == ` + wizard);
-  console.log(`cheater == ` + cheat);
-  console.log(`newscore.score == ` + newScore.score);
-
-  if ((newScore.score > 0 || newScore.winner) && !wizard && !cheat) {
-    writeLocal(newScore);
-    writeGlobal(newScore);
+  if (!endGameScore) {
+    endGameScore = new LocalScore();
   }
+  loadScores(endGameScore);
 }
 
 
