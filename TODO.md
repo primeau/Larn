@@ -22,16 +22,13 @@ bugs:
 extras:
 * add store value of inventory to score to save people from having to sell everything at the end of a winning game
 + prevent stairs/shaft from being in treasure rooms
-+ prevent volcano access when player level < 10(?)
-  - "Alas, descending into the volcanic shaft is too challenging right now"
-  - If < level 10 and we go with V0 idea: "you feel like you don't belong here" upon descent
+- url for scoreboard
 - game start/end stats
-- no notification given when haste monsters, aggravate subsides
+- give notification given when haste, aggravate monsters subsides
 - cloud save via password
 - start new game without reloading
 - copy local scores to global
 - nerf stealth based on difficulty?
-- put platinum dragon beside eye of larn
 - color (mcolor/ocolor)
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - ipad support
@@ -39,7 +36,6 @@ extras:
 - 'you got the dirt off!' should remove 1 negative armor class for armor / shield
 - beep support
 - 'twitch' mode to broadcast and watch games (webrtc?)
-- url for scoreboard
 - stats on most dangerous monster, level, moves/kills/spells ratio
 - hall of fame and bad luck scoreboards
 * theres a way to pvnert, look around, then reload and not be 'cheating'
@@ -87,7 +83,7 @@ node / express / mongo
 npm install -g express-generator
 
 
-atom:
+atom: keymap.cson
 '.editor':
   'ctrl-alt-cmd-down': 'git-diff:move-to-next-diff'
   'ctrl-alt-cmd-up': 'git-diff:move-to-previous-diff'
