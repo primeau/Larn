@@ -98,7 +98,7 @@ function act_down_shaft() {
   */
   // if (gtime < 100) {
   // if (player.EXPERIENCE < 10) {
-  if (LEVELS[1] == null) {
+  if (LEVELS[1] == null && !wizard) {
     nomove = 1;
     updateLog(`  You feel a foreboding sense of doom, and back away`);
     return;

@@ -134,24 +134,24 @@ function bottomline() {
 
 
 function botside() {
-  var line = 0;
-  botsideline(player.STEALTH, `Stealth   `, line++, changedStealth);
+  var line = 1;
+  botsideline(player.STEALTH, `Stealth`, line++, changedStealth);
   botsideline(player.UNDEADPRO, `Undead Pro`, line++, changedUndeadPro);
   botsideline(player.SPIRITPRO, `Spirit Pro`, line++, changedSpiritPro);
-  botsideline(player.CHARMCOUNT, `Charm     `, line++, changedCharmCount);
-  botsideline(player.TIMESTOP, `Time Stop `, line++, changedTimeStop);
+  botsideline(player.CHARMCOUNT, `Charm`, line++, changedCharmCount);
+  botsideline(player.TIMESTOP, `Time Stop`, line++, changedTimeStop);
   botsideline(player.HOLDMONST, `Hold Monst`, line++, changedHoldMonst);
-  botsideline(player.GIANTSTR, `Giant Str `, line++, changedGiantStr);
+  botsideline(player.GIANTSTR, `Giant Str`, line++, changedGiantStr);
   botsideline(player.FIRERESISTANCE, `Fire Resit`, line++, changedFireResistance);
-  botsideline(player.DEXCOUNT, `Dexterity `, line++, changedDexCount);
-  botsideline(player.STRCOUNT, `Strength  `, line++, changedStrCount);
-  botsideline(player.SCAREMONST, `Scare     `, line++, changedScareMonst);
+  botsideline(player.DEXCOUNT, `Dexterity`, line++, changedDexCount);
+  botsideline(player.STRCOUNT, `Strength`, line++, changedStrCount);
+  botsideline(player.SCAREMONST, `Scare`, line++, changedScareMonst);
   botsideline(player.HASTESELF, `Haste Self`, line++, changedHasteSelf);
-  botsideline(player.CANCELLATION, `Cancel    `, line++, changedCancellation);
-  botsideline(player.INVISIBILITY, `Invisible `, line++, changedInvisibility);
-  botsideline(player.ALTPRO, `Protect 3 `, line++, changedAltPro);
-  botsideline(player.PROTECTIONTIME, `Protect 2 `, line++, changedProtectionTime);
-  botsideline(player.WTW, `Wall-Walk `, line++, changedWTW);
+  botsideline(player.CANCELLATION, `Cancel`, line++, changedCancellation);
+  botsideline(player.INVISIBILITY, `Invisible`, line++, changedInvisibility);
+  botsideline(player.ALTPRO, `Protect 3`, line++, changedAltPro);
+  botsideline(player.PROTECTIONTIME, `Protect 2`, line++, changedProtectionTime);
+  botsideline(player.WTW, `Wall-Walk`, line++, changedWTW);
 }
 
 
@@ -159,9 +159,9 @@ function botside() {
 const blank = `          `;
 
 function botsideline(stat, name, line, bold) {
-  cursor(70, line + 1);
+  cursor(70, line);
   var str = padString(stat > 0 ? name : blank, -1, bold);
-  lprcat(str + ` `);
+  lprcat(str);
 }
 
 
@@ -315,7 +315,7 @@ function moveplayer(dir) {
       dir = rund(9); /*if confused any dir*/
     }
   }
-  
+
   var k = player.x + diroffx[dir];
   var m = player.y + diroffy[dir];
 
