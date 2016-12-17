@@ -285,3 +285,30 @@ function compareArrays(a1, a2) {
   if (!a1 && !a2) return true;
   return a1 && a2 && a1.length == a2.length && a1.every((v,i)=> v === a2[i]);
 }
+
+
+
+function localStorageSetObject(key, value) {
+  try {
+    localStorage.setObject(key, value);
+  }
+  catch (err) {
+      console.log(`set: cookies are disabled`);
+      appendLog(`Cookies are disabled, games cannot be loaded or saved\n`);
+  }
+}
+
+
+
+function localStorageGetObject(key, failValue) {
+  try {
+    var retrievedObject = localStorage.getObject(key);
+    return retrievedObject || failValue;
+  }
+  catch (err) {
+    console.log(`get: cookies are disabled`);
+    console.trace();
+    appendLog(`Cookies are disabled, games cannot be loaded or saved\n`);
+    return failValue;
+  }
+}
