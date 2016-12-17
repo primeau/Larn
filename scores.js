@@ -207,7 +207,7 @@ var winners = null;
 var losers = null;
 
 
-const MAX_SCORES_TO_PRINT = 25;
+const MAX_SCORES_TO_PRINT = 50;
 const MIN_TIME_PLAYED = 50;
 
 
@@ -220,6 +220,7 @@ function loadScores(newScore) {
 
   scoresPrinted = 0; // reset scores list
 
+  // TODO: merge this into a single request
   readGlobal(true, newScore); // load winners
   readGlobal(false, newScore); // load losers
 }
@@ -236,15 +237,14 @@ function readGlobal(loadWinners, newScore, offline) {
   Parse.Cloud.run('highscores', {
     winner: loadWinners,
     limit: MAX_SCORES_TO_PRINT,
-    logname: logname,
-    gameover: GAMEOVER,
     timeused: MIN_TIME_PLAYED,
   }, {
     success: function(results) {
       /* populate an empty array in case there are no results */
       loadWinners ? winners = [] : losers = [];
 
-      //console.log(`Successfully retrieved ` + results.length + ` scores.`);
+      console.log(`Successfully retrieved ` + results.length + ` scores.`);
+
       for (var i = 0; i < results.length; i++) {
         var object = results[i];
         object.convertToLocal();
@@ -333,9 +333,7 @@ function printWinnerScoreBoard(winners, newScore) {
     var scoreId = p.id || p.who;
     var local = p.id == null;
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}  ${padString(`` + p.timeused, 5)} Mobuls   ${p.who}`;
-    lprc(`<a href='javascript:loadScoreStats("${scoreId}", ${local}, true)'>`);
-    lprc(`${score}`);
-    lprc(`</a><br>`);
+    lprc(`<a href='javascript:loadScoreStats("${scoreId}", ${local}, true)'>${score}</a><br>`);
   }
   printScoreBoard(winners, newScore, header, printout);
 }
@@ -350,9 +348,7 @@ function printLoserScoreBoard(losers, newScore) {
     var scoreId = p.id || p.who;
     var local = p.id == null;
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level}`;
-    lprc(`<a href='javascript:loadScoreStats("${scoreId}", ${local}, false)'>`);
-    lprc(`${score}`);
-    lprc(`</a><br>`);
+    lprc(`<a href='javascript:loadScoreStats("${scoreId}", ${local}, false)'>${score}</a><br>`);
   }
   printScoreBoard(losers, newScore, header, printout);
 }

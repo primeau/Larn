@@ -1,29 +1,28 @@
 Parse.Cloud.define('highscores', function(request, response) {
   var query = new Parse.Query('GlobalScore');
+  query.limit(10000); /* probably limited to 1000 on server side? */
+
+  query.equalTo('winner', request.params.winner);
 
   /* prioritize fast games for winners, high scores for visitors */
   if (request.params.winner) {
-    query.descending('hardlev', 'score');
-
-    /* sorting ascending and descending doesn't work */
-    // query.descending('hardlev').ascending('timeused');
-
+    query.descending('hardlev');
+    query.addAscending('timeused');
   } else {
-    query.descending('hardlev', 'score', 'level', 'timeused');
-  }
-  query.equalTo('winner', request.params.winner);
-
-  /*
-     filter out short games, but make sure very fast winning games get recorded.
-     yes, it's possible to win in < 5 mobuls without cheating
-  */
-  if (!request.params.winner && request.params.timeused != null)
+    query.descending('hardlev', 'score', 'timeused', 'level');
+    /* filter out short games */
     query.greaterThan('timeused', request.params.timeused);
-
-  // console.log((request.params.gameover ? 'gameover ' : '') + 'scoreboard request from: ' + request.params.logname);
+  }
 
   query.find({
     success: function(scores) {
+
+      /*
+         TODO:
+         if scores.length gets larger than 1000, this code will
+         need to be fixed to include pagination
+      */
+      console.log("scores: " + request.params.winner + " " + scores.length);
 
       /* populate an empty array in case there are no results */
       var scoreboard = [];
