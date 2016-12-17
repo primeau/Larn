@@ -244,7 +244,7 @@ function readGlobal(loadWinners, newScore, offline) {
       /* populate an empty array in case there are no results */
       loadWinners ? winners = [] : losers = [];
 
-      debug(`Successfully retrieved ` + results.length + ` scores.`);
+      //console.log(`Successfully retrieved ` + results.length + ` scores.`);
       for (var i = 0; i < results.length; i++) {
         var object = results[i];
         object.convertToLocal();
@@ -294,8 +294,8 @@ function showScores(newScore, local) {
 
   if (local) {
     lprcat(`               <b>Larn Scoreboard</b> (Global scoreboard not available)\n`);
-    winners = localStorage.getObject('winners') || [];
-    losers = localStorage.getObject('losers') || [];
+    winners = localStorageGetObject('winners', []);
+    losers = localStorageGetObject('losers', []);
   } else {
     lprcat(`                             <b>Global Larn Scoreboard</b>\n`);
   }
