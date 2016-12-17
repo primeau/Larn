@@ -6,12 +6,14 @@ function welcome() {
 
   clear();
 
+  lflush();
+
   createLevelNames();
 
   lprcat(helppages[0]);
   cursors();
 
-  logname = localStorage.getObject('logname') || `Adventurer`;
+  logname = localStorageGetObject('logname', logname);
 
   lprcat(`Welcome to Larn. Please enter your name [<b>${logname}</b>]: `);
 
@@ -40,19 +42,22 @@ function createLevelNames() {
 
 function setname(name) {
 
-  if (name == ESC) {
+  // Our Hero could have no name, but this is not Braavos
+  name = name.trim();
+
+  if (name == ESC || name == '') {
     name = logname;
   }
 
   if (name) {
     logname = name.substring(0, 24);
-    localStorage.setObject('logname', logname);
+    localStorageSetObject('logname', logname);
   }
 
   cursors();
   cltoeoln();
 
-  var saveddata = localStorage.getObject(logname);
+  var saveddata = localStorageGetObject(logname);
   var checkpoint;
 
   var winner = false;
@@ -66,14 +71,14 @@ function setname(name) {
   }
   /* check for a checkpoint file */
   else {
-    checkpoint = localStorage.getObject('checkpoint');
+    checkpoint = localStorageGetObject('checkpoint');
   }
 
   // console.log(`winner == ` + winner);
   // console.log(`savegame == ` + savegame);
   // console.log(`checkpoint == ` + (checkpoint != null));
 
-  var diff = Number(localStorage.getObject('difficulty') || 0);
+  var diff = Number(localStorageGetObject('difficulty') || 0);
   setDifficulty(diff);
 
   if (getDifficulty() == null || getDifficulty() == `` || isNaN(Number(getDifficulty()))) {
@@ -120,7 +125,7 @@ function setGameDifficulty(hard) {
 
   sethard(hard); /* set up the desired difficulty */
 
-  localStorage.setObject('difficulty', getDifficulty());
+  localStorageSetObject('difficulty', getDifficulty());
 }
 
 
@@ -358,15 +363,15 @@ function wizardmode(password) {
 
   if (password === 'checkpoint') {
     updateLog(`reload to restart from backup checkpoint`);
-    var checkpoint = localStorage.getObject('checkpointbackup');
-    localStorage.setObject('checkpoint', checkpoint);
+    var checkpoint = localStorageGetObject('checkpointbackup');
+    localStorageSetObject('checkpoint', checkpoint);
     return 1;
   }
 
   if (password === 'savegame') {
     updateLog(`reload to restart from backup save game`);
-    var savegame = localStorage.getObject(logname + 'backup');
-    localStorage.setObject(logname, savegame);
+    var savegame = localStorageGetObject(logname + 'backup');
+    localStorageSetObject(logname, savegame);
     return 1;
   }
 

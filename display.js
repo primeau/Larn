@@ -525,5 +525,6 @@ function appendLog(text) {
 
 
 function deleteLog() {
+  if (!LOG) return;
   return LOG.pop();
 }
