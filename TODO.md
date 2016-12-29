@@ -22,6 +22,7 @@ bugs:
 extras:
 * add store value of inventory to score to save people from having to sell everything at the end of a winning game
 + prevent stairs/shaft from being in treasure rooms
+- prevent 'trapped in solid rock' after casting WTW
 - url for scoreboard
 - game start/end stats
 - give notification given when haste, aggravate monsters subsides
@@ -47,7 +48,6 @@ todo:
   + minify
   + babel
   + jshint?
-  + parse cloud code
 - update wikipedia, roguebasin, temple of the roguelike
 
 

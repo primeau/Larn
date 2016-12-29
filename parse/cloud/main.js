@@ -1,16 +1,19 @@
 Parse.Cloud.define('highscores', function(request, response) {
+
+  var start = new Date().getTime();
+
   var query = new Parse.Query('GlobalScore');
   query.limit(10000); /* probably limited to 1000 on server side? */
 
-  query.equalTo('winner', request.params.winner);
+  if (request.params.doselect) {
+    query.select('winner', 'score', 'hardlev', 'who', 'timeused', 'what', 'level');
+  }
 
-  /* prioritize fast games for winners, high scores for visitors */
-  if (request.params.winner) {
-    query.descending('hardlev');
-    query.addAscending('timeused');
-  } else {
-    query.descending('hardlev', 'score', 'timeused', 'level');
-    /* filter out short games */
+  query.equalTo('winner', request.params.winner);
+  query.addDescending('hardlev', 'score');
+
+  /* filter out short games */
+  if (!request.params.winner) {
     query.greaterThan('timeused', request.params.timeused);
   }
 
@@ -22,7 +25,6 @@ Parse.Cloud.define('highscores', function(request, response) {
          if scores.length gets larger than 1000, this code will
          need to be fixed to include pagination
       */
-      console.log("scores: " + request.params.winner + " " + scores.length);
 
       /* populate an empty array in case there are no results */
       var scoreboard = [];
@@ -45,6 +47,10 @@ Parse.Cloud.define('highscores', function(request, response) {
       }
 
       response.success(scoreboard);
+
+      var end = new Date().getTime();
+      var timeused = end - start;
+      console.log(request.params.winner, scores.length, 'time used: ' + timeused);
 
     },
 

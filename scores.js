@@ -82,9 +82,15 @@ var GlobalScore = Parse.Object.extend({
     this.timeused = this.get('timeused');
     this.what = this.get('what');
     this.level = this.get('level');
+
+    /*
+    for higher performance,  everything after this point comes back
+    'undefined' when requesting the winners/losers scoreboard list
+    */
     this.hof = this.get('hof');
     this.explored = this.get('explored');
-    this.player = JSON.parse(this.get('player'));
+    var p = this.get('player');
+    this.player = p ? JSON.parse(p) : p;
     this.browser = this.get('browser');
     this.debug = this.get('debug');
     this.gamelog = this.get('gamelog');
@@ -238,6 +244,7 @@ function readGlobal(loadWinners, newScore, offline) {
     winner: loadWinners,
     limit: MAX_SCORES_TO_PRINT,
     timeused: MIN_TIME_PLAYED,
+    doselect: true,
   }, {
     success: function(results) {
       /* populate an empty array in case there are no results */
@@ -246,9 +253,9 @@ function readGlobal(loadWinners, newScore, offline) {
       console.log(`Successfully retrieved ` + results.length + ` scores.`);
 
       for (var i = 0; i < results.length; i++) {
-        var object = results[i];
-        object.convertToLocal();
-        //console.log(`${object.id} - ${object.get('winner')} ${object.get('hardlev')} ${object.get('score')} ${object.get('who')}`);
+        var highscore = results[i];
+        highscore.convertToLocal();
+        //console.log(`${highscore.id} - ${highscore.get('winner')} ${highscore.get('hardlev')} ${highscore.get('score')} ${highscore.get('who')}`);
       }
 
       if (loadWinners) {
