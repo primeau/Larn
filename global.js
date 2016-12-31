@@ -235,6 +235,21 @@ function nearbymonst() {
 
 
 
+function nearbymonsters() {
+  var near = [];
+  for (var x = player.x - 1; x < player.x + 2; x++) {
+    for (var y = player.y - 1; y < player.y + 2; y++) {
+      var monster = monsterAt(x, y);
+      if (monster) {
+        near.push(monster);
+      }
+    }
+  }
+  return near;
+}
+
+
+
 /*
     makemonst(lev)
         int lev;

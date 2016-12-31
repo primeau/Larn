@@ -29,7 +29,6 @@ extras:
 - cloud save via password
 - start new game without reloading
 - copy local scores to global
-- nerf stealth based on difficulty?
 - color (mcolor/ocolor)
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - ipad support

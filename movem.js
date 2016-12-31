@@ -177,7 +177,31 @@ function movemonst() {
       lasthy = w1y;
     }
   }
+
+  noticeplayer();
+
 }
+
+
+
+/*
+   v12.4.5:
+   randomly wake up monsters next to our hero, even in stealth mode
+ */
+function noticeplayer() {
+  var monsters = nearbymonsters();
+  for (var i = 0; i < monsters.length ; i++) {
+    var monster = monsters[i];
+    if (rund(15) < getDifficulty() - 2) { // increase odds starting with diff 3
+      if (!monster.awake && rnd(101) < 50) { // want at worst 50/50 odds
+        updateLog(`The ${monster} sees you!`);
+        monster.awake = true;
+      }
+    }
+  }
+}
+
+
 
 const ripple = initGrid(MAXX, MAXY); /* proximity ripple storage */
 

@@ -6,8 +6,7 @@ with the following updates:
 1. [new] A global scoreboard has been added to the game. A local scoreboard
 is also available for offline games.
 
-2. [new] Added an amiga-style objects option with help of Christoper
-Yewchuck.
+2. [new] Added an amiga-style objects option with help of Christoper Yewchuck.
 
 3. [new] The LRS is still present, but it's no longer necessary to pay taxes
 because it was so easy to work around in the original game.
@@ -24,7 +23,10 @@ WC/AC gains. Now altars can randomly crumble to dust.
 7. [balance] The chest and book at the store decline in quality as difficulty
 goes up.
 
-8. [fix] It's possible to fall into a pit again. This was broken in 12.4.
+8. [balance] The scroll of Stealth was much too powerful. Now there is a chance
+a monster will notice when the player passes too closely.
+
+9. [fix] It's possible to fall into a pit again. This was broken in 12.4.
 
 
 
