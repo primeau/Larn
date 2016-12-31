@@ -92,7 +92,6 @@ function loadState(state) {
 
   var savedPlayer = state.player;
   player = loadPlayer(savedPlayer);
-  playerID = state.playerID;
 
   player.level = LEVELS[state.level];
 

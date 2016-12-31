@@ -72,7 +72,6 @@ function GameState() {
   this.LEVELS = LEVELS;
   this.LOG = LOG;
   this.player = player;
-  this.playerID = playerID;
 
   this.newsphereflag = newsphereflag;
   this.GAMEOVER = GAMEOVER;
