@@ -18,6 +18,7 @@ var LocalScore = function() {
   this.timeused = Math.floor(gtime / 100); /* the time used in mobuls to win the game */
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
   this.level = LEVELNAMES[level]; /* the level player was on when he died */
+  this.playerID = playerID; /* nothing nefarious, just simple way to differentiate players in the game database */
   this.hof = false; /* hall of fame candidate? */
   this.debug = debug_used; /* did the player use debug mode? */
   this.gamelog = LOG; /* the last few lines of what happened */
@@ -65,6 +66,7 @@ var GlobalScore = Parse.Object.extend({
     this.timeused = local.timeused;
     this.what = local.what;
     this.level = local.level;
+    this.playerID = local.playerID;
     this.hof = local.hof;
     this.explored = local.explored;
     this.player = local.player;
@@ -87,6 +89,7 @@ var GlobalScore = Parse.Object.extend({
     for higher performance,  everything after this point comes back
     'undefined' when requesting the winners/losers scoreboard list
     */
+    this.playerID = this.get('playerID');
     this.hof = this.get('hof');
     this.explored = this.get('explored');
     var p = this.get('player');
@@ -105,6 +108,7 @@ var GlobalScore = Parse.Object.extend({
     this.set('timeused', this.timeused);
     this.set('what', this.what);
     this.set('level', this.level);
+    this.set('playerID', this.playerID);
     this.set('hof', this.hof);
     this.set('explored', this.explored);
     this.set('player', this.player);

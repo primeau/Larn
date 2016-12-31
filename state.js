@@ -8,6 +8,7 @@
 var LEVELS = new Array(MAXLEVEL + MAXVLEVEL);
 var LOG;
 var player;
+var playerID;
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 var GAMEOVER = true;
@@ -71,6 +72,7 @@ function GameState() {
   this.LEVELS = LEVELS;
   this.LOG = LOG;
   this.player = player;
+  this.playerID = playerID;
 
   this.newsphereflag = newsphereflag;
   this.GAMEOVER = GAMEOVER;

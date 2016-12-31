@@ -92,7 +92,7 @@ function movemonst() {
             current.smart = true;
             smart_count++;
           } else
-            current.smart = true;
+            current.smart = false;
 
           movelist[movecnt] = current;
           movecnt++;

@@ -14,6 +14,8 @@ function welcome() {
   cursors();
 
   logname = localStorageGetObject('logname', logname);
+  playerID = localStorageGetObject('playerID', Math.random().toString(36).substr(2, 5));
+  localStorageSetObject('playerID', playerID);
 
   lprcat(`Welcome to Larn. Please enter your name [<b>${logname}</b>]: `);
 
