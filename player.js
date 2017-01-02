@@ -642,7 +642,6 @@ function wield(index) {
         appendLog(` cancelled`);
         nomove = 1;
       }
-      debug(useindex);
       setMazeMode(true);
       return 1;
     }

@@ -7,35 +7,32 @@
     the player is actually standing at a live fountain.
 */
 function act_drink_fountain() {
-  if (rnd(1501) < 2) {
-    updateLog(`  Oops! You seem to have caught the dreadful sleep!`);
-    beep();
-    died(280, false); /* fell into the dreadful sleep */
-    return;
-  }
+    if (rnd(1501) < 2) {
+        updateLog(`  Oops! You seem to have caught the dreadful sleep!`);
+        beep();
+        died(280, false); /* fell into the dreadful sleep */
+        return;
+    }
 
-  var x = rnd(100);
-  if (x < 7) {
-    player.HALFDAM += 200 + rnd(200);
-    updateLog(`  You feel a sickness coming on`);
-  } else if (x < 13)
-    quaffpotion(createObject(OPOTION, 23), false); /* see invisible,but don't know the potion */
-
-  else if (x < 45)
-    updateLog(`  Nothing seems to have happened`);
-
-  else if (rnd(3) != 2)
-    fntchange(1); /*  change char levels upward   */
-
-  else
-    fntchange(-1); /*  change char levels downward */
-
-  if (rnd(12) < 3) {
-    updateLog(`  The fountains bubbling slowly quiets`);
-    setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
-    player.level.know[player.x][player.y] = 0;
-  }
-  return;
+    var x = rnd(100);
+    if (x < 7) {
+        player.HALFDAM += 200 + rnd(200);
+        updateLog(`  You feel a sickness coming on`);
+    } else if (x < 13) {
+        quaffpotion(createObject(OPOTION, 23), false); /* see invisible, but don't know the potion */
+    } else if (x < 45) {
+        updateLog(`  Nothing seems to have happened`);
+    } else if (rnd(3) != 2) {
+        fntchange(1); /*  change char levels upward   */
+    } else {
+        fntchange(-1); /*  change char levels downward */
+    }
+    
+    if (rnd(12) < 3) {
+        updateLog(`  The fountains bubbling slowly quiets`);
+        setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
+        player.level.know[player.x][player.y] = 0;
+    }
 }
 
 
@@ -46,21 +43,33 @@ function act_drink_fountain() {
     the player is actually standing at a live fountain.
 */
 function act_wash_fountain() {
-  if (rnd(100) < 11) {
-    var x = rnd((level << 2) + 2);
-    updateLog(`  Oh no!  The water was foul!  You suffer ${x} hit points!`);
-    lastnum = 273; /* drank some poisonous water */
-    player.losehp(x);
-  } else if (rnd(100) < 29) {
-    updateLog(`  You got the dirt off!`);
-  } else if (rnd(100) < 31) {
-    updateLog(`  This water seems to be hard water!  The dirt didn't come off!`);
-  } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {
-    createmonster(WATERLORD); /*    make water lord     */
-  } else {
-    updateLog(`  Nothing seems to have happened`);
-  }
-  return;
+    if (rnd(100) < 11) {
+        var x = rnd((level << 2) + 2);
+        updateLog(`  Oh no!  The water was foul!  You suffer ${x} hit points!`);
+        lastnum = 273; /* drank some poisonous water */
+        player.losehp(x);
+    } else if (rnd(100) < 29) {
+        updateLog(`  You got the dirt off!`);
+        /* 12.4.5
+           remove one negative armor class point
+        */
+        enchantarmor(true);
+    } else if (rnd(100) < 31) {
+        updateLog(`  This water seems to be hard water!  The dirt didn't come off!`);
+    } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {
+        createmonster(WATERLORD); /*    make water lord     */
+    } else {
+        updateLog(`  Nothing seems to have happened`);
+    }
+
+    /* 12.4.5
+       since getting the dirt off is a good bonus, need to limit it somehow
+    */
+    if (rnd(12) < 3) {
+        updateLog(`  The fountains bubbling slowly quiets`);
+        setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
+        player.level.know[player.x][player.y] = 0;
+    }
 }
 
 

@@ -174,7 +174,7 @@ function more(select_allowed) {
 /*
     function to enchant armor player is currently wearing
  */
-function enchantarmor() {
+function enchantarmor(rusty_only) {
   var armor;
 
   if (player.WEAR) {
@@ -184,10 +184,13 @@ function enchantarmor() {
   } else {
     cursors();
     beep();
-    updateLog(`  You feel a sense of loss`);
+    if (!rusty_only) updateLog(`  You feel a sense of loss`);
     return false;
   }
   if (!armor.matches(OSCROLL) && !armor.matches(OPOTION)) {
+    if (rusty_only && armor.arg >= 0) {
+      return false; // fountains should only improve negative stats
+    }
     armor.arg++;
     return true;
   }

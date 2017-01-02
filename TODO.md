@@ -20,7 +20,6 @@ bugs:
 
 extras:
 - game start/end stats
-- 'you got the dirt off!' should remove 1 negative armor class for armor / shield
 - prevent 'trapped in solid rock' after casting WTW
 - give notification given when haste, aggravate monsters subsides
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
