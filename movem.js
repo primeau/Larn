@@ -192,7 +192,7 @@ function noticeplayer() {
   var monsters = nearbymonsters();
   for (var i = 0; i < monsters.length ; i++) {
     var monster = monsters[i];
-    if (rund(15) < getDifficulty() - 2) { // increase odds starting with diff 3
+    if (rund(15) < getDifficulty() - 1) { // increase odds starting with diff 2
       if (!monster.awake && rnd(101) < 50) { // want at worst 50/50 odds
         updateLog(`The ${monster} sees you!`);
         monster.awake = true;
