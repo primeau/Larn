@@ -98,7 +98,7 @@ function setname(name) {
     setDifficulty(getDifficulty() + 1);
     readmail();
     // clear the mail flag
-    localStorage.removeItem(logname);
+    localStorageRemoveItem(logname);
   } else if (savegame || checkpoint) {
     player = new Player();
     if (savegame) {

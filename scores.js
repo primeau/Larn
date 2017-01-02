@@ -419,7 +419,7 @@ function printScoreBoard(board, newScore, header, printout) {
 function loadScoreStats(gameId, local, winner) {
 
   if (local) {
-    var board = winner ? localStorage.getObject('winners') : localStorage.getObject('losers');
+    var board = winner ? localStorageGetObject('winners', []) : localStorageGetObject('losers', []);
     var stats = getHighScore(board, gameId);
     setDiv(`STATS`, getStatString(stats));
     return;
@@ -468,24 +468,24 @@ function writeLocal(newScore) {
   // write high score to board
   // TODO there is lots of duplication here...
   if (newScore.winner) {
-    var winners = localStorage.getObject('winners') || [];
+    var winners = localStorageGetObject('winners', []);
     if (isHighestScoreForPlayer(winners, newScore)) {
       var scoreIndex = getHighScoreIndex(winners, newScore.who);
       console.log(`writing high score to winners scoreboard`);
       winners[scoreIndex] = newScore;
-      localStorage.setObject('winners', winners);
+      localStorageSetObject('winners', winners);
     }
 
     // always write trigger to show mail next time
-    localStorage.setObject(newScore.who, 'winner');
+    localStorageSetObject(newScore.who, 'winner');
 
   } else {
-    var losers = localStorage.getObject('losers') || [];
+    var losers = localStorageGetObject('losers', []);
     if (isHighestScoreForPlayer(losers, newScore)) {
       var scoreIndex = getHighScoreIndex(losers, newScore.who);
       console.log(`writing high score to visitors scoreboard`);
       losers[scoreIndex] = newScore;
-      localStorage.setObject('losers', losers);
+      localStorageSetObject('losers', losers);
     }
   }
 }
@@ -545,7 +545,7 @@ function isHighestScoreForPlayer(scoreboard, score) {
 
 /* convenience function to move local game score to the global board */
 // function writeLocalToGlobal() {
-//   var w = localStorage.getObject('losers'); // or 'winners'
+//   var w = localStorageGetObject('losers', []); // or 'winners'
 //   for (var i = 0; i < w.length; i++) {
 //     var g = new GlobalScore(w[i]);
 //     g.write();
@@ -696,7 +696,7 @@ function died(reason, slain) {
   dropflag = 1;
 
   /* delete the checkpoint file */
-  localStorage.removeItem('checkpoint');
+  localStorageRemoveItem('checkpoint');
 
   // show scoreboard unless they saved the game
   if (reason != 287) {

@@ -18,10 +18,10 @@ function saveGame(isCheckPoint) {
   var state = new GameState();
   var bytes;
 
-  localStorage.setObject(saveName, state);
+  localStorageSetObject(saveName, state);
 
   /* save an emergency backup */
-  localStorage.setObject(saveName + 'backup', state);
+  localStorageSetObject(saveName + 'backup', state);
 
   var hash = forge.md.sha512.create();
   hash.update(bytes = JSON.stringify(state));
@@ -37,7 +37,7 @@ function saveGame(isCheckPoint) {
   }
 
   // console.log(`saved hash: ` + hash.digest().toHex());
-  localStorage.setObject('hash', hash.digest().toHex());
+  localStorageSetObject('hash', hash.digest().toHex());
 }
 
 
@@ -59,7 +59,7 @@ function loadSavedGame(savedState, isCheckPoint) {
 
   // console.log(`computed hash: ` + hash.digest().toHex());
 
-  var savedHash = localStorage.getObject('hash', hash);
+  var savedHash = localStorageGetObject('hash', []);
   // console.log(`saved hash: ` + savedHash);
 
   cheat = hash.digest().toHex() != savedHash;
@@ -76,8 +76,8 @@ function loadSavedGame(savedState, isCheckPoint) {
   }
 
   /* clear the saved game file */
-  localStorage.removeItem(logname);
-  localStorage.removeItem('checkpoint');
+  localStorageRemoveItem(logname);
+  localStorageRemoveItem('checkpoint');
 
 }
 

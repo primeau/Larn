@@ -290,11 +290,12 @@ function compareArrays(a1, a2) {
 
 function localStorageSetObject(key, value) {
   try {
+    console.log(`setObject: ${key} ${value}`);
     localStorage.setObject(key, value);
   }
   catch (err) {
       console.log(`set: cookies are disabled`);
-      appendLog(`Cookies are disabled, games cannot be loaded or saved\n`);
+      updateLog(`Cookies are disabled, games cannot be loaded or saved\n`);
   }
 }
 
@@ -302,13 +303,26 @@ function localStorageSetObject(key, value) {
 
 function localStorageGetObject(key, failValue) {
   try {
+    console.log(`getObject: ${key}`);
     var retrievedObject = localStorage.getObject(key);
     return retrievedObject || failValue;
   }
   catch (err) {
     console.log(`get: cookies are disabled`);
-    console.trace();
-    appendLog(`Cookies are disabled, games cannot be loaded or saved\n`);
+    updateLog(`Cookies are disabled, games cannot be loaded or saved\n`);
     return failValue;
+  }
+}
+
+
+
+function localStorageRemoveItem(key) {
+  try {
+    console.log(`removeItem: ${key}`);
+    localStorage.removeItem(key);
+  }
+  catch (err) {
+    console.log(`remove: cookies are disabled`);
+    updateLog(`Cookies are disabled, games cannot be loaded or saved\n`);
   }
 }

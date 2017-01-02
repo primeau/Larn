@@ -9,7 +9,7 @@ score, this will indicate more taxes are due. On the other hand,
 taxes don't need to be paid, so I'm ignoring it.
 */
 function readmail() {
-  var scores = localStorage.getObject('winners').sort(sortScore);
+  var scores = localStorageGetObject('winners', []).sort(sortScore);
   highestScore = getHighScore(scores, logname);
   var gold = 0;
   if (highestScore) gold = highestScore.score;

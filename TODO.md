@@ -1,7 +1,6 @@
 bugs:
 * no recovery if scoreboard hangs when loading
 + closed window alert is annoying -> create alert-on-close option?
-- the game won't start in safari private browsing mode
 - scoreboard request from parse can probably be done as one request
 - amiga mode
   - strikethrough missing on taxes owing after victory
@@ -20,20 +19,20 @@ bugs:
 
 
 extras:
-* add store value of inventory to score to save people from having to sell everything at the end of a winning game
-+ prevent stairs/shaft from being in treasure rooms
-- prevent 'trapped in solid rock' after casting WTW
-- url for scoreboard
 - game start/end stats
+- 'you got the dirt off!' should remove 1 negative armor class for armor / shield
+- prevent 'trapped in solid rock' after casting WTW
 - give notification given when haste, aggravate monsters subsides
+- improve smart monster movement beyond existing algorithm which gets stuck sometimes
++ add store value of inventory to score to save people from having to sell everything at the end of a winning game
++ prevent stairs/shaft from being in treasure rooms
+- url for scoreboard
 - cloud save via password
 - start new game without reloading
 - copy local scores to global
 - color (mcolor/ocolor)
-- improve smart monster movement beyond existing algorithm which gets stuck sometimes
 - ipad support
 - more authentic font
-- 'you got the dirt off!' should remove 1 negative armor class for armor / shield
 - beep support
 - 'twitch' mode to broadcast and watch games (webrtc?)
 - stats on most dangerous monster, level, moves/kills/spells ratio
@@ -68,14 +67,6 @@ build:
 - copy files:        # scp -P 1911 *.js ../JLarn/*.html jay@prim.io:/usr/share/nginx/html/larn
 - commit changes:    # git commit -a -m "Our Hero has a nicer scoreboard"
 - push to github     # git push origin master
-
-
-parse:
-- set up account key on parse.com
-- install parse developer CLI:  # curl -s https://www.parse.com/downloads/cloud_code/installer.sh
-- install account key:          # parse configure accountkey -d
-- initialize:                   # parse new (then select 'e'xisting)
-- start auto-deply tool         # parse develop larn
 
 
 atom: keymap.cson
