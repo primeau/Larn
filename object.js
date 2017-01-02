@@ -600,8 +600,16 @@ function oteleport(err) {
   var tmp;
   if (err) {
     if (rnd(151) < 3) {
-      updateLog(`You are trapped in solid rock!`)
-      died(264, false); /* trapped in solid rock */
+      /*
+      12.4.5 - you shouldn't get trapped in solid rock with WTW
+      */
+      if (player.WTW == 0) {
+        updateLog(`You are trapped in solid rock!`)
+        died(264, false); /* trapped in solid rock */
+      }
+      else {
+        updateLog(`You feel lucky!`)
+      }
     }
   }
 

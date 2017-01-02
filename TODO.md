@@ -20,7 +20,6 @@ bugs:
 
 extras:
 - game start/end stats
-- prevent 'trapped in solid rock' after casting WTW
 - give notification given when haste, aggravate monsters subsides
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 + add store value of inventory to score to save people from having to sell everything at the end of a winning game
