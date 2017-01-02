@@ -27,7 +27,7 @@ function act_drink_fountain() {
     } else {
         fntchange(-1); /*  change char levels downward */
     }
-    
+
     if (rnd(12) < 3) {
         updateLog(`  The fountains bubbling slowly quiets`);
         setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
@@ -53,7 +53,11 @@ function act_wash_fountain() {
         /* 12.4.5
            remove one negative armor class point
         */
-        enchantarmor(true);
+        if (rnd(100) < 50) {
+            enchantarmor(true);
+        } else {
+            enchweapon(true);
+        }
     } else if (rnd(100) < 31) {
         updateLog(`  This water seems to be hard water!  The dirt didn't come off!`);
     } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {

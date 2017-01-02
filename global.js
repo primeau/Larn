@@ -200,15 +200,18 @@ function enchantarmor(rusty_only) {
 /*
     function to enchant a weapon presently being wielded
  */
-function enchweapon() {
+function enchweapon(rusty_only) {
   var weapon = player.WIELD;
   if (!weapon) {
     cursors();
     beep();
-    updateLog(`  You feel a sense of loss`);
+    if (!rusty_only) updateLog(`  You feel a sense of loss`);
     return false;
   }
   if (!weapon.matches(OSCROLL) && !weapon.matches(OPOTION)) {
+    if (rusty_only && weapon.arg >= 0) {
+      return false; // fountains should only improve negative stats
+    }
     weapon.arg++;
     if (weapon.matches(OCLEVERRING))
       player.setIntelligence(player.INTELLIGENCE + 1);
