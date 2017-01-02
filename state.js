@@ -9,6 +9,7 @@ var LEVELS = new Array(MAXLEVEL + MAXVLEVEL);
 var LOG;
 var player;
 var playerID;
+var NOCOOKIES = false;
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 var GAMEOVER = true;

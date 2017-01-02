@@ -230,6 +230,10 @@ function startgame(hard) {
 
   lflush();
   updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
+  if (NOCOOKIES) {
+    updateLog(`Cookies are disabled, games cannot be loaded or saved`);
+  }
+
 
   showcell(player.x, player.y);
 

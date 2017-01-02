@@ -223,6 +223,12 @@ const MIN_TIME_PLAYED = 50;
 
 
 function loadScores(newScore) {
+
+  if (NOCOOKIES) {
+    updateLog(`Sorry, the scoreboard can't be retrieved when cookies are disabled`);
+    return;
+  }
+
   mazeMode = false;
   amiga_mode = false;
   clear();

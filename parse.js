@@ -429,7 +429,7 @@ function parse(key) {
   if (key == 'S') {
     nomove = 1;
     saveGame();
-    died(287, false); /* saved game */
+    if (!NOCOOKIES) died(287, false); /* saved game */
     return;
   }
 

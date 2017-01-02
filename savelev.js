@@ -2,6 +2,12 @@
 
 function saveGame(isCheckPoint) {
 
+  if (NOCOOKIES) {
+    if (!isCheckPoint)
+    updateLog(`Cookies are disabled, games cannot be loaded or saved`);
+    return;
+  }
+
   if (wizard || cheat) {
     if (isCheckPoint) {
       // console.log(`not saving wizard/cheater checkpoint`);
@@ -29,10 +35,7 @@ function saveGame(isCheckPoint) {
   player.level = x;
   // END HACK to not store player.level
 
-  if (isCheckPoint) {
-    //var pad = 67 - LOG[LOG.length - 1].length;
-    //appendLog(padString('*', pad));
-  } else {
+  if (!isCheckPoint) {
     updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
   }
 
