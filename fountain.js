@@ -51,13 +51,18 @@ function act_wash_fountain() {
     } else if (rnd(100) < 29) {
         updateLog(`  You got the dirt off!`);
         /* 12.4.5
-           remove one negative armor class point
+           remove one negative wc/ac point, or remove itchyness
         */
-        if (rnd(100) < 50) {
-            enchantarmor(true);
-        } else {
-            enchweapon(true);
+        if (player.ITCHING) {
+          player.ITCHING = 1;
         }
+        else {
+          if (rnd(100) < 50) {
+              enchantarmor(true);
+          } else {
+              enchweapon(true);
+          }
+      }
     } else if (rnd(100) < 31) {
         updateLog(`  This water seems to be hard water!  The dirt didn't come off!`);
     } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {
