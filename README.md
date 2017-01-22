@@ -29,7 +29,7 @@ community. Version 12.3 was the last version released by Kevin.
 
 Someone made 12.4 through 12.4.2, possibly copx according to
 roguebasin. Edwin Denicholas took 12.4 alpha 2 and caressed it into
-12.4.3 for Win32. Verson 12.4.4 includes a bugfix from Joe Neff.
+12.4.3 for Win32. Version 12.4.4 includes a bugfix from Joe Neff.
 
 Other editions of Larn have been distributed by others, namely
 LARN13, Ultra-Larn, and NLarn.

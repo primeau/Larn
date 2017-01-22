@@ -1,0 +1,214 @@
+<!doctype html>
+<html class='no-js' lang=''>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='x-ua-compatible' content='ie=edge'>
+  <title>Play Larn Online - A classic DOS/Amiga/Unix Roguelike Video Game</title>
+  <meta name='description' content='Larn Game: Play Larn Online - A classic DOS/Amiga/Unix Roguelike Video Game'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <!-- <meta name='viewport' content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'> -->
+  <!-- <link rel='apple-touch-icon' href='apple-touch-icon.png'> -->
+
+  <style>
+    section {
+      width: 65%;
+      float: left;
+    }
+
+    aside {
+      width: 21%;
+      float: right;
+    }
+
+    footer {
+      width: 60%;
+      float: left;
+    }
+
+    a:link {
+      color: #bbbbbb;
+    }
+
+    a:visited {
+      color: #551A8B;
+    }
+
+    a:hover {
+      color: #FF00FF;
+    }
+
+    a:active {
+      color: #EE0000;
+    }
+
+    a:link {
+      text-decoration: none;
+    }
+
+    a:visited {
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: none;
+    }
+
+    a:active {
+      text-decoration: none;
+    }
+
+    /*@font-face {
+      font-family: 'dos';
+      src: url('fonts/vgasys.otf');
+    }*/
+
+    body {
+      font-family: 'dos', 'Courier New', Courier, monospace;
+      font-size: 22px;
+      color: lightgrey;
+      margin: 25px;
+    }
+
+    div {
+      background-position: center center;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      white-space: pre;
+    }
+
+    div.image {
+      height: 24px;
+      width: 12px;
+      display: inline-block;
+      background-image: url("img/o94.png");
+    }
+
+    p.mono {
+      white-space: pre;
+    }
+
+    mark {
+      background-color: lightgrey;
+      color: black;
+    }
+  </style>
+
+  <script type='text/javascript' src='util/parse-1.9.2.min.js'></script>
+  <script src='util/forge.min.js'></script>
+  <script src='util/mousetrap.min.js'></script>
+
+  <script src='larn.js'></script>
+  <script src='main.js'></script>
+  <script src='object.js'></script>
+  <script src='monster.js'></script>
+  <script src='monsterdata.js'></script>
+  <script src='util.js'></script>
+  <script src='player.js'></script>
+  <script src='mazes.js'></script>
+  <script src='level.js'></script>
+  <script src='create.js'></script>
+  <script src='data.js'></script>
+  <script src='parse.js'></script>
+  <script src='scores.js'></script>
+  <script src='inventory.js'></script>
+  <script src='movem.js'></script>
+  <script src='action.js'></script>
+  <script src='global.js'></script>
+  <script src='io.js'></script>
+  <script src='display.js'></script>
+  <script src='storedata.js'></script>
+  <script src='store.js'></script>
+  <script src='savelev.js'></script>
+  <script src='spells.js'></script>
+  <script src='spellsinfo.js'></script>
+  <script src='regen.js'></script>
+  <script src='spheres.js'></script>
+  <script src='help.js'></script>
+  <script src='state.js'></script>
+  <script src='bill.js'></script>
+  <script src='altar.js'></script>
+  <script src='fountain.js'></script>
+  <script src='potion.js'></script>
+  <script src='scroll.js'></script>
+  <script src='stairs.js'></script>
+  <script src='throne.js'></script>
+
+</head>
+
+<body bgcolor='#000000'>
+  <!--[if lt IE 8]>
+            <p class='browserupgrade'>You are using an <strong>outdated</strong> browser. Please <a href='http://browsehappy.com/'>upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+  <section>
+    <div id='LARN'>
+      LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or MORIA,
+      but with a different feel and winning criteria. Unfortunately if you're seeing
+      this page it means that there was an error loading the game. Please send a message
+      to "larn (at) prim.io" and I'll get to the bottom of it!
+    </div>
+    <script>
+      'use strict';
+      var no_intro = false;
+      play();
+    </script>
+
+    <!-- <p>
+      <button onclick='mousetrap(null, 'return')'>return</button>
+    </p>
+
+    <p>
+      <button onclick='mousetrap(null, 'E')'>enter</button>
+      <button onclick='mousetrap(null, 'escape')'>escape</button>
+      <button onclick='mousetrap(null, 'q')'>quaff</button>
+      <button onclick='mousetrap(null, 'r')'>read</button>
+    </p>
+
+    <p>
+      <button onclick='mousetrap(null, 'up')'>up</button>
+    </p>
+
+    <p>
+      <button onclick='mousetrap(null, 'left')'>left</button>
+      <button onclick='mousetrap(null, 'right')'>right</button>
+    </p>
+
+    <p>
+      <button onclick='mousetrap(null, 'down')'>down</button>
+    </p>
+
+    <p>
+      <button onclick='mousetrap(null, 'z')'>scores</button>
+    </p> -->
+  </section>
+
+
+  <aside>
+    <p class='mono' id='STATS'></p>
+  </aside>
+
+  <footer>
+    <p class='mono' id='FOOTER'>
+    </p>
+  </footer>
+
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-67478429-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+</body>
+
+</html>

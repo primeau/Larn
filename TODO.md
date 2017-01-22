@@ -19,6 +19,7 @@ bugs:
 
 
 extras:
+- add support for other wizard mode passwords
 - game start/end stats
 - give notification given when haste, aggravate monsters subsides
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
