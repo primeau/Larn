@@ -64,6 +64,7 @@ build:
                      # npm install -g babel-eslint
 - watch files:       # babel --watch JLarn/ --out-dir JLarn-out/
 - copy files:        # scp -P 1911 *.js ../JLarn/*.html jay@prim.io:/usr/share/nginx/html/larn
+- copy files:        # scp -P 1911 *.js ../JLarn/*.html jay@prim.io:/var/www/html/larn/
 - commit changes:    # git commit -a -m "Our Hero has a nicer scoreboard"
 - push to github     # git push origin master
 
