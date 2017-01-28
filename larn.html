@@ -7,7 +7,7 @@
   <title>Play Larn Online - A classic DOS/Amiga/Unix Roguelike Video Game</title>
   <meta name='description' content='Larn Game: Play Larn Online - A classic DOS/Amiga/Unix Roguelike Video Game'>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" href="img/favicon.png">
   <!-- <meta name='viewport' content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'> -->
   <!-- <link rel='apple-touch-icon' href='apple-touch-icon.png'> -->
 
@@ -146,11 +146,28 @@
       LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or MORIA,
       but with a different feel and winning criteria. Unfortunately if you're seeing
       this page it means that there was an error loading the game. Please send a message
-      to "larn (at) prim.io" and I'll get to the bottom of it!
+      to "eye (at) larn.org" and I'll get to the bottom of it!
     </div>
     <script>
       'use strict';
       var no_intro = false;
+
+      function updateConfiguration(url) {
+        let params = new URLSearchParams(url.search.slice(1));
+        for (let p of params) {
+          console.log(`url parameter: ${p[0]}=${p[1]}`);
+          configureParameter(p);
+        }
+      }
+
+      function configureParameter(param) {
+          if (param[0] == `mode` && param[1] == `amiga`) {
+              console.log(`switching to Amiga mode`);
+              amiga_mode = false;
+              original_objects = false;
+              eventToggleMode(null, null, true);
+          }
+      }
       play();
     </script>
 

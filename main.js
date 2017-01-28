@@ -234,6 +234,7 @@ function startgame(hard) {
     updateLog(`Cookies are disabled, games cannot be loaded or saved`);
   }
 
+  updateConfiguration(window.location);
 
   showcell(player.x, player.y);
 
