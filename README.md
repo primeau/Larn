@@ -1,4 +1,4 @@
-[You can play Larn here](http://prim.io/larn/ "You can play Larn here")
+[You can play Larn online here](http://larn.org "You can play Larn online here")
 
 
 JS LARN version 12.4.5

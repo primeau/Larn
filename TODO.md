@@ -17,7 +17,6 @@ bugs:
   - save checkpoint in a thread?
   - break LEVELS into 14 sections & only save on level change
 
-
 extras:
 - add support for other wizard mode passwords
 - game start/end stats
@@ -37,39 +36,3 @@ extras:
 - stats on most dangerous monster, level, moves/kills/spells ratio
 - hall of fame and bad luck scoreboards
 * theres a way to pvnert, look around, then reload and not be 'cheating'
-
-
-todo:
-+ build process
-  + update build number in version command
-  + minify
-  + babel
-  + jshint?
-- update wikipedia, roguebasin, temple of the roguelike
-
-
-rename/refactor:
-- remove player.level, also very confusing with also having player.LEVEL
-- callback nomenclature & functions could be improved
-- rename object.js to item.js
-- look for TODO/HACK
-
-
-build:
-- install homebrew:  # (no) ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-- install npm/node:  # (no) brew install node
-- install npm/node:  # (yes) https://nodejs.org/en/
-- install babel:     # npm install -g babel
-- install eslint:    # npm install -g eslint
-                     # npm install -g babel-eslint
-- watch files:       # babel --watch JLarn/ --out-dir JLarn-out/
-- copy files:        # scp -P 1911 *.js ../JLarn/*.html jay@prim.io:/usr/share/nginx/html/larn
-- copy files:        # scp -P 1911 *.js ../JLarn/*.html jay@prim.io:/var/www/html/larn/
-- commit changes:    # git commit -a -m "Our Hero has a nicer scoreboard"
-- push to github     # git push origin master
-
-
-atom: keymap.cson
-'.editor':
-  'ctrl-alt-cmd-down': 'git-diff:move-to-next-diff'
-  'ctrl-alt-cmd-up': 'git-diff:move-to-previous-diff'
