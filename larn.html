@@ -151,23 +151,6 @@
     <script>
       'use strict';
       var no_intro = false;
-
-      function updateConfiguration(url) {
-        let params = new URLSearchParams(url.search.slice(1));
-        for (let p of params) {
-          console.log(`url parameter: ${p[0]}=${p[1]}`);
-          configureParameter(p);
-        }
-      }
-
-      function configureParameter(param) {
-          if (param[0] == `mode` && param[1] == `amiga`) {
-              console.log(`switching to Amiga mode`);
-              amiga_mode = false;
-              original_objects = false;
-              eventToggleMode(null, null, true);
-          }
-      }
       play();
     </script>
 

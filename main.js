@@ -246,6 +246,25 @@ function startgame(hard) {
 
 
 
+function updateConfiguration(url) {
+    // internet explorer doesn't support "URLSearchParams" yet
+    var params = {};
+    location.search.substr(1).split("&").forEach(function(item) {
+        params[item.split("=")[0]] = item.split("=")[1]
+    });
+
+    console.log(`url parameters`, params);
+
+    if (params.mode && params.mode == `amiga`) {
+        console.log(`switching to Amiga mode`);
+        amiga_mode = false;
+        original_objects = false;
+        eventToggleMode(null, null, true);
+    }
+}
+
+
+
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
