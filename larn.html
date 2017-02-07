@@ -94,6 +94,21 @@
       background-color: lightgrey;
       color: black;
     }
+
+    .button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        width: 100px;
+        font-size: 22px;
+        height: 52px;
+        cursor: pointer;
+    }
+
+
   </style>
 
   <script type='text/javascript' src='util/parse-1.9.2.min.js'></script>
@@ -151,36 +166,35 @@
     <script>
       'use strict';
       var no_intro = false;
+      var mobile = false;
       play();
     </script>
 
+
     <!-- <p>
-      <button onclick='mousetrap(null, 'return')'>return</button>
-    </p>
-
+    <button class='button' onclick='mousetrap(null, "escape")'>escape</button>
+    <button class='button' onclick='mousetrap(null, "return")'>return</button>
+    <button class='button' onclick='mousetrap(null, "E")'>enter</button>
+    <button class='button' onclick='mousetrap(null, "q")'>quaff</button>
+    <button class='button' onclick='mousetrap(null, "r")'>read</button>
+  </p>
     <p>
-      <button onclick='mousetrap(null, 'E')'>enter</button>
-      <button onclick='mousetrap(null, 'escape')'>escape</button>
-      <button onclick='mousetrap(null, 'q')'>quaff</button>
-      <button onclick='mousetrap(null, 'r')'>read</button>
-    </p>
-
+    <button class='button' onclick='mousetrap(null, "y")'>&#8598;</button>
+    <button class='button' onclick='mousetrap(null, "up")'>&#8593;</button>
+    <button class='button' onclick='mousetrap(null, "u")'>&#8599;</button>
+  </p>
     <p>
-      <button onclick='mousetrap(null, 'up')'>up</button>
-    </p>
-
+    <button class='button' onclick='mousetrap(null, "left")'>&#8592;</button>
+    <button class='button' onclick='mousetrap(null, ".")'>.</button>
+    <button class='button' onclick='mousetrap(null, "right")'>&#8594;</button>
+  </p>
     <p>
-      <button onclick='mousetrap(null, 'left')'>left</button>
-      <button onclick='mousetrap(null, 'right')'>right</button>
-    </p>
+    <button class='button' onclick='mousetrap(null, "b")'>&#8601;</button>
+    <button class='button' onclick='mousetrap(null, "down")'>&#8595;</button>
+    <button class='button' onclick='mousetrap(null, "n")'>&#8600;</button>
+    <button class='button' onclick='mousetrap(null, "z")'>scores</button> -->
 
-    <p>
-      <button onclick='mousetrap(null, 'down')'>down</button>
-    </p>
 
-    <p>
-      <button onclick='mousetrap(null, 'z')'>scores</button>
-    </p> -->
   </section>
 
 
@@ -189,8 +203,7 @@
   </aside>
 
   <footer>
-    <p class='mono' id='FOOTER'>
-    </p>
+    <p class='mono' id='FOOTER'></p>
   </footer>
 
   <script>

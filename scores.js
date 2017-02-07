@@ -19,6 +19,7 @@ var LocalScore = function() {
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
   this.level = LEVELNAMES[level]; /* the level player was on when he died */
   this.playerID = playerID; /* nothing nefarious, just simple way to differentiate players in the game database */
+  this.gameID = gameID; /* unique game ID */
   this.hof = false; /* hall of fame candidate? */
   this.debug = debug_used; /* did the player use debug mode? */
   this.gamelog = LOG; /* the last few lines of what happened */
@@ -67,6 +68,7 @@ var GlobalScore = Parse.Object.extend({
     this.what = local.what;
     this.level = local.level;
     this.playerID = local.playerID;
+    this.gameID = local.gameID;
     this.hof = local.hof;
     this.explored = local.explored;
     this.player = local.player;
@@ -90,6 +92,7 @@ var GlobalScore = Parse.Object.extend({
     'undefined' when requesting the winners/losers scoreboard list
     */
     this.playerID = this.get('playerID');
+    this.gameID = this.get('gameID');
     this.hof = this.get('hof');
     this.explored = this.get('explored');
     var p = this.get('player');
@@ -109,6 +112,7 @@ var GlobalScore = Parse.Object.extend({
     this.set('what', this.what);
     this.set('level', this.level);
     this.set('playerID', this.playerID);
+    this.set('gameID', this.gameID);
     this.set('hof', this.hof);
     this.set('explored', this.explored);
     this.set('player', this.player);
@@ -221,6 +225,20 @@ const MAX_SCORES_TO_PRINT = 50;
 const MIN_TIME_PLAYED = 50;
 
 
+function loadWinners() {
+  if (NOCOOKIES) {
+    updateLog(`Sorry, the scoreboard can't be retrieved when cookies are disabled`);
+    return;
+  }
+  mazeMode = false;
+  amiga_mode = false;
+  clear();
+  scoresPrinted = 0; // reset scores list
+
+  winners = [];
+  losers = readGlobal(false); // load winners
+}
+
 
 function loadScores(newScore) {
 
@@ -318,8 +336,8 @@ function showScores(newScore, local) {
   }
 
   if (winners.length != 0 || losers.length != 0) {
-    printWinnerScoreBoard(winners, newScore);
-    printLoserScoreBoard(losers, newScore);
+    if (winners.length > 0) printWinnerScoreBoard(winners, newScore);
+    if (losers.length > 0) printLoserScoreBoard(losers, newScore);
   } else {
     lprcat(`\n  The scoreboard is empty`);
   }

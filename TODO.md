@@ -18,6 +18,7 @@ bugs:
   - break LEVELS into 14 sections & only save on level change
 
 extras:
++ always show inventory, knows scrolls, potions, spells
 - add support for other wizard mode passwords
 - game start/end stats
 - give notification given when haste, aggravate monsters subsides

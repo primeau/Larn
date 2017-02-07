@@ -10,6 +10,7 @@ var LOG;
 var player;
 var playerID;
 var NOCOOKIES = false;
+var PARAMS = {};
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 var GAMEOVER = true;
@@ -19,6 +20,7 @@ var original_objects = true;
 var dnd_item = null;
 var genocide = [];
 var amiga_mode = false;
+var gameID = Math.random().toString(36).substr(2, 8);
 var debug_used = 0;
 
 var logname = `Adventurer`;
@@ -82,6 +84,7 @@ function GameState() {
   this.dnd_item = dnd_item;
   this.genocide = genocide;
   this.amiga_mode = amiga_mode;
+  this.gameID = gameID;
   this.debug_used = debug_used;
 
   this.logname = logname;

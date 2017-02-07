@@ -4,7 +4,7 @@ function saveGame(isCheckPoint) {
 
   if (NOCOOKIES) {
     if (!isCheckPoint)
-    updateLog(`Cookies are disabled, games cannot be loaded or saved`);
+    updateLog(`1 Cookies are disabled, games cannot be loaded or saved`);
     return;
   }
 
@@ -106,6 +106,7 @@ function loadState(state) {
   dnd_item = state.dnd_item;
   genocide = state.genocide;
   amiga_mode = state.amiga_mode;
+  gameID = state.gameID;
 
   if (amiga_mode) {
     amiga_mode = false;

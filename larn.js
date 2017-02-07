@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '293';
+const BUILD = '294';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -48,8 +48,33 @@ function play() {
   //
   // bltDocument();
 
-  welcome(); // show welcome screen, start the game
+  loadURLParameters();
 
+  no_intro = PARAMS.nointro ? PARAMS.nointro == `true` : false;
+  mobile = PARAMS.mobile ? PARAMS.mobile == `true` : false;
+
+  if (PARAMS.score) {
+      if (PARAMS.score == `winners`) {
+          player = new Player();
+          loadWinners();
+      } else if (PARAMS.score == `visitors`) {
+          player = new Player();
+      }
+  } else {
+      welcome(); // show welcome screen, start the game
+  }
+
+}
+
+
+
+function loadURLParameters() {
+    // internet explorer doesn't support "URLSearchParams" yet
+    PARAMS = {};
+    location.search.substr(1).split("&").forEach(function(item) {
+        PARAMS[item.split("=")[0]] = item.split("=")[1]
+    });
+    console.log(`url parameters`, PARAMS);
 }
 
 
