@@ -225,22 +225,8 @@ const MAX_SCORES_TO_PRINT = 50;
 const MIN_TIME_PLAYED = 50;
 
 
-function loadWinners() {
-  if (NOCOOKIES) {
-    updateLog(`Sorry, the scoreboard can't be retrieved when cookies are disabled`);
-    return;
-  }
-  mazeMode = false;
-  amiga_mode = false;
-  clear();
-  scoresPrinted = 0; // reset scores list
 
-  winners = [];
-  losers = readGlobal(false); // load winners
-}
-
-
-function loadScores(newScore) {
+function loadScores(newScore, winner, visitor) {
 
   if (NOCOOKIES) {
     updateLog(`Sorry, the scoreboard can't be retrieved when cookies are disabled`);
@@ -254,9 +240,14 @@ function loadScores(newScore) {
 
   scoresPrinted = 0; // reset scores list
 
-  // TODO: merge this into a single request
-  readGlobal(true, newScore); // load winners
-  readGlobal(false, newScore); // load losers
+  // winners = [];
+  // losers = [];
+  if (winner) {
+    readGlobal(true, newScore); // load winners
+  }
+  if (visitor) {
+    readGlobal(false, newScore); // load losers
+  }
 }
 
 
@@ -784,7 +775,7 @@ function endgame(key) {
   if (!endGameScore) {
     endGameScore = new LocalScore();
   }
-  loadScores(endGameScore);
+  loadScores(endGameScore, true, true);
 }
 
 
