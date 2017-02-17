@@ -88,16 +88,23 @@ Item.prototype = {
       return (this.id == item.id);
     },
 
-    toString: function(inStore, showAll) {
+    toString: function(inStore, showAll, tempPlayer) {
       var description = this.desc;
+      //
       if (this.matches(OPOTION)) {
-        if (isKnownPotion(this) || inStore || showAll) {
-          description += ` of ` + POTION_NAMES[this.arg];
+        if (tempPlayer && !isKnownPotion(this, tempPlayer) && showAll) {
+          description += ` (of ${POTION_NAMES[this.arg]})`; // special case for scoreboard
+        }
+        else if (isKnownPotion(this) || inStore || showAll) {
+          description += ` of ${POTION_NAMES[this.arg]}`;
         }
       }
       //
       else if (this.matches(OSCROLL)) {
-        if (isKnownScroll(this) || inStore || showAll) {
+        if (tempPlayer && !isKnownScroll(this, tempPlayer) && showAll) {
+          description += ` (of ${SCROLL_NAMES[this.arg]})`; // special case for scoreboard
+        }
+        else if (isKnownScroll(this) || inStore || showAll) {
           description += ` of ` + SCROLL_NAMES[this.arg];
         }
       }
@@ -120,10 +127,11 @@ Item.prototype = {
           description += ` ` + this.arg;
         }
       }
-      if ((this === player.WEAR || this === player.SHIELD) && !inStore) {
+      if (!tempPlayer) tempPlayer = player;
+      if ((this === tempPlayer.WEAR || this === tempPlayer.SHIELD) && !inStore) {
         description += ` (being worn)`
       }
-      if (this === player.WIELD && !inStore) {
+      if (this === tempPlayer.WIELD && !inStore) {
         description += ` (weapon in hand)`
       }
       return description;

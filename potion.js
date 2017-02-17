@@ -1,9 +1,10 @@
 'use strict';
 
 
-function isKnownPotion(item) {
+function isKnownPotion(item, tempPlayer) {
+  if (!tempPlayer) tempPlayer = player;
   if (item.matches(OPOTION)) {
-    if (player.knownPotions[item.arg]) {
+    if (tempPlayer.knownPotions[item.arg]) {
       return true;
     }
   }

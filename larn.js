@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '294';
+const BUILD = '295';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -56,9 +56,10 @@ function play() {
   if (PARAMS.score) {
       if (PARAMS.score == `winners`) {
           player = new Player();
-          loadWinners();
+          loadScores(null, true);
       } else if (PARAMS.score == `visitors`) {
           player = new Player();
+          loadScores(null, false);
       }
   } else {
       welcome(); // show welcome screen, start the game

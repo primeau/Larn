@@ -1,9 +1,10 @@
 'use strict';
 
 
-function isKnownScroll(item) {
+function isKnownScroll(item, tempPlayer) {
+  if (!tempPlayer) tempPlayer = player;
   if (item.matches(OSCROLL)) {
-    if (player.knownScrolls[item.arg]) {
+    if (tempPlayer.knownScrolls[item.arg]) {
       return true;
     }
   }
