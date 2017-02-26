@@ -6,7 +6,7 @@ Parse.Cloud.define('highscores', function(request, response) {
   query.limit(10000); /* probably limited to 1000 on server side? */
 
   if (request.params.doselect) {
-    query.select('winner', 'score', 'hardlev', 'who', 'timeused', 'what', 'level');
+    query.select('winner', 'score', 'hardlev', 'who', 'timeused', 'what', 'level', 'version', 'extra');
   }
 
   query.equalTo('winner', request.params.winner);
@@ -34,6 +34,14 @@ Parse.Cloud.define('highscores', function(request, response) {
 
       for (var i = 0; i < scores.length; i++) {
         var object = scores[i];
+
+        /* filter out old games played when 'cheats' were still available  */
+        var version = object.get('version');
+        if (version == 1244) continue;
+
+        // /* eventually, filter out by build */
+        // var build = object.get('extra');
+        // if (!build || build[1] < 272) continue;
 
         /* filter out lower scores for the same player */
         var who = object.get('who');

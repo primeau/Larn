@@ -319,7 +319,7 @@ function parse(key) {
   //
   if (key == 'z') {
     nomove = 1;
-    loadScores(null, true, true);
+    loadScores(null, true, false);
   }
 
   //

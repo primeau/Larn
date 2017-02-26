@@ -85,8 +85,8 @@ helppages[1] =
 helppages[2] =
 `                                <b>Special Notes</b> \n\
 \n\
-When dropping gold, if you type '<b>*</b>' as your amount, all your gold gets dropped.\n\
-In general, typing in '<b>*</b>' means all of what your interested in.  This is true\n\
+When dropping gold, if you type '<b>*</b>' as your amount, all your gold is dropped.\n\
+In general, typing in '<b>*</b>' means all of what you're interested in. This is true\n\
 when visiting the bank, or when contributing at altars.\n\
 \n\
 When in the store, trading post, school, or home, an <b>escape</b> will get you out.\n\

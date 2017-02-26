@@ -401,7 +401,7 @@ function wizardmode(password) {
 
   if (password.length == 10) {
     updateLog(`trying to load game ` + password);
-    loadScoreStats(password);
+    dbQueryLoadGame(password);
     return 1;
   }
 

@@ -753,6 +753,7 @@ function wear(index) {
 
 
 function game_stats(p, score) {
+  if (!player) return;
   if (!p) p = player;
 
   var tmpgtime = gtime;

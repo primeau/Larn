@@ -1,3 +1,5 @@
+//TODO: break into multiple files (endgame, scoreboard (new class), scores)
+
 'use strict';
 
 var scoreBoard = [];
@@ -217,17 +219,20 @@ function sortScore(a, b) {
 
 
 
-var winners = null;
-var losers = null;
+var winners = [];
+var losers = [];
+var winnerTime = 0;
+var loserTime = 0;
+var scoreIndex = 0;
 
 
-const MAX_SCORES_TO_PRINT = 50;
+const MAX_SCORES_PER_PAGE = 18;
+const MAX_SCORES_TO_READ = 18*3;
 const MIN_TIME_PLAYED = 50;
 
 
 
-function loadScores(newScore, winner, visitor) {
-
+function loadScores(newScore, showWinners, showLosers) {
   if (NOCOOKIES) {
     updateLog(`Sorry, the scoreboard can't be retrieved when cookies are disabled`);
     return;
@@ -236,82 +241,85 @@ function loadScores(newScore, winner, visitor) {
   mazeMode = false;
   amiga_mode = false;
   clear();
-  lprcat(`Loading Global Scoreboard...\n`);
+  lprcat(`Loading Scoreboard...\n`);
 
-  scoresPrinted = 0; // reset scores list
-
-  // winners = [];
-  // losers = [];
-  if (winner) {
-    readGlobal(true, newScore); // load winners
-  }
-  if (visitor) {
-    readGlobal(false, newScore); // load losers
-  }
+  dbQueryHighScores(newScore, showWinners, showLosers, true);
+  dbQueryHighScores(newScore, showWinners, showLosers, false);
 }
 
 
 
-function readGlobal(loadWinners, newScore, offline) {
-
-  if (offline) {
-    showLocalScores(newScore);
-    return;
-  }
-
+function dbQueryHighScores(newScore, showWinners, showLosers, loadWinners) {
   Parse.Cloud.run('highscores', {
     winner: loadWinners,
-    limit: MAX_SCORES_TO_PRINT,
+    limit: MAX_SCORES_TO_READ,
     timeused: MIN_TIME_PLAYED,
     doselect: true,
   }, {
     success: function(results) {
-      /* populate an empty array in case there are no results */
-      loadWinners ? winners = [] : losers = [];
-
-      console.log(`Successfully retrieved ` + results.length + ` scores.`);
-
-      for (var i = 0; i < results.length; i++) {
-        var highscore = results[i];
-        highscore.convertToLocal();
-        //console.log(`${highscore.id} - ${highscore.get('winner')} ${highscore.get('hardlev')} ${highscore.get('score')} ${highscore.get('who')}`);
-      }
-
       if (loadWinners) {
-        winners = results;
-      } else {
-        losers = results;
+        winnerTime = millis();
+        winners = dbQueryHighScoresSuccess(results);
       }
-
-      if (winners && losers) // wait for both to load before showing
-        showGlobalScores(newScore);
+      else {
+        loserTime = millis();
+        losers = dbQueryHighScoresSuccess(results);
+      }
+      if (winnerTime > 0 && loserTime > 0) { // wait for both to load before showing
+        showGlobalScores(newScore, showWinners, showLosers);
+      }
     },
     error: function(error) {
-      console.log(`Error: ` + error.code + ` ` + error.message);
-      showLocalScores(newScore);
+      console.log(`Error: ${error.code} ${error.message}`);
+      showLocalScores(newScore, true, true);
     }
   });
-
 }
 
 
 
-function showGlobalScores(newScore) {
-  showScores(newScore, false);
+function dbQueryHighScoresSuccess (results) {
+  console.log(`Successfully retrieved ` + results.length + ` scores.`);
+  for (var i = 0; i < results.length; i++) {
+    var highscore = results[i];
+    highscore.convertToLocal();
+    //console.log(`${highscore.id} - ${highscore.get('winner')} ${highscore.get('hardlev')} ${highscore.get('score')} ${highscore.get('who')}`);
+  }
+  return results;
 }
 
 
 
-function showLocalScores(newScore) {
-  showScores(newScore, true);
+function showGlobalScores(newScore, showWinners, showLosers) {
+  showScores(newScore, false, showWinners, showLosers, 0);
 }
 
 
 
-function showScores(newScore, local) {
+function showLocalScores(newScore, showWinners, showLosers) {
+  showScores(newScore, true, showWinners, showLosers, 0);
+}
+
+
+
+function showScores(newScore, local, showWinners, showLosers, offset) {
   var exitscores = function(key) {
-    if (key == ESC || key == ' ' || key == ENTER) {
+    if (key == ESC || key == ENTER) {
+      winnerTime = 0;
+      loserTime = 0;
+      scoreIndex = 0;
       return exitbuilding();
+    }
+    if (key == ' ') {
+      if (scoreIndex < winners.length) {
+        showScores(newScore, local, true, false, 0);
+      }
+      else {
+        showScores(newScore, local, false, true, winners.length);
+        if (scoreIndex >= winners.length + losers.length) {
+          scoreIndex = 0;
+        }
+      }
     }
   }
 
@@ -319,29 +327,30 @@ function showScores(newScore, local) {
   clear();
 
   if (local) {
-    lprcat(`               <b>Larn Scoreboard</b> (Global scoreboard not available)\n`);
+    lprcat(`                   <b>Larn Scoreboard</b> (Global scoreboard not available)\n`);
     winners = localStorageGetObject('winners', []);
     losers = localStorageGetObject('losers', []);
   } else {
-    lprcat(`                             <b>Global Larn Scoreboard</b>\n`);
+    if (showWinners && !showLosers)
+      lprcat(`                    <b>Winners Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
+    else if (showLosers && !showWinners)
+      lprcat(`                    <b>Visitors Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
+    else
+      lprcat(`                    <b>Global Larn Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
   }
 
   if (winners.length != 0 || losers.length != 0) {
-    if (winners.length > 0) printWinnerScoreBoard(winners, newScore);
-    if (losers.length > 0) printLoserScoreBoard(losers, newScore);
+    if (showWinners) printWinnerScoreBoard(winners, newScore, offset);
+    if (showLosers) printLoserScoreBoard(losers, newScore, offset);
   } else {
     lprcat(`\n  The scoreboard is empty`);
   }
 
-  // cursor(1, 23);
-  cursor(1, 7); // this looks weird, but we aren't printing '/n' after each score to make more space
-  lprcat(`         Click on a score for more information (only games > ${MIN_TIME_PLAYED} mobuls)\n`);
-  //cursor(1, 24);
+  cursor(1, GAMEOVER ? 7 : 23);
+  //cursor(1, 7); // this looks weird, but we aren't printing '/n' after each score to make more space
+  lprcat(`                     Click on a score for more information\n`);
   if (!GAMEOVER) {
-    lprcat(`                        ---- Press <b>escape</b> to exit  ----`);
-    // clear the arrays for the next time the scoreboard is loaded
-    winners = null;
-    losers = null;
+    lprcat(`             ----  Press <b>space</b> for next page, <b>escape</b> to exit  ----`);
     setCharCallback(exitscores);
   } else {
     lprcat(`                 ----  Reload your browser to play again  ----`);
@@ -351,60 +360,65 @@ function showScores(newScore, local) {
 
 
 
-function printWinnerScoreBoard(winners, newScore) {
-  var header = `\n     Score   Difficulty   Time Needed   Larn Winners List\n`;
-
+function printWinnerScoreBoard(winners, newScore, offset) {
+  var header = `\n     Score   Difficulty   Winner                    Time Needed\n`;
   // TODO duplication
   function printout(p) {
     var scoreId = p.id || p.who;
     var local = p.id == null;
-    var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}  ${padString(`` + p.timeused, 5)} Mobuls   ${p.who}`;
-    lprc(`<a href='javascript:loadScoreStats("${scoreId}", ${local}, true)'>${score}</a><br>`);
-  }
-  printScoreBoard(winners, newScore, header, printout);
+    var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${padString(p.who, -25)}${padString(`` + p.timeused, 5)} Mobuls`;
+    var endcode = GAMEOVER ? `<br>` : ``;
+    lprc(`<a href='javascript:dbQueryLoadGame("${scoreId}", ${local}, true)'>${score}</a>${endcode}`);
+    if (!GAMEOVER) lprc(`\n`);
+}
+  printScoreBoard(winners, newScore, header, printout, offset);
 }
 
 
 
-function printLoserScoreBoard(losers, newScore) {
-  var header = (`\n     Score   Difficulty   Larn Visitor Log\n`);
-
+function printLoserScoreBoard(losers, newScore, offset) {
+  var header = (`\n     Score   Difficulty   Visitor                   Fate\n`);
   // TODO duplication
   function printout(p) {
     var scoreId = p.id || p.who;
     var local = p.id == null;
-    var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${p.who}, ${p.what} on ${p.level}`;
-    lprc(`<a href='javascript:loadScoreStats("${scoreId}", ${local}, false)'>${score}</a><br>`);
+    var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${padString(p.who, -25)} ${p.what} on ${p.level}`;
+    var endcode = GAMEOVER ? `<br>` : ``;
+    lprc(`<a href='javascript:dbQueryLoadGame("${scoreId}", ${local}, false)'>${score}</a>${endcode}`);
+    if (!GAMEOVER) lprc(`\n`);
   }
-  printScoreBoard(losers, newScore, header, printout);
+  printScoreBoard(losers, newScore, header, printout, offset);
 }
 
 
 
-var scoresPrinted = 0; // made global to be able to print more high scores
-
-function printScoreBoard(board, newScore, header, printout) {
+function printScoreBoard(board, newScore, header, printout, offset) {
   var scoreboard = board.sort(sortScore);
 
   /* the scoreboard has multiple games per player in it,
   we only want to show one result per player */
   var players = [];
-  var winners = false;
+  var isWinningScore = false;
 
   lprcat(header);
   var newScorePrinted = false;
 
-  for (var i = 0; i < scoreboard.length; i++) {
+  var i = GAMEOVER ? 0 : scoreIndex - offset;
+
+  for (var count = 0 ; i < scoreboard.length ; i++, scoreIndex++) {
+
+    if (!GAMEOVER && ++count > MAX_SCORES_PER_PAGE) {
+      break;
+    }
+
     var p = scoreboard[i];
     //console.log(i + ` ` + p.who + `, ` + p.score);
     if (players.indexOf(p.who) >= 0) continue;
     players.push(p.who);
 
-    winners = p.winner;
+    isWinningScore = p.winner;
 
     var isNewScore = newScore ? isEqual(p, newScore) : false;
-
-    if (++scoresPrinted > MAX_SCORES_TO_PRINT) break;
 
     if (isNewScore) {
       lprc(`<b>`);
@@ -416,12 +430,11 @@ function printScoreBoard(board, newScore, header, printout) {
       lprc(`</b>`);
       newScorePrinted = true;
     }
-    //lprcat(`\n`);
 
   } // end for
 
   /* if this score didn't make the high score board, print it out at the bottom  */
-  if (!newScorePrinted && newScore && newScore.winner == winners) {
+  if (!newScorePrinted && newScore && newScore.winner == isWinningScore) {
     lprc(`<b>`);
     printout(newScore);
     lprc(`</b>`);
@@ -431,7 +444,7 @@ function printScoreBoard(board, newScore, header, printout) {
 
 
 
-function loadScoreStats(gameId, local, winner) {
+function dbQueryLoadGame(gameId, local, winner) {
 
   if (local) {
     var board = winner ? localStorageGetObject('winners', []) : localStorageGetObject('losers', []);
@@ -472,8 +485,8 @@ function loadScoreStats(gameId, local, winner) {
 
 
 
-function writeLocal(newScore) {
-  //console.log(`writeLocal: ` + newScore);
+function localWriteHighScore(newScore) {
+  //console.log(`localWriteHighScore: ` + newScore);
 
   // don't write 0 scores
   if (newScore.score <= 0) {
@@ -485,9 +498,9 @@ function writeLocal(newScore) {
   if (newScore.winner) {
     var winners = localStorageGetObject('winners', []);
     if (isHighestScoreForPlayer(winners, newScore)) {
-      var scoreIndex = getHighScoreIndex(winners, newScore.who);
+      var scoreArrayIndex = getHighScoreIndex(winners, newScore.who);
       console.log(`writing high score to winners scoreboard`);
-      winners[scoreIndex] = newScore;
+      winners[scoreArrayIndex] = newScore;
       localStorageSetObject('winners', winners);
     }
 
@@ -497,9 +510,9 @@ function writeLocal(newScore) {
   } else {
     var losers = localStorageGetObject('losers', []);
     if (isHighestScoreForPlayer(losers, newScore)) {
-      var scoreIndex = getHighScoreIndex(losers, newScore.who);
+      var scoreArrayIndex = getHighScoreIndex(losers, newScore.who);
       console.log(`writing high score to visitors scoreboard`);
-      losers[scoreIndex] = newScore;
+      losers[scoreArrayIndex] = newScore;
       localStorageSetObject('losers', losers);
     }
   }
@@ -507,15 +520,15 @@ function writeLocal(newScore) {
 
 
 
-function writeGlobal(newScore) {
-  //console.log(`writeGlobal: ` + newScore);
+function dbWriteHighScore(newScore) {
+  //console.log(`dbWriteHighScore: ` + newScore);
 
   var globalScore = new GlobalScore(newScore);
   //console.log(newScore.who + ` ` + newScore.score + ` ` + newScore.hardlev);
   globalScore.write();
   globalScore.save(null, {
     success: function(score) {
-      console.log(`writeGlobal: success: ` + newScore.who + ` ` + newScore.score + ` ` + newScore.hardlev);
+      console.log(`dbWriteHighScore: success: ` + newScore.who + ` ` + newScore.score + ` ` + newScore.hardlev);
       score.convertToLocal();
       endGameScore = score; // need to record the game id from parse
     },
@@ -755,8 +768,8 @@ function writeScoreToDatabase() {
   console.log(`endGameScore.score == ` + endGameScore.score);
 
   if ((endGameScore.score > 0 || endGameScore.winner) && !wizard && !cheat) {
-    writeLocal(endGameScore);
-    writeGlobal(endGameScore);
+    localWriteHighScore(endGameScore);
+    dbWriteHighScore(endGameScore);
   }
 }
 

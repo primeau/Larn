@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '297';
+const BUILD = '298';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -54,13 +54,8 @@ function play() {
   mobile = PARAMS.mobile ? PARAMS.mobile == `true` : false;
 
   if (PARAMS.score) {
-      if (PARAMS.score == `winners`) {
-          player = new Player();
-          loadScores(null, true);
-      } else if (PARAMS.score == `visitors`) {
-          player = new Player();
-          loadScores(null, false);
-      }
+    player = new Player();
+    loadScores(null, true, true);
   } else {
       welcome(); // show welcome screen, start the game
   }

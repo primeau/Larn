@@ -1,4 +1,5 @@
 bugs:
+* inventory stays on screen after d,space,* ?
 * no recovery if scoreboard hangs when loading
 + closed window alert is annoying -> create alert-on-close option?
 - scoreboard request from parse can probably be done as one request
