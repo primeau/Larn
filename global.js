@@ -256,6 +256,15 @@ function nearbymonsters() {
 
 
 
+function nearPlayer(item) {
+  for (var tmpx = vx(player.x - 1); tmpx < vx(player.x + 2); tmpx++)
+    for (var tmpy = vy(player.y - 1); tmpy < vy(player.y + 2); tmpy++)
+      if (itemAt(tmpx, tmpy).matches(item)) return true;
+  return false;
+}
+
+
+
 /*
     makemonst(lev)
         int lev;
