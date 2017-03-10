@@ -579,6 +579,15 @@ function parse(key) {
   }
 
   //
+  // toggle extra keyboard help mode
+  //
+  if (key == '!') {
+    nomove = 1;
+    keyboard_hints = !keyboard_hints;
+    return;
+  }
+
+  //
   // wizard mode
   //
   if (key == '_') {

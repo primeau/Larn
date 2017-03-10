@@ -14,8 +14,15 @@ function welcome() {
   cursors();
 
   logname = localStorageGetObject('logname', logname);
-  playerID = localStorageGetObject('playerID', Math.random().toString(36).substr(2, 5));
+  
+  var tmpID = Math.random().toString(36).substr(2, 5);
+  playerID = localStorageGetObject('playerID', tmpID);
   localStorageSetObject('playerID', playerID);
+
+  // this is probably their first game, turn on keyboard_hints
+  if (playerID === tmpID) {
+      keyboard_hints = true;
+  }
 
   lprcat(`Welcome to Larn. Please enter your name [<b>${logname}</b>]: `);
 
@@ -242,7 +249,7 @@ function startgame(hard) {
   lflush();
   updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
   if (NOCOOKIES) {
-    updateLog(`2 Cookies are disabled, games cannot be loaded or saved`);
+    updateLog(`Cookies are disabled, games cannot be loaded or saved`);
   }
 
   setAmigaMode();

@@ -164,6 +164,8 @@ function setButtons() {
 
     if (!mobile && player && mazeMode) {
       addButton(BUTTON_HELP);
+      var hintsLabel = keyboard_hints ? `on` : `off`;
+      addButton(createVariableButton(`!`, `Keyboard Hints: ${hintsLabel}`));
     }
     setDiv(`FOOTER`, BUTTONS);
     return; // disable everything else for now

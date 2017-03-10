@@ -22,6 +22,7 @@ var genocide = [];
 var amiga_mode = false;
 var gameID = Math.random().toString(36).substr(2, 8);
 var debug_used = 0;
+var keyboard_hints = false;
 
 var logname = `Adventurer`;
 var cheat = 0; /* 1 if the player has fudged save file */

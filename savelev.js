@@ -4,7 +4,7 @@ function saveGame(isCheckPoint) {
 
   if (NOCOOKIES) {
     if (!isCheckPoint)
-    updateLog(`1 Cookies are disabled, games cannot be loaded or saved`);
+    updateLog(`Cookies are disabled, games cannot be loaded or saved`);
     return;
   }
 

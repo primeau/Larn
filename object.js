@@ -423,12 +423,17 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OALTAR)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog(`There is a Holy Altar here!`);
+    if (do_ident) updateLog(`There is a Holy Altar here!`, `<b>'p'</b> to pray, <b>'A'</b> to desecrate`);
   }
   //
-  else if (item.matches(OTHRONE) || item.matches(ODEADTHRONE)) {
+  else if (item.matches(OTHRONE)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog(`There is ${item} here!`);
+    if (do_ident) updateLog(`There is ${item} here!`, `<b>'R'</b> remove gems, <b>'s'</b> sit`);
+  }
+  //
+  else if (item.matches(ODEADTHRONE)) {
+    if (nearbymonst()) return;
+    if (do_ident) updateLog(`There is ${item} here!`, `<b>'s'</b> to sit`);
   }
   //
   else if (item.matches(OPIT)) {
@@ -443,7 +448,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OFOUNTAIN)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog(`There is a fountain here`);
+    if (do_ident) updateLog(`There is a fountain here`, `<b>'f'</b> to wash, <b>'D'</b> to drink`);
   }
   //
   else if (item.matches(ODEADFOUNTAIN)) {
@@ -453,24 +458,17 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(ODNDSTORE)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog(`There is a DND store here`);
+    if (do_ident) updateLog(`There is a DND store here`, `<b>'E'</b> to enter`);
   }
   //
-  else if (item.matches(OBANK) || item.matches(OBANK2)) {
+  else if (item.isStore() && !item.matches(OVOLUP) && !item.matches(OVOLDOWN)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog(`You have found ${item}`);
+    if (do_ident) updateLog(`You have found ${item}`, `<b>'E'</b> to enter`);
   }
   //
   else if (item.matches(OSTATUE)) {
     if (nearbymonst()) return;
     if (do_ident) updateLog(`You are standing in front of a statue`);
-  }
-  //
-  else if (item.matches(OCHEST)) {
-    if (nearbymonst()) {
-      // do nothing, allow player to pick up chest!
-    }
-    if (do_ident) updateLog(`There is a chest here`);
   }
   //
   else if (item.matches(OIVTELETRAP)) {
@@ -555,6 +553,35 @@ function lookforobject(do_ident, do_pickup, do_action) {
     updateLog(`You have been enveloped by the zone of nothingness!`);
     died(283, false); /* annihilated in a sphere */
     return;
+  }
+
+  else if (item.matches(OSTAIRSUP) || item.matches(OVOLUP)) {
+    if (do_ident) updateLog(`You have found ${item}`, `<b>'<'</b> to climb up`);
+  }
+  else if (item.matches(OSTAIRSDOWN) || item.matches(OVOLDOWN)) {
+    if (do_ident) updateLog(`You have found ${item}`, `<b>'>'</b> to climb down`);
+  }
+
+  else if (item.matches(OPOTION)) {
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take, <b>'q'</b> to quaff`);
+  }
+  else if (item.matches(OSCROLL) || item.matches(OBOOK)) {
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take, <b>'r'</b> to read`);
+  }
+  else if (item.isArmor()) {
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take, <b>'W'</b> to wear`);
+  }
+  else if (item.isWeapon()) {
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take, <b>'w'</b> to wield`);
+  }
+  else if (item.matches(OCHEST)) {
+    if (do_ident && !do_pickup) updateLog(`There is a chest here`, `<b>'t'</b> to take, <b>'O'</b> to open`);
+  }
+  else if (item.matches(OCOOKIE)) {
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take, <b>'e'</b> to eat`);
+  }
+  else if (item.carry) {
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take`);
   }
 
   // base case
