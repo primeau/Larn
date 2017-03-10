@@ -21,6 +21,7 @@ function welcome() {
 
   if (!no_intro) {
     setTextCallback(setname);
+    setButtons();
   } else {
     setname(logname);
   }
@@ -55,6 +56,8 @@ function setname(name) {
     logname = name.substring(0, 24);
     localStorageSetObject('logname', logname);
   }
+
+  FS.identify(playerID, { displayName: logname });
 
   cursors();
   cltoeoln();
@@ -208,6 +211,14 @@ function makeplayer() {
   player.x = rnd(MAXX - 2);
   player.y = rnd(MAXY - 2);
 
+  // eventToggleDebugWTW();
+  // eventToggleDebugStairs();
+  // eventToggleDebugOutput();
+  // eventToggleDebugKnowAll();
+  // //eventToggleDebugStats();
+  // eventToggleDebugImmortal();
+  // wizardmode(`pvnert(x)`);
+
   recalc();
   changedWC = 0; // don't highlight AC & WC on game start
   changedAC = 0;
@@ -278,6 +289,8 @@ function mainloop(key) {
   nomove = 0;
 
   parse(key);
+
+  setButtons();
 
   if (nomove == 1) {
     paint();
@@ -430,41 +443,43 @@ function wizardmode(password) {
   player.raiseexperience(6000000);
   player.AWARENESS = 100000;
 
-  for (var i = 0; i < MAXY; i++)
-    for (var j = 0; j < MAXX; j++)
-      player.level.know[j][i] = KNOWALL;
-
   for (var i = 0; i < spelcode.length; i++) {
     learnSpell(spelcode[i]);
   }
 
-  for (var scrolli = 0; scrolli < SCROLL_NAMES.length; scrolli++) {
-    var scroll = createObject(OSCROLL, scrolli);
-    learnScroll(scroll);
-    player.level.items[scrolli][0] = scroll;
-  }
+  player.setGold(250000);
 
-  for (var potioni = MAXX - 1; potioni > MAXX - 1 - POTION_NAMES.length; potioni--) {
-    var potion = createObject(OPOTION, MAXX - 1 - potioni);
-    learnPotion(potion);
-    player.level.items[potioni][0] = potion;
-  }
+  if (player.level) {
+    for (var i = 0; i < MAXY; i++)
+      for (var j = 0; j < MAXX; j++)
+        player.level.know[j][i] = KNOWALL;
 
-  var ix = 0;
-  var iy = 0;
-  var xmod = 0;
-  var ymod = 1;
-  for (var i = 0; i < itemlist.length; i++) {
-    if (itemlist[i]) player.level.items[ix += xmod][iy += ymod] = createObject(itemlist[i]);
-    if (i == MAXY - 1) {
-      ix = 1
-      iy = MAXY - 1;
-      xmod = 1;
-      ymod = 0;
+    for (var scrolli = 0; scrolli < SCROLL_NAMES.length; scrolli++) {
+      var scroll = createObject(OSCROLL, scrolli);
+      learnScroll(scroll);
+      player.level.items[scrolli][0] = scroll;
+    }
+
+    for (var potioni = MAXX - 1; potioni > MAXX - 1 - POTION_NAMES.length; potioni--) {
+      var potion = createObject(OPOTION, MAXX - 1 - potioni);
+      learnPotion(potion);
+      player.level.items[potioni][0] = potion;
+    }
+
+    var ix = 0;
+    var iy = 0;
+    var xmod = 0;
+    var ymod = 1;
+    for (var i = 0; i < itemlist.length; i++) {
+      if (itemlist[i]) player.level.items[ix += xmod][iy += ymod] = createObject(itemlist[i]);
+      if (i == MAXY - 1) {
+        ix = 1
+        iy = MAXY - 1;
+        xmod = 1;
+        ymod = 0;
+      }
     }
   }
-
-  player.setGold(250000);
 
   return 1;
 }

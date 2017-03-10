@@ -18,6 +18,34 @@ function rund(value) {
 
 
 
+/*
+ *  vxy(x,y)       Routine to verify/fix coordinates for being within bounds
+ *      int *x,*y;
+ *
+ *  Function to verify x & y are within the bounds for a level
+ *  If *x or *y is not within the absolute bounds for a level, fix them so that
+ *    they are on the level.
+ */
+function vxy(x, y) {
+  x = vx(x);
+  y = vy(y);
+  return [x, y];
+}
+
+function vx(x) {
+  x = Math.max(0, x);
+  x = Math.min(MAXX - 1, x);
+  return x;
+}
+
+function vy(y) {
+  y = Math.max(0, y);
+  y = Math.min(MAXY - 1, y);
+  return y;
+}
+
+
+
 function beep() {
   // TODO
 }
@@ -218,7 +246,17 @@ function timeleft() {
 
 function isalpha(str) {
   str = String(str);
-  return str.length == 1 && str.match(/^[A-Za-z]+$/);
+
+  //TODO this doesn't account for many other special keys (left, right, etc)
+  var isSpecialChar = false;
+  isSpecialChar |= (str === ESC);
+  isSpecialChar |= (str === ENTER);
+  isSpecialChar |= (str === SPACE);
+  isSpecialChar |= (str === TAB);
+  isSpecialChar |= (str === DEL);
+
+  //return str.length == 1 && str.match(/^[A-Za-z]+$/);
+  return !isSpecialChar && str.match(/^[A-Za-z]+$/);
 }
 
 

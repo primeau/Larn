@@ -202,6 +202,22 @@ Item.prototype = {
       return ring;
     },
 
+    isStore: function() {
+      var store = false;
+      store |= this.matches(OENTRANCE);
+      store |= this.matches(OBANK);
+      store |= this.matches(OBANK2);
+      store |= this.matches(OLRS);
+      store |= this.matches(OHOME);
+      store |= this.matches(ODNDSTORE);
+      store |= this.matches(OVOLUP);
+      store |= this.matches(OVOLDOWN);
+      store |= this.matches(OSCHOOL);
+      store |= this.matches(OTRADEPOST);
+      return store;
+    },
+
+
   } // ITEM OBJECT
 
 

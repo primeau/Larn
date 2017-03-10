@@ -423,7 +423,7 @@ function bankmessage(str, duration) {
 function bank_deposit(amt) {
   if (amt == ESC) {
     bankmessage(`  cancelled`, 700);
-    return 0;
+    return 1;
   }
 
   if (amt == '*') {
@@ -441,7 +441,7 @@ function bank_deposit(amt) {
     player.BANKACCOUNT += amt;
     bankmessage(``, 700);
   }
-  return 0;
+  return 1;
 }
 
 
@@ -449,7 +449,7 @@ function bank_deposit(amt) {
 function bank_withdraw(amt) {
   if (amt == ESC) {
     bankmessage(`  cancelled`, 700);
-    return 0;
+    return 1;
   }
 
   if (amt == '*') {
@@ -467,7 +467,7 @@ function bank_withdraw(amt) {
     player.BANKACCOUNT -= amt;
     bankmessage(``, 700);
   }
-  return 0;
+  return 1;
 }
 
 
@@ -508,7 +508,7 @@ function bank_sell(key) {
       }
     }
   }
-  return 0;
+  return 1;
 }
 
 

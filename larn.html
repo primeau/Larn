@@ -7,8 +7,8 @@
   <title>Play Larn Online - A classic DOS/Amiga/Unix Roguelike Video Game</title>
   <meta name='description' content='Larn Game: Play Larn Online - A classic DOS/Amiga/Unix Roguelike Video Game'>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
   <link rel="icon" type="image/png" href="img/favicon.png">
-  <!-- <meta name='viewport' content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'> -->
   <!-- <link rel='apple-touch-icon' href='apple-touch-icon.png'> -->
 
   <style>
@@ -95,17 +95,30 @@
       color: black;
     }
 
-    .button {
-        background-color: #4CAF50;
+    .button, .narrowbutton, .variablebutton {
+        background-color: #008040;
         border: none;
-        color: white;
+        color: lightgrey;
         text-align: center;
         text-decoration: none;
         display: inline-block;
-        width: 100px;
-        font-size: 22px;
-        height: 52px;
+        width: 70px;
+        font-size: 12px;
+        height: 25px;
         cursor: pointer;
+        -webkit-touch-callout:none;
+        -webkit-user-select:none;
+        -khtml-user-select:none;
+        -moz-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
+    }
+    .narrowbutton {
+        width: 24px;
+    }
+    .variablebutton {
+        /*width: fit-content; TODO: doesn't work on mobile for some reason*/
+        width: 200px;
     }
 
 
@@ -114,6 +127,7 @@
   <script type='text/javascript' src='util/parse-1.9.2.min.js'></script>
   <script src='util/forge.min.js'></script>
   <script src='util/mousetrap.min.js'></script>
+  <script src='util/fs.js'></script>
 
   <script src='larn.js'></script>
   <script src='main.js'></script>
@@ -127,6 +141,7 @@
   <script src='create.js'></script>
   <script src='data.js'></script>
   <script src='parse.js'></script>
+  <script src='buttons.js'></script>
   <script src='scores.js'></script>
   <script src='inventory.js'></script>
   <script src='movem.js'></script>
@@ -156,6 +171,7 @@
   <!--[if lt IE 8]>
             <p class='browserupgrade'>You are using an <strong>outdated</strong> browser. Please <a href='http://browsehappy.com/'>upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+
   <section>
     <div id='LARN'>
       LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or MORIA,
@@ -163,40 +179,7 @@
       this page it means that there was an error loading the game. Please send a message
       to "eye (at) larn.org" and I'll get to the bottom of it!
     </div>
-    <script>
-      'use strict';
-      var no_intro = false;
-      var mobile = false;
-      play();
-    </script>
-
-
-    <!-- <p>
-    <button class='button' onclick='mousetrap(null, "escape")'>escape</button>
-    <button class='button' onclick='mousetrap(null, "return")'>return</button>
-    <button class='button' onclick='mousetrap(null, "E")'>enter</button>
-    <button class='button' onclick='mousetrap(null, "q")'>quaff</button>
-    <button class='button' onclick='mousetrap(null, "r")'>read</button>
-  </p>
-    <p>
-    <button class='button' onclick='mousetrap(null, "y")'>&#8598;</button>
-    <button class='button' onclick='mousetrap(null, "up")'>&#8593;</button>
-    <button class='button' onclick='mousetrap(null, "u")'>&#8599;</button>
-  </p>
-    <p>
-    <button class='button' onclick='mousetrap(null, "left")'>&#8592;</button>
-    <button class='button' onclick='mousetrap(null, ".")'>.</button>
-    <button class='button' onclick='mousetrap(null, "right")'>&#8594;</button>
-  </p>
-    <p>
-    <button class='button' onclick='mousetrap(null, "b")'>&#8601;</button>
-    <button class='button' onclick='mousetrap(null, "down")'>&#8595;</button>
-    <button class='button' onclick='mousetrap(null, "n")'>&#8600;</button>
-    <button class='button' onclick='mousetrap(null, "z")'>scores</button> -->
-
-
   </section>
-
 
   <aside>
     <p class='mono' id='STATS'></p>
@@ -207,20 +190,13 @@
   </footer>
 
   <script>
-    (function(i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date();
-      a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0];
-      a.async = 1;
-      a.src = g;
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-    ga('create', 'UA-67478429-1', 'auto');
-    ga('send', 'pageview');
+    'use strict';
+    var no_intro = false;
+    var mobile = false;
+    play();
   </script>
+
+  <script src='util/ga.js'></script>
 
 </body>
 

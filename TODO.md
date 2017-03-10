@@ -1,11 +1,11 @@
 bugs:
-* inventory stays on screen after d,space,* ?
+* amiga mode: viewing scoreboard resets to classic mode (partially fixed)
+? inventory stays on screen after d,space,*
++ player killed with range spell should drop gold/items beside corpse, not player
 * no recovery if scoreboard hangs when loading
 + closed window alert is annoying -> create alert-on-close option?
 - scoreboard request from parse can probably be done as one request
-- amiga mode
-  - strikethrough missing on taxes owing after victory
-  - viewing scoreboard resets to classic mode
+- amiga mode: strikethrough missing on taxes owing after victory
 - blindness
   - black tile when opening door when blind
   - when blind, a monster from an unknown tile will reveal the tile its standing on during attack
@@ -19,6 +19,8 @@ bugs:
   - break LEVELS into 14 sections & only save on level change
 
 extras:
+* add "helpful" button to show potential commands
+* show other actions ("you have desecrated at the altar!" etc)
 + always show inventory, knows scrolls, potions, spells
 - add support for other wizard mode passwords
 - game start/end stats

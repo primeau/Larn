@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '298';
+const BUILD = '299';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -182,7 +182,21 @@ function eventToggleMode(event, key, quiet) {
 
 
 function createDiv(x, y) {
-  return `<div id='${x},${y}' class='image'></div>`;
+  var callback = ``;
+  if (mobile) {
+    var key = `.`;
+    if (x < 22 && y <= 5) key = `y`;
+    else if (x <= 44 && y <= 5) key = `k`;
+    else if (x <= 67 && y <= 5) key = `u`;
+    else if (x < 22 && y <= 11) key = `h`;
+    else if (x <= 44 && y <= 11) key = `.`;
+    else if (x <= 67 && y <= 11) key = `l`;
+    else if (x < 22 && y <= 16) key = `b`;
+    else if (x <= 44 && y <= 16) key = `j`;
+    else if (x <= 67 && y <= 16) key = `n`;
+    callback = `onclick='mousetrap(null, "${key}")'`;
+  }
+  return `<div id='${x},${y}' class='image' ${callback}></div>`;
 }
 
 

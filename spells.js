@@ -52,6 +52,7 @@ function cast(key) {
 
   if (key == ESC) {
     appendLog(`  aborted`);
+    spellToCast = null;
     return 1;
   }
 
@@ -78,6 +79,7 @@ function cast(key) {
     //bottomline();
   }
 
+  spellToCast = null;
   return 1;
 }
 

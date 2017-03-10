@@ -308,6 +308,7 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
       winnerTime = 0;
       loserTime = 0;
       scoreIndex = 0;
+      setAmigaMode();
       return exitbuilding();
     }
     if (key == ' ') {

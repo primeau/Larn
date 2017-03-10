@@ -569,38 +569,6 @@ function hitplayer(x, y) {
 
 
 /*
- *  vxy(x,y)       Routine to verify/fix coordinates for being within bounds
- *      int *x,*y;
- *
- *  Function to verify x & y are within the bounds for a level
- *  If *x or *y is not within the absolute bounds for a level, fix them so that
- *    they are on the level.
- *  Returns TRUE if it was out of bounds, and the *x & *y in the calling
- *  routine are affected.
- */
-function vxy(x, y) {
-  x = Math.max(0, x);
-  x = Math.min(MAXX - 1, x);
-  y = Math.max(0, y);
-  y = Math.min(MAXY - 1, y);
-  return [x, y];
-}
-
-function vx(x) {
-  x = Math.max(0, x);
-  x = Math.min(MAXX - 1, x);
-  return x;
-}
-
-function vy(y) {
-  y = Math.max(0, y);
-  y = Math.min(MAXY - 1, y);
-  return y;
-}
-
-
-
-/*
  *  hitmonster(x,y)     Function to hit a monster at the designated coordinates
  *      int x,y;
  *

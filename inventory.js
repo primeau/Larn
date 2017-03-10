@@ -1,21 +1,24 @@
 'use strict';
 
 /* show character's inventory */
-function showinventory(select_allowed, callback, inv_filter, show_gold, show_time) {
+// TODO change this to getInventory() that returns an array of appropriate items to separate filtering from viewing
+function showinventory(select_allowed, callback, inv_filter, show_gold, show_time, no_print) {
+
+  var buttons = [];
 
   nomove = 1;
 
-  mazeMode = false;
+  if (!no_print) mazeMode = false;
   var srcount = 0;
 
   setCharCallback(callback);
 
-  cursor(1, 1);
+  if (!no_print) cursor(1, 1);
 
   if (show_gold) {
     if (player.GOLD) {
-      cltoeoln();
-      lprcat(`.) ${Number(player.GOLD).toLocaleString()} gold pieces\n`);
+      if (!no_print) cltoeoln();
+      if (!no_print) lprcat(`.) ${Number(player.GOLD).toLocaleString()} gold pieces\n`);
       srcount++;
     } else {
       show_gold = false;
@@ -34,29 +37,30 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
     if (inv_filter(item)) {
       srcount++;
       if (srcount <= wrap) {
-        cltoeoln();
+        if (!no_print) cltoeoln();
         widest = Math.max(widest, item.toString().length + 5);
       } else {
         var extra = show_gold ? 1 : 0;
-        cursor(widest, srcount % wrap + extra);
+        if (!no_print) cursor(widest, srcount % wrap + extra);
       }
       var foo = player.inventory.indexOf(item);
-      lprcat(`${getCharFromIndex(foo)}) ${item}\n`);
+      if (!no_print) lprcat(`${getCharFromIndex(foo)}) ${item}\n`);
+      buttons.push([getCharFromIndex(foo), item.toString()]);
     }
   }
 
-  cursor(1, Math.min(wrap + 1, ++srcount));
+  if (!no_print) cursor(1, Math.min(wrap + 1, ++srcount));
 
   if (show_time) {
-    cltoeoln();
-    lprcat(`Elapsed time is ${elapsedtime()}. You have ${timeleft()} mobuls left\n`);
+    if (!no_print) cltoeoln();
+    if (!no_print) lprcat(`Elapsed time is ${elapsedtime()}. You have ${timeleft()} mobuls left\n`);
   }
 
-  cltoeoln();
-  more(select_allowed);
+  if (!no_print) cltoeoln();
+  if (!no_print) more(select_allowed);
+  if (!no_print) blt();
 
-  blt();
-
+  return buttons;
 }
 
 

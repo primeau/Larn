@@ -5,6 +5,8 @@ const ENTER = 'return';
 const SPACE = 'space';
 const TAB = 'tab';
 const DEL = `backspace`;
+const CAPS = `CAPS`;
+var UPPERCASE = false;
 
 
 
@@ -91,6 +93,16 @@ function parse(key) {
 
   // if (keyboard_input_callback)
   // debug(`keyboard_input_callback: ` + keyboard_input_callback.name);
+
+  //
+  // upper/lower case keyboard input for mobile
+  //
+  if (key == CAPS) {
+    nomove = 1;
+    UPPERCASE = !UPPERCASE;
+    return;
+  }
+
 
   if (blocking_callback) {
     // debug(blocking_callback.name + `: `);
