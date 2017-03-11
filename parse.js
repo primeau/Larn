@@ -171,7 +171,11 @@ function parse(key) {
   //
   // EAT COOKIE
   //
-  if (key == 'E') {
+  if (key == 'E' || key == 'e') {
+    if (item.isStore()) {
+      enter();
+      return;
+    }
     if (player.TIMESTOP == 0)
       if (item.matches(OCOOKIE)) {
         outfortune();
@@ -386,7 +390,7 @@ function parse(key) {
   //
   // ENTER A BUILDING
   //
-  if (key == 'e' || key == ENTER) {
+  if (key == 'E' || key == 'e' || key == ENTER) {
     enter();
     return;
   }
