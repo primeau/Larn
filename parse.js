@@ -171,7 +171,7 @@ function parse(key) {
   //
   // EAT COOKIE
   //
-  if (key == 'e') {
+  if (key == 'E') {
     if (player.TIMESTOP == 0)
       if (item.matches(OCOOKIE)) {
         outfortune();
@@ -229,8 +229,14 @@ function parse(key) {
       dropflag = 1; /* prevent player from picking back up if fail */
       return;
     } else {
-      prepare_direction_event(open_something, true);
+      if (nearPlayer(OCLOSEDDOOR) || nearPlayer(OCHEST)) {
+        prepare_direction_event(open_something);
+      }
+      else {
+        updateLog(`There is nothing to open!`);
+      }
     }
+    dropflag = 1;
     return;
   }
 
@@ -357,7 +363,12 @@ function parse(key) {
       close_something(0);
       return;
     } else {
-      prepare_direction_event(close_something, true);
+      if (nearPlayer(OOPENDOOR)) {
+        prepare_direction_event(close_something);
+      }
+      else {
+        updateLog(`There is nothing to close!`);
+      }
       dropflag = 1;
       return;
     }
@@ -375,7 +386,7 @@ function parse(key) {
   //
   // ENTER A BUILDING
   //
-  if (key == 'E') {
+  if (key == 'e' || key == ENTER) {
     enter();
     return;
   }

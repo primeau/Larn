@@ -14,11 +14,11 @@ var BUTTON_QUAFF = createButton(`q`, `quaff`);
 var BUTTON_READ = createButton(`r`, `read`);
 var BUTTON_CAST = createButton(`c`, `cast`);
 var BUTTON_INVENTORY = createButton(`i`, `inventory`);
-var BUTTON_INVENTORY_FULL = createButton(`i`, `known items`);
+var BUTTON_INVENTORY_FULL = createButton(`I`, `known items`);
 var BUTTON_TELEPORT = createButton(`Z`, `teleport`);
 
 // uncommon buttons
-var BUTTON_EAT = createButton(`e`, `eat`);
+var BUTTON_EAT = createButton(`E`, `eat`);
 var BUTTON_TAKEOFF = createButton(`T`, `remove armor`);
 var BUTTON_AUTOPICKUP = createButton(`@`, `auto-pickup`);
 var BUTTON_PACKWEIGHT = createButton(`g`, `pack weight`);
@@ -35,7 +35,7 @@ var BUTTON_DROP = createButton(`d`, `drop`);
 var BUTTON_OPEN = createButton(`o`, `open`);
 var BUTTON_CLOSE = createButton(`C`, `close`);
 var BUTTON_TRAPS = createButton(`^`, `identify trap`);
-var BUTTON_ENTER = createButton(`E`, `enter`);
+var BUTTON_ENTER = createButton(`e`, `enter`);
 
 var BUTTON_FOUNTAIN_TIDY = createButton(`f`, `tidy up`);
 var BUTTON_FOUNTAIN_DRINK = createButton(`D`, `drink`);
@@ -50,17 +50,17 @@ var BUTTON_UPSTAIRS = createButton(`<`, `go up`);
 var BUTTON_DOWNSTAIRS = createButton(`>`, `go down`);
 
 // keypad
-var BUTTON_UP_LEFT = createButton(`y`, `&#8598;`, `Y`);
-var BUTTON_UP = createButton(`k`, `&#8593;`, `K`);
-var BUTTON_UP_RIGHT = createButton(`u`, `&#8599;`, `U`);
+var BUTTON_UP_LEFT = createButton(`y`, `↖`, `Y`);
+var BUTTON_UP = createButton(`k`, `↑`, `K`);
+var BUTTON_UP_RIGHT = createButton(`u`, `↗`, `U`);
 
-var BUTTON_LEFT = createButton(`h`, `&#8592;`, `H`);
+var BUTTON_LEFT = createButton(`h`, `←`, `H`);
 var BUTTON_NOMOVE = createButton(`.`, `.`);
-var BUTTON_RIGHT = createButton(`l`, `&#8594;`, `L`);
+var BUTTON_RIGHT = createButton(`l`, `→`, `L`);
 
-var BUTTON_DOWN_LEFT = createButton(`b`, `&#8601;`, `B`);
-var BUTTON_DOWN = createButton(`j`, `&#8595;`, `J`);
-var BUTTON_DOWN_RIGHT = createButton(`n`, `&#8600;`, `N`);
+var BUTTON_DOWN_LEFT = createButton(`b`, `↙`, `B`);
+var BUTTON_DOWN = createButton(`j`, `↓`, `J`);
+var BUTTON_DOWN_RIGHT = createButton(`n`, `↘`, `N`);
 
 // stores
 var BUTTON_EXIT = createButton(ESC, `exit`);
@@ -162,13 +162,15 @@ function newButtonRow() {
 function setButtons() {
     BUTTONS = '';
 
-    if (!mobile && player && mazeMode) {
-      addButton(BUTTON_HELP);
-      var hintsLabel = keyboard_hints ? `on` : `off`;
-      addButton(createVariableButton(`!`, `Keyboard Hints: ${hintsLabel}`));
+    if (!mobile) {
+        if (player && mazeMode) {
+            addButton(BUTTON_HELP);
+            var hintsLabel = keyboard_hints ? `on` : `off`;
+            addButton(createVariableButton(`!`, `Keyboard Hints: ${hintsLabel}`));
+        }
+        setDiv(`FOOTER`, BUTTONS);
+        return; // disable everything else for now
     }
-    setDiv(`FOOTER`, BUTTONS);
-    return; // disable everything else for now
 
     if (!player) {
         if (keyboard_input_callback === setname) {

@@ -422,18 +422,18 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OALTAR)) {
-    if (nearbymonst()) return;
-    if (do_ident) updateLog(`There is a Holy Altar here!`, `<b>'p'</b> to pray, <b>'A'</b> to desecrate`);
+    //if (nearbymonst()) return;
+    if (do_ident) updateLog(`There is a Holy Altar here!`, formatHint('p', 'to pray', 'A', 'to desecrate'));
   }
   //
   else if (item.matches(OTHRONE)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog(`There is ${item} here!`, `<b>'R'</b> remove gems, <b>'s'</b> sit`);
+    if (do_ident) updateLog(`There is ${item} here!`, formatHint('R', 'remove gems', 's', 'sit down'));
   }
   //
   else if (item.matches(ODEADTHRONE)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog(`There is ${item} here!`, `<b>'s'</b> to sit`);
+    if (do_ident) updateLog(`There is ${item} here!`, formatHint('s', 'sit down'));
   }
   //
   else if (item.matches(OPIT)) {
@@ -448,7 +448,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OFOUNTAIN)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog(`There is a fountain here`, `<b>'f'</b> to wash, <b>'D'</b> to drink`);
+    if (do_ident) updateLog(`There is a fountain here`, formatHint('f', 'to wash', 'D', 'to drink'));
   }
   //
   else if (item.matches(ODEADFOUNTAIN)) {
@@ -458,12 +458,12 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(ODNDSTORE)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog(`There is a DND store here`, `<b>'E'</b> to enter`);
+    if (do_ident) updateLog(`There is a DND store here`, formatHint('e', 'to go inside'));
   }
   //
   else if (item.isStore() && !item.matches(OVOLUP) && !item.matches(OVOLDOWN)) {
     if (nearbymonst()) return;
-    if (do_ident) updateLog(`You have found ${item}`, `<b>'E'</b> to enter`);
+    if (do_ident) updateLog(`You have found ${item}`, formatHint('e', 'to go inside'));
   }
   //
   else if (item.matches(OSTATUE)) {
@@ -556,32 +556,32 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
 
   else if (item.matches(OSTAIRSUP) || item.matches(OVOLUP)) {
-    if (do_ident) updateLog(`You have found ${item}`, `<b>'<'</b> to climb up`);
+    if (do_ident) updateLog(`You have found ${item}`, formatHint('<', 'to climb up'));
   }
   else if (item.matches(OSTAIRSDOWN) || item.matches(OVOLDOWN)) {
-    if (do_ident) updateLog(`You have found ${item}`, `<b>'>'</b> to climb down`);
+    if (do_ident) updateLog(`You have found ${item}`, formatHint('>', 'to climb down'));
   }
 
   else if (item.matches(OPOTION)) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take, <b>'q'</b> to quaff`);
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'q', 'to quaff'));
   }
   else if (item.matches(OSCROLL) || item.matches(OBOOK)) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take, <b>'r'</b> to read`);
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'r', 'to read'));
   }
   else if (item.isArmor()) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take, <b>'W'</b> to wear`);
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'W', 'to wear'));
   }
   else if (item.isWeapon()) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take, <b>'w'</b> to wield`);
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'w', 'to wield'));
   }
   else if (item.matches(OCHEST)) {
-    if (do_ident && !do_pickup) updateLog(`There is a chest here`, `<b>'t'</b> to take, <b>'O'</b> to open`);
+    if (do_ident && !do_pickup) updateLog(`There is a chest here`, formatHint('t', 'to take', 'o', 'to open'));
   }
   else if (item.matches(OCOOKIE)) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take, <b>'e'</b> to eat`);
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'E', 'to eat'));
   }
   else if (item.carry) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, `<b>'t'</b> to take`);
+    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take'));
   }
 
   // base case
@@ -600,6 +600,14 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
 
 } // lookforobject
+
+
+
+function formatHint(key1, hint1, key2, hint2) {
+  var hintstring1 = `<b>${key1}</b> ${hint1}`;
+  var hintstring2 = key2 && hint2 ? `, <b>${key2}</b> ${hint2}` : ``;
+  return `[${hintstring1}${hintstring2}]`;
+}
 
 
 

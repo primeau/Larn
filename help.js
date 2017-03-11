@@ -58,16 +58,16 @@ journey into these caverns.\n\
 
 helppages[1] =
 `                      <b>Help File for The Caverns of Larn</b>                 \n\
-                                                                                \n\
- y|Y  move|run northwest     k|K  move|run up            u|U  move|run northeast\n\
- h|H  move|run left           .   stay here              l|L  move|run right    \n\
- b|B  move|run southwest     j|J  move|run down          n|N  move|run southeast\n\
-                                                                                \n\
+                                                                          shift+\n\
+ y|Y  move|run northwest  k|K  move|run up    u|U  move|run northeast      ↖↑↗  \n\
+ h|H  move|run left        .   stay here      l|L  move|run right         ←    →\n\
+ b|B  move|run southwest  j|J  move|run down  n|N  move|run southeast      ↙↓↘  \n\
+                                                                          to run\n\
                               A  desecrate an altar       <  go up stairs       \n\
   c  cast a spell             C  close a door                                   \n\
   d  drop an item             D  drink at a fountain      >  go down stairs     \n\
-  e  eat something            E  enter a store, dungeon                         \n\
-  f  tidy up at a fountain       or volcanic shaft        ^  identify a trap    \n\
+  e  enter a store, dungeon   E  eat something                                  \n\
+  f  tidy up at a fountain                                ^  identify a trap    \n\
   g  get present pack weight                                                    \n\
   i  inventory your pockets   I  list all known items     :  look at object you \n\
   o  open a door or chest                                    are standing on    \n\

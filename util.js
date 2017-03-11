@@ -246,17 +246,17 @@ function timeleft() {
 
 function isalpha(str) {
   str = String(str);
+  return str.length == 1 && str.match(/^[A-Za-z]+$/);
 
-  //TODO this doesn't account for many other special keys (left, right, etc)
-  var isSpecialChar = false;
-  isSpecialChar |= (str === ESC);
-  isSpecialChar |= (str === ENTER);
-  isSpecialChar |= (str === SPACE);
-  isSpecialChar |= (str === TAB);
-  isSpecialChar |= (str === DEL);
+  // //TODO this doesn't account for many other special keys (left, right, etc)
+  // var isSpecialChar = false;
+  // isSpecialChar |= (str === ESC);
+  // isSpecialChar |= (str === ENTER);
+  // isSpecialChar |= (str === SPACE);
+  // isSpecialChar |= (str === TAB);
+  // isSpecialChar |= (str === DEL);
+  // return !isSpecialChar && str.match(/^[A-Za-z]+$/);
 
-  //return str.length == 1 && str.match(/^[A-Za-z]+$/);
-  return !isSpecialChar && str.match(/^[A-Za-z]+$/);
 }
 
 

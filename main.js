@@ -14,7 +14,7 @@ function welcome() {
   cursors();
 
   logname = localStorageGetObject('logname', logname);
-  
+
   var tmpID = Math.random().toString(36).substr(2, 5);
   playerID = localStorageGetObject('playerID', tmpID);
   localStorageSetObject('playerID', playerID);
@@ -64,7 +64,9 @@ function setname(name) {
     localStorageSetObject('logname', logname);
   }
 
-  FS.identify(playerID, { displayName: logname });
+  if (location.hostname != 'localhost') {
+    FS.identify(playerID, { displayName: logname });
+  }
 
   cursors();
   cltoeoln();
@@ -248,6 +250,7 @@ function startgame(hard) {
 
   lflush();
   updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
+  updateLog(`Press <b>e</b> to enter buildings and the dungeon`);
   if (NOCOOKIES) {
     updateLog(`Cookies are disabled, games cannot be loaded or saved`);
   }

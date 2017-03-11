@@ -32,6 +32,15 @@ function pre_cast() {
 
 
 
+function matchesSpell(spell) {
+  for (var i = 0; i < spelcode.length; i++) {
+    if (spelcode[i] === spell) return true;
+  }
+  return false;
+}
+
+
+
 function cast(key) {
 
   nomove = 1;
@@ -56,7 +65,8 @@ function cast(key) {
     return 1;
   }
 
-  if (!isalpha(key)) {
+  if (!(isalpha(key) || matchesSpell(key))) {
+  // if (!isalpha(key) && !matchesSpell(key)) {
     return 0;
   }
 

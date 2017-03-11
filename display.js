@@ -504,9 +504,7 @@ function updateLog(text, hint) {
   }
   if (!LOG) return;
   if (keyboard_hints && hint) {
-    var pad = ` `;
-    //text = `${text}${pad}-- ${hint}`;
-    text = `${text}${pad}(${hint})`;
+    text = `${text} ${hint}`;
   }
   LOG.push(text);
   if (LOG.length > LOG_SAVE_SIZE) {
