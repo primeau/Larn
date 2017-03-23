@@ -155,18 +155,8 @@ function inv_sort(a, b) {
   if (a == null) return 1;
   if (b == null) return -1;
 
-  var asort = (sortorder.indexOf(a.id) + 1) * 10000 + a.inv;
-  var bsort = (sortorder.indexOf(b.id) + 1) * 10000 + b.inv;
-
-  // sort unknown scrolls and potions above known
-  // sort unknown scrolls and potions in inventory order
-  // sort known scrolls and potions in inventory order
-  if (isKnownScroll(a) || isKnownPotion(a)) {
-    asort += a.arg * 100;
-  }
-  if (isKnownScroll(b) || isKnownPotion(b)) {
-    bsort += b.arg * 100;
-  }
+  var asort = a.getSortCode();
+  var bsort = b.getSortCode();
 
   return asort - bsort;
 }

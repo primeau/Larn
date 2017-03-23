@@ -469,10 +469,14 @@ function wizardmode(password) {
   player.setDexterity(70);
   player.setCharisma(70);
 
+  player.inventory[0] = null;
+  player.inventory[1] = null;
+  var startLance = createObject(OLANCE, 25);
+  var startRing = createObject(OPROTRING, 50);
+  take(startLance);
+  take(startRing);
   player.WEAR = null;
-  player.inventory[0] = createObject(OLANCE, 25);
-  player.WIELD = player.inventory[0];
-  player.inventory[1] = createObject(OPROTRING, 50);
+  player.WIELD = startLance;
 
   player.raiseexperience(6000000);
   player.AWARENESS = 100000;

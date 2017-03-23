@@ -219,6 +219,15 @@ Item.prototype = {
       return store;
     },
 
+    getSortCode: function() {
+      var invcode = this.inv ? this.inv : 0;
+      var sortcode = (sortorder.indexOf(this.id) + 1) * 10000 + invcode;
+      if (isKnownScroll(this) || isKnownPotion(this)) {
+        sortcode += this.arg * 100;
+      }
+      return sortcode;
+    }
+
 
   } // ITEM OBJECT
 
