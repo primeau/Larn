@@ -222,9 +222,14 @@ Item.prototype = {
     getSortCode: function() {
       var invcode = this.inv ? this.inv : 0;
       var sortcode = (sortorder.indexOf(this.id) + 1) * 10000 + invcode;
+
+      // sort unknown scrolls and potions above known
+      // sort unknown scrolls and potions in inventory order
+      // sort known scrolls and potions in inventory order
       if (isKnownScroll(this) || isKnownPotion(this)) {
-        sortcode += this.arg * 100;
+        sortcode += (this.arg + 1) * 100;
       }
+
       return sortcode;
     }
 
