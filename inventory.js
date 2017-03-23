@@ -5,7 +5,9 @@
 // written for this project
 // TODO change this to getInventory() that returns an array of appropriate items
 // to separate filtering from viewing
-function showinventory(select_allowed, callback, inv_filter, show_gold, show_time, printScreen) {
+function showinventory(select_allowed, callback, inv_filter, show_gold, show_time, printScreen, p) {
+
+  if (!p) p = player;
 
   var buttons = [];
 
@@ -19,9 +21,9 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
   if (printScreen) cursor(1, 1);
 
   if (show_gold) {
-    if (player.GOLD) {
+    if (p.GOLD) {
       if (printScreen) cltoeoln();
-      if (printScreen) lprcat(`.) ${Number(player.GOLD).toLocaleString()} gold pieces\n`);
+      if (printScreen) lprcat(`.) ${Number(p.GOLD).toLocaleString()} gold pieces\n`);
       srcount++;
     } else {
       show_gold = false;
@@ -32,7 +34,7 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
   var wrap = 23;
   wrap -= show_time ? 1 : 0;
 
-  var inventory = player.inventory.slice();
+  var inventory = p.inventory.slice();
   inventory.sort(inv_sort);
 
   for (var k = 0; k < inventory.length; k++) {
@@ -46,7 +48,7 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
         var extra = show_gold ? 1 : 0;
         if (printScreen) cursor(widest, srcount % wrap + extra);
       }
-      var foo = player.inventory.indexOf(item);
+      var foo = p.inventory.indexOf(item);
       if (printScreen) lprcat(`${getCharFromIndex(foo)}) ${item}\n`);
       buttons.push([getCharFromIndex(foo), item]);
     }

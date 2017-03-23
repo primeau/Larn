@@ -764,7 +764,7 @@ function game_stats(p, endgame) {
   var s = endgame ? `Inventory:\n` : ``;
 
   s += `.) ` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
-  var inv = showinventory(false, null, showall, false, false, false); //HACK!
+  var inv = showinventory(false, null, showall, false, false, false, p); //HACK!
   for (var i = 0; i < inv.length; i++) {
     var item = inv[i][1];
     if (item) {
