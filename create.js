@@ -39,11 +39,13 @@ function newcavelevel(depth) {
         player.level.know[i][j] = KNOWALL;
 
 
-  /* save a checkpoint file to prevent a different random
-  level from being created */
+  /*
+  save a checkpoint file to prevent a different random level from being created
+  -- disabled in v304 since it's too easy to abuse
   if (depth > 0) {
-    saveGame(true);
-  }
+     saveGame(true);
+   }
+   */
 
 }
 

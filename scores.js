@@ -150,7 +150,7 @@ function getStatString(score) {
   if (!score.winner) {
     stats += `${score.what} on ${score.level}\n`;
   }
-  stats += `\n${game_stats(tempPlayer, score)}\n`;
+  stats += `\n${debug_stats(tempPlayer, score)}\n`;
   if (score.explored) {
     stats += `Levels Visited:\n`;
     stats += `${score.explored}\n\n`;

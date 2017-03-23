@@ -1,24 +1,27 @@
 'use strict';
 
 /* show character's inventory */
-// TODO change this to getInventory() that returns an array of appropriate items to separate filtering from viewing
-function showinventory(select_allowed, callback, inv_filter, show_gold, show_time, no_print) {
+// HACK this printScreen business is probably the most embarassing code i've
+// written for this project
+// TODO change this to getInventory() that returns an array of appropriate items
+// to separate filtering from viewing
+function showinventory(select_allowed, callback, inv_filter, show_gold, show_time, printScreen) {
 
   var buttons = [];
 
-  nomove = 1;
+  nomove = callback ? 1 : 0; // HACK callback is null when called by game_stats()
 
-  if (!no_print) mazeMode = false;
+  if (printScreen) mazeMode = false;
   var srcount = 0;
 
-  setCharCallback(callback);
+  if (callback) setCharCallback(callback);
 
-  if (!no_print) cursor(1, 1);
+  if (printScreen) cursor(1, 1);
 
   if (show_gold) {
     if (player.GOLD) {
-      if (!no_print) cltoeoln();
-      if (!no_print) lprcat(`.) ${Number(player.GOLD).toLocaleString()} gold pieces\n`);
+      if (printScreen) cltoeoln();
+      if (printScreen) lprcat(`.) ${Number(player.GOLD).toLocaleString()} gold pieces\n`);
       srcount++;
     } else {
       show_gold = false;
@@ -37,28 +40,28 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
     if (inv_filter(item)) {
       srcount++;
       if (srcount <= wrap) {
-        if (!no_print) cltoeoln();
+        if (printScreen) cltoeoln();
         widest = Math.max(widest, item.toString().length + 5);
       } else {
         var extra = show_gold ? 1 : 0;
-        if (!no_print) cursor(widest, srcount % wrap + extra);
+        if (printScreen) cursor(widest, srcount % wrap + extra);
       }
       var foo = player.inventory.indexOf(item);
-      if (!no_print) lprcat(`${getCharFromIndex(foo)}) ${item}\n`);
-      buttons.push([getCharFromIndex(foo), item.toString()]);
+      if (printScreen) lprcat(`${getCharFromIndex(foo)}) ${item}\n`);
+      buttons.push([getCharFromIndex(foo), item]);
     }
   }
 
-  if (!no_print) cursor(1, Math.min(wrap + 1, ++srcount));
+  if (printScreen) cursor(1, Math.min(wrap + 1, ++srcount));
 
   if (show_time) {
-    if (!no_print) cltoeoln();
-    if (!no_print) lprcat(`Elapsed time is ${elapsedtime()}. You have ${timeleft()} mobuls left\n`);
+    if (printScreen) cltoeoln();
+    if (printScreen) lprcat(`Elapsed time is ${elapsedtime()}. You have ${timeleft()} mobuls left\n`);
   }
 
-  if (!no_print) cltoeoln();
-  if (!no_print) more(select_allowed);
-  if (!no_print) blt();
+  if (printScreen) cltoeoln();
+  if (printScreen) more(select_allowed);
+  if (printScreen) blt();
 
   return buttons;
 }
@@ -93,35 +96,35 @@ function showquaff(item) {
 
 const sortorder = [
   OLARNEYE.id,
-
-  OSHIELD.id,
-  OLEATHER.id,
-  OSTUDLEATHER.id,
-  ORING.id,
-  OCHAIN.id,
-  OSPLINT.id,
-  OPLATE.id,
-  OPLATEARMOR.id,
   OSSPLATE.id,
-
-  ODAGGER.id,
-  OSPEAR.id,
-  OFLAIL.id,
-  OBATTLEAXE.id,
-  OLONGSWORD.id,
-  O2SWORD.id,
-  OSWORD.id,
-  OSWORDofSLASHING.id,
-  OHAMMER.id,
   OLANCE.id,
+  OSHIELD.id,
+
+  OPLATEARMOR.id,
+  OPLATE.id,
+  OSPLINT.id,
+  OCHAIN.id,
+  ORING.id,
+  OSTUDLEATHER.id,
+  OLEATHER.id,
+
+  OHAMMER.id,
+  OSWORDofSLASHING.id,
+  OSWORD.id,
+  O2SWORD.id,
+  OLONGSWORD.id,
+  OBATTLEAXE.id,
+  OFLAIL.id,
+  OSPEAR.id,
+  ODAGGER.id,
 
   ORINGOFEXTRA.id,
-  OREGENRING.id,
   OPROTRING.id,
+  OCLEVERRING.id,
+  OREGENRING.id,
   OENERGYRING.id,
   ODEXRING.id,
   OSTRRING.id,
-  OCLEVERRING.id,
   ODAMRING.id,
 
   OBELT.id,
@@ -137,10 +140,10 @@ const sortorder = [
   OCUBEofUNDEAD.id,
   ONOTHEFT.id,
 
-  OSAPPHIRE.id,
+  ODIAMOND.id,
   ORUBY.id,
   OEMERALD.id,
-  ODIAMOND.id,
+  OSAPPHIRE.id,
 
   OCOOKIE.id,
 ];
@@ -151,23 +154,21 @@ function inv_sort(a, b) {
   if (a == null && b == null) return 0;
   if (a == null) return 1;
   if (b == null) return -1;
-  var asort = sortorder.indexOf(a.id); // JRP we could cache this in the item object
-  var bsort = sortorder.indexOf(b.id); // but it's not enough of a perf issue
 
-  // if the sort order is obvious
-  if (asort != bsort) {
-    return asort - bsort;
-  } else {
-    // sort scrolls and potions alphabetically by name, not arg to
-    // prevent guessing based on arg (i.e. pulverize/annihilation/lifeprotect would always be last)
-    if (a.matches(OSCROLL) && b.matches(OSCROLL) || a.matches(OPOTION) && b.matches(OPOTION)) {
-      return a.toString().localeCompare(b.toString());
-    } else {
-      // otherwise, sort by arg
-      return a.arg - b.arg;
-    }
+  var asort = (sortorder.indexOf(a.id) + 1) * 10000 + a.inv;
+  var bsort = (sortorder.indexOf(b.id) + 1) * 10000 + b.inv;
 
+  // sort unknown scrolls and potions above known
+  // sort unknown scrolls and potions in inventory order
+  // sort known scrolls and potions in inventory order
+  if (isKnownScroll(a) || isKnownPotion(a)) {
+    asort += a.arg * 100;
   }
+  if (isKnownScroll(b) || isKnownPotion(b)) {
+    bsort += b.arg * 100;
+  }
+
+  return asort - bsort;
 }
 
 
@@ -196,6 +197,7 @@ function take(item) {
   for (var i = 0; i < limit; i++) {
     if (!player.inventory[i]) {
       player.inventory[i] = item;
+      item.inv = i; // helper for sorting inventory
       debug(`take(): ` + item);
       limit = 0;
       player.adjustcvalues(item, true);
@@ -219,7 +221,7 @@ function drop_object(index) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
   if (index == '*' || index == ' ' || index == 'I') {
     if (mazeMode) {
-      showinventory(true, drop_object, showall, false, false);
+      showinventory(true, drop_object, showall, false, false, true);
     } else {
       setMazeMode(true);
     }

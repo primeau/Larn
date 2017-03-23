@@ -392,11 +392,10 @@ function inventoryButtons(callback, filter) {
     if (blocking_callback === callback) {
         console.log(callback.name);
         newButtonRow();
-        var inv = showinventory(true, callback, filter, false, false, true);
+        var inv = showinventory(false, callback, filter, false, false, false);
         for (i = 0; i < inv.length; i++) {
             newButtonRow();
             var params = inv[i];
-            console.log(inv[i]);
             addButton(createVariableButton(params[0], params[1]));
             newButtonRow();
         }

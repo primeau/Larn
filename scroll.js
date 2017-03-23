@@ -36,7 +36,7 @@ function act_read_something(index) {
 
       if (index == '*' || index == ' ' || index == 'I') {
         if (mazeMode) {
-          showinventory(true, act_read_something, showread, false, false);
+          showinventory(true, act_read_something, showread, false, false, true);
         } else {
           setMazeMode(true);
         }

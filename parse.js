@@ -210,7 +210,7 @@ function parse(key) {
   //
   if (key == 'i') {
     nomove = 1;
-    showinventory(false, parse_inventory, showall, true, true);
+    showinventory(false, parse_inventory, showall, true, true, true);
     return;
   }
 
@@ -579,6 +579,14 @@ function parse(key) {
     nomove = 1;
     auto_pickup = !auto_pickup;
     updateLog(`Auto-pickup: ${auto_pickup ? `on` : `off`}`);
+    return;
+  }
+
+  // toggle inventory on right side
+  if (key == '#') {
+    nomove = 1;
+    side_inventory = !side_inventory;
+    updateLog(`Inventory view: ${side_inventory ? `on` : `off`}`);
     return;
   }
 

@@ -615,7 +615,7 @@ function wield(index) {
   else {
     if (index == '*' || index == ' ' || index == 'I') {
       if (mazeMode) {
-        showinventory(true, wield, showwield, false, false);
+        showinventory(true, wield, showwield, false, false, true);
       } else {
         setMazeMode(true);
       }
@@ -692,7 +692,7 @@ function wear(index) {
   else {
     if (index == '*' || index == ' ' || index == 'I') {
       if (mazeMode) {
-        showinventory(true, wear, showwear, false, false);
+        showinventory(true, wear, showwear, false, false, true);
       } else {
         setMazeMode(true);
       }
@@ -752,7 +752,45 @@ function wear(index) {
 
 
 
-function game_stats(p, score) {
+function game_stats(p, endgame) {
+  // return if walking the maze and inventory and stats are off
+  if (mazeMode && (!side_inventory || !debug_stats)) return ``;
+
+  // return if showing the scoreboard, but not a high score
+  if (!mazeMode && typeof p == 'undefined') return ``;
+
+  if (!p) p = player;
+
+  var s = endgame ? `Inventory:\n` : ``;
+
+  s += `.) ` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
+  var inv = showinventory(false, null, showall, false, false, false); //HACK!
+  for (var i = 0; i < inv.length; i++) {
+    var item = inv[i][1];
+    if (item) {
+      s += inv[i][0] + `) ` + item.toString(false, endgame || DEBUG_STATS, p) + `\n`;
+    }
+  }
+
+  s += `\nKnown Spells:\n`;
+  var count = 0;
+  var spellcolumns = 6;
+  for (var spell = 0; spell < p.knownSpells.length; spell++) {
+    var tmp = p.knownSpells[spell];
+    if (tmp) {
+      s += tmp + ` `;
+      if (++count % spellcolumns == 0)
+        s += `\n`;
+    }
+  }
+  if (count % spellcolumns != 0) s += `\n`;
+
+  return s;
+}
+
+
+
+function debug_stats(p, score) {
   if (!player) return;
   if (!p) p = player;
 
@@ -763,16 +801,17 @@ function game_stats(p, score) {
     tmprmst = score.extra[EXTRA_RMST];
   }
 
-  var s = ``;
+  var s = game_stats(p, score != null);
 
-  s += `Inventory:\n`;
-  s += `.) ` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
-  var c = `a`;
-  for (var inven = 0; inven < p.inventory.length; inven++) {
-    var item = p.inventory[inven];
-    if (item) {
-      s += c.nextChar(inven) + `) ` + item.toString(false, true, p) + `\n`;
-    }
+  s += `\nKnown Scrolls:\n`;
+  for (var scroll = 0; scroll < p.knownScrolls.length; scroll++) {
+    var tmp = p.knownScrolls[scroll];
+    if (tmp) s += SCROLL_NAMES[tmp.arg] + `\n`;
+  }
+  s += `\nKnown Potions:\n`;
+  for (var potion = 0; potion < p.knownPotions.length; potion++) {
+    var tmp = p.knownPotions[potion];
+    if (tmp) s += POTION_NAMES[tmp.arg] + `\n`;
   }
 
   s += `\nBank Account:\n`;
@@ -836,28 +875,6 @@ function game_stats(p, score) {
   // s += `PAINT: ` + DEBUG_PAINT + `\n`;
   // s += `LPR:   ` + DEBUG_LPRCAT + `\n`;
   // s += `LPRC:  ` + DEBUG_LPRC + `\n`;
-
-  s += `\nKnown Spells:\n`;
-  var count = 0;
-  for (var spell = 0; spell < p.knownSpells.length; spell++) {
-    var tmp = p.knownSpells[spell];
-    if (tmp) {
-      s += tmp + ` `;
-      if (++count % 3 == 0)
-        s += `\n`;
-    }
-  }
-  if (count % 3) s += `\n`;
-  s += `\nKnown Scrolls:\n`;
-  for (var scroll = 0; scroll < p.knownScrolls.length; scroll++) {
-    var tmp = p.knownScrolls[scroll];
-    if (tmp) s += SCROLL_NAMES[tmp.arg] + `\n`;
-  }
-  s += `\nKnown Potions:\n`;
-  for (var potion = 0; potion < p.knownPotions.length; potion++) {
-    var tmp = p.knownPotions[potion];
-    if (tmp) s += POTION_NAMES[tmp.arg] + `\n`;
-  }
 
   return s;
 }

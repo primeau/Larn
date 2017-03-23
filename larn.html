@@ -13,18 +13,14 @@
 
   <style>
     section {
-      width: 65%;
+      width: 1060px;
       float: left;
+      /*border: 1px solid #990000;*/
     }
-
+    
     aside {
-      width: 21%;
-      float: right;
-    }
-
-    footer {
-      width: 60%;
-      float: left;
+      margin-left: 1070px;
+      /*border: 1px solid #009900;*/
     }
 
     a:link {
@@ -58,7 +54,6 @@
     a:active {
       text-decoration: none;
     }
-
     /*@font-face {
       font-family: 'dos';
       src: url('fonts/vgasys.otf');
@@ -95,31 +90,33 @@
       color: black;
     }
 
-    .button, .narrowbutton, .variablebutton {
-        background-color: #008040;
-        border: none;
-        color: lightgrey;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 12px;
-        height: 25px;
-        cursor: pointer;
-        -webkit-touch-callout:none;
-        -webkit-user-select:none;
-        -khtml-user-select:none;
-        -moz-user-select:none;
-        -ms-user-select:none;
-        user-select:none;
+    .button,
+    .narrowbutton,
+    .variablebutton {
+      background-color: #039903;
+      border: none;
+      color: lightgrey;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      height: 25px;
+      cursor: pointer;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
+
     .narrowbutton {
-        width: 24px;
+      width: 24px;
     }
+
     .button {
       width: 70px;
     }
-
-
   </style>
 
   <script type='text/javascript' src='util/parse-1.9.2.min.js'></script>
@@ -166,26 +163,28 @@
 
 </head>
 
+<body>
+
   <!--[if lt IE 8]>
             <p class='browserupgrade'>You are using an <strong>outdated</strong> browser. Please <a href='http://browsehappy.com/'>upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
   <section>
     <div id='LARN'>
-      LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or MORIA,
-      but with a different feel and winning criteria. Unfortunately if you're seeing
-      this page it means that there was an error loading the game. Please send a message
-      to "eye (at) larn.org" and I'll get to the bottom of it!
+      LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or MORIA, but with a different feel and winning criteria.
+      Unfortunately if you're seeing this page it means that there was an error loading the game. Please send a message to "eye (at)
+      larn.org" and I'll get to the bottom of it!
     </div>
+  </section>
+
+  <section>
+    <p class='mono' id='FOOTER'></p>
   </section>
 
   <aside>
     <p class='mono' id='STATS'></p>
   </aside>
 
-  <footer>
-    <p class='mono' id='FOOTER'></p>
-  </footer>
 
   <script>
     'use strict';

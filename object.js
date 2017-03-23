@@ -6,12 +6,13 @@ const hack_objnamelist = `·:\\_^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~
 
 
 
-var Item = function Item(id, char, desc, carry, arg) {
+var Item = function Item(id, char, desc, carry, arg, inv) {
   this.id = id;
   this.char = char;
   this.desc = desc;
   this.carry = carry;
   this.arg = arg;
+  this.inv = inv;
 
   if (!arg) this.arg = 0;
 
@@ -33,7 +34,7 @@ function createObject(item, arg) {
     item = itemlist[item];
   }
 
-  var newItem = new Item(item.id, item.char, item.desc, item.carry);
+  var newItem = new Item(item.id, item.char, item.desc, item.carry, item.arg, item.inv);
 
   if (arg) {
     newItem.arg = arg;
@@ -58,6 +59,7 @@ Item.prototype = {
     desc: ``,
     carry: false,
     arg: 0,
+    inv: null,
 
     // TODO: cache this
     getChar: function() {
@@ -563,25 +565,25 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
 
   else if (item.matches(OPOTION)) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'q', 'to quaff'));
+    if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'q', 'to quaff'));
   }
   else if (item.matches(OSCROLL) || item.matches(OBOOK)) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'r', 'to read'));
+    if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'r', 'to read'));
   }
   else if (item.isArmor()) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'W', 'to wear'));
+    if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'W', 'to wear'));
   }
   else if (item.isWeapon()) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'w', 'to wield'));
+    if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'w', 'to wield'));
   }
   else if (item.matches(OCHEST)) {
-    if (do_ident && !do_pickup) updateLog(`There is a chest here`, formatHint('t', 'to take', 'o', 'to open'));
+    if (do_ident) updateLog(`There is a chest here`, formatHint('t', 'to take', 'o', 'to open'));
   }
   else if (item.matches(OCOOKIE)) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'E', 'to eat'));
+    if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'E', 'to eat'));
   }
   else if (item.carry) {
-    if (do_ident && !do_pickup) updateLog(`You have found ${item}`, formatHint('t', 'to take'));
+    if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take'));
   }
 
   // base case

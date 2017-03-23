@@ -1,4 +1,5 @@
 bugs:
+
 * amiga mode: viewing scoreboard resets to classic mode (partially fixed)
 ? inventory stays on screen after d,space,*
 + player killed with range spell should drop gold/items beside corpse, not player
@@ -14,17 +15,14 @@ bugs:
 - monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
 - readmail() can report wrong gold/tax status (related to having a higher local score)
-- checkpoints are choppy
-  - save checkpoint in a thread?
-  - break LEVELS into 14 sections & only save on level change
+
 
 extras:
-* add "helpful" button to show potential commands
+* click to identify object
 * show other actions ("you have desecrated at the altar!" etc)
-+ always show inventory, knows scrolls, potions, spells
 - add support for other wizard mode passwords
 - game start/end stats
-- give notification given when haste, aggravate monsters subsides
+- give notification given when haste, aggravate monsters subsides (no?)
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
 + add store value of inventory to score to save people from having to sell everything at the end of a winning game
 + prevent stairs/shaft from being in treasure rooms
@@ -36,7 +34,5 @@ extras:
 - ipad support
 - more authentic font
 - beep support
-- 'twitch' mode to broadcast and watch games (webrtc?)
 - stats on most dangerous monster, level, moves/kills/spells ratio
 - hall of fame and bad luck scoreboards
-* theres a way to pvnert, look around, then reload and not be 'cheating'

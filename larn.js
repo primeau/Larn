@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '303';
+const BUILD = '304';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -89,6 +89,7 @@ function initKeyBindings() {
   Mousetrap.bind('^', mousetrap);
   Mousetrap.bind(':', mousetrap);
   Mousetrap.bind('@', mousetrap);
+  Mousetrap.bind('#', mousetrap);
   Mousetrap.bind('}', eventToggleMode);
   Mousetrap.bind('?', mousetrap);
   Mousetrap.bind('!', mousetrap);

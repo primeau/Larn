@@ -34,7 +34,7 @@ function act_quaffpotion(index) {
       //debug(useindex);
       if (index == '*' || index == ' ' || index == 'I') {
         if (mazeMode) {
-          showinventory(true, act_quaffpotion, showquaff, false, false);
+          showinventory(true, act_quaffpotion, showquaff, false, false, true);
         } else {
           setMazeMode(true);
         }

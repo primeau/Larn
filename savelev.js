@@ -24,7 +24,13 @@ function saveGame(isCheckPoint) {
   var state = new GameState();
   var bytes;
 
-  localStorageSetObject(saveName, state);
+  /* v304 -- i've decided to remove the automatic reloading checkpoint feature
+     for accidentally closed windows because it's too easy to cheat.
+     if a game is lost it still can be restored with the 'checkpoint command'
+  */
+  if (saveName != 'checkpoint') {
+    localStorageSetObject(saveName, state);
+  }
 
   /* save an emergency backup */
   localStorageSetObject(saveName + 'backup', state);
@@ -39,6 +45,7 @@ function saveGame(isCheckPoint) {
     updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
   }
 
+  // console.log(JSON.stringify(state));
   // console.log(`saved hash: ` + hash.digest().toHex());
   localStorageSetObject('hash', hash.digest().toHex());
 }
@@ -59,23 +66,30 @@ function loadSavedGame(savedState, isCheckPoint) {
   // 3. are they the same?
   var hash = forge.md.sha512.create();
   hash.update(JSON.stringify(savedState));
+  // console.log(JSON.stringify(savedState));
 
   // console.log(`computed hash: ` + hash.digest().toHex());
 
   var savedHash = localStorageGetObject('hash', []);
   // console.log(`saved hash: ` + savedHash);
 
-  cheat = hash.digest().toHex() != savedHash;
+  cheat = cheat || hash.digest().toHex() != savedHash;
   console.log(`cheater? ` + cheat);
 
   if (isCheckPoint) {
-    updateLog(`Welcome back. I saved your game for you. (Your backup file has now been deleted)`);
+    updateLog(`Did you quit accidentally? I restored your last game just in case.`);
   } else {
     updateLog(`Welcome back. (Your save file has now been been deleted)`);
   }
 
+  /* v304 -- disabling cheating funcionality for now. It's really more
+     of a tool for me to check for savegame consistency at this point
+  */
   if (cheat) {
-    updateLog(`Have you been cheating?`);
+    // updateLog(`Have you been cheating?`);
+    updateLog(`*** Hey, you should tell <b>eye@larn.org</b> about this game`);
+    updateLog(`    Larn thinks you're cheating (but you're probably not)`);
+    cheat = false;
   }
 
   /* clear the saved game file */

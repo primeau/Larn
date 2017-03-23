@@ -211,10 +211,12 @@ function makeplayer() {
   learnPotion(createObject(OPOTION, 21));
 
   if (getDifficulty() <= 0) {
-    player.inventory[0] = createObject(OLEATHER);
-    player.inventory[1] = createObject(ODAGGER);
-    player.WEAR = player.inventory[0];
-    player.WIELD = player.inventory[1];
+    var startLeather = createObject(OLEATHER);
+    var startDagger = createObject(ODAGGER);
+    take(startLeather);
+    take(startDagger);
+    player.WEAR = startLeather;
+    player.WIELD = startDagger;
   }
 
   player.x = rnd(MAXX - 2);
@@ -223,10 +225,32 @@ function makeplayer() {
   // eventToggleDebugWTW();
   // eventToggleDebugStairs();
   // eventToggleDebugOutput();
-  // eventToggleDebugKnowAll();
-  // //eventToggleDebugStats();
+  // // eventToggleDebugKnowAll();
+  // eventToggleDebugStats();
   // eventToggleDebugImmortal();
+  // auto_pickup = true;
+  // // player.LEVEL = 25;
   // wizardmode(`pvnert(x)`);
+  // // for (var i = 2; i < 26; i+=2) {
+  // //   take(createObject(OSCROLL, rnd(5)));
+  // //   take(createObject(OPOTION, rnd(5)));
+  // // }
+  // // player.updateHoldMonst(100000);
+  // player.updateStealth(100000);
+  // // player.updateAltPro(100000);
+  // // player.updateTimeStop(10);
+  // // player.updateGiantStr(100000);
+  // // player.updateDexCount(100000);
+  // // player.updateUndeadPro(100000);
+  // // player.updateStrCount(100000);
+  // // player.updateSpiritPro(100000);
+  // // player.updateCharmCount(100000);
+  // // player.updateHasteSelf(100000);
+  // // player.updateProtectionTime(100000);
+  // // player.updateCancellation(100000);
+  // // player.updateScareMonst(100000);
+  // // player.updateInvisibility(100000);
+  // // player.updateFireResistance(100000);
 
   recalc();
   changedWC = 0; // don't highlight AC & WC on game start

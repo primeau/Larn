@@ -25,7 +25,7 @@ function paint() {
 
 function blt() {
   if (amiga_mode) {
-    // do nithing
+    // do nothing
   } else {
     // TODO: setup for not repainting in text mode
     // TODO: need to update io.js:os_put_font(), display.js:blt(), larn.js:play()
@@ -114,7 +114,7 @@ function setImage(x, y, img) {
 
 
 function printStats() {
-  setDiv(`STATS`, DEBUG_STATS ? game_stats() : ``);
+  setDiv(`STATS`, DEBUG_STATS ? debug_stats() : game_stats());
 }
 
 

@@ -28,7 +28,7 @@ var logname = `Adventurer`;
 var cheat = 0; /* 1 if the player has fudged save file */
 var level = 0; /* cavelevel player is on = cdesc[CAVELEVEL] */
 var wizard = 0; /* the wizard mode flag */
-var gtime = -1; /* the clock for the game */
+var gtime = 0; /* the clock for the game */
 var HARDGAME = 0; /* game difficulty */
 
 /* these function were added as a defensive measure to find a pesky bug,
@@ -69,6 +69,7 @@ var w1x;
 var w1y;
 var spheres = [];
 var auto_pickup = false;
+var side_inventory = true;
 
 
 

@@ -214,7 +214,7 @@ function act_eatcookie(index) {
 
       if (index == '*' || index == ' ' || index == 'I') {
         if (mazeMode) {
-          showinventory(true, act_eatcookie, showeat, false, false);
+          showinventory(true, act_eatcookie, showeat, false, false, true);
         } else {
           setMazeMode(true);
         }
