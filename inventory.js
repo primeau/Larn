@@ -11,7 +11,7 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
 
   var buttons = [];
 
-  nomove = callback ? 1 : 0; // HACK callback is null when called by game_stats()
+  if (callback) nomove = 1; // HACK callback is null when called by game_stats()
 
   if (printScreen) mazeMode = false;
   var srcount = 0;

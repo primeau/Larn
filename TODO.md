@@ -1,7 +1,7 @@
 bugs:
-
+* thrift shoppe re-orders list after sale?
+* quit doesn't work?
 * amiga mode: viewing scoreboard resets to classic mode (partially fixed)
-? inventory stays on screen after d,space,*
 + player killed with range spell should drop gold/items beside corpse, not player
 * no recovery if scoreboard hangs when loading
 + closed window alert is annoying -> create alert-on-close option?
@@ -10,7 +10,6 @@ bugs:
 - blindness
   - black tile when opening door when blind
   - when blind, a monster from an unknown tile will reveal the tile its standing on during attack
-+ smart monsters can walk over pits stop when standing on them?
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
@@ -24,8 +23,7 @@ extras:
 - game start/end stats
 - give notification given when haste, aggravate monsters subsides (no?)
 - improve smart monster movement beyond existing algorithm which gets stuck sometimes
-+ add store value of inventory to score to save people from having to sell everything at the end of a winning game
-+ prevent stairs/shaft from being in treasure rooms
+- add store value of inventory to score to save people from having to sell everything at the end of a winning game
 - url for scoreboard
 - cloud save via password
 - start new game without reloading
