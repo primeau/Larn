@@ -1,4 +1,5 @@
 bugs:
+* blinking cursor at startup
 * thrift shoppe re-orders list after sale?
 * quit doesn't work?
 * amiga mode: viewing scoreboard resets to classic mode (partially fixed)

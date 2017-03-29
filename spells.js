@@ -775,6 +775,12 @@ function setup_godirect(delay, spnum, direction, damage, cshow, stroverride) {
   napping = true;
   nomove = 1;
   setTimeout(godirect, delay, spnum, player.x, player.y, diroffx[direction], diroffy[direction], damage, delay, cshow, stroverride);
+  // // might need this for IE compatibility? so far so good though
+  // setTimeout(
+  //   function() {
+  //     godirect(spnum, player.x, player.y, diroffx[direction], diroffy[direction], damage, delay, cshow, stroverride);
+  //   }
+  // );
 }
 
 

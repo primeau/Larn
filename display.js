@@ -66,21 +66,31 @@ function setChar(x, y, c, markup) {
 function setDiv(id, data, markup) {
   var doc = document.getElementById(id); // CACHE THIS?
   if (doc) {
-    if (data === doc.innerHTML && markup != START_MARK && markup != START_BOLD) {
-      return;
+    // optimization:
+    // most of the time, we're just repainting the same data into each div.
+    // therefore, only repaint when the data is different, or there
+    // is a MARK or BOLD being applied where there wasn't one before
+    if (data === doc.innerHTML) {
+      if (markup != START_BOLD && doc.style.fontWeight == 'normal' || markup == START_BOLD && doc.style.fontWeight == 'bold') {
+        return;
+      }
+      if (markup == START_MARK) {
+        return;
+      }
     }
     // else {
-    //   console.log(data, doc.innerHTML);
+    //   console.log("DATA: " + data);
+    //   console.log("DOC:  " + doc.innerHTML);
     // }
     doc.innerHTML = data;
     if (markup == START_BOLD) {
-      doc.style.fontWeight = (markup == START_BOLD) ? 'bold' : 'normal';
+      doc.style.fontWeight = 'bold';
     } else if (markup == START_MARK) {
-      doc.innerHTML = `<mark>${data}</mark>`;
       // probably would be better to set a different bg and font color
       // doc.style.color = markup == 'highlight' ? 'green' : 'lightgrey';
+      doc.innerHTML = `<mark>${data}</mark>`;
     } else {
-      doc.style.fontWeight = (markup == START_BOLD) ? 'bold' : 'normal';
+      doc.style.fontWeight = 'normal';
     }
   } else {
     console.log(`null document: ${id}`);

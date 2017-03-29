@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '308';
+const BUILD = '309';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -21,7 +21,10 @@ function play() {
 
   Parse.initialize(`ZG6aY4DKdkKn39YGogG0WFhqk089WTqVWprNfijo`, `Ioo0zvIxR5xvkf6lQQDW9A7YHaNyOItSDFb756Um`);
   Parse.serverURL = 'https://parseapi.back4app.com';
+
   initKeyBindings();
+
+  fixFunctionDotName(); // this fixed directional spells for IE
 
   /* warn the player that closing their window will kill the game.
      this is a bit annoying, and I'm tempted to get rid of it now

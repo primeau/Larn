@@ -100,7 +100,6 @@ const sortorder = [
   OLARNEYE.id,
   OSSPLATE.id,
   OLANCE.id,
-  OSHIELD.id,
 
   OPLATEARMOR.id,
   OPLATE.id,
@@ -109,6 +108,8 @@ const sortorder = [
   ORING.id,
   OSTUDLEATHER.id,
   OLEATHER.id,
+
+  OSHIELD.id,
 
   OHAMMER.id,
   OSWORDofSLASHING.id,
