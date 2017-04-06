@@ -24,7 +24,9 @@ function welcome() {
       keyboard_hints = true;
   }
 
-  lprcat(`Welcome to Larn. Please enter your name [<b>${logname}</b>]: `);
+  var nameString = `Welcome to Larn. Please enter your name [<b>${logname}</b>]: `;
+  lprcat(nameString);
+  blinken(nameString.length - 5, 24);
 
   if (!no_intro) {
     setTextCallback(setname);
@@ -123,7 +125,10 @@ function setname(name) {
 
     return 1;
   } else {
-    lprcat(`What difficulty would you like to play? [<b>${getDifficulty()}</b>] `);
+    var difficultyString = `What difficulty would you like to play? [<b>${getDifficulty()}</b>]: `;
+    lprcat(difficultyString);
+    blinken(difficultyString.length - 5, 24);
+
     setNumberCallback(startgame, false);
   }
   return 0;
@@ -260,6 +265,9 @@ function makeplayer() {
 
 
 function startgame(hard) {
+
+  clearBlinkingCursor();
+
   if (highestScore) {
     /* these are very ambiguous method names -- sorry. */
     setDifficulty(highestScore.hardlev + 1);

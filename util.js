@@ -197,6 +197,31 @@ function getInput_done() {
 
 
 
+var BLINKENCURSOR;
+var BLINKEN = true;
+const BLINKENCHAR = `_`;
+
+function blinken(x, y) {
+  clearBlinkingCursor();
+  BLINKENCURSOR = setInterval (
+    function() {
+      var xpos = x + KEYBOARD_INPUT.length;
+      cursor(xpos, y);
+      lprc(BLINKEN ? `` : BLINKENCHAR);
+      cltoeoln();
+      cursor(xpos, y);
+      BLINKEN = !BLINKEN;
+      paint();
+    }, 250
+  );
+}
+
+
+function clearBlinkingCursor() {
+  clearInterval(BLINKENCURSOR);
+}
+
+
 String.prototype.nextChar = function(i) {
   var n = (i == null) ? 1 : i;
   return String.fromCharCode(this.charCodeAt(0) + n);

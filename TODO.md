@@ -1,9 +1,13 @@
 bugs:
-* blinking cursor at startup
+* arrow buttons on help screen are truncated in amiga mode
++ player killed with range spell should drop gold/items beside corpse, not player
+* monsters can follow player to next level????
+* take and a few other commands use a turn even if nothing is there to be taken
 * thrift shoppe re-orders list after sale?
+* hide changing difficulty option for brand new players
 * quit doesn't work?
 * amiga mode: viewing scoreboard resets to classic mode (partially fixed)
-+ player killed with range spell should drop gold/items beside corpse, not player
+
 * no recovery if scoreboard hangs when loading
 + closed window alert is annoying -> create alert-on-close option?
 - scoreboard request from parse can probably be done as one request

@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '309';
+const BUILD = '314';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -24,7 +24,7 @@ function play() {
 
   initKeyBindings();
 
-  fixFunctionDotName(); // this fixed directional spells for IE
+  fixFunctionDotName(); // this fixed directional spells for IE (not needed now)
 
   /* warn the player that closing their window will kill the game.
      this is a bit annoying, and I'm tempted to get rid of it now
