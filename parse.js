@@ -106,9 +106,9 @@ function parse(key) {
 
   if (blocking_callback) {
     // debug(blocking_callback.name + `: `);
-    var before = blocking_callback.name;
+    var before = blocking_callback;
     var done = blocking_callback(key);
-    var after = blocking_callback.name;
+    var after = blocking_callback;
     // debug(blocking_callback.name + `: ` + done);
 
     // if a blocking callback assigns a new one, we're not done yet
@@ -607,6 +607,8 @@ function parse(key) {
   if (key == '!') {
     nomove = 1;
     keyboard_hints = !keyboard_hints;
+    if (keyboard_hints)
+      lookforobject(true, false, false);
     return;
   }
 
