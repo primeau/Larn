@@ -565,7 +565,8 @@ function otradiven() {
       }
       tradorder[i] = j++; /* will display only if identified */
       var fancy = !item.isRing() && item != player.WIELD && item != player.WEAR && item != player.SHIELD;
-      lprcat(`${getCharFromIndex(i)}) ${item.toString(fancy)}`);
+      var itemDescription = `${getCharFromIndex(i)}) ${item.toString(fancy)}`.substring(0,39);
+      lprcat(itemDescription);
 
     } else {
       tradorder[i] = 0; /* make sure order array is clear */
