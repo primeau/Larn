@@ -69,12 +69,12 @@ function setDiv(id, data, markup) {
     // optimization:
     // most of the time, we're just repainting the same data into each div.
     // therefore, only repaint when the data is different, or there
-    // is a MARK or BOLD being applied where there wasn't one before
-    if (data === doc.innerHTML) {
-      if (markup != START_BOLD && doc.style.fontWeight == 'normal' || markup == START_BOLD && doc.style.fontWeight == 'bold') {
-        return;
-      }
-      if (markup == START_MARK) {
+    // is a BOLD being applied where there wasn't one before
+    //
+    // START_MARK is still a special snowflake for amiga mode though
+    if (data === doc.innerHTML && markup != START_MARK) {
+      if (markup != START_BOLD && doc.style.fontWeight == 'normal' ||
+          markup == START_BOLD && doc.style.fontWeight == 'bold') {
         return;
       }
     }

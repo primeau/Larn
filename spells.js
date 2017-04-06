@@ -630,7 +630,7 @@ function create_guardian(monst, x, y) {
   if (!isGenocided(monst))
     createmonster(monst, x, y);
 
-  // not in original, but maybe a good idea?
+  // 12.4.5: not in original, but maybe a good idea?
   // if (monsterAt(x,y)) {
   //   monsterAt(x,y).awake = true;
   // }
