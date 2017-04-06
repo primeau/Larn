@@ -194,7 +194,9 @@ function noticeplayer() {
     var monster = monsters[i];
     if (rund(15) < getDifficulty() - 1) { // increase odds starting with diff 2
       if (!monster.awake && rnd(101) < 50) { // want at worst 50/50 odds
-        updateLog(`The ${monster} sees you!`);
+        if (player.STEALTH) {
+          updateLog(`The ${monster} sees you!`);
+        }
         monster.awake = true;
       }
     }
