@@ -124,7 +124,7 @@ function setImage(x, y, img) {
 
 
 function printStats() {
-  setDiv(`STATS`, DEBUG_STATS ? debug_stats() : game_stats());
+  setDiv(`STATS`, DEBUG_STATS ? debug_stats() : game_stats(player));
 }
 
 

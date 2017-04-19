@@ -21,7 +21,8 @@ function welcome() {
 
   // this is probably their first game, turn on keyboard_hints
   if (playerID === tmpID) {
-      keyboard_hints = true;
+    newplayer = true;
+    keyboard_hints = true;
   }
 
   var nameString = `Welcome to Larn. Please enter your name [<b>${logname}</b>]: `;
@@ -102,9 +103,9 @@ function setname(name) {
     setDifficulty(0);
   }
 
-  if (no_intro) {
+  if (no_intro || newplayer) {
     startgame(getDifficulty());
-    return 0;
+    return 1;
   }
 
   if (winner) {
@@ -120,7 +121,7 @@ function setname(name) {
     } else {
       loadSavedGame(checkpoint, true);
     }
-
+    clearBlinkingCursor(); // clear after setting name and loading savegame
     setGameDifficulty(getDifficulty());
 
     return 1;
@@ -266,6 +267,7 @@ function makeplayer() {
 
 function startgame(hard) {
 
+  // clear the blinking cursor after setting difficulty
   clearBlinkingCursor();
 
   if (highestScore) {
@@ -281,8 +283,10 @@ function startgame(hard) {
   newcavelevel(0); /*  make the dungeon */
 
   lflush();
-  updateLog(`Welcome to Larn, ${logname} -- Press <b>?</b> for help`);
-  updateLog(`Press <b>e</b> to enter buildings and the dungeon`);
+  var introMessage = `Welcome to Larn, ${logname} -- Press <b>?</b> for help`;
+  //if (!keyboard_hints && logname.length < 22) introMessage += `, <b>!</b> for keyboard hints`;
+  updateLog(introMessage);
+
   if (NOCOOKIES) {
     updateLog(`Cookies are disabled, games cannot be loaded or saved`);
   }
