@@ -121,6 +121,10 @@ function recalc() {
     if (item.matches(OENERGYRING)) player.ENERGY += item.arg + 1;
   }
 
+  // 12.4.5: prevent negative WC and AC
+  player.WCLASS = Math.max(0, player.WCLASS);
+  player.AC = Math.max(0, player.AC);
+
   if (oldAC != player.AC) changedAC = millis();
   if (oldWC != player.WCLASS) changedWC = millis();
 }
