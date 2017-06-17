@@ -1,4 +1,6 @@
 bugs:
+* monsters will follow when running with STP
+* 1/2 move monsters (Hobgoblins, etc) sometimes follow 1:1 when running
 * arrow buttons on help screen are truncated in amiga mode
 + player killed with range spell should drop gold/items beside corpse, not player
 * monsters can follow player to next level????
@@ -7,8 +9,12 @@ bugs:
 * hide changing difficulty option for brand new players
 * quit doesn't work?
 * amiga mode: viewing scoreboard resets to classic mode (partially fixed)
+* non-scoreboard winning game doesn't load?
+* local games show as winner and loser?
+* games that don't make the high score list aren't loadable when clicked on when a game ends
 
 * no recovery if scoreboard hangs when loading
++ 9 str + GIANTSTR then quaff strength potion and base STR only goes up by one
 + closed window alert is annoying -> create alert-on-close option?
 - scoreboard request from parse can probably be done as one request
 - amiga mode: strikethrough missing on taxes owing after victory

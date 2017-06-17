@@ -326,3 +326,19 @@ function pocketfull() {
   }
   return (true);
 }
+
+
+
+/*
+    routine to tell if player isn't carrying anything
+    returns true if pockets are empty, else false
+*/
+function pocketempty() {
+  var limit = Math.min(15 + (player.LEVEL >> 1), MAXINVEN);
+  for (var i = 0; i < limit; i++) {
+    if (player.inventory[i]) {
+      return (false);
+    }
+  }
+  return (true);
+}

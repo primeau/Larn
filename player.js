@@ -753,8 +753,11 @@ function wear(index) {
 
 
 function game_stats(p, endgame) {
-  // return if walking the maze and inventory and stats are off
-  if (mazeMode && (!side_inventory || !debug_stats)) return ``;
+
+  //console.log(1);
+  // return if inventory and stats are off
+  if (!side_inventory || !debug_stats) return ``;
+  //console.log(!mazeMode, typeof p == 'undefined');
 
   // return if showing the scoreboard, but not a high score
   if (!mazeMode && typeof p == 'undefined') return ``;
@@ -763,7 +766,9 @@ function game_stats(p, endgame) {
 
   var s = endgame ? `Inventory:\n` : ``;
 
-  s += `.) ` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
+  if (endgame) {
+    s += `.) ` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
+  }
   var inv = showinventory(false, null, showall, false, false, false, p); //HACK!
   for (var i = 0; i < inv.length; i++) {
     var item = inv[i][1];
@@ -772,7 +777,8 @@ function game_stats(p, endgame) {
     }
   }
 
-  s += `\nKnown Spells:\n`;
+  if (endgame || !pocketempty()) s += `\n`;
+  s += `Known Spells:\n`;
   var count = 0;
   var spellcolumns = 6;
   for (var spell = 0; spell < p.knownSpells.length; spell++) {

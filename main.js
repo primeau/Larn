@@ -284,7 +284,6 @@ function startgame(hard) {
 
   lflush();
   var introMessage = `Welcome to Larn, ${logname} -- Press <b>?</b> for help`;
-  //if (!keyboard_hints && logname.length < 22) introMessage += `, <b>!</b> for keyboard hints`;
   updateLog(introMessage);
 
   if (NOCOOKIES) {
