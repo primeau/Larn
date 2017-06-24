@@ -227,7 +227,7 @@ var scoreIndex = 0;
 
 
 const MAX_SCORES_PER_PAGE = 18;
-const MAX_SCORES_TO_READ = 18*3;
+const MAX_SCORES_TO_READ = 18*4;
 const MIN_TIME_PLAYED = 50;
 
 
