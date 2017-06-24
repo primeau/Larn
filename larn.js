@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '317';
+const BUILD = '319';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -38,17 +38,19 @@ function play() {
   // TODO: setup for not repainting in text mode
   // TODO: need to update io.js:os_put_font(), display.js:blt(), larn.js:play()
   // TODO: this will break scoreboard rendering
-  // for (var y = 0; y < 24; y++) {
-  //   for (var x = 0; x < 80; x++) {
-  //     display[x][y] = createDiv(x,y);
-  //   }
-  // }
-  //
-  // if (!images) {
-  //   loadImages();
-  // }
-  //
-  // bltDocument();
+  if (altrender) {
+    for (var y = 0; y < 24; y++) {
+      for (var x = 0; x < 80; x++) {
+        display[x][y] = createDiv(x,y);
+      }
+    }
+
+    if (!images) {
+      loadImages();
+    }
+
+    bltDocument();
+}
 
   loadURLParameters();
 

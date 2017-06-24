@@ -132,7 +132,9 @@ function os_put_font(ch, x, y, markup) {
       // TODO: setup for not repainting in text mode
       // TODO: need to update io.js:os_put_font(), display.js:blt(), larn.js:play()
       // TODO: this will break scoreboard rendering
-      //setChar(x, y, ch, markup);
+      if (altrender) {
+        setChar(x, y, ch, markup);
+      }
 
     } else {
       // HACK HACk HAck Hack hack

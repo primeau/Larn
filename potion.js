@@ -140,7 +140,24 @@ function quaffpotion(potion, set_known) {
 
     case 5:
       /* strength */
+      /*
+      v12.4.5 - HERO fix part 1 of 2
+                i think a strength potion should always restore you to a base
+                12 STR. in older versions, if you have STR < 11 and quaff HERO
+                before quaffing a strength potion, you would only gain 1 STR,
+                and subsequently would go back to < 12 STR after HERO wears off
+      */
+      if (player.HERO) {
+        player.setStrength(player.STRENGTH - 11);
+      }
+
       player.setStrength(Math.max(12, player.STRENGTH + 1));
+
+      /* v12.4.5 - HERO fix part 2 of 2 */
+      if (player.HERO) {
+        player.setStrength(player.STRENGTH + 11);
+      }
+
       updateLog(`  Wow!  You feel great!`);
       break;
 

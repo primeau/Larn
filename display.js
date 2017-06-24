@@ -30,7 +30,12 @@ function blt() {
     // TODO: setup for not repainting in text mode
     // TODO: need to update io.js:os_put_font(), display.js:blt(), larn.js:play()
     // TODO: this will break scoreboard rendering
-    bltDocument();
+    if (altrender) {
+      // do nothing
+    }
+    else {
+      bltDocument();
+    }
   }
 }
 
