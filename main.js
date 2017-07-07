@@ -67,8 +67,14 @@ function setname(name) {
     localStorageSetObject('logname', logname);
   }
 
-  if (location.hostname != 'localhost') {
-    FS.identify(playerID, { displayName: logname });
+  if (dofs) {
+    var userVars = {
+     'displayName': logname,
+     'playerID_str': playerID,
+     'gameNum_int' : gameNum,
+    };
+    console.log(`fs`, userVars);
+    FS.identify(playerID, userVars);
   }
 
   cursors();

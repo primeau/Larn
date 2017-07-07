@@ -14,9 +14,9 @@ bugs:
 * games that don't make the high score list aren't loadable when clicked on when a game ends
 
 * no recovery if scoreboard hangs when loading
-+ 9 str + GIANTSTR then quaff strength potion and base STR only goes up by one
 + closed window alert is annoying -> create alert-on-close option?
 - scoreboard request from parse can probably be done as one request
+  - should just have a dedicated scoreboard table
 - amiga mode: strikethrough missing on taxes owing after victory
 - blindness
   - black tile when opening door when blind
@@ -44,4 +44,5 @@ extras:
 - more authentic font
 - beep support
 - stats on most dangerous monster, level, moves/kills/spells ratio
+  - win/death ratio per difficulty
 - hall of fame and bad luck scoreboards
