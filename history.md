@@ -30,6 +30,10 @@ a monster will notice when the player passes too closely.
 
 10. [fix] It's possible to fall into a pit again. This was broken in 12.4.
 
+11. [fix] The last hit monster could chase you from across the maze after the
+player had teleported away. This bug could also cause other monsters to become
+'possessed' and move very erratically in rare situations.
+
 
 
 Larn 12.4.4
