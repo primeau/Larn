@@ -384,12 +384,28 @@ var Player = function Player() {
       var prev = this.TIMESTOP;
       this.TIMESTOP = Math.max(0, this.TIMESTOP + x);
       changedTimeStop = getUpdateTime(prev, x, this.TIMESTOP, changedTimeStop);
+      /* 12.4.5
+      fix for last hit monster chasing the player from across the maze
+      caused by hitting monster, holding, then running away
+      */
+      if (x > 0) {
+        lasthx = 0;
+        lasthy = 0;
+      }
       return this.TIMESTOP;
     };
     this.updateHoldMonst = function(x) {
       var prev = this.HOLDMONST;
       this.HOLDMONST = Math.max(0, this.HOLDMONST + x);
       changedHoldMonst = getUpdateTime(prev, x, this.HOLDMONST, changedHoldMonst);
+      /* 12.4.5
+      fix for last hit monster chasing the player from across the maze
+      caused by hitting monster, holding, then running away
+      */
+      if (x > 0) {
+        lasthx = 0;
+        lasthy = 0;
+      }
       return this.HOLDMONST;
     };
     this.updateGiantStr = function(x) {

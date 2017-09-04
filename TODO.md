@@ -1,20 +1,20 @@
 bugs:
+* hit monster from beyond range, it may not chase in the right dir, or may get stuck
+* red wizard demon prince bug?
+* can't load most recent game if you go to scoreboard too fast
+* warn if changing names because it's annoying on the scoreboard
 * monsters will follow when running with STP
 * 1/2 move monsters (Hobgoblins, etc) sometimes follow 1:1 when running
+* better inventory layout, font selection with react?
 * arrow buttons on help screen are truncated in amiga mode
 + player killed with range spell should drop gold/items beside corpse, not player
-* monsters can follow player to next level????
 * take and a few other commands use a turn even if nothing is there to be taken
 * thrift shoppe re-orders list after sale?
-* hide changing difficulty option for brand new players
 * quit doesn't work?
 * amiga mode: viewing scoreboard resets to classic mode (partially fixed)
-* non-scoreboard winning game doesn't load?
 * local games show as winner and loser?
-* games that don't make the high score list aren't loadable when clicked on when a game ends
 
 * no recovery if scoreboard hangs when loading
-+ closed window alert is annoying -> create alert-on-close option?
 - scoreboard request from parse can probably be done as one request
   - should just have a dedicated scoreboard table
 - amiga mode: strikethrough missing on taxes owing after victory

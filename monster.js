@@ -699,6 +699,14 @@ function hitm(x, y, damage) {
     }
     monster.dropsomething();
     player.level.monsters[x][y] = null;
+
+    /*
+    v12.4.5
+    clear the last hit monster if it's killed
+    */
+    lasthx = 0;
+    lasthy = 0;
+
     //player.level.know[x][y] = 0; // HACK FIX FOR BLACK TILE FIX ON OMNIDIRECT
     //monster = null;
     return (hpoints);

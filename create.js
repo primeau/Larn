@@ -14,6 +14,14 @@
 function newcavelevel(depth) {
   if (level != depth) changedDepth = millis();
 
+  /* 12.4.5
+  prevent a rogue monster from starting to move towards the player
+  just because it's in the same square as the last hit monster on
+  another level
+  */
+  lasthx = 0;
+  lasthy = 0;
+
   if (LEVELS[depth]) { // if we have visited this level before
     player.level = LEVELS[depth];
     level = depth;
@@ -502,7 +510,7 @@ function fillroom(what, arg) {
     subroutine to put monsters into an empty room without walls or other
     monsters
  */
-function fillmonst(what) {
+function fillmonst(what, awake) {
   var monster = createMonster(what);
   for (var trys = 5; trys > 0; --trys) /* max # of creation attempts */ {
     var x = rnd(MAXX - 2);
@@ -512,6 +520,7 @@ function fillmonst(what) {
       (!player.level.monsters[x][y]) && //
       ((player.x != x) || (player.y != y))) {
       player.level.monsters[x][y] = monster;
+      if (awake) monster.awake = awake;
       player.level.know[x][y] &= ~KNOWHERE;
       return (0);
     }

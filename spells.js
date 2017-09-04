@@ -443,6 +443,11 @@ function speldamage(x) {
       if (!wizard)
         spelknow[36] = 0;
       positionplayer();
+      /* 12.4.5
+      the last hit monster is probably somewhere else now
+      */
+      lasthx = 0;
+      lasthy = 0;
 
       updateWalls();
 
@@ -606,6 +611,15 @@ function spell_teleport(direction) {
     fillmonst(monster.arg);
     player.level.monsters[x][y] = null;
     player.level.know[x][y] &= ~KNOWHERE;
+
+    /* 12.4.5
+    fix for last hit monster chasing the player from across the maze
+    caused by hitting monster, teleporting it away, then a new monster
+    appears in the same spot
+    */
+    lasthx = 0;
+    lasthy = 0;
+
   } else {
     lasthx = x;
     lasthy = y;

@@ -714,9 +714,11 @@ function oteleport(err) {
   /*
   v12.4.5 - if you hit a monster, and then teleport away, it would keep
             trying to chase you, even if you were really far away.
+
             BONUS bug: if there is a monster on a *different level* at
             the same location, IT will start to move around, sometimes
-            through walls.
+            through walls. now fixed in newcavelevel() and a few other
+            places also.
   */
   lasthx = 0;
   lasthy = 0;
