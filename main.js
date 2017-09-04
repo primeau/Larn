@@ -26,6 +26,10 @@ function welcome() {
   }
 
   var nameString = `Welcome to Larn. Please enter your name [<b>${logname}</b>]: `;
+
+  // if (!newplayer)
+  //   nameString = `(Please stick to one name!)`;
+
   lprcat(nameString);
   blinken(nameString.length - 5, 24);
 

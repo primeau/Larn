@@ -117,7 +117,7 @@ function movemonst() {
            blast down doors to treasure rooms and not have a single
            intelligent monster move.
         */
-        build_proximity_ripple(tmp1, tmp2, tmp3, tmp4);
+        build_proximity_ripple();
         for (i = 0; i < movecnt; i++)
           if (movelist[i].smart)
             move_smart(movelist[i].x, movelist[i].y);
@@ -145,7 +145,7 @@ function movemonst() {
       else
       if (monster.intelligence > min_int) {
         if (smart_count == 0)
-          build_proximity_ripple(tmp1, tmp2, tmp3, tmp4);
+          build_proximity_ripple();
         move_smart(lasthx, lasthy);
       } else
         move_dumb(lasthx, lasthy);
@@ -167,7 +167,7 @@ function movemonst() {
       } else
       if (monster.intelligence > min_int) {
         if (smart_count == 0) {
-          build_proximity_ripple(tmp1, tmp2, tmp3, tmp4);
+          build_proximity_ripple();
         }
         move_smart(lasthx, lasthy);
       } else {
@@ -228,17 +228,15 @@ var queue = [];
 //     W 9 9 8 7 7 7    will not move at all.
 //     W W W 8 W W W
 // */
-function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
+function build_proximity_ripple() {
 
   var k, m, z, tmpx, tmpy;
   var curx, cury, curdist;
 
-  var xl = vx(tmp3 - 2);
-  var yl = vy(tmp1 - 2);
-  var xh = vx(tmp4 + 2);
-  var yh = vy(tmp2 + 2);
-
-  // debug(`xy1 ${xl}, ${yl}, ${xh}, ${yh}`);
+  var xl = 0;
+  var yl = 0;
+  var xh = MAXX - 1;
+  var yh = MAXY - 1;
 
   for (k = yl; k <= yh; k++)
     for (m = xl; m <= xh; m++) {
@@ -266,12 +264,6 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
     }
 
   /* now perform proximity ripple from player.x,player.y to monster */
-  xl = vx(tmp3 - 1);
-  yl = vy(tmp1 - 1);
-  xh = vx(tmp4 + 1);
-  yh = vy(tmp2 + 1);
-
-  //debug(`xy2 ${xl}, ${yl}, ${xh}, ${yh}`);
 
   ripple[player.x][player.y] = 1;
   queue.push(new QueueEntry(player.x, player.y, 1));
@@ -301,22 +293,20 @@ function build_proximity_ripple(tmp1, tmp2, tmp3, tmp4) {
 
           if (DEBUG_PROXIMITY) {
             cursor(tmpx + 1, tmpy + 1);
-            if (ripple[tmpx][tmpy] < 10) {
+
+            if (monsterAt(tmpx, tmpy)) {
               var intel = 10 - getDifficulty();
-              if (monsterAt(tmpx, tmpy)) {
-                if (monsterAt(tmpx, tmpy).intelligence > intel) {
-                  lprc(`<b>${monsterAt(tmpx, tmpy).getChar()}</b>`);
-                } else {
-                  lprc(`${monsterAt(tmpx, tmpy).getChar()}`);
-                }
+              if (monsterAt(tmpx, tmpy).intelligence > intel) {
+                lprc(`<b>${monsterAt(tmpx, tmpy).getChar()}</b>`);
+                //lprc(`<b>${ripple[tmpx][tmpy]%10}</b>`);
               } else {
-                lprc(ripple[tmpx][tmpy]);
+                lprc(`${monsterAt(tmpx, tmpy).getChar()}`);
               }
-            } else {
-              lprc(`<b>${(ripple[tmpx][tmpy])%10}</b>`);
+            }
+            else {
+              lprc(ripple[tmpx][tmpy]%10);
             }
           }
-
 
         }
       }

@@ -1,5 +1,4 @@
 bugs:
-* hit monster from beyond range, it may not chase in the right dir, or may get stuck
 * red wizard demon prince bug?
 * can't load most recent game if you go to scoreboard too fast
 * warn if changing names because it's annoying on the scoreboard
