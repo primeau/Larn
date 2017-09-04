@@ -617,9 +617,12 @@ function hitmonster(x, y) {
     if (monster.matches(RUSTMONSTER) || monster.matches(DISENCHANTRESS) || monster.matches(CUBE)) {
       if (player.WIELD) {
         if (player.WIELD.arg > -10) {
-          updateLog(`  Your weapon is dulled by the ${monster}`);
-          beep();
-          player.WIELD.arg--;
+          // fix: leather and stainless plate shouldn't rust
+          if (!player.WIELD.matches(OLEATHER) && !player.WIELD.matches(OSSPLATE)) {
+            updateLog(`  Your weapon is dulled by the ${monster}`);
+            beep();
+            player.WIELD.arg--;
+          }
 
           /* fix for dulled rings of strength,cleverness, and dexterity
              bug.

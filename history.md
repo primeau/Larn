@@ -34,6 +34,14 @@ a monster will notice when the player passes too closely.
 player had teleported away. This bug could also cause other monsters to become
 'possessed' and move very erratically in rare situations.
 
+12. [fix] Leather and stainless plate armor could be dulled when used as a
+weapon against rusting monsters. Thanks to Will Oprisko for finding this one.
+
+13. [un-fix] The history lesson from the College of Larn says that the Eye
+of Larn is protected by a Platinum Dragon, which wasn't the case in the original
+version of Larn. I changed it to be true for a while, but it unbalanced the
+game too much. For anyone who died at the hands of a Platinum Dragon while
+questing for the Eye, I'm sorry.
 
 
 Larn 12.4.4
