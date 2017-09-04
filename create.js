@@ -104,10 +104,6 @@ function cannedlevel(depth) {
           if (depth < MAXLEVEL) break;
           monsters[x][y] = createMonster(makemonst(depth + 1));
           break;
-        case 'd':
-          if (depth != MAXLEVEL - 1) break;
-          monsters[x][y] = createMonster(PLATINUMDRAGON);
-          break;
         case '~':
           if (depth != MAXLEVEL - 1) break;
           items[x][y] = createObject(OLARNEYE);
