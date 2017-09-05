@@ -1,19 +1,16 @@
 bugs:
-* red wizard demon prince bug?
-* can't load most recent game if you go to scoreboard too fast
-* warn if changing names because it's annoying on the scoreboard
-* monsters will follow when running with STP
-* 1/2 move monsters (Hobgoblins, etc) sometimes follow 1:1 when running
-* better inventory layout, font selection with react?
-* arrow buttons on help screen are truncated in amiga mode
-+ player killed with range spell should drop gold/items beside corpse, not player
-* take and a few other commands use a turn even if nothing is there to be taken
-* thrift shoppe re-orders list after sale?
-* quit doesn't work?
-* amiga mode: viewing scoreboard resets to classic mode (partially fixed)
-* local games show as winner and loser?
-
-* no recovery if scoreboard hangs when loading
+- red wizard demon prince bug?
+- can't load most recent game if you go to scoreboard too fast
+- warn if changing names because it's annoying on the scoreboard
+- arrow buttons on help screen are truncated in amiga mode
+- player killed with range spell should drop gold/items beside corpse, not player
+- take and a few other commands use a turn even if nothing is there to be taken
+- thrift shoppe re-orders list after sale?
+- quit doesn't work?
+- amiga mode: viewing scoreboard resets to classic mode (partially fixed)
+- local games show as winner and loser?
+- better inventory layout, font selection with react?
+- no recovery if scoreboard hangs when loading
 - scoreboard request from parse can probably be done as one request
   - should just have a dedicated scoreboard table
 - amiga mode: strikethrough missing on taxes owing after victory
@@ -27,8 +24,8 @@ bugs:
 
 
 extras:
-* click to identify object
-* show other actions ("you have desecrated at the altar!" etc)
+- click to identify object
+- show other actions ("you have desecrated at the altar!" etc)
 - add support for other wizard mode passwords
 - game start/end stats
 - give notification given when haste, aggravate monsters subsides (no?)

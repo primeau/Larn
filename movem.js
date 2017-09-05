@@ -339,7 +339,7 @@ function move_scared(i, j) {
     case XVART:
     case STALKER:
     case ICELIZARD:
-      if ((gtime & 1) == 1) return;
+      if (isHalfTime()) return;
   };
 
   var xl = vx(i + rnd(3) - 2);
@@ -379,7 +379,7 @@ function move_smart(i, j) {
     case XVART:
     case STALKER:
     case ICELIZARD:
-      if ((gtime & 1) == 1) return;
+      if (isHalfTime()) return;
   };
 
   var didmove = false; // UPGRADE -- smart monster should move inside closed rooms
@@ -442,7 +442,7 @@ function move_dumb(i, j) {
     case XVART:
     case STALKER:
     case ICELIZARD:
-      if ((gtime & 1) == 1) return;
+      if (isHalfTime()) return;
   };
 
 
@@ -578,7 +578,7 @@ function mmove(aa, bb, cc, dd) {
   }
 
   if (monster.matches(TROLL)) { /* if a troll regenerate him */
-    if ((gtime & 1) == 0)
+    if (isHalfTime())
       if (monsterlist[monster.arg].hitpoints > monster.hitpoints) monster.hitpoints++;
   }
 
@@ -626,4 +626,13 @@ function mmove(aa, bb, cc, dd) {
   if (player.level.know[aa][bb] & HAVESEEN) show1cell(aa, bb);
   if (player.level.know[cc][dd] & HAVESEEN) show1cell(cc, dd);
 
+}
+
+
+
+/*
+ v12.4.5 - fix for half speed monsters folling at 1:1 or not at all when running
+ */
+function isHalfTime() {
+  return (player.MOVESMADE & 1) == 1;
 }

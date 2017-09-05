@@ -417,11 +417,16 @@ function mainloop(key) {
 
 
 function parse2() {
-  if (player.HASTEMONST) {
-    movemonst();
+  /*
+   v12.4.5 - fix for monsters chasing the player even when time is stopped
+   */
+  if (player.TIMESTOP <= 0) {
+    if (player.HASTEMONST) {
+      movemonst();
+    }
+    movemonst(); /* move the monsters */
+    randmonst();
   }
-  movemonst(); /* move the monsters */
-  randmonst();
   regen();
 }
 
