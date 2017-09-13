@@ -87,4 +87,4 @@ Acknowledgements
 
 Many thanks to
 [![BrowserStack](https://d3but80xmlhqzj.cloudfront.net/production/images/static/header/header-logo.svg)](http://www.browserstack.com/) for supporting this open source project with a free license to
-improve cross-browser support. 
+improve cross-browser support.
