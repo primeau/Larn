@@ -87,4 +87,5 @@ Acknowledgements
 
 Many thanks to BrowserStack for supporting this open source project with a free
 license to improve cross-browser support.
-[![BrowserStack](http://larn.org/browserstack.png)](http://www.browserstack.com/){:height="36px"}.
+
+[![BrowserStack](http://larn.org/browserstack.png)](http://www.browserstack.com/)
