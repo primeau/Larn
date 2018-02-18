@@ -1,14 +1,14 @@
 bugs:
 - red wizard demon prince bug?
+- half speed monsters don't move with HAS?
 - can't load most recent game if you go to scoreboard too fast
 - warn if changing names because it's annoying on the scoreboard
 - arrow buttons on help screen are truncated in amiga mode
 - player killed with range spell should drop gold/items beside corpse, not player
 - take and a few other commands use a turn even if nothing is there to be taken
-- thrift shoppe re-orders list after sale?
 - quit doesn't work?
 - amiga mode: viewing scoreboard resets to classic mode (partially fixed)
-- local games show as winner and loser?
+- last local game shows as winner and loser
 - better inventory layout, font selection with react?
 - no recovery if scoreboard hangs when loading
 - scoreboard request from parse can probably be done as one request
@@ -25,18 +25,16 @@ bugs:
 
 extras:
 - click to identify object
-- show other actions ("you have desecrated at the altar!" etc)
-- add support for other wizard mode passwords
-- game start/end stats
-- give notification given when haste, aggravate monsters subsides (no?)
-- improve smart monster movement beyond existing algorithm which gets stuck sometimes
-- add store value of inventory to score to save people from having to sell everything at the end of a winning game
 - url for scoreboard
 - cloud save via password
+- game start/end stats
+- ipad support
+- show other actions ("you have desecrated at the altar!" etc)
+- add support for other wizard mode passwords
+- give notification given when haste, aggravate monsters subsides (no?)
 - start new game without reloading
 - copy local scores to global
 - color (mcolor/ocolor)
-- ipad support
 - more authentic font
 - beep support
 - stats on most dangerous monster, level, moves/kills/spells ratio

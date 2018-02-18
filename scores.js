@@ -12,7 +12,6 @@ const EXTRA_GTIME = 3;
 var LocalScore = function() {
   var isWinner = lastmonst == 263;
   var winBonus = isWinner ? 100000 * getDifficulty() : 0;
-
   this.who = logname; /* the name of the character */
   this.hardlev = getDifficulty(); /* the level of difficulty player played at */
   this.winner = isWinner;
@@ -21,7 +20,7 @@ var LocalScore = function() {
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
   this.level = LEVELNAMES[level]; /* the level player was on when he died */
   this.playerID = playerID; /* nothing nefarious, just simple way to differentiate players in the game database */
-  this.gameID = gameID; /* unique game ID */
+  this.gameID = gameID + (dofs ? '+' : ''); /* unique game ID */
   this.hof = false; /* hall of fame candidate? */
   this.debug = debug_used; /* did the player use debug mode? */
   this.gamelog = LOG; /* the last few lines of what happened */

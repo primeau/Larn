@@ -402,7 +402,7 @@ function speldamage(x) {
       var savemon = [];
       var saveitm = [];
       var i, j;
-      var empty = OEMPTY; //createObject(OEMPTY);
+      var empty = OEMPTY;
       for (j = 0; j < MAXY; j++) {
         for (i = 0; i < MAXX; i++) /* save all items and monsters */ {
           var item = itemAt(i, j);
@@ -414,7 +414,12 @@ function speldamage(x) {
           if (monster) {
             savemon.push(monster);
           }
-          player.level.items[i][j] = createObject(OWALL);
+          if (level != 0) {
+            player.level.items[i][j] = OWALL;
+          }
+          else {
+            player.level.items[i][j] = OEMPTY;
+          }
           player.level.monsters[i][j] = null;
           if (wizard)
             player.level.know[i][j] = KNOWALL;
@@ -422,7 +427,7 @@ function speldamage(x) {
             player.level.know[i][j] = 0;
         }
       }
-      eat(1, 1);
+      if (level != 0) eat(1, 1);
       if (level == 1)
         player.level.items[33][MAXY - 1] = createObject(OHOMEENTRANCE);
       for (j = rnd(MAXY - 2), i = 1; i < MAXX - 1; i++) {
@@ -441,7 +446,7 @@ function speldamage(x) {
       }
       loseint();
       if (!wizard)
-        spelknow[36] = 0;
+        forgetSpell(36); /* forget */
       positionplayer();
       /* 12.4.5
       the last hit monster is probably somewhere else now

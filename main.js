@@ -78,7 +78,12 @@ function setname(name) {
      'gameNum_int' : gameNum,
     };
     console.log(`fs`, userVars);
-    FS.identify(playerID, userVars);
+    try {
+      FS.identify(playerID, userVars);
+    }
+    catch (e) {
+      console.error(`caught: ${e}`);
+    }
   }
 
   cursors();
