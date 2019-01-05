@@ -21,8 +21,8 @@ var lambda;
 function play() {
 
         // this role only has access to invoke the lambda score function 
-        AWS.config.accessKeyId = "AKIAI6GYITXCUB4Y2CZA";
-        AWS.config.secretAccessKey = "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";
+        AWS.config.accessKeyId = "AWS_CONFIG_ACCESSKEYID";
+        AWS.config.secretAccessKey = "AWS_CONFIG_SECRETACCESSKEY";
 
         lambda = new AWS.Lambda({
             region: 'us-east-1',
