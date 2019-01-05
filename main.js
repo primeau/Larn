@@ -334,12 +334,70 @@ function setAmigaMode() {
 
 
 
+// /**
+//  * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
+//  * 
+//  * @param {String} text The text to be rendered.
+//  * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
+//  * 
+//  * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+//  */
+// function getTextWidth(text, font) {
+//   // re-use canvas object for better performance
+//   var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+//   var context = canvas.getContext("2d");
+//   context.font = font;
+//   var metrics = context.measureText(text);
+//   return metrics.width;
+// }
+
+
+
+// function makeItFit() {
+
+//   var el = document.getElementById('LARN');
+//   var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
+//   var fontSize = parseFloat(style); 
+//   // now you have a proper float for the font size (yes, it can be a float, not just an integer)
+  
+//   var browserWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+//   var browserHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+//   fontSize = parseFloat(100);
+//   var safe = 100;
+//   var fontWidth = getTextWidth("0", fontSize + 'pt dos');
+//   // while (fontWidth * 80.0 < browserWidth) {
+//   //   fontWidth = getTextWidth("0", fontSize + 'pt dos');
+//   //   fontSize += 0.1;
+//   //   el.style.fontSize = (fontSize) + 'px';
+//   //   //console.log("+W", fontWidth, fontWidth*80.0, browserWidth, fontSize);
+//   //   if (safe-- < 0) return;
+//   // }
+
+//   // safe = 100;
+//   // if (fontWidth * 80.0 > browserWidth) {
+//   //   fontWidth = getTextWidth("0", fontSize + 'pt dos');
+//   //   fontSize -= 0.1;
+//   //   el.style.fontSize = (fontSize) + 'px';
+//   //   //console.log("-W", fontWidth, fontWidth*80.0, browserWidth, fontSize);
+//   //   if (safe-- < 0) return;
+//   // }
+
+//     var suggestedSize = Math.max(10, ((browserHeight-100) / 24.0));
+// console.log(suggestedSize, fontSize);
+//     suggestedSize = Math.min(suggestedSize, fontSize);
+//     el.style.fontSize = (suggestedSize-1) + 'px';
+
+// }
+
 /*
   JRP
   since we're running in a event-driven system we need to
   turn the original main loop a little bit inside-out
 */
 function mainloop(key) {
+
+  // makeItFit();
 
   if (napping) {
     debug(`napping`);
@@ -477,7 +535,7 @@ function wizardmode(password) {
     return 1;
   }
 
-  if (password.length == 10) {
+  if (password.length == 10 || password.length == 11) {
     updateLog(`trying to load game ` + password);
     dbQueryLoadGame(password);
     return 1;

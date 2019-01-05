@@ -1,11 +1,10 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '335';
+const BUILD = '336';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
-
 
 var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
@@ -16,11 +15,19 @@ var DEBUG_LPRCAT = 0;
 var DEBUG_LPRC = 0;
 var DEBUG_PROXIMITY = false;
 
+var dofs = false;
+var lambda;
 
 function play() {
 
-  Parse.initialize(`ZG6aY4DKdkKn39YGogG0WFhqk089WTqVWprNfijo`, `Ioo0zvIxR5xvkf6lQQDW9A7YHaNyOItSDFb756Um`);
-  Parse.serverURL = 'https://parseapi.back4app.com';
+        // this role only has access to invoke the lambda score function 
+        AWS.config.accessKeyId = "AKIAI6GYITXCUB4Y2CZA";
+        AWS.config.secretAccessKey = "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";
+
+        lambda = new AWS.Lambda({
+            region: 'us-east-1',
+            apiVersion: '2015-03-31'
+        });
 
   initKeyBindings();
 

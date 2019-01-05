@@ -20,7 +20,7 @@ var original_objects = true;
 var dnd_item = null;
 var genocide = [];
 var amiga_mode = false;
-var gameID = Math.random().toString(36).substr(2, 8);
+var gameID = Math.random().toString(36).substr(2, 10);
 var debug_used = 0;
 var keyboard_hints = false;
 

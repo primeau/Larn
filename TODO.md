@@ -1,18 +1,20 @@
+todo:
+- colors for dragons?
+- "sorry, no mobile" message for larn.html
+- warn if changing names because it's annoying on the scoreboard
+- click to identify object
+- player killed with range spell should drop gold/items beside corpse, not player
+- show time in side inventory
+- bold help items
+
 bugs:
 - red wizard demon prince bug?
 - half speed monsters don't move with HAS?
-- can't load most recent game if you go to scoreboard too fast
-- warn if changing names because it's annoying on the scoreboard
 - arrow buttons on help screen are truncated in amiga mode
-- player killed with range spell should drop gold/items beside corpse, not player
 - take and a few other commands use a turn even if nothing is there to be taken
-- quit doesn't work?
 - amiga mode: viewing scoreboard resets to classic mode (partially fixed)
 - last local game shows as winner and loser
 - better inventory layout, font selection with react?
-- no recovery if scoreboard hangs when loading
-- scoreboard request from parse can probably be done as one request
-  - should just have a dedicated scoreboard table
 - amiga mode: strikethrough missing on taxes owing after victory
 - blindness
   - black tile when opening door when blind
@@ -24,7 +26,6 @@ bugs:
 
 
 extras:
-- click to identify object
 - url for scoreboard
 - cloud save via password
 - game start/end stats
@@ -39,4 +40,3 @@ extras:
 - beep support
 - stats on most dangerous monster, level, moves/kills/spells ratio
   - win/death ratio per difficulty
-- hall of fame and bad luck scoreboards
