@@ -514,6 +514,10 @@ function parse_see_spells(key) {
 
 
 function updateLog(text, hint) {
+
+  // BUGFIX FOR PUTTING EMPTY STRINGS INTO DYNAMO
+  if (text == ``) text = ` `;
+
   if (DEBUG_OUTPUT) {
     //console.log(`LARN: ${text} ${hint}`);
   }

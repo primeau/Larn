@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '336';
+const BUILD = '338';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -20,14 +20,17 @@ var lambda;
 
 function play() {
 
-        // this role only has access to invoke the lambda score function 
-        AWS.config.accessKeyId = "AWS_CONFIG_ACCESSKEYID";
-        AWS.config.secretAccessKey = "AWS_CONFIG_SECRETACCESSKEY";
+  // this role only has access to invoke the lambda score function 
+  AWS.config.accessKeyId = "AWS_CONFIG_ACCESSKEYID";
+  AWS.config.secretAccessKey = "AWS_CONFIG_SECRETACCESSKEY";
+  
+  // real credentials are set here, and not committed
+  initLambdaCredentials();
 
-        lambda = new AWS.Lambda({
-            region: 'us-east-1',
-            apiVersion: '2015-03-31'
-        });
+  lambda = new AWS.Lambda({
+    region: 'us-east-1',
+    apiVersion: '2015-03-31'
+  });
 
   initKeyBindings();
 
