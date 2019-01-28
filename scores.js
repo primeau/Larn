@@ -473,8 +473,16 @@ function dbWriteHighScore(newScore) {
         }
     });
 
-
-
+    try {
+      if (newScore.winner) {
+        Rollbar.info(`winner: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
+      } else {
+        Rollbar.info(`visitor: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
+      }
+    } catch (error) {
+      console.error(`caught: ${error}`);
+    }
+  
 }
 
 

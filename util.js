@@ -393,20 +393,3 @@ function localStorageRemoveItem(key) {
   }
 }
 
-
-
-/* added in v309 to fix directional spells not working in IE */
-function fixFunctionDotName() {
-  // Fix Function#name on browsers that do not support it (IE):
-  if (!(function f() {}).name) {
-      Object.defineProperty(Function.prototype, 'name', {
-          get: function() {
-              var name = (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
-              // For better performance only parse once, and then cache the
-              // result through a new accessor for repeated access.
-              Object.defineProperty(this, 'name', { value: name });
-              return name;
-          }
-      });
-  }
-}
