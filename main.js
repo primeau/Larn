@@ -71,21 +71,6 @@ function setname(name) {
     localStorageSetObject('logname', logname);
   }
 
-  if (dofs) {
-    var userVars = {
-     'displayName': logname,
-     'playerID_str': playerID,
-     'gameNum_int' : gameNum,
-    };
-    console.log(`fs`, userVars);
-    try {
-      FS.identify(playerID, userVars);
-    }
-    catch (e) {
-      console.error(`caught: ${e}`);
-    }
-  }
-
   cursors();
   cltoeoln();
 
@@ -280,6 +265,32 @@ function makeplayer() {
 
 
 
+function initFS() {
+  try {
+    var gameNum = localStorageGetObject('gameNum', 0) + 1;
+    localStorageSetObject('gameNum', gameNum);
+    if (gameNum <= 5 || getDifficulty() > 3) {
+      dofs = true;
+      console.log('dofs: ' + gameNum + ' ' + dofs + ' ' + getDifficulty());
+    }
+
+    if (dofs) {
+      fsfunc();
+      var userVars = {
+        'displayName': logname,
+        'playerID_str': playerID,
+        'gameNum_int': gameNum,
+      };
+      console.log(`fs`, userVars);
+      FS.identify(playerID, userVars);
+    }
+  } catch (e) {
+    console.error(`caught: ${e}`);
+  }
+}
+
+
+
 function startgame(hard) {
 
   // clear the blinking cursor after setting difficulty
@@ -292,6 +303,8 @@ function startgame(hard) {
   } else {
     setGameDifficulty(hard);
   }
+
+  initFS();
 
   makeplayer(); /*  make the character that will play  */
 

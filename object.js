@@ -73,7 +73,12 @@ Item.prototype = {
       }
       //
       else if (!original_objects) {
-        if (this.id == OWALL.id || this.id == OEMPTY.id) {
+        if (this.id == OWALL.id || 
+          this.id == OEMPTY.id ||
+          this.id == OIVTRAPDOOR.id ||
+          this.id == OIVDARTRAP.id ||
+          this.id == OTRAPARROWIV.id ||
+          this.id == OIVTELETRAP.id) {
           return hack_objnamelist[this.id];
         } else {
           return `<b>${hack_objnamelist[this.id]}</b>`;

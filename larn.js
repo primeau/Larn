@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '341';
+const BUILD = '342';
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
