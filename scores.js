@@ -290,7 +290,7 @@ function printWinnerScoreBoard(winners, newScore, offset) {
   // TODO duplication
   function printout(p) {
     var scoreId = p.gameID || p.who;
-    var local = p.gameID == null;
+    var local = p.gameID == null; // FIXME p.gameID is never null now 
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${padString(p.who, -25)}${padString(`` + p.timeused, 5)} Mobuls`;
     var endcode = GAMEOVER ? `<br>` : ``;
     lprc(`<a href='javascript:dbQueryLoadGame("${scoreId}", ${local}, true)'>${score}</a>${endcode}`);
@@ -306,7 +306,7 @@ function printLoserScoreBoard(losers, newScore, offset) {
   // TODO duplication
   function printout(p) {
     var scoreId = p.gameID || p.who;
-    var local = p.gameID == null;
+    var local = p.gameID == null; // FIXME p.gameID is never null now 
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${padString(p.who, -25)} ${p.what} on ${p.level}`;
     var endcode = GAMEOVER ? `<br>` : ``;
     lprc(`<a href='javascript:dbQueryLoadGame("${scoreId}", ${local}, false)'>${score}</a>${endcode}`);
@@ -318,6 +318,9 @@ function printLoserScoreBoard(losers, newScore, offset) {
 
 
 function printScoreBoard(board, newScore, header, printout, offset) {
+
+    // BUG: due to how lprc() works, a maximum of 80 scores will be printed per board
+
     var scoreboard = board;
 
     var isWinningScore = false;
@@ -465,19 +468,23 @@ function dbWriteHighScore(newScore) {
                 console.log(`Couldn't save game ${gameId}`);
             } else {
                 console.log(`lambda error: lambda status=${data.StatusCode} larn status=${status}`);
-                console.log(error, error.stack);
+                if (error) console.log(error, error.stack);
             }
         } else {
             console.log(`no data lambda error: `);
-            console.log(error, error.stack);
+            if (error) console.log(error, error.stack);
         }
     });
 
     try {
-      if (newScore.winner) {
-        Rollbar.info(`winner: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
-      } else {
-        Rollbar.info(`visitor: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
+      if (Rollbar) {
+        if (newScore.winner) {
+          Rollbar.info(`winner: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
+        } else {
+          if (newScore.hardlev > 0 && newScore.timeused > 5) {
+            Rollbar.info(`visitor: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
+          }
+        }
       }
     } catch (error) {
       console.error(`caught: ${error}`);

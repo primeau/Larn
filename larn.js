@@ -1,7 +1,9 @@
 'use strict';
 
 const VERSION = '12.4.5';
-const BUILD = '342';
+const BUILD = '343';
+
+var ULARN = false; // are we playing LARN or ULARN
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
@@ -64,6 +66,7 @@ function play() {
 
   no_intro = PARAMS.nointro ? PARAMS.nointro == `true` : false;
   mobile = PARAMS.mobile ? PARAMS.mobile == `true` : false;
+  ULARN = PARAMS.ularn ? PARAMS.ularn == `true` : false;
 
   if (PARAMS.score) {
     player = new Player();

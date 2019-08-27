@@ -1,4 +1,4 @@
-[You can play Larn online here](http://larn.org "You can play Larn online here")
+[You can play Larn online here](https://larn.org "You can play Larn online here")
 
 
 JS LARN version 12.4.5
@@ -88,4 +88,4 @@ Acknowledgements
 Many thanks to BrowserStack for supporting this open source project with a free
 license to improve cross-browser support.
 
-[![BrowserStack](http://larn.org/browserstack.png)](http://www.browserstack.com/)
+[![BrowserStack](https://larn.org/browserstack.png)](https://www.browserstack.com/)
