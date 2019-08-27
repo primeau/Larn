@@ -195,6 +195,11 @@ function outfortune() {
   updateLog(`The cookie was delicious.`);
   if (player.BLINDCOUNT)
     return;
+    
+  // lazy load fortunes
+  if (!FORTUNES) 
+    FORTUNES = COMMON_FORTUNES.concat(ULARN ? ULARN_FORTUNES : LARN_FORTUNES);
+
   var fortune = FORTUNES[rund(FORTUNES.length)];
   updateLog(`Inside you find a scrap of paper that says:`);
   updateLog(`  ${fortune}`);

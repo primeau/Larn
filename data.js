@@ -207,8 +207,11 @@ const POTION_NAMES = [
 
 
 
-const FORTUNES = [
-  `Gem value = gem * 2 ^ perfection`,
+var FORTUNES; // this is now set in action.js
+
+
+
+const COMMON_FORTUNES = [
   `Sitting down can have unexpected results`,
   `Don't pry into the affairs of others`,
   `Drinking can be hazardous to your health`,
@@ -216,32 +219,56 @@ const FORTUNES = [
   `Some monsters are greedy`,
   `Nymphs have light fingers`,
   `Try kissing a disenchantress!`,
-  `The Eye of Larn improves with time`,
   `Hammers and brains don't mix`,
   `What does a potion of cure dianthroritis taste like?`,
   `Hit point gain/loss when raising a level depends on constitution`,
-  `Healing a mighty wizard can be exhilarating`,
   `Be sure to pay your taxes`,
-  `Are Vampires afraid of something?`,
   `Some dragons can fly`,
   `Dost thou strive for perfection?`,
   `Patience is a virtue, unless your daughter dies`,
-  `What does the Eye of Larn see in its guardian?`,
   `A level 25 player casts like crazy!`,
-  `Energy rings affect spell regeneration`,
-  `My, aren't you clever!`,
   `Difficulty affects regeneration`,
-  `Control of the pesty spirits is most helpful`,
+  `Control of the pesky spirits is most helpful`,
   `Don't fall into a bottomless pit`,
   `Dexterity allows you to carry more`,
   `You can get 2 points of WC for the price of one`,
   `Never enter the dungeon naked! The monsters will laugh at you!`,
   `Did someone put itching powder in your armor?`,
-  `You klutz!`,
-  `Avoid opening doors. You never know whats on the other side.`,
-  `Infinite regeneration ---> temptation`,
+  `Avoid opening doors. You never know what's on the other side.`,
   `The greatest weapon in the game has not the highest Weapon Class`,
-  `You can't buy the most powerful scroll`,
   `Identify things before you use them`,
   `There's more than one way through a wall`,
+];
+
+
+
+const LARN_FORTUNES = [
+  `Gem value = gem * 2 ^ perfection`,
+  `The Eye of Larn improves with time`,
+  `Healing a mighty wizard can be exhilarating`,
+  `Are Vampires afraid of something?`,
+  `What does the Eye of Larn see in its guardian?`,
+  `Energy rings affect spell regeneration`,
+  `My, aren't you clever!`,
+  `You klutz!`,
+  `Infinite regeneration ---> temptation`,
+  `You can't buy the most powerful scroll`,
+];
+
+
+
+const ULARN_FORTUNES = [
+`A perfect gem is twice as beautiful`,
+`Ask the genie`,
+'Are monsters afraid of something?',
+`What can the Eye of Larn see for its guardian?`,
+`Spells not regenerating?  You need more energy`,
+`Watch out for trap doors`,
+`Take the express`,
+`The most powerful scroll isn't for sale`,
+`Try Dealer McDope's for all your recreational needs!`,
+`Who is tougher than a demon prince?`,
+`Slayer has a grudge`,
+`Wonderful wands prevent you from falling`,
+`It is said that the king is never far from his throne`,
 ];
