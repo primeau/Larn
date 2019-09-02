@@ -75,6 +75,11 @@ function initNewLevel(depth) {
 
 function loadcanned() {
   var mazeindex;
+
+  // lazy load MAZES
+  if (!MAZES) 
+    MAZES = COMMON_MAZES.concat(ULARN ? ULARN_MAZES : LARN_MAZES);
+
   do {
     mazeindex = rund(MAZES.length);
   } while (USED_MAZES.indexOf(mazeindex) > -1);
@@ -409,7 +414,7 @@ function makeobject(depth) {
   if ((depth != MAXLEVEL - 1) && (depth != MAXLEVEL + MAXVLEVEL - 1))
     fillmroom(rund(2), OIVTRAPDOOR, 0);
 
-  if (depth <= 10) {
+  if (depth < MAXLEVEL) {
     fillmroom((rund(2)), ODIAMOND, rnd(10 * depth + 1) + 10);
     fillmroom(rund(2), ORUBY, rnd(6 * depth + 1) + 6);
     fillmroom(rund(2), OEMERALD, rnd(4 * depth + 1) + 4);
@@ -421,7 +426,7 @@ function makeobject(depth) {
   for (i = 0; i < rnd(5) + 3; i++) fillroom(OSCROLL, newscroll()); /* make a SCROLL */
   for (i = 0; i < rnd(12) + 11; i++) fillroom(OGOLDPILE, 12 * rnd(depth + 1) + (depth << 3) + 10); /* make GOLD */
 
-  if (depth == 5) fillroom(OBANK2, 0); /* branch office of the bank */
+  if (depth == (ULARN ? 8 : 5)) fillroom(OBANK2, 0); /* branch office of the bank */
 
   froom(2, ORING, 0); /* a ring mail */
   froom(1, OSTUDLEATHER, 0); /* a studded leather */

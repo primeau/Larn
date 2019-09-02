@@ -5,9 +5,9 @@
 /* never, ever, never use a code formatter here */
 /************************************************/
 
-
-const MAXLEVEL = 11;      /* max # levels in the dungeon  */
-const MAXVLEVEL = 3;      /* max # of levels in the temple of the luran */
+var gameName;  // ULARN
+var MAXLEVEL;  // ULARN    /* max # levels in the dungeon  */
+var MAXVLEVEL; // ULARN    /* max # of levels in the temple of the luran */
 const LOG_SIZE = 5;       /* number of log lines to show */
 const LOG_SAVE_SIZE = 20; /* number of log lines to save */
 const MAXINVEN = 26;      /* max number of items a player can carry */
@@ -15,7 +15,7 @@ const MAXX = 67;          /* maze width */
 const MAXY = 17;          /* maze height */
 const TAXRATE = 1 / 20;   /* amount of taxes owed after winning */
 const MAXPLEVEL = 100;    /* maximum player level allowed  */
-const TIMELIMIT = 30000;  /* maximum number of moves before the game is called */
+const TIMELIMIT; // ULARN  /* maximum number of moves before the game is called */
 
 
 

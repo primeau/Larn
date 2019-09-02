@@ -68,6 +68,8 @@ function play() {
   mobile = PARAMS.mobile ? PARAMS.mobile == `true` : false;
   ULARN = PARAMS.ularn ? PARAMS.ularn == `true` : false;
 
+  setUlarnVars();
+
   if (PARAMS.score) {
     player = new Player();
     loadScores(null, true, true);

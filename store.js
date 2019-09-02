@@ -274,7 +274,7 @@ function obank() {
 
 
 function obank2() {
-  banktitle(`Welcome to the 5th level branch office of the First National Bank of Larn.`);
+  banktitle(`Welcome to the ${ULARN ? 8 : 5}th level branch office of the First National Bank of Larn.`);
   /* because we state the level in the title, clear the '?' in the
      level display at the bottom, if the user teleported.
   */

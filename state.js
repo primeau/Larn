@@ -5,7 +5,7 @@
 
 
 /* additions for JS Larn */
-var LEVELS = new Array(MAXLEVEL + MAXVLEVEL);
+var LEVELS;
 var LOG;
 var player;
 var playerID;
