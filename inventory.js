@@ -98,6 +98,7 @@ function showquaff(item) {
 
 const sortorder = [
   OLARNEYE.id,
+  OELVENCHAIN.id,
   OSSPLATE.id,
   OLANCE.id,
 

@@ -31,6 +31,7 @@ const STORE_INVENTORY = [
   [9000,   OPLATEARMOR.id,      0,  1],
   [26000,  OSSPLATE.id,         0,  1],
   [1500,   OSHIELD.id,          0,  1],
+  //[50000,  OELVENCHAIN.id,      0,  0],
   [20,     ODAGGER.id,          0,  3],
   [200,    OSPEAR.id,           0,  3],
   [800,    OFLAIL.id,           0,  2],

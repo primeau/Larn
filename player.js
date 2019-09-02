@@ -640,7 +640,7 @@ function wield(index) {
     }
     if (index == '-') {
       if (player.WIELD) {
-        updateLog(`You weapon is sheathed`);
+        updateLog(`You unwield your weapon`);
         player.WIELD = null;
       }
       setMazeMode(true);
@@ -675,6 +675,16 @@ function wield(index) {
     setMazeMode(true);
     return 1;
   }
+
+  // ULARN: can't wield and wear at the same time
+  // but there was no corresponding code to prevent wearing, then wielding
+  // so i'm not including this
+  // if (ULARN) {
+  //   if (player.SHIELD == item || player.WEAR == item) {
+  //     updateLog(`  You can't wield your ${item.toString(true)} while you're wearing it!`);
+  //     return 1;
+  //   }
+  // }
 
   if (index === item) {
     index = getCharFromIndex(player.inventory.indexOf(item));
@@ -731,7 +741,17 @@ function wear(index) {
       return 1;
     }
   }
+
   // common cases for both
+
+  // I was going to add this for LARN/ULARN but it's kind of annoying
+  // if (ULARN) {
+  //   if (player.WEAR) {
+  //     updateLog(`  You are already wearing some armor.`);
+  //     setMazeMode(true);
+  //     return 1;
+  //   }
+  // }
   if (
     item.matches(OLEATHER) ||
     item.matches(OCHAIN) ||
@@ -740,6 +760,7 @@ function wear(index) {
     item.matches(OSPLINT) ||
     item.matches(OPLATEARMOR) ||
     item.matches(OSTUDLEATHER) ||
+    item.matches(OELVENCHAIN) ||
     item.matches(OSSPLATE)) {
     player.WEAR = item;
   } else if (item.matches(OSHIELD)) {
@@ -748,6 +769,14 @@ function wear(index) {
       setMazeMode(true);
       return 1;
     } else {
+      // I was going to add this for LARN/ULARN but it's kind of annoying
+      // if (ULARN) {
+      //   if (player.SHIELD) {
+      //     updateLog(`  You are already wearing a shield.`);
+      //     setMazeMode(true);
+      //     return 1;
+      //   }
+      // }
       player.SHIELD = item;
     }
   } else {
@@ -759,6 +788,7 @@ function wear(index) {
   if (index === item) {
     index = getCharFromIndex(player.inventory.indexOf(item));
   }
+  
   updateLog(`  You wear:`);
   updateLog(`${index}) ${item.toString(true)}`);
 

@@ -618,7 +618,7 @@ function hitmonster(x, y) {
       if (player.WIELD) {
         if (player.WIELD.arg > -10) {
           // fix: leather and stainless plate shouldn't rust
-          if (!player.WIELD.matches(OLEATHER) && !player.WIELD.matches(OSSPLATE)) {
+          if (!player.WIELD.matches(OLEATHER) && !player.WIELD.matches(OSSPLATE) && !player.WIELD.matches(OELVENCHAIN)) {
             updateLog(`  Your weapon is dulled by the ${monster}`);
             beep();
             player.WIELD.arg--;
@@ -802,6 +802,9 @@ function spattack(x, xx, yy) {
         }
         if (armor && armor.matches(OSSPLATE)) {
           updateLog(`The ${monster} hit you -- you're fortunate to have stainless steel armor!`);
+        }
+        if (armor && armor.matches(OELVENCHAIN)) {
+          updateLog(`The ${monster} hit you -- you are very lucky to have such strong elven chain!`);
         }
       } else {
         updateLog(`The ${monster} hit you -- your armor feels weaker`);

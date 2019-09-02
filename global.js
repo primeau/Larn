@@ -79,6 +79,7 @@ function recalc() {
     if (armor.matches(OPLATE)) player.AC = 9 + extra;
     if (armor.matches(OPLATEARMOR)) player.AC = 10 + extra;
     if (armor.matches(OSSPLATE)) player.AC = 12 + extra;
+    if (armor.matches(OELVENCHAIN)) player.AC = 15 + extra;
   }
   if (player.SHIELD && player.SHIELD.matches(OSHIELD)) {
     player.AC += 2 + player.SHIELD.arg;
@@ -359,6 +360,8 @@ function packweight() {
         weight += 26;
         break;
       case OSWORDofSLASHING.id:
+        weight += ULARN ? 15 : 23;
+        break;
       case OCHAIN.id:
       case OBATTLEAXE.id:
       case O2SWORD.id:
@@ -370,6 +373,7 @@ function packweight() {
       case OFLAIL.id:
         weight += 20;
         break;
+      case OELVENCHAIN.id:
       case OLANCE.id:
       case OSTUDLEATHER.id:
         weight += 15;

@@ -2,7 +2,7 @@
 
 const itemlist = [];
 
-const hack_objnamelist = `·:\\_^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~****899)))[[[[[)^·[1$$$·^^·3·/4\\0,_________8 `;
+const hack_objnamelist = `·:\\_^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~****899)))[[[[[)^·[1$$$·^^·3·/4\\0,________]8 `;
 
 
 
@@ -184,6 +184,7 @@ Item.prototype = {
       armor |= this.matches(OPLATE);
       armor |= this.matches(OPLATEARMOR);
       armor |= this.matches(OSSPLATE);
+      armor |= this.matches(OELVENCHAIN);
       return armor;
     },
 
@@ -261,7 +262,7 @@ const OMIRROR = new Item(11, `<b>M</b>`, `a mirror`, false);
 const ODNDSTORE = new Item(12, `<b>=</b>`, `the DND store`, false);
 const OSTAIRSDOWN = new Item(13, `<b>&gt</b>`, `a staircase going down`, false);
 //#define OELEVATORDOWN 14
-const OBANK2 = new Item(15, `<b>$</b>`, `the 5th branch of the Bank of Larn`, false);
+const OBANK2 = new Item(15, `<b>$</b>`, `the Nth branch of the Bank of Larn`, false);
 const OBANK = new Item(16, `<b>$</b>`, `the bank of Larn`, false);
 const ODEADFOUNTAIN = new Item(17, `<b>f</b>`, `a dead fountain`, false);
 const OGOLDPILE = new Item(18, `<b>*</b>`, `some gold`, true, 0);
@@ -338,7 +339,7 @@ const OCOOKIE = new Item(83, `<b>c</b>`, `a fortune cookie`, true);
 //#define OPSTAFF 89          /* staff of power */
 //#define OVORPAL 90
 //#define OSLAYER 91
-//#define OELVENCHAIN 92
+const OELVENCHAIN = new Item(92, `<b>]</b>`, `elven chain`, true); // ULARN
 
 
 

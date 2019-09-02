@@ -15,7 +15,7 @@ const MAXX = 67;          /* maze width */
 const MAXY = 17;          /* maze height */
 const TAXRATE = 1 / 20;   /* amount of taxes owed after winning */
 const MAXPLEVEL = 100;    /* maximum player level allowed  */
-const TIMELIMIT; // ULARN  /* maximum number of moves before the game is called */
+var TIMELIMIT; // ULARN  /* maximum number of moves before the game is called */
 
 
 
