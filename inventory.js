@@ -213,6 +213,7 @@ function take(item) {
  */
 function drop_object(index) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
+  var pitflag = itemAt(player.x, player.y).matches(OPIT);
   if (index == '*' || index == ' ' || index == 'I') {
     if (mazeMode) {
       showinventory(true, drop_object, showall, false, false, true);
@@ -245,7 +246,7 @@ function drop_object(index) {
     return 1;
   }
 
-  if (isItemAt(player.x, player.y)) {
+  if (!pitflag && isItemAt(player.x, player.y)) {
     beep();
     updateLog(`  There's something here already`);
     setMazeMode(true);
@@ -254,12 +255,17 @@ function drop_object(index) {
 
   // if (player.y == MAXY - 1 && player.x == 33) return (1); /* not in entrance */
 
-  player.inventory[useindex] = null;
-  player.level.items[player.x][player.y] = item;
-
   updateLog(`  You drop: `);
   updateLog(`${getCharFromIndex(useindex)}) ${item}`);
   // show3(k); /* show what item you dropped*/
+
+  player.inventory[useindex] = null;
+  if (pitflag) {
+    updateLog(`  It disappears down the pit.`);
+  }
+  else {
+    player.level.items[player.x][player.y] = item;
+  }
   player.level.know[player.x][player.y] = 0;
 
   if (player.WIELD === item) {
@@ -281,6 +287,7 @@ function drop_object(index) {
 
 function drop_object_gold(amount) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
+  var pitflag = itemAt(player.x, player.y).matches(OPIT);
 
   if (amount == ESC) {
     appendLog(` cancelled`);
@@ -299,7 +306,7 @@ function drop_object_gold(amount) {
     return 1;
   }
 
-  if (isItemAt(player.x, player.y)) {
+  if (!pitflag && isItemAt(player.x, player.y)) {
     beep();
     updateLog(`  There's something here already`);
     return 1;
@@ -307,7 +314,12 @@ function drop_object_gold(amount) {
 
   player.setGold(player.GOLD - amount);
   updateLog(`  You drop ${Number(amount).toLocaleString()} gold pieces`);
-  player.level.items[player.x][player.y] = createObject(OGOLDPILE, amount);
+  if (pitflag) {
+    updateLog(`  The gold disappears down the pit.`);
+  }
+  else {
+    player.level.items[player.x][player.y] = createObject(OGOLDPILE, amount);
+  }
   player.level.know[player.x][player.y] = 0;
   return 1;
 }
