@@ -340,6 +340,7 @@ function emptyhanded() {
     function to calculate the pack weight of the player
     returns the number of pounds the player is carrying
  */
+// TODO: this could go into a new object.weight field
 function packweight() {
   var weight = player.GOLD / 1000;
   for (var i = 0; i < player.inventory.length; i++) {
@@ -360,7 +361,7 @@ function packweight() {
         weight += 26;
         break;
       case OSWORDofSLASHING.id:
-        weight += ULARN ? 15 : 23;
+        weight += (ULARN ? 15 : 23);
         break;
       case OCHAIN.id:
       case OBATTLEAXE.id:
@@ -375,6 +376,8 @@ function packweight() {
         break;
       case OELVENCHAIN.id:
       case OLANCE.id:
+      case OSLAYER.id:
+      case OVORPAL.id:
       case OSTUDLEATHER.id:
         weight += 15;
         break;

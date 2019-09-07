@@ -81,7 +81,7 @@ Monster.prototype = {
     },
 
     isDemon: function() {
-      return this.arg >= 56 /* && this.arg <= 64 */ ;
+      return this.arg >= DEMONLORD;
     },
 
     /*
@@ -499,6 +499,8 @@ function hitplayer(x, y) {
     return;
   }
 
+  // ULARN TODO: lots of things
+
   lastnum = monster; /* killed by a ${monstername} */
 
   /*  spirit naga's and poltergeist's do nothing if scarab of negate spirit   */
@@ -634,11 +636,17 @@ function hitmonster(x, y) {
           if (player.WIELD.matches(OCLEVERRING))
             player.setIntelligence(player.INTELLIGENCE - 1);
         }
+        // ULARN TODO: Your weapon disintegrates!
       }
     }
   }
   if (flag == 1) {
     hitm(x, y, damage);
+    if (ULARN) {
+      if (monster.isDemon() && monster.hitpoints > 0) {
+        console.log(  `nYour lance of death tickles the ${monster}`);
+      }
+    }
   }
   if (monster.matches(VAMPIRE)) {
     //if (monster.hitpoints < 25) { // UPDATE this is original code
@@ -647,6 +655,9 @@ function hitmonster(x, y) {
       player.level.know[x][y] = 0;
     }
   }
+
+  // ULARN TODO: METAMORPH && LEMMING
+
 }
 
 
@@ -672,20 +683,35 @@ function hitm(x, y, damage) {
   lasthy = y;
   monster.awake = true; /* make sure hitting monst breaks stealth condition */
   player.updateHoldMonst(-player.HOLDMONST); /* hit a monster breaks hold monster spell  */
-  switch (monster.arg) { /* if a dragon and orb(s) of dragon slaying   */
-    case WHITEDRAGON:
-    case REDDRAGON:
-    case GREENDRAGON:
-    case BRONZEDRAGON:
-    case PLATINUMDRAGON:
-    case SILVERDRAGON:
-      damage *= 1 + (player.SLAYING << 1);
-      break;
+
+  /* if a dragon and orb of dragon slaying */
+  if (player.SLAYING) {
+    switch (monster.arg) {
+      case WHITEDRAGON:
+      case REDDRAGON:
+      case GREENDRAGON:
+      case BRONZEDRAGON:
+      case PLATINUMDRAGON:
+      case SILVERDRAGON:
+        damage *= 3;
+        break;
+    }
   }
+
+  // ULARN TODO:  /* Deal with Vorpy */
 
   /* invincible monster fix is here */
   if (monster.hitpoints > monsterlist[monster.arg].hitpoints)
     monster.hitpoints = monsterlist[monster.arg].hitpoints;
+
+  if (ULARN && monster.isDemon()) {
+    if (player.WIELD.matches(OLANCE)) {
+      damage = 300;
+    }
+    if (player.WIELD.matches(OSLAYER)) {
+      damage = 10000;
+    }
+  }
 
   var hpoints = monster.hitpoints;
   monster.hitpoints -= damage;

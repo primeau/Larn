@@ -552,7 +552,8 @@ function mmove(aa, bb, cc, dd) {
       case DEMONLORD + 5:
       case DEMONLORD + 6:
       case DEMONPRINCE:
-        break;
+      case LUCIFER:
+          break;
 
       default:
         player.level.monsters[cc][dd] = null; /* fell in a pit or trapdoor */

@@ -2,7 +2,7 @@
 
 const itemlist = [];
 
-const hack_objnamelist = `·:\\_^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~****899)))[[[[[)^·[1$$$·^^·3·/4\\0,________]8 `;
+const hack_objnamelist = `·:\\~^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~****899)))[[[[[)^·[1$$$·^^·3·/4\\0,u...//))]8 :::::@`;
 
 
 
@@ -246,22 +246,20 @@ Item.prototype = {
 
 
 const OEMPTY = new Item(0, `·`, `empty space`, false); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
-const OHOMEENTRANCE = new Item(93, OEMPTY.char, `exit to home level`, false);
-const OUNKNOWN = new Item(94, ' ', `... nothing`, false);
 const OALTAR = new Item(1, `<b>A</b>`, `a holy altar`, false);
 const OTHRONE = new Item(2, `<b>T</b>`, `a handsome jewel encrusted throne`, false);
-//#define OORB 3
+const OORB = new Item(3, `<b>o</b>`, `an orb of enlightenment`, true); // ULARN
 const OPIT = new Item(4, `<b>P</b>`, `a pit`, false);
-const OSTAIRSUP = new Item(5, `<b>&lt</b>`, `a staircase going up`, false); // use &lt to prevent bugginess when dropping a ! or ? to the right
-//#define OELEVATORUP 6
+/*TODO*/ const OSTAIRSUP = new Item(5, `<b>&lt</b>`, `a staircase going up`, false); // use &lt to prevent bugginess when dropping a ! or ? to the right
+/*TODO use '_'?*/ const OELEVATORUP = new Item(6, `<b>^</b>`, `an elevator going up`, false); // ULARN
 const OFOUNTAIN = new Item(7, `<b>F</b>`, `a bubbling fountain`, false);
 const OSTATUE = new Item(8, `<b>&</b>`, `a great marble statue`, false);
 const OTELEPORTER = new Item(9, `<b>^</b>`, `a teleport trap`, false);
 const OSCHOOL = new Item(10, `<b>+</b>`, `the College of Larn`, false);
 const OMIRROR = new Item(11, `<b>M</b>`, `a mirror`, false);
 const ODNDSTORE = new Item(12, `<b>=</b>`, `the DND store`, false);
-const OSTAIRSDOWN = new Item(13, `<b>&gt</b>`, `a staircase going down`, false);
-//#define OELEVATORDOWN 14
+/*TODO*/ const OSTAIRSDOWN = new Item(13, `<b>&gt</b>`, `a staircase going down`, false);
+/*TODO use '_'?*/const OELEVATORDOWN = new Item(14, `<b>^</b>`, `an elevator going down`, false); // ULARN
 const OBANK2 = new Item(15, `<b>$</b>`, `the Nth branch of the Bank of Larn`, false);
 const OBANK = new Item(16, `<b>$</b>`, `the bank of Larn`, false);
 const ODEADFOUNTAIN = new Item(17, `<b>f</b>`, `a dead fountain`, false);
@@ -292,15 +290,15 @@ const OSCROLL = new Item(41, `<b>?</b>`, `a magic scroll`, true);
 const OPOTION = new Item(42, `<b>!</b>`, `a magic potion`, true);
 const OBOOK = new Item(43, `<b>B</b>`, `a book`, true);
 const OCHEST = new Item(44, `<b>C</b>`, `a chest`, true);
-const OAMULET = new Item(45, `<b>}</b>`, `an amulet of invisibility`, true);
+/*TODO*/ const OAMULET = new Item(45, `<b>}</b>`, `an amulet of invisibility`, true);
 const OORBOFDRAGON = new Item(46, `<b>o</b>`, `an orb of dragon slaying`, true);
-const OSPIRITSCARAB = new Item(47, `<b>:</b>`, `a scarab of negate spirit`, true);
-const OCUBEofUNDEAD = new Item(48, `<b>;</b>`, `a cube of undead control`, true);
-const ONOTHEFT = new Item(49, `<b>,</b>`, `device of theft prevention`, true);
-const ODIAMOND = new Item(50, `<b>@</b>`, `a brilliant diamond`, true);
-const ORUBY = new Item(51, `<b>@</b>`, `a ruby`, true);
-const OEMERALD = new Item(52, `<b>@</b>`, `an enchanting emerald`, true);
-const OSAPPHIRE = new Item(53, `<b>@</b>`, `a sparkling sapphire`, true);
+/*TODO*/ const OSPIRITSCARAB = new Item(47, `<b>:</b>`, `a scarab of negate spirit`, true);
+/*TODO*/ const OCUBEofUNDEAD = new Item(48, `<b>;</b>`, `a cube of undead control`, true);
+/*TODO*/ const ONOTHEFT = new Item(49, `<b>,</b>`, `device of theft prevention`, true);
+/*TODO*/ const ODIAMOND = new Item(50, `<b>@</b>`, `a brilliant diamond`, true);
+/*TODO*/ const ORUBY = new Item(51, `<b>@</b>`, `a ruby`, true);
+/*TODO*/ const OEMERALD = new Item(52, `<b>@</b>`, `an enchanting emerald`, true);
+/*TODO*/ const OSAPPHIRE = new Item(53, `<b>@</b>`, `a sparkling sapphire`, true);
 const OENTRANCE = new Item(54, `<b>E</b>`, `the dungeon entrance`, false);
 const OVOLDOWN = new Item(55, `<b>V</b>`, `a volcanic shaft leaning downward`, false);
 const OVOLUP = new Item(56, `<b>V</b>`, `the base of a volcanic shaft`, false);
@@ -331,15 +329,23 @@ const OLRS = new Item(80, `<b>L</b>`, `the Larn Revenue Service`, false);
 //#define OTHRONE2 81
 const OANNIHILATION = new Item(82, `<b>s</b>`, `a sphere of annihilation`, false);
 const OCOOKIE = new Item(83, `<b>c</b>`, `a fortune cookie`, true);
-//#define OURN 84
-//#define OBRASSLAMP 85
-//#define OHANDofFEAR 86      /* hand of fear */
-//#define OSPHTAILSMAN 87     /* tailsman of the sphere */
-//#define OWWAND 88           /* wand of wonder */
-//#define OPSTAFF 89          /* staff of power */
-//#define OVORPAL 90
-//#define OSLAYER 91
-const OELVENCHAIN = new Item(92, `<b>]</b>`, `elven chain`, true); // ULARN
+/* need amiga */ const OURN = new Item(84, `<b>u</b>`, `a golden urn`, true); // ULARN
+/* need amiga */ const OBRASSLAMP = new Item(85, `<b>.</b>`, `a brass lamp`, true); // ULARN
+/* need amiga */ const OHANDofFEAR = new Item(86, `<b>.</b>`, `The Hand of Fear`, true); // ULARN
+/* need amiga */ const OSPHTAILSMAN = new Item(87, `<b>.</b>`, `The Talisman of the Sphere`, true); // ULARN
+/* need amiga */ const OWWAND = new Item(88, `<b>/</b>`, `a wand of wonder`, true); // ULARN
+/* need amiga */ const OPSTAFF = new Item(89, `<b>/</b>`, `a staff of power`, true); // ULARN
+/* need amiga */ const OVORPAL = new Item(90, `<b>)</b>`, `the Vorpal Blade`, true); // ULARN
+/* need amiga */ const OSLAYER = new Item(91, `<b>)</b>`, `Slayer`, true); // ULARN
+/* need amiga */ const OELVENCHAIN = new Item(92, `<b>]</b>`, `elven chain`, true); // ULARN
+const OHOMEENTRANCE = new Item(93, OEMPTY.char, `exit to home level`, false);
+const OUNKNOWN = new Item(94, ' ', `... nothing`, false);
+/* need amiga */ const OSPEED = new Item(95, `<b>:</b>`, `some speed`, true); // ULARN
+/* need amiga */ const OACID = new Item(96, `<b>:</b>`, `some LSD`, true); // ULARN
+/* need amiga */ const OHASH = new Item(97, `<b>:</b>`, `some hashish`, true); // ULARN
+/* need amiga */ const OSHROOMS = new Item(98, `<b>:</b>`, `some magic mushrooms`, true); // ULARN
+/* need amiga */ const OCOKE = new Item(99, `<b>:</b>`, `some cocaine`, true); // ULARN
+/* need amiga */ const OPAD = new Item(100, `<b>@</b>`, `Dealer McDope's Pad`, false); // ULARN
 
 
 

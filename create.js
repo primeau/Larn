@@ -551,7 +551,7 @@ function fillroom(what, arg) {
  */
 function fillmonst(what, awake) {
   var monster = createMonster(what);
-  for (var trys = 5; trys > 0; --trys) /* max # of creation attempts */ {
+  for (var trys = 10; trys > 0; --trys) /* max # of creation attempts */ {
     var x = rnd(MAXX - 2);
     var y = rnd(MAXY - 2);
     //debug(`fillmonst: ${x},${y} ${player.level.items[x][y]}`);
@@ -600,6 +600,41 @@ function sethp(flg) {
   for (var i = 0; i < nummonsters; i++) {
     fillmonst(makemonst(level));
   }
+
+  if (ULARN & flg) {
+    /*
+    ** level 11 gets 1 demon lord
+    ** level 12 gets 2 demon lords
+    ** level 13 gets 3 demon lords
+    ** level 14 gets 4 demon lords
+    ** level 15 gets 5 demon lords
+    */
+    var numdemons = 0;
+    if ((level >= MAXLEVEL - 5) && (level < MAXLEVEL)) {
+      numdemons = level - 10;
+      for (var j = 1 ; j <= numdemons ; j++) {
+        if (fillmonst(DEMONLORD + rund(7)) == -1) {
+          j--;
+        }
+      }
+    }
+    /*
+    ** level V1 gets 1 demon prince
+    ** level V2 gets 2 demon princes
+    ** level V3 gets 3 demon princes
+    ** level V4 gets 4 demon princes
+    ** level V5 gets 5 demon princes
+    */
+    else if (level >= MAXLEVEL) {
+      numdemons = level - MAXLEVEL + 1;
+      for (var j = 1 ; j <= numdemons ; j++){
+        if (fillmonst(DEMONPRINCE) == -1) {
+          j--;
+        }
+      }
+    }
+  }
+
 }
 
 

@@ -508,13 +508,14 @@ function parse(key) {
   if (key == '<') {
 
     if (DEBUG_STAIRS_EVERYWHERE) {
-      if (level == MAXLEVEL)
-        moveNear(OVOLUP, true)
-      else if (level == 1) {
+      if (level == MAXLEVEL + 1) {
         newcavelevel(0);
-        moveNear(OENTRANCE, true);
-      } else if (level != 0)
-        moveNear(OSTAIRSUP, true);
+        return;
+      }
+      if (level != 0) {
+        newcavelevel(level - 1);
+        return;
+      }
     }
 
     up_stairs();
@@ -528,11 +529,10 @@ function parse(key) {
   if (key == '>') {
 
     if (DEBUG_STAIRS_EVERYWHERE) {
-      if (!item.matches(OVOLDOWN) && level == 0) {
-        moveNear(OENTRANCE, true);
-        enter();
-      } else if (level != 0 && level != MAXLEVEL - 1 && level != MAXLEVEL + MAXVLEVEL - 1)
-        moveNear(OSTAIRSDOWN, true)
+      if (!item.matches(OVOLDOWN) && level != MAXLEVEL - 1 && level != MAXLEVEL + MAXVLEVEL - 1) {
+        newcavelevel(level + 1);
+        return;
+      }
     }
 
     down_stairs();

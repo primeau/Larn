@@ -816,9 +816,6 @@ function setup_godirect(delay, spnum, direction, damage, cshow, stroverride) {
  */
 function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
-  /* bad args */
-  //if (spnum < 0 || spnum >= SPNUM || str == 0 || delay < 0) return;
-
   if (isconfuse()) {
     exitspell();
     return;
@@ -874,28 +871,36 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   if (monster) {
     ifblind(x, y);
 
-    if (nospell(spnum, monster)) {
-      lasthx = x;
-      lasthy = y;
-      exitspell();
-      return;
+    /* cannot cast a missile spell at lucifer!! */
+    if (ULARN && (monster.matches(LUCIFER) || (monster.isDemon() && rnd(100) < 10))) {
+      dx *= -1;
+      dy *= -1;
+      cursors();
+      updateLog(`  the ${monster} returns your puny missile!`);
+    } else {
+      if (nospell(spnum, monster)) {
+        lasthx = x;
+        lasthy = y;
+        exitspell();
+        return;
+      }
+    
+      cursors();
+      updateLog(str(monster));
+      dam -= hitm(x, y, dam);
+      show1cell(x, y);
+      //nap(1000);
+
+      x -= dx;
+      y -= dy;
     }
-
-    cursors();
-    updateLog(str(monster));
-    dam -= hitm(x, y, dam);
-    show1cell(x, y);
-    //nap(1000);
-
-    x -= dx;
-    y -= dy;
   } else if (item.matches(OWALL)) {
     cursors();
     updateLog(str(`wall`));
     if ( /* enough damage? */
       dam >= 50 + getDifficulty() &&
-      /* not on V3 */
-      level < MAXLEVEL + MAXVLEVEL - 1 &&
+      /* not on V3,V4,V5 */
+      level < MAXLEVEL + MAXVLEVEL - (ULARN ? 3 : 1) &&
       x < MAXX - 1 && y < MAXY - 1 &&
       x != 0 && y != 0) {
       updateLog(`  The wall crumbles`);
@@ -937,7 +942,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       show1cell(x, y);
     }
     dam = 0;
-  } else if (item.matches(OALTAR)) {
+  } else if (!ULARN && item.matches(OALTAR)) {
     cursors();
     updateLog(str(`altar`));
     if (dam > 75 - (getDifficulty() >> 2)) {
@@ -945,7 +950,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       show1cell(x, y);
     }
     dam = 0;
-  } else if (item.matches(OFOUNTAIN)) {
+  } else if (!ULARN && item.matches(OFOUNTAIN)) {
     cursors();
     updateLog(str(`fountain`));
     if (dam > 55) {
