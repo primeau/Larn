@@ -102,7 +102,6 @@ function cannedlevel(depth) {
   var pt = 0;
   for (var y = 0; y < MAXY; y++) {
     for (var x = 0; x < MAXX; x++) {
-      //var pt = MAXX * y + x;
       switch (canned[pt++]) {
         case '#':
           items[x][y] = createObject(OWALL);
@@ -114,18 +113,20 @@ function cannedlevel(depth) {
           items[x][y] = newobject(depth + 1);
           break;
         case '.':
-          if (depth < MAXLEVEL) break;
+          if (depth < (ULARN ? MAXLEVEL - 6: MAXLEVEL)) break;
           monsters[x][y] = createMonster(makemonst(depth + 1));
           break;
         case '~':
           if (depth != MAXLEVEL - 1) break;
           items[x][y] = createObject(OLARNEYE);
-          monsters[x][y] = createMonster(rund(8) + DEMONLORD);
+          var guardian = ULARN ? createMonster(DEMONPRINCE) : createMonster(rund(8) + DEMONLORD);
+          monsters[x][y] = guardian;
           break;
         case '!':
           if (depth != MAXLEVEL + MAXVLEVEL - 1) break;
           items[x][y] = createObject(OPOTION, 21);
-          monsters[x][y] = createMonster(DEMONPRINCE);
+          var guardian = ULARN ? createMonster(LUCIFER) : createMonster(DEMONPRINCE);
+          monsters[x][y] = guardian;
           break;
       } // switch
       if (!items[x][y]) {
@@ -141,7 +142,20 @@ function cannedlevel(depth) {
 function makemaze(k) {
   var i, j, tmp, tmp2, mx, mxl, mxh, my, myl, myh, z;
 
-  if (k > 1 && (rnd(17) <= 4 || k == MAXLEVEL - 1 || k == MAXLEVEL + MAXVLEVEL - 1)) {
+  var useCanned = false;
+  if (k == MAXLEVEL - 1 || k == MAXLEVEL + MAXVLEVEL - 1) {
+    useCanned = true;
+  }
+  else if (k > 1) {
+    if (ULARN) {
+      useCanned = rnd(100) < 50;
+    }
+    else {
+      useCanned = rnd(17) <= 4;
+    }
+  }
+
+  if (useCanned) {
     /* read maze from data file */
     cannedlevel(k);
     return;
@@ -351,14 +365,14 @@ function troom(lv, xsize, ysize, tx, ty, glyph) {
     for (player.x = tx + 1; player.x <= tx + xsize - 2; player.x += 2) {
       for (i = 0, j = rnd(6); i <= j; i++) {
         something(lv + 2);
-        createmonster(makemonst(lv + 1));
+        createmonster(makemonst(lv + (ULARN ? 2 : 1)));
       }
     }
   } else {
     for (player.x = tx + 1; player.x <= tx + xsize - 2; player.x += 2) {
       for (i = 0, j = rnd(4); i <= j; i++) {
         something(lv + 2);
-        createmonster(makemonst(lv + 3));
+        createmonster(makemonst(lv + (ULARN ? 4 : 3)));
       }
     }
   }
@@ -374,14 +388,14 @@ function troom(lv, xsize, ysize, tx, ty, glyph) {
  */
 function makeobject(depth) {
   if (depth == 0) {
-    fillroom(OENTRANCE, 0); /*  entrance to dungeon         */
-    fillroom(ODNDSTORE, 0); /*  the DND STORE               */
-    fillroom(OSCHOOL, 0); /*  college of Larn             */
-    fillroom(OBANK, 0); /*  1st national bank of larn   */
-    fillroom(OVOLDOWN, 0); /*  volcano shaft to temple     */
-    fillroom(OHOME, 0); /*  the players home & family   */
+    fillroom(OENTRANCE, 0);  /*  entrance to dungeon         */
+    fillroom(ODNDSTORE, 0);  /*  the DND STORE               */
+    fillroom(OSCHOOL, 0);    /*  college of Larn             */
+    fillroom(OBANK, 0);      /*  1st national bank of larn   */
+    fillroom(OVOLDOWN, 0);   /*  volcano shaft to temple     */
+    fillroom(OHOME, 0);      /*  the players home & family   */
     fillroom(OTRADEPOST, 0); /*  the trading post            */
-    fillroom(OLRS, 0); /*  the larn revenue service    */
+    fillroom(OLRS, 0);       /*  the larn revenue service    */
     return;
   }
 
@@ -391,28 +405,43 @@ function makeobject(depth) {
 
   if (depth == MAXLEVEL) fillroom(OVOLUP, 0); /* volcano shaft up from the temple */
 
-  /* make the fixed objects in the maze STAIRS */
-  if ((depth > 0) && (depth != MAXLEVEL - 1) && (depth != MAXLEVEL + MAXVLEVEL - 1)) fillroom(OSTAIRSDOWN, 0);
+  if ((depth > 0) &&                                      /* no stairs on home level */
+      (depth != MAXLEVEL - 1) &&                          /* no stairs on bottom of dungeon */
+      (depth < MAXLEVEL + MAXVLEVEL - (ULARN ? 3 : 1))) { /* no stairs on v3, v4, v5 */
+    fillroom(OSTAIRSDOWN, 0);
+  }
+
   if ((depth > 1) && (depth != MAXLEVEL)) fillroom(OSTAIRSUP, 0);
 
   /* make the random objects in the maze */
   fillmroom(rund(3), OBOOK, depth);
   fillmroom(rund(3), OALTAR, 0);
   fillmroom(rund(3), OSTATUE, 0);
-  fillmroom(rund(3), OPIT, 0);
   fillmroom(rund(3), OFOUNTAIN, 0);
-  fillmroom(rnd(3) - 2, OIVTELETRAP, 0);
   fillmroom(rund(2), OTHRONE, 0);
   fillmroom(rund(2), OMIRROR, 0);
-  fillmroom(rund(2), OTRAPARROWIV, 0);
-  fillmroom(rnd(3) - 2, OIVDARTRAP, 0);
   fillmroom(rund(3), OCOOKIE, 0);
 
-  if (depth == 1) fillmroom(1, OCHEST, depth);
-  else fillmroom(rund(2), OCHEST, depth);
+  /* be sure to have pits and trapdoors on V3, V4, and V5 */
+	/* because there are no stairs on those levels */
+  if (ULARN && depth >= MAXLEVEL + MAXVLEVEL - 3) {
+    fillroom(OPIT, 0);
+    fillroom(OIVTRAPDOOR,0);
+  }
+  /* regular pits */ 
+  fillmroom(rund(3), OPIT, 0);
 
-  if ((depth != MAXLEVEL - 1) && (depth != MAXLEVEL + MAXVLEVEL - 1))
+  if (ULARN || (depth != MAXLEVEL - 1) && (depth != MAXLEVEL + MAXVLEVEL - 1))
     fillmroom(rund(2), OIVTRAPDOOR, 0);
+
+  fillmroom(rund(2), OTRAPARROWIV, 0);
+  fillmroom(rnd(3) - 2, OIVDARTRAP, 0);
+  fillmroom(rnd(3) - 2, OIVTELETRAP, 0);
+
+  if (depth == 1) 
+    fillmroom(1, OCHEST, depth);
+  else 
+    fillmroom(rund(2), OCHEST, depth);
 
   if (depth < MAXLEVEL) {
     fillmroom((rund(2)), ODIAMOND, rnd(10 * depth + 1) + 10);
@@ -422,11 +451,15 @@ function makeobject(depth) {
   }
 
   var i;
-  for (i = 0; i < rnd(4) + 3; i++) fillroom(OPOTION, newpotion()); /* make a POTION */
-  for (i = 0; i < rnd(5) + 3; i++) fillroom(OSCROLL, newscroll()); /* make a SCROLL */
-  for (i = 0; i < rnd(12) + 11; i++) fillroom(OGOLDPILE, 12 * rnd(depth + 1) + (depth << 3) + 10); /* make GOLD */
+  for (i = 0; i < rnd(4) + 3; i++) 
+    fillroom(OPOTION, newpotion()); /* make a POTION */
+  for (i = 0; i < rnd(5) + 3; i++) 
+    fillroom(OSCROLL, newscroll()); /* make a SCROLL */
+  for (i = 0; i < rnd(12) + 11; i++) 
+    fillroom(OGOLDPILE, 12 * rnd(depth + 1) + (depth << 3) + 10); /* make GOLD */
 
-  if (depth == (ULARN ? 8 : 5)) fillroom(OBANK2, 0); /* branch office of the bank */
+  if (depth == (ULARN ? 8 : 5)) 
+    fillroom(OBANK2, 0); /* branch office of the bank */
 
   froom(2, ORING, 0); /* a ring mail */
   froom(1, OSTUDLEATHER, 0); /* a studded leather */
@@ -435,14 +468,15 @@ function makeobject(depth) {
   froom(2, OBATTLEAXE, rund(3)); /* a battle axe */
   froom(5, OLONGSWORD, rund(3)); /* a long sword */
   froom(5, OFLAIL, rund(3)); /* a flail */
+  froom(7, OSPEAR, rnd(5)); /* a spear */
   froom(4, OREGENRING, rund(3)); /* ring of regeneration */
   froom(1, OPROTRING, rund(3)); /* ring of protection */
   froom(2, OSTRRING, 1 + rnd(3)); /* ring of strength */
-  froom(7, OSPEAR, rnd(5)); /* a spear */
+  froom(2, ORINGOFEXTRA, 0); /* ring of extra regen */
+
   froom(3, OORBOFDRAGON, 0); /* orb of dragon slaying */
   froom(4, OSPIRITSCARAB, 0); /* scarab of negate spirit */
   froom(4, OCUBEofUNDEAD, 0); /* cube of undead control */
-  froom(2, ORINGOFEXTRA, 0); /* ring of extra regen */
   froom(3, ONOTHEFT, 0); /* device of antitheft */
   froom(2, OSWORDofSLASHING, 0); /* sword of slashing */
 
