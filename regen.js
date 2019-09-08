@@ -68,6 +68,11 @@ function regen() {
   if (player.HASTEMONST)     --player.HASTEMONST;
 
   if (player.SEEINVISIBLE) {
+    if (ULARN) {
+      if (isCarrying(OAMULET)) {
+        player.SEEINVISIBLE++;
+      }
+    }
     if (--player.SEEINVISIBLE <= 0) {
       monsterlist[STALKER].char = OEMPTY.char;
       if (!player.BLINDCOUNT) {

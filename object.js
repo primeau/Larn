@@ -92,7 +92,11 @@ Item.prototype = {
     },
 
     matches: function(item) {
-      return (this.id == item.id);
+      if (item == null) {
+        //debug(`object.matches() null item`);
+        return false;
+      }
+      return (item != null && this.id == item.id);
     },
 
     toString: function(inStore, showAll, tempPlayer) {
@@ -170,6 +174,8 @@ Item.prototype = {
       weapon |= this.matches(OSWORDofSLASHING);
       weapon |= this.matches(OHAMMER);
       weapon |= this.matches(OBELT);
+      weapon |= this.matches(OVORPAL);
+      weapon |= this.matches(OSLAYER);
       return weapon;
     },
 
@@ -222,6 +228,7 @@ Item.prototype = {
       store |= this.matches(OVOLDOWN);
       store |= this.matches(OSCHOOL);
       store |= this.matches(OTRADEPOST);
+      store |= this.matches(OPAD);
       return store;
     },
 
@@ -248,10 +255,10 @@ Item.prototype = {
 const OEMPTY = new Item(0, `·`, `empty space`, false); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
 const OALTAR = new Item(1, `<b>A</b>`, `a holy altar`, false);
 const OTHRONE = new Item(2, `<b>T</b>`, `a handsome jewel encrusted throne`, false);
-const OORB = new Item(3, `<b>o</b>`, `an orb of enlightenment`, true); // ULARN
+const OORB = new Item(3, `<b><font color='green'>o</font></b>`, `an orb of enlightenment`, true); // ULARN
 const OPIT = new Item(4, `<b>P</b>`, `a pit`, false);
 /*TODO*/ const OSTAIRSUP = new Item(5, `<b>&lt</b>`, `a staircase going up`, false); // use &lt to prevent bugginess when dropping a ! or ? to the right
-/*TODO use '_'?*/ const OELEVATORUP = new Item(6, `<b>^</b>`, `an elevator going up`, false); // ULARN
+/*TODO use '_'?*/ const OELEVATORUP = new Item(6, `<b><font color='green'>^</font></b>`, `an elevator going up`, false); // ULARN
 const OFOUNTAIN = new Item(7, `<b>F</b>`, `a bubbling fountain`, false);
 const OSTATUE = new Item(8, `<b>&</b>`, `a great marble statue`, false);
 const OTELEPORTER = new Item(9, `<b>^</b>`, `a teleport trap`, false);
@@ -259,7 +266,7 @@ const OSCHOOL = new Item(10, `<b>+</b>`, `the College of Larn`, false);
 const OMIRROR = new Item(11, `<b>M</b>`, `a mirror`, false);
 const ODNDSTORE = new Item(12, `<b>=</b>`, `the DND store`, false);
 /*TODO*/ const OSTAIRSDOWN = new Item(13, `<b>&gt</b>`, `a staircase going down`, false);
-/*TODO use '_'?*/const OELEVATORDOWN = new Item(14, `<b>^</b>`, `an elevator going down`, false); // ULARN
+/*TODO use '_'?*/const OELEVATORDOWN = new Item(14, `<b><font color='green'>^</font></b>`, `an elevator going down`, false); // ULARN
 const OBANK2 = new Item(15, `<b>$</b>`, `the Nth branch of the Bank of Larn`, false);
 const OBANK = new Item(16, `<b>$</b>`, `the bank of Larn`, false);
 const ODEADFOUNTAIN = new Item(17, `<b>f</b>`, `a dead fountain`, false);
@@ -267,12 +274,12 @@ const OGOLDPILE = new Item(18, `<b>*</b>`, `some gold`, true, 0);
 const OOPENDOOR = new Item(19, `<b>O</b>`, `an open door`, false);
 const OCLOSEDDOOR = new Item(20, `<b>D</b>`, `a closed door`, false);
 const OWALL = new Item(21, `▒`, `a wall`, false);
-const OLARNEYE = new Item(22, `<b>~</b>`, `The Eye of Larn`, true);
+const OLARNEYE = new Item(22, `<b><font color='green'>~</font></b>`, `The Eye of Larn`, true);
 const OPLATE = new Item(23, `<b>]</b>`, `plate mail`, true);
 const OCHAIN = new Item(24, `<b>[</b>`, `chain mail`, true);
 const OLEATHER = new Item(25, `<b>[</b>`, `leather armor`, true);
-const OSWORDofSLASHING = new Item(26, `<b>)</b>`, `a sword of slashing`, true);
-const OHAMMER = new Item(27, `<b>)</b>`, `Bessman's flailing hammer`, true);
+const OSWORDofSLASHING = new Item(26, `<b><font color='green'>)</font></b>`, `a sword of slashing`, true);
+const OHAMMER = new Item(27, `<b><font color='green'>)</font></b>`, `Bessman's flailing hammer`, true);
 const OSWORD = new Item(28, `<b>)</b>`, `a sunsword`, true);
 const O2SWORD = new Item(29, `<b>(</b>`, `a two handed sword`, true);
 const OSPEAR = new Item(30, `<b>(</b>`, `a spear`, true);
@@ -291,10 +298,10 @@ const OPOTION = new Item(42, `<b>!</b>`, `a magic potion`, true);
 const OBOOK = new Item(43, `<b>B</b>`, `a book`, true);
 const OCHEST = new Item(44, `<b>C</b>`, `a chest`, true);
 /*TODO*/ const OAMULET = new Item(45, `<b>}</b>`, `an amulet of invisibility`, true);
-const OORBOFDRAGON = new Item(46, `<b>o</b>`, `an orb of dragon slaying`, true);
-/*TODO*/ const OSPIRITSCARAB = new Item(47, `<b>:</b>`, `a scarab of negate spirit`, true);
-/*TODO*/ const OCUBEofUNDEAD = new Item(48, `<b>;</b>`, `a cube of undead control`, true);
-/*TODO*/ const ONOTHEFT = new Item(49, `<b>,</b>`, `device of theft prevention`, true);
+const OORBOFDRAGON = new Item(46, `<b><font color='green'>o</font></b>`, `an orb of dragon slaying`, true);
+/*TODO*/ const OSPIRITSCARAB = new Item(47, `<b><font color='green'>:</font></b>`, `a scarab of negate spirit`, true);
+/*TODO*/ const OCUBEofUNDEAD = new Item(48, `<b><font color='green'>;</font></b>`, `a cube of undead control`, true);
+/*TODO*/ const ONOTHEFT = new Item(49, `<b><font color='green'>,</font></b>`, `device of theft prevention`, true);
 /*TODO*/ const ODIAMOND = new Item(50, `<b>@</b>`, `a brilliant diamond`, true);
 /*TODO*/ const ORUBY = new Item(51, `<b>@</b>`, `a ruby`, true);
 /*TODO*/ const OEMERALD = new Item(52, `<b>@</b>`, `an enchanting emerald`, true);
@@ -329,15 +336,15 @@ const OLRS = new Item(80, `<b>L</b>`, `the Larn Revenue Service`, false);
 //#define OTHRONE2 81
 const OANNIHILATION = new Item(82, `<b>s</b>`, `a sphere of annihilation`, false);
 const OCOOKIE = new Item(83, `<b>c</b>`, `a fortune cookie`, true);
-/* need amiga */ const OURN = new Item(84, `<b>u</b>`, `a golden urn`, true); // ULARN
-/* need amiga */ const OBRASSLAMP = new Item(85, `<b>.</b>`, `a brass lamp`, true); // ULARN
-/* need amiga */ const OHANDofFEAR = new Item(86, `<b>.</b>`, `The Hand of Fear`, true); // ULARN
-/* need amiga */ const OSPHTAILSMAN = new Item(87, `<b>.</b>`, `The Talisman of the Sphere`, true); // ULARN
-/* need amiga */ const OWWAND = new Item(88, `<b>/</b>`, `a wand of wonder`, true); // ULARN
-/* need amiga */ const OPSTAFF = new Item(89, `<b>/</b>`, `a staff of power`, true); // ULARN
-/* need amiga */ const OVORPAL = new Item(90, `<b>)</b>`, `the Vorpal Blade`, true); // ULARN
-/* need amiga */ const OSLAYER = new Item(91, `<b>)</b>`, `Slayer`, true); // ULARN
-/* need amiga */ const OELVENCHAIN = new Item(92, `<b>]</b>`, `elven chain`, true); // ULARN
+const OURN = new Item(84, `<b><font color='green'>u</font></b>`, `a golden urn`, true); // ULARN NOT IMPLEMENTED
+/* need amiga */ const OBRASSLAMP = new Item(85, `<b><font color='green'>.</font></b>`, `a brass lamp`, true); // ULARN
+/* need amiga */ const OHANDofFEAR = new Item(86, `<b><font color='green'>.</font></b>`, `The Hand of Fear`, true); // ULARN
+/* need amiga */ const OSPHTAILSMAN = new Item(87, `<b><font color='green'>.</font></b>`, `The Talisman of the Sphere`, true); // ULARN
+/* need amiga */ const OWWAND = new Item(88, `<b><font color='green'>/</font></b>`, `a wand of wonder`, true); // ULARN
+/* need amiga */ const OPSTAFF = new Item(89, `<b><font color='green'>/</font></b>`, `a staff of power`, true); // ULARN
+/* need amiga */ const OVORPAL = new Item(90, `<b><font color='green'>)</font></b>`, `the Vorpal Blade`, true); // ULARN
+/* need amiga */ const OSLAYER = new Item(91, `<b><font color='green'>)</font></b>`, `Slayer`, true); // ULARN
+/* need amiga */ const OELVENCHAIN = new Item(92, `<b><font color='green'>]</font></b>`, `elven chain`, true); // ULARN
 const OHOMEENTRANCE = new Item(93, OEMPTY.char, `exit to home level`, false);
 const OUNKNOWN = new Item(94, ' ', `... nothing`, false);
 /* need amiga */ const OSPEED = new Item(95, `<b>:</b>`, `some speed`, true); // ULARN
@@ -345,7 +352,7 @@ const OUNKNOWN = new Item(94, ' ', `... nothing`, false);
 /* need amiga */ const OHASH = new Item(97, `<b>:</b>`, `some hashish`, true); // ULARN
 /* need amiga */ const OSHROOMS = new Item(98, `<b>:</b>`, `some magic mushrooms`, true); // ULARN
 /* need amiga */ const OCOKE = new Item(99, `<b>:</b>`, `some cocaine`, true); // ULARN
-/* need amiga */ const OPAD = new Item(100, `<b>@</b>`, `Dealer McDope's Pad`, false); // ULARN
+/* need amiga */ const OPAD = new Item(100, `<b><font color='green'>@</font></b>`, `Dealer McDope's Pad`, false); // ULARN
 
 
 

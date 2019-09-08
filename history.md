@@ -45,7 +45,10 @@ properly when the player was running.
 14. [fix] After casting Stop Time, monsters would still chase the player when
 running. 
 
-15. [un-fix] The history lesson from the College of Larn says that the Eye
+15. [fix] Bessman's Flailing Hammer could only be created on the first level
+of the dungeon.
+
+16. [un-fix] The history lesson from the College of Larn says that the Eye
 of Larn is protected by a Platinum Dragon, which wasn't the case in the original
 version of Larn. I changed it to be true for a while, but it unbalanced the
 game too much. For anyone who died at the hands of a Platinum Dragon while

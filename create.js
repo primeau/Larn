@@ -140,8 +140,6 @@ function cannedlevel(depth) {
 
 /* subroutine to make the caverns for a given level. only walls are made */
 function makemaze(k) {
-  var i, j, tmp, tmp2, mx, mxl, mxh, my, myl, myh, z;
-
   var useCanned = false;
   if (k == MAXLEVEL - 1 || k == MAXLEVEL + MAXVLEVEL - 1) {
     useCanned = true;
@@ -165,8 +163,8 @@ function makemaze(k) {
   var item = player.level.items;
   var mitem = player.level.monsters;
 
-  for (i = 0; i < MAXY; i++)
-    for (j = 0; j < MAXX; j++)
+  for (var i = 0; i < MAXY; i++)
+    for (var j = 0; j < MAXX; j++)
       item[j][i] = (k == 0) ? empty : createObject(OWALL);
 
   if (k == 0) return;
@@ -175,43 +173,40 @@ function makemaze(k) {
 
   if (k == 1) item[33][MAXY - 1] = OHOMEENTRANCE;
 
-  /*  now for open spaces -- not on level 10  */
-  if (k != MAXLEVEL - 1) {
-    tmp2 = rnd(3) + 3;
+  /*  now for open spaces */
+  var tmp2 = rnd(3) + 3;
+  var mx, mxl, mxh, my, myl, myh;
+  var mon;
+  for (var tmp = 0; tmp < tmp2; tmp++) {
+    my = rnd(11) + 2;
+    myl = my - rnd(2);
+    myh = my + rnd(2);
 
-    var tmp;
-    for (tmp = 0; tmp < tmp2; tmp++) {
-      my = rnd(11) + 2;
-      myl = my - rnd(2);
-      myh = my + rnd(2);
-
-      if (k < MAXLEVEL) {
-        mx = rnd(44) + 5;
-        mxl = mx - rnd(4);
-        mxh = mx + rnd(12) + 3;
-        z = null;
-      } else {
-        mx = rnd(60) + 3;
-        mxl = mx - rnd(2);
-        mxh = mx + rnd(2);
-        z = makemonst(k);
-      }
-
-      for (i = mxl; i < mxh; i++)
-        for (j = myl; j < myh; j++) {
-          item[i][j] = empty;
-          mitem[i][j] = z ? createMonster(z) : null;
-        }
+    if (k < MAXLEVEL) {
+      mx = rnd(44) + 5;
+      mxl = mx - rnd(4);
+      mxh = mx + rnd(12) + 3;
+      mon = null;
+    } else {
+      mx = rnd(60) + 3;
+      mxl = mx - rnd(2);
+      mxh = mx + rnd(2);
+      mon = makemonst(k);
     }
-  }
 
-  if (k != MAXLEVEL - 1) {
-    my = rnd(MAXY - 2);
-    for (i = 1; i < MAXX - 1; i++)
-      item[i][my] = empty;
+    for (var i = mxl; i < mxh; i++)
+      for (var j = myl; j < myh; j++) {
+        item[i][j] = empty;
+        mitem[i][j] = mon ? createMonster(mon) : null;
+      }
   }
+  /*  now for open spaces */
 
-  if (k > 1) {
+  my = rnd(MAXY - 2);
+  for (var i = 1; i < MAXX - 1; i++)
+    item[i][my] = empty;
+
+  if (k > (ULARN ? 4 : 1)) {
     treasureroom(k);
   }
 
@@ -244,7 +239,7 @@ function eat(xx, yy) {
   var dir = rnd(4);
   var tries = 2;
 
-  var empty = OEMPTY; //createObject(OEMPTY);
+  var empty = OEMPTY;
   var item = player.level.items;
 
   while (tries) {
@@ -293,20 +288,14 @@ function eat(xx, yy) {
 
 /*
  *  function to make a treasure room on a level
- *  level 10's treasure room has the eye in it and demon lords
- *  level V3 has potion of cure dianthroritis and demon prince
  */
 function treasureroom(lv) {
   for (var tx = 1 + rnd(10); tx < MAXX - 10; tx += 10)
-    if ((lv == MAXLEVEL - 1) || (lv == MAXLEVEL + MAXVLEVEL - 1) || rnd(13) == 2) {
+    if (rnd(ULARN ? 13 : 10) == 2) {
       var xsize = rnd(6) + 3;
       var ysize = rnd(3) + 3;
       var ty = rnd(MAXY - 9) + 1; /* upper left corner of room */
-      if (lv == MAXLEVEL - 1 || lv == MAXLEVEL + MAXVLEVEL - 1) {
-        troom(lv, xsize, ysize, tx = tx + rnd(MAXX - 24), ty, rnd(3) + 6);
-      } else {
-        troom(lv, xsize, ysize, tx, ty, rnd(9));
-      }
+      troom(lv, xsize, ysize, tx, ty, rnd(9));
     }
 }
 
@@ -411,7 +400,24 @@ function makeobject(depth) {
     fillroom(OSTAIRSDOWN, 0);
   }
 
-  if ((depth > 1) && (depth != MAXLEVEL)) fillroom(OSTAIRSUP, 0);
+  if ((depth > 1) && (depth != MAXLEVEL)) {
+    fillroom(OSTAIRSUP, 0);
+  }
+
+  if (ULARN) {
+    if (depth > 3 &&                          // > 3
+        depth != MAXLEVEL - 1 &&              // not on 15
+        depth != MAXLEVEL &&                  // not on V1
+        depth != MAXLEVEL + MAXVLEVEL - 1) {  // not on V5
+      createArtifact(OELEVATORUP, player.ELEVUP, rnd(100) > 85);
+    }
+    if (depth > 0 &&                            // not on home
+        (depth <= MAXLEVEL - 7 ||               // < level 10
+         depth == MAXLEVEL - 1 ||               // 15
+         depth == MAXLEVEL + MAXVLEVEL - 1)) {  // V5
+      createArtifact(OELEVATORDOWN, player.ELEVDOWN, rnd(100) > 85);
+    }
+  }
 
   /* make the random objects in the maze */
   fillmroom(rund(3), OBOOK, depth);
@@ -461,6 +467,11 @@ function makeobject(depth) {
   if (depth == (ULARN ? 8 : 5)) 
     fillroom(OBANK2, 0); /* branch office of the bank */
 
+  if (ULARN && depth >= 4) {
+    /* Dealer McDope's Pad */
+    createArtifact(OPAD, player.PAD, rnd(100) > 75);
+  }
+
   froom(2, ORING, 0); /* a ring mail */
   froom(1, OSTUDLEATHER, 0); /* a studded leather */
   froom(3, OSPLINT, 0); /* a splint mail */
@@ -474,29 +485,87 @@ function makeobject(depth) {
   froom(2, OSTRRING, 1 + rnd(3)); /* ring of strength */
   froom(2, ORINGOFEXTRA, 0); /* ring of extra regen */
 
-  froom(3, OORBOFDRAGON, 0); /* orb of dragon slaying */
-  froom(4, OSPIRITSCARAB, 0); /* scarab of negate spirit */
-  froom(4, OCUBEofUNDEAD, 0); /* cube of undead control */
-  froom(3, ONOTHEFT, 0); /* device of antitheft */
-  froom(2, OSWORDofSLASHING, 0); /* sword of slashing */
+  if (!ULARN) {
+    createArtifact(OORBOFDRAGON,     player.SLAYING,      rnd(151) < 3);
+    createArtifact(OSPIRITSCARAB,    player.NEGATESPIRIT, rnd(151) < 4);
+    createArtifact(OCUBEofUNDEAD,    player.CUBEofUNDEAD, rnd(151) < 4);
+    createArtifact(ONOTHEFT,         player.NOTHEFT,      rnd(151) < 3);
+    createArtifact(OSWORDofSLASHING, player.SLASH,        rnd(151) < 2);
+    createArtifact(OHAMMER,          player.BESSMANN,     rnd(151) < 4);
+  }
 
-  if (player.BESSMANN == 0) {
-    froom(4, OHAMMER, 0); /*Bessman's flailing hammer*/
-    player.BESSMANN = 1;
+  if (ULARN) {
+    // only one of these per level
+    var created = false;
+    created |= createArtifact(OBRASSLAMP,    player.LAMP,         !created && rnd(120) < 8);
+    created |= createArtifact(OWWAND,        player.WAND,         !created && rnd(120) < 8);
+    created |= createArtifact(OORBOFDRAGON,  player.SLAYING,      !created && rnd(120) < 8);
+    created |= createArtifact(OSPIRITSCARAB, player.NEGATESPIRIT, !created && rnd(120) < 8);
+    created |= createArtifact(OCUBEofUNDEAD, player.CUBEofUNDEAD, !created && rnd(120) < 8);
+    created |= createArtifact(ONOTHEFT,      player.NOTHEFT,      !created && rnd(120) < 8);
+    created |= createArtifact(OSPHTAILSMAN,  player.TALISMAN,     !created && rnd(120) < 8);
+    created |= createArtifact(OHANDofFEAR,   player.HAND,         !created && rnd(120) < 8);
+    created |= createArtifact(OORB,          player.ORB,          !created && rnd(120) < 8);
+    created |= createArtifact(OELVENCHAIN,   player.ELVEN,        !created && rnd(120) < 8);
+
+    // more than one of these artifacts can be created on a level
+    createArtifact(OSWORDofSLASHING, player.SLASH,    rnd(120) < 8);
+    createArtifact(OHAMMER,          player.BESSMANN, rnd(120) < 8);
+    createArtifact(OSLAYER,          player.SLAY,     depth >= 10 && rnd(100) > 85 - (depth - 10));
+    createArtifact(OVORPAL,          player.VORPAL,   rnd(120) < 8);
+    createArtifact(OPSTAFF,          player.STAFF,    depth >= 8 && rnd(100) > 85 - (depth - 10));
   }
 
   if (getDifficulty() < 3 || (rnd(4) == 3)) {
     if (depth > 3) {
-      froom(3, OSWORD, 3); /* sunsword + 3 */
-      froom(5, O2SWORD, rnd(4)); /* a two handed sword */
-      froom(3, OBELT, 4); /* belt of striking */
-      froom(3, OENERGYRING, 3); /* energy ring */
-      froom(4, OPLATE, 5); /* platemail + 5 */
-      froom(3, OCLEVERRING, 1 + rnd(2)); /* ring of cleverness */
+      froom(3, OSWORD, rund(6)); /* sunsword */
+      froom(5, O2SWORD, rnd(6)); /* a two handed sword */
+      froom(3, OBELT, rund(7)); /* belt of striking */
+      froom(3, OENERGYRING, rund(6)); /* energy ring */
+      froom(4, OPLATE, rund(8)); /* platemail */
+      if (!ULARN) froom(3, OCLEVERRING, 1 + rnd(2)); /* ring of cleverness */
     }
   }
 } // makeobject()
 
+
+
+function createArtifact(artifact, exists, odds) {
+  var createdArtifact = false;
+  if (!exists && odds) {
+    fillroom(artifact);
+    createdArtifact = true;
+    debug(`created ${artifact}`);
+  }
+  if (createdArtifact) {
+    switch (artifact.id) {
+      case OBRASSLAMP.id:       player.LAMP = true;         break;
+      case OWWAND.id:           player.WAND = true;         break;
+      case OORBOFDRAGON.id:     player.SLAYING = true;      break;
+      case OSPIRITSCARAB.id:    player.NEGATESPIRIT = true; break;
+      case OCUBEofUNDEAD.id:    player.CUBEofUNDEAD = true; break;
+      case ONOTHEFT.id:         player.NOTHEFT = true;      break;
+      case OSPHTAILSMAN.id:     player.TALISMAN = true;     break;
+      case OHANDofFEAR.id:      player.HAND = true;         break;
+      case OORB.id:             player.ORB = true;          break;
+      case OELVENCHAIN.id:      player.ELVEN = true;        break;
+      case OSWORDofSLASHING.id: player.SLASH = true;        break;
+      case OHAMMER.id:          player.BESSMANN = true;     break;
+      case OSLAYER.id:          player.SLAY = true;         break;
+      case OVORPAL.id:          player.VORPAL = true;       break;
+      case OPSTAFF.id:          player.STAFF = true;        break;
+
+      case OPAD.id:             player.PAD = true;          break;
+      case OELEVATORUP.id:      player.ELEVUP = true;       break;
+      case OELEVATORDOWN.id:    player.ELEVDOWN = true;     break;
+
+      default:
+        debug(`unidentified artifact created: ${artifact}`);
+        break;
+    }
+    return createdArtifact;
+  }
+}
 
 
 /*

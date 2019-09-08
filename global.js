@@ -24,7 +24,7 @@ function positionplayer(x, y, exact) {
     while (numTries-- > 0) {
       var newx = x + (rnd(3) - 2) * distance;
       var newy = y + (rnd(3) - 2) * distance;
-      debug(`positionplayer: (` + distance + `) try ` + newx + `,` + newy);
+      // debug(`positionplayer: (` + distance + `) try ` + newx + `,` + newy);
       if ((newx != x || newy != y)) {
         if (canMove(newx, newy)) {
           player.x = newx;

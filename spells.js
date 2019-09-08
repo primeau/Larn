@@ -206,11 +206,10 @@ function speldamage(x) {
     case 13:
       /* invisibility */
       var amuletmodifier = 0;
-      for (var i = 0; i < 26; i++) {
-        /* if he has the amulet of invisibility then add more time */
-        if (player.inventory[i] && player.inventory[i].matches(OAMULET)) {
-          amuletmodifier += 1 + player.inventory[i].arg;
-        }
+      var amulet = isCarrying(OAMULET);
+      /* if he has the amulet of invisibility then add more time */
+      if (amulet) {
+        amuletmodifier += 1 + amulet.arg;
       }
       player.updateInvisibility((amuletmodifier << 7) + 12);
       return;

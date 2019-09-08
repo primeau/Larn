@@ -15,87 +15,107 @@ var Player = function Player() {
     this.level = null;
     this.char = `▓`;
 
+    this.WEAR = null;
+    this.WIELD = null;
+    this.SHIELD = null;
+
+    // bottom line stats
+    this.SPELLS = 1;
+    this.SPELLMAX = 1;
+    this.AC = 0;
+    this.WCLASS = 0;
+    this.LEVEL = 1;
+    this.EXPERIENCE = 0;
+    this.HP = 10;
+    this.HPMAX = 10;
     this.STRENGTH = 12;
     this.INTELLIGENCE = 12;
     this.WISDOM = 12;
     this.CONSTITUTION = 12;
     this.DEXTERITY = 12;
     this.CHARISMA = 12;
-    this.HPMAX = 10;
-    this.HP = 10;
+
     this.GOLD = 0;
-    this.EXPERIENCE = 0;
-    this.LEVEL = 1;
-    this.REGEN = 1;
-    this.WCLASS = 0;
-    this.AC = 0;
     this.BANKACCOUNT = 0;
-    this.SPELLMAX = 1;
-    this.SPELLS = 1;
+
+    //counters
     this.ENERGY = 0;
     this.ECOUNTER = 96;
-    this.MOREDEFENSES = 0;
-    this.WEAR = null;
-    this.PROTECTIONTIME = 0;
-    this.WIELD = null;
-    // AMULET =           // UNUSED
+    this.REGEN = 1;
     this.REGENCOUNTER = 16;
-    this.MOREDAM = 0;
-    this.DEXCOUNT = 0;
-    this.STRCOUNT = 0;
-    this.BLINDCOUNT = 0;
-    this.CONFUSE = 0;
-    this.ALTPRO = 0;
+
+    // bonuses
+    this.MOREDEFENSES = 0;
+    this.STREXTRA = 0;
+    this.GIANTSTR = 0;
     this.HERO = 0;
+    this.AWARENESS = 0;
+    this.SEEINVISIBLE = 0;
+    this.SPIRITPRO = 0;
+    this.UNDEADPRO = 0;
+    this.FIRERESISTANCE = 0;
+    this.STEALTH = 0;
+    this.LIFEPROT = 0;
+    this.MOREDAM = 0; // not sure this does anything
+
+    // magic
+    this.PROTECTIONTIME = 0;
+    this.DEXCOUNT = 0;
     this.CHARMCOUNT = 0;
+    this.STRCOUNT = 0;
     this.INVISIBILITY = 0;
     this.CANCELLATION = 0;
     this.HASTESELF = 0;
-    // EYEOFLARN =        // UNUSED
-    this.AGGRAVATE = 0;
     this.GLOBE = 0;
-    this.TELEFLAG = 0;
-    this.SLAYING = 0;
-    this.NEGATESPIRIT = 0;
     this.SCAREMONST = 0;
-    this.AWARENESS = 0;
     this.HOLDMONST = 0;
     this.TIMESTOP = 0;
+    this.WTW = 0;
+    this.ALTPRO = 0;
+
+    // curses
+    this.AGGRAVATE = 0;
     this.HASTEMONST = 0;
-    this.CUBEofUNDEAD = 0;
-    this.GIANTSTR = 0;
-    this.FIRERESISTANCE = 0;
-    this.BESSMANN = 0;
-    this.NOTHEFT = 0;
+    this.HALFDAM = 0;
+    this.CONFUSE = 0;
+    this.BLINDCOUNT = 0;
+    this.ITCHING = 0;
+    this.CLUMSINESS = 0;
+    this.LAUGHING = 0;      // UNUSED
+    this.DRAINSTRENGTH = 0; // UNUSED
+    this.INFEEBLEMENT = 0;  // UNUSED
+
+    this.TELEFLAG = 0;
+
+    // special items
+    this.LAMP = false;
+    this.WAND = false;
+    this.SLAYING = false; // orb of dragon slaying
+    this.NEGATESPIRIT = false;
+    this.CUBEofUNDEAD = false;
+    this.NOTHEFT = false;
+    this.TALISMAN = false;
+    this.HAND = false;
+    this.ORB = false;  // orb of enlightenment
+    this.ELVEN = false;
+    this.SLASH = false; // sword of slashing
+    this.BESSMANN = false;
+    this.SLAY = false;  // slayer
+    this.VORPAL = false;
+    this.STAFF = false;
+    this.EYEOFLARN = false;
+    // this.AMULET = 0; // you can just buy this
+
+    this.PAD = false;
+    this.ELEVUP = false;
+    this.ELEVDOWN = false;
+
     // this.HARDGAME = 0; moved to state.js
-    // CPUTIME =
-    // BYTESIN =
-    // BYTESOUT =
+
+    // stats
     this.MOVESMADE = 0;
     this.MONSTKILLED = 0;
     this.SPELLSCAST = 0;
-    // LANCEDEATH = null; // NOT USING
-    this.SPIRITPRO = 0;
-    this.UNDEADPRO = 0;
-    this.SHIELD = null;
-    this.STEALTH = 0;
-    this.ITCHING = 0;
-    this.LAUGHING = 0; // UNUSED
-    this.DRAINSTRENGTH = 0; // UNUSED
-    this.CLUMSINESS = 0;
-    this.INFEEBLEMENT = 0; // UNUSED
-    this.HALFDAM = 0;
-    this.SEEINVISIBLE = 0;
-    // FILLROOM =
-    // RANDOMWALK =
-    // SPHCAST =    /* nz if an active sphere of annihilation */
-    this.WTW = 0;
-    /* walk through walls */
-    this.STREXTRA = 0;
-    /* character strength due to objects or enchantments */
-    // TMP =        /* misc scratch space */
-    this.LIFEPROT = 0;
-    /* life protection counter */
 
     this.getChar = function() {
       if (amiga_mode)
@@ -907,10 +927,24 @@ function debug_stats(p, score) {
   s += `CLMSY: ` + p.CLUMSINESS + `\n`;
 
   s += `\nSpecial Items:\n`;
-  s += `THEFT: ` + p.NOTHEFT + `\n`;
-  s += `CUBE:  ` + p.CUBEofUNDEAD + `\n`;
-  s += `ORB:   ` + p.SLAYING + `\n`;
+  if (ULARN) s += `LAMP:  ` + p.LAMP + `\n`;
+  if (ULARN) s += `WAND:  ` + p.WAND + `\n`;
+  s += `SLAY:  ` + p.SLAYING + `\n`;
   s += `NEGAT: ` + p.NEGATESPIRIT + `\n`;
+  s += `CUBE:  ` + p.CUBEofUNDEAD + `\n`;
+  s += `THEFT: ` + p.NOTHEFT + `\n`;
+  if (ULARN) s += `TALIS: ` + p.TALISMAN + `\n`;
+  if (ULARN) s += `HAND:  ` + p.HAND + `\n`;
+  if (ULARN) s += `ORB:   ` + p.ORB + `\n`;
+  if (ULARN) s += `ELVEN: ` + p.ELVEN + `\n`;
+  s += `SLASH: ` + p.SLASH + `\n`;
+  s += `BESSM: ` + p.BESSMANN + `\n`;
+  if (ULARN) s += `SLAYR: ` + p.SLAY + `\n`;
+  if (ULARN) s += `VORP:  ` + p.VORPAL + `\n`;
+  if (ULARN) s += `STAFF: ` + p.STAFF + `\n`;
+  if (ULARN) s += `PAD:   ` + p.PAD + `\n`;
+  if (ULARN) s += `ELEDN: ` + p.ELEVDOWN + `\n`;
+  if (ULARN) s += `ELEUP: ` + p.ELEVUP + `\n`;
 
   s += `\nLocation:\nx,y:   ${p.x},${p.y}\n`;
 

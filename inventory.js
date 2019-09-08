@@ -101,6 +101,7 @@ const sortorder = [
   OELVENCHAIN.id,
   OSSPLATE.id,
   OLANCE.id,
+  OSLAYER.id,
 
   OPLATEARMOR.id,
   OPLATE.id,
@@ -114,6 +115,7 @@ const sortorder = [
 
   OHAMMER.id,
   OSWORDofSLASHING.id,
+  OVORPAL.id,
   OSWORD.id,
   O2SWORD.id,
   OLONGSWORD.id,
@@ -139,10 +141,17 @@ const sortorder = [
 
   OCHEST.id,
   OAMULET.id,
+
+  OBRASSLAMP.id,
+  OWWAND.id,
   OORBOFDRAGON.id,
   OSPIRITSCARAB.id,
   OCUBEofUNDEAD.id,
   ONOTHEFT.id,
+  OTALISMAN.id,
+  OHAND.id,
+  OORB.id,
+  OPSTAFF.id,
 
   ODIAMOND.id,
   ORUBY.id,
@@ -354,4 +363,15 @@ function pocketempty() {
     }
   }
   return (true);
+}
+
+
+
+function isCarrying(item) {
+  for (var i = 0; i < player.inventory.length; i++) {
+    var tmpItem = player.inventory[i];
+    if (item.matches(tmpItem)) return tmpItem;
+  }
+  return null;
+
 }
