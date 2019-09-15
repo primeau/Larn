@@ -92,14 +92,17 @@ function recalc() {
     if (weapon.matches(ODAGGER)) player.WCLASS = 3 + extra;
     if (weapon.matches(OBELT)) player.WCLASS = 7 + extra;
     if (weapon.matches(OSHIELD)) player.WCLASS = 8 + extra;
+    if (weapon.matches(OPSTAFF)) player.WCLASS = 10 + extra;
     if (weapon.matches(OSPEAR)) player.WCLASS = 10 + extra;
     if (weapon.matches(OFLAIL)) player.WCLASS = 14 + extra;
     if (weapon.matches(OBATTLEAXE)) player.WCLASS = 17 + extra;
-    if (weapon.matches(OLANCE)) player.WCLASS = 19 + extra;
+    if (weapon.matches(OLANCE)) player.WCLASS = (ULARN ? 20 : 19) + extra;
     if (weapon.matches(OLONGSWORD)) player.WCLASS = 22 + extra;
+    if (weapon.matches(OVORPAL)) player.WCLASS = 22 + extra;
     if (weapon.matches(O2SWORD)) player.WCLASS = 26 + extra;
-    if (weapon.matches(OSWORD)) player.WCLASS = 32 + extra;
     if (weapon.matches(OSWORDofSLASHING)) player.WCLASS = 30 + extra;
+    if (weapon.matches(OSLAYER)) player.WCLASS = 30 + extra;
+    if (weapon.matches(OSWORD)) player.WCLASS = 32 + extra;
     if (weapon.matches(OHAMMER)) player.WCLASS = 35 + extra;
   }
   player.WCLASS += player.MOREDAM;
@@ -297,6 +300,13 @@ function makemonst(lev) {
 
   while (isGenocided(tmp) && tmp < monsterlist.length - 1)
     tmp++; /* genocided? */
+
+  if (ULARN && level < MAXLEVEL) {
+    if (rnd(100) < 10) {
+      tmp = LEMMING;
+    }
+  }
+
   return (tmp);
 }
 
@@ -369,6 +379,7 @@ function packweight() {
         weight += 23;
         break;
       case OLONGSWORD.id:
+      case OPSTAFF.id:
       case OSWORD.id:
       case ORING.id:
       case OFLAIL.id:
@@ -386,6 +397,7 @@ function packweight() {
         weight += 8;
         break;
       case OORBOFDRAGON.id:
+      case OORB.id:
       case OBELT.id:
         weight += 4;
         break;
