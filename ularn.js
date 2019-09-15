@@ -8,8 +8,15 @@ function setUlarnVars() {
 
     LEVELS = new Array(MAXLEVEL + MAXVLEVEL);
 
-    gameName = ULARN ? `Ularn` : `Larn`;
+    GAMENAME = ULARN ? `Ularn` : `Larn`;
 
-    OBANK2.desc = `the ${ULARN ? 8 : 5}th branch of the Bank of Larn`;
+    OBANK.desc = `the bank of ${GAMENAME}`;
+    OBANK2.desc = `the ${ULARN ? 8 : 5}th branch of the Bank of ${GAMENAME}`;
+    OSCHOOL.desc = `the College of ${GAMENAME}`;
+    OLRS.desc = `the ${GAMENAME} Revenue Service`;
 
+    if (ULARN) {
+        monsterlist[LEMMING].char = `l`;
+        monsterlist[LEMMING].desc = `lemming`;
+    }
 }

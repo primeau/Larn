@@ -50,6 +50,11 @@ function enter() {
     act_down_shaft();
     return;
   }
+  if (building.matches(OPAD)) {
+    updateLog(`You try the door, but it's locked. Maybe another time.`);
+    setMazeMode(true);
+    return;
+  }
 
   debug(`enter(): no building here`);
   setMazeMode(true);
@@ -117,27 +122,9 @@ function dndstore() {
     clear(); // this is the correct behaviour
   }
 
-  lprcat(`Welcome to the Larn Thrift Shoppe.  We stock many items explorers find useful\n`);
+  lprcat(`Welcome to the ${GAMENAME} Thrift Shoppe.  We stock many items explorers find useful\n`);
   lprcat(`in their adventures.  Feel free to browse to your hearts content.\n`);
   lprcat(`Also be advised, if you break 'em, you pay for 'em.`);
-
-  // TODO, maybe
-  // if (outstanding_taxes > 0) {
-  //   lprcat(`\n\nThe Larn Revenue Service has ordered us to not do business with tax evaders.\n`);
-  //   beep();
-  //   lprintf(`They have also told us that you owe %d gp in back taxes, and as we must\n`, (long) outstanding_taxes);
-  //   lprcat(`comply with the law, we cannot serve you at this time.  Soo Sorry.\n`);
-  //   cursors();
-  //   lprcat(`\nPress `);
-  //   standout(`escape`);
-  //   lprcat(` to leave: `);
-  //   lflush();
-  //   i = 0;
-  //   while (i != '\33') i = ttgetch();
-  //   paint();
-  //   nosignal = 0; /* enable signals */
-  //   return;
-  // }
 
   for (var i = dndindex; i < 26 + dndindex; i++) {
     dnditem(i);
@@ -269,12 +256,12 @@ function dnditem(i) {
  *
  */
 function obank() {
-  banktitle(`Welcome to the First National Bank of Larn.`);
+  banktitle(`Welcome to the First National Bank of ${GAMENAME}.`);
 }
 
 
 function obank2() {
-  banktitle(`Welcome to the ${ULARN ? 8 : 5}th level branch office of the First National Bank of Larn.`);
+  banktitle(`Welcome to the ${ULARN ? 8 : 5}th level branch office of the First National Bank of ${GAMENAME}.`);
   /* because we state the level in the title, clear the '?' in the
      level display at the bottom, if the user teleported.
   */
@@ -285,25 +272,6 @@ function obank2() {
 function banktitle(str) {
   clear();
   lprcat(str);
-  // TODO, maybe
-  // if (outstanding_taxes > 0) {
-  //   register int i;
-  //   lprcat(`\n\nThe Larn Revenue Service has ordered that your account be frozen until all\n`);
-  //   beep();
-  //   lprintf(`levied taxes have been paid.  They have also told us that you owe %d gp in\n`, (long) outstanding_taxes);
-  //   lprcat(`taxes, and we must comply with them. We cannot serve you at this time.  Sorry.\n`);
-  //   lprcat(`We suggest you go to the LRS office and pay your taxes.\n`);
-  //   cursors();
-  //   lprcat(`\nPress `);
-  //   standout(`escape`);
-  //   lprcat(` to leave: `);
-  //   lflush();
-  //   i = 0;
-  //   while (i != '\33') i = ttgetch();
-  //   paint();
-  //   nosignal = 0; /* enable signals */
-  //   return;
-  // }
   lprcat(`\n\n   Gemstone                 Appraisal      Gemstone                 Appraisal`);
   obanksub();
   paint();
@@ -581,7 +549,7 @@ function otradepost() {
 
   clear();
 
-  lprcat(`Welcome to the Larn Trading Post. We buy items that explorers no longer find\n`);
+  lprcat(`Welcome to the ${GAMENAME} Trading Post. We buy items that explorers no longer find\n`);
   lprcat(`useful. Since the condition of the items you bring in is not certain,\n`);
   lprcat(`and we incur great expense in reconditioning the items, we usually pay\n`);
   lprcat(`only 20% of their value were they to be new. If the items are badly\n`);
@@ -758,7 +726,7 @@ function oschool() {
 function printclasses() {
   cl_up(1, 18);
   cursor(1, 1);
-  lprcat(`The College of Larn offers the exciting opportunity of higher education to\n`);
+  lprcat(`The College of ${GAMENAME} offers the exciting opportunity of higher education to\n`);
   lprcat(`all inhabitants of the caves. Here is the class schedule:\n\n\n`);
   lprcat(`\t\t    Course Name               Time Needed\n\n`);
 
@@ -776,7 +744,7 @@ function printclasses() {
   lprc('\n');
   if (!course[6]) lprcat(`\t\tg)  Contemporary Dance          10 mobuls`);
   lprc('\n');
-  if (!course[7]) lprcat(`\t\th)  History of Larn              5 mobuls`);
+  if (!course[7]) lprcat(`\t\th)  History of ${GAMENAME}${ULARN ? `` : ` `}             5 mobuls`);
 
   lprcat(`\n\n\t\tAll courses cost 250 gold pieces`);
   cursor(30, 18);
@@ -1050,7 +1018,7 @@ function olrs() {
   clear();
 
   cursor(1, 4);
-  lprcat(`Welcome to the Larn Revenue Service district office  `);
+  lprcat(`Welcome to the ${GAMENAME} Revenue Service district office  `);
 
   cursor(1, 6);
   if (outstanding_taxes > 0) {

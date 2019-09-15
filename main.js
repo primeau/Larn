@@ -10,6 +10,7 @@ function welcome() {
 
   createLevelNames();
 
+  initHelpPages();
   lprcat(helppages[0]);
   cursors();
 
@@ -25,7 +26,7 @@ function welcome() {
     keyboard_hints = true;
   }
 
-  var nameString = `Welcome to Larn. Please enter your name [<b>${logname}</b>]: `;
+  var nameString = `Welcome to ${GAMENAME}. Please enter your name [<b>${logname}</b>]: `;
 
   // if (!newplayer)
   //   nameString = `(Please stick to one name!)`;
@@ -228,15 +229,20 @@ function makeplayer() {
   player.x = rnd(MAXX - 2);
   player.y = rnd(MAXY - 2);
 
+  // enableDebug();
   // eventToggleDebugWTW();
   // eventToggleDebugStairs();
   // eventToggleDebugOutput();
-  // // eventToggleDebugKnowAll();
+  // eventToggleDebugKnowAll();
   // eventToggleDebugStats();
   // eventToggleDebugImmortal();
-  // auto_pickup = true;
-  // // player.LEVEL = 25;
+  // eventToggleDebugAwareness();
+  // player.updateStealth(100000);
+  // keyboard_hints = true;
+
+  // // auto_pickup = true;
   // wizardmode(`pvnert(x)`);
+
   // // for (var i = 2; i < 26; i+=2) {
   // //   take(createObject(OSCROLL, rnd(5)));
   // //   take(createObject(OPOTION, rnd(5)));
@@ -311,7 +317,8 @@ function startgame(hard) {
   newcavelevel(0); /*  make the dungeon */
 
   lflush();
-  var introMessage = `Welcome to Larn, ${logname} -- Press <b>?</b> for help`;
+
+  var introMessage = `Welcome to ${GAMENAME}, ${logname} -- Press <b>?</b> for help`;
   updateLog(introMessage);
 
   if (NOCOOKIES) {
@@ -608,17 +615,25 @@ function wizardmode(password) {
 
     var ix = 0;
     var iy = 0;
-    var xmod = 0;
-    var ymod = 1;
-    for (var i = 0; i < itemlist.length; i++) {
-      if (itemlist[i]) player.level.items[ix += xmod][iy += ymod] = createObject(itemlist[i]);
-      if (i == MAXY - 1) {
-        ix = 1
-        iy = MAXY - 1;
-        xmod = 1;
-        ymod = 0;
-      }
+    var wizi = 0;
+    while (wizi < MAXY) {
+      if (itemlist[++wizi]) 
+        player.level.items[ix][++iy] = createObject(itemlist[wizi]);
     }
+    --wizi;
+    while (++ix < MAXX - 1) {
+      if (itemlist[++wizi]) 
+        player.level.items[ix][iy-1] = createObject(itemlist[wizi]);
+      else --ix;
+    }
+
+    // 100 items now
+    while (wizi < OPAD.id) {
+      var wizitem = itemlist[++wizi];
+      if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN) 
+        player.level.items[ix][--iy] = createObject(wizitem);
+    }
+
   }
 
   return 1;

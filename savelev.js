@@ -88,7 +88,7 @@ function loadSavedGame(savedState, isCheckPoint) {
   if (cheat) {
     // updateLog(`Have you been cheating?`);
     updateLog(`*** Hey, you should tell <b>eye@larn.org</b> about this game`);
-    updateLog(`    Larn thinks you're cheating (but you're probably not)`);
+    updateLog(`    ${GAMENAME} thinks you're cheating (but you're probably not)`);
     cheat = false;
   }
 
@@ -248,6 +248,7 @@ function loadPlayer(saved) {
   newPlayer.GLOBE = saved.GLOBE;
   newPlayer.TELEFLAG = saved.TELEFLAG;
   newPlayer.SLAYING = saved.SLAYING;
+  // ULARN TODO: save all the special items
   newPlayer.NEGATESPIRIT = saved.NEGATESPIRIT;
   newPlayer.SCAREMONST = saved.SCAREMONST;
   newPlayer.AWARENESS = saved.AWARENESS;

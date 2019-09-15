@@ -508,7 +508,7 @@ function parse(key) {
   if (key == '<') {
 
     if (DEBUG_STAIRS_EVERYWHERE) {
-      if (level == MAXLEVEL + 1) {
+      if (level == MAXLEVEL) {
         newcavelevel(0);
         return;
       }

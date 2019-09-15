@@ -5,7 +5,7 @@
 /* never, ever, never use a code formatter here */
 /************************************************/
 
-var gameName;  // ULARN
+var GAMENAME;  // ULARN
 var MAXLEVEL;  // ULARN    /* max # levels in the dungeon  */
 var MAXVLEVEL; // ULARN    /* max # of levels in the temple of the luran */
 const LOG_SIZE = 5;       /* number of log lines to show */

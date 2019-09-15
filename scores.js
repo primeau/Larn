@@ -252,7 +252,7 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
   clear();
 
   if (local) {
-    lprcat(`                   <b>Larn Scoreboard</b> (Global scoreboard not available)\n`);
+    lprcat(`                   <b>${GAMENAME} Scoreboard</b> (Global scoreboard not available)\n`);
     winners = localStorageGetObject('winners', []);
     losers = localStorageGetObject('losers', []);
   } else {
@@ -261,7 +261,7 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
     else if (showLosers && !showWinners)
       lprcat(`                    <b>Visitors Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
     else
-      lprcat(`                    <b>Global Larn Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
+      lprcat(`                    <b>Global ${GAMENAME} Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
   }
 
   if (winners.length != 0 || losers.length != 0) {
