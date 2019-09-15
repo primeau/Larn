@@ -86,6 +86,7 @@ var Player = function Player() {
     this.INFEEBLEMENT = 0;  // UNUSED
 
     this.TELEFLAG = 0;
+    this.BESSMANINTEL = 0;
 
     // special items
     this.LAMP = false;
@@ -132,6 +133,7 @@ var Player = function Player() {
         warning -- will kill player if hp goes to zero
      */
     this.losehp = function(damage) {
+      damage = Math.round(damage);
       if (damage <= 0) return;
       changedHP = millis();
       debug(`losehp: ${lastmonst}:${damage}`);
@@ -300,19 +302,42 @@ var Player = function Player() {
       if (item.matches(OHAMMER)) {
         player.setDexterity(player.DEXTERITY + (pickup ? 10 : -10));
         player.setStrExtra(player.STREXTRA + (pickup ? 10 : -10));
-        player.setIntelligence(player.INTELLIGENCE + (pickup ? -10 : 10));
+        var startIntel = player.INTELLIGENCE;
+        // our hero might lose < 10 intelligence when picking up the
+        // hammer. we don't want them to get 10 back when dropping it.
+        // this can still be gamed with rings of intelligence, but 
+        // it's better than it was.
+        if (pickup) {
+          player.setIntelligence(player.INTELLIGENCE - 10);
+          player.BESSMANINTEL = startIntel - player.INTELLIGENCE;  
+        }
+        else {
+          player.setIntelligence(player.INTELLIGENCE + player.BESSMANINTEL);
+        }
       }
       if (item.matches(OSWORDofSLASHING)) {
         player.setDexterity(player.DEXTERITY + (pickup ? 5 : -5));
       }
-      if (item.matches(OORBOFDRAGON))
-        pickup ? player.SLAYING++ : player.SLAYING--;
-      if (item.matches(OSPIRITSCARAB))
-        pickup ? player.NEGATESPIRIT++ : player.NEGATESPIRIT--;
-      if (item.matches(OCUBEofUNDEAD))
-        pickup ? player.CUBEofUNDEAD++ : player.CUBEofUNDEAD--;
-      if (item.matches(ONOTHEFT))
-        pickup ? player.NOTHEFT++ : player.NOTHEFT--;
+      if (item.matches(OSLAYER)) {
+        player.setIntelligence(player.INTELLIGENCE + (pickup ? 10 : -10));
+      }
+      if (item.matches(OPSTAFF)) {
+        player.setWisdom(player.WISDOM + (pickup ? 10 : -10));
+      }
+      // if (item.matches(OORBOFDRAGON))
+      //   pickup ? player.SLAYING++ : player.SLAYING--;
+      // if (item.matches(OSPIRITSCARAB))
+      //   pickup ? player.NEGATESPIRIT++ : player.NEGATESPIRIT--;
+      // if (item.matches(OCUBEofUNDEAD))
+      //   pickup ? player.CUBEofUNDEAD++ : player.CUBEofUNDEAD--;
+      // if (item.matches(ONOTHEFT))
+      //   pickup ? player.NOTHEFT++ : player.NOTHEFT--;
+
+
+      if (item.matches(OORB) & pickup) {
+        player.AWARENESS++;
+      }
+        
 
       if (oldDex != player.DEXTERITY) changedDEX = millis();
       if (oldStr != player.STREXTRA) changedSTR = millis();

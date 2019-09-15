@@ -64,7 +64,7 @@ function regen() {
   if (player.HALFDAM)        if (--player.HALFDAM <= 0)        updateLog(`You now feel better`);
 
   if (player.AGGRAVATE)      --player.AGGRAVATE;
-  if (player.AWARENESS)      --player.AWARENESS;
+  if (player.AWARENESS)      if (!isCarrying(OORB)) --player.AWARENESS;
   if (player.HASTEMONST)     --player.HASTEMONST;
 
   if (player.SEEINVISIBLE) {

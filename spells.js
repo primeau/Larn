@@ -330,6 +330,9 @@ function speldamage(x) {
     case 27:
       /* scare monster */
       player.updateScareMonst(rnd(10) + clev);
+      if (isCarrying(OHANDofFEAR)) {
+        player.SCAREMONST *= 3;
+      }
       return;
 
     case 28:
