@@ -20,7 +20,7 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, de
 
 function createMonster(monst) {
 
-  if (!monst) return null;
+ if (!monst) return null;
 
   var arg = monst.arg;
 
@@ -390,6 +390,7 @@ function createmonster(mon, x, y) {
 
   if (oktocreate) {
     var monster = createMonster(mon);
+    if (!monster) return;
     player.level.monsters[x][y] = monster;
     player.level.know[x][y] &= ~KNOWHERE;
     monster.awake = false;
@@ -503,15 +504,34 @@ function hitplayer(x, y) {
 
   lastnum = monster; /* killed by a ${monstername} */
 
-  /*  spirit naga's and poltergeist's do nothing if scarab of negate spirit   */
-  if (player.NEGATESPIRIT || player.SPIRITPRO) {
-    if (monster.matches(POLTERGEIST) || monster.matches(SPIRITNAGA)) return;
+  var damageModifier = 1; // will alway be 1 for classic Larn
+
+  if (isCarrying(OSPIRITSCARAB) || player.SPIRITPRO) {
+    if (monster.matches(POLTERGEIST) || monster.matches(SPIRITNAGA)) {
+      if (ULARN) {
+        /* spirit naga's and poltergeist's damage is halved if scarab of negate spirit */
+        damageModifier = 0.5;
+      }
+      else {
+        /* spirit naga's and poltergeist's do nothing if scarab of negate spirit */
+        return;
+      }
+    }    
   }
 
-  /*  if undead and cube of undead control    */
-  if (player.CUBEofUNDEAD || player.UNDEADPRO) {
-    if (monster.matches(VAMPIRE) || monster.matches(WRAITH) || monster.matches(ZOMBIE)) return;
+  if (isCarrying(OCUBEofUNDEAD) || player.UNDEADPRO) {
+    if (monster.matches(VAMPIRE) || monster.matches(WRAITH)) {
+      /* vampire, wraith do nothing with undead control */
+      return;
+    }
+    if (monster.matches(ZOMBIE)) {
+      if (ULARN)
+        damageModifier = 0.5;
+      else
+        return;
+    }
   }
+
   if ((player.level.know[x][y] & KNOWHERE) == 0)
     show1cell(x, y);
 
@@ -520,6 +540,10 @@ function hitplayer(x, y) {
 
   cursors();
   ifblind(x, y);
+
+  if (ULARN && monster.matches(LEMMING)) {
+    return;
+  }
 
   if ((player.INVISIBILITY > 0) && (rnd(33) < 20)) {
     updateLog(`The ${monster} misses wildly`);
@@ -537,6 +561,14 @@ function hitplayer(x, y) {
     dam = monster.damage;
     dam += rnd(((dam < 1) ? 1 : dam)) + monster.level;
   }
+
+  /* demon damage is reduced if wielding Slayer */
+  if (monster.isDemon() && player.WIELD.matches(OSLAYER)) {
+    dam = (1 - (0.1 * rnd(5)) * dam);
+  }
+
+  /* take damage reductions into account for ularn special artifacts */
+  dam *= damageModifier;
 
   var playerHit = false;
   var lifeCount = player.LIFEPROT;
@@ -648,7 +680,7 @@ function hitmonster(x, y) {
       }
     }
   }
-  if (monster.matches(VAMPIRE)) {
+  if (!ULARN && monster.matches(VAMPIRE)) {
     //if (monster.hitpoints < 25) { // UPDATE this is original code
     if (monster.hitpoints > 0 && monster.hitpoints < 25) {
       player.level.monsters[x][y] = createMonster(BAT);
@@ -656,8 +688,11 @@ function hitmonster(x, y) {
     }
   }
 
-  // ULARN TODO: METAMORPH && LEMMING
+  // ULARN TODO: METAMORPH
 
+  if (ULARN && monster.matches(LEMMING)) {
+    if (rnd(100) <= 40) createmonster(LEMMING);
+  }
 }
 
 
@@ -685,7 +720,7 @@ function hitm(x, y, damage) {
   player.updateHoldMonst(-player.HOLDMONST); /* hit a monster breaks hold monster spell  */
 
   /* if a dragon and orb of dragon slaying */
-  if (player.SLAYING) {
+  if (isCarrying(OORBOFDRAGON)) {
     switch (monster.arg) {
       case WHITEDRAGON:
       case REDDRAGON:
@@ -785,7 +820,33 @@ const rustarm = [
 
 function spattack(x, xx, yy) {
 
-  if (player.CANCELLATION) return 0;
+  // this is a silly hack, but lastnum is actually the monster that hit you
+  // in some cases, where lastmonst is only the name of the last monster to
+  // hit you.
+  var monster = lastnum;
+
+  if (player.CANCELLATION) {
+    /* cancel only works 5% of time for demon prince and god */
+    if (ULARN && (monster.matches(DEMONPRINCE) || monster.matches(LUCIFER))) {
+      if (rnd(100) >= 95) {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  }
+
+  /* staff of power cancels demonlords/wraiths/vampires 75% of time */
+  /* lucifer is unaffected */
+  if (!monster.matches(LUCIFER)) {
+    if (monster.isDemon() || monster.matches(WRAITH) || monster.matches(VAMPIRE)) {
+      if (isCarrying(OPSTAFF)) {
+        if (rnd(100) < 75) {
+          return 0;
+        }
+      }
+    }
+  }
 
   if (player.HP <= 0) {
     debug('already dead');
@@ -796,7 +857,7 @@ function spattack(x, xx, yy) {
 
   var damage = null;
   var armorclass = player.AC;
-  var monster = lastmonst;
+  monster = lastmonst;
 
   switch (x) {
     case 1:
@@ -871,7 +932,7 @@ function spattack(x, xx, yy) {
       return 0;
 
     case 8:
-      if (player.NOTHEFT) return 0; /* he has a device of no theft */
+      if (isCarrying(ONOTHEFT)) return 0; /* he has a device of no theft */
       if (player.GOLD) {
         updateLog(`The ${monster} hit you -- your purse feels lighter`);
         if (player.GOLD > 32767)
@@ -923,7 +984,7 @@ function spattack(x, xx, yy) {
       return 0;
 
     case 14:
-      if (player.NOTHEFT) return 0; /* he has device of no theft */
+      if (isCarrying(ONOTHEFT)) return 0; /* he has device of no theft */
       if (emptyhanded() == 1) {
         updateLog(`The ${monster} couldn't find anything to steal`);
         break;

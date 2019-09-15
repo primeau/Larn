@@ -176,6 +176,7 @@ Item.prototype = {
       weapon |= this.matches(OBELT);
       weapon |= this.matches(OVORPAL);
       weapon |= this.matches(OSLAYER);
+      weapon |= this.matches(OPSTAFF);
       return weapon;
     },
 
@@ -339,7 +340,7 @@ const OCOOKIE = new Item(83, `<b>c</b>`, `a fortune cookie`, true);
 const OURN = new Item(84, `<b><font color='green'>u</font></b>`, `a golden urn`, true); // ULARN NOT IMPLEMENTED
 /* need amiga */ const OBRASSLAMP = new Item(85, `<b><font color='green'>.</font></b>`, `a brass lamp`, true); // ULARN
 /* need amiga */ const OHANDofFEAR = new Item(86, `<b><font color='green'>.</font></b>`, `The Hand of Fear`, true); // ULARN
-/* need amiga */ const OSPHTAILSMAN = new Item(87, `<b><font color='green'>.</font></b>`, `The Talisman of the Sphere`, true); // ULARN
+/* need amiga */ const OSPHTALISMAN = new Item(87, `<b><font color='green'>.</font></b>`, `The Talisman of the Sphere`, true); // ULARN
 /* need amiga */ const OWWAND = new Item(88, `<b><font color='green'>/</font></b>`, `a wand of wonder`, true); // ULARN
 /* need amiga */ const OPSTAFF = new Item(89, `<b><font color='green'>/</font></b>`, `a staff of power`, true); // ULARN
 /* need amiga */ const OVORPAL = new Item(90, `<b><font color='green'>)</font></b>`, `the Vorpal Blade`, true); // ULARN
@@ -570,8 +571,12 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OTRAPDOOR)) {
+    if (isCarrying(OWWAND)) {
+      updateLog(`You escape a trap door.`);
+      return;
+    }
     if ((level == MAXLEVEL - 1) || (level == MAXLEVEL + MAXVLEVEL - 1)) {
-      updateLog(`You fell through a bottomless trap door!`);
+       updateLog(`You fell through a bottomless trap door!`);
       //nap(2000);
       died(271, false); /* fell through a bottomless trap door */
     }
@@ -616,13 +621,23 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'E', 'to eat'));
   }
   else if (item.carry) {
-    if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take'));
+    if (ULARN) {
+      if (do_ident) updateLog(`You find ${item}.`, formatHint('t', 'to take'));
+    }
+    else {
+      if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take'));
+    }
   }
 
   // base case
   else {
     if (do_ident && !item.matches(OWALL)) {
-      updateLog(`You have found ${item}`);
+      if (ULARN) {
+        updateLog(`You find ${item}.`);
+      }
+      else {
+        updateLog(`You have found ${item}`);
+      }
     }
   }
 
@@ -651,6 +666,10 @@ function opit() {
     return;
   }
   if (rnd(70) <= 9 * player.DEXTERITY - packweight() && rnd(101) >= 5) { // BUGFIX this is broken in 12.4
+    return;
+  }
+  if (isCarrying(OWWAND)) {
+    updateLog(`You float right over the pit.`);
     return;
   }
   if (level == MAXLEVEL - 1 || level >= MAXLEVEL + MAXVLEVEL - 1) {

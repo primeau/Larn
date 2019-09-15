@@ -503,7 +503,7 @@ function makeobject(depth) {
     created |= createArtifact(OSPIRITSCARAB, player.NEGATESPIRIT, !created && rnd(120) < 8);
     created |= createArtifact(OCUBEofUNDEAD, player.CUBEofUNDEAD, !created && rnd(120) < 8);
     created |= createArtifact(ONOTHEFT,      player.NOTHEFT,      !created && rnd(120) < 8);
-    created |= createArtifact(OSPHTAILSMAN,  player.TALISMAN,     !created && rnd(120) < 8);
+    created |= createArtifact(OSPHTALISMAN,  player.TALISMAN,     !created && rnd(120) < 8);
     created |= createArtifact(OHANDofFEAR,   player.HAND,         !created && rnd(120) < 8);
     created |= createArtifact(OORB,          player.ORB,          !created && rnd(120) < 8);
     created |= createArtifact(OELVENCHAIN,   player.ELVEN,        !created && rnd(120) < 8);
@@ -545,7 +545,7 @@ function createArtifact(artifact, exists, odds) {
       case OSPIRITSCARAB.id:    player.NEGATESPIRIT = true; break;
       case OCUBEofUNDEAD.id:    player.CUBEofUNDEAD = true; break;
       case ONOTHEFT.id:         player.NOTHEFT = true;      break;
-      case OSPHTAILSMAN.id:     player.TALISMAN = true;     break;
+      case OSPHTALISMAN.id:     player.TALISMAN = true;     break;
       case OHANDofFEAR.id:      player.HAND = true;         break;
       case OORB.id:             player.ORB = true;          break;
       case OELVENCHAIN.id:      player.ELVEN = true;        break;

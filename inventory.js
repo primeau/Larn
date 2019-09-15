@@ -148,8 +148,8 @@ const sortorder = [
   OSPIRITSCARAB.id,
   OCUBEofUNDEAD.id,
   ONOTHEFT.id,
-  OTALISMAN.id,
-  OHAND.id,
+  OSPHTALISMAN.id,
+  OHANDofFEAR.id,
   OORB.id,
   OPSTAFF.id,
 

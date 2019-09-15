@@ -345,6 +345,25 @@ function move_scared(i, j) {
   var xl = vx(i + rnd(3) - 2);
   var yl = vy(j + rnd(3) - 2);
 
+  // // TODO: THIS TOTALLY DOESN'T WORK because scared isn't used for anything
+
+  // var scared = isCarrying(OHANDofFEAR) ? 1 : 0;
+  // if (player.SCAREMONST) {
+  //   /* hand of fear is scarier if scare monster is in effect. */
+  //   scared++;
+  // } else if ((scared == 1) && (rnd(10) > 4)) {
+  //   /* Hand of fear alone is only effective 60% of the time */
+  //   scared = 0;
+  // }
+  // /* A demon lord or higher is only scared if the player has both
+  //  * the hand of fear and scare monster active.
+  //  * Even then, only half the time */
+  // if ((monster.isDemon()) || (monster.matches(PLATINUMDRAGON))) {
+  //   scared = (scared <= 1) ? 0 : (rnd(10) > 5);
+  // }
+
+  // console.log(scared);
+
   var item = itemAt(xl, yl);
 
   if (!item.matches(OWALL) && !item.matches(OCLOSEDDOOR) && !monsterAt(xl, yl)) {
@@ -537,6 +556,7 @@ function mmove(aa, bb, cc, dd) {
   if (item.matches(OPIT) || item.matches(OTRAPDOOR)) {
     switch (monster.arg) {
       case BAT:
+      case LEMMING:
       case EYE:
       case SPIRITNAGA:
       case PLATINUMDRAGON:
@@ -553,6 +573,7 @@ function mmove(aa, bb, cc, dd) {
       case DEMONLORD + 6:
       case DEMONPRINCE:
       case LUCIFER:
+          if (!(ULARN && monster.arg == LEMMING)) // lemmings fall, bats don't
           break;
 
       default:
@@ -573,6 +594,13 @@ function mmove(aa, bb, cc, dd) {
 
   monster.awake = true;
   player.level.monsters[aa][bb] = null;
+
+  if (ULARN && monster.matches(LEMMING)) {
+    /* 2% chance moving a lemming creates a new lemming in the old spot */
+    if (rnd(100) <= 2) {
+      player.level.monsters[aa][bb] = createMonster(LEMMING);
+    }
+  }
 
   if (monster.matches(LEPRECHAUN) && (item.matches(OGOLDPILE) || item.isGem())) {
     player.level.items[cc][dd] = OEMPTY; /* leprechaun takes gold */
@@ -632,7 +660,7 @@ function mmove(aa, bb, cc, dd) {
 
 
 /*
- v12.4.5 - fix for half speed monsters folling at 1:1 or not at all when running
+ v12.4.5 - fix for half speed monsters following at 1:1 or not at all when running
  */
 function isHalfTime() {
   return (player.MOVESMADE & 1) == 1;
