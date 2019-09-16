@@ -88,7 +88,7 @@ Monster.prototype = {
       },
 
       isDemon: function () {
-        return this.arg >= DEMONLORD && this != INVISIBLESTALKER;
+        return this.arg >= DEMONLORD;
       },
 
     /*
@@ -683,7 +683,7 @@ function hitmonster(x, y) {
     hitm(x, y, damage);
     if (ULARN) {
       if (monster.isDemon() && monster.hitpoints > 0) {
-        console.log(  `nYour lance of death tickles the ${monster}`);
+        console.log(`  Your lance of death tickles the ${monster}`);
       }
     }
   }

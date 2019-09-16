@@ -96,6 +96,8 @@ const monsterlist = [
   new Monster(`u`, `green urchin`,                  10, -3,  12, 0,  0,  3,  0,    85,  5000),
   new Monster(`D`, `red dragon`,                    10, -2,  13, 3,  0,  19, 800,  110, 14000),
   // 57
+  new Monster(OEMPTY.char, `invisible stalker`,     7,   3,  6,  0,  0,  5,  0,    50,  350),
+  // 58
   /*          CHAR         NAME                     LV   AC  DAM ATT DEF INT GOLD  HP  EXP */
   new Monster(OEMPTY.char, `type I demon lord`,     12, -30, 18, 0,  0,  20, 0,    140, 50000),
   new Monster(OEMPTY.char, `type II demon lord`,    13, -30, 18, 0,  0,  21, 0,    160, 75000),
@@ -168,7 +170,7 @@ const SILVERDRAGON = 53;
 const PLATINUMDRAGON = 54;
 const GREENURCHIN = 55;
 const REDDRAGON = 56;
-const DEMONLORD = 57;
-const DEMONPRINCE = 64;
-const LUCIFER = 65;
-const INVISIBLESTALKER = 66;
+const INVISIBLESTALKER = 57;
+const DEMONLORD = 58;
+const DEMONPRINCE = 65;
+const LUCIFER = 66;
