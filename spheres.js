@@ -33,7 +33,7 @@ function newsphere(x, y, dir, life, lev) {
     if (y >= MAXY - 1) y = MAXY - 2;
   }
   var monster = monsterAt(x, y);
-  if (monster && monster.arg >= DEMONLORD + 4) /* demons dispel spheres */ {
+  if (monster && monster.isDemon()) /* demons dispel spheres */ {
     show1cell(x, y); /* show the demon (ha ha) */
     cursors();
     updateLog(`The ${monster} dispels the sphere!`);

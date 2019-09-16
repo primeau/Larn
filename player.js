@@ -954,7 +954,7 @@ function debug_stats(p, score) {
   s += `\nSpecial Items:\n`;
   if (ULARN) s += `LAMP:  ` + p.LAMP + `\n`;
   if (ULARN) s += `WAND:  ` + p.WAND + `\n`;
-  s += `SLAY:  ` + p.SLAYING + `\n`;
+  s += `DRGSL: ` + p.SLAYING + `\n`;
   s += `NEGAT: ` + p.NEGATESPIRIT + `\n`;
   s += `CUBE:  ` + p.CUBEofUNDEAD + `\n`;
   s += `THEFT: ` + p.NOTHEFT + `\n`;

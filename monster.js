@@ -69,20 +69,27 @@ Monster.prototype = {
         return `monster`;
     },
 
-    getChar: function() {
-      if (amiga_mode) {
-        var tempMonsterArg = this.arg;
-        if (tempMonsterArg == STALKER) {
-          tempMonsterArg = (player.SEEINVISIBLE > 0) ? STALKER : INVISIBLESTALKER;
+    getChar: function () {
+        if (amiga_mode) {
+          var tempMonsterArg = this.arg;
+          if (tempMonsterArg == STALKER) {
+            tempMonsterArg = (player.SEEINVISIBLE > 0) ? STALKER : INVISIBLESTALKER;
+          }
+          // // ULARN TODO: AMIGA TILES FOR DEMONS
+          // if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
+          // }
+          return `${DIV_START}m${tempMonsterArg}${DIV_END}`;
+        } else {
+          if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
+            return `<font color='red'>${demonchar[this.arg - DEMONLORD]}</font>`;
+          }
+          return monsterlist[this.arg].char;
         }
-        return `${DIV_START}m${tempMonsterArg}${DIV_END}`;
-      } else
-        return monsterlist[this.arg].char;
-    },
+      },
 
-    isDemon: function() {
-      return this.arg >= DEMONLORD;
-    },
+      isDemon: function () {
+        return this.arg >= DEMONLORD && this != INVISIBLESTALKER;
+      },
 
     /*
      *  dropsomething(monst)    Function to create an object when a monster dies

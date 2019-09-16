@@ -582,7 +582,7 @@ function mmove(aa, bb, cc, dd) {
   }
 
   if (item.matches(OANNIHILATION)) {
-    if (monster.arg >= DEMONLORD + 3) /* demons dispel spheres */ {
+    if (monster.isDemon()) /* demons dispel spheres */ {
       cursors();
       updateLog(`The ${monster} dispels the sphere!`);
       rmsphere(cc, dd); /* delete the sphere */

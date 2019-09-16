@@ -104,13 +104,15 @@ const monsterlist = [
   new Monster(OEMPTY.char, `type V demon lord`,     16, -40, 22, 0,  0,  24, 0,    220, 150000),
   new Monster(OEMPTY.char, `type VI demon lord`,    17, -45, 24, 0,  0,  25, 0,    240, 175000),
   new Monster(OEMPTY.char, `type VII demon lord`,   18, -70, 27, 6,  0,  26, 0,    260, 200000),
-  new Monster(OEMPTY.char, `demon prince`,          25, -127,30, 6,  0,  28, 0,    345, 300000)
+  new Monster(OEMPTY.char, `demon prince`,          25, -127,30, 6,  0,  28, 0,    345, 300000),
+  new Monster(OEMPTY.char, `God of Hellfire`,       20, -127,127,6,  0, 100, 0,  32767, 1000000)
 ];
 
-
+const demonchar = [`1`,`2`,`3`,`4`,`5`,`6`,`7`,`9`,`0`];
 
 /* defines for the monsters as objects */
 const BAT = 1;
+const LEMMING = 1;
 const GNOME = 2;
 const HOBGOBLIN = 3;
 const JACKAL = 4;
@@ -148,7 +150,6 @@ const OSEQUIP = 35;
 const ROTHE = 36;
 const XORN = 37;
 const VAMPIRE = 38;
-const INVISIBLESTALKER = 64;
 const STALKER = 39;
 const POLTERGEIST = 40;
 const DISENCHANTRESS = 41;
@@ -168,5 +169,6 @@ const PLATINUMDRAGON = 54;
 const GREENURCHIN = 55;
 const REDDRAGON = 56;
 const DEMONLORD = 57;
-
 const DEMONPRINCE = 64;
+const LUCIFER = 65;
+const INVISIBLESTALKER = 66;

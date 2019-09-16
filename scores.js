@@ -699,7 +699,8 @@ function writeScoreToDatabase() {
   console.log(`cheater == ` + cheat);
   console.log(`endGameScore.score == ` + endGameScore.score);
 
-  if ((endGameScore.score > 0 || endGameScore.winner) && !wizard && !cheat) {
+  // ULARN TODO: ADD SAVE GAMES
+  if (!ULARN && ((endGameScore.score > 0 || endGameScore.winner) && !wizard && !cheat)) {
     localWriteHighScore(endGameScore);
     dbWriteHighScore(endGameScore);
   }
