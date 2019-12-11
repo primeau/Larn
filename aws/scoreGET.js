@@ -1,51 +1,37 @@
-var AWS = require('aws-sdk');
+module.exports.scoreGET = async(dynamo, gameID, event, context) => {
 
-module.exports = {
+    const params = {
+        Key: {
+            "gameID": gameID
+        },
+        TableName: "games"
+    };
 
-    scoreGET: async function(dynamo, gameID) {
+    try {
+        console.log(`scoreGET: attempting to load game: ${gameID}\n`);
+        const data = await dynamo.get(params).promise();
 
-        var response = {
-            statusCode: 500,
-            body: `scoreGET total fail`,
-        };
-        
-        var params = {
-            Key: {
-                "gameID": gameID
-            },
-            TableName: "games"
-        };
-        
-        await dynamo.get(params, function(error, data) {
-    
-            if (error) {
-                console.log(`scoreGET dynamo error: ` + gameID);
-                response = {
-                    statusCode: 500,
-                    body: `scoreGET dynamo error: ` + gameID,
-                };
-            }
-            else if (!data.Item) {
-                console.log(`scoreGET can't find: ` + gameID);
-                response = {
-                    statusCode: 404,
-                    body: `can't find game: ` + gameID,
-                };
-            }
-            else {
-                console.log(`scoreGET got: ` + gameID);
-                response = {
-                    statusCode: 200,
-                    body: JSON.stringify(data.Item),
-                };
-            }
-    
-        }).promise();
-    
-        return response;
-    
+        if (!data.Item) {
+            console.log(`scoreGET: can't find: ${gameID}\n`);
+            return {
+                statusCode: 404,
+                body: `can't find game: ` + gameID
+            };
+        }
+        else {
+            console.log(`scoreGET: got game: ${gameID}\n`);
+            return {
+                statusCode: 200,
+                body: JSON.stringify(data.Item)
+            };
+        }
     }
-    
+    catch (error) {
+        console.log(`scoreGET: dynamo error: ${gameID}\n`);
+        return {
+            statusCode: 500,
+            body: `scoreGET: dynamo error: ${gameID}\n`
+        };
+    }
+
 };
-    
-    

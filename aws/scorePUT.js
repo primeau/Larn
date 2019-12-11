@@ -1,91 +1,87 @@
-var AWS = require('aws-sdk');
-var scoreboardReader = require('scoreboardGET');
+const scoreboardReader = require('./scoreboardGET');
 
-module.exports = {
+module.exports.scorePUT = async(dynamo, game, event, context) => {
 
-    scorePUT: async function(dynamo, game) {
-        var response = await this.gamesDbWrite(dynamo, game);
-        
-        // check high score board
+    /*
+        game.who = "TESTING";
+        game.hardlev = 12;
+        game.gameID = "1234567892";
+    */
+
+    console.log(`scorePUT: start writing game: ${game.gameID}\n`);
+    var response = await DBWrite(dynamo, game, false);
+    console.log(`scorePUT done writing game: ${game.gameID} got ${response.statusCode}\n`);
+
+    // if we successfully write the game to the database
+    // check to see if we need to update the high score board
+    if (response.statusCode == 200) {
+        console.log(`scorePUT: start check for high score eligibility\n`);
         var lowest = await getLowestScore(dynamo, game);
-        // console.log(lowest.gameID, game.gameID);
+        console.log(`scorePUT: done check for high score eligibility\n`);
         if (lowest.gameID == game.gameID) {
-            console.log("not high score");
+            console.log(`scorePUT: game ${game.gameID} NOT a high score\n`);
         }
         else {
-            await writeHighScore(dynamo, game);
-        }        
-        
-        if (response.statusCode == 200) {
-            return {
-                statusCode: 200,
-                body: game.gameID,
-            };
+            console.log(`scorePUT: game ${game.gameID} IS a high score\n`);
+            console.log(`scorePUT: start writing high score: ${game.who} ${game.winner} ${game.hardlev} ${game.timeused} ${game.score}\n`);
+            response = await DBWrite(dynamo, game, true);
+            console.log(`scorePUT: done writing high score with response ${response.statusCode}\n`);
         }
-        else {
-            return {
-                statusCode: 500,
-                body: `scorePUT dynamo error writing game ${game.gameID}`,
-            };
-        }
-    },
-    
-    
-
-    gamesDbWrite: async function(dynamo, game) {
-
-        var params = {
-            Item: game,
-            TableName: 'games'
-        };
-
-        var response = {
-            statusCode: 500,
-            body: `gamesDbWrite total fail`,
-        };
-
-        await dynamo.put(params, function(error, data) {
-            if (error) {
-                console.log("gamesDbWrite dynamo error", error);
-                response = {
-                    statusCode: 500,
-                    body: `dynamo error`,
-                };
-            }
-            else if (!data) {
-                console.log(`error: 404`);
-                response = {
-                    statusCode: 404,
-                    body: `can't find games table`,
-                };
-            }
-            else {
-                console.log("successful write to games table", game.gameID);
-                response = {
-                    statusCode: 200,
-                    body: `${game.gameID}`,
-                };
-            }
-
-        }).promise();
-
-
         return response;
-
-    },
-
-
+    }
+    else {
+        return {
+            statusCode: response.statusCode,
+            body: `scorePUT failed to write new score: ${game.gameID} got ${response.statusCode}\n`
+        };
+    }
 };
 
 
 
- async function getLowestScore(dynamo, game) {
+async function DBWrite(dynamo, game, highScore) {
 
-    // quick checks
+    var params = setParams(game, highScore);
+    var response;
+
+    try {
+        const DBresponse = await dynamo.put(params).promise();
+        //console.log(`\nDBresponse: ${JSON.stringify(DBresponse)}\n`);
+        if (DBresponse) {
+            console.log(`DBWrite successful write to ${params.TableName} table: ${game.gameID}\n`);
+            response = {
+                statusCode: 200,
+                body: `${game.gameID}`
+            };
+        }
+        else {
+            console.log(`DBWrite failed write to ${params.TableName} table: ${game.gameID}\n`);
+            response = {
+                statusCode: 400,
+                body: `DBWrite error 400 writing game ${game.gameID}`
+            };
+        }
+    }
+    catch (error) {
+        console.log(`DBWrite: failure writing to db: ${game.gameID}\n, error`);
+        response = {
+            statusCode: 500,
+            body: `DBWrite error 500 writing game ${game.gameID}`
+        };
+    }
+
+    return response;
+}
+
+
+
+async function getLowestScore(dynamo, game) {
+
+    // quick checks -- don't bother with debug and old games
     if (game.debug == 1) return game;
     if (game.version && game.version == 1244) return game;
 
-    // more quick checks    
+    // more quick checks, we know there are scores better than these   
     if (game.winner) {
         if (game.hardlev <= 3) return game;
     }
@@ -100,92 +96,83 @@ module.exports = {
 
     if (response.statusCode == 200) {
         // if the player has a lower score, replace that
-        var prevPlayerScore = board.find(function(x) {
-            return x.who == game.who;
-        });
+        var prevPlayerScore = board.find(function(x) { return x.who == game.who; });
         if (prevPlayerScore) {
-            console.log(prevPlayerScore.hardlev, game.hardlev, scoreboardReader.compareScore(prevPlayerScore, game));
+            console.log(`getLowestScoreA:`, prevPlayerScore.hardlev, game.hardlev, scoreboardReader.compareScore(prevPlayerScore, game), `\n`);
             if (scoreboardReader.compareScore(prevPlayerScore, game) > 0) {
-                console.log('should write new high score for existing player');
+                console.log(`getLowestScoreA: should write new high score for existing player\n`);
                 return prevPlayerScore; // this game has a higher score, and prev player game should be replaced
             }
             return game;
         }
-            
-        // this code assumes the 
+
         // this is a new player, get the lowest score
         var prevLowestScore = board.pop();
         if (prevLowestScore) {
-            console.log(prevLowestScore.hardlev, game.hardlev, scoreboardReader.compareScore(prevLowestScore, game));
+            console.log(`getLowestScoreB:`, prevLowestScore.hardlev, game.hardlev, scoreboardReader.compareScore(prevLowestScore, game), `\n`);
             if (scoreboardReader.compareScore(prevLowestScore, game) > 0) {
-                console.log('should write high score for new player');
+                console.log(`getLowestScoreB: should write high score for new player\n`);
                 return prevLowestScore; // this game has a higher score, and lowest score should be replaced
             }
             return game;
         }
-        
-        return game;
 
+        return game;
     }
     else {
         console.log(response.statusCode, response.body);
-        console.log(`dynamo error checking high score table: ${game.gameID}`);
+        console.log(`getLowestScore: dynamo error checking high score table: ${game.gameID}\n`);
         return game;
     }
-
 
 }
 
 
 
 
-async function writeHighScore(dynamo, score) {
-
-    console.log(`writeHighScore: ${score.who} ${score.hardlev} ${score.timeused} ${score.who} ${score.score}`);
-
+function setParams(score, highScore) {
     var params;
-    
-    if (score.winner) {
-        params = {
-            TableName: "winners",
-            Item: {
-                "gameID": score.gameID,
-                "score": score.score,
-                "winner": score.winner, // redundant, but makes life easier for sorting
-                "hardlev": score.hardlev,
-                "who": score.who,
-                "timeused": score.timeused,
-                "playerID": score.playerID,
-                "createdAt": score.createdAt,
-            }
-        };
+
+    if (highScore) {
+        if (score.winner) {
+            params = {
+                TableName: "winners",
+                Item: {
+                    "gameID": score.gameID,
+                    "score": score.score,
+                    "winner": score.winner, // redundant, but makes life easier for sorting
+                    "hardlev": score.hardlev,
+                    "who": score.who,
+                    "timeused": score.timeused,
+                    "playerID": score.playerID,
+                    "createdAt": score.createdAt,
+                }
+            };
+        }
+        else {
+            params = {
+                TableName: "visitors",
+                Item: {
+                    "gameID": score.gameID,
+                    "score": score.score,
+                    "winner": score.winner, // redundant, but makes life easier for sorting
+                    "hardlev": score.hardlev,
+                    "who": score.who,
+                    "what": score.what,
+                    "level": score.level,
+                    "timeused": score.timeused,
+                    "playerID": score.playerID,
+                    "createdAt": score.createdAt,
+                }
+            };
+        }
     }
     else {
         params = {
-            TableName: "visitors",
-            Item: {
-                "gameID": score.gameID,
-                "score": score.score,
-                "winner": score.winner, // redundant, but makes life easier for sorting
-                "hardlev": score.hardlev,
-                "who": score.who,
-                "what": score.what,
-                "level": score.level,
-                "timeused": score.timeused,
-                "playerID": score.playerID,
-                "createdAt": score.createdAt,
-            }
+            Item: score,
+            TableName: 'games'
         };
     }
-    await dynamo.put(params, function (err, data) {
-        if (err) {
-            console.log("err: " + score.gameID);
-            console.log("err JSON: " + JSON.stringify(err));
-        } else {
-            console.log(`wrote high score: ${score.who} ${score.hardlev} ${score.timeused} ${score.who} ${score.score}`);
-        }
-    }).promise();
-    
-    
-    
+
+    return params;
 }
