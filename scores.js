@@ -200,10 +200,10 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
         if (status == 200) {
             var newData = JSON.parse(payload.body);
 
-            winners = newData[0];
+            winners = newData[0].slice(0, MAX_SCORES_TO_READ);
             console.log(`loaded winners: ${winners.length}`);
 
-            losers = newData[1];
+            losers = newData[1].slice(0, MAX_SCORES_TO_READ);
             console.log(`loaded visitors: ${losers.length}`);
 
             showScores(newScore, false, showWinners, showLosers, 0);
@@ -329,9 +329,9 @@ function printScoreBoard(board, newScore, header, printout, offset) {
     lprcat(header);
 
     var i = GAMEOVER ? 0 : scoreIndex - offset;
-    for (var count = 0; i < scoreboard.length; i++, scoreIndex++) {
+    for (var count = 0; i < scoreboard.length ; i++, scoreIndex++) {
 
-        if (!GAMEOVER && ++count > MAX_SCORES_PER_PAGE) {
+        if (!GAMEOVER && ++count > MAX_SCORES_PER_PAGE ) {
             break;
         }
 
