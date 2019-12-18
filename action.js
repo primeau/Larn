@@ -85,11 +85,11 @@ function act_open_chest(x, y) {
     player.level.items[x][y] = OEMPTY; /* destroy the chest */
     player.level.know[x][y] = 0;
     if (rnd(100) < 69) {
-      creategem(); /* gems from the chest */
+      creategem(true); /* gems from the chest */
     }
-    dropgold(rnd(110 * chest.arg + 200));
+    dropgold(rnd(110 * chest.arg + 200), true);
     for (i = 0; i < rnd(4); i++) {
-      something(chest.arg + 2);
+      something(chest.arg + 2, true);
     }
   } else
     updateLog(`  Nothing happens`);

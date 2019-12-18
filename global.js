@@ -1,6 +1,10 @@
 'use strict';
 
 
+const ENCH_SCROLL = 0;    /* Enchantment from reading a scroll */
+const ENCH_ALTAR = 1;     /* Enchantment from an altar         */
+const ENCH_FOUNTAIN = 2;  /* Enchantment from a fountain       */
+
 function positionplayer(x, y, exact) {
   if (x == null) x = player.x;
   if (y == null) y = player.y;
@@ -138,7 +142,7 @@ function recalc() {
 /*
     function to create a gem on a square near the player
  */
-function creategem() {
+function creategem(nearPlayer) {
   var i, j;
   switch (rnd(4)) {
     case 1:
@@ -158,7 +162,7 @@ function creategem() {
       j = 20;
       break;
   };
-  createitem(i, rnd(j) + j / 10);
+  createitem(i, rnd(j) + j / 10, nearPlayer);
 }
 
 
@@ -182,7 +186,7 @@ function more(select_allowed) {
 /*
     function to enchant armor player is currently wearing
  */
-function enchantarmor(rusty_only) {
+function enchantarmor(enchant_source) {
   var armor;
 
   if (player.WEAR) {
@@ -192,15 +196,49 @@ function enchantarmor(rusty_only) {
   } else {
     cursors();
     beep();
-    if (!rusty_only) updateLog(`  You feel a sense of loss`);
+    if (enchant_source != ENCH_FOUNTAIN) updateLog(`You feel a sense of loss.`);
     return false;
   }
   if (!armor.matches(OSCROLL) && !armor.matches(OPOTION)) {
-    if (rusty_only && armor.arg >= 0) {
+    if (enchant_source == ENCH_FOUNTAIN && armor.arg >= 0) {
       return false; // fountains should only improve negative stats
     }
+    if (ULARN) {
+      // choose what to enchant
+      armor = (rund(100) < 50) ? player.SHIELD : player.WEAR;
+      if (!armor) armor = (armor == player.SHIELD) ? player.WEAR : player.SHIELD;
+    }
+
+    // enchant
     armor.arg++;
-    return true;
+
+    if (ULARN) {
+      // check for destruction at >= +10.
+      if (armor.arg >= 10) {
+        if (enchant_source == ENCH_ALTAR) {
+          armor.arg--;
+          updateLog(`Your ${armor.toString(true)} glows briefly.`);
+          return false;
+        } else if (rnd(10) <= 9) {
+          var destroyindex = player.inventory.indexOf(armor);
+          if (armor === player.WEAR) player.WEAR = null;
+          if (armor === player.SHIELD) player.SHIELD = null;
+          if (armor === player.WIELD) player.WIELD = null;
+          player.inventory[destroyindex] = null;
+          player.adjustcvalues(armor, false);
+          updateLog(`Your ${armor.toString(true)} vibrates violently and crumbles into dust!`);
+          return false;
+        }
+      }
+      else {
+        updateLog(`Your ${armor.toString(true)} glows for a moment.`);
+        return true;
+      }
+    }
+    else {
+      updateLog(`  You feel your armor vibrate for a moment`);
+      return true;
+    }
   }
   return false;
 }
@@ -208,7 +246,7 @@ function enchantarmor(rusty_only) {
 /*
     function to enchant a weapon presently being wielded
  */
-function enchweapon(rusty_only) {
+function enchweapon(enchant_source) {
   var weapon = player.WIELD;
   if (!weapon) {
     cursors();

@@ -111,11 +111,11 @@ Monster.prototype = {
         case PLATINUMDRAGON:
         case GNOMEKING:
         case REDDRAGON:
-          something(level);
+          something(level, false);
           return;
 
         case LEPRECHAUN:
-          if (rnd(101) >= 75) creategem();
+          if (rnd(101) >= 75) creategem(false);
           if (rnd(5) == 1) this.dropsomething(LEPRECHAUN);
           return;
       }
@@ -145,11 +145,11 @@ function randmonst() {
  *  Enter with the number of gold pieces to drop
  *  Returns nothing of value.
  */
-function dropgold(amount) {
+function dropgold(amount, nearPlayer) {
   if (amount > 250) {
     amount = Math.round(amount / 100) * 100;
   }
-  createitem(OGOLDPILE, amount);
+  createitem(OGOLDPILE, amount, nearPlayer);
 }
 
 
@@ -161,10 +161,10 @@ function dropgold(amount) {
  *  Enter with the cave level on which something is to be dropped
  *  Returns nothing of value.
  */
-function something(lv) {
+function something(lv, nearPlayer) {
   if (lv < 0 || lv > MAXLEVEL + MAXVLEVEL) return; /* correct level? */
-  if (rnd(101) < 8) something(lv); /* possibly more than one item */
-  createitem(newobject(lv));
+  if (rnd(101) < 8) something(lv, nearPlayer); /* possibly more than one item */
+  createitem(newobject(lv), 0, nearPlayer);
 }
 
 
@@ -471,23 +471,34 @@ function cgood(x, y, itm, monst) {
 
 /*
  *  createitem(it,arg)      Routine to place an item next to the player
- *      int it,arg;
+ *      int item, arg;
  *
  *  Enter with the item number and its argument (iven[], ivenarg[])
  *  Returns no value, thus we don't know about createitem() failures.
  */
-function createitem(it, arg) {
+function createitem(item, arg, nearPlayer) {
   var x, y, k, i;
   //if (it >= MAXOBJ) return; /* no such object */
+  var firstTry = true;
   for (k = rnd(8), i = -8; i < 0; i++, k++) /* choose direction, then try all */ {
     if (k > 8) k = 1; /* wraparound the diroff arrays */
-    x = player.x + diroffx[k];
-    y = player.y + diroffy[k];
+
+    if (nearPlayer) {
+      x = player.x + diroffx[k];
+      y = player.y + diroffy[k];
+    }
+    else {
+      x = lasthx + (firstTry ? 0 : diroffx[k]);
+      y = lasthy + (firstTry ? 0 : diroffy[k]);
+    }
+
     if (cgood(x, y, 1, 0)) /* if we can create here */ {
-      player.level.items[x][y] = createObject(it, arg);
+      player.level.items[x][y] = createObject(item, arg);
       //player.level.know[x][y] = 0;
       return;
     }
+
+    firstTry = false;
   }
 }
 

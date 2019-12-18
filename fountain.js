@@ -58,9 +58,9 @@ function act_wash_fountain() {
         }
         else {
           if (rnd(100) < 50) {
-              enchantarmor(true);
+              enchantarmor(ENCH_FOUNTAIN);
           } else {
-              enchweapon(true);
+              enchweapon(ENCH_FOUNTAIN);
           }
       }
     } else if (rnd(100) < 31) {

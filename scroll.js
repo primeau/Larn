@@ -73,14 +73,12 @@ function read_scroll(scroll) {
   switch (scroll.arg) {
     case 0:
       /* enchant armor */
-      if (enchantarmor())
-        updateLog(`  Your armor glows for a moment`);
+      enchantarmor(ENCH_SCROLL);
       break;
 
     case 1:
       /* enchant weapon */
-      if (enchweapon())
-        updateLog(`  Your weapon glows for a moment`);
+      enchweapon(ENCH_SCROLL);
       break;
 
     case 2:
@@ -108,7 +106,7 @@ function read_scroll(scroll) {
 
     case 5:
       /* create artifact */
-      something(level);
+      something(level, true);
       break;
 
     case 6:

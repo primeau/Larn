@@ -119,14 +119,12 @@ function cannedlevel(depth) {
         case '~':
           if (depth != MAXLEVEL - 1) break;
           items[x][y] = createObject(OLARNEYE);
-          var guardian = ULARN ? createMonster(DEMONPRINCE) : createMonster(rund(8) + DEMONLORD);
-          monsters[x][y] = guardian;
+          ULARN ? create_guardian(DEMONPRINCE, x, y) : create_guardian(rund(8) + DEMONLORD, x, y);
           break;
         case '!':
           if (depth != MAXLEVEL + MAXVLEVEL - 1) break;
           items[x][y] = createObject(OPOTION, 21);
-          var guardian = ULARN ? createMonster(LUCIFER) : createMonster(DEMONPRINCE);
-          monsters[x][y] = guardian;
+          ULARN ? create_guardian(LUCIFER, x, y) : create_guardian(DEMONPRINCE, x, y);
           break;
       } // switch
       if (!items[x][y]) {
@@ -353,14 +351,14 @@ function troom(lv, xsize, ysize, tx, ty, glyph) {
   if (getDifficulty() < 2) {
     for (player.x = tx + 1; player.x <= tx + xsize - 2; player.x += 2) {
       for (i = 0, j = rnd(6); i <= j; i++) {
-        something(lv + 2);
+        something(lv + 2, true);
         createmonster(makemonst(lv + (ULARN ? 2 : 1)));
       }
     }
   } else {
     for (player.x = tx + 1; player.x <= tx + xsize - 2; player.x += 2) {
       for (i = 0, j = rnd(4); i <= j; i++) {
-        something(lv + 2);
+        something(lv + 2, true);
         createmonster(makemonst(lv + (ULARN ? 4 : 3)));
       }
     }

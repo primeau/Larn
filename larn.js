@@ -3,7 +3,7 @@
 const VERSION = '12.4.5';
 const BUILD = '343';
 
-var ULARN = false; // are we playing LARN or ULARN
+var ULARN = false; // are we playing LARN or ULARN?
 
 const IMG_HEIGHT = 24;
 const IMG_WIDTH = 12;
