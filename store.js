@@ -590,6 +590,16 @@ function parse_tradepost(key) {
   //cursor(62, 22);
   //lprc(key);
 
+  /* 12.4.5
+  prevent players from selling things once they have found the potion
+  to prevent them from racking up the scoreboard
+  */
+  if (player.hasPickedUpPotion) {
+    storemessage(`Sorry friend, the shop is closed, you should go home now`, 1500);
+    //nap(2000);
+    return 0;
+}
+
   if (i >= 0 && i <= 26) {
     var item = player.inventory[i];
     if (!item) {
@@ -643,7 +653,7 @@ function parse_tradepost(key) {
   /* we have now found the value of the item, and dealt with any error
   cases. print the object's value, let the user sell it */
   value = Math.floor(value);
-  storemessage(`Item (${key}) is worth ${value} gold pieces to us. Do you want to sell it?`);
+  storemessage(`Item (${key}) is worth ${Number(value).toLocaleString()} gold pieces to us. Do you want to sell it?`);
 
   itemToSell = [];
   itemToSell[SELL_PRICE] = value;

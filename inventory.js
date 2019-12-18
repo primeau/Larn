@@ -200,6 +200,7 @@ function take(item) {
   for (var i = 0; i < limit; i++) {
     if (!player.inventory[i]) {
       player.inventory[i] = item;
+      if (item.matches(OPOTION) && item.arg == 21) player.hasPickedUpPotion = true;
       item.inv = i; // helper for sorting inventory
       debug(`take(): ` + item);
       limit = 0;
@@ -235,6 +236,7 @@ function drop_object(index) {
 
   if (index == '.') {
     nomove = 1;
+    setMazeMode(true); // fix for when dropping gold when inventory is visible
     updateLog(`How much gold will you drop? `);
     setNumberCallback(drop_object_gold, true);
     return 1;
@@ -315,7 +317,11 @@ function drop_object_gold(amount) {
     return 1;
   }
 
-  if (!pitflag && isItemAt(player.x, player.y)) {
+  /* 12.4.5
+  Allow dropping gold on top of gold
+  */
+  var goldExists = itemAt(player.x, player.y).matches(OGOLDPILE);
+  if (!pitflag && isItemAt(player.x, player.y) && !goldExists) {
     beep();
     updateLog(`  There's something here already`);
     return 1;
@@ -326,8 +332,12 @@ function drop_object_gold(amount) {
   if (pitflag) {
     updateLog(`  The gold disappears down the pit.`);
   }
-  else {
-    player.level.items[player.x][player.y] = createObject(OGOLDPILE, amount);
+  else  {
+    var floorGoldAmount = 0;
+    if (goldExists) {
+      floorGoldAmount = itemAt(player.x, player.y).arg;
+    }
+    player.level.items[player.x][player.y] = createObject(OGOLDPILE, amount + floorGoldAmount);
   }
   player.level.know[player.x][player.y] = 0;
   return 1;

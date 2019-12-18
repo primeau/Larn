@@ -30,25 +30,33 @@ goes up.
 a monster will notice when the player passes too closely. Affects difficulty 2
 and higher.
 
-10. [fix] It's possible to fall into a pit again. This was broken in 12.4.
+10. [balance] Selling items is blocked once the potion has been picked up to
+prevent player from inflating their score by selling epic items.   
 
-11. [fix] The last hit monster would chase the player from across the maze after
+11. [fix] It's possible to fall into a pit again. This was broken in 12.4.
+
+12. [fix] The last hit monster would chase the player from across the maze after
 teleporting away. This bug could also cause other monsters to become 'possessed'
 and move very erratically in rare situations.
 
-12. [fix] Leather and stainless plate armor could be dulled when used as a
+13. [fix] Leather and stainless plate armor could be dulled when used as a
 weapon against rusting monsters. Thanks to Will Oprisko for finding this one.
 
-13. [fix] Half-speed monsters (Hobgoblins, Ice Monsters, etc) didn't move
+14. [fix] Half-speed monsters (Hobgoblins, Ice Monsters, etc) didn't move
 properly when the player was running.
 
-14. [fix] After casting Stop Time, monsters would still chase the player when
+15. [fix] After casting Stop Time, monsters would still chase the player when
 running. 
 
-15. [fix] Bessman's Flailing Hammer could only be created on the first level
+16. [fix] Bessman's Flailing Hammer could only be created on the first level
 of the dungeon.
 
-16. [un-fix] The history lesson from the College of Larn says that the Eye
+17. [fix] You can drop gold onto an existing pile of gold now.
+
+18. [fix] When a monster is killed with a ranged attack, it will drop loot
+near itself instead of the player.
+
+19. [un-fix] The history lesson from the College of Larn says that the Eye
 of Larn is protected by a Platinum Dragon, which wasn't the case in the original
 version of Larn. I changed it to be true for a while, but it unbalanced the
 game too much. For anyone who died at the hands of a Platinum Dragon while

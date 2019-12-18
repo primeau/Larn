@@ -117,6 +117,12 @@ var Player = function Player() {
     this.MOVESMADE = 0;
     this.MONSTKILLED = 0;
     this.SPELLSCAST = 0;
+    
+    /* 12.4.5
+    prevent players from selling things once they have found the potion
+    to prevent them from racking up the scoreboard
+    */
+    this.hasPickedUpPotion = false;
 
     this.getChar = function() {
       if (amiga_mode)

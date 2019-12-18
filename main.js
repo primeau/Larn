@@ -1,5 +1,6 @@
 'use strict';
 
+/* if (ULARN) This game is bad for you. It is evil. It will rot your brain. */
 
 /* create new game */
 function welcome() {
@@ -229,19 +230,27 @@ function makeplayer() {
   player.x = rnd(MAXX - 2);
   player.y = rnd(MAXY - 2);
 
-  // enableDebug();
-  // eventToggleDebugWTW();
-  // eventToggleDebugStairs();
-  // eventToggleDebugOutput();
-  // eventToggleDebugKnowAll();
-  // eventToggleDebugStats();
-  // eventToggleDebugImmortal();
-  // eventToggleDebugAwareness();
-  // player.updateStealth(100000);
-  // keyboard_hints = true;
+  /*
+  enableDebug();
+  eventToggleDebugWTW();
+  eventToggleDebugStairs();
+  eventToggleDebugOutput();
+  eventToggleDebugKnowAll();
+  eventToggleDebugStats();
+  eventToggleDebugImmortal();
+  eventToggleDebugAwareness();
+  player.updateStealth(100000);
+  keyboard_hints = true;
+  wizardmode(`pvnert(x)`);
 
-  // // auto_pickup = true;
-  // wizardmode(`pvnert(x)`);
+  var startLeather = createObject(OLEATHER);
+  var startShield = createObject(OSHIELD);
+  take(startLeather);
+  take(startShield);
+  player.WEAR = startLeather;
+  player.SHIELD = startShield;
+*/
+  // auto_pickup = true;
 
   // // for (var i = 2; i < 26; i+=2) {
   // //   take(createObject(OSCROLL, rnd(5)));

@@ -161,6 +161,11 @@ function dropgold(amount, nearPlayer) {
  *  Enter with the cave level on which something is to be dropped
  *  Returns nothing of value.
  */
+
+/* 12.4.5
+killing a monster with a ranged spell will drop loot beside the 
+monster, not the player
+*/
 function something(lv, nearPlayer) {
   if (lv < 0 || lv > MAXLEVEL + MAXVLEVEL) return; /* correct level? */
   if (rnd(101) < 8) something(lv, nearPlayer); /* possibly more than one item */
