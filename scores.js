@@ -20,7 +20,8 @@ var LocalScore = function() {
   this.timeused = Math.floor(gtime / 100); /* the time used in mobuls to win the game */
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
   this.level = LEVELNAMES[level]; /* the level player was on when he died */
-  this.playerID = playerID; /* nothing nefarious, just simple way to differentiate players in the game database */
+  this.playerID = playerID; /* nothing nefarious, just a simple way to differentiate players in the game database */
+  this.playerIP = playerIP; /* nothing nefarious, just a simple way to differentiate players in the game database */
   this.gameID = gameID + (dofs ? '+' : ''); /* unique game ID */
   this.debug = debug_used; /* did the player use debug mode? */
   this.gamelog = LOG; /* the last few lines of what happened */
@@ -200,6 +201,8 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
         if (status == 200) {
             var newData = JSON.parse(payload.body);
 
+            // only return top 72 so the end game scoreboard
+            // doesn't overflow above 80 
             winners = newData[0].slice(0, MAX_SCORES_TO_READ);
             console.log(`loaded winners: ${winners.length}`);
 

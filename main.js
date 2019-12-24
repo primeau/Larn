@@ -241,13 +241,10 @@ function makeplayer() {
   eventToggleDebugAwareness();
   player.updateStealth(100000);
   keyboard_hints = true;
-  wizardmode(`pvnert(x)`);
+  //wizardmode(`pvnert(x)`);
 
-  var startLeather = createObject(OLEATHER);
   var startShield = createObject(OSHIELD);
-  take(startLeather);
   take(startShield);
-  player.WEAR = startLeather;
   player.SHIELD = startShield;
 */
   // auto_pickup = true;
@@ -306,6 +303,21 @@ function initFS() {
 
 
 
+function getIP() {
+  try {
+    fetch(`https://www.cloudflare.com/cdn-cgi/trace`).then(function (response) {
+      response.text().then(function (text) {
+        var tmp = text.split(`\n`)[2];
+        playerIP = tmp.split(`=`)[1];
+      });
+    });
+  } catch (e) {
+    console.error(`caught: ${e}`);
+  }
+}
+
+
+
 function startgame(hard) {
 
   // clear the blinking cursor after setting difficulty
@@ -320,6 +332,7 @@ function startgame(hard) {
   }
 
   initFS();
+  getIP();
 
   makeplayer(); /*  make the character that will play  */
 
