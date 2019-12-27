@@ -52,8 +52,10 @@ function act_remove_gems(arg) {
 function sit_on_throne() {
   cursors();
   var item = itemAt(player.x, player.y);
-  if (item.matches(OTHRONE) || item.matches(ODEADTHRONE)) {
+  if (item.matches(OTHRONE)) {
     act_sit_throne(item.arg);
+  } else if (item.matches(ODEADTHRONE)) {
+    act_sit_dead_throne(item.arg);
   } else {
     updateLog(`I see no throne to sit on here!`);
   }
@@ -83,5 +85,24 @@ function act_sit_throne(arg) {
   } else {
     updateLog(`  Nothing happens`);
   }
-  return;
+}
+
+
+
+function act_sit_dead_throne(arg) {
+  if (ULARN) {
+    var k = rnd(101);
+    if (k < 5) {
+      player.raiselevel();
+    } else if (k < 25) {
+      updateLog(`  Zaaaappp!  You've been teleported!`);
+      beep();
+      oteleport(0);
+    } else {
+      updateLog(`  Nothing happens`);
+    }
+    return;
+  } else {
+    act_sit_throne(arg);
+  }
 }
