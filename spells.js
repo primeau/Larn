@@ -943,7 +943,8 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   } else if (item.matches(OTHRONE)) {
     cursors();
     updateLog(str(`throne`));
-    if (dam > 39 && item.arg == 0) {
+    var throneStrength = ULARN ? 39 : 33;
+    if (dam > throneStrength && item.arg == 0) {
       create_guardian(GNOMEKING, x, y);
       item.arg = 1; // nullify the throne
       show1cell(x, y);
