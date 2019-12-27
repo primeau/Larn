@@ -677,10 +677,12 @@ function opit() {
   } else {
     var damage = 0;
     if (rnd(101) < 20) {
-      updateLog(`You fell into a pit! Your fall is cushioned by an unknown force`);
+      var pitMessage = ULARN ? `A poor monster cushions your fall!` : `Your fall is cushioned by an unknown force`;
+      updateLog(`You fell into a pit! ${pitMessage}`);
     } else {
       damage = rnd(level * 3 + 3);
-      updateLog(`You fell into a pit! You suffer ${damage} hit points damage`);
+      var plural = damage == 1 ? `` : `s`;
+      updateLog(`You fell into a pit! You suffer ${damage} hit point${plural} damage`);
       lastnum = 261; /* fell into a pit */
     }
     player.losehp(damage);
@@ -692,7 +694,8 @@ function opit() {
 
 
 function obottomless() {
-  updateLog(`You fell into a bottomless pit!`);
+  var bottomlessMessage = ULARN ? `You fell into a pit leading straight to HELL!` : `You fell into a bottomless pit!`;
+  updateLog(bottomlessMessage);
   beep();
   //nap(3000);
   died(262, false); /* fell into a bottomless pit */

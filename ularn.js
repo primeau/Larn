@@ -19,4 +19,9 @@ function setUlarnVars() {
         monsterlist[LEMMING].char = `l`;
         monsterlist[LEMMING].desc = `lemming`;
     }
+
+    // this should probably be replaced with enums
+    DEATH_REASONS[6] = `fell into a pit to HELL`;
+    DEATH_REASONS[15] = `fell through a trap door to HELL`;
+
 }

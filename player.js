@@ -517,8 +517,9 @@ var Player = function Player() {
       var prev = this.ALTPRO;
       this.ALTPRO = Math.max(0, this.ALTPRO + x);
       changedAltPro = getUpdateTime(prev, x, this.ALTPRO, changedAltPro);
-      if (prev <= 0 && this.ALTPRO > 0) this.setMoreDefenses(this.MOREDEFENSES + 3);
-      if (prev > 0 && this.ALTPRO <= 0) this.setMoreDefenses(this.MOREDEFENSES - 3);
+      var ALTAR_BOOST = ULARN ? 5 : 3;
+      if (prev <= 0 && this.ALTPRO > 0) this.setMoreDefenses(this.MOREDEFENSES + ALTAR_BOOST);
+      if (prev > 0 && this.ALTPRO <= 0) this.setMoreDefenses(this.MOREDEFENSES - ALTAR_BOOST);
       return this.ALTPRO;
     };
     this.updateProtectionTime = function(x) {
