@@ -1,9 +1,9 @@
 'use strict';
 
 
-const ENCH_SCROLL = 0;    /* Enchantment from reading a scroll */
-const ENCH_ALTAR = 1;     /* Enchantment from an altar         */
-const ENCH_FOUNTAIN = 2;  /* Enchantment from a fountain       */
+const ENCH_SCROLL = 0; /* Enchantment from reading a scroll */
+const ENCH_ALTAR = 1; /* Enchantment from an altar         */
+const ENCH_FOUNTAIN = 2; /* Enchantment from a fountain       */
 
 function positionplayer(x, y, exact) {
   if (x == null) x = player.x;
@@ -211,6 +211,7 @@ function enchantarmor(enchant_source) {
 
     // enchant
     armor.arg++;
+    var armorMessage = (armor === player.SHIELD) ? `shield` : `armor`;
 
     if (ULARN) {
       // check for destruction at >= +10.
@@ -226,17 +227,16 @@ function enchantarmor(enchant_source) {
           if (armor === player.WIELD) player.WIELD = null;
           player.inventory[destroyindex] = null;
           player.adjustcvalues(armor, false);
-          updateLog(`Your ${armor.toString(true)} vibrates violently and crumbles into dust!`);
+          updateLog(`  Your ${armorMessage} vibrates violently and crumbles into dust!`);
           return false;
         }
-      }
-      else {
-        updateLog(`Your ${armor.toString(true)} glows for a moment.`);
+      } else {
+        updateLog(`  Your ${armorMessage} glows for a moment.`);
         return true;
       }
-    }
+    } // end ULARN
     else {
-      updateLog(`  You feel your armor vibrate for a moment`);
+      updateLog(`  You feel your ${armorMessage} vibrate for a moment`);
       return true;
     }
   }
@@ -251,24 +251,48 @@ function enchweapon(enchant_source) {
   if (!weapon) {
     cursors();
     beep();
-    if (!rusty_only) updateLog(`  You feel a sense of loss`);
+    if (!enchant_source != ENCH_FOUNTAIN) {
+      if (ULARN) updateLog(`  You feel depressed.`);
+      else updateLog(`  You feel a sense of loss`);
+    }
     return false;
   }
   if (!weapon.matches(OSCROLL) && !weapon.matches(OPOTION)) {
-    if (rusty_only && weapon.arg >= 0) {
+    if (enchant_source == ENCH_FOUNTAIN && weapon.arg >= 0) {
       return false; // fountains should only improve negative stats
     }
     weapon.arg++;
-    if (weapon.matches(OCLEVERRING))
+    if (weapon.matches(OCLEVERRING)) {
       player.setIntelligence(player.INTELLIGENCE + 1);
-    else
-    if (weapon.matches(OSTRRING))
+    } else if (weapon.matches(OSTRRING)) {
       player.setStrExtra(player.STREXTRA + 1);
-    else
-    if (weapon.matches(ODEXRING))
+    } else if (weapon.matches(ODEXRING)) {
       player.setDexterity(player.DEXTERITY + 1);
+    }
 
-    return true;
+    if (ULARN) {
+      if (weapon.arg >= 10 && rnd(10) <= 9) {
+        if (enchant_source == ENCH_ALTAR) {
+          weapon.arg--;
+          updateLog(`  Your weapon glows a little.`);
+          return false;
+        } else {
+          updateLog(`  Your weapon vibrates violently and crumbles into dust!`);
+          var destroyindex = player.inventory.indexOf(weapon);
+          player.WIELD = null;
+          player.inventory[destroyindex] = null;
+          player.adjustcvalues(weapon, false);
+          return false;
+        }
+      } else {
+        updateLog(`  Your weapon glows for a moment.`);
+        return true;
+      }
+    } // end ULARN
+    else {
+      updateLog(`  You feel your weapon vibrate for a moment`);
+      return true;
+    }
   }
   return false;
 }

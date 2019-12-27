@@ -31,24 +31,31 @@ function pray_at_altar() {
     Perform the actions associated with praying at an altar and giving a
     donation.
 */
-function act_donation_pray(k) {
-  if (k == ESC) {
+function act_donation_pray(offering) {
+  if (offering == ESC) {
     appendLog(` cancelled`);
     nomove = 1;
     prayed = 0;
     return 1;
   }
 
-  if (k == '*') {
-    debug(k = player.GOLD);
+  if (offering == '*') {
+    offering = player.GOLD;
+  }
+  offering = Number(offering);
+
+  /* Player donates more gold than they have.  Loop back around so
+   player can't escape the altar for free. */
+  if (offering > player.GOLD) {
+    updateLog(`  You don't have that much!`);
+    prayed = 0;
+    dropflag = 1;
+    return 1;
   }
 
-  k = Number(k);
-
   /* make giving zero gold equivalent to 'just pray'ing.  Allows player to
-     'just pray' in command mode, without having to add yet another command.
-  */
-  if (k == 0) {
+     'just pray' in command mode, without having to add yet another command. */
+  if (offering == 0) {
     // // for testing
     // var outcome;
     // var cnt = 0;
@@ -63,55 +70,88 @@ function act_donation_pray(k) {
     return 1;
   }
 
-  if (player.GOLD >= k) {
+  if (player.GOLD >= offering) {
     prayed = 1;
     dropflag = 1;
 
-    var temp = player.GOLD / 10;
-    player.setGold(player.GOLD - k);
+    var oneTenth = player.GOLD / 10;
+    player.setGold(player.GOLD - offering);
 
-    /* if player gave less than 10% of _original_ gold, make a monster
-     */
-    if (k < temp || k < rnd(50)) {
-      createmonster(makemonst(level + 1));
-      player.AGGRAVATE += 200;
-      return 1;
-    }
-    if (rnd(101) > 50) {
-      act_prayer_heard();
-      return 1;
-    }
-    if (rnd(43) == 5) {
-      if (player.WEAR || player.SHIELD)
-        updateLog(`  You feel your armor vibrate for a moment`);
-      enchantarmor();
-      return 1;
-    }
-    if (rnd(43) == 8) {
-      if (player.WIELD)
-        updateLog(`  You feel your weapon vibrate for a moment`);
-      enchweapon();
-      return 1;
-    }
-    /*
-     v12.4.5 - prevents our hero from buying too many +AC/WC
-     */
-    if (rnd(43) == 13) {
-      crumble_altar();
-      return 1;
-    }
+    if (ULARN) {
+      // less than 10% of post offering gold 
+      if (offering < (player.GOLD / 10) && rnd(60) < 30) {
+        updateLog(`Cheapskate! The Gods are insulted by such a tiny offering!`);
+        forget(); /*  remember to destroy the altar   */
+        // ularn does NOT appreciate cheapskates
+        createmonster(DEMONPRINCE);
+        player.AGGRAVATE += 1500;
+        return 1;
+      }
+      // less than 10% of original gold
+      else if (offering < oneTenth || offering < rnd(50)) {
+        createmonster(makemonst(level + 2));
+        player.AGGRAVATE += 500;
+        return 1;
+      }
+      //
+      else {
+        var p = rund(16);
+        if (p < 4) {
+          updateLog("Thank you.");
+          return 1;
+        } else if (p < 6) {
+          enchantarmor(ENCH_ALTAR);
+          enchantarmor(ENCH_ALTAR);
+        } else if (p < 8) {
+          enchweapon(ENCH_ALTAR);
+          enchweapon(ENCH_ALTAR);
+        } else {
+          act_prayer_heard();
+        }
 
-    updateLog(`  Thank You.`);
-    return 1;
+        /*
+         v12.4.5 - prevents our hero from buying too many +AC/WC
+         */
+        if (rnd(43) == 13) {
+          crumble_altar();
+        }
+
+        return 1;
+      }
+    } // end ULARN
+    else {
+      //if player gave less than 10% of _original_ gold, make a monster
+      if (offering < oneTenth || offering < rnd(50)) {
+        createmonster(makemonst(level + 1));
+        player.AGGRAVATE += 200;
+        return 1;
+      }
+      if (rnd(101) > 50) {
+        act_prayer_heard();
+        return 1;
+      }
+      if (rnd(43) == 5) {
+        enchantarmor(ENCH_ALTAR);
+        return 1;
+      }
+      if (rnd(43) == 8) {
+        enchweapon(ENCH_ALTAR);
+        return 1;
+      }
+
+      /*
+       v12.4.5 - prevents our hero from buying too many +AC/WC
+       */
+      if (rnd(43) == 13) {
+        crumble_altar();
+        return 1;
+      }
+
+      updateLog(`  Thank You.`);
+      return 1;
+
+    }
   }
-
-  /* Player donates more gold than they have.  Loop back around so
-     player can't escape the altar for free.
-  */
-  updateLog(`  You don't have that much!`);
-  prayed = 0;
-  dropflag = 1;
-  return 1;
 
 }
 
@@ -123,30 +163,46 @@ function act_donation_pray(k) {
     the money prompt when praying.
 */
 function act_just_pray() {
-  if (rnd(100) < 75) {
-    updateLog(`  Nothing happens`);
-  } else if (rnd(43) == 10) {
-    /*
-     v12.4.5 - prevents our hero from getting too many free +AC/WC
-     */
+
+  /*
+   v12.4.5 - prevents our hero from getting too many free +AC/WC
+   */
+  if (rnd(43) == 10) {
     crumble_altar();
     return 'crumble';
-  } else if (rnd(43) == 10) {
-    if (player.WEAR || player.SHIELD) {
-      updateLog(`  You feel your armor vibrate for a moment`);
-    }
-    enchantarmor();
-    return 'ac';
-  } else if (rnd(43) == 10) {
-    if (player.WIELD) {
-      updateLog(`  You feel your weapon vibrate for a moment`);
-    }
-    enchweapon();
-    return 'wc';
-  } else {
-    createmonster(makemonst(level + 1));
   }
-  return;
+
+  if (ULARN) {
+    var p = rund(100);
+    if (p < 12) {
+      createmonster(makemonst(level + 2));
+    } else if (p < 17) {
+      enchweapon(ENCH_ALTAR);
+    } else if (p < 22) {
+      enchantarmor(ENCH_ALTAR);
+    } else if (p < 27) {
+      act_prayer_heard();
+    } else {
+      updateLog(`  Nothing happens`);
+    }
+  } else {
+    if (rnd(100) < 75) {
+      updateLog(`  Nothing happens`);
+    } else if (rnd(43) == 10) {
+      enchantarmor(ENCH_ALTAR);
+      return 'ac';
+    } else if (rnd(43) == 10) {
+      if (player.WIELD) {
+        updateLog(`  You feel your weapon vibrate for a moment`);
+      }
+      enchweapon();
+      return 'wc';
+    } else {
+      createmonster(makemonst(level + 1));
+    }
+    return;
+  }
+
 }
 
 
@@ -156,8 +212,11 @@ function act_just_pray() {
 */
 function act_desecrate_altar() {
   if (rnd(100) < 60) {
-    createmonster(makemonst(level + 2) + 8);
+    var monstBoost = ULARN ? 3 : 2;
+    createmonster(makemonst(level + monstBoost) + 8);
     player.AGGRAVATE += 2500;
+  } else if (ULARN && rnd(100) < 5) {
+    player.raiselevel();
   } else if (rnd(101) < 30) {
     crumble_altar();
   } else
@@ -183,7 +242,8 @@ function crumble_altar() {
 */
 function act_ignore_altar(x, y) {
   if (rnd(100) < 30) {
-    createmonster(makemonst(level + 1), x, y);
+    var monstBoost = ULARN ? 2 : 1;
+    createmonster(makemonst(level + monstBoost), x, y);
     player.AGGRAVATE += rnd(450);
   } else
     updateLog(`  Nothing happens`);
@@ -197,5 +257,11 @@ function act_ignore_altar(x, y) {
  */
 function act_prayer_heard() {
   updateLog(`  You have been heard!`);
-  player.updateAltPro(500); /* protection field */
+  var protime;
+  if (ULARN) {
+    protime = 800;
+  } else {
+    protime = 500;
+  }
+  player.updateAltPro(protime); /* protection field */
 }

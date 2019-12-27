@@ -451,14 +451,14 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OGOLDPILE)) {
     updateLog(`You have found some gold!`);
-    updateLog(`  It is worth ${item.arg}!`);
+    updateLog(`  It is worth ${Number(item.arg).toLocaleString()}!`);
     player.setGold(player.GOLD + item.arg);
     forget();
     return;
   }
   //
   else if (item.matches(OALTAR)) {
-    //if (nearbymonst()) return;
+    if (nearbymonst()) return;
     if (do_ident) updateLog(`There is a Holy Altar here!`, formatHint('p', 'to pray', 'A', 'to desecrate'));
   }
   //

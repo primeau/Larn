@@ -164,7 +164,8 @@ function botside() {
   botsideline(player.HASTESELF, `Haste Self`, line++, changedHasteSelf);
   botsideline(player.CANCELLATION, `Cancel`, line++, changedCancellation);
   botsideline(player.INVISIBILITY, `Invisible`, line++, changedInvisibility);
-  botsideline(player.ALTPRO, `Protect 3`, line++, changedAltPro);
+  var altProLabel = `Protect ` + (ULARN ? `5` : `3`);
+  botsideline(player.ALTPRO, altProLabel, line++, changedAltPro);
   botsideline(player.PROTECTIONTIME, `Protect 2`, line++, changedProtectionTime);
   botsideline(player.WTW, `Wall-Walk`, line++, changedWTW);
 }
@@ -519,7 +520,7 @@ function updateLog(text, hint) {
   if (text == ``) text = ` `;
 
   if (DEBUG_OUTPUT) {
-    //console.log(`LARN: ${text} ${hint}`);
+    console.log(`LARN: ${text} ${hint ? hint : ``}`);
   }
   if (!LOG) return;
   if (keyboard_hints && hint) {

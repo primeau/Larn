@@ -270,6 +270,11 @@ function speldamage(x) {
             }
           } else if (item.matches(OALTAR)) {
             create_guardian(DEMONPRINCE, i, j);
+            if (ULARN) {
+              createmonster(DEMONPRINCE);
+              createmonster(DEMONPRINCE);
+              createmonster(DEMONPRINCE);
+            }
           } else if (item.matches(OFOUNTAIN)) {
             create_guardian(WATERLORD, i, j);
           } else if (monsterAt(i, j) && monsterAt(i, j).matches(XORN)) {
