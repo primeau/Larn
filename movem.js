@@ -242,6 +242,8 @@ function build_proximity_ripple() {
     for (m = xl; m <= xh; m++) {
       switch (itemAt(m, k).id) {
         case OWALL.id:
+        case OELEVATORUP.id:
+        case OELEVATORDOWN.id:
         case OPIT.id:
         case OCLOSEDDOOR.id:
         case OTRAPDOOR.id:
@@ -384,6 +386,13 @@ function move_scared(i, j) {
     Parameters: the X,Y position of the monster to be moved.
 */
 function move_smart(i, j) {
+
+  // if (!DEBUG_OUTPUT) {
+  //   console.log(`dumb`);
+  //   move_dumb(i,j);
+  //   return;
+  // }
+
   var x, y, z;
 
   /* check for a half-speed monster, and check if not to move.  Could be
@@ -627,11 +636,18 @@ function mmove(aa, bb, cc, dd) {
       flag = 2;
     } else flag = 1;
   }
-  if (item.matches(OTELEPORTER)) /* monster hits teleport trap */ {
-    flag = 3;
-    fillmonst(monster.arg);
-    player.level.monsters[cc][dd] = null;
-  }
+  if (!monster.isDemon()) {  
+    if (item.matches(OTELEPORTER)) /* monster hits teleport trap */ {
+      flag = 3;
+      fillmonst(monster.arg);
+      player.level.monsters[cc][dd] = null;
+    }
+    if (item.matches(OELEVATORDOWN) || item.matches(OELEVATORUP)) {
+      flag = 4;
+      player.level.monsters[cc][dd] = null;
+    }
+  }  
+  
   if (player.BLINDCOUNT) return; /* if blind don't show where monsters are   */
 
   if (player.level.know[cc][dd] & HAVESEEN) {
@@ -649,7 +665,10 @@ function mmove(aa, bb, cc, dd) {
       case 3:
         updateLog(`The ${monster} gets teleported`);
         break;
-    };
+      case 4:
+        updateLog(`The ${monster} is carried away by an elevator!`);
+        break;
+      };
   }
 
   if (player.level.know[aa][bb] & HAVESEEN) show1cell(aa, bb);
@@ -663,5 +682,6 @@ function mmove(aa, bb, cc, dd) {
  v12.4.5 - fix for half speed monsters following at 1:1 or not at all when running
  */
 function isHalfTime() {
+  // TODO: IS THIS THE PLACE TO FIX 1/2 SPEED MONSTERS NOT WORKING WITH HASTE?
   return (player.MOVESMADE & 1) == 1;
 }

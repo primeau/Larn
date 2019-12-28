@@ -258,16 +258,16 @@ const OALTAR = new Item(1, `<b>A</b>`, `a holy altar`, false);
 const OTHRONE = new Item(2, `<b>T</b>`, `a handsome jewel encrusted throne`, false);
 const OORB = new Item(3, `<b><font color='green'>o</font></b>`, `an orb of enlightenment`, true); // ULARN
 const OPIT = new Item(4, `<b>P</b>`, `a pit`, false);
-/*TODO*/ const OSTAIRSUP = new Item(5, `<b>&lt</b>`, `a staircase going up`, false); // use &lt to prevent bugginess when dropping a ! or ? to the right
-/*TODO use '_'?*/ const OELEVATORUP = new Item(6, `<b><font color='green'>^</font></b>`, `an elevator going up`, false); // ULARN
+const OSTAIRSUP = new Item(5, `<b>&lt</b>`, `a staircase going up`, false); // use &lt to prevent bugginess when dropping a ! or ? to the right
+const OELEVATORUP = new Item(6, `<b><font color='green'>^</font></b>`, `an express elevator going up`, false); // ULARN
 const OFOUNTAIN = new Item(7, `<b>F</b>`, `a bubbling fountain`, false);
 const OSTATUE = new Item(8, `<b>&</b>`, `a great marble statue`, false);
 const OTELEPORTER = new Item(9, `<b>^</b>`, `a teleport trap`, false);
 const OSCHOOL = new Item(10, `<b>+</b>`, `the College of Larn`, false);
 const OMIRROR = new Item(11, `<b>M</b>`, `a mirror`, false);
 const ODNDSTORE = new Item(12, `<b>=</b>`, `the DND store`, false);
-/*TODO*/ const OSTAIRSDOWN = new Item(13, `<b>&gt</b>`, `a staircase going down`, false);
-/*TODO use '_'?*/const OELEVATORDOWN = new Item(14, `<b><font color='green'>^</font></b>`, `an elevator going down`, false); // ULARN
+const OSTAIRSDOWN = new Item(13, `<b>&gt</b>`, `a staircase going down`, false);
+const OELEVATORDOWN = new Item(14, `<b><font color='green'>^</font></b>`, `an express elevator going down`, false); // ULARN
 const OBANK2 = new Item(15, `<b>$</b>`, `the Nth branch of the Bank of Larn`, false);
 const OBANK = new Item(16, `<b>$</b>`, `the bank of Larn`, false);
 const ODEADFOUNTAIN = new Item(17, `<b>f</b>`, `a dead fountain`, false);
@@ -575,7 +575,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog(`You escape a trap door.`);
       return;
     }
-    if ((level == MAXLEVEL - 1) || (level == MAXLEVEL + MAXVLEVEL - 1)) {
+    if ((level == DBOTTOM) || (level == VBOTTOM)) {
        updateLog(`You fell through a bottomless trap door!`);
       //nap(2000);
       died(271, false); /* fell through a bottomless trap door */
@@ -596,10 +596,23 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
 
   else if (item.matches(OSTAIRSUP) || item.matches(OVOLUP)) {
-    if (do_ident) updateLog(`You have found ${item}`, formatHint('<', 'to climb up'));
+    var stairMessage = `You have found ${item}`;
+    if (ULARN) stairMessage = `There is a circular staircase here`;
+    if (do_ident) updateLog(stairMessage, formatHint('<', 'to climb up'));
   }
   else if (item.matches(OSTAIRSDOWN) || item.matches(OVOLDOWN)) {
-    if (do_ident) updateLog(`You have found ${item}`, formatHint('>', 'to climb down'));
+    var stairMessage = `You have found ${item}`;
+    if (ULARN) stairMessage = `There is a circular staircase here`;
+    if (do_ident) updateLog(stairMessage, formatHint('>', 'to climb down'));
+  }
+
+  else if (item.matches(OELEVATORUP)) {
+    updateLog(`You have found ${item}`);
+    oelevator(1);
+  }
+  else if (item.matches(OELEVATORDOWN)) {
+    updateLog(`You have found ${item}`);
+    oelevator(-1);
   }
 
   else if (item.matches(OPOTION)) {
@@ -672,7 +685,7 @@ function opit() {
     updateLog(`You float right over the pit.`);
     return;
   }
-  if (level == MAXLEVEL - 1 || level >= MAXLEVEL + MAXVLEVEL - 1) {
+  if (level == DBOTTOM || level >= VBOTTOM) {
     obottomless();
   } else {
     var damage = 0;
@@ -699,6 +712,59 @@ function obottomless() {
   beep();
   //nap(3000);
   died(262, false); /* fell into a bottomless pit */
+}
+
+
+
+function oelevator(direction) {
+  // going up
+  if (direction == 1) {
+    if (level == 0) {
+      updateLog(`,  unfortunately, it is out of order.`);
+      return;
+    }
+    player.x = rnd(MAXX - 2);
+    player.y = rnd(MAXY - 2);
+    //nap(2000);
+
+
+    // in dungeon
+    if (level <= DBOTTOM) {
+      newcavelevel(rund(level));
+    }
+    // in volcano
+    else {
+      var newLevel = DBOTTOM + rund(level - DBOTTOM);
+      console.log(MAXLEVEL, level, newLevel);
+      if (newLevel == DBOTTOM) newLevel = 0;
+      console.log(MAXLEVEL, level, newLevel);
+      newcavelevel(newLevel);
+    }
+  }
+  // going down 
+  else {
+    if (level == DBOTTOM || level == (VBOTTOM)) {
+      //nap(2000);
+      updateLog(`  and it leads straight to HELL!`);
+      beep();
+      //nap(3000);
+      died(287);
+      return;
+    }
+    player.x = rnd(MAXX - 2);
+    player.y = rnd(MAXY - 2);
+    //nap(2000);
+
+    // in dungeon
+    if (level <= DBOTTOM) {
+      newcavelevel(level + rnd(DBOTTOM - level));
+    }
+    // in volcano
+    else {
+      newcavelevel(level + rnd(VBOTTOM - level));
+    }
+  }
+  positionplayer();
 }
 
 
@@ -739,13 +805,13 @@ function oteleport(err) {
   } else if (level < MAXLEVEL) {
     tmp = rnd(5) + level - 3;
     if (tmp >= MAXLEVEL)
-      tmp = MAXLEVEL - 1;
+      tmp = DBOTTOM;
     if (tmp < 1)
       tmp = 1;
   } else {
     tmp = rnd(3) + level - 2;
     if (tmp >= MAXLEVEL + MAXVLEVEL)
-      tmp = MAXLEVEL + MAXVLEVEL - 1;
+      tmp = VBOTTOM;
     if (tmp < MAXLEVEL)
       tmp = MAXLEVEL;
   }

@@ -255,7 +255,7 @@ function speldamage(x) {
           // kn = & know[i][j];
           var item = itemAt(i, j);
           if (item.matches(OWALL)) {
-            if (level < MAXLEVEL + MAXVLEVEL - 1)
+            if (level < VBOTTOM)
             //* p = * kn = 0;
               setItem(i, j, OEMPTY);
           } else if (item.matches(OSTATUE)) {
@@ -275,7 +275,7 @@ function speldamage(x) {
               createmonster(DEMONPRINCE);
               createmonster(DEMONPRINCE);
             }
-          } else if (item.matches(OFOUNTAIN)) {
+          } else if (!ULARN && item.matches(OFOUNTAIN)) {
             create_guardian(WATERLORD, i, j);
           } else if (monsterAt(i, j) && monsterAt(i, j).matches(XORN)) {
             ifblind(i, j);

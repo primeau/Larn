@@ -6,6 +6,9 @@ function setUlarnVars() {
     MAXVLEVEL = ULARN ? 5 : 3;
     TIMELIMIT = ULARN ? 40000 : 30000;
 
+    DBOTTOM = (MAXLEVEL - 1);
+    VBOTTOM = (MAXLEVEL + MAXVLEVEL - 1);
+
     LEVELS = new Array(MAXLEVEL + MAXVLEVEL);
 
     GAMENAME = ULARN ? `Ularn` : `Larn`;
@@ -18,6 +21,9 @@ function setUlarnVars() {
     if (ULARN) {
         monsterlist[LEMMING].char = `l`;
         monsterlist[LEMMING].desc = `lemming`;
+
+        OSTAIRSUP.char = `%`;
+        OSTAIRSDOWN.char = `%`;
     }
 
     // this should probably be replaced with enums

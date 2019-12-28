@@ -117,12 +117,12 @@ function cannedlevel(depth) {
           monsters[x][y] = createMonster(makemonst(depth + 1));
           break;
         case '~':
-          if (depth != MAXLEVEL - 1) break;
+          if (depth != DBOTTOM) break;
           items[x][y] = createObject(OLARNEYE);
           ULARN ? create_guardian(DEMONPRINCE, x, y) : create_guardian(rund(8) + DEMONLORD, x, y);
           break;
         case '!':
-          if (depth != MAXLEVEL + MAXVLEVEL - 1) break;
+          if (depth != VBOTTOM) break;
           items[x][y] = createObject(OPOTION, 21);
           ULARN ? create_guardian(LUCIFER, x, y) : create_guardian(DEMONPRINCE, x, y);
           break;
@@ -139,7 +139,7 @@ function cannedlevel(depth) {
 /* subroutine to make the caverns for a given level. only walls are made */
 function makemaze(k) {
   var useCanned = false;
-  if (k == MAXLEVEL - 1 || k == MAXLEVEL + MAXVLEVEL - 1) {
+  if (k == DBOTTOM || k == VBOTTOM) {
     useCanned = true;
   }
   else if (k > 1) {
@@ -392,9 +392,9 @@ function makeobject(depth) {
 
   if (depth == MAXLEVEL) fillroom(OVOLUP, 0); /* volcano shaft up from the temple */
 
-  if ((depth > 0) &&                                      /* no stairs on home level */
-      (depth != MAXLEVEL - 1) &&                          /* no stairs on bottom of dungeon */
-      (depth < MAXLEVEL + MAXVLEVEL - (ULARN ? 3 : 1))) { /* no stairs on v3, v4, v5 */
+  if ((depth > 0) &&                         /* no stairs on home level */
+      (depth != DBOTTOM) &&                  /* no stairs on bottom of dungeon */
+      (depth < VBOTTOM - (ULARN ? 2 : 0))) { /* no stairs on v3, v4, v5 */
     fillroom(OSTAIRSDOWN, 0);
   }
 
@@ -403,16 +403,16 @@ function makeobject(depth) {
   }
 
   if (ULARN) {
-    if (depth > 3 &&                          // > 3
-        depth != MAXLEVEL - 1 &&              // not on 15
-        depth != MAXLEVEL &&                  // not on V1
-        depth != MAXLEVEL + MAXVLEVEL - 1) {  // not on V5
+    if (depth > 3 &&          // > 3
+        depth != DBOTTOM &&   // not on 15
+        depth != MAXLEVEL &&  // not on V1
+        depth != VBOTTOM) {   // not on V5
       createArtifact(OELEVATORUP, player.ELEVUP, rnd(100) > 85);
     }
-    if (depth > 0 &&                            // not on home
-        (depth <= MAXLEVEL - 7 ||               // < level 10
-         depth == MAXLEVEL - 1 ||               // 15
-         depth == MAXLEVEL + MAXVLEVEL - 1)) {  // V5
+    if (depth > 0 &&               // not on home
+        (depth <= (DBOTTOM - 5) || // < level 10
+         depth == DBOTTOM ||       // 15
+         depth == VBOTTOM)) {      // V5
       createArtifact(OELEVATORDOWN, player.ELEVDOWN, rnd(100) > 85);
     }
   }
@@ -435,7 +435,7 @@ function makeobject(depth) {
   /* regular pits */ 
   fillmroom(rund(3), OPIT, 0);
 
-  if (ULARN || (depth != MAXLEVEL - 1) && (depth != MAXLEVEL + MAXVLEVEL - 1))
+  if (ULARN || (depth != DBOTTOM) && (depth != VBOTTOM))
     fillmroom(rund(2), OIVTRAPDOOR, 0);
 
   fillmroom(rund(2), OTRAPARROWIV, 0);

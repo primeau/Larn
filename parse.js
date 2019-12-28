@@ -529,7 +529,7 @@ function parse(key) {
   if (key == '>') {
 
     if (DEBUG_STAIRS_EVERYWHERE) {
-      if (!item.matches(OVOLDOWN) && level != MAXLEVEL - 1 && level != MAXLEVEL + MAXVLEVEL - 1) {
+      if (!item.matches(OVOLDOWN) && level != DBOTTOM && level != VBOTTOM) {
         newcavelevel(level + 1);
         return;
       }
@@ -554,6 +554,8 @@ function parse(key) {
           case OTRAPARROW.id:
           case OTELEPORTER.id:
           case OPIT.id:
+          case OELEVATORUP.id:
+          case OELEVATORDOWN.id:
             updateLog(`It's ${trap}`);
             flag++;
         };
