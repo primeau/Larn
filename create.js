@@ -606,7 +606,7 @@ function fillroom(what, arg) {
     }
   }
   var newItem = createObject(what, arg);
-  player.level.items[x][y] = newItem;
+  setItem(x, y, newItem);
   //debug(`fillroom(): ${newItem}`);
 }
 

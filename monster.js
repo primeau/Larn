@@ -498,8 +498,7 @@ function createitem(item, arg, nearPlayer) {
     }
 
     if (cgood(x, y, 1, 0)) /* if we can create here */ {
-      player.level.items[x][y] = createObject(item, arg);
-      //player.level.know[x][y] = 0;
+      setItem(x, y, createObject(item, arg));
       return;
     }
 

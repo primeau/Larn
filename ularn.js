@@ -22,8 +22,8 @@ function setUlarnVars() {
         monsterlist[LEMMING].char = `l`;
         monsterlist[LEMMING].desc = `lemming`;
 
-        OSTAIRSUP.char = `%`;
-        OSTAIRSDOWN.char = `%`;
+        OSTAIRSUP.char = `<b>%</b>`;
+        OSTAIRSDOWN.char = `<b>%</b>`;
     }
 
     // this should probably be replaced with enums

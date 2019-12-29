@@ -82,8 +82,7 @@ function act_open_chest(x, y) {
         updateLog(`  A sickness engulfs you!`);
         break;
     };
-    player.level.items[x][y] = OEMPTY; /* destroy the chest */
-    player.level.know[x][y] = 0;
+    setItem(x, y, OEMPTY); /* destroy the chest */
     if (rnd(100) < 69) {
       creategem(true); /* gems from the chest */
     }
@@ -140,8 +139,7 @@ function act_open_door(x, y) {
     }
   } else {
     updateLog(`  The door opens`);
-    player.level.know[x][y] = 0;
-    player.level.items[x][y] = createObject(OOPENDOOR);
+    setItem(x, y, createObject(OOPENDOOR));
     return (1);
   }
 }
@@ -175,8 +173,7 @@ function close_something(direction) {
       updateLog(`  There's a monster in the way!`);
       return;
     }
-    player.level.items[x][y] = createObject(OCLOSEDDOOR, 0);
-    player.level.know[x][y] = 0;
+    setItem(x, y, createObject(OCLOSEDDOOR, 0));
     if (direction == 0) {
       player.x = lastpx;
       player.y = lastpy;

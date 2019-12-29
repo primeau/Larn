@@ -770,7 +770,7 @@ function oelevator(direction) {
 
 
 function forget() {
-  player.level.items[player.x][player.y] = OEMPTY;
+  setItem(player.x, player.y, OEMPTY);
 }
 
 

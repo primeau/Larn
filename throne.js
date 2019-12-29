@@ -32,7 +32,8 @@ function act_remove_gems(arg) {
     for (var i = 0; i < rnd(4); i++) {
       creategem(true); /* gems pop off the throne */
     }
-    player.level.items[player.x][player.y] = createObject(ODEADTHRONE, itemAt(player.x, player.y).arg);
+    var throneArg = itemAt(player.x, player.y).arg;
+    setItem(player.x, player.y, createObject(ODEADTHRONE, throneArg));
     player.level.know[player.x][player.y] = 0;
   } else if (k < 40 && arg == 0 && !isGenocided(GNOMEKING)) {
     createmonster(GNOMEKING);

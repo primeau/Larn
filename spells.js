@@ -66,7 +66,7 @@ function cast(key) {
   }
 
   if (!(isalpha(key) || matchesSpell(key))) {
-  // if (!isalpha(key) && !matchesSpell(key)) {
+    // if (!isalpha(key) && !matchesSpell(key)) {
     return 0;
   }
 
@@ -252,17 +252,16 @@ function speldamage(x) {
       var yh = Math.min(player.y + 1, MAXY - 2);
       for (var i = Math.max(player.x - 1, 1); i <= xh; i++) {
         for (var j = Math.max(player.y - 1, 1); j <= yh; j++) {
-          // kn = & know[i][j];
           var item = itemAt(i, j);
           if (item.matches(OWALL)) {
             if (level < VBOTTOM)
-            //* p = * kn = 0;
               setItem(i, j, OEMPTY);
           } else if (item.matches(OSTATUE)) {
-            if (getDifficulty() < 3) {
-              setItem(i, j, createObject(OBOOK, level));
-              //* kn = 0;
-            }
+              var doCrumble = getDifficulty() < 3;
+              if (ULARN) doCrumble = getDifficulty() <= 3 && rnd(60) < 30;
+              if (doCrumble) {
+                setItem(i, j, createObject(OBOOK, level));
+              }
           } else if (item.matches(OTHRONE)) {
             if (item.arg == 0) {
               create_guardian(GNOMEKING, i, j);
@@ -422,10 +421,9 @@ function speldamage(x) {
             savemon.push(monster);
           }
           if (level != 0) {
-            player.level.items[i][j] = OWALL;
-          }
-          else {
-            player.level.items[i][j] = OEMPTY;
+            setItem(i, j, OWALL);
+          } else {
+            setItem(i, j, OEMPTY);
           }
           player.level.monsters[i][j] = null;
           if (wizard)
@@ -436,10 +434,10 @@ function speldamage(x) {
       }
       if (level != 0) eat(1, 1);
       if (level == 1)
-        player.level.items[33][MAXY - 1] = createObject(OHOMEENTRANCE);
+        setItem(33, MAXY - 1, createObject(OHOMEENTRANCE));
       for (j = rnd(MAXY - 2), i = 1; i < MAXX - 1; i++) {
         // JRP: I'm not sure why we do this, but it's in the original code
-        player.level.items[i][j] = empty;
+        setItem(i, j, empty);
       }
       /* put objects back in level */
       while (saveitm.length > 0) {
@@ -891,7 +889,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
         exitspell();
         return;
       }
-    
+
       cursors();
       updateLog(str(monster));
       dam -= hitm(x, y, dam);
@@ -911,9 +909,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       x < MAXX - 1 && y < MAXY - 1 &&
       x != 0 && y != 0) {
       updateLog(`  The wall crumbles`);
-      player.level.items[x][y] = OEMPTY;
-      player.level.know[x][y] = 0;
-      show1cell(x, y);
+      setItem(x, y, OEMPTY);
 
       updateWalls(x, y, 1);
 
@@ -924,21 +920,20 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     updateLog(str(`door`));
     if (dam >= 40) {
       updateLog(`  The door is blasted apart`);
-      player.level.items[x][y] = OEMPTY;
-      player.level.know[x][y] = 0;
-      show1cell(x, y);
+      setItem(x, y, OEMPTY);
     }
     dam = 0;
   } else if (item.matches(OSTATUE)) {
     cursors();
     updateLog(str(`statue`));
-    if (getDifficulty() < 3)
-      if (dam > 44) {
+    if (dam > 44) {
+      var doCrumble = getDifficulty() < 3;
+      if (ULARN) doCrumble = getDifficulty() <= 3 && rnd(60) < 30;
+      if (doCrumble) {
         updateLog(`  The statue crumbles`);
-        player.level.items[x][y] = createObject(OBOOK, level);
-        player.level.know[x][y] = 0;
-        show1cell(x, y);
+        setItem(x, y, createObject(OBOOK, level));
       }
+    }
     dam = 0;
   } else if (item.matches(OTHRONE)) {
     cursors();
@@ -1064,7 +1059,8 @@ function annihilate() {
   for (var i = player.x - 1; i <= player.x + 1; i++) {
     for (var j = player.y - 1; j <= player.y + 1; j++) {
       var monster = monsterAt(i, j);
-      if (monster) { /* if a monster there */
+      if (monster) {
+        /* if a monster there */
         if (monster.arg < DEMONLORD + 2 &&
           // JRP: Everyone gets an easter egg. This one is mine.
           monster.arg != LAMANOBE) {

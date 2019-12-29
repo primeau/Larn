@@ -275,9 +275,8 @@ function drop_object(index) {
     updateLog(`  It disappears down the pit.`);
   }
   else {
-    player.level.items[player.x][player.y] = item;
+    setItem(player.x, player.y, item);
   }
-  player.level.know[player.x][player.y] = 0;
 
   if (player.WIELD === item) {
     player.WIELD = null;
@@ -337,9 +336,8 @@ function drop_object_gold(amount) {
     if (goldExists) {
       floorGoldAmount = itemAt(player.x, player.y).arg;
     }
-    player.level.items[player.x][player.y] = createObject(OGOLDPILE, amount + floorGoldAmount);
+    setItem(player.x, player.y, createObject(OGOLDPILE, amount + floorGoldAmount));
   }
-  player.level.know[player.x][player.y] = 0;
   return 1;
 }
 

@@ -612,7 +612,7 @@ function mmove(aa, bb, cc, dd) {
   }
 
   if (monster.matches(LEPRECHAUN) && (item.matches(OGOLDPILE) || item.isGem())) {
-    player.level.items[cc][dd] = OEMPTY; /* leprechaun takes gold */
+    setItem(cc, dd, OEMPTY); /* leprechaun takes gold */
   }
 
   if (monster.matches(TROLL)) { /* if a troll regenerate him */
