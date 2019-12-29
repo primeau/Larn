@@ -7,32 +7,58 @@
     the player is actually standing at a live fountain.
 */
 function act_drink_fountain() {
-    if (rnd(1501) < 2) {
-        updateLog(`  Oops! You seem to have caught the dreadful sleep!`);
-        beep();
-        died(280, false); /* fell into the dreadful sleep */
-        return;
-    }
 
-    var x = rnd(100);
-    if (x < 7) {
-        player.HALFDAM += 200 + rnd(200);
-        updateLog(`  You feel a sickness coming on`);
-    } else if (x < 13) {
-        quaffpotion(createObject(OPOTION, 23), false); /* see invisible, but don't know the potion */
+  if (rnd(1501) < (ULARN ? 4 : 2)) {
+    var sleepExclaim = ULARN ? `OH MY GOD!! You` : `Oops! You seem to`;
+    updateLog(`  ${sleepExclaim} have caught the dreadful sleep!`);
+    beep();
+    died(280, false); /* fell into the dreadful sleep */
+    return;
+  }
+
+  var x = rnd(100);
+
+  if (ULARN) {
+    if (x == 1) {
+      player.raiselevel();
+    } else if (x < 11) {
+      var hitloss = rnd((level << 2) + 2);
+      updateLog(`  Bleah! The water tasted like stale gatorade! You lose ${hitloss} hit point`);
+      exclaim(hitloss);
+      lastnum = 273;
+      player.losehp(hitloss);
+    } else if (x < 14) {
+      player.HALFDAM += 200 + rnd(200);
+      updateLog(`  The water makes you vomit.`);
+    } else if (x < 17) {
+      quaffpotion(createObject(OPOTION, 17), false); /* giant strength, but don't know the potion */
     } else if (x < 45) {
-        updateLog(`  Nothing seems to have happened`);
+      updateLog(`  Nothing seems to have happened`);
     } else if (rnd(3) != 2) {
-        fntchange(1); /*  change char levels upward   */
+      fntchange(1); /*  change char levels upward   */
     } else {
-        fntchange(-1); /*  change char levels downward */
+      fntchange(-1); /*  change char levels downward */
     }
+  } else {
+    if (x < 7) {
+      player.HALFDAM += 200 + rnd(200);
+      updateLog(`  You feel a sickness coming on`);
+    } else if (x < 13) {
+      quaffpotion(createObject(OPOTION, 23), false); /* see invisible, but don't know the potion */
+    } else if (x < 45) {
+      updateLog(`  Nothing seems to have happened`);
+    } else if (rnd(3) != 2) {
+      fntchange(1); /*  change char levels upward   */
+    } else {
+      fntchange(-1); /*  change char levels downward */
+    }
+  }
 
-    if (rnd(12) < 3) {
-        updateLog(`  The fountains bubbling slowly quiets`);
-        setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
-        player.level.know[player.x][player.y] = 0;
-    }
+  if (rnd(12) < 3) {
+    updateLog(`  The fountains bubbling slowly quiets`);
+    setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
+    player.level.know[player.x][player.y] = 0;
+  }
 }
 
 
@@ -43,42 +69,48 @@ function act_drink_fountain() {
     the player is actually standing at a live fountain.
 */
 function act_wash_fountain() {
-    if (rnd(100) < 11) {
-        var x = rnd((level << 2) + 2);
-        updateLog(`  Oh no!  The water was foul!  You suffer ${x} hit points!`);
-        lastnum = 273; /* drank some poisonous water */
-        player.losehp(x);
-    } else if (rnd(100) < 29) {
-        updateLog(`  You got the dirt off!`);
-        /* 12.4.5
-           remove one negative wc/ac point, or remove itchyness
-        */
-        if (player.ITCHING) {
-          player.ITCHING = 1;
-        }
-        else {
-          if (rnd(100) < 50) {
-              enchantarmor(ENCH_FOUNTAIN);
-          } else {
-              enchweapon(ENCH_FOUNTAIN);
-          }
-      }
-    } else if (rnd(100) < 31) {
-        updateLog(`  This water seems to be hard water!  The dirt didn't come off!`);
-    } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {
-        createmonster(WATERLORD); /*    make water lord     */
-    } else {
-        updateLog(`  Nothing seems to have happened`);
-    }
+  if (rnd(100) < 11) {
+    var hitloss = rnd((level << 2) + 2);
+    var washExclaim = `  Oh no! The water was foul! You suffer ${hitloss} hit point`;
+    if (ULARN) washExclaim = `  The water burns like acid! You lose ${hitloss} hit point`;
+    updateLog(washExclaim);
+    exclaim(hitloss);
+    lastnum = 273; /* drank some poisonous water */
+    player.losehp(hitloss);
+  } else if (rnd(100) < 29) {
+    if (ULARN) updateLog(`  You are now clean.`);
+    else updateLog(`  You got the dirt off!`);
 
     /* 12.4.5
-       since getting the dirt off is a good bonus, need to limit it somehow
+       remove one negative wc/ac point, or remove itchyness
     */
-    if (rnd(12) < 3) {
-        updateLog(`  The fountains bubbling slowly quiets`);
-        setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
-        player.level.know[player.x][player.y] = 0;
+    if (player.ITCHING) {
+      player.ITCHING = 1; // interestingly, this was also added in ularn 1.6.3!
+    } else {
+      if (rnd(100) < 50) {
+        enchantarmor(ENCH_FOUNTAIN);
+      } else {
+        enchweapon(ENCH_FOUNTAIN);
+      }
     }
+
+  } else if (rnd(100) < 31) {
+    if (ULARN) updateLog(`  This water seems to be hard water! The dirt didn't come off!`);
+    else updateLog(`  This water needs soap -- the dirt didn't come off.`);
+  } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {
+    createmonster(WATERLORD); /*    make water lord     */
+  } else {
+    updateLog(`  Nothing seems to have happened`);
+  }
+
+  /* 12.4.5
+     since getting the dirt off is a good bonus, need to limit it somehow
+  */
+  if (rnd(12) < 3) {
+    updateLog(`  The fountains bubbling slowly quiets`);
+    setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
+    player.level.know[player.x][player.y] = 0;
+  }
 }
 
 
@@ -88,7 +120,6 @@ function act_wash_fountain() {
     if x > 0 they are raised   if x < 0 they are lowered
 */
 function fntchange(how) {
-  //lprc('\n');
   how = how / Math.abs(how);
   switch (rnd(9)) {
     case 1:
@@ -117,7 +148,7 @@ function fntchange(how) {
       fch(how);
       break;
     case 6:
-      updateLog(`Your charm`);
+      updateLog(`  Your charm`);
       player.setCharisma(player.CHARISMA + how);
       fch(how);
       break;
