@@ -779,11 +779,11 @@ function forget() {
  * subroutine to handle a teleport trap +/- 1 level maximum
  */
 function oteleport(err) {
-  var tmp;
   if (err) {
     if (rnd(151) < 3) {
       /*
       12.4.5 - you shouldn't get trapped in solid rock with WTW
+      This was also added in ularn 1.6.3
       */
       if (player.WTW == 0) {
         updateLog(`You are trapped in solid rock!`)
@@ -800,20 +800,21 @@ function oteleport(err) {
   }
 
   player.TELEFLAG = 1; /* show ? on bottomline if been teleported */
+  var newLevel;
   if (level == 0) {
-    tmp = 0;
+    newLevel = 0;
   } else if (level < MAXLEVEL) {
-    tmp = rnd(5) + level - 3;
-    if (tmp >= MAXLEVEL)
-      tmp = DBOTTOM;
-    if (tmp < 1)
-      tmp = 1;
+    newLevel = rnd(5) + level - 3;
+    if (newLevel >= MAXLEVEL)
+      newLevel = DBOTTOM;
+    if (newLevel < 1)
+      newLevel = 1;
   } else {
-    tmp = rnd(3) + level - 2;
-    if (tmp >= MAXLEVEL + MAXVLEVEL)
-      tmp = VBOTTOM;
-    if (tmp < MAXLEVEL)
-      tmp = MAXLEVEL;
+    newLevel = rnd(ULARN ? 4 : 3) + level - 2;
+    if (newLevel >= MAXLEVEL + MAXVLEVEL)
+      newLevel = VBOTTOM;
+    if (newLevel < MAXLEVEL)
+      newLevel = MAXLEVEL;
   }
   player.x = rnd(MAXX - 2);
   player.y = rnd(MAXY - 2);
@@ -830,8 +831,8 @@ function oteleport(err) {
   lasthx = 0;
   lasthy = 0;
 
-  if (level != tmp) {
-    newcavelevel(tmp);
+  if (level != newLevel) {
+    newcavelevel(newLevel);
   }
   positionplayer();
 }

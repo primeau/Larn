@@ -20,7 +20,7 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, de
 
 function createMonster(monst) {
 
- if (!monst) return null;
+  if (!monst) return null;
 
   var arg = monst.arg;
 
@@ -43,85 +43,85 @@ function createMonster(monst) {
 
 
 Monster.prototype = {
-    arg: 0,
-    char: `💩`,
-    desc: null,
-    level: 0,
-    armorclass: 0,
-    damage: 0,
-    attack: 0,
-    defense: 0,
-    intelligence: 0,
-    gold: 0,
-    hitpoints: 0,
-    experience: 0,
-    awake: false,
-    /*  false=sleeping true=awake monst*/
+  arg: 0,
+  char: `💩`,
+  desc: null,
+  level: 0,
+  armorclass: 0,
+  damage: 0,
+  attack: 0,
+  defense: 0,
+  intelligence: 0,
+  gold: 0,
+  hitpoints: 0,
+  experience: 0,
+  awake: false,
+  /*  false=sleeping true=awake monst*/
 
-    matches: function(monsterarg) {
-      return this.arg == monsterarg;
-    },
+  matches: function (monsterarg) {
+    return this.arg == monsterarg;
+  },
 
-    toString: function() {
-      if (player.BLINDCOUNT == 0)
-        return this.desc;
-      else
-        return `monster`;
-    },
+  toString: function () {
+    if (player.BLINDCOUNT == 0)
+      return this.desc;
+    else
+      return `monster`;
+  },
 
-    getChar: function () {
-        if (amiga_mode) {
-          var tempMonsterArg = this.arg;
-          if (tempMonsterArg == STALKER) {
-            tempMonsterArg = (player.SEEINVISIBLE > 0) ? STALKER : INVISIBLESTALKER;
-          }
-          // // ULARN TODO: AMIGA TILES FOR DEMONS
-          // if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
-          // }
-          return `${DIV_START}m${tempMonsterArg}${DIV_END}`;
-        } else {
-          if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
-            return `<font color='red'>${demonchar[this.arg - DEMONLORD]}</font>`;
-          }
-          return monsterlist[this.arg].char;
-        }
-      },
-
-      isDemon: function () {
-        return this.arg >= DEMONLORD;
-      },
-
-    /*
-     *  dropsomething(monst)    Function to create an object when a monster dies
-     *      int monst;
-     *
-     *  Function to create an object near the player when certain monsters are killed
-     *  Enter with the monster number
-     *  Returns nothing of value.
-     */
-    dropsomething: function() {
-      switch (this.arg) {
-        case ORC:
-        case NYMPH:
-        case ELF:
-        case TROGLODYTE:
-        case TROLL:
-        case ROTHE:
-        case VIOLETFUNGI:
-        case PLATINUMDRAGON:
-        case GNOMEKING:
-        case REDDRAGON:
-          something(level, false);
-          return;
-
-        case LEPRECHAUN:
-          if (rnd(101) >= 75) creategem(false);
-          if (rnd(5) == 1) this.dropsomething(LEPRECHAUN);
-          return;
+  getChar: function () {
+    if (amiga_mode) {
+      var tempMonsterArg = this.arg;
+      if (tempMonsterArg == STALKER) {
+        tempMonsterArg = (player.SEEINVISIBLE > 0) ? STALKER : INVISIBLESTALKER;
       }
-    },
+      // // ULARN TODO: AMIGA TILES FOR DEMONS
+      // if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
+      // }
+      return `${DIV_START}m${tempMonsterArg}${DIV_END}`;
+    } else {
+      if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
+        return `<font color='red'>${demonchar[this.arg - DEMONLORD]}</font>`;
+      }
+      return monsterlist[this.arg].char;
+    }
+  },
 
-  } // monster class
+  isDemon: function () {
+    return this.arg >= DEMONLORD;
+  },
+
+  /*
+   *  dropsomething(monst)    Function to create an object when a monster dies
+   *      int monst;
+   *
+   *  Function to create an object near the player when certain monsters are killed
+   *  Enter with the monster number
+   *  Returns nothing of value.
+   */
+  dropsomething: function () {
+    switch (this.arg) {
+      case ORC:
+      case NYMPH:
+      case ELF:
+      case TROGLODYTE:
+      case TROLL:
+      case ROTHE:
+      case VIOLETFUNGI:
+      case PLATINUMDRAGON:
+      case GNOMEKING:
+      case REDDRAGON:
+        something(level, false);
+        return;
+
+      case LEPRECHAUN:
+        if (rnd(101) >= 75) creategem(false);
+        if (rnd(5) == 1) this.dropsomething(LEPRECHAUN);
+        return;
+    }
+  },
+
+} // monster class
 
 
 
@@ -390,7 +390,8 @@ function createmonster(mon, x, y) {
   var oktocreate = (x != null && y != null && cgood(x, y, 0, 1));
   var i = oktocreate ? 0 : -8;
 
-  for (var k = rnd(8); i < 0; i++, k++) { /* choose direction, then try all */
+  /* choose direction, then try all */
+  for (var k = rnd(8); i < 0; i++, k++) {
     if (k > 8) k = 1; /* wraparound the diroff arrays */
     x = player.x + diroffx[k];
     y = player.y + diroffy[k];
@@ -491,8 +492,7 @@ function createitem(item, arg, nearPlayer) {
     if (nearPlayer) {
       x = player.x + diroffx[k];
       y = player.y + diroffy[k];
-    }
-    else {
+    } else {
       x = lasthx + (firstTry ? 0 : diroffx[k]);
       y = lasthy + (firstTry ? 0 : diroffy[k]);
     }
@@ -533,12 +533,11 @@ function hitplayer(x, y) {
       if (ULARN) {
         /* spirit naga's and poltergeist's damage is halved if scarab of negate spirit */
         damageModifier = 0.5;
-      }
-      else {
+      } else {
         /* spirit naga's and poltergeist's do nothing if scarab of negate spirit */
         return;
       }
-    }    
+    }
   }
 
   if (isCarrying(OCUBEofUNDEAD) || player.UNDEADPRO) {
@@ -658,7 +657,7 @@ function hitmonster(x, y) {
   with monster.armorclass already increasing with difficulty, the
   extra modifier is excessive
   */
-  var difficultyModifier = 0 /* getDifficulty() */;
+  var difficultyModifier = 0 /* getDifficulty() */ ;
 
   if ((rnd(20) < hitSkill - difficultyModifier) || (rnd(71) < 5)) /* need at least random chance to hit */ {
     updateLog(`You hit the ` + (blind ? `monster` : monster));
@@ -669,7 +668,8 @@ function hitmonster(x, y) {
     updateLog(`You missed the ` + (blind ? `monster` : monster));
     flag = 0;
   }
-  if (flag == 1) { /* if the monster was hit */
+  if (flag == 1) {
+    /* if the monster was hit */
     if (monster.matches(RUSTMONSTER) || monster.matches(DISENCHANTRESS) || monster.matches(CUBE)) {
       if (player.WIELD) {
         if (player.WIELD.arg > -10) {
@@ -895,7 +895,8 @@ function spattack(x, xx, yy) {
       }
       if (rust == 0 && armor) {
         for (var i = 0; i < rustarm.length; i++) {
-          if (armor.matches(rustarm[i][0])) { /* find armor in table */
+          if (armor.matches(rustarm[i][0])) {
+            /* find armor in table */
             if (armor.arg > rustarm[i][1]) {
               armor.arg -= 1;
               rust = 1;
@@ -964,10 +965,17 @@ function spattack(x, xx, yy) {
       } else updateLog(`The ${monster} couldn't find any gold to steal`);
       player.level.monsters[xx][yy] = null;
       player.level.know[xx][yy] &= ~KNOWHERE;
+
+      /* 12.4.5 and ularn */
+      /* put the monster back somewhere on the level */
+      fillmonst(monster.arg);
+      if (xx == lasthx) lasthx = 0;
+      if (yy == lasthy) lasthy = 0;
       return 1;
 
     case 9:
-      for (var j = 50;;) { /* disenchant */
+      for (var j = 50;;) {
+        /* disenchant */
         var i = rund(26);
         var item = player.inventory[i]; /* randomly select item */
         if (item && item.arg > 0 && !item.matches(OSCROLL) && !item.matches(OPOTION)) {
@@ -1015,6 +1023,13 @@ function spattack(x, xx, yy) {
       if (stealsomething() == 0) updateLog(`  nothing`);
       player.level.monsters[xx][yy] = null;
       player.level.know[xx][yy] &= ~KNOWHERE;
+
+      /* 12.4.5 and ularn */
+      /* put the monster back somewhere on the level */
+      fillmonst(monster.arg);
+      if (xx == lasthx) lasthx = 0;
+      if (yy == lasthy) lasthy = 0;
+
       recalc();
       return 1;
 

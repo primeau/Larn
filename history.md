@@ -14,49 +14,52 @@ because it was so easy to work around in the original game.
 
 4. [new] Washing at a fountain can clean negative weapon or armor class.
 
-5. [balance] 'Smart' monsters in a closed room never moved. Now they follow
+5. [new] Monsters that pick your pocket and disappear can now be found
+elsewhere on the same level.
+
+6. [balance] 'Smart' monsters in a closed room never moved. Now they follow
 player movement, except for demons, who stand guard to protect the Eye of Larn
 and potion of cure Dianthroritis.
 
-6. [balance] Players could donate or 'just pray' their way into unreasonable
+7. [balance] Players could donate or 'just pray' their way into unreasonable
 WC/AC gains. Now altars will randomly crumble to dust.
 
-7. [balance] The list of things the player can wield is considerably shorter.
+8. [balance] The list of things the player can wield is considerably shorter.
 
-8. [balance] The chest and book at the store decline in quality as difficulty
+9. [balance] The chest and book at the store decline in quality as difficulty
 goes up.
 
-9. [balance] The scroll of Stealth was much too powerful. Now there is a chance
+10. [balance] The scroll of Stealth was much too powerful. Now there is a chance
 a monster will notice when the player passes too closely. Affects difficulty 2
 and higher.
 
-10. [balance] Selling items is blocked once the potion has been picked up to
+11. [balance] Selling items is blocked once the potion has been picked up to
 prevent player from inflating their score by selling epic items.   
 
-11. [fix] It's possible to fall into a pit again. This was broken in 12.4.
+12. [fix] It's possible to fall into a pit again. This was broken in 12.4.
 
-12. [fix] The last hit monster would chase the player from across the maze after
+13. [fix] The last hit monster would chase the player from across the maze after
 teleporting away. This bug could also cause other monsters to become 'possessed'
 and move very erratically in rare situations.
 
-13. [fix] Leather and stainless plate armor could be dulled when used as a
+14. [fix] Leather and stainless plate armor could be dulled when used as a
 weapon against rusting monsters. Thanks to Will Oprisko for finding this one.
 
-14. [fix] Half-speed monsters (Hobgoblins, Ice Monsters, etc) didn't move
+15. [fix] Half-speed monsters (Hobgoblins, Ice Monsters, etc) didn't move
 properly when the player was running.
 
-15. [fix] After casting Stop Time, monsters would still chase the player when
+16. [fix] After casting Stop Time, monsters would still chase the player when
 running. 
 
-16. [fix] Bessman's Flailing Hammer could only be created on the first level
+17. [fix] Bessman's Flailing Hammer could only be created on the first level
 of the dungeon.
 
-17. [fix] You can drop gold onto an existing pile of gold now.
+18. [fix] You can drop gold onto an existing pile of gold now.
 
-18. [fix] When a monster is killed with a ranged attack, it will drop loot
+19. [fix] When a monster is killed with a ranged attack, it will drop loot
 near itself instead of the player.
 
-19. [un-fix] The history lesson from the College of Larn says that the Eye
+20. [un-fix] The history lesson from the College of Larn says that the Eye
 of Larn is protected by a Platinum Dragon, which wasn't the case in the original
 version of Larn. I changed it to be true for a while, but it unbalanced the
 game too much. For anyone who died at the hands of a Platinum Dragon while
