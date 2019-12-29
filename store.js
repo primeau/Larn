@@ -533,7 +533,7 @@ function otradiven() {
       }
       tradorder[i] = j++; /* will display only if identified */
       var fancy = !item.isRing() && item != player.WIELD && item != player.WEAR && item != player.SHIELD;
-      var itemDescription = `${getCharFromIndex(i)}) ${item.toString(fancy)}`.substring(0,39);
+      var itemDescription = `${getCharFromIndex(i)}) ${item.toString(fancy)}`.substring(0, 39);
       lprcat(itemDescription);
 
     } else {
@@ -598,7 +598,7 @@ function parse_tradepost(key) {
     storemessage(`Sorry friend, the shop is closed, you should go home now`, 1500);
     //nap(2000);
     return 0;
-}
+  }
 
   if (i >= 0 && i <= 26) {
     var item = player.inventory[i];
@@ -838,8 +838,12 @@ function parse_class(key) {
 
       case 'h':
         player.setIntelligence(player.INTELLIGENCE + 1);
-        lprcat(`\nYour instructor told you that the Eye of Larn is rumored to be guarded`);
-        lprcat(`\nby a platinum dragon who possesses psionic abilities`);
+        if (ULARN) {
+          lprcat("\nWow! e = mc^2!");
+        } else {
+          lprcat(`\nYour instructor told you that the Eye of Larn is rumored to be guarded`);
+          lprcat(`\nby a platinum dragon who possesses psionic abilities`);
+        }
         break;
     }
 
@@ -959,15 +963,15 @@ function win(key) {
   updateLog(``);
   updateLog(`The potion is `);
 
-  setTimeout(function() {
+  setTimeout(function () {
     appendLog(`working!`);
     paint();
-    setTimeout(function() {
+    setTimeout(function () {
       updateLog(``);
       updateLog(``);
       updateLog(`The doctor thinks that your daughter will recover in a few days.`);
       paint();
-      setTimeout(function() {
+      setTimeout(function () {
         updateLog(`Congratulations!`);
         paint();
         napping = false;
