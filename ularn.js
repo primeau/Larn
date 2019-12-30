@@ -18,6 +18,7 @@ function setUlarnVars() {
 
     // MAZES
     LEVELS = new Array(MAXLEVEL + MAXVLEVEL);
+    MAZES = COMMON_MAZES.concat(ULARN ? ULARN_MAZES : LARN_MAZES);
 
     // DND STORE
     STORE_INVENTORY = ULARN ? ULARN_STORE_INVENTORY : LARN_STORE_INVENTORY;
@@ -33,6 +34,9 @@ function setUlarnVars() {
 
     // LRS
     OLRS.desc = `the ${GAMENAME} Revenue Service`;
+
+    // ITEMS
+    FORTUNES = COMMON_FORTUNES.concat(ULARN ? ULARN_FORTUNES : LARN_FORTUNES);
 
     if (ULARN) {
         monsterlist[LEMMING].char = `l`;

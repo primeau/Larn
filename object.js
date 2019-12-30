@@ -492,7 +492,10 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (nearbymonst()) return;
     if (do_ident) updateLog(`There is a dead fountain here`);
   }
-  //
+  else if (ULARN && item.matches(OOPENDOOR)) {
+    if (nearbymonst()) return;
+    if (do_ident) updateLog(`There is an open door here.`);
+  }
   else if (item.matches(ODNDSTORE)) {
     if (nearbymonst()) return;
     if (do_ident) updateLog(`There is a DND store here`, formatHint('e', 'to go inside'));

@@ -209,7 +209,7 @@ const POTION_NAMES = [
 
 
 
-var FORTUNES; // this is now set in action.js
+var FORTUNES;
 
 
 

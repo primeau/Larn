@@ -115,27 +115,27 @@ function act_open_door(x, y) {
         updateLog(`  The door makes an awful groan, but remains stuck`);
         player.AGGRAVATE += rnd(400);
         break;
-
-      case 7:
-        updateLog(`  You are jolted by an electric shock `);
-        lastnum = 274; /* fried by an electric shock */
-        player.losehp(rnd(20));
-        break;
-
       case 8:
-        updateLog(`  You feel drained`);
-        player.loselevel();
-        break;
+        // no level loss in ularn, fall through to electric shock
+        if (!ULARN) {
+          updateLog(`  You feel drained`);
+          player.loselevel();
+          break;
+        }
+        case 7:
+          updateLog(`  You are jolted by an electric shock`);
+          lastnum = 274; /* fried by an electric shock */
+          player.losehp(rnd(20));
+          break;
 
-      case 9:
-        updateLog(`  You suddenly feel weaker `);
-        player.setStrength(player.STRENGTH - 1);
-        break;
+        case 9:
+          updateLog(`  You suddenly feel weaker`);
+          player.setStrength(player.STRENGTH - 1);
+          break;
 
-      default:
-        updateLog(`  The door doesn't budge`);
-        return (0);
-        break;
+        default:
+          updateLog(`  The door doesn't budge`);
+          return (0);
     }
   } else {
     updateLog(`  The door opens`);
@@ -174,6 +174,7 @@ function close_something(direction) {
       return;
     }
     setItem(x, y, createObject(OCLOSEDDOOR, 0));
+    updateLog(`  The door closes`);
     if (direction == 0) {
       player.x = lastpx;
       player.y = lastpy;
@@ -192,10 +193,6 @@ function outfortune() {
   updateLog(`The cookie was delicious.`);
   if (player.BLINDCOUNT)
     return;
-    
-  // lazy load fortunes
-  if (!FORTUNES) 
-    FORTUNES = COMMON_FORTUNES.concat(ULARN ? ULARN_FORTUNES : LARN_FORTUNES);
 
   var fortune = FORTUNES[rund(FORTUNES.length)];
   updateLog(`Inside you find a scrap of paper that says:`);

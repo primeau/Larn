@@ -76,10 +76,6 @@ function initNewLevel(depth) {
 function loadcanned() {
   var mazeindex;
 
-  // lazy load MAZES
-  if (!MAZES) 
-    MAZES = COMMON_MAZES.concat(ULARN ? ULARN_MAZES : LARN_MAZES);
-
   do {
     mazeindex = rund(MAZES.length);
   } while (USED_MAZES.indexOf(mazeindex) > -1);
