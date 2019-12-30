@@ -126,6 +126,7 @@ Item.prototype = {
         this.matches(ODEADTHRONE) ||
         this.matches(OBOOK) ||
         this.matches(OCHEST) ||
+        this.matches(OAMULET) ||
         (this.isRing() && inStore && !showAll) ||
         this.isGem()) {
         // do nothing

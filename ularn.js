@@ -10,6 +10,8 @@ function setUlarnVars() {
     VBOTTOM = (MAXLEVEL + MAXVLEVEL - 1);
 
     LEVELS = new Array(MAXLEVEL + MAXVLEVEL);
+    STORE_INVENTORY = ULARN ? ULARN_STORE_INVENTORY : LARN_STORE_INVENTORY;
+    MAXITM = STORE_INVENTORY.length;
 
     GAMENAME = ULARN ? `Ularn` : `Larn`;
 
@@ -24,10 +26,9 @@ function setUlarnVars() {
 
         OSTAIRSUP.char = `<b>%</b>`;
         OSTAIRSDOWN.char = `<b>%</b>`;
+
+        // this should probably be replaced with enums
+        DEATH_REASONS[6] = `fell into a pit to HELL`;
+        DEATH_REASONS[15] = `fell through a trap door to HELL`;
     }
-
-    // this should probably be replaced with enums
-    DEATH_REASONS[6] = `fell into a pit to HELL`;
-    DEATH_REASONS[15] = `fell through a trap door to HELL`;
-
 }
