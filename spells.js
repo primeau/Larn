@@ -254,14 +254,14 @@ function speldamage(x) {
         for (var j = Math.max(player.y - 1, 1); j <= yh; j++) {
           var item = itemAt(i, j);
           if (item.matches(OWALL)) {
-            if (level < VBOTTOM)
+            if (level < VBOTTOM - (ULARN ? 2 : 0))
               setItem(i, j, OEMPTY);
           } else if (item.matches(OSTATUE)) {
-              var doCrumble = getDifficulty() < 3;
-              if (ULARN) doCrumble = getDifficulty() <= 3 && rnd(60) < 30;
-              if (doCrumble) {
-                setItem(i, j, createObject(OBOOK, level));
-              }
+            var doCrumble = getDifficulty() < 3;
+            if (ULARN) doCrumble = getDifficulty() <= 3 && rnd(60) < 30;
+            if (doCrumble) {
+              setItem(i, j, createObject(OBOOK, level));
+            }
           } else if (item.matches(OTHRONE)) {
             if (item.arg == 0) {
               create_guardian(GNOMEKING, i, j);
@@ -277,6 +277,9 @@ function speldamage(x) {
           } else if (!ULARN && item.matches(OFOUNTAIN)) {
             create_guardian(WATERLORD, i, j);
           } else if (monsterAt(i, j) && monsterAt(i, j).matches(XORN)) {
+            ifblind(i, j);
+            hitm(i, j, 200);
+          } else if (ULARN && monsterAt(i, j) && monsterAt(i, j).matches(TROLL)) {
             ifblind(i, j);
             hitm(i, j, 200);
           }
@@ -905,7 +908,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     if ( /* enough damage? */
       dam >= 50 + getDifficulty() &&
       /* not on V3,V4,V5 */
-      level < MAXLEVEL + MAXVLEVEL - (ULARN ? 3 : 1) &&
+      level < VBOTTOM - (ULARN ? 2 : 0) &&
       x < MAXX - 1 && y < MAXY - 1 &&
       x != 0 && y != 0) {
       updateLog(`  The wall crumbles`);
