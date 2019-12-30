@@ -247,19 +247,13 @@ function loadPlayer(saved) {
   newPlayer.AGGRAVATE = saved.AGGRAVATE;
   newPlayer.GLOBE = saved.GLOBE;
   newPlayer.TELEFLAG = saved.TELEFLAG;
-  newPlayer.SLAYING = saved.SLAYING;
-  // ULARN TODO: save all the special items
-  newPlayer.NEGATESPIRIT = saved.NEGATESPIRIT;
   newPlayer.SCAREMONST = saved.SCAREMONST;
   newPlayer.AWARENESS = saved.AWARENESS;
   newPlayer.HOLDMONST = saved.HOLDMONST;
   newPlayer.TIMESTOP = saved.TIMESTOP;
   newPlayer.HASTEMONST = saved.HASTEMONST;
-  newPlayer.CUBEofUNDEAD = saved.CUBEofUNDEAD;
   newPlayer.GIANTSTR = saved.GIANTSTR;
   newPlayer.FIRERESISTANCE = saved.FIRERESISTANCE;
-  newPlayer.BESSMANN = saved.BESSMANN;
-  newPlayer.NOTHEFT = saved.NOTHEFT;
   newPlayer.SPIRITPRO = saved.SPIRITPRO;
   newPlayer.UNDEADPRO = saved.UNDEADPRO;
   newPlayer.STEALTH = saved.STEALTH;
@@ -274,9 +268,32 @@ function loadPlayer(saved) {
   newPlayer.STREXTRA = saved.STREXTRA;
   newPlayer.LIFEPROT = saved.LIFEPROT;
 
+  // ULARN TODO: save all the special items
+  newPlayer.LAMP = saved.LAMP;
+  newPlayer.WAND = saved.WAND;
+  newPlayer.SLAYING = saved.SLAYING;
+  newPlayer.NEGATESPIRIT = saved.NEGATESPIRIT;
+  newPlayer.CUBEofUNDEAD = saved.CUBEofUNDEAD;
+  newPlayer.NOTHEFT = saved.NOTHEFT;
+  newPlayer.TALISMAN = saved.TALISMAN;
+  newPlayer.HAND = saved.HAND;
+  newPlayer.ORB = saved.ORB;
+  newPlayer.ELVEN = saved.ELVEN;
+  newPlayer.SLASH = saved.SLASH;
+  newPlayer.BESSMANNINTEL = saved.BESSMANNINTEL;
+  newPlayer.BESSMANN = saved.BESSMANN;
+  newPlayer.SLAY = saved.SLAY;
+  newPlayer.VORPAL = saved.VORPAL;
+  newPlayer.STAFF = saved.STAFF;
+  newPlayer.PAD = saved.PAD;
+  newPlayer.ELEVDOWN = saved.ELEVDOWN;
+  newPlayer.ELEVUP = saved.ELEVUP;
+
   newPlayer.MOVESMADE = saved.MOVESMADE;
   newPlayer.SPELLSCAST = saved.SPELLSCAST;
   newPlayer.MONSTKILLED = saved.MONSTKILLED;
+
+  newPlayer.hasPickedUpPotion = saved.hasPickedUpPotion;
 
   return newPlayer;
 }

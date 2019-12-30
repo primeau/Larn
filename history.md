@@ -17,6 +17,8 @@ because it was so easy to work around in the original game.
 5. [new] Monsters that pick your pocket and disappear can now be found
 elsewhere on the same level.
 
+5. [new] The Sword of Slashing doesn't rust.
+
 6. [balance] 'Smart' monsters in a closed room never moved. Now they follow
 player movement, except for demons, who stand guard to protect the Eye of Larn
 and potion of cure Dianthroritis.

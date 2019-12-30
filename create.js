@@ -505,9 +505,9 @@ function makeobject(depth) {
     // more than one of these artifacts can be created on a level
     createArtifact(OSWORDofSLASHING, player.SLASH,    rnd(120) < 8);
     createArtifact(OHAMMER,          player.BESSMANN, rnd(120) < 8);
-    createArtifact(OSLAYER,          player.SLAY,     depth >= 10 && rnd(100) > 85 - (depth - 10));
+    createArtifact(OSLAYER,          player.SLAY,     depth >= 10 && rnd(100) > (85 - (depth - 10)));
     createArtifact(OVORPAL,          player.VORPAL,   rnd(120) < 8);
-    createArtifact(OPSTAFF,          player.STAFF,    depth >= 8 && rnd(100) > 85 - (depth - 10));
+    createArtifact(OPSTAFF,          player.STAFF,    depth >= 8 && rnd(100) > (85 - (depth - 10)));
   }
 
   if (getDifficulty() < 3 || (rnd(4) == 3)) {

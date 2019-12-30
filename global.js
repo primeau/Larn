@@ -70,9 +70,13 @@ function recalc() {
   player.WCLASS = 0;
   player.AC = 0;
 
-  var armor, weapon, extra;
-  if (player.WEAR) {
-    armor = player.WEAR;
+  var armor = player.WEAR;
+  var weapon = player.WIELD;
+  var shield = player.SHIELD;
+
+  var extra;
+
+  if (armor) {
     extra = armor.arg;
     if (armor.matches(OSHIELD)) player.AC = 2 + extra;
     if (armor.matches(OLEATHER)) player.AC = 2 + extra;
@@ -85,13 +89,14 @@ function recalc() {
     if (armor.matches(OSSPLATE)) player.AC = 12 + extra;
     if (armor.matches(OELVENCHAIN)) player.AC = 15 + extra;
   }
-  if (player.SHIELD && player.SHIELD.matches(OSHIELD)) {
-    player.AC += 2 + player.SHIELD.arg;
+
+  if (shield && shield.matches(OSHIELD)) {
+    player.AC += 2 + shield.arg;
   }
+  
   player.AC += player.MOREDEFENSES;
 
-  if (player.WIELD) {
-    weapon = player.WIELD;
+  if (weapon) {
     extra = weapon.arg;
     if (weapon.matches(ODAGGER)) player.WCLASS = 3 + extra;
     if (weapon.matches(OBELT)) player.WCLASS = 7 + extra;
@@ -221,12 +226,7 @@ function enchantarmor(enchant_source) {
           updateLog(`Your ${armor.toString(true)} glows briefly.`);
           return false;
         } else if (rnd(10) <= 9) {
-          var destroyindex = player.inventory.indexOf(armor);
-          if (armor === player.WEAR) player.WEAR = null;
-          if (armor === player.SHIELD) player.SHIELD = null;
-          if (armor === player.WIELD) player.WIELD = null;
-          player.inventory[destroyindex] = null;
-          player.adjustcvalues(armor, false);
+          destroyInventory(armor);
           updateLog(`  Your ${armorMessage} vibrates violently and crumbles into dust!`);
           return false;
         }
@@ -277,11 +277,8 @@ function enchweapon(enchant_source) {
           updateLog(`  Your weapon glows a little.`);
           return false;
         } else {
+          destroyInventory(weapon);
           updateLog(`  Your weapon vibrates violently and crumbles into dust!`);
-          var destroyindex = player.inventory.indexOf(weapon);
-          player.WIELD = null;
-          player.inventory[destroyindex] = null;
-          player.adjustcvalues(weapon, false);
           return false;
         }
       } else {
@@ -295,6 +292,17 @@ function enchweapon(enchant_source) {
     }
   }
   return false;
+}
+
+
+
+function destroyInventory(item) {
+  var destroyindex = player.inventory.indexOf(item);
+  if (item === player.WEAR) player.WEAR = null;
+  if (item === player.SHIELD) player.SHIELD = null;
+  if (item === player.WIELD) player.WIELD = null;
+  player.inventory[destroyindex] = null;
+  player.adjustcvalues(item, false);
 }
 
 

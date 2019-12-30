@@ -121,6 +121,33 @@ Monster.prototype = {
     }
   },
 
+  /*
+   * Can we chop this thing's head off with the Vorpal Blade? 
+   */
+  canBeBeheaded() {
+    if (this.isDemon()) return false;
+    switch (this.arg) {
+      case EYE:
+      case CUBE:
+      case METAMORPH:
+      case VORTEX:
+      case VIOLETFUNGI:
+      case XORN:
+      case POLTERGEIST:
+      case SHAMBLINGMOUND:
+      case YELLOWMOLD:
+      case MIMIC:
+      case WATERLORD:
+      case SPIRITNAGA:
+      case GREENURCHIN:
+        return false;
+      default:
+        return true;
+    }
+  },
+
+
+
 } // monster class
 
 
@@ -584,7 +611,7 @@ function hitplayer(x, y) {
   }
 
   /* demon damage is reduced if wielding Slayer */
-  if (monster.isDemon() && player.WIELD.matches(OSLAYER)) {
+  if (monster.isDemon() && player.WIELD && player.WIELD.matches(OSLAYER)) {
     dam = (1 - (0.1 * rnd(5)) * dam);
   }
 
@@ -637,6 +664,7 @@ function hitmonster(x, y) {
   //vxy( & x, & y); /* verify coordinates are within range */
 
   var monster = player.level.monsters[x][y];
+  var weapon = player.WIELD;
 
   if (!monster) {
     //debug(`monster.hitmonster(): no monster at: ` + xy(x, y));
@@ -671,34 +699,26 @@ function hitmonster(x, y) {
   if (flag == 1) {
     /* if the monster was hit */
     if (monster.matches(RUSTMONSTER) || monster.matches(DISENCHANTRESS) || monster.matches(CUBE)) {
-      if (player.WIELD) {
-        if (player.WIELD.arg > -10) {
-          // fix: leather and stainless plate shouldn't rust
-          if (!player.WIELD.matches(OLEATHER) && !player.WIELD.matches(OSSPLATE) && !player.WIELD.matches(OELVENCHAIN)) {
+      if (weapon && weapon.isWeapon()) {
+        if (weapon.arg > -10) {
+          if (!weapon.matches(OSWORDofSLASHING)) /* 12.4.5 -- impervious to rust */ {
             updateLog(`  Your weapon is dulled by the ${monster}`);
             beep();
-            player.WIELD.arg--;
+            weapon.arg--;
           }
-
-          /* fix for dulled rings of strength,cleverness, and dexterity
-             bug.
-          */
-          if (player.WIELD.matches(ODEXRING))
-            player.setDexterity(player.DEXTERITY - 1);
-          if (player.WIELD.matches(OSTRRING))
-            player.setStrExtra(player.STREXTRA - 1);
-          if (player.WIELD.matches(OCLEVERRING))
-            player.setIntelligence(player.INTELLIGENCE - 1);
+        } else if (ULARN && weapon.arg <= -10) {
+          destroyInventory(weapon);
+          updateLog(`  Your weapon disintegrates!`);
+          flag = 0; /* Didn't hit after all... */
         }
-        // ULARN TODO: Your weapon disintegrates!
       }
     }
   }
   if (flag == 1) {
     hitm(x, y, damage);
     if (ULARN) {
-      if (monster.isDemon() && monster.hitpoints > 0) {
-        console.log(`  Your lance of death tickles the ${monster}`);
+      if (monster.isDemon() && weapon && weapon.matches(OLANCE) && monster.hitpoints > 0) {
+        updateLog(`  Your lance of death tickles the ${monster}`);
       }
     }
   }
@@ -755,17 +775,23 @@ function hitm(x, y, damage) {
     }
   }
 
-  // ULARN TODO:  /* Deal with Vorpy */
+  var weapon = player.WIELD;
+
+  /* Deal with Vorpy */
+  if (weapon && weapon.matches(OVORPAL) && rnd(20) == 1 && monster.canBeBeheaded()) {
+    updateLog(`  The Vorpal Blade beheads the ${monster}!`);
+    damage = monster.hitpoints;
+  }
 
   /* invincible monster fix is here */
   if (monster.hitpoints > monsterlist[monster.arg].hitpoints)
     monster.hitpoints = monsterlist[monster.arg].hitpoints;
 
   if (ULARN && monster.isDemon()) {
-    if (player.WIELD.matches(OLANCE)) {
+    if (weapon && weapon.matches(OLANCE)) {
       damage = 300;
     }
-    if (player.WIELD.matches(OSLAYER)) {
+    if (weapon && weapon.matches(OSLAYER)) {
       damage = 10000;
     }
   }

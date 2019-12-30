@@ -104,7 +104,7 @@ var Player = function Player() {
     this.SLAY = false;  // slayer
     this.VORPAL = false;
     this.STAFF = false;
-    this.EYEOFLARN = false;
+    // this.EYEOFLARN = false; // not used
     // this.AMULET = 0; // you can just buy this
 
     this.PAD = false;
