@@ -294,7 +294,7 @@ function obanksub() {
       if (item.matches(OLARNEYE)) {
         gemvalue[i] = Math.max(50000, 250000 - ((gtime * 7) / 100) * 100);
       } else {
-        gemvalue[i] = (255 & item.arg) * 100;
+        gemvalue[i] = item.arg * 100;
       }
       gemorder[i] = k;
       cursor((k % 2) * 40 + 1, (k >> 1) + 4);
@@ -326,8 +326,12 @@ function bank_print_gold() {
   cursor(31, 18);
   cltoeoln();
   lprcat(`You have ${Number(player.GOLD).toLocaleString()} gold pieces`);
-  if (player.BANKACCOUNT + player.GOLD >= 500000)
-    lprcat(`\n\nNote: Larndom law states that only deposits under 500,000gp can earn interest`);
+  if (player.BANKACCOUNT + player.GOLD >= MAX_BANK_BALANCE) {
+    lprcat(`\n\nNote: `);
+    if (ULARN) lprcat(`Only `);
+    else lprcat(`Larndom law states that only `);
+    lprcat(`deposits under ${Number(MAX_BANK_BALANCE).toLocaleString()}gp can earn interest`);
+  }
 }
 
 
@@ -485,13 +489,13 @@ function bank_sell(key) {
 function ointerest() {
   if (player.BANKACCOUNT < 0) player.BANKACCOUNT = 0;
 
-  if (player.BANKACCOUNT > 0 && player.BANKACCOUNT < 500000) {
+  if (player.BANKACCOUNT > 0 && player.BANKACCOUNT < MAX_BANK_BALANCE) {
     var i = elapsedtime() - lasttime; /* # mobuls elapsed */
-    while (i-- > 0 && player.BANKACCOUNT < 500000) {
-      player.BANKACCOUNT += player.BANKACCOUNT / 250;
+    while (i-- > 0 && player.BANKACCOUNT < BANKLIMIT) {
+      player.BANKACCOUNT += player.BANKACCOUNT / (ULARN ? 877 : 250);
     }
     /* interest limit */
-    player.BANKACCOUNT = Math.min(500000, player.BANKACCOUNT);
+    player.BANKACCOUNT = Math.min(MAX_BANK_BALANCE, player.BANKACCOUNT);
   }
 
   lasttime = elapsedtime();

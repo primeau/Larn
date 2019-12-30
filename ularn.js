@@ -1,23 +1,37 @@
 'use strict';
 
+var MAX_BANK_BALANCE;
+
 function setUlarnVars() {
 
-    MAXLEVEL = ULARN ? 16 : 11;
-    MAXVLEVEL = ULARN ? 5 : 3;
+    // GAME NAME
+    GAMENAME = ULARN ? `Ularn` : `Larn`;
+
+    // TIME
     TIMELIMIT = ULARN ? 40000 : 30000;
 
+    // DUNGEON AND VOLCANO LEVELS
+    MAXLEVEL = ULARN ? 16 : 11;
+    MAXVLEVEL = ULARN ? 5 : 3;
     DBOTTOM = (MAXLEVEL - 1);
     VBOTTOM = (MAXLEVEL + MAXVLEVEL - 1);
 
+    // MAZES
     LEVELS = new Array(MAXLEVEL + MAXVLEVEL);
+
+    // DND STORE
     STORE_INVENTORY = ULARN ? ULARN_STORE_INVENTORY : LARN_STORE_INVENTORY;
     MAXITM = STORE_INVENTORY.length;
 
-    GAMENAME = ULARN ? `Ularn` : `Larn`;
-
+    // BANK
+    MAX_BANK_BALANCE = ULARN ? 1000000 : 500000;
     OBANK.desc = `the bank of ${GAMENAME}`;
     OBANK2.desc = `the ${ULARN ? 8 : 5}th branch of the Bank of ${GAMENAME}`;
+    
+    // SCHOOL
     OSCHOOL.desc = `the College of ${GAMENAME}`;
+
+    // LRS
     OLRS.desc = `the ${GAMENAME} Revenue Service`;
 
     if (ULARN) {
