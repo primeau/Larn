@@ -56,13 +56,12 @@ function act_open_chest(x, y) {
   if (rnd(101) < 40) {
     updateLog(`  The chest explodes as you open it`);
     beep();
-    var i = rnd(10);
+    var damage = rnd(10);
+    if (damage > player.hitpoints) damage = player.hitpoints;
     lastnum = 281; /* killed by an exploding chest */
-    updateLog(`  You suffer ${i} hit points damage!`);
-    if (i > 0) {
-      player.losehp(i);
-      //bottomhp();
-    }
+    updateLog(`  You suffer ${damage} hit points damage!`);
+    player.losehp(damage);
+
     switch (rnd(10)) /* see if he gets a curse */ {
       case 1:
         player.ITCHING += rnd(1000) + 100;
@@ -79,7 +78,8 @@ function act_open_chest(x, y) {
       case 3:
         player.HALFDAM += rnd(1600) + 200;
         beep();
-        updateLog(`  A sickness engulfs you!`);
+        if (ULARN) updateLog(`  You suddenly feel sick and BARF all over your shoes!`);
+        else updateLog(`  A sickness engulfs you!`);
         break;
     };
     setItem(x, y, OEMPTY); /* destroy the chest */
@@ -87,7 +87,7 @@ function act_open_chest(x, y) {
       creategem(true); /* gems from the chest */
     }
     dropgold(rnd(110 * chest.arg + 200), true);
-    for (i = 0; i < rnd(4); i++) {
+    for (var i = 0; i < rnd(4); i++) {
       something(chest.arg + 2, true);
     }
   } else

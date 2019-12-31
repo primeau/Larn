@@ -192,7 +192,7 @@ function dnd_parse(key) {
         from the store are special and are reduced in resale value and
         quality as difficulty goes up
       */
-      if (boughtItem.matches(OBOOK) || boughtItem.matches(OCHEST)) {
+      if (!ULARN &&(boughtItem.matches(OBOOK) || boughtItem.matches(OCHEST))) {
         boughtItem.arg = Math.max(1, boughtItem.arg - getDifficulty());
       }
 
