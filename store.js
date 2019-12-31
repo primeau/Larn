@@ -591,15 +591,12 @@ function parse_tradepost(key) {
   var value = 0;
   var i = getIndexFromChar(key);
 
-  //cursor(62, 22);
-  //lprc(key);
-
   /* 12.4.5
   prevent players from selling things once they have found the potion
   to prevent them from racking up the scoreboard
   */
   if (player.hasPickedUpPotion) {
-    storemessage(`Sorry friend, the shop is closed, you should go home now`, 1500);
+    storemessage(`Sorry friend, the shop is closed. It's time to go home now.`, 1500);
     //nap(2000);
     return 0;
   }
@@ -617,8 +614,13 @@ function parse_tradepost(key) {
       //nap(2000);
       return 0;
     }
+    if (item.matches(OLANCE) && player.ramboflag) {
+      storemessage(`You don't *really* want to sell that, now do you?`, 1000);
+      //nap(2000);
+      return 0;
+    }
     if (item.isGem()) {
-      value = 20 * (item.arg & 255);
+      value = 20 * item.arg;
     } //
     else if (item.matches(OLARNEYE)) {
       value = Math.max(10000, 50000 - (((gtime * 7) / 100) * 20));
@@ -674,8 +676,9 @@ const SELL_ITEM = 1;
 
 
 function parse_sellitem(key) {
+  var priceString = Number(itemToSell[SELL_PRICE]).toLocaleString();
   if (key == ESC || key == 'N' || key == 'n') {
-    cursor(63 + itemToSell[SELL_PRICE].toString().length, 24);
+    cursor(63 + priceString.length, 24);
     setCharCallback(parse_tradepost);
     lprcat(`no thanks`);
     //nap(500);
@@ -686,20 +689,16 @@ function parse_sellitem(key) {
     return 1;
   }
   if (key == 'Y' || key == 'y') {
-    cursor(63 + itemToSell[SELL_PRICE].toString().length, 24);
+    cursor(63 + priceString.length, 24);
     setCharCallback(parse_tradepost);
     lprcat(`yes`);
 
     napping = true;
     setTimeout(storemessage, 700, ``);
     player.setGold(player.GOLD + itemToSell[SELL_PRICE]);
-    if (player.WEAR === itemToSell[SELL_ITEM]) player.WEAR = null;
-    if (player.WIELD === itemToSell[SELL_ITEM]) player.WIELD = null;
-    if (player.SHIELD === itemToSell[SELL_ITEM]) player.SHIELD = null;
-    player.adjustcvalues(itemToSell[SELL_ITEM], false);
     var index = player.inventory.indexOf(itemToSell[SELL_ITEM]);
-    player.inventory[index] = null;
     cleartradiven(index);
+    destroyInventory(itemToSell[SELL_ITEM]);
     itemToSell = null;
     return 1;
   }

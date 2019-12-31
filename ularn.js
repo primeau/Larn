@@ -35,6 +35,9 @@ function setUlarnVars() {
     // LRS
     OLRS.desc = `the ${GAMENAME} Revenue Service`;
 
+    // TRADING POST
+    if (ULARN) OTRADEPOST.desc = `You have found the Ularn trading Post`;
+
     // ITEMS
     FORTUNES = COMMON_FORTUNES.concat(ULARN ? ULARN_FORTUNES : LARN_FORTUNES);
 

@@ -11,6 +11,7 @@ var Player = function Player() {
     }
 
     this.gender = MALE;
+    this.ramboflag = true;
 
     this.knownPotions = [];
     this.knownScrolls = [];
