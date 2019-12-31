@@ -21,6 +21,15 @@ var END_MARK = `</mark>`;
 var START_BOLD = `<b>`;
 var END_BOLD = `</b>`;
 
+
+
+function lprint(str) {
+  lprcat(str);
+  blt();
+}
+
+
+
 function lprcat(str, width) {
   DEBUG_LPRCAT++;
   if (width) {

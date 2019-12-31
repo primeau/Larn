@@ -843,7 +843,7 @@ function parse_class(key) {
       case 'h':
         player.setIntelligence(player.INTELLIGENCE + 1);
         if (ULARN) {
-          lprcat("\nWow! e = mc^2!");
+          lprcat(`\nWow! e = mc^2!`);
         } else {
           lprcat(`\nYour instructor told you that the Eye of Larn is rumored to be guarded`);
           lprcat(`\nby a platinum dragon who possesses psionic abilities`);
@@ -887,66 +887,95 @@ function parse_class(key) {
  *
  *
  */
-function ohome() {
+async function ohome() {
 
+  setMazeMode(false);
+  
+  napping = true;
   dropflag = 1;
 
   setCharCallback(parse_home);
 
-  for (var i = 0; i < 26; i++) {
-    var item = player.inventory[i];
-    if (item && item.matches(OPOTION) && item.arg == 21) {
-      //iven[i] = 0; /* remove from inventory */
-      if (gtime > TIMELIMIT) {
-        setMazeMode(true);
-        updateLog(`Congratulations. You found a potion of cure dianthroritis. Frankly, no one`);
-        updateLog(`thought you could do it. Boy! Did you surprise them! The doctor has the sad`);
-        updateLog(`duty to inform you that your daughter died before your return. There was`);
-        updateLog(`nothing that could be done without the potion.`);
-        died(269, false); /* failed */
-        return;
-      } else {
-        setMazeMode(true);
-        updateLog(`Congratulations. You found a potion of cure dianthroritis. Frankly, no one`);
-        updateLog(`thought you could do it. Boy! Did you surprise them! The doctor is now`);
-        updateLog(`administering the potion, and in a few moments your daughter should be well`);
-        updateLog(`on her way to recovery.`);
+  var hasPotion = isCarrying(createObject(OPOTION, 21));
+  var inTime = gtime <= TIMELIMIT;
 
-        updateLog(`Press <b>enter</b> to continue: `);
-
-        setCharCallback(win);
-        return;
-      }
-    }
+  if (hasPotion) {
+    lprint(`Congratulations. You found the potion of cure dianthroritis!\n\n`);
+    await nap(1000);
+    lprint(`Frankly, No one thought you could do it. Boy! Did you surprise them!\n\n`);
+    await nap(1000);
   }
 
-  if (gtime > TIMELIMIT) {
-    setMazeMode(true);
-    updateLog(`Welcome home ${logname}.`);
-    updateLog(`The latest word from the doctor is not good.`);
-    updateLog(`The doctor has the sad duty to inform you that your daughter died! You didn't`);
-    updateLog(`make it in time. There was nothing that could be done without the potion.`);
+  // has potion and returned in time. winner!
+  if (hasPotion && inTime) {
+    lprint(`The doctor is now administering the potion, and in a few moments\n`);
+    lprint(`your daughter should be well on her way to recovery.\n\n`);
+    await nap(1000);
+    lprint(`Press <b>enter</b> to continue: `);
+    napping = false;
+    setCharCallback(win);
+    return;
+  }
+
+  // has potion but ran out of time
+  if (hasPotion && !inTime) {
+    if (ULARN) {
+      lprint(`However... the doctor has the sad duty to inform you that your daughter\n`);
+      lprint(`has died! You didn't make it in time. In your agony, you kill the doctor,\nyour `);
+      if (player.gender == MALE) lprcat(`wife`);
+      else if (player.gender == FEMALE) lprcat(`husband`);
+      else lprcat(`partner`);
+      lprint(` and yourself! Too bad...\n\n`);
+    } else {
+      lprint(`The doctor has the sad duty to inform you that your daughter died before\n`);
+      lprint(`your return. There was nothing that could be done without the potion.\n\n`);
+    }
+    await nap(2000);
+    napping = false;
     died(269, false); /* failed */
     return;
   }
 
-  clear();
+  // doesn't have potion and still has time
+  if (!hasPotion && inTime) {
+    cursor(1, 7);
+    lprcat(`\tWelcome home ${logname}.`);
+    lprcat(`\n\n\tThe latest word from the doctor is not good.`);
+    lprcat(`\n\n\tThe diagnosis is confirmed as dianthroritis. The doctor guesses that`);
+    lprcat(`\n\tyour daughter has only ${timeleft()} mobuls left in this world. It's up to you,`);
+    lprcat(`\n\t${logname}, to find the only hope for your daughter, the`);
+    lprcat(`\n\tvery rare potion of cure dianthroritis. It is rumored that only deep`);
+    lprcat(`\n\tin the depths of the caves can this potion be found.`);
+    lprcat(`\n\n\tPress <b>escape</b> to leave: `);
+    paint();
+    napping = false;
+  }
 
-  cursor(1, 7);
-
-  lprcat(`\tWelcome home ${logname}.`);
-  lprcat(`\n\n\tThe latest word from the doctor is not good.`);
-  lprcat(`\n\n\tThe diagnosis is confirmed as dianthroritis. The doctor guesses that`);
-  lprcat(`\n\tyour daughter has only ${timeleft()} mobuls left in this world. It's up to you,`);
-  lprcat(`\n\t${logname}, to find the only hope for your daughter, the`);
-  lprcat(`\n\tvery rare potion of cure dianthroritis. It is rumored that only deep`);
-  lprcat(`\n\tin the depths of the caves can this potion be found.`);
-
-  lprcat(`\n\n\tPress <b>escape</b> to leave: `);
-
-  paint();
-
+  // doesn't have potion but ran out of time
+  if (!hasPotion && !inTime) {
+    lprint(`Welcome home ${logname}.\n\n`);
+    await nap(1000);
+    lprint(`The latest word from the doctor is not good.\n\n`);
+    await nap(1000);
+    if (ULARN) {
+      lprint(`The doctor has the sad duty to inform you that your daughter has died!\n`);
+      lprint(`You didn't make it in time. In your agony, you kill the doctor, your\n`);
+      if (player.gender == MALE) lprcat(`wife`);
+      else if (player.gender == FEMALE) lprcat(`husband`);
+      else lprcat(`partner`);
+      lprint(` and yourself! Too bad...\n\n`);
+    } else {
+      lprint(`The doctor has the sad duty to inform you that your daughter died! You didn't\n`);
+      lprint(`make it in time. There was nothing that could be done without the potion.\n\n`);
+    }
+    await nap(2000);
+    napping = false;
+    died(269, false); /* failed */
+    return;
+  }
 }
+
+
 
 function parse_home(key) {
   if (key == ESC && !GAMEOVER) {
@@ -954,36 +983,29 @@ function parse_home(key) {
   }
 }
 
-function win(key) {
+
+
+async function win(key) {
   if (key != ENTER) {
     return 0;
   }
-
   napping = true;
-  updateLog(``);
-  updateLog(``);
-  updateLog(``);
-  updateLog(``);
-  updateLog(``);
-  updateLog(`The potion is `);
-
-  setTimeout(function () {
-    appendLog(`working!`);
-    paint();
-    setTimeout(function () {
-      updateLog(``);
-      updateLog(``);
-      updateLog(`The doctor thinks that your daughter will recover in a few days.`);
-      paint();
-      setTimeout(function () {
-        updateLog(`Congratulations!`);
-        paint();
-        napping = false;
-        died(263, false); /* a winner! */
-      }, 1000);
-    }, 1500);
-  }, 2000);
-
+  cursor(1, 8);
+  cltoeoln();
+  lprint(`The potion is`);
+  await nap(500);
+  lprint(`.`);
+  await nap(1000);
+  lprint(`.`);
+  await nap(1000);
+  lprint(`.`);
+  await nap(1000);
+  lprint(` working!\n\n`);
+  lprintf(`The doctor thinks that your daughter will recover in a few days.\n`);
+  lprintf(`Congratulations!\n\n`);
+  await nap(2000);
+  napping = false;
+  died(263, false); /* a winner! */
   return 1;
 }
 

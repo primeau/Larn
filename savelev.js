@@ -200,6 +200,8 @@ function loadPlayer(saved) {
     if (saved.WEAR && saved.WEAR.id == item.id && saved.WEAR.arg == item.arg) newPlayer.WEAR = newPlayer.inventory[i];
   }
 
+  newPlayer.gender = saved.gender;
+  
   newPlayer.knownPotions = saved.knownPotions;
   newPlayer.knownScrolls = saved.knownScrolls;
   newPlayer.knownSpells = saved.knownSpells;

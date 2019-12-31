@@ -93,7 +93,7 @@ function recalc() {
   if (shield && shield.matches(OSHIELD)) {
     player.AC += 2 + shield.arg;
   }
-  
+
   player.AC += player.MOREDEFENSES;
 
   if (weapon) {
@@ -483,4 +483,16 @@ function packweight() {
     };
   }
   return (weight);
+}
+
+
+
+async function nap(time) {
+  debug(`nap start`, time);
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('resolved');
+      debug(`nap end`, time);
+    }, time);
+  });
 }

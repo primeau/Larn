@@ -1,10 +1,16 @@
 'use strict';
 
+const MALE = 0;
+const FEMALE = 1;
+const OTHER = 2;
+
 var Player = function Player() {
     this.inventory = [];
     for (var i = 0; i < MAXINVEN; i++) {
       this.inventory[i] = null;
     }
+
+    this.gender = MALE;
 
     this.knownPotions = [];
     this.knownScrolls = [];

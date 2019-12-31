@@ -108,6 +108,14 @@ function parse(key) {
     // debug(blocking_callback.name + `: `);
     var before = blocking_callback;
     var done = blocking_callback(key);
+    
+    // dumb hack until everything gets moved to async/await
+    var isPromise = Promise.resolve(done) == done;
+    if (isPromise) {
+      debug('parse: ispromise');
+      return;
+    }
+
     var after = blocking_callback;
     // debug(blocking_callback.name + `: ` + done);
 

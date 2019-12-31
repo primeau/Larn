@@ -664,13 +664,13 @@ function died(reason, slain) {
   // show scoreboard unless they saved the game
   if (reason != 287) {
     lastmonst = reason; // for scoreboard
-    updateLog(`Press <b>enter</b> to view the scoreboard: `);
+    lprcat(`Press <b>enter</b> to view the scoreboard: `);
     if (cheat && wizard)
-      appendLog(`(cheater and wizard scores not recorded)`);
+    lprcat(`(cheater and wizard scores not recorded)`);
     else if (wizard)
-      appendLog(`(sorry, wizard scores are not recorded)`);
+    lprcat(`(sorry, wizard scores are not recorded)`);
     else if (cheat)
-      appendLog(`(sorry, cheater scores are not recorded)`);
+    lprcat(`(sorry, cheater scores are not recorded)`);
 
     writeScoreToDatabase();
     setCharCallback(endgame);

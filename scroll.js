@@ -189,8 +189,7 @@ function read_scroll(scroll) {
       for (var i = 0; i < 26; i++) {
         var item = player.inventory[i];
         if (item && item.isGem()) {
-          item.arg &= 255;
-          item.arg <<= 1;
+          item.arg *= 2;
           item.arg = Math.min(255, item.arg);
         }
       }
