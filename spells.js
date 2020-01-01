@@ -1064,7 +1064,7 @@ function annihilate() {
       var monster = monsterAt(i, j);
       if (monster) {
         /* if a monster there */
-        if (monster.arg < DEMONLORD + 2 &&
+        if (!monster.isDemon() &&
           // JRP: Everyone gets an easter egg. This one is mine.
           monster.arg != LAMANOBE) {
           k += monster.experience;

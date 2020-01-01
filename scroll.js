@@ -70,6 +70,9 @@ function read_scroll(scroll) {
   }
   learnScroll(scroll);
 
+  if (ULARN) updateLog(`You read a scroll of ${SCROLL_NAMES[scroll.arg]}`);
+  var printMessage = !ULARN;
+
   switch (scroll.arg) {
     case 0:
       /* enchant armor */
@@ -83,7 +86,7 @@ function read_scroll(scroll) {
 
     case 2:
       /* enlightenment */
-      updateLog(`  You have been granted enlightenment!`);
+      if (printMessage) updateLog(`  You have been granted enlightenment!`);
       var yh = Math.min(player.y + 7, MAXY);
       var xh = Math.min(player.x + 25, MAXX);
       var yl = Math.max(player.y - 7, 0);
@@ -96,7 +99,7 @@ function read_scroll(scroll) {
 
     case 3:
       /* blank paper */
-      updateLog(`  This scroll seems to be blank`);
+      if (printMessage) updateLog(`  This scroll seems to be blank`);
       break;
 
     case 4:
@@ -111,43 +114,48 @@ function read_scroll(scroll) {
 
     case 6:
       /* aggravate monsters */
-      updateLog(`  Something isn't right...`);
+      if (printMessage) updateLog(`  Something isn't right...`);
       player.AGGRAVATE += 800;
       break;
 
     case 7:
       /* time warp */
-      var i = rnd(1000) - 850;
-      gtime += i;
-      var mobuls = Math.abs(Math.round(i / 100));
-      if (i >= 0)
-        updateLog(`  You went forward in time by ${mobuls} mobuls`);
-      else
-        updateLog(`  You went backward in time by ${mobuls} mobuls`);
-      adjtime(i); /* adjust time for time warping */
+      var warpTime = (rnd(1000) - 850);
+      gtime += warpTime;
+      if (ULARN && gtime < 0) gtime = 0;
+      var mobuls = Math.abs(Math.round(warpTime / 100));
+      debug(`timewarp: ${warpTime} ${mobuls}`);
+      if (warpTime >= 0) {
+        updateLog(`  You went forward in time by ${mobuls} mobul${mobuls==1?``:`s`}`);
+      } else {
+        updateLog(`  You went backward in time by ${mobuls} mobul${mobuls==1?``:`s`}`);
+      }
+      adjtime(warpTime); /* adjust time for time warping */
       break;
 
     case 8:
       /* teleportation */
-      updateLog(`  Your surroundings change`);
+      if (printMessage) updateLog(`  Your surroundings change`);
       oteleport(0);
       break;
 
     case 9:
       /* expanded awareness */
-      updateLog(`  You feel extra alert`);
+      if (printMessage) updateLog(`  You feel extra alert`);
       player.AWARENESS += 1800;
       break;
 
     case 10:
       /* haste monster */
-      updateLog(`  Something isn't right...`);
+      if (ULARN) updateLog(`  You feel nervous.`);
+      else updateLog(`  Something isn't right...`);
       player.HASTEMONST += rnd(55) + 12;
       break;
 
     case 11:
       /* monster healing */
-      updateLog(`  Something isn't right...`);
+      if (ULARN) updateLog(`  You feel uneasy.`);
+      else updateLog(`  Something isn't right...`);
       for (var j = 0; j < MAXY; j++)
         for (var i = 0; i < MAXX; i++)
           if (player.level.monsters[i][j])
@@ -171,7 +179,7 @@ function read_scroll(scroll) {
 
     case 15:
       /* magic mapping */
-      updateLog(`  You have been granted enlightenment!`);
+      if (printMessage) updateLog(`  You have been granted enlightenment!`);
       for (var i = 0; i < MAXX; i++)
         for (var j = 0; j < MAXY; j++)
           player.level.know[i][j] = KNOWALL;
@@ -185,7 +193,7 @@ function read_scroll(scroll) {
 
     case 17:
       /* gem perfection */
-      updateLog(`  You feel someone eyeing your belongings`);
+      if (printMessage) updateLog(`  You feel someone eyeing your belongings`);
       for (var i = 0; i < 26; i++) {
         var item = player.inventory[i];
         if (item && item.isGem()) {
@@ -197,7 +205,7 @@ function read_scroll(scroll) {
 
     case 18:
       /* spell extension */
-      updateLog(`  You feel a twitch at the base of your skull`);
+      if (printMessage) updateLog(`  You feel a twitch at the base of your skull`);
       player.updateCharmCount(player.CHARMCOUNT);
       player.updateTimeStop(player.TIMESTOP);
       player.updateHoldMonst(player.HOLDMONST);
@@ -214,7 +222,7 @@ function read_scroll(scroll) {
 
     case 19:
       /* identify */
-      updateLog(`  You feel someone eyeing your belongings`);
+      if (printMessage) updateLog(`  You feel someone eyeing your belongings`);
       for (var i = 0; i < player.inventory.length; i++) {
         var item = player.inventory[i];
         if (item) {
@@ -228,7 +236,7 @@ function read_scroll(scroll) {
 
     case 20:
       /* remove curse */
-      updateLog(`  You sense a benign presence`);
+      if (printMessage) updateLog(`  You sense a benign presence`);
       if (player.BLINDCOUNT > 0) player.BLINDCOUNT = 1;
       if (player.CONFUSE > 0) player.CONFUSE = 1;
       if (player.AGGRAVATE > 0) player.AGGRAVATE = 1;
@@ -248,10 +256,10 @@ function read_scroll(scroll) {
 
     case 22:
       /* pulverization */
-      var pulverize_message = function(monster) {
+      var pulverize_message = function (monster) {
         return `  The ray hits the ${monster}`;
       }
-      var scroll_pulverize = function(direction) {
+      var scroll_pulverize = function (direction) {
         setup_godirect(10, LIT /* same as LIT */ , direction, 150, ' ', pulverize_message);
       }
       prepare_direction_event(scroll_pulverize);
@@ -259,7 +267,7 @@ function read_scroll(scroll) {
 
     case 23:
       /* life protection */
-      updateLog(`  You sense a benign presence`);
+      if (printMessage) updateLog(`  You sense a benign presence`);
       player.LIFEPROT++;
       break;
   };

@@ -339,13 +339,13 @@ const OLRS = new Item(80, `<b>L</b>`, `the Larn Revenue Service`, false);
 const OANNIHILATION = new Item(82, `<b>s</b>`, `a sphere of annihilation`, false);
 const OCOOKIE = new Item(83, `<b>c</b>`, `a fortune cookie`, true);
 const OURN = new Item(84, `<b><font color='green'>u</font></b>`, `a golden urn`, true); // ULARN NOT IMPLEMENTED
-/* need amiga */ const OBRASSLAMP = new Item(85, `<b><font color='green'>.</font></b>`, `a brass lamp`, true); // ULARN
-/* need amiga */ const OHANDofFEAR = new Item(86, `<b><font color='green'>.</font></b>`, `The Hand of Fear`, true); // ULARN
-/* need amiga */ const OSPHTALISMAN = new Item(87, `<b><font color='green'>.</font></b>`, `The Talisman of the Sphere`, true); // ULARN
+/* need amiga */ const OBRASSLAMP = new Item(85, `<b><font color='yellow'>.</font></b>`, `a brass lamp`, true); // ULARN
+/* need amiga */ const OHANDofFEAR = new Item(86, `<b><font color='red'>.</font></b>`, `The Hand of Fear`, true); // ULARN
+/* need amiga */ const OSPHTALISMAN = new Item(87, `<b><font color='blue'>.</font></b>`, `The Talisman of the Sphere`, true); // ULARN
 /* need amiga */ const OWWAND = new Item(88, `<b><font color='green'>/</font></b>`, `a wand of wonder`, true); // ULARN
-/* need amiga */ const OPSTAFF = new Item(89, `<b><font color='green'>/</font></b>`, `a staff of power`, true); // ULARN
-/* need amiga */ const OVORPAL = new Item(90, `<b><font color='green'>)</font></b>`, `the Vorpal Blade`, true); // ULARN
-/* need amiga */ const OSLAYER = new Item(91, `<b><font color='green'>)</font></b>`, `Slayer`, true); // ULARN
+/* need amiga */ const OPSTAFF = new Item(89, `<b><font color='blue'>/</font></b>`, `a staff of power`, true); // ULARN
+/* need amiga */ const OVORPAL = new Item(90, `<b><font color='blue'>)</font></b>`, `the Vorpal Blade`, true); // ULARN
+/* need amiga */ const OSLAYER = new Item(91, `<b><font color='red'>)</font></b>`, `Slayer`, true); // ULARN
 /* need amiga */ const OELVENCHAIN = new Item(92, `<b><font color='green'>]</font></b>`, `elven chain`, true); // ULARN
 const OHOMEENTRANCE = new Item(93, OEMPTY.char, `exit to home level`, false);
 const OUNKNOWN = new Item(94, ' ', `... nothing`, false);
