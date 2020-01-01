@@ -5,9 +5,9 @@
 /* never, ever, never use a code formatter here */
 /************************************************/
 
-var GAMENAME;  // ULARN
-var MAXLEVEL;  // ULARN    /* max # levels in the dungeon  */
-var MAXVLEVEL; // ULARN    /* max # of levels in the temple of the luran */
+var GAMENAME;  // ULARN   /* are we playing larn or ularn? */
+var MAXLEVEL;  // ULARN   /* max # levels in the dungeon  */
+var MAXVLEVEL; // ULARN   /* max # of levels in the temple of the luran */
 var DBOTTOM;   // ULARN
 var VBOTTOM;   // ULARN
 const LOG_SIZE = 5;       /* number of log lines to show */
@@ -17,7 +17,8 @@ const MAXX = 67;          /* maze width */
 const MAXY = 17;          /* maze height */
 const TAXRATE = 1 / 20;   /* amount of taxes owed after winning */
 const MAXPLEVEL = 100;    /* maximum player level allowed  */
-var TIMELIMIT; // ULARN  /* maximum number of moves before the game is called */
+var TIMELIMIT; // ULARN   /* maximum number of moves before the game is called */
+var MAX_BANK_BALANCE;
 
 
 
@@ -52,7 +53,7 @@ const SKILL = [
   175 * MEG, 180 * MEG, 185 * MEG, 190 * MEG, 195 * MEG,
   200 * MEG, 210 * MEG, 220 * MEG, 230 * MEG, 240 * MEG,
   250 * MEG, 260 * MEG, 270 * MEG, 280 * MEG, 290 * MEG,
-  300 * MEG
+  300 * MEG, 320 * MEG, 340 * MEG, 370 * MEG
 ];
 
 

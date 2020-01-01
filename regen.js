@@ -70,6 +70,7 @@ function regen() {
   if (player.SEEINVISIBLE) {
     if (ULARN) {
       if (isCarrying(OAMULET)) {
+         /* See inv doesn't wear off if player has amulet of invisibility */
         player.SEEINVISIBLE++;
       }
     }

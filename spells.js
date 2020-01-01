@@ -66,7 +66,6 @@ function cast(key) {
   }
 
   if (!(isalpha(key) || matchesSpell(key))) {
-    // if (!isalpha(key) && !matchesSpell(key)) {
     return 0;
   }
 
@@ -86,7 +85,6 @@ function cast(key) {
   } else {
     nomove = 0;
     updateLog(`  Nothing Happened `);
-    //bottomline();
   }
 
   spellToCast = null;
@@ -112,13 +110,13 @@ function speldamage(x) {
     return;
   }
 
-  var clev = player.LEVEL;
+  var playerLev = player.LEVEL;
   if ((rnd(23) == 7) || (rnd(18) > player.INTELLIGENCE)) {
     nomove = 0;
     updateLog(`  It didn't work!`);
     return;
   }
-  if (clev * 3 + 2 < x) {
+  if (playerLev * 3 + 2 < x) {
     nomove = 0;
     updateLog(`  Nothing happens.  You seem inexperienced at this`);
     return;
@@ -184,7 +182,7 @@ function speldamage(x) {
 
     case 9:
       /* healing */
-      player.raisehp(20 + (clev << 1));
+      player.raisehp(20 + (playerLev << 1));
       return;
 
     case 10:
@@ -233,12 +231,12 @@ function speldamage(x) {
 
     case 17:
       /* cancellation */
-      player.updateCancellation(5 + clev);
+      player.updateCancellation(5 + playerLev);
       return;
 
     case 18:
       /* haste self */
-      player.updateHasteSelf(7 + clev);
+      player.updateHasteSelf(7 + playerLev);
       return;
 
     case 19:
@@ -254,8 +252,10 @@ function speldamage(x) {
         for (var j = Math.max(player.y - 1, 1); j <= yh; j++) {
           var item = itemAt(i, j);
           if (item.matches(OWALL)) {
-            if (level < VBOTTOM - (ULARN ? 2 : 0))
+            /* can't vpr below V2 */
+            if (level < VBOTTOM - (ULARN ? 2 : 0)) {
               setItem(i, j, OEMPTY);
+            }
           } else if (item.matches(OSTATUE)) {
             var doCrumble = getDifficulty() < 3;
             if (ULARN) doCrumble = getDifficulty() <= 3 && rnd(60) < 30;
@@ -317,7 +317,7 @@ function speldamage(x) {
 
     case 25:
       /* flood */
-      omnidirect(x, 32 + clev, `struggles for air in your flood!`);
+      omnidirect(x, 32 + playerLev, `struggles for air in your flood!`);
       return;
 
     case 26:
@@ -336,7 +336,7 @@ function speldamage(x) {
 
     case 27:
       /* scare monster */
-      player.updateScareMonst(rnd(10) + clev);
+      player.updateScareMonst(rnd(10) + playerLev);
       if (isCarrying(OHANDofFEAR)) {
         player.SCAREMONST *= 3;
       }
@@ -344,12 +344,12 @@ function speldamage(x) {
 
     case 28:
       /* hold monster */
-      player.updateHoldMonst(rnd(10) + clev);
+      player.updateHoldMonst(rnd(10) + playerLev);
       return;
 
     case 29:
       /* time stop */
-      player.updateTimeStop(rnd(20) + (clev << 1));
+      player.updateTimeStop(rnd(20) + (playerLev << 1));
       return;
 
     case 30:
@@ -359,12 +359,17 @@ function speldamage(x) {
 
     case 31:
       /* magic fire */
-      omnidirect(x, 35 + rnd(10) + clev, `cringes from the flame`);
+      omnidirect(x, 35 + rnd(10) + playerLev, `cringes from the flame`);
       return;
 
       /* ----- LEVEL 6 SPELLS ----- */
 
     case 32:
+      /* make wall */
+      prepare_direction_event(spell_makewall);
+      return;
+
+    case 33:
       /* sphere of annihilation */
       if ((rnd(23) == 5) && (wizard == 0)) {
         //beep();
@@ -377,16 +382,16 @@ function speldamage(x) {
       prepare_direction_event(spell_sphere);
       return;
       //
-    case 33:
+    case 34:
       /* genocide */
       updateLog(`Genocide what monster? `);
       setCharCallback(genmonst);
       if (!wizard)
-        forgetSpell(33); /* forget */
+        forgetSpell(GEN); /* forget */
       loseint();
       return;
 
-    case 34:
+    case 35:
       /* summon demon */
       if (rnd(100) > 30) {
         prepare_direction_event(spell_summon);
@@ -401,12 +406,12 @@ function speldamage(x) {
       }
       return;
 
-    case 35:
+    case 36:
       /* walk through walls */
       player.updateWTW(rnd(10) + 5);
       return;
 
-    case 36:
+    case 37:
       /* alter reality */
       var savemon = [];
       var saveitm = [];
@@ -454,7 +459,7 @@ function speldamage(x) {
       }
       loseint();
       if (!wizard)
-        forgetSpell(36); /* forget */
+        forgetSpell(ALT); /* forget */
       positionplayer();
       /* 12.4.5
       the last hit monster is probably somewhere else now
@@ -466,11 +471,11 @@ function speldamage(x) {
 
       return;
 
-    case 37:
+    case 38:
       /* permanence */
       adjtime(-99999);
       if (!wizard)
-        forgetSpell(37); /* forget */
+        forgetSpell(PER); /* forget */
       loseint();
       return;
 
@@ -549,6 +554,10 @@ function spell_finger(direction) {
   }
 }
 
+function spell_makewall(direction) {
+  makewall(direction);
+}
+
 function spell_sphere(direction) {
   var x = player.x + diroffx[direction];
   var y = player.y + diroffy[direction];
@@ -588,7 +597,7 @@ function spell_polymorph(direction) {
 
   ifblind(x, y);
 
-  if (nospell(16 /*polymorph*/ , monster) == 0) {
+  if (nospell(PLY, monster) == 0) {
     player.level.monsters[x][y] = null;
     createmonster(rnd(monsterlist.length - 1), x, y);
     show1cell(x, y); /* show the new monster */
@@ -611,7 +620,7 @@ function spell_polymorph(direction) {
 function spell_teleport(direction) {
   //if (spnum < 0 || spnum >= SPNUM) return; /* bad args */
   if (isconfuse()) return;
-  //dirsub( & x, & y);
+
   var x = player.x + diroffx[direction];
   var y = player.y + diroffy[direction];
   var monster = getMonster(direction);
@@ -620,7 +629,7 @@ function spell_teleport(direction) {
     return;
   }
   ifblind(x, y);
-  if (nospell(30 /*teleportaway*/ , monster) == 0) {
+  if (nospell(TEL, monster) == 0) {
     fillmonst(monster.arg);
     player.level.monsters[x][y] = null;
     player.level.know[x][y] &= ~KNOWHERE;
@@ -744,7 +753,6 @@ function direct(spnum, direction, dam, arg) {
   if (isconfuse()) {
     return;
   }
-  //dirsub( & x, & y);
   var x = player.x + diroffx[direction];
   var y = player.y + diroffy[direction];
 
@@ -759,7 +767,7 @@ function direct(spnum, direction, dam, arg) {
   var str = attackmessage[spnum];
 
   if (item.matches(OMIRROR) && !monster) {
-    if (spnum == 3) /* sleep */ {
+    if (spnum == SLE) /* sleep */ {
       updateLog(`  You fall asleep! `);
       beep();
       arg += 2;
@@ -768,7 +776,7 @@ function direct(spnum, direction, dam, arg) {
         //nap(1000);
       }
       return;
-    } else if (spnum == 6) /* web */ {
+    } else if (spnum == WEB) /* web */ {
       updateLog(`  You get stuck in your own web! `);
       beep();
       arg += 2;
@@ -1045,6 +1053,42 @@ function omnidirect(spnum, dam, str) {
           lasthy = y;
         }
       }
+    }
+  }
+}
+
+
+
+function makewall(direction) {
+  //if (spnum < 0 || spnum >= SPNUM || str == 0) return; /* bad args */
+
+  if (isconfuse()) return;
+
+  var x = player.x + diroffx[direction];
+  var y = player.y + diroffy[direction];
+  var item = itemAt(x, y);
+  var monster = monsterAt(x, y);
+
+  if (!item || item.matches(OHOMEENTRANCE)) { // not dungeon entrance
+    updateLog(`  you can't make a wall there!`);
+    exitspell();
+    return;
+  }
+
+  if ((y >= 0) && (y <= MAXY - 1) && (x >= 0) && (x <= MAXX - 1)) { // within bounds
+    if (!item.matches(OWALL)) { // not a wall
+      if (item.matches(OEMPTY)) { // no other items there
+        if (!monster) { // no monsters
+          setItem(x, y, OWALL);
+          updateWalls(player.x, player.y, 2);
+        } else {
+          updateLog(`  there's a monster there!`);
+        }
+      } else {
+        updateLog(`  there's something there already!`);
+      }
+    } else {
+      updateLog(`  there's a wall there already!`);
     }
   }
 }

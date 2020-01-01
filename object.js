@@ -300,10 +300,10 @@ const OPOTION = new Item(42, `<b>!</b>`, `a magic potion`, true);
 const OBOOK = new Item(43, `<b>B</b>`, `a book`, true);
 const OCHEST = new Item(44, `<b>C</b>`, `a chest`, true);
 /*TODO*/ const OAMULET = new Item(45, `<b>}</b>`, `an amulet of invisibility`, true);
-const OORBOFDRAGON = new Item(46, `<b><font color='green'>o</font></b>`, `an orb of dragon slaying`, true);
+const OORBOFDRAGON = new Item(46, `<b><font color='blue'>o</font></b>`, `an orb of dragon slaying`, true);
 /*TODO*/ const OSPIRITSCARAB = new Item(47, `<b><font color='green'>:</font></b>`, `a scarab of negate spirit`, true);
-/*TODO*/ const OCUBEofUNDEAD = new Item(48, `<b><font color='green'>;</font></b>`, `a cube of undead control`, true);
-/*TODO*/ const ONOTHEFT = new Item(49, `<b><font color='green'>,</font></b>`, `device of theft prevention`, true);
+/*TODO*/ const OCUBEofUNDEAD = new Item(48, `<b><font color='purple'>;</font></b>`, `a cube of undead control`, true);
+/*TODO*/ const ONOTHEFT = new Item(49, `<b><font color='yellow'>,</font></b>`, `device of theft prevention`, true);
 /*TODO*/ const ODIAMOND = new Item(50, `<b>@</b>`, `a brilliant diamond`, true);
 /*TODO*/ const ORUBY = new Item(51, `<b>@</b>`, `a ruby`, true);
 /*TODO*/ const OEMERALD = new Item(52, `<b>@</b>`, `an enchanting emerald`, true);
@@ -338,7 +338,7 @@ const OLRS = new Item(80, `<b>L</b>`, `the Larn Revenue Service`, false);
 //#define OTHRONE2 81
 const OANNIHILATION = new Item(82, `<b>s</b>`, `a sphere of annihilation`, false);
 const OCOOKIE = new Item(83, `<b>c</b>`, `a fortune cookie`, true);
-const OURN = new Item(84, `<b><font color='green'>u</font></b>`, `a golden urn`, true); // ULARN NOT IMPLEMENTED
+const OURN = new Item(84, `<b><font color='yellow'>u</font></b>`, `a golden urn`, true); // ULARN NOT IMPLEMENTED
 /* need amiga */ const OBRASSLAMP = new Item(85, `<b><font color='yellow'>.</font></b>`, `a brass lamp`, true); // ULARN
 /* need amiga */ const OHANDofFEAR = new Item(86, `<b><font color='red'>.</font></b>`, `The Hand of Fear`, true); // ULARN
 /* need amiga */ const OSPHTALISMAN = new Item(87, `<b><font color='blue'>.</font></b>`, `The Talisman of the Sphere`, true); // ULARN
@@ -724,7 +724,7 @@ function oelevator(direction) {
   // going up
   if (direction == 1) {
     if (level == 0) {
-      updateLog(`,  unfortunately, it is out of order.`);
+      appendLog(`, unfortunately it is out of order.`);
       return;
     }
     player.x = rnd(MAXX - 2);
@@ -848,16 +848,24 @@ function oteleport(err) {
  */
 function readbook(book) {
   var lev = book.arg;
-  var i, tmp;
+  var spell, tmp;
   if (lev <= 3)
-    i = rund((tmp = splev[lev]) ? tmp : 1);
+    spell = rund((tmp = splev[lev]) ? tmp : 1);
   else
-    i = rnd((tmp = splev[lev] - 9) ? tmp : 1) + 9;
-  learnSpell(spelcode[i]);
-  updateLog(`Spell \'<b>${spelcode[i]}</b>\': ${spelname[i]}`);
-  updateLog(`  ${speldescript[i]}`);
+    spell = rnd((tmp = splev[lev] - 9) ? tmp : 1) + 9;
+
+  // original larn doesn't have make wall spell
+  if (!ULARN && spell == MKW) {
+    readbook(book);
+    return;
+  }
+
+  learnSpell(spelcode[spell]);
+  updateLog(`Spell \'<b>${spelcode[spell]}</b>\': ${spelname[spell]}`);
+  updateLog(`  ${speldescript[spell]}`);
   if (rnd(10) == 4) {
-    updateLog(`  Your intelligence went up by one!`);
+    if (ULARN) updateLog(`You feel clever!`);
+    else updateLog(`  Your intelligence went up by one!`);
     player.setIntelligence(player.INTELLIGENCE + 1);
   }
 }

@@ -134,7 +134,7 @@ const ULARN_STORE_INVENTORY = [
   [2200,   OREGENRING.id,       0,  1],
   [10000,  ORINGOFEXTRA.id,     0,  1],
   [2800,   OBELT.id,            0,  1],
-  [4000,   OAMULET.id,          5,  1],
+  [4000,   OAMULET.id,          0 /*5*/,  1],
   [5000,   OCUBEofUNDEAD.id,    0,  0],
   [6000,   ONOTHEFT.id,         0,  0],
   [5900,   OCHEST.id,           3,  1],
