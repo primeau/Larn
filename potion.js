@@ -78,6 +78,9 @@ function quaffpotion(potion, set_known) {
     learnPotion(potion);
   }
 
+  if (ULARN) updateLog(`You drink a potion of ${POTION_NAMES[potion.arg]}`);
+  var printMessage = !ULARN;
+
   switch (potion.arg) {
     case 0:
       /* sleep */
@@ -157,14 +160,14 @@ function quaffpotion(potion, set_known) {
       if (player.HERO) {
         player.setStrength(player.STRENGTH + 11);
       }
-
-      updateLog(`  Wow!  You feel great!`);
+      updateLog(`  Wow! You feel great!`);
       break;
 
     case 6:
       /* charisma */
       player.setCharisma(player.CHARISMA + 1);
-      updateLog(`  Your charm went up by one!`);
+      if (ULARN) updateLog(`  You feel charismatic!`);
+      else updateLog(`  Your charm went up by one!`);
       break;
 
     case 7:
@@ -176,7 +179,8 @@ function quaffpotion(potion, set_known) {
     case 8:
       /* intelligence */
       player.setIntelligence(player.INTELLIGENCE + 1);
-      updateLog(`  Your intelligence went up by one!`);
+      if (ULARN) updateLog(`  You feel clever!`);
+      else updateLog(`  Your intelligence went up by one!`);
       break;
 
     case 9:
@@ -200,7 +204,7 @@ function quaffpotion(potion, set_known) {
 
     case 10:
       /* monster detection */
-      updateLog(`  You detect the presence of monsters!`);
+      if (printMessage) updateLog(`  You detect the presence of monsters!`);
       //nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
@@ -216,7 +220,7 @@ function quaffpotion(potion, set_known) {
 
     case 11:
       /* potion of forgetfulness */
-      updateLog(`  You stagger for a moment . .`);
+      updateLog(`  You stagger for a moment...`);
       for (var i = 0; i < MAXX; i++)
         for (var j = 0; j < MAXY; j++) {
           player.level.know[i][j] = 0;
@@ -226,7 +230,7 @@ function quaffpotion(potion, set_known) {
 
     case 12:
       /* water */
-      updateLog(`  This potion has no taste to it`);
+      if (printMessage) updateLog(`  This potion has no taste to it`);
       break;
 
     case 13:
@@ -252,13 +256,14 @@ function quaffpotion(potion, set_known) {
         player.setCharisma(player.CHARISMA + 11);
       }
       player.HERO += 250;
-      updateLog(`  WOW!!!  You feel Super-fantastic!!!`);
+      updateLog(`  WOW!!! You feel Super-fantastic!!!`);
       break;
 
     case 16:
       /* sturdiness */
       player.setConstitution(player.CONSTITUTION + 1);
-      updateLog(`  You have a greater intestinal constitude!`);
+      if (ULARN) updateLog(`  You feel healthier!`);
+      else updateLog(`  You have a greater intestinal constitude!`);
       break;
 
     case 17:
@@ -294,8 +299,9 @@ function quaffpotion(potion, set_known) {
 
     case 20:
       /* instant healing */
-      updateLog(`  You feel all better now!`);
       player.raisehp(player.HPMAX - player.HP);
+      if (ULARN) removecurse(false);
+      updateLog(`  You feel all better now!`);
       break;
 
     case 21:
