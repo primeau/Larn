@@ -271,7 +271,7 @@ function loadPlayer(saved) {
   newPlayer.STREXTRA = saved.STREXTRA;
   newPlayer.LIFEPROT = saved.LIFEPROT;
 
-  // ULARN TODO: save all the special items
+  // ULARN save all the special items
   newPlayer.LAMP = saved.LAMP;
   newPlayer.WAND = saved.WAND;
   newPlayer.SLAYING = saved.SLAYING;

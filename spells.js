@@ -1071,7 +1071,6 @@ function makewall(direction) {
 
   if (!item || item.matches(OHOMEENTRANCE)) { // not dungeon entrance
     updateLog(`  you can't make a wall there!`);
-    exitspell();
     return;
   }
 
@@ -1079,7 +1078,7 @@ function makewall(direction) {
     if (!item.matches(OWALL)) { // not a wall
       if (item.matches(OEMPTY)) { // no other items there
         if (!monster) { // no monsters
-          setItem(x, y, OWALL);
+          setItem(x, y, createObject(OWALL));
           updateWalls(player.x, player.y, 2);
         } else {
           updateLog(`  there's a monster there!`);

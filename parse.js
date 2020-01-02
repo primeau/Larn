@@ -325,7 +325,8 @@ function parse(key) {
   //
   if (key == 'v') {
     nomove = 1;
-    updateLog(`JS Larn, Version ${VERSION} build ${BUILD} -- Difficulty ${getDifficulty()}`);
+    var larnString = ULARN ? `The Addiction of JS Ularn` : `JS Larn`;
+    updateLog(`${larnString}, Version ${VERSION} build ${BUILD} -- Difficulty ${getDifficulty()}`);
     if (wizard) updateLog(` Wizard`);
     if (cheat) updateLog(` Cheater`);
     return;

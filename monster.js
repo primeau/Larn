@@ -1,14 +1,13 @@
 'use strict';
 
 
-var Monster = function Monster(char, desc, level, armorclass, damage, attack, defence, intelligence, gold, hitpoints, experience, awake) {
+var Monster = function Monster(char, desc, level, armorclass, damage, attack, intelligence, gold, hitpoints, experience, awake) {
   this.char = char;
   this.desc = desc;
   this.level = level;
   this.armorclass = armorclass;
   this.damage = damage;
   this.attack = attack;
-  this.defence = defence;
   this.intelligence = intelligence;
   this.gold = gold;
   this.hitpoints = hitpoints;
@@ -31,7 +30,7 @@ function createMonster(monst) {
   }
 
   var monster = new Monster(monst.char, monst.desc, monst.level,
-    monst.armorclass, monst.damage, monst.attack, monst.defence,
+    monst.armorclass, monst.damage, monst.attack,
     monst.intelligence, monst.gold, monst.hitpoints, monst.experience,
     monst.awake);
 
@@ -113,7 +112,6 @@ Monster.prototype = {
       case REDDRAGON:
         something(level, false);
         return;
-
       case LEPRECHAUN:
         if (rnd(101) >= 75) creategem(false);
         if (rnd(5) == 1) this.dropsomething(LEPRECHAUN);
@@ -549,8 +547,6 @@ function hitplayer(x, y) {
     return;
   }
 
-  // ULARN TODO: lots of things
-
   lastnum = monster; /* killed by a ${monstername} */
 
   var damageModifier = 1; // will alway be 1 for classic Larn
@@ -568,15 +564,14 @@ function hitplayer(x, y) {
   }
 
   if (isCarrying(OCUBEofUNDEAD) || player.UNDEADPRO) {
-    if (monster.matches(VAMPIRE) || monster.matches(WRAITH)) {
-      /* vampire, wraith do nothing with undead control */
-      return;
-    }
-    if (monster.matches(ZOMBIE)) {
-      if (ULARN)
+    if (monster.matches(VAMPIRE) || monster.matches(WRAITH) || monster.matches(ZOMBIE)) {
+      if (ULARN) {
+        /*	halved if undead and cube of undead control	*/
         damageModifier = 0.5;
-      else
+      } else {
+        /* do nothing */
         return;
+      }
     }
   }
 
@@ -593,13 +588,18 @@ function hitplayer(x, y) {
     return;
   }
 
-  if ((player.INVISIBILITY > 0) && (rnd(33) < 20)) {
-    updateLog(`The ${monster} misses wildly`);
-    return;
+  if (!(ULARN && monster.isDemon())) {
+    if ((player.INVISIBILITY > 0) && (rnd(33) < 20)) {
+      updateLog(`The ${monster} misses wildly`);
+      return;
+    }
   }
-  if ((player.CHARMCOUNT > 0) && (rnd(30) + 5 * monster.level - player.CHARISMA < 30)) {
-    updateLog(`The ${monster} is awestruck at your magnificence!`);
-    return;
+
+  if (!(ULARN && (monster.isDemon() || monster.matches(PLATINUMDRAGON)))) {
+    if ((player.CHARMCOUNT > 0) && (rnd(30) + 5 * monster.level - player.CHARISMA < 30)) {
+      updateLog(`The ${monster} is awestruck at your magnificence!`);
+      return;
+    }
   }
 
   var dam;
@@ -722,15 +722,20 @@ function hitmonster(x, y) {
       }
     }
   }
+
   if (!ULARN && monster.matches(VAMPIRE)) {
-    //if (monster.hitpoints < 25) { // UPDATE this is original code
     if (monster.hitpoints > 0 && monster.hitpoints < 25) {
       player.level.monsters[x][y] = createMonster(BAT);
       player.level.know[x][y] = 0;
     }
   }
 
-  // ULARN TODO: METAMORPH
+  if (ULARN && monster.matches(METAMORPH)) {
+    if (monster.hitpoints > 0 && monster.hitpoints < 25) {
+      player.level.monsters[x][y] = createMonster(BRONZEDRAGON + rund(9));
+      player.level.know[x][y] = 0;
+    }
+  }
 
   if (ULARN && monster.matches(LEMMING)) {
     if (rnd(100) <= 40) createmonster(LEMMING);
@@ -949,6 +954,8 @@ function spattack(x, xx, yy) {
 
     case 2: // hell hound
       damage = rnd(15) + 8 - armorclass;
+      // fall through
+
     case 3: // dragon
       if (damage == null) damage = rnd(20) + 25 - armorclass;
       if (player.FIRERESISTANCE) updateLog(`The ${monster}'s flame doesn't faze you!`);
@@ -1061,6 +1068,7 @@ function spattack(x, xx, yy) {
 
     case 15: // bugbear
       damage = rnd(10) + 5 - armorclass;
+      // fall through
 
     case 16: // osequip
       if (damage == null) damage = rnd(15) + 10 - armorclass;

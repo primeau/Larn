@@ -285,7 +285,7 @@ function eat(xx, yy) {
  */
 function treasureroom(lv) {
   for (var tx = 1 + rnd(10); tx < MAXX - 10; tx += 10)
-    if (rnd(ULARN ? 13 : 10) == 2) {
+    if (rnd((ULARN ? 13 : 10)) == 2) {
       var xsize = rnd(6) + 3;
       var ysize = rnd(3) + 3;
       var ty = rnd(MAXY - 9) + 1; /* upper left corner of room */

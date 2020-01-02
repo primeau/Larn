@@ -212,7 +212,7 @@ function act_just_pray() {
 */
 function act_desecrate_altar() {
   if (rnd(100) < 60) {
-    var monstBoost = ULARN ? 3 : 2;
+    var monstBoost = (ULARN ? 3 : 2);
     createmonster(makemonst(level + monstBoost) + 8);
     player.AGGRAVATE += 2500;
   } else if (ULARN && rnd(100) < 5) {
@@ -242,7 +242,7 @@ function crumble_altar() {
 */
 function act_ignore_altar(x, y) {
   if (rnd(100) < 30) {
-    var monstBoost = ULARN ? 2 : 1;
+    var monstBoost = (ULARN ? 2 : 1);
     createmonster(makemonst(level + monstBoost), x, y);
     player.AGGRAVATE += rnd(450);
   } else
