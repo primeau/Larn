@@ -965,25 +965,25 @@ function debug_stats(p, score) {
   s += `ITCH:  ` + p.ITCHING + `\n`;
   s += `CLMSY: ` + p.CLUMSINESS + `\n`;
 
-  s += `\nSpecial Items:\n`;
-  if (ULARN) s += `LAMP:  ` + p.LAMP + `\n`;
-  if (ULARN) s += `WAND:  ` + p.WAND + `\n`;
-  s += `DRGSL: ` + p.SLAYING + `\n`;
-  s += `NEGAT: ` + p.NEGATESPIRIT + `\n`;
-  s += `CUBE:  ` + p.CUBEofUNDEAD + `\n`;
-  s += `THEFT: ` + p.NOTHEFT + `\n`;
-  if (ULARN) s += `TALIS: ` + p.TALISMAN + `\n`;
-  if (ULARN) s += `HAND:  ` + p.HAND + `\n`;
-  if (ULARN) s += `ORB:   ` + p.ORB + `\n`;
-  if (ULARN) s += `ELVEN: ` + p.ELVEN + `\n`;
-  s += `SLASH: ` + p.SLASH + `\n`;
-  s += `BESSM: ` + p.BESSMANN + `\n`;
-  if (ULARN) s += `SLAYR: ` + p.SLAY + `\n`;
-  if (ULARN) s += `VORP:  ` + p.VORPAL + `\n`;
-  if (ULARN) s += `STAFF: ` + p.STAFF + `\n`;
-  if (ULARN) s += `PAD:   ` + p.PAD + `\n`;
-  if (ULARN) s += `ELEDN: ` + p.ELEVDOWN + `\n`;
-  if (ULARN) s += `ELEUP: ` + p.ELEVUP + `\n`;
+  s += `\nSpecial Items Created:\n`;
+  if (ULARN) s += `LAMP:  ${booleanToNumberString(p.LAMP)}\n`;
+  if (ULARN) s += `WAND:  ${booleanToNumberString(p.WAND)}\n`;
+  s += `DRGSL: ${booleanToNumberString(p.SLAYING)}\n`;
+  s += `NEGAT: ${booleanToNumberString(p.NEGATESPIRIT)}\n`;
+  s += `CUBE:  ${booleanToNumberString(p.CUBEofUNDEAD)}\n`;
+  s += `THEFT: ${booleanToNumberString(p.NOTHEFT)}\n`;
+  if (ULARN) s += `TALIS: ${booleanToNumberString(p.TALISMAN)}\n`;
+  if (ULARN) s += `HAND:  ${booleanToNumberString(p.HAND)}\n`;
+  if (ULARN) s += `ORB:   ${booleanToNumberString(p.ORB)}\n`;
+  if (ULARN) s += `ELVEN: ${booleanToNumberString(p.ELVEN)}\n`;
+  s += `SLASH: ${booleanToNumberString(p.SLASH)}\n`;
+  s += `BESSM: ${booleanToNumberString(p.BESSMANN)}\n`;
+  if (ULARN) s += `SLAYR: ${booleanToNumberString(p.SLAY)}\n`;
+  if (ULARN) s += `VORP:  ${booleanToNumberString(p.VORPAL)}\n`;
+  if (ULARN) s += `STAFF: ${booleanToNumberString(p.STAFF)}\n`;
+  if (ULARN) s += `PAD:   ${booleanToNumberString(p.PAD)}\n`;
+  if (ULARN) s += `ELEDN: ${booleanToNumberString(p.ELEVDOWN)}\n`;
+  if (ULARN) s += `ELEUP: ${booleanToNumberString(p.ELEVUP)}\n`;
 
   s += `\nLocation:\nx,y:   ${p.x},${p.y}\n`;
 
@@ -1002,4 +1002,11 @@ function debug_stats(p, score) {
   // s += `LPRC:  ` + DEBUG_LPRC + `\n`;
 
   return s;
+}
+
+
+
+function booleanToNumberString (bool) {
+  if (bool) return `1`;
+  else return `0`;
 }

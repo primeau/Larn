@@ -663,14 +663,17 @@ function died(reason, slain) {
 
   // show scoreboard unless they saved the game
   if (reason != 287) {
+    var printFunc = mazeMode ? updateLog : lprcat;
     lastmonst = reason; // for scoreboard
-    lprcat(`Press <b>enter</b> to view the scoreboard: `);
+    printFunc(`Press <b>enter</b> to view the scoreboard: `);
     if (cheat && wizard)
-    lprcat(`(cheater and wizard scores not recorded)`);
+    printFunc(`(cheater and wizard scores not recorded)`);
     else if (wizard)
-    lprcat(`(sorry, wizard scores are not recorded)`);
+    printFunc(`(sorry, wizard scores are not recorded)`);
     else if (cheat)
-    lprcat(`(sorry, cheater scores are not recorded)`);
+    printFunc(`(sorry, cheater scores are not recorded)`);
+    else if (ULARN)
+    printFunc(`(sorry, Ularn scores are not recorded (yet))`);
 
     writeScoreToDatabase();
     setCharCallback(endgame);

@@ -1,3 +1,11 @@
+
+JS U/Larn 12.5.0 (currently beta)
+----------------
+Added Ularn functionality. Primarily follows the 1.5 codebase with some 
+inspiration from 1.6. Maintains the new/balance/fix items of version 12.4.5 
+where it seems to make sense.
+
+
 JS Larn 12.4.5
 --------------
 Ported to JavaScript. Gameplay is intended to be identical to version 12.4.4,
@@ -6,62 +14,64 @@ with the following updates:
 1. [new] A global scoreboard has been added to the game. A local scoreboard
 is also available for offline games.
 
-2. [new] Added an Amiga-style graphics option with help and encouragement of
+1. [new] Added an Amiga-style graphics option with help and encouragement of
 Christoper Yewchuck.
 
-3. [new] The LRS is still present, but it's no longer necessary to pay taxes
+1. [new] The LRS is still present, but it's no longer necessary to pay taxes
 because it was so easy to work around in the original game.
 
-4. [new] Washing at a fountain can clean negative weapon or armor class.
+1. [new] Washing at a fountain can clean negative weapon or armor class.
 
-5. [new] Monsters that pick your pocket and disappear can now be found
+1. [new] Monsters that pick your pocket and disappear can now be found
 elsewhere on the same level.
 
-5. [new] The Sword of Slashing doesn't rust.
+1. [new] The Sword of Slashing doesn't rust.
 
-6. [balance] 'Smart' monsters in a closed room never moved. Now they follow
+1. [balance] 'Smart' monsters in a closed room never moved. Now they follow
 player movement, except for demons, who stand guard to protect the Eye of Larn
 and potion of cure Dianthroritis.
 
-7. [balance] Players could donate or 'just pray' their way into unreasonable
+1. [balance] Players could donate or 'just pray' their way into unreasonable
 WC/AC gains. Now altars will randomly crumble to dust.
 
-8. [balance] The list of things the player can wield is considerably shorter.
+1. [balance] The list of things the player can wield is considerably shorter.
 
-9. [balance] The chest and book at the store decline in quality as difficulty
+1. [balance] The chest and book at the store decline in quality as difficulty
 goes up.
 
-10. [balance] The scroll of Stealth was much too powerful. Now there is a chance
+1. [balance] The scroll of Stealth was much too powerful. Now there is a chance
 a monster will notice when the player passes too closely. Affects difficulty 2
 and higher.
 
-11. [balance] Selling items is blocked once the potion has been picked up to
+1. [balance] Selling items is blocked once the potion has been picked up to
 prevent player from inflating their score by selling epic items.   
 
-12. [fix] It's possible to fall into a pit again. This was broken in 12.4.
+1. [balance] Demons can no longer be teleported.
 
-13. [fix] The last hit monster would chase the player from across the maze after
+1. [fix] It's possible to fall into a pit again. This was broken in 12.4.
+
+1. [fix] The last hit monster would chase the player from across the maze after
 teleporting away. This bug could also cause other monsters to become 'possessed'
 and move very erratically in rare situations.
 
-14. [fix] Leather and stainless plate armor could be dulled when used as a
+1. [fix] Leather and stainless plate armor could be dulled when used as a
 weapon against rusting monsters. Thanks to Will Oprisko for finding this one.
 
-15. [fix] Half-speed monsters (Hobgoblins, Ice Monsters, etc) didn't move
+1. [fix] Half-speed monsters (Hobgoblins, Ice Monsters, etc) didn't move
 properly when the player was running.
 
-16. [fix] After casting Stop Time, monsters would still chase the player when
+1. [fix] After casting Stop Time, monsters would still chase the player when
 running. 
 
-17. [fix] Bessman's Flailing Hammer could only be created on the first level
+1. [fix] Bessman's Flailing Hammer could only be created on the first level
 of the dungeon.
 
-18. [fix] You can drop gold onto an existing pile of gold now.
+1. [fix] You can drop gold onto an existing pile of gold now.
 
-19. [fix] When a monster is killed with a ranged attack, it will drop loot
+1. [fix] When a monster is killed with a ranged attack, it will drop loot
 near itself instead of the player.
 
-20. [un-fix] The history lesson from the College of Larn says that the Eye
+1. [un-fix] The history lesson from the College of Larn says that the Eye
 of Larn is protected by a Platinum Dragon, which wasn't the case in the original
 version of Larn. I changed it to be true for a while, but it unbalanced the
 game too much. For anyone who died at the hands of a Platinum Dragon while
