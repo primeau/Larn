@@ -1,7 +1,7 @@
 'use strict';
 
-const VERSION = '12.4.5';
-const BUILD = '343';
+const VERSION = '12.5.0 (beta)';
+const BUILD = '385';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -68,7 +68,7 @@ function play() {
   mobile = PARAMS.mobile ? PARAMS.mobile == `true` : false;
   ULARN = PARAMS.ularn ? PARAMS.ularn == `true` : false;
 
-  setUlarnVars();
+  setGameConfig();
 
   if (PARAMS.score) {
     player = new Player();

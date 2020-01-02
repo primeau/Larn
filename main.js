@@ -230,23 +230,34 @@ function makeplayer() {
   player.x = rnd(MAXX - 2);
   player.y = rnd(MAXY - 2);
 
-  /*
-  enableDebug();
-  eventToggleDebugWTW();
-  eventToggleDebugStairs();
-  eventToggleDebugOutput();
-  eventToggleDebugKnowAll();
-  eventToggleDebugStats();
-  eventToggleDebugImmortal();
-  eventToggleDebugAwareness();
-  player.updateStealth(100000);
-  keyboard_hints = true;
-  //wizardmode(`pvnert(x)`);
+  // enableDebug();
+  // eventToggleDebugWTW();
+  // eventToggleDebugStairs();
+  // eventToggleDebugOutput();
+  // eventToggleDebugKnowAll();
+  // eventToggleDebugStats();
+  // eventToggleDebugImmortal();
+  // eventToggleDebugAwareness();
+  // player.updateStealth(100000);
+  // keyboard_hints = true;
+  // //wizardmode(`pvnert(x)`);
+  // //player.GOLD = 1000000;
 
-  var startShield = createObject(OSHIELD);
-  take(startShield);
-  player.SHIELD = startShield;
-*/
+  // var startShield = createObject(OSHIELD);
+  // take(startShield);
+  // take(createObject(OLARNEYE));
+  // take(createObject(ONOTHEFT));
+  // var startDagger = createObject(ODAGGER, -9);
+  // var startSlayer = createObject(OSLAYER);
+  // var startVorpy = createObject(OVORPAL);
+  // take(startDagger);
+  // take(startSlayer);
+  // take(startVorpy);
+  // player.WIELD = startVorpy;
+  // player.SHIELD = startShield;
+  // //take(createObject(OPOTION, 21));
+  // gtime = 0;
+  
   // auto_pickup = true;
 
   // // for (var i = 2; i < 26; i+=2) {
@@ -353,6 +364,8 @@ function startgame(hard) {
 
   GAMEOVER = false;
   setMazeMode(true);
+
+  // wizardmode(`pvnert(x)`);
 
   return 1;
 }
@@ -583,6 +596,9 @@ function wizardmode(password) {
     return 1;
   }
 
+  // other valid passwords to add in the future
+  // main(){}
+  // frobozz
   if (password !== 'pvnert(x)') {
     updateLog(`Sorry`);
     return 1;

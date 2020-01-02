@@ -1,6 +1,6 @@
 'use strict';
 
-function setUlarnVars() {
+function setGameConfig() {
 
     // GAME NAME
     GAMENAME = ULARN ? `Ularn` : `Larn`;
@@ -69,4 +69,5 @@ function setUlarnVars() {
         DEATH_REASONS[6] = `fell into a pit to HELL`;
         DEATH_REASONS[15] = `fell through a trap door to HELL`;
     }
+
 }
