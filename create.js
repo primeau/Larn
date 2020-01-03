@@ -529,7 +529,7 @@ function createArtifact(artifact, exists, odds) {
   if (!exists && odds) {
     fillroom(artifact);
     createdArtifact = true;
-    debug(`created ${artifact}`);
+    debug(`created ${artifact} on ${level}`);
   }
   if (createdArtifact) {
     switch (artifact.id) {

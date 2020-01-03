@@ -491,7 +491,7 @@ function ointerest() {
 
   if (player.BANKACCOUNT > 0 && player.BANKACCOUNT < MAX_BANK_BALANCE) {
     var i = elapsedtime() - lasttime; /* # mobuls elapsed */
-    while (i-- > 0 && player.BANKACCOUNT < BANKLIMIT) {
+    while (i-- > 0 && player.BANKACCOUNT < MAX_BANK_BALANCE) {
       player.BANKACCOUNT += player.BANKACCOUNT / (ULARN ? 877 : 250);
     }
     /* interest limit */

@@ -66,10 +66,10 @@ running.
 1. [fix] Bessman's Flailing Hammer could only be created on the first level
 of the dungeon.
 
-1. [fix] You can drop gold onto an existing pile of gold now.
+1. [fix]/[new] You can drop gold onto an existing pile of gold now.
 
-1. [fix] When a monster is killed with a ranged attack, it will drop loot
-near itself instead of the player.
+1. [fix]/[new] When a monster is killed with a ranged attack, loot will now be 
+dropped beside the corpse instead of the player.
 
 1. [un-fix] The history lesson from the College of Larn says that the Eye
 of Larn is protected by a Platinum Dragon, which wasn't the case in the original
