@@ -65,9 +65,9 @@ function setGameConfig() {
         OEMERALD.char = `<b><font color='green'><</font></b>`;
         OSAPPHIRE.char = `<b><font color='blue'><</font></b>`;
 
-        // this should probably be replaced with enums
-        DEATH_REASONS[6] = `fell into a pit to HELL`;
-        DEATH_REASONS[15] = `fell through a trap door to HELL`;
+        DEATH_REASONS.set(DIED_BOTTOMLESS_TRAPDOOR, `fell through a trap door to HELL`);
+        DEATH_REASONS.set(DIED_BOTTOMLESS_PIT, `fell into a pit to HELL`);
+        DEATH_REASONS.set(DIED_FAILED, `killed his family and committed suicide`);
     }
 
 }

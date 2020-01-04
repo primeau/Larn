@@ -1,8 +1,8 @@
 'use strict';
 
 
-const ENCH_SCROLL = 0; /* Enchantment from reading a scroll */
-const ENCH_ALTAR = 1; /* Enchantment from an altar         */
+const ENCH_SCROLL = 0;   /* Enchantment from reading a scroll */
+const ENCH_ALTAR = 1;    /* Enchantment from an altar         */
 const ENCH_FOUNTAIN = 2; /* Enchantment from a fountain       */
 
 function positionplayer(x, y, exact) {
@@ -486,13 +486,17 @@ function packweight() {
 }
 
 
+var NONAP = false;
 
 async function nap(time) {
-  debug(`nap start`, time);
+
+  if (NONAP) time = 10;
+
+  //debug(`nap start`, time);
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('resolved');
-      debug(`nap end`, time);
+      //debug(`nap end`, time);
     }, time);
   });
 }

@@ -411,11 +411,14 @@ const NO_MORE = `nomore`;
  *  function to show what magic items have been discovered thus far
  *  enter with -1 for just spells, anything else will give scrolls & potions
  */
-function seemagic(onlyspells) {
+function seemagic(onlyspells, allspells) {
   mazeMode = false;
 
+  var spelldata = player.knownSpells;
+  if (allspells) spelldata = spelcode;
+
   if (onlyspells) {
-    cl_up(79, ((player.knownSpells.length + 2) / 3 + 4)); /* lines needed for display */
+    cl_up(79, ((spelldata.length + 2) / 3 + 4)); /* lines needed for display */
   } else {
     clear();
   }
@@ -425,10 +428,11 @@ function seemagic(onlyspells) {
   var buffer = [];
 
   var spellstring = `  The magic spells you have discovered thus far:`;
+  if (allspells) spellstring = `Availible spells are:`;
   var spellfunc = function(spell, buffer) {
     return padString(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
   }
-  printknown(spellstring, player.knownSpells, spellfunc, buffer, true);
+  printknown(spellstring, spelldata, spellfunc, buffer, true);
 
   if (!onlyspells) {
     var scrollstring = `  The magic scrolls you have found to date are:`;

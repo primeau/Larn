@@ -208,11 +208,11 @@ function setButtons() {
 
 
         newButtonRow();
-        if (player.SPELLS > 0 && spellToCast == null) {
+        if (player.SPELLS > 0 && newSpellCode == null) {
             addButton(BUTTON_CAST);
         }
 
-        if (spellToCast != null) {
+        if (newSpellCode != null) {
             for (spellIndex = 0; spellIndex < player.knownSpells.length; spellIndex++) {
                 if (player.knownSpells[spellIndex]) {
                     if (spellIndex % 5 == 0) newButtonRow();

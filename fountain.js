@@ -12,7 +12,7 @@ function act_drink_fountain() {
     var sleepExclaim = ULARN ? `OH MY GOD!! You` : `Oops! You seem to`;
     updateLog(`  ${sleepExclaim} have caught the dreadful sleep!`);
     beep();
-    died(280, false); /* fell into the dreadful sleep */
+    died(DIED_DREADFUL_SLEEP, false); /* fell into the dreadful sleep */
     return;
   }
 
@@ -25,7 +25,7 @@ function act_drink_fountain() {
       var hitloss = rnd((level << 2) + 2);
       updateLog(`  Bleah! The water tasted like stale gatorade! You lose ${hitloss} hit point`);
       exclaim(hitloss);
-      lastnum = 273;
+      lastnum = DIED_BAD_WATER;
       player.losehp(hitloss);
     } else if (x < 14) {
       player.HALFDAM += 200 + rnd(200);
@@ -75,7 +75,7 @@ function act_wash_fountain() {
     if (ULARN) washExclaim = `  The water burns like acid! You lose ${hitloss} hit point`;
     updateLog(washExclaim);
     exclaim(hitloss);
-    lastnum = 273; /* drank some poisonous water */
+    lastnum = DIED_BAD_WATER; /* drank some poisonous water */
     player.losehp(hitloss);
   } else if (rnd(100) < 29) {
     if (ULARN) updateLog(`  You are now clean.`);

@@ -192,7 +192,7 @@ function dnd_parse(key) {
         from the store are special and are reduced in resale value and
         quality as difficulty goes up
       */
-      if (!ULARN &&(boughtItem.matches(OBOOK) || boughtItem.matches(OCHEST))) {
+      if (!ULARN && (boughtItem.matches(OBOOK) || boughtItem.matches(OCHEST))) {
         boughtItem.arg = Math.max(1, boughtItem.arg - getDifficulty());
       }
 
@@ -886,10 +886,10 @@ function parse_class(key) {
  *
  *
  */
-async function ohome() {
+function ohome() {
 
   setMazeMode(false);
-  
+
   napping = true;
   dropflag = 1;
 
@@ -931,7 +931,7 @@ async function ohome() {
     }
     await nap(2000);
     napping = false;
-    died(269, false); /* failed */
+    died(DIED_FAILED, false); /* failed */
     return;
   }
 
@@ -969,7 +969,7 @@ async function ohome() {
     }
     await nap(2000);
     napping = false;
-    died(269, false); /* failed */
+    died(DIED_FAILED, false); /* failed */
     return;
   }
 }
@@ -984,7 +984,7 @@ function parse_home(key) {
 
 
 
-async function win(key) {
+function win(key) {
   if (key != ENTER) {
     return 0;
   }

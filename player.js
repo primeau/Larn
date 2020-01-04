@@ -658,7 +658,7 @@ var changedWTW = 0;
  */
 function ifblind(x, y) {
   if (player.BLINDCOUNT > 0) {
-    lastnum = 279; /* demolished by an unseen attacker */
+    lastnum = DIED_UNSEEN_ATTACKER; /* demolished by an unseen attacker */
     lastmonst = `monster`;
     return true;
   } else {

@@ -2,7 +2,9 @@
 
 function learnSpell(spell) {
   //debug(`learning ${spell} ${spelcode.indexOf(spell)}`)
-  player.knownSpells[spelcode.indexOf(spell)] = spell;
+  var spellIndex = spelcode.indexOf(spell);
+  player.knownSpells[spellIndex] = spell;
+  return spellIndex;
 }
 
 
@@ -13,8 +15,7 @@ function forgetSpell(spellnum) {
 
 
 
-var eys = `Enter your spell: `;
-var spellToCast = null;
+var newSpellCode = null;
 
 
 
@@ -22,8 +23,7 @@ function pre_cast() {
   cursors();
   nomove = 1;
   if (player.SPELLS > 0) {
-    updateLog(eys);
-    spellToCast = ``;
+    updateLog(`Enter your spell: `);
     setCharCallback(cast);
   } else {
     updateLog(`You don't have any spells!`);
@@ -41,53 +41,58 @@ function matchesSpell(spell) {
 
 
 
-function cast(key) {
-
-  nomove = 1;
-
+function getSpellCode(key, showAllSpells) {
   if (key == 'I' || key == ` `) {
-    seemagic(true);
+    seemagic(true, showAllSpells );
     setCharCallback(parse_see_spells);
-    if (!spellToCast) updateLog(eys);
+    //if (!newSpellCode) updateLog(eys);
     return 0;
   }
-
-  if (key == DEL && spellToCast.length >= 1) {
-    spellToCast = spellToCast.substring(0, spellToCast.length - 1);
+  if (key == DEL && newSpellCode.length >= 1) {
+    newSpellCode = newSpellCode.substring(0, newSpellCode.length - 1);
     var line = deleteLog();
     updateLog(line.substring(0, line.length - 1));
     return 0;
   }
-
   if (key == ESC) {
     appendLog(`  aborted`);
-    spellToCast = null;
+    newSpellCode = null;
     return 1;
   }
-
   if (!(isalpha(key) || matchesSpell(key))) {
     return 0;
   }
-
-  spellToCast += key;
+  if (!newSpellCode) newSpellCode = ``;
+  newSpellCode += key;
   appendLog(key);
-
-  if (spellToCast.length < 3) {
+  if (newSpellCode.length < 3) {
     return 0;
   }
+  else {
+    return newSpellCode;
+  }
+}
 
+
+function cast(key) {
+  nomove = 1;
+
+  // keep adding to newSpellCode until it's 3 letters
+  // this part is the same as wish(key) in action.js
+  var codeCheck = getSpellCode(key, false);
+  if (codeCheck !== newSpellCode) {
+    return codeCheck;
+  }
   player.setSpells(player.SPELLS - 1);
   player.SPELLSCAST++;
-
-  var spellnum = player.knownSpells.indexOf(spellToCast.toLowerCase());
+  var spellnum = player.knownSpells.indexOf(newSpellCode.toLowerCase());
   if (spellnum >= 0) {
     speldamage(spellnum);
   } else {
     nomove = 0;
     updateLog(`  Nothing Happened `);
   }
-
-  spellToCast = null;
+  newSpellCode = null;
   return 1;
 }
 
@@ -328,7 +333,7 @@ function speldamage(x) {
         beep();
         updateLog(`  Your heart stopped!`);
         //nap(4000);
-        died(270, false); /* erased by a wayward finger */
+        died(DIED_WAYWARD_FINGER, false); /* erased by a wayward finger */
       }
       return;
 
@@ -375,7 +380,7 @@ function speldamage(x) {
         //beep();
         updateLog(`You have been enveloped by the zone of nothingness!`);
         //nap(4000);
-        died(258, false); /* self - annihilated */
+        died(DIED_ANNIHILATED_SELF, false); /* self - annihilated */
         return;
       }
       loseint();
@@ -401,7 +406,7 @@ function speldamage(x) {
         updateLog(`  The demon turned on you and vanished!`);
         beep();
         var i = rnd(40) + 30;
-        lastnum = 277; /* attacked by a revolting demon */
+        lastnum = DIED_DEMON; /* attacked by a revolting demon */
         player.losehp(i);
       }
       return;
@@ -786,7 +791,7 @@ function direct(spnum, direction, dam, arg) {
       }
       return;
     } else {
-      lastnum = 278; /* hit by own magic */
+      lastnum = DIED_OWN_MAGIC; /* hit by own magic */
       updateLog(str(`spell caster (that's you)`));
       beep();
       player.losehp(dam);
@@ -862,11 +867,8 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     cursors();
     updateLog(`  You are hit by your own magic!`);
 
-    lastnum = 278;
+    lastnum = DIED_OWN_MAGIC;
     player.losehp(dam);
-    // if (player.HP <= 0) {
-    //   died(278, true); /* hit by own magic */
-    // }
     exitspell();
     return;
   }

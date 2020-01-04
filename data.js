@@ -96,40 +96,59 @@ const CLASSES = [
 ];
 
 
+/* < 256   killed by the monster number */
+const DIED_ANNIHILATED_SELF = 258;
+const DIED_ARROW = 259;
+const DIED_DART = 260;
+const DIED_PIT = 261;
+const DIED_BOTTOMLESS_PIT = 262;
+const DIED_SOLID_ROCK = 264;
+const DIED_FAILED = 269;
+const DIED_WAYWARD_FINGER = 270;
+const DIED_BOTTOMLESS_TRAPDOOR = 271;
+const DIED_TRAPDOOR = 272;
+const DIED_BAD_WATER = 273;
+const DIED_ELECTRIC_SHOCK = 274;
+const DIED_VOLCANO_SLIP = 275;
+const DIED_DEMON = 277;
+const DIED_OWN_MAGIC = 278;
+const DIED_UNSEEN_ATTACKER = 279;
+const DIED_DREADFUL_SLEEP = 280;
+const DIED_EXPLODING_CHEST = 281;
+const DIED_ANNIHILATED = 283;
+const DIED_GENIE = 286;
+const DIED_BOTTOMLESS_ELEVATOR = 287;
+const DIED_SAVED_GAME = 299;
+const DIED_QUITTER = 300;
+const DIED_WINNER = 301;
 
-const DEATH_REASONS = [
-  ``,
-  ``,
-  `self - annihilated`,
-  `shot by an arrow`,
-  `hit by a dart`,
-  `fell into a pit`,
-  `fell into a bottomless pit`,
-  `a winner`,
-  `trapped in solid rock`,
-  ``,
-  ``,
-  ``,
-  ``,
-  `failed`,
-  `erased by a wayward finger`,
-  `fell through a bottomless trap door`,
-  `fell through a trap door`,
-  `drank some poisonous water`,
-  `fried by an electric shock`,
-  `slipped on a volcano shaft`,
-  ``,
-  `attacked by a revolting demon`,
-  `hit by own magic`,
-  `demolished by an unseen attacker`,
-  `fell into the dreadful sleep`,
-  `killed by an exploding chest`,
-  ``,
-  `annihilated in a sphere`,
-  ``,
-  ``,
-  `a quitter`,
-];
+
+let DEATH_REASONS = new Map([
+  [DIED_ANNIHILATED_SELF, `self - annihilated`],
+  [DIED_ARROW, `shot by an arrow`],
+  [DIED_DART, `hit by a dart`],
+  [DIED_PIT, `fell into a pit`],
+  [DIED_BOTTOMLESS_PIT, `fell into a bottomless pit`],
+  [DIED_SOLID_ROCK, `trapped in solid rock`],
+  [DIED_FAILED, `failed`],
+  [DIED_WAYWARD_FINGER, `erased by a wayward finger`],
+  [DIED_BOTTOMLESS_TRAPDOOR, `fell through a bottomless trap door`],
+  [DIED_TRAPDOOR, `fell through a trap door`],
+  [DIED_BAD_WATER, `drank some poisonous water`],
+  [DIED_ELECTRIC_SHOCK, `fried by an electric shock`],
+  [DIED_VOLCANO_SLIP, `slipped in a volcano shaft`],
+  [DIED_DEMON, `attacked by a revolting demon`],
+  [DIED_OWN_MAGIC, `hit by own magic`],
+  [DIED_UNSEEN_ATTACKER, `demolished by an unseen attacker`],
+  [DIED_DREADFUL_SLEEP, `fell into the dreadful sleep`],
+  [DIED_EXPLODING_CHEST, `killed by an exploding chest`],
+  [DIED_ANNIHILATED, `annihilated in a sphere`],
+  [DIED_GENIE, `wasted by a pissed off genie`],
+  [DIED_BOTTOMLESS_ELEVATOR, `took an elevator straight to HELL`],
+  [DIED_SAVED_GAME, `died in a savegame mishap`],
+  [DIED_QUITTER, `a quitter`],
+  [DIED_WINNER, `a winner`],
+]);
 
 
 

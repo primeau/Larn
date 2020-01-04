@@ -539,7 +539,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OTRAPARROW)) {
     updateLog(`You are hit by an arrow`);
-    lastnum = 259; /* shot by an arrow */
+    lastnum = DIED_ARROW; /* shot by an arrow */
     player.losehp(rnd(10) + level);
     return;
   }
@@ -557,7 +557,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(ODARTRAP)) {
     updateLog(`You are hit by a dart`);
-    lastnum = 260; /* hit by a dart */
+    lastnum = DIED_DART; /* hit by a dart */
     player.losehp(rnd(5));
     player.setStrength(player.STRENGTH - 1);
     return;
@@ -580,13 +580,15 @@ function lookforobject(do_ident, do_pickup, do_action) {
       return;
     }
     if ((level == DBOTTOM) || (level == VBOTTOM)) {
-       updateLog(`You fell through a bottomless trap door!`);
+      var trapMessage = ``;
+      if (ULARN) trapMessage = `leading straight to HELL`;
+       updateLog(`You fell through a bottomless trap door ${trapMessage}!`);
       //nap(2000);
-      died(271, false); /* fell through a bottomless trap door */
+      died(DIED_BOTTOMLESS_TRAPDOOR, false); /* fell through a bottomless trap door */
     }
     var dmg = rnd(5 + level);
     updateLog(`You fall through a trap door!  You lose ${dmg} hit points`);
-    lastnum = 272; /* fell through a trap door */
+    lastnum = DIED_TRAPDOOR; /* fell through a trap door */
     player.losehp(dmg);
     //nap(2000);
     newcavelevel(level + 1);
@@ -595,7 +597,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   //
   else if (item.matches(OANNIHILATION)) {
     updateLog(`You have been enveloped by the zone of nothingness!`);
-    died(283, false); /* annihilated in a sphere */
+    died(DIED_ANNIHILATED, false); /* annihilated in a sphere */
     return;
   }
 
@@ -617,6 +619,9 @@ function lookforobject(do_ident, do_pickup, do_action) {
   else if (item.matches(OELEVATORDOWN)) {
     updateLog(`You have found ${item}`);
     oelevator(-1);
+  }
+  else if (item.matches(OBRASSLAMP)) {
+    updateLog(`You find ${item}. [<b>R</b> to rub]`);
   }
 
   else if (item.matches(OPOTION)) {
@@ -700,7 +705,7 @@ function opit() {
       damage = rnd(level * 3 + 3);
       var plural = damage == 1 ? `` : `s`;
       updateLog(`You fell into a pit! You suffer ${damage} hit point${plural} damage`);
-      lastnum = 261; /* fell into a pit */
+      lastnum = DIED_PIT; /* fell into a pit */
     }
     player.losehp(damage);
     //nap(2000);
@@ -715,7 +720,7 @@ function obottomless() {
   updateLog(bottomlessMessage);
   beep();
   //nap(3000);
-  died(262, false); /* fell into a bottomless pit */
+  died(DIED_BOTTOMLESS_PIT, false); /* fell into a bottomless pit */
 }
 
 
@@ -752,7 +757,7 @@ function oelevator(direction) {
       updateLog(`  and it leads straight to HELL!`);
       beep();
       //nap(3000);
-      died(287);
+      died(DIED_BOTTOMLESS_ELEVATOR);
       return;
     }
     player.x = rnd(MAXX - 2);
@@ -791,7 +796,7 @@ function oteleport(err) {
       */
       if (player.WTW == 0) {
         updateLog(`You are trapped in solid rock!`)
-        died(264, false); /* trapped in solid rock */
+        died(DIED_SOLID_ROCK, false); /* trapped in solid rock */
       }
       else {
         updateLog(`You feel lucky!`)

@@ -11,7 +11,7 @@ const EXTRA_GTIME = 3;
 
 var LocalScore = function() {
   this.createdAt = Date.now();
-  var isWinner = lastmonst == 263;
+  var isWinner = lastmonst == DIED_WINNER;
   var winBonus = isWinner ? 100000 * getDifficulty() : 0;
   this.who = logname; /* the name of the character */
   this.hardlev = getDifficulty(); /* the level of difficulty player played at */
@@ -570,7 +570,7 @@ function paytaxes(x) {
 function getWhyDead(reason) {
   var cause = ``;
   if (typeof reason === `number`) {
-    cause += DEATH_REASONS[(Number(reason) - 256)];
+    cause += DEATH_REASONS.get(reason);
   } //
   else {
     cause += `killed by a ${lastmonst}`;
@@ -589,12 +589,14 @@ function canProtect(reason) {
     reason = 0; // TODO check for unseen attacker?
   }
   switch (reason) {
-    case 262: // bottomless pit
-    case 263: // winner
-    case 269: // failed to save daughter
-    case 271: // bottomless trapdoor
-    case 286: // quitter
-    case 287: // saved game
+    case DIED_WINNER:
+    case DIED_SAVED_GAME:
+    case DIED_FAILED:
+    case DIED_QUITTER:
+    case DIED_BOTTOMLESS_PIT:
+    case DIED_BOTTOMLESS_TRAPDOOR:
+    case DIED_BOTTOMLESS_ELEVATOR:
+    case DIED_GENIE:
       protect = false;
   }
   return protect;
@@ -604,38 +606,10 @@ function canProtect(reason) {
 
 /*
  * Subroutine to record who played larn, and what the score was
- *
- * < 256   killed by the monster number
- *
- * 258     self - annihilated
- * 259     shot by an arrow
- * 260     hit by a dart
- * 261     fell into a pit
- * 262     fell into a bottomless pit
- * 263     a winner
- * 264     trapped in solid rock
- *
- * 269     failed
- * 270     erased by a wayward finger
- * 271     fell through a bottomless trap door
- * 272     fell through a trap door
- * 273     drank some poisonous water
- * 274     fried by an electric shock
- * 275     slipped on a volcano shaft
- *
- * 277     attacked by a revolting demon
- * 278     hit by own magic
- * 279     demolished by an unseen attacker
- * 280     fell into the dreadful sleep
- * 281     killed by an exploding chest
- *
- * 283     annihilated in a sphere
- * 286     a quitter
- * 287     saved game -- shouldn't go on scoreboard!
  */
 function died(reason, slain) {
 
-  var winner = reason == 263;
+  var winner = reason == DIED_WINNER;
 
   if (player.LIFEPROT > 0) {
     if (canProtect(reason)) {
@@ -662,7 +636,7 @@ function died(reason, slain) {
   localStorageRemoveItem('checkpoint');
 
   // show scoreboard unless they saved the game
-  if (reason != 287) {
+  if (reason != DIED_SAVED_GAME) {
     var printFunc = mazeMode ? updateLog : lprcat;
     lastmonst = reason; // for scoreboard
     printFunc(`Press <b>enter</b> to view the scoreboard: `);
