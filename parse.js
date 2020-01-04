@@ -15,8 +15,47 @@ var keyboard_input_callback;
 
 
 
+// var BLOCKING = false;
+// var ASYNC_KEYBOARD_EVENT_LISTENER;
+
+// function waitForKeypress(KEY) {
+//   BLOCKING = true; // only need to do 1 
+//   //Mousetrap.reset(); // of these things
+//   KEYBOARD_INPUT = ``;
+//   debug(`waitforkeypress ` + KEY);
+//   return new Promise((resolve, reject) => {
+//     addEventListener('keydown', ASYNC_KEYBOARD_EVENT_LISTENER = function (event) {
+//       var key = event.key;
+//       if (event.which == 8) { // 8 == backspace
+//         // if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
+//         event.preventDefault();
+//         key = DEL;
+//         // }
+//       }
+//       var got = getTextInput(key);
+//       debug(`keylistener key=${key} got=${got} input=${KEYBOARD_INPUT}`);
+//       if (BLOCKING && (key == ENTER || key == KEY)) {
+//         removeEventListener('keydown', ASYNC_KEYBOARD_EVENT_LISTENER);
+//         BLOCKING = false; // also only need to do
+//         //initKeyBindings(); // one of these things
+//         resolve(KEYBOARD_INPUT);
+//         KEYBOARD_INPUT = ``;
+//         debug(`DONE`);
+//       }
+//     });
+//   });
+// }
+
+
+
 function mousetrap(e, key) {
-  //console.log(`mousetrap: ` + key);
+
+  // if (BLOCKING) {
+  //   debug(`blocking mousetrap: ` + BLOCKING);
+  //   return;
+  // }
+
+  // debug(`mousetrap: ` + key);
   if (key == SPACE) key = ' ';
   if (key == TAB) return false;
   mainloop(key);
@@ -108,7 +147,7 @@ function parse(key) {
     // debug(blocking_callback.name + `: `);
     var before = blocking_callback;
     var done = blocking_callback(key);
-    
+
     // dumb hack until everything gets moved to async/await
     var isPromise = Promise.resolve(done) == done;
     if (isPromise) {
@@ -233,8 +272,8 @@ function parse(key) {
       return;
     }
     /* check for player standing on a chest.  If he is, prompt for and
-       let him open it.  If player ESCs from prompt, quit the Open
-       command.
+        let him open it.  If player ESCs from prompt, quit the Open
+        command.
     */
     if (item.matches(OCHEST)) {
       act_open_chest(player.x, player.y);
@@ -243,8 +282,7 @@ function parse(key) {
     } else {
       if (nearPlayer(OCLOSEDDOOR) || nearPlayer(OCHEST)) {
         prepare_direction_event(open_something);
-      }
-      else {
+      } else {
         updateLog(`There is nothing to open!`);
       }
     }
@@ -378,8 +416,7 @@ function parse(key) {
     } else {
       if (nearPlayer(OOPENDOOR)) {
         prepare_direction_event(close_something);
-      }
-      else {
+      } else {
         updateLog(`There is nothing to close!`);
       }
       dropflag = 1;
@@ -444,7 +481,7 @@ function parse(key) {
     }
     if (key == 'y' || key == 'Y') {
       appendLog(` yes`);
-      died(286, false); /* a quitter */
+      died(DIED_QUITTER, false); /* a quitter */
       return 1;
     }
     return 0;
@@ -454,10 +491,16 @@ function parse(key) {
   // REMOVE GEMS
   //
   if (key == 'R') {
-    remove_gems();
+    if (item.matches(OBRASSLAMP)) {
+      act_rub_lamp();
+    } else {
+      remove_gems();
+    }
     dropflag = 1;
     return;
   }
+
+
 
   //
   // S - save game
@@ -465,7 +508,7 @@ function parse(key) {
   if (key == 'S') {
     nomove = 1;
     saveGame();
-    if (!NOCOOKIES) died(287, false); /* saved game */
+    if (!NOCOOKIES) died(DIED_SAVED_GAME, false); /* saved game */
     return;
   }
 

@@ -58,7 +58,7 @@ function act_open_chest(x, y) {
     beep();
     var damage = rnd(10);
     if (damage > player.hitpoints) damage = player.hitpoints;
-    lastnum = 281; /* killed by an exploding chest */
+    lastnum = DIED_EXPLODING_CHEST; /* killed by an exploding chest */
     updateLog(`  You suffer ${damage} hit points damage!`);
     player.losehp(damage);
 
@@ -124,7 +124,7 @@ function act_open_door(x, y) {
         }
         case 7:
           updateLog(`  You are jolted by an electric shock`);
-          lastnum = 274; /* fried by an electric shock */
+          lastnum = DIED_ELECTRIC_SHOCK; /* fried by an electric shock */
           player.losehp(rnd(20));
           break;
 
@@ -233,5 +233,65 @@ function act_eatcookie(index) {
     }
   }
   setMazeMode(true);
+  return 1;
+}
+
+
+
+function act_rub_lamp() {
+  cursors();
+  // we can assume the player is over the lamp
+  updateLog("You rub the lamp.");
+
+  /* angry genie! */
+  if (rnd(100) > 90) {
+    updateLog("  The magic genie was very upset at being disturbed!");
+    lastnum = DIED_GENIE;
+    player.losehp(player.HP / 2 + 1);
+    return;
+    //beep();
+  }
+
+  /* higher level, better chance of spell */
+  else if ((rnd(100) + player.LEVEL / 2) > 80) {
+    updateLog("  A magic genie appears!");
+    updateLog(`  What spell would you like? : `);
+
+    setCharCallback(wish); // capture spell keyboard input
+
+  } else {
+    updateLog("  nothing happened.");
+    /* bad luck */
+    if (rnd(100) < 15) {
+      updateLog("The genie prefers not to be disturbed again!");
+      forget();
+      player.LAMP = false; /* chance of finding lamp again */
+    }
+  }
+}
+
+
+
+function wish(key) {
+  nomove = 1;
+
+  // keep adding to newSpellCode until it's 3 letters
+  // this part is the same as cast(key) in spells.js
+  var codeCheck = getSpellCode(key, true);
+  if (codeCheck !== newSpellCode) {
+    return codeCheck;
+  }
+
+  var spellIndex = learnSpell(newSpellCode);
+  newSpellCode = null;
+
+  if (spellIndex >= 0) {
+    updateLog(`Spell \'<b>${spelcode[spellIndex]}</b>\': ${spelname[spellIndex]}`);
+    updateLog(`  ${speldescript[spellIndex]}`);
+  } else {
+    updateLog("  The genie has never heard of such a spell!");
+  }
+  updateLog(`The genie prefers not to be disturbed again.`);
+  forget();
   return 1;
 }
