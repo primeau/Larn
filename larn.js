@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '389';
+const BUILD = '390';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -25,7 +25,7 @@ function play() {
   // this role only has access to invoke the lambda score function 
   AWS.config.accessKeyId = "AWS_CONFIG_ACCESSKEYID";
   AWS.config.secretAccessKey = "AWS_CONFIG_SECRETACCESSKEY";
-  
+
   // real credentials are set here, and not committed
   initLambdaCredentials();
 
@@ -51,7 +51,7 @@ function play() {
   if (altrender) {
     for (var y = 0; y < 24; y++) {
       for (var x = 0; x < 80; x++) {
-        display[x][y] = createDiv(x,y);
+        display[x][y] = createDiv(x, y);
       }
     }
 
@@ -60,7 +60,7 @@ function play() {
     }
 
     bltDocument();
-}
+  }
 
   loadURLParameters();
 
@@ -74,7 +74,7 @@ function play() {
     player = new Player();
     loadScores(null, true, true);
   } else {
-      welcome(); // show welcome screen, start the game
+    welcome(); // show welcome screen, start the game
   }
 
 }
@@ -82,12 +82,12 @@ function play() {
 
 
 function loadURLParameters() {
-    // internet explorer doesn't support "URLSearchParams" yet
-    PARAMS = {};
-    location.search.substr(1).split("&").forEach(function(item) {
-        PARAMS[item.split("=")[0]] = item.split("=")[1]
-    });
-    console.log(`url parameters`, PARAMS);
+  // internet explorer doesn't support "URLSearchParams" yet
+  PARAMS = {};
+  location.search.substr(1).split("&").forEach(function (item) {
+    PARAMS[item.split("=")[0]] = item.split("=")[1]
+  });
+  console.log(`url parameters`, PARAMS);
 }
 
 

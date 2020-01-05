@@ -5,3 +5,5 @@ fullstory.js
 larn_local.html
 config
 node_modules
+*.json
+aws/aws-sdk.js

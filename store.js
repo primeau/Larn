@@ -886,7 +886,7 @@ function parse_class(key) {
  *
  *
  */
-function ohome() {
+async function ohome() {
 
   setMazeMode(false);
 
@@ -984,7 +984,7 @@ function parse_home(key) {
 
 
 
-function win(key) {
+async function win(key) {
   if (key != ENTER) {
     return 0;
   }

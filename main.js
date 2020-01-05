@@ -255,9 +255,10 @@ function makeplayer() {
   // take(startVorpy);
   // player.WIELD = startVorpy;
   // player.SHIELD = startShield;
-  // //take(createObject(OPOTION, 21));
+  // take(createObject(OPOTION, 21));
+  // take(createObject(OBRASSLAMP));
   // gtime = 0;
-  
+
   // auto_pickup = true;
 
   // // for (var i = 2; i < 26; i+=2) {
@@ -373,12 +374,12 @@ function startgame(hard) {
 
 
 function setAmigaMode() {
-    if (PARAMS.mode && PARAMS.mode == `amiga`) {
-        console.log(`switching to Amiga mode`);
-        amiga_mode = false;
-        original_objects = false;
-        eventToggleMode(null, null, true);
-    }
+  if (PARAMS.mode && PARAMS.mode == `amiga`) {
+    console.log(`switching to Amiga mode`);
+    amiga_mode = false;
+    original_objects = false;
+    eventToggleMode(null, null, true);
+  }
 }
 
 
@@ -414,7 +415,7 @@ function setAmigaMode() {
 //   var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
 //   var fontSize = parseFloat(style); 
 //   // now you have a proper float for the font size (yes, it can be a float, not just an integer)
-  
+
 //   var browserWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 //   var browserHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -655,20 +656,20 @@ function wizardmode(password) {
     var iy = 0;
     var wizi = 0;
     while (wizi < MAXY) {
-      if (itemlist[++wizi]) 
+      if (itemlist[++wizi])
         player.level.items[ix][++iy] = createObject(itemlist[wizi]);
     }
     --wizi;
     while (++ix < MAXX - 1) {
-      if (itemlist[++wizi]) 
-        player.level.items[ix][iy-1] = createObject(itemlist[wizi]);
+      if (itemlist[++wizi])
+        player.level.items[ix][iy - 1] = createObject(itemlist[wizi]);
       else --ix;
     }
 
     // 100 items now
     while (wizi < OPAD.id) {
       var wizitem = itemlist[++wizi];
-      if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN) 
+      if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
         player.level.items[ix][--iy] = createObject(wizitem);
     }
 
