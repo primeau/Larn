@@ -1,0 +1,213 @@
+<!doctype html>
+<html class='no-js' lang=''>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='x-ua-compatible' content='ie=edge'>
+    <title>Play Larn Online - A classic DOS/Amiga/Unix Roguelike Video Game</title>
+    <meta name='description' content='Larn Game: Play Larn Online - A classic DOS/Amiga/Unix Roguelike Video Game'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
+    <link rel="icon" type="image/png" href="../img/favicon.png">
+    <!-- <link rel='apple-touch-icon' href='apple-touch-icon.png'> -->
+
+    <style>
+        section {
+            width: 1060px;
+            float: left;
+            /*border: 1px solid #990000;*/
+        }
+
+        aside {
+            margin-left: 1120px;
+            /*border: 1px solid #009900;*/
+        }
+
+        footer {
+            margin-left: 0px;
+            width: 100%;
+            float: left;
+            /*border: 1px solid #990099;*/
+        }
+
+        a:link {
+            color: #bbbbbb;
+        }
+
+        a:visited {
+            color: #551A8B;
+        }
+
+        a:hover {
+            color: #FF00FF;
+        }
+
+        a:active {
+            color: #EE0000;
+        }
+
+        a:link {
+            text-decoration: none;
+        }
+
+        a:visited {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        a:active {
+            text-decoration: none;
+        }
+
+        body {
+            font-family: 'dos', 'Courier New', Courier, monospace;
+            font-size: 22px;
+            color: lightgrey;
+            margin: 25px;
+            background-color: #000000;
+        }
+
+        div {
+            background-position: center center;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            white-space: pre;
+        }
+
+        div.image {
+            height: 24px;
+            width: 12px;
+            display: inline-block;
+            background-image: url("img/o94.png");
+        }
+
+        p.mono {
+            white-space: pre;
+        }
+
+        mark {
+            background-color: lightgrey;
+            color: black;
+        }
+
+        .button,
+        .narrowbutton,
+        .variablebutton {
+            background-color: #039903;
+            border: none;
+            color: lightgrey;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            height: 25px;
+            cursor: pointer;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .narrowbutton {
+            width: 24px;
+        }
+
+        .button {
+            width: 70px;
+        }
+    </style>
+
+
+    <script src="util/rollbar.js"></script>
+    <script src="util/lambda.min.js"></script>
+    <script src='util/forge.min.js'></script>
+    <script src='util/mousetrap.min.js'></script>
+
+    <!-- <script src='larn.min.js'></script> -->
+
+    <script src='config.js'></script>
+    <script src='util.js'></script>
+    <script src='config/larn_config.js'></script>
+    <script src='larn.js'></script>
+    <script src='main.js'></script>
+    <script src='object.js'></script>
+    <script src='monster.js'></script>
+    <script src='monsterdata.js'></script>
+    <script src='player.js'></script>
+    <script src='mazes.js'></script>
+    <script src='level.js'></script>
+    <script src='create.js'></script>
+    <script src='data.js'></script>
+    <script src='parse.js'></script>
+    <script src='buttons.js'></script>
+    <script src='scores.js'></script>
+    <script src='inventory.js'></script>
+    <script src='movem.js'></script>
+    <script src='action.js'></script>
+    <script src='global.js'></script>
+    <script src='io.js'></script>
+    <script src='display.js'></script>
+    <script src='storedata.js'></script>
+    <script src='store.js'></script>
+    <script src='savelev.js'></script>
+    <script src='spells.js'></script>
+    <script src='spellsinfo.js'></script>
+    <script src='regen.js'></script>
+    <script src='spheres.js'></script>
+    <script src='help.js'></script>
+    <script src='state.js'></script>
+    <script src='bill.js'></script>
+    <script src='altar.js'></script>
+    <script src='fountain.js'></script>
+    <script src='potion.js'></script>
+    <script src='scroll.js'></script>
+    <script src='stairs.js'></script>
+    <script src='throne.js'></script>
+    <script src='fullstory.js'></script>
+
+</head>
+
+<body>
+
+    <!--[if lt IE 10]>
+            <p class='browserupgrade'>Unfortunately if you're seeing this page it means that your browser isn't quite new enough. Please upgrade to Firefox 15+, IE 10+, or any version of Chrome or Safari.</p>
+        <![endif]-->
+
+    <section>
+        <div id='LARN'>
+            LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or MORIA, but with a different feel
+            and winning criteria. Unfortunately if you're seeing this page it means that there was an error loading the
+            game. Please send a message to "eye (at) larn.org" and I'll get to the bottom of it!
+
+        </div>
+    </section>
+
+    <aside>
+        <p class='mono' id='STATS'></p>
+    </aside>
+
+    <footer>
+        <p class='mono' id='FOOTER'></p>
+    </footer>
+
+
+    <script>
+        'use strict';
+        var no_intro = false;
+        var newplayer = false;
+        var mobile = false;
+        var altrender = false;
+
+        play();
+    </script>
+
+    <script src='util/ga.js'></script>
+
+</body>
+
+</html>

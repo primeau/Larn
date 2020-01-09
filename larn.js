@@ -27,7 +27,11 @@ function play() {
   AWS.config.secretAccessKey = "AWS_CONFIG_SECRETACCESSKEY";
 
   // real credentials are set here, and not committed
-  initLambdaCredentials();
+  try {
+    initLambdaCredentials();
+  } catch (error) {
+    console.error(`not loading aws credentials: ${error}`);
+  }
 
   lambda = new AWS.Lambda({
     region: 'us-east-1',
@@ -146,6 +150,7 @@ function initKeyBindings() {
 
 
 function enableDebug() {
+  debug_used = 1;
   Mousetrap.bind('alt+`', eventToggleDebugStats);
   Mousetrap.bind('alt+1', eventToggleDebugOutput);
   Mousetrap.bind('alt+2', eventToggleDebugWTW);
@@ -264,13 +269,13 @@ function eventToggleDebugKnowAll() {
   nomove = 1;
   debug_used = 1;
   DEBUG_KNOW_ALL = true;
-  for (var i = 0; i < spelcode.length; i++) {
+  for (let i = 0; i < spelcode.length; i++) {
     learnSpell(spelcode[i]);
   }
-  for (var i = 0; i < SCROLL_NAMES.length; i++) {
+  for (let i = 0; i < SCROLL_NAMES.length; i++) {
     learnScroll(createObject(OSCROLL, i));
   }
-  for (var i = 0; i < POTION_NAMES.length; i++) {
+  for (let i = 0; i < POTION_NAMES.length; i++) {
     learnPotion(createObject(OPOTION, i));
   }
   updateLog(`DEBUG_KNOW_ALL: ` + DEBUG_KNOW_ALL);
