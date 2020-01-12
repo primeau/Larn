@@ -18,12 +18,14 @@ function open_something(direction) {
 
   if (!item) {
     updateLog(`  There is nothing to open!`);
+    nomove = 1;
     return 1;
   }
 
   if (item.matches(OOPENDOOR)) {
     updateLog(`  The door is already open!`);
     beep();
+    nomove = 1;
     return 1;
   } else if (item.matches(OCHEST)) {
     act_open_chest(x, y);
@@ -34,6 +36,7 @@ function open_something(direction) {
   } else {
     updateLog(`  You can't open that!`);
     beep();
+    nomove = 1;
     return 1;
   }
 
@@ -81,7 +84,7 @@ function act_open_chest(x, y) {
         if (ULARN) updateLog(`  You suddenly feel sick and BARF all over your shoes!`);
         else updateLog(`  A sickness engulfs you!`);
         break;
-    };
+    }
     setItem(x, y, OEMPTY); /* destroy the chest */
     if (rnd(100) < 69) {
       creategem(true); /* gems from the chest */
@@ -122,6 +125,7 @@ function act_open_door(x, y) {
           player.loselevel();
           break;
         }
+        // eslint-disable-next-line no-fallthrough
         case 7:
           updateLog(`  You are jolted by an electric shock`);
           lastnum = DIED_ELECTRIC_SHOCK; /* fried by an electric shock */
@@ -159,6 +163,7 @@ function close_something(direction) {
 
   if (!item) {
     updateLog(`  There is nothing to close!`);
+    nomove = 1;
     return 1;
   }
 
@@ -167,10 +172,12 @@ function close_something(direction) {
   */
   if (item.matches(OCLOSEDDOOR)) {
     updateLog(`  The door is already closed!`);
+    nomove = 1;
     beep();
   } else if (item.matches(OOPENDOOR)) {
     if (monsterAt(x, y)) {
       updateLog(`  There's a monster in the way!`);
+      nomove = 1;
       return;
     }
     setItem(x, y, createObject(OCLOSEDDOOR, 0));
@@ -182,6 +189,7 @@ function close_something(direction) {
 
   } else {
     updateLog(`  You can't close that!`);
+    nomove = 1;
     beep();
   }
   return 1;
@@ -223,6 +231,7 @@ function act_eatcookie(index) {
 
       if (useindex >= 0 && useindex < 26) {
         updateLog(`  You don't have item ${index}!`);
+        nomove = 1;
       }
       if (useindex <= -1) {
         appendLog(` cancelled`);
@@ -230,6 +239,7 @@ function act_eatcookie(index) {
       }
     } else {
       updateLog(`  You can't eat that!`);
+      nomove = 1;
     }
   }
   setMazeMode(true);
@@ -286,7 +296,7 @@ function wish(key) {
   newSpellCode = null;
 
   if (spellIndex >= 0) {
-    updateLog(`Spell \'<b>${spelcode[spellIndex]}</b>\': ${spelname[spellIndex]}`);
+    updateLog(`Spell '<b>${spelcode[spellIndex]}</b>': ${spelname[spellIndex]}`);
     updateLog(`  ${speldescript[spellIndex]}`);
   } else {
     updateLog("  The genie has never heard of such a spell!");

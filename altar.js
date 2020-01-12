@@ -8,6 +8,7 @@ function desecrate_altar() {
     act_desecrate_altar();
   } else {
     updateLog(`I see no altar to desecrate here!`);
+    nomove = 1;
   }
 }
 
@@ -18,6 +19,7 @@ function pray_at_altar() {
   cursors();
   if (!itemAt(player.x, player.y).matches(OALTAR)) {
     updateLog(`I see no altar to pray at here!`);
+    nomove = 1;
   } else {
     updateLog(`  How much do you donate? `);
     setNumberCallback(act_donation_pray, true);

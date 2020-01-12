@@ -400,8 +400,8 @@ function getMonster(direction) {
  */
 function createmonster(mon, x, y) {
   if (mon < 1 || mon > monsterlist.length - 1) /* check for monster number out of bounds */ {
-    beep();
-    debug(`can't createmonst ${mon}`);
+   // beep();
+    debug(`createmonst invalid ${mon}`);
     //nap(3000);
     return;
   }
@@ -437,7 +437,10 @@ function createmonster(mon, x, y) {
       case POLTERGEIST:
       case VAMPIRE:
         monster.awake = true;
-    };
+    }
+  }
+  else {
+    debug(`failed to createmonst ${mon}, ${x},${y}`)
   }
 }
 
@@ -490,10 +493,12 @@ function cgood(x, y, itm, monst) {
       case OTRAPARROW.id:
       case ODARTRAP.id:
       case OTRAPDOOR.id:
+      case OELEVATORUP.id:
+      case OELEVATORDOWN.id:
         return (false);
       default:
         break;
-    };
+    }
   }
   return (true);
 }
@@ -910,7 +915,7 @@ function spattack(x, xx, yy) {
 
   var damage = null;
   var armorclass = player.AC;
-  monster = lastmonst;
+  // monster = lastmonst; // lastmonst is only the name of the last monster to hit
 
   switch (x) {
     case 1:
@@ -925,7 +930,7 @@ function spattack(x, xx, yy) {
         }
       }
       if (rust == 0 && armor) {
-        for (var i = 0; i < rustarm.length; i++) {
+        for (let i = 0; i < rustarm.length; i++) {
           if (armor.matches(rustarm[i][0])) {
             /* find armor in table */
             if (armor.arg > rustarm[i][1]) {
@@ -979,6 +984,14 @@ function spattack(x, xx, yy) {
     case 6:
       updateLog(`The ${monster} drains you of your life energy!`);
       player.loselevel();
+      if (monster.matches(DEMONPRINCE)) {
+        player.losemspells(1);
+      }
+      if (monster.matches(LUCIFER)) {
+        player.loselevel();
+        player.losemspells(2); 
+      }
+      // beep();
       return 0;
 
     case 7:
@@ -998,7 +1011,7 @@ function spattack(x, xx, yy) {
       } else updateLog(`The ${monster} couldn't find any gold to steal`);
       player.level.monsters[xx][yy] = null;
       player.level.know[xx][yy] &= ~KNOWHERE;
-
+      // beep();
       /* 12.4.5 and ularn */
       /* put the monster back somewhere on the level */
       fillmonst(monster.arg);
@@ -1009,12 +1022,13 @@ function spattack(x, xx, yy) {
     case 9:
       for (var j = 50;;) {
         /* disenchant */
-        var i = rund(26);
-        var item = player.inventory[i]; /* randomly select item */
+        var rndItem = rund(26);
+        var item = player.inventory[rndItem]; /* randomly select item */
         if (item && item.arg > 0 && !item.matches(OSCROLL) && !item.matches(OPOTION)) {
           if ((item.arg -= 3) < 0) item.arg = 0;
-          updateLog(`The ${monster} hits you -- you feel a sense of loss`);
-          updateLog(`  ${getCharFromIndex(i)}) ${item}`);
+          updateLog(`The ${monster} hits you with a spell of disenchantment!`);
+          updateLog(`  ${getCharFromIndex(rndItem)}) ${item}`);
+          // beep();
           recalc();
           return 0;
         }
@@ -1046,13 +1060,14 @@ function spattack(x, xx, yy) {
       player.losehp(damage);
       return 0;
 
-    case 14:
+    case 14: // ULARN TODO: put the stolen item into the monster's inventory
       if (isCarrying(ONOTHEFT)) return 0; /* he has device of no theft */
       if (emptyhanded() == 1) {
         updateLog(`The ${monster} couldn't find anything to steal`);
         break;
       }
       updateLog(`The ${monster} picks your pocket and takes: `);
+      // beep();
       if (stealsomething() == 0) updateLog(`  nothing`);
       player.level.monsters[xx][yy] = null;
       player.level.know[xx][yy] &= ~KNOWHERE;

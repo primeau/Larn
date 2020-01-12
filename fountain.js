@@ -153,41 +153,41 @@ function fntchange(how) {
       fch(how);
       break;
     case 7:
-      var j = rnd(level + 1);
+      var hpchange = rnd(level + 1);
       if (how < 0) {
-        updateLog(`  You lose ${j} hit point`);
-        exclaim(j);
-        player.losemhp(j);
+        updateLog(`  You lose ${hpchange} hit point`);
+        exclaim(hpchange);
+        player.losemhp(hpchange);
       } else {
-        updateLog(`  You gain ${j} hit point`);
-        exclaim(j);
-        player.raisemhp(j);
+        updateLog(`  You gain ${hpchange} hit point`);
+        exclaim(hpchange);
+        player.raisemhp(hpchange);
       }
       break;
 
     case 8:
-      var j = rnd(level + 1);
+      var spellchange = rnd(level + 1);
       if (how > 0) {
-        updateLog(`  You just gained ${j} spell`);
-        exclaim(j);
-        player.raisemspells(j);
+        updateLog(`  You just gained ${spellchange} spell`);
+        exclaim(spellchange);
+        player.raisemspells(spellchange);
       } else {
-        updateLog(`  You just lost ${j} spell`);
-        exclaim(j);
-        player.losemspells(j);
+        updateLog(`  You just lost ${spellchange} spell`);
+        exclaim(spellchange);
+        player.losemspells(spellchange);
       }
       break;
 
     case 9:
-      var j = 5 * rnd((level + 1) * (level + 1));
+      var xpchange = 5 * rnd((level + 1) * (level + 1));
       if (how < 0) {
-        updateLog(`  You just lost ${j} experience point`);
-        exclaim(j);
-        player.loseexperience(j);
+        updateLog(`  You just lost ${xpchange} experience point`);
+        exclaim(xpchange);
+        player.loseexperience(xpchange);
       } else {
-        updateLog(`  You just gained ${j} experience point`);
-        exclaim(j);
-        player.raiseexperience(j);
+        updateLog(`  You just gained ${xpchange} experience point`);
+        exclaim(xpchange);
+        player.raiseexperience(xpchange);
       }
       break;
   }
@@ -225,8 +225,10 @@ function drink_fountain() {
   var item = itemAt(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
     updateLog(`There is no water to drink!`);
+    nomove = 1;
   } else if (!item.matches(OFOUNTAIN)) {
     updateLog(`I see no fountain to drink from here!`);
+    nomove = 1;
   } else {
     act_drink_fountain();
   }
@@ -242,8 +244,10 @@ function wash_fountain() {
   var item = itemAt(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
     updateLog(`There is no water to wash in!`);
+    nomove = 1;
   } else if (!item.matches(OFOUNTAIN)) {
     updateLog(`I see no fountain to wash at here!`);
+    nomove = 1;
   } else {
     act_wash_fountain();
   }

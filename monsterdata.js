@@ -141,7 +141,7 @@ const ULARN_monsterlist = [
   new Monster(`d`, `white dragon`,                  5,    4,   5,  5,  16,  500,    65,    1000),
   new Monster(`e`, `elf`,                           5,    3,   3,  0,  15,   50,    25,      33),
   new Monster(`g`, `gelatinous cube`,               5,    9,   3,  0,   3,    0,    24,      43),
-  new Monster(`mmm`, `metamorph`,                     6,    9,   3,  0,   3,    0,    32,      40),
+  new Monster(`m`, `metamorph`,                     6,    9,   3,  0,   3,    0,    32,      40),
   new Monster(`v`, `vortex`,                        6,    5,   4,  0,   3,    0,    33,      53),
   new Monster(`z`, `ziller`,                        6,   15,   3,  0,   3,    0,    34,      33),
   new Monster(`F`, `violet fungus`,                 6,   12,   3,  0,   3,    0,    39,      90),

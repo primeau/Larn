@@ -7,10 +7,12 @@ function remove_gems() {
   var item = itemAt(player.x, player.y);
   if (item.matches(ODEADTHRONE)) {
     updateLog(`There are no gems to remove!`);
+    nomove = 1;
   } else if (item.matches(OTHRONE)) {
     act_remove_gems(item.arg);
   } else {
     updateLog(`I see no throne here to remove gems from!`);
+    nomove = 1;
   }
 }
 
@@ -59,6 +61,7 @@ function sit_on_throne() {
     act_sit_dead_throne(item.arg);
   } else {
     updateLog(`I see no throne to sit on here!`);
+    nomove = 1;
   }
 }
 

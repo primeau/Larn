@@ -31,7 +31,7 @@ var Player = function Player() {
     this.SPELLMAX = 1;
     this.AC = 0;
     this.WCLASS = 0;
-    this.LEVEL = 1;
+    this.LEVEL = 1; /* experience level, not cave level */
     this.EXPERIENCE = 0;
     this.HP = 10;
     this.HPMAX = 10;
@@ -337,25 +337,15 @@ var Player = function Player() {
       if (item.matches(OPSTAFF)) {
         player.setWisdom(player.WISDOM + (pickup ? 10 : -10));
       }
-      // if (item.matches(OORBOFDRAGON))
-      //   pickup ? player.SLAYING++ : player.SLAYING--;
-      // if (item.matches(OSPIRITSCARAB))
-      //   pickup ? player.NEGATESPIRIT++ : player.NEGATESPIRIT--;
-      // if (item.matches(OCUBEofUNDEAD))
-      //   pickup ? player.CUBEofUNDEAD++ : player.CUBEofUNDEAD--;
-      // if (item.matches(ONOTHEFT))
-      //   pickup ? player.NOTHEFT++ : player.NOTHEFT--;
-
-
       if (item.matches(OORB) & pickup) {
         player.AWARENESS++;
       }
-        
 
       if (oldDex != player.DEXTERITY) changedDEX = millis();
       if (oldStr != player.STREXTRA) changedSTR = millis();
       if (oldInt != player.INTELLIGENCE) changedINT = millis();
     };
+
 
 
     this.setStrExtra = function(x) {
@@ -619,8 +609,6 @@ var changedAC = 0;
 var changedWC = 0;
 var changedLevel = 0;
 var changedExp = 0;
-var changedHP = 0;
-var changedHPMax = 0;
 var changedSTR = 0;
 var changedINT = 0;
 var changedWIS = 0;
@@ -916,12 +904,12 @@ function debug_stats(p, score) {
 
   s += `\nKnown Scrolls:\n`;
   for (var scroll = 0; scroll < p.knownScrolls.length; scroll++) {
-    var tmp = p.knownScrolls[scroll];
+    let tmp = p.knownScrolls[scroll];
     if (tmp) s += SCROLL_NAMES[tmp.arg] + `\n`;
   }
   s += `\nKnown Potions:\n`;
   for (var potion = 0; potion < p.knownPotions.length; potion++) {
-    var tmp = p.knownPotions[potion];
+    let tmp = p.knownPotions[potion];
     if (tmp) s += POTION_NAMES[tmp.arg] + `\n`;
   }
 

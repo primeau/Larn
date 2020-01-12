@@ -284,6 +284,7 @@ function parse(key) {
         prepare_direction_event(open_something);
       } else {
         updateLog(`There is nothing to open!`);
+        nomove = 1;
       }
     }
     dropflag = 1;
@@ -418,6 +419,7 @@ function parse(key) {
         prepare_direction_event(close_something);
       } else {
         updateLog(`There is nothing to close!`);
+        nomove = 1;
       }
       dropflag = 1;
       return;
@@ -525,6 +527,7 @@ function parse(key) {
       updateLog(`Your armor is off`);
     } else
       updateLog(`You aren't wearing anything`);
+      nomove = 1;
     return;
   }
 
@@ -610,7 +613,7 @@ function parse(key) {
           case OELEVATORDOWN.id:
             updateLog(`It's ${trap}`);
             flag++;
-        };
+        }
       }
     }
     if (flag == 0)
