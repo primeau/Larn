@@ -157,8 +157,8 @@ function makemaze(k) {
   var item = player.level.items;
   var mitem = player.level.monsters;
 
-  for (var i = 0; i < MAXY; i++)
-    for (var j = 0; j < MAXX; j++)
+  for (let i = 0; i < MAXY; i++)
+    for (let j = 0; j < MAXX; j++)
       item[j][i] = (k == 0) ? empty : createObject(OWALL);
 
   if (k == 0) return;
@@ -171,7 +171,7 @@ function makemaze(k) {
   var tmp2 = rnd(3) + 3;
   var mx, mxl, mxh, my, myl, myh;
   var mon;
-  for (var tmp = 0; tmp < tmp2; tmp++) {
+  for (let tmp = 0; tmp < tmp2; tmp++) {
     my = rnd(11) + 2;
     myl = my - rnd(2);
     myh = my + rnd(2);
@@ -197,7 +197,7 @@ function makemaze(k) {
   /*  now for open spaces */
 
   my = rnd(MAXY - 2);
-  for (var i = 1; i < MAXX - 1; i++)
+  for (let i = 1; i < MAXX - 1; i++)
     item[i][my] = empty;
 
   if (k > (ULARN ? 4 : 1)) {
@@ -660,7 +660,7 @@ function sethp(flg) {
     nummonsters = (level >> 1) + 1;
   }
 
-  for (var i = 0; i < nummonsters; i++) {
+  for (let i = 0; i < nummonsters; i++) {
     fillmonst(makemonst(level));
   }
 
@@ -675,7 +675,7 @@ function sethp(flg) {
     var numdemons = 0;
     if ((level >= MAXLEVEL - 5) && (level < MAXLEVEL)) {
       numdemons = level - 10;
-      for (var j = 1 ; j <= numdemons ; j++) {
+      for (let j = 1 ; j <= numdemons ; j++) {
         if (fillmonst(DEMONLORD + rund(7)) == -1) {
           j--;
         }
@@ -690,7 +690,7 @@ function sethp(flg) {
     */
     else if (level >= MAXLEVEL) {
       numdemons = level - MAXLEVEL + 1;
-      for (var j = 1 ; j <= numdemons ; j++){
+      for (let j = 1 ; j <= numdemons ; j++){
         if (fillmonst(DEMONPRINCE) == -1) {
           j--;
         }

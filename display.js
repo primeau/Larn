@@ -541,7 +541,7 @@ function updateLog(text, hint) {
 function appendLog(text) {
   var newText;
   if (text == DEL) {
-    var newText = deleteLog();
+    newText = deleteLog();
     newText = newText.substring(0, newText.length - 1);
   } else {
     newText = deleteLog() + text;

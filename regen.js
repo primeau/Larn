@@ -10,10 +10,8 @@ function regen() {
     return;
   }
 
-  if (player.STRENGTH < 3) {
-    player.setStrength(3);
-  }
-
+  // is this where gtime should be incremented?
+  
   if (player.HP != player.HPMAX) {
     if (player.REGENCOUNTER-- <= 0) /* regenerate hit points */ {
       player.REGENCOUNTER = 22 + (getDifficulty() << 1) - player.LEVEL;

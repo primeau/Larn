@@ -166,7 +166,7 @@ function creategem(nearPlayer) {
       i = OSAPPHIRE;
       j = 20;
       break;
-  };
+  }
   createitem(i, rnd(j) + j / 10, nearPlayer);
 }
 
@@ -480,7 +480,7 @@ function packweight() {
       default:
         weight++;
         break;
-    };
+    }
   }
   return (weight);
 }

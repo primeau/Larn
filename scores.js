@@ -212,7 +212,7 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
             showScores(newScore, false, showWinners, showLosers, 0);
         }
         else if (status == 404) {
-            var stats = `Couldn't find global scoreboard, showing local scoreboard`;
+          let stats = `Couldn't find global scoreboard, showing local scoreboard`;
             showScores(newScore, true, showWinners, showLosers, 0);
             setDiv(`STATS`, stats);
         }
@@ -220,7 +220,7 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
             var statuscode = data ? data.StatusCode : 555;
             console.log(`lambda error: lambda status=${statuscode} larn status=${status}`);
             if (error) console.log(error, error.stack);
-            var stats = `Error loading global scoreboard, showing local scoreboard`;
+            let stats = `Error loading global scoreboard, showing local scoreboard`;
             showScores(newScore, true, showWinners, showLosers, 0);
             setDiv(`STATS`, stats);
         }
@@ -236,6 +236,7 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
     if (key == ESC || key == ENTER) {
       scoreIndex = 0;
       setAmigaMode();
+      nomove = 1;
       return exitbuilding();
     }
     if (key == ' ') {
@@ -404,7 +405,7 @@ function dbQueryLoadGame(gameId, local, winner) {
         setDiv(`STATS`, stats);
     });
 
-};
+}
 
 
 
@@ -427,9 +428,9 @@ function localWriteHighScore(newScore) {
   // write high score to board
   // TODO there is lots of duplication here...
   if (newScore.winner) {
-    var winners = localStorageGetObject('winners', []);
+    let winners = localStorageGetObject('winners', []);
     if (isHighestScoreForPlayer(winners, newScore)) {
-      var scoreArrayIndex = getHighScoreIndex(winners, newScore.who);
+      let scoreArrayIndex = getHighScoreIndex(winners, newScore.who);
       console.log(`writing high score to winners scoreboard`);
       winners[scoreArrayIndex] = newScore;
       localStorageSetObject('winners', winners);
@@ -439,9 +440,9 @@ function localWriteHighScore(newScore) {
     localStorageSetObject(newScore.who, 'winner');
 
   } else {
-    var losers = localStorageGetObject('losers', []);
+    let losers = localStorageGetObject('losers', []);
     if (isHighestScoreForPlayer(losers, newScore)) {
-      var scoreArrayIndex = getHighScoreIndex(losers, newScore.who);
+      let scoreArrayIndex = getHighScoreIndex(losers, newScore.who);
       console.log(`writing high score to visitors scoreboard`);
       losers[scoreArrayIndex] = newScore;
       localStorageSetObject('losers', losers);

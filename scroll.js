@@ -91,8 +91,8 @@ function read_scroll(scroll) {
       var xh = Math.min(player.x + 25, MAXX);
       var yl = Math.max(player.y - 7, 0);
       var xl = Math.max(player.x - 25, 0);
-      for (var i = xl; i < xh; i++)
-        for (var j = yl; j < yh; j++)
+      for (let i = xl; i < xh; i++)
+        for (let j = yl; j < yh; j++)
           player.level.know[i][j] = KNOWALL;
       //draws(xl, xh, yl, yh);
       break;
@@ -156,8 +156,8 @@ function read_scroll(scroll) {
       /* monster healing */
       if (ULARN) updateLog(`  You feel uneasy.`);
       else updateLog(`  Something isn't right...`);
-      for (var j = 0; j < MAXY; j++)
-        for (var i = 0; i < MAXX; i++)
+      for (let j = 0; j < MAXY; j++)
+        for (let i = 0; i < MAXX; i++)
           if (player.level.monsters[i][j])
             player.level.monsters[i][j].hitpoints = monsterlist[player.level.monsters[i][j].arg].hitpoints;
       break;
@@ -180,8 +180,8 @@ function read_scroll(scroll) {
     case 15:
       /* magic mapping */
       if (printMessage) updateLog(`  You have been granted enlightenment!`);
-      for (var i = 0; i < MAXX; i++)
-        for (var j = 0; j < MAXY; j++)
+      for (let i = 0; i < MAXX; i++)
+        for (let j = 0; j < MAXY; j++)
           player.level.know[i][j] = KNOWALL;
       //draws(0, MAXX, 0, MAXY);
       break;
@@ -194,8 +194,8 @@ function read_scroll(scroll) {
     case 17:
       /* gem perfection */
       if (printMessage) updateLog(`  You feel someone eyeing your belongings`);
-      for (var i = 0; i < 26; i++) {
-        var item = player.inventory[i];
+      for (let i = 0; i < 26; i++) {
+        let item = player.inventory[i];
         if (item && item.isGem()) {
           item.arg *= 2;
           item.arg = Math.min(255, item.arg);
@@ -223,8 +223,8 @@ function read_scroll(scroll) {
     case 19:
       /* identify */
       if (printMessage) updateLog(`  You feel someone eyeing your belongings`);
-      for (var i = 0; i < player.inventory.length; i++) {
-        var item = player.inventory[i];
+      for (let i = 0; i < player.inventory.length; i++) {
+        let item = player.inventory[i];
         if (item) {
           if (item.matches(OPOTION))
             learnPotion(item);
@@ -260,7 +260,7 @@ function read_scroll(scroll) {
       if (printMessage) updateLog(`  You sense a benign presence`);
       player.LIFEPROT++;
       break;
-  };
+  }
 }
 
 

@@ -19,16 +19,16 @@ function loadImages() {
   console.log(`loading images`);
 
   var img;
-  for (var i = 0; i <= 64; i++) {
-    img = `img/m${i}.png`;
+  for (let monsterIndex = 0; monsterIndex <= 64; monsterIndex++) {
+    img = `img/m${monsterIndex}.png`;
     images[img] = createImage(img);
   }
-  for (var i = 0; i <= 94; i++) {
-    img = `img/o${i}.png`;
+  for (let objectIndex = 0; objectIndex <= 94; objectIndex++) {
+    img = `img/o${objectIndex}.png`;
     images[img] = createImage(img);
   }
-  for (var i = 0; i <= 30; i += 2) {
-    img = `img/w${i}.png`;
+  for (let wallIndex = 0; wallIndex <= 30; wallIndex += 2) {
+    img = `img/w${wallIndex}.png`;
     images[img] = createImage(img);
   }
   img = `img/player.png`;

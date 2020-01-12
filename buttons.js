@@ -27,7 +27,7 @@ var BUTTON_SCORES = createButton(`z`, `scores`);
 var BUTTON_TAXES = createButton(`P`, `taxes`);
 var BUTTON_QUIT = createButton(`Q`, `quit`);
 var BUTTON_SAVE = createButton(`S`, `save game`);
-var BUTTON_SAVE = createButton(`}`, `mode`);
+var BUTTON_MODE = createButton(`}`, `mode`);
 
 // contextual buttons
 var BUTTON_TAKE = createButton(`t`, `pick up`);
@@ -81,7 +81,7 @@ var BUTTON_SPACE_ENDGAME = createVariableButton(` `, `Congratulations! View Scor
 
 function is_touch_device() {
     return 'ontouchstart' in window || navigator.maxTouchPoints;
-};
+}
 
 
 

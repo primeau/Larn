@@ -131,7 +131,7 @@ function quaffpotion(potion, set_known) {
         case 5:
           player.setCharisma(player.CHARISMA + 1);
           break;
-      };
+      }
       updateLog(`  You feel strange for a moment`);
       break;
 
@@ -189,9 +189,9 @@ function quaffpotion(potion, set_known) {
       //nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
-      for (var i = 0; i < MAXX; i++)
-        for (var j = 0; j < MAXY; j++) {
-          var item = itemAt(i, j);
+      for (let i = 0; i < MAXX; i++)
+        for (let j = 0; j < MAXY; j++) {
+          let item = itemAt(i, j);
           if (item.carry &&
             !item.isGem() &&
             !item.matches(OLARNEYE) &&
@@ -208,8 +208,8 @@ function quaffpotion(potion, set_known) {
       //nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
-      for (var i = 0; i < MAXX; i++)
-        for (var j = 0; j < MAXY; j++) {
+      for (let i = 0; i < MAXX; i++)
+        for (let j = 0; j < MAXY; j++) {
           var monster = monsterAt(i, j);
           if (monster && (monster.getChar() != OEMPTY.getChar())) {
             player.level.know[i][j] = HAVESEEN;
@@ -221,8 +221,8 @@ function quaffpotion(potion, set_known) {
     case 11:
       /* potion of forgetfulness */
       updateLog(`  You stagger for a moment...`);
-      for (var i = 0; i < MAXX; i++)
-        for (var j = 0; j < MAXY; j++) {
+      for (let i = 0; i < MAXX; i++)
+        for (let j = 0; j < MAXY; j++) {
           player.level.know[i][j] = 0;
           //nap(1000);
         }
@@ -287,9 +287,9 @@ function quaffpotion(potion, set_known) {
       //nap(1000);
       if (player.BLINDCOUNT > 0)
         return;
-      for (var i = 0; i < MAXX; i++)
-        for (var j = 0; j < MAXY; j++) {
-          var item = itemAt(i, j);
+      for (let i = 0; i < MAXX; i++)
+        for (let j = 0; j < MAXY; j++) {
+          let item = itemAt(i, j);
           if (item.isGem() || item.matches(OLARNEYE) || item.matches(OGOLDPILE)) {
             player.level.know[i][j] = HAVESEEN;
             show1cell(i, j);
@@ -321,5 +321,5 @@ function quaffpotion(potion, set_known) {
       monsterlist[STALKER].char = 'I';
       updateLog(`  You feel your vision sharpen`);
       break;
-  };
+  }
 }

@@ -449,38 +449,37 @@ function bank_sell(key) {
     bankmessage(`  cancelled`, 700);
   } else if (key == '*') {
     var gems_sold = false;
-    for (i = 0; i < 26; i++) {
-      if (gemvalue[i]) {
-        gems_sold = true;
-        player.setGold(player.GOLD + gemvalue[i]);
-        player.inventory[i] = null;
-        gemvalue[i] = 0;
-        var k = gemorder[i];
-        cursor((k % 2) * 40 + 1, (k >> 1) + 4);
-        lprintf(``, 39);
-        bankmessage(``, 700);
-      }
+    for (let i = 0; i < 26; i++) {
+      gems_sold |= sellGem(i);
     }
     if (!gems_sold) {
       bankmessage(`You have no gems to sell!`, 700);
     }
   } else {
-    var i = getIndexFromChar(key);
-    if (i >= 0 && i <= 26) {
-      if (gemvalue[i] == 0) {
-        bankmessage(`Item ${getCharFromIndex(i)} is not a gemstone!`, 700);
-      } else {
-        player.setGold(player.GOLD + gemvalue[i]);
-        player.inventory[i] = null;
-        gemvalue[i] = 0;
-        var k = gemorder[i];
-        cursor((k % 2) * 40 + 1, (k >> 1) + 4);
-        lprintf(``, 39);
-        bankmessage(``, 700);
-      }
+    let i = getIndexFromChar(key);
+    if (!sellGem(i)) {
+      bankmessage(`Item ${getCharFromIndex(i)} is not a gemstone!`, 700);
     }
   }
   return 1;
+}
+
+
+
+function sellGem(i) {
+  let item = player.inventory[i];
+  if (item && (item.isGem() || item.matches(OLARNEYE))) {
+    player.setGold(player.GOLD + gemvalue[i]);
+    player.inventory[i] = null;
+    gemvalue[i] = 0;
+    var k = gemorder[i];
+    cursor((k % 2) * 40 + 1, (k >> 1) + 4);
+    lprintf(``, 39);
+    bankmessage(``, 700);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 

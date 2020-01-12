@@ -61,7 +61,7 @@ function lprcat(str, width) {
         if (amiga_mode) {
           continue;
         } else {
-          var diff = 1;
+          let diff = 1;
           if (cursorx > 80) diff = cursorx - 80;
           cursorx -= diff;
           c = str.substr(i - 3 - diff, diff) + END_BOLD;
@@ -80,7 +80,7 @@ function lprcat(str, width) {
         if (amiga_mode) {
           continue;
         } else {
-          var diff = 1;
+          let diff = 1;
           if (cursorx > 80) diff = cursorx - 80;
           cursorx -= diff;
           c = str.substr(i - 6 - diff, diff) + END_MARK;
