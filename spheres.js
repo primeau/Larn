@@ -1,7 +1,7 @@
 'use strict';
 
 /* this is the structure for maintaining & moving the spheres of annihilation */
-var Sphere = function(x, y, dir, lifetime, lev) {
+var Sphere = function (x, y, dir, lifetime, lev) {
   this.x = x; /* location of the sphere */
   this.y = y;
   this.level = lev;
@@ -23,7 +23,8 @@ var Sphere = function(x, y, dir, lifetime, lev) {
  */
 function newsphere(x, y, dir, life, lev) {
   if (dir >= 9) dir = 0; /* no movement if direction not found */
-  if (lev == 0) { /* don't go out of bounds */
+  if (lev == 0) {
+    /* don't go out of bounds */
     x = vx(x);
     y = vy(y);
   } else {
@@ -32,41 +33,46 @@ function newsphere(x, y, dir, life, lev) {
     if (y < 1) y = 1;
     if (y >= MAXY - 1) y = MAXY - 2;
   }
+
   var monster = monsterAt(x, y);
-  if (monster && monster.isDemon()) /* demons dispel spheres */ {
-    show1cell(x, y); /* show the demon (ha ha) */
-    cursors();
-    updateLog(`The ${monster} dispels the sphere!`);
-    rmsphere(x, y); /* remove any spheres that are here */
-    return;
+
+  if (!isCarrying(OSPHTALISMAN)) { // talisman of the sphere negates many things
+    if (monster && monster.isDemon()) /* demons dispel spheres */ {
+      show1cell(x, y); /* show the demon (ha ha) */
+      cursors();
+      updateLog(`The ${monster} dispels the sphere!`);
+      rmsphere(x, y); /* remove any spheres that are here */
+      return;
+    }
+    if (monster && monster.matches(DISENCHANTRESS)) /* disenchantress cancels spheres */ {
+      cursors();
+      updateLog(`The ${monster} causes cancellation of the sphere!`);
+      sphboom(x, y); /* blow up stuff around sphere */
+      rmsphere(x, y); /* remove any spheres that are here */
+      return;
+    }
+    if (player.CANCELLATION) /* cancellation cancels spheres */ {
+      cursors();
+      updateLog(`As the cancellation spell takes effect, you hear a great earth shaking blast!`);
+      sphboom(x, y); /* blow up stuff around sphere */
+      rmsphere(x, y); /* remove any spheres that are here */
+      return;
+    }
+    if (player.x == x && player.y == y) /* collision of sphere and player! */ {
+      cursors();
+      updateLog(`You have been enveloped by the zone of nothingness!`);
+      rmsphere(x, y); /* remove any spheres that are here */
+      //nap(2000);
+      died(DIED_ANNIHILATED_SELF, false); /* self - annihilated */
+    }
   }
-  if (monster && monster.matches(DISENCHANTRESS)) /* disenchantress cancels spheres */ {
-    cursors();
-    updateLog(`The ${monster} causes cancellation of the sphere!`);
-    sphboom(x, y); /* blow up stuff around sphere */
-    rmsphere(x, y); /* remove any spheres that are here */
-    return;
-  }
-  if (player.CANCELLATION) /* cancellation cancels spheres */ {
-    cursors();
-    updateLog(`As the cancellation takes effect, you hear a great earth shaking blast!`);
-    sphboom(x, y); /* blow up stuff around sphere */
-    rmsphere(x, y); /* remove any spheres that are here */
-    return;
-  }
+
   if (itemAt(x, y).matches(OANNIHILATION)) /* collision of spheres detonates spheres */ {
     cursors();
     updateLog(`Two spheres of annihilation collide! You hear a great earth shaking blast!`);
     sphboom(x, y); /* blow up stuff around sphere */
     rmsphere(x, y); /* remove any spheres that are here */
     return;
-  }
-  if (player.x == x && player.y == y) /* collision of sphere and player! */ {
-    cursors();
-    updateLog(`You have been enveloped by the zone of nothingness!`);
-    rmsphere(x, y); /* remove any spheres that are here */
-    //nap(2000);
-    died(DIED_ANNIHILATED_SELF, false); /* self - annihilated */
   }
 
   setItem(x, y, createObject(OANNIHILATION));
@@ -97,7 +103,8 @@ function rmsphere(x, y) {
   for (var i = 0; i < spheres.length; i++) {
     var sp = spheres[i];
     if (!sp) continue;
-    if (sp.level == level) { /* is sphere on this level? */
+    if (sp.level == level) {
+      /* is sphere on this level? */
       if (x == sp.x && y == sp.y) /* locate sphere at this location */ {
         setItem(x, y, OEMPTY);
         player.level.monsters[x][y] = null;
@@ -129,11 +136,13 @@ function sphboom(x, y) {
       setItem(j, i, OEMPTY);
       player.level.monsters[j][i] = null;
       show1cell(j, i);
-      if (player.x == j && player.y == i) {
-        cursors();
-        updateLog(`You were too close to the sphere!`);
-        //nap(2000);
-        died(DIED_ANNIHILATED, false); /* player killed in explosion */
+      if (!isCarrying(OSPHTALISMAN)) { // sphere of talisman protects
+        if (player.x == j && player.y == i) {
+          cursors();
+          updateLog(`You were too close to the sphere!`);
+          //nap(2000);
+          died(DIED_ANNIHILATED, false); /* player killed in explosion */
+        }
       }
     }
   }
@@ -157,7 +166,7 @@ function movsphere() {
     var sp = spheres[i];
     if (!sp) continue;
     if (sp.level != level) continue;
-    // if (!itemAt(sp.x, sp.y).matches(OANNIHILATION)) continue; /* not really there */
+    if (!itemAt(sp.x, sp.y).matches(OANNIHILATION)) continue; /* not really there */
     if (--sp.lifetime < 0) /* has sphere run out of gas? */ {
       rmsphere(sp.x, sp.y); /* delete sphere */
       continue;
@@ -167,10 +176,12 @@ function movsphere() {
       case 2:
         /* change direction to a random one */
         sp.direction = rnd(8);
+        // deliberate fall through
+        // eslint-disable-next-line no-fallthrough
       default:
         /* move in normal direction */
         rmsphere(sp.x, sp.y);
         newsphere(sp.x + diroffx[sp.direction], sp.y + diroffy[sp.direction], sp.direction, sp.lifetime, sp.level);
-    };
+    }
   }
 }

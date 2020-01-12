@@ -447,6 +447,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
 
   if (item.matches(OEMPTY)) {
     // do nothing
+    nomove = 1;
     return;
   }
   //
@@ -596,20 +597,25 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
   //
   else if (item.matches(OANNIHILATION)) {
-    updateLog(`You have been enveloped by the zone of nothingness!`);
-    died(DIED_ANNIHILATED, false); /* annihilated in a sphere */
-    return;
+    if (isCarrying(OSPHTALISMAN)) {
+      updateLog(`The Talisman of the Sphere protects you from annihilation!`);
+    }
+    else {
+      updateLog(`You have been enveloped by the zone of nothingness!`);
+      died(DIED_ANNIHILATED, false); /* annihilated in a sphere */
+      return;
+    }
   }
 
   else if (item.matches(OSTAIRSUP) || item.matches(OVOLUP)) {
-    var stairMessage = `You have found ${item}`;
+    let stairMessage = `You have found ${item}`;
     if (ULARN) stairMessage = `There is a circular staircase here`;
-    if (do_ident) updateLog(stairMessage, formatHint('<', 'to climb up'));
+    if (do_ident) updateLog(stairMessage, formatHint('<', 'go up'));
   }
   else if (item.matches(OSTAIRSDOWN) || item.matches(OVOLDOWN)) {
-    var stairMessage = `You have found ${item}`;
+    let stairMessage = `You have found ${item}`;
     if (ULARN) stairMessage = `There is a circular staircase here`;
-    if (do_ident) updateLog(stairMessage, formatHint('>', 'to climb down'));
+    if (do_ident) updateLog(stairMessage, formatHint('>', 'go down'));
   }
 
   else if (item.matches(OELEVATORUP)) {
@@ -663,8 +669,8 @@ function lookforobject(do_ident, do_pickup, do_action) {
     }
   }
 
-  if (do_pickup && item.carry) {
-    if (take(item)) {
+  if (do_pickup) {
+    if (item.carry && take(item)) {
       forget(); // remove from board
     } else {
       nomove = 1;
@@ -853,21 +859,25 @@ function oteleport(err) {
  */
 function readbook(book) {
   var lev = book.arg;
-  var spell, tmp;
-  if (lev <= 3)
-    spell = rund((tmp = splev[lev]) ? tmp : 1);
-  else
-    spell = rnd((tmp = splev[lev] - 9) ? tmp : 1) + 9;
+  var spellIndex, spell;
+  if (lev <= 3) {
+    spell = splev[lev];
+    spellIndex = rund((spell) ? spell : 1);
+  }
+  else {
+    spell = splev[lev] - 9;
+    spellIndex = rnd((spell) ? spell : 1) + 9;
+  }
 
   // original larn doesn't have make wall spell
-  if (!ULARN && spell == MKW) {
+  if (!ULARN && spellIndex == MKW) {
     readbook(book);
     return;
   }
 
-  learnSpell(spelcode[spell]);
-  updateLog(`Spell \'<b>${spelcode[spell]}</b>\': ${spelname[spell]}`);
-  updateLog(`  ${speldescript[spell]}`);
+  learnSpell(spelcode[spellIndex]);
+  updateLog(`Spell '<b>${spelcode[spellIndex]}</b>': ${spelname[spellIndex]}`);
+  updateLog(`  ${speldescript[spellIndex]}`);
   if (rnd(10) == 4) {
     if (ULARN) updateLog(`You feel clever!`);
     else updateLog(`  Your intelligence went up by one!`);

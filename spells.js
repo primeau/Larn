@@ -174,16 +174,17 @@ function speldamage(x) {
       player.updateStrCount(150 + rnd(100));
       return;
 
-    case 8:
+    case 8: {
       /* enlightenment */
-      var yl = Math.max(0, player.y - 5);
-      var yh = Math.min(MAXY, player.y + 6);
-      var xl = Math.max(0, player.x - 15);
-      var xh = Math.min(MAXX, player.x + 16);
-      for (var i = xl; i < xh; i++)
-        for (var j = yl; j < yh; j++)
+      let yl = Math.max(0, player.y - 5);
+      let yh = Math.min(MAXY, player.y + 6);
+      let xl = Math.max(0, player.x - 15);
+      let xh = Math.min(MAXX, player.x + 16);
+      for (let i = xl; i < xh; i++)
+        for (let j = yl; j < yh; j++)
           player.level.know[i][j] = KNOWALL;
       return;
+    }
 
     case 9:
       /* healing */
@@ -249,20 +250,20 @@ function speldamage(x) {
       omnidirect(x, 30 + rnd(10), `gasps for air`);
       return;
 
-    case 20:
+    case 20: {
       /* vaporize rock */
-      var xh = Math.min(player.x + 1, MAXX - 2);
-      var yh = Math.min(player.y + 1, MAXY - 2);
-      for (var i = Math.max(player.x - 1, 1); i <= xh; i++) {
-        for (var j = Math.max(player.y - 1, 1); j <= yh; j++) {
-          var item = itemAt(i, j);
+      let xh = Math.min(player.x + 1, MAXX - 2);
+      let yh = Math.min(player.y + 1, MAXY - 2);
+      for (let i = Math.max(player.x - 1, 1); i <= xh; i++) {
+        for (let j = Math.max(player.y - 1, 1); j <= yh; j++) {
+          let item = itemAt(i, j);
           if (item.matches(OWALL)) {
             /* can't vpr below V2 */
             if (level < VBOTTOM - (ULARN ? 2 : 0)) {
               setItem(i, j, OEMPTY);
             }
           } else if (item.matches(OSTATUE)) {
-            var doCrumble = getDifficulty() < 3;
+            let doCrumble = getDifficulty() < 3;
             if (ULARN) doCrumble = getDifficulty() <= 3 && rnd(60) < 30;
             if (doCrumble) {
               setItem(i, j, createObject(OBOOK, level));
@@ -295,7 +296,7 @@ function speldamage(x) {
       updateWalls(player.x, player.y, 2);
 
       return;
-
+    }
       /* ----- LEVEL 4 SPELLS ----- */
 
     case 21:
@@ -376,7 +377,7 @@ function speldamage(x) {
 
     case 33:
       /* sphere of annihilation */
-      if ((rnd(23) == 5) && (wizard == 0)) {
+      if (!isCarrying(OSPHTALISMAN) && (rnd(23) == 5)) {
         //beep();
         updateLog(`You have been enveloped by the zone of nothingness!`);
         //nap(4000);
@@ -396,7 +397,7 @@ function speldamage(x) {
       loseint();
       return;
 
-    case 35:
+    case 35: {
       /* summon demon */
       if (rnd(100) > 30) {
         prepare_direction_event(spell_summon);
@@ -405,27 +406,28 @@ function speldamage(x) {
       } else {
         updateLog(`  The demon turned on you and vanished!`);
         beep();
-        var i = rnd(40) + 30;
+        let i = rnd(40) + 30;
         lastnum = DIED_DEMON; /* attacked by a revolting demon */
         player.losehp(i);
       }
       return;
+    }
 
     case 36:
       /* walk through walls */
       player.updateWTW(rnd(10) + 5);
       return;
 
-    case 37:
+    case 37: {
       /* alter reality */
       var savemon = [];
       var saveitm = [];
-      var i, j;
       var empty = OEMPTY;
+      let i, j;
       for (j = 0; j < MAXY; j++) {
         for (i = 0; i < MAXX; i++) /* save all items and monsters */ {
-          var item = itemAt(i, j);
-          var monster = monsterAt(i, j);
+          let item = itemAt(i, j);
+          let monster = monsterAt(i, j);
           if (!item.matches(OEMPTY) && !item.matches(OWALL) &&
             !item.matches(OANNIHILATION) && !item.matches(OHOMEENTRANCE)) {
             saveitm.push(item);
@@ -454,12 +456,12 @@ function speldamage(x) {
       }
       /* put objects back in level */
       while (saveitm.length > 0) {
-        var item = saveitm.pop();
+        let item = saveitm.pop();
         fillroom(item, item.arg);
       }
       /* put monsters back in */
       while (savemon.length > 0) {
-        var monster = savemon.pop();
+        let monster = savemon.pop();
         fillmonst(monster.arg);
       }
       loseint();
@@ -475,6 +477,7 @@ function speldamage(x) {
       updateWalls();
 
       return;
+    }
 
     case 38:
       /* permanence */
@@ -489,7 +492,7 @@ function speldamage(x) {
       appendLog(`  spell ${x} not available!`);
       beep();
       return;
-  };
+  }
 }
 
 

@@ -49,10 +49,10 @@ function welcome() {
 
 function createLevelNames() {
   LEVELNAMES.push(`H`);
-  for (var i = 1; i < MAXLEVEL; i++) {
+  for (let i = 1; i < MAXLEVEL; i++) {
     LEVELNAMES.push(`${i}`);
   }
-  for (var i = 0; i < MAXVLEVEL; i++) {
+  for (let i = 0; i < MAXVLEVEL; i++) {
     LEVELNAMES.push(`V${i+1}`);
   }
 }
@@ -163,7 +163,6 @@ function sethard(hard) {
     console.log(`error setting difficulty, defaulting to 0`);
     hard = 0;
   }
-
   setDifficulty(Math.max(0, hard));
 
   // console.log(`setting difficulty: ` + getDifficulty());
@@ -175,25 +174,25 @@ function sethard(hard) {
       var monster = monsterlist[j];
 
       /* JRP we don't need to worry about blowing int boundaries
-         so we can keep making things harder as difficulty goes up */
+         so we can keep making things harder as difficulty goes up */  
       i = ((6 + k) * monster.hitpoints + 1) / 6;
-      //monster.hitpoints = Math.min(32767, Math.round(i));
+      if (!ULARN) monster.hitpoints = Math.min(32767, Math.round(i));
       monster.hitpoints = Math.round(i);
 
       i = ((6 + k) * monster.damage + 1) / 5;
-      //monster.damage = Math.min(127, Math.round(i));
+      if (!ULARN) monster.damage = Math.min(127, Math.round(i));
       monster.damage = Math.round(i);
 
       i = (10 * monster.gold) / (10 + k);
-      //monster.gold = Math.min(32767, Math.round(i));
+      monster.gold = Math.min(32767, Math.round(i));
       monster.gold = Math.round(i);
 
       i = monster.armorclass - k;
-      //monster.armorclass = Math.max(-127, Math.round(i));
+      monster.armorclass = Math.max(-127, Math.round(i));
       monster.armorclass = Math.round(i);
 
       i = (7 * monster.experience) / (7 + k) + 1;
-      //monster.experience = Math.max(1, Math.round(i));
+      monster.experience = Math.max(1, Math.round(i));
       monster.experience = Math.round(i);
 
       //console.log(`${monster.char}: hp:${monster.hitpoints}, d:${monster.damage}, g:${monster.gold}, ac:${monster.armorclass}, x:${monster.experience}`);
@@ -230,57 +229,61 @@ function makeplayer() {
   player.x = rnd(MAXX - 2);
   player.y = rnd(MAXY - 2);
 
-  // enableDebug();
-  // eventToggleDebugWTW();
-  // eventToggleDebugStairs();
-  // eventToggleDebugOutput();
-  // eventToggleDebugKnowAll();
-  // eventToggleDebugStats();
-  // eventToggleDebugImmortal();
-  // eventToggleDebugAwareness();
-  // player.updateStealth(100000);
-  // keyboard_hints = true;
-  // //wizardmode(`pvnert(x)`);
-  // //player.GOLD = 1000000;
+  var DEVMODE = false;
+  if (DEVMODE) {
+    enableDebug();
+    eventToggleDebugWTW();
+    eventToggleDebugStairs();
+    eventToggleDebugOutput();
+    eventToggleDebugKnowAll();
+    eventToggleDebugStats();
+    eventToggleDebugImmortal();
+    eventToggleDebugAwareness();
+    // player.updateStealth(100000);
+    // keyboard_hints = true;
+    wizardmode(`pvnert(x)`);
+    // //player.GOLD = 1000000;
 
-  // var startShield = createObject(OSHIELD);
-  // take(startShield);
-  // take(createObject(OLARNEYE));
-  // take(createObject(ONOTHEFT));
-  // var startDagger = createObject(ODAGGER, -9);
-  // var startSlayer = createObject(OSLAYER);
-  // var startVorpy = createObject(OVORPAL);
-  // take(startDagger);
-  // take(startSlayer);
-  // take(startVorpy);
-  // player.WIELD = startVorpy;
-  // player.SHIELD = startShield;
-  // take(createObject(OPOTION, 21));
-  // take(createObject(OBRASSLAMP));
-  // gtime = 0;
+    // var startShield = createObject(OSHIELD);
+    // take(startShield);
+    take(createObject(OLARNEYE));
+    take(createObject(ONOTHEFT));
+    take(createObject(OSPHTALISMAN));
+    // var startDagger = createObject(ODAGGER, -9);
+    // var startSlayer = createObject(OSLAYER);
+    // var startVorpy = createObject(OVORPAL);
+    // take(startDagger);
+    // take(startSlayer);
+    // take(startVorpy);
+    // player.WIELD = startVorpy;
+    // player.SHIELD = startShield;
+    // take(createObject(OPOTION, 21));
+    // take(createObject(OBRASSLAMP));
+    // gtime = 0;
 
-  // auto_pickup = true;
+    // auto_pickup = true;
 
-  // // for (var i = 2; i < 26; i+=2) {
-  // //   take(createObject(OSCROLL, rnd(5)));
-  // //   take(createObject(OPOTION, rnd(5)));
-  // // }
-  // // player.updateHoldMonst(100000);
-  // player.updateStealth(100000);
-  // // player.updateAltPro(100000);
-  // // player.updateTimeStop(10);
-  // // player.updateGiantStr(100000);
-  // // player.updateDexCount(100000);
-  // // player.updateUndeadPro(100000);
-  // // player.updateStrCount(100000);
-  // // player.updateSpiritPro(100000);
-  // // player.updateCharmCount(100000);
-  // // player.updateHasteSelf(100000);
-  // // player.updateProtectionTime(100000);
-  // // player.updateCancellation(100000);
-  // // player.updateScareMonst(100000);
-  // // player.updateInvisibility(100000);
-  // // player.updateFireResistance(100000);
+    // // for (var i = 2; i < 26; i+=2) {
+    // //   take(createObject(OSCROLL, rnd(5)));
+    // //   take(createObject(OPOTION, rnd(5)));
+    // // }
+    // // player.updateHoldMonst(100000);
+    // player.updateStealth(100000);
+    // // player.updateAltPro(100000);
+    // // player.updateTimeStop(10);
+    // // player.updateGiantStr(100000);
+    // // player.updateDexCount(100000);
+    // // player.updateUndeadPro(100000);
+    // // player.updateStrCount(100000);
+    // // player.updateSpiritPro(100000);
+    // // player.updateCharmCount(100000);
+    // // player.updateHasteSelf(100000);
+    // // player.updateProtectionTime(100000);
+    // // player.updateCancellation(100000);
+    // // player.updateScareMonst(100000);
+    // // player.updateInvisibility(100000);
+    // // player.updateFireResistance(100000);
+  }
 
   recalc();
   changedWC = 0; // don't highlight AC & WC on game start
@@ -629,15 +632,15 @@ function wizardmode(password) {
   player.raiseexperience(6000000);
   player.AWARENESS = 100000;
 
-  for (var i = 0; i < spelcode.length; i++) {
+  for (let i = 0; i < spelcode.length; i++) {
     learnSpell(spelcode[i]);
   }
 
   player.setGold(250000);
 
   if (player.level) {
-    for (var i = 0; i < MAXY; i++)
-      for (var j = 0; j < MAXX; j++)
+    for (let i = 0; i < MAXY; i++)
+      for (let j = 0; j < MAXX; j++)
         player.level.know[j][i] = KNOWALL;
 
     for (var scrolli = 0; scrolli < SCROLL_NAMES.length; scrolli++) {

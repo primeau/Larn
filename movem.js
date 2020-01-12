@@ -64,9 +64,9 @@ function movemonst() {
   if (player.AGGRAVATE || player.STEALTH == 0) {
     for (j = tmp1; j < tmp2; j++) {
       for (i = tmp3; i < tmp4; i++) {
-        var monster = monsterAt(i, j);
+        let monster = monsterAt(i, j);
         if (monster) {
-          var current = Object.create(MonsterLocation);
+          let current = Object.create(MonsterLocation);
           current.x = i;
           current.y = j;
           if (monster.intelligence > min_int) {
@@ -83,9 +83,9 @@ function movemonst() {
   } else {
     for (j = tmp1; j < tmp2; j++) {
       for (i = tmp3; i < tmp4; i++) {
-        var monster = monsterAt(i, j);
+        let monster = monsterAt(i, j);
         if (monster && monster.awake) {
-          var current = Object.create(MonsterLocation);
+          let current = Object.create(MonsterLocation);
           current.x = i;
           current.y = j;
           if (monster.intelligence > min_int) {
@@ -137,7 +137,7 @@ function movemonst() {
     /* If the last monster hit is within the move window, its already
        been moved.
     */
-    var monster = monsterAt(lasthx, lasthy);
+    let monster = monsterAt(lasthx, lasthy);
     if (((lasthx < tmp3 || lasthx >= tmp4) ||
         (lasthy < tmp1 || lasthy >= tmp2)) && monster) {
       if (player.SCAREMONST)
@@ -158,7 +158,7 @@ function movemonst() {
        Otherwise (monster outside window, asleep due to stealth),
        move the monster and update the lasthit x,y position.
         */
-    var monster = monsterAt(lasthx, lasthy);
+    let monster = monsterAt(lasthx, lasthy);
     if (((lasthx < tmp3 || lasthx >= tmp4) ||
         (lasthy < tmp1 || lasthy >= tmp2)) && monster ||
       monster && !monster.awake) {
@@ -190,7 +190,7 @@ function movemonst() {
  */
 function noticeplayer() {
   var monsters = nearbymonsters();
-  for (var i = 0; i < monsters.length ; i++) {
+  for (var i = 0; i < monsters.length; i++) {
     var monster = monsters[i];
     if (rund(15) < getDifficulty() - 1) { // increase odds starting with diff 2
       if (!monster.awake && rnd(101) < 50) { // want at worst 50/50 odds
@@ -233,6 +233,7 @@ function build_proximity_ripple() {
   var k, m, z, tmpx, tmpy;
   var curx, cury, curdist;
 
+  // ULARN TODO? THIS PROBABLY SHOULD'T BE THIS BIG
   var xl = 0;
   var yl = 0;
   var xh = MAXX - 1;
@@ -241,6 +242,11 @@ function build_proximity_ripple() {
   for (k = yl; k <= yh; k++)
     for (m = xl; m <= xh; m++) {
       switch (itemAt(m, k).id) {
+
+        // ULARN TODO? VAMPIRE + MIRROR?
+        // TODO? DEMONPRINCE++ IGNORES TRAPS
+        // TODO? flying monsters ignore pits and trap doors.
+
         case OWALL.id:
         case OELEVATORUP.id:
         case OELEVATORDOWN.id:
@@ -262,7 +268,7 @@ function build_proximity_ripple() {
         default:
           ripple[m][k] = 0;
           break;
-      };
+      }
     }
 
   /* now perform proximity ripple from player.x,player.y to monster */
@@ -304,9 +310,8 @@ function build_proximity_ripple() {
               } else {
                 lprc(`${monsterAt(tmpx, tmpy).getChar()}`);
               }
-            }
-            else {
-              lprc(ripple[tmpx][tmpy]%10);
+            } else {
+              lprc(ripple[tmpx][tmpy] % 10);
             }
           }
 
@@ -342,7 +347,7 @@ function move_scared(i, j) {
     case STALKER:
     case ICELIZARD:
       if (isHalfTime()) return;
-  };
+  }
 
   var xl = vx(i + rnd(3) - 2);
   var yl = vy(j + rnd(3) - 2);
@@ -408,7 +413,7 @@ function move_smart(i, j) {
     case STALKER:
     case ICELIZARD:
       if (isHalfTime()) return;
-  };
+  }
 
   var didmove = false; // UPGRADE -- smart monster should move inside closed rooms
 
@@ -429,20 +434,20 @@ function move_smart(i, j) {
           return;
         }
     } else
-    /* prevent vampires from moving onto mirrors
-     */
+      /* prevent vampires from moving onto mirrors
+       */
       for (z = 1; z < 9; z++) /* go around in a circle */ {
-      x = i + diroffx[z];
-      y = j + diroffy[z];
-      if ((ripple[x][y] < ripple[i][j]) && !(itemAt(x, y).matches(OMIRROR)))
-        if (!monsterAt(x, y)) {
-          w1x = x;
-          w1y = y;
-          didmove = true; // UPGRADE
-          mmove(i, j, x, y);
-          return;
-        }
-    }
+        x = i + diroffx[z];
+        y = j + diroffy[z];
+        if ((ripple[x][y] < ripple[i][j]) && !(itemAt(x, y).matches(OMIRROR)))
+          if (!monsterAt(x, y)) {
+            w1x = x;
+            w1y = y;
+            didmove = true; // UPGRADE
+            mmove(i, j, x, y);
+            return;
+          }
+      }
 
   // UPGRADE
   // make all monsters move in closed rooms, except demons, who should
@@ -471,7 +476,7 @@ function move_dumb(i, j) {
     case STALKER:
     case ICELIZARD:
       if (isHalfTime()) return;
-  };
+  }
 
 
   /* dumb monsters move here */
@@ -582,21 +587,31 @@ function mmove(aa, bb, cc, dd) {
       case DEMONLORD + 6:
       case DEMONPRINCE:
       case LUCIFER:
-          if (!(ULARN && monster.arg == LEMMING)) // lemmings fall, bats don't
-          break;
-
+        if (!(ULARN && monster.arg == LEMMING)) // lemmings fall, bats don't
+          break; // fall through and delete monster unless lemming
+        // eslint-disable-next-line no-fallthrough
       default:
         player.level.monsters[cc][dd] = null; /* fell in a pit or trapdoor */
-    };
+    }
   }
 
   if (item.matches(OANNIHILATION)) {
-    if (monster.isDemon()) /* demons dispel spheres */ {
-      cursors();
-      updateLog(`The ${monster} dispels the sphere!`);
-      rmsphere(cc, dd); /* delete the sphere */
+    /* demons dispel spheres */
+    if (monster.isDemon()) {
+      /* most demons can't dispel if carrying talisman */
+      if (!isCarrying(OSPHTALISMAN) ||
+        // lucifer can't dispels 30% of the time if talisman
+        isCarrying(OSPHTALISMAN) && monster.matches(LUCIFER) && rnd(10) > 7) {
+        cursors();
+        updateLog(`The ${monster} dispels the sphere!`);
+        rmsphere(cc, dd); /* delete the sphere */
+      }
+      else {
+        player.level.monsters[cc][dd] = null; /* monster dead */ 
+        setItem(cc, dd, OEMPTY);
+        }
     } else {
-      player.level.monsters[cc][dd] = null;
+      player.level.monsters[cc][dd] = null; /* monster dead */
       setItem(cc, dd, OEMPTY);
     }
   }
@@ -615,7 +630,8 @@ function mmove(aa, bb, cc, dd) {
     setItem(cc, dd, OEMPTY); /* leprechaun takes gold */
   }
 
-  if (monster.matches(TROLL)) { /* if a troll regenerate him */
+  if (monster.matches(TROLL)) {
+    /* if a troll regenerate him */
     if (isHalfTime())
       if (monsterlist[monster.arg].hitpoints > monster.hitpoints) monster.hitpoints++;
   }
@@ -636,7 +652,7 @@ function mmove(aa, bb, cc, dd) {
       flag = 2;
     } else flag = 1;
   }
-  if (!monster.isDemon()) {  
+  if (!monster.isDemon()) {
     if (item.matches(OTELEPORTER)) /* monster hits teleport trap */ {
       flag = 3;
       fillmonst(monster.arg);
@@ -646,8 +662,8 @@ function mmove(aa, bb, cc, dd) {
       flag = 4;
       player.level.monsters[cc][dd] = null;
     }
-  }  
-  
+  }
+
   if (player.BLINDCOUNT) return; /* if blind don't show where monsters are   */
 
   if (player.level.know[cc][dd] & HAVESEEN) {
@@ -668,7 +684,7 @@ function mmove(aa, bb, cc, dd) {
       case 4:
         updateLog(`The ${monster} is carried away by an elevator!`);
         break;
-      };
+    }
   }
 
   if (player.level.know[aa][bb] & HAVESEEN) show1cell(aa, bb);
