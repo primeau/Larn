@@ -628,7 +628,7 @@ function hitplayer(x, y) {
 
   if (monster.attack > 0)
     if (((dam + bias + 8) > player.AC) || (rnd(((player.AC > 0) ? player.AC : 1)) == 1)) {
-      if (spattack(monster.attack, x, y)) {
+      if (spattack(monster, monster.attack, x, y)) {
         // spattack returns 1 if the monster disappears (theft)
         return;
       }
@@ -876,12 +876,7 @@ const rustarm = [
   [OPLATEARMOR, -9],
 ];
 
-function spattack(x, xx, yy) {
-
-  // this is a silly hack, but lastnum is actually the monster that hit you
-  // in some cases, where lastmonst is only the name of the last monster to
-  // hit you.
-  var monster = lastnum;
+function spattack(monster, attack, xx, yy) {
 
   if (player.CANCELLATION) {
     /* cancel only works 5% of time for demon prince and god */
@@ -896,7 +891,7 @@ function spattack(x, xx, yy) {
 
   /* staff of power cancels demonlords/wraiths/vampires 75% of time */
   /* lucifer is unaffected */
-  if (!monster.matches(LUCIFER)) {
+  if (ULARN && !monster.matches(LUCIFER)) {
     if (monster.isDemon() || monster.matches(WRAITH) || monster.matches(VAMPIRE)) {
       if (isCarrying(OPSTAFF)) {
         if (rnd(100) < 75) {
@@ -917,7 +912,7 @@ function spattack(x, xx, yy) {
   var armorclass = player.AC;
   // monster = lastmonst; // lastmonst is only the name of the last monster to hit
 
-  switch (x) {
+  switch (attack) {
     case 1:
       /* rust your armor, rust=1 when rusting has occurred */
       var rust = 0;
@@ -1052,7 +1047,7 @@ function spattack(x, xx, yy) {
 
     case 12:
       /* performs any number of other special attacks */
-      return spattack(spsel[rund(10)], xx, yy);
+      return spattack(monster, spsel[rund(10)], xx, yy);
 
     case 13:
       updateLog(`The ${monster} flattens you with its psionics!`);
