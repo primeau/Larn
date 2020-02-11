@@ -105,7 +105,8 @@ function setname(name) {
     setDifficulty(0);
   }
 
-  if (no_intro || newplayer) {
+  if (no_intro) {
+    player = new Player();
     startgame(getDifficulty());
     return 1;
   }
@@ -132,7 +133,7 @@ function setname(name) {
     lprcat(difficultyString);
     blinken(difficultyString.length - 5, 24);
 
-    setNumberCallback(startgame, false);
+    setNumberCallback(setdiff, false);
   }
   return 0;
 }
@@ -174,7 +175,7 @@ function sethard(hard) {
       var monster = monsterlist[j];
 
       /* JRP we don't need to worry about blowing int boundaries
-         so we can keep making things harder as difficulty goes up */  
+         so we can keep making things harder as difficulty goes up */
       i = ((6 + k) * monster.hitpoints + 1) / 6;
       if (!ULARN) monster.hitpoints = Math.min(32767, Math.round(i));
       monster.hitpoints = Math.round(i);
@@ -208,23 +209,12 @@ subroutine to create the player and the players attributes
 this is called at the beginning of a game and at no other time
 */
 function makeplayer() {
-  player = new Player();
 
-  /* he knows protection, magic missile */
-  learnSpell(`pro`);
-  learnSpell(`mle`);
+  /* much of this work has been moved elsewhere */
+  // player = new Player();
 
   /* always know cure dianthroritis */
   learnPotion(createObject(OPOTION, 21));
-
-  if (getDifficulty() <= 0) {
-    var startLeather = createObject(OLEATHER);
-    var startDagger = createObject(ODAGGER);
-    take(startLeather);
-    take(startDagger);
-    player.WEAR = startLeather;
-    player.WIELD = startDagger;
-  }
 
   player.x = rnd(MAXX - 2);
   player.y = rnd(MAXY - 2);
@@ -333,7 +323,7 @@ function getIP() {
 
 
 
-function startgame(hard) {
+function setdiff(hard) {
 
   // clear the blinking cursor after setting difficulty
   clearBlinkingCursor();
@@ -345,6 +335,77 @@ function startgame(hard) {
   } else {
     setGameDifficulty(hard);
   }
+
+  player = new Player();
+
+  if (ULARN) {
+    clear();
+    lprcat(`The Addiction of Ularn\n\n`);
+    lprcat(`\tPick a character class...\n\n`);
+    lprcat(`\ta)  Ogre          Exceptional strength, but thick as a brick\n`);
+    lprcat(`\tb)  Wizard        Smart, good at magic, but very weak\n`);
+    lprcat(`\tc)  Klingon       Strong and average IQ, but unwise & very ugly\n`);
+    lprcat(`\td)  Elf           OK at magic, but a mediocre fighter\n`);
+    lprcat(`\te)  Rogue         Nimble and smart, but only average strength\n`);
+    lprcat(`\tf)  Adventurer    Jack of all trades, master of none\n`);
+    lprcat(`\tg)  Dwarf         Strong and healthy, but not good at magic\n`);
+    lprcat(`\th)  Rambo         Bad at everything, but has a Lance of Death\n`);
+    cursors();
+
+    player.char_picked = localStorageGetObject('character_class') || 'Adventurer';
+
+    lprcat(`So, what are ya? [<b>${player.char_picked}</b>]:`);
+    lflush();
+    blinken(player.char_picked.length + 23, 24);
+    setCharCallback(setclass);
+  } else {
+    setclass(`Adventurer`); /* default to Adventurer for regular Larn */
+    return true;
+  }
+
+}
+
+
+
+function setclass(classpick) {
+
+  console.log(`classpick: ${classpick}`);
+  let characterClass;
+
+  if (classpick === `a` || classpick === `Ogre`) {
+    characterClass = `Ogre`;
+  } else if (classpick === `b` || classpick === `Wizard`) {
+    characterClass = `Wizard`;
+  } else if (classpick === `c` || classpick === `Klingon`) {
+    characterClass = `Klingon`;
+  } else if (classpick === `d` || classpick === `Elf`) {
+    characterClass = `Elf`;
+  } else if (classpick === `e` || classpick === `Rogue`) {
+    characterClass = `Rogue`;
+  } else if (classpick === `f` || classpick === `Adventurer`) {
+    characterClass = `Adventurer`;
+  } else if (classpick === `g` || classpick === `Dwarf`) {
+    characterClass = `Dwarf`;
+  } else if (classpick === `h` || classpick === `Rambo`) {
+    characterClass = `Rambo`;
+  } else if (classpick === ENTER) {
+    characterClass = player.char_picked; /* default to the one set from local storage */
+  }
+
+  if (characterClass) {
+    player.setCharacterClass(characterClass);
+    localStorageSetObject('character_class', characterClass);
+    startgame(getDifficulty());
+    clearBlinkingCursor();
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+
+function startgame(hard) {
 
   initFS();
   getIP();
@@ -603,80 +664,81 @@ function wizardmode(password) {
   // other valid passwords to add in the future
   // main(){}
   // frobozz
-  if (password !== 'pvnert(x)') {
+  if (password === 'pvnert(x)') {
+    //updateLog(`disabling wizard mode`);
+    wizard = 1;
+
+    player.TELEFLAG = 0;
+
+    player.setStrength(70);
+    player.setIntelligence(70);
+    player.setWisdom(70);
+    player.setConstitution(70);
+    player.setDexterity(70);
+    player.setCharisma(70);
+
+    player.inventory[0] = null;
+    player.inventory[1] = null;
+    var startLance = createObject(OLANCE, 25);
+    var startRing = createObject(OPROTRING, 50);
+    take(startLance);
+    take(startRing);
+    player.WEAR = null;
+    player.WIELD = startLance;
+
+    player.raiseexperience(6000000);
+    player.AWARENESS = 100000;
+
+    for (let i = 0; i < spelcode.length; i++) {
+      learnSpell(spelcode[i]);
+    }
+
+    player.setGold(250000);
+
+    if (player.level) {
+      for (let i = 0; i < MAXY; i++)
+        for (let j = 0; j < MAXX; j++)
+          player.level.know[j][i] = KNOWALL;
+
+      for (var scrolli = 0; scrolli < SCROLL_NAMES.length; scrolli++) {
+        var scroll = createObject(OSCROLL, scrolli);
+        learnScroll(scroll);
+        player.level.items[scrolli][0] = scroll;
+      }
+
+      for (var potioni = MAXX - 1; potioni > MAXX - 1 - POTION_NAMES.length; potioni--) {
+        var potion = createObject(OPOTION, MAXX - 1 - potioni);
+        learnPotion(potion);
+        player.level.items[potioni][0] = potion;
+      }
+
+      var ix = 0;
+      var iy = 0;
+      var wizi = 0;
+      while (wizi < MAXY) {
+        if (itemlist[++wizi])
+          player.level.items[ix][++iy] = createObject(itemlist[wizi]);
+      }
+      --wizi;
+      while (++ix < MAXX - 1) {
+        if (itemlist[++wizi])
+          player.level.items[ix][iy - 1] = createObject(itemlist[wizi]);
+        else --ix;
+      }
+
+      // 100 items now
+      while (wizi < OPAD.id) {
+        var wizitem = itemlist[++wizi];
+        if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
+          player.level.items[ix][--iy] = createObject(wizitem);
+      }
+
+    }
+  } else {
     updateLog(`Sorry`);
     return 1;
   }
 
-  //updateLog(`disabling wizard mode`);
-  wizard = 1;
-
-  player.TELEFLAG = 0;
-
-  player.setStrength(70);
-  player.setIntelligence(70);
-  player.setWisdom(70);
-  player.setConstitution(70);
-  player.setDexterity(70);
-  player.setCharisma(70);
-
-  player.inventory[0] = null;
-  player.inventory[1] = null;
-  var startLance = createObject(OLANCE, 25);
-  var startRing = createObject(OPROTRING, 50);
-  take(startLance);
-  take(startRing);
-  player.WEAR = null;
-  player.WIELD = startLance;
-
-  player.raiseexperience(6000000);
-  player.AWARENESS = 100000;
-
-  for (let i = 0; i < spelcode.length; i++) {
-    learnSpell(spelcode[i]);
-  }
-
-  player.setGold(250000);
-
-  if (player.level) {
-    for (let i = 0; i < MAXY; i++)
-      for (let j = 0; j < MAXX; j++)
-        player.level.know[j][i] = KNOWALL;
-
-    for (var scrolli = 0; scrolli < SCROLL_NAMES.length; scrolli++) {
-      var scroll = createObject(OSCROLL, scrolli);
-      learnScroll(scroll);
-      player.level.items[scrolli][0] = scroll;
-    }
-
-    for (var potioni = MAXX - 1; potioni > MAXX - 1 - POTION_NAMES.length; potioni--) {
-      var potion = createObject(OPOTION, MAXX - 1 - potioni);
-      learnPotion(potion);
-      player.level.items[potioni][0] = potion;
-    }
-
-    var ix = 0;
-    var iy = 0;
-    var wizi = 0;
-    while (wizi < MAXY) {
-      if (itemlist[++wizi])
-        player.level.items[ix][++iy] = createObject(itemlist[wizi]);
-    }
-    --wizi;
-    while (++ix < MAXX - 1) {
-      if (itemlist[++wizi])
-        player.level.items[ix][iy - 1] = createObject(itemlist[wizi]);
-      else --ix;
-    }
-
-    // 100 items now
-    while (wizi < OPAD.id) {
-      var wizitem = itemlist[++wizi];
-      if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
-        player.level.items[ix][--iy] = createObject(wizitem);
-    }
-
-  }
 
   return 1;
 }

@@ -11,7 +11,8 @@ var Player = function Player() {
     }
 
     this.gender = MALE;
-    this.ramboflag = true;
+    this.char_picked = `Adventurer`;
+    this.ramboflag = false;
 
     this.knownPotions = [];
     this.knownScrolls = [];
@@ -93,7 +94,6 @@ var Player = function Player() {
     this.INFEEBLEMENT = 0;  // UNUSED
 
     this.TELEFLAG = 0;
-    this.BESSMANINTEL = 0;
 
     // special items
     this.LAMP = false;
@@ -107,16 +107,14 @@ var Player = function Player() {
     this.ORB = false;  // orb of enlightenment
     this.ELVEN = false;
     this.SLASH = false; // sword of slashing
+    this.BESSMANINTEL = 0;
     this.BESSMANN = false;
     this.SLAY = false;  // slayer
     this.VORPAL = false;
     this.STAFF = false;
-    // this.EYEOFLARN = false; // not used
-    // this.AMULET = 0; // you can just buy this
-
     this.PAD = false;
-    this.ELEVUP = false;
     this.ELEVDOWN = false;
+    this.ELEVUP = false;
 
     // this.HARDGAME = 0; moved to state.js
 
@@ -585,7 +583,153 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
     return output;
   }; //
 
+  
 
+  this.setCharacterClass = function(characterClass) {
+    this.char_picked = characterClass;
+    if (characterClass === `Ogre`) {
+      learnSpell(`mle`);
+      this.SPELLMAX = 1;
+      this.SPELLS = 1;
+      this.HPMAX = 16;
+      this.HP = 16;
+      this.STRENGTH = 18;
+      this.INTELLIGENCE = 4;
+      this.WISDOM = 6;
+      this.CONSTITUTION = 16;
+      this.DEXTERITY = 6;
+      this.CHARISMA = 4;
+      take(createObject(OPOTION, rund(6)));
+      take(createObject(OPOTION, rund(6)));
+      return true;
+    } else if (characterClass === `Wizard`) {
+      learnSpell(`mle`);
+      learnSpell(`chm`);
+      this.SPELLMAX = 2;
+      this.SPELLS = 2;
+      this.HPMAX = 8;
+      this.HP = 8;
+      this.STRENGTH = 8;
+      this.INTELLIGENCE = 16;
+      this.WISDOM = 16;
+      this.CONSTITUTION = 6;
+      this.DEXTERITY = 6;
+      this.CHARISMA = 8;
+      take(createObject(OSCROLL, rund(6)));
+      take(createObject(OSCROLL, rund(6)));
+      take(createObject(OPOTION, 19)); /* treasure finding */
+      return true;
+    } else if (characterClass === `Klingon`) {
+      learnSpell(`ssp`);
+      this.SPELLMAX = 1;
+      this.SPELLS = 1;
+      this.HPMAX = 14;
+      this.HP = 14;
+      this.STRENGTH = 14;
+      this.INTELLIGENCE = 12;
+      this.WISDOM = 4;
+      this.CONSTITUTION = 12;
+      this.DEXTERITY = 8;
+      this.CHARISMA = 3;
+      let startArmor = createObject(OSTUDLEATHER);
+      take(startArmor);
+      this.WEAR = startArmor;
+      take(createObject(OPOTION, rund(6)));
+      return true;
+    } else if (characterClass === `Elf`) {
+      learnSpell(`pro`);
+      this.SPELLMAX = 2;
+      this.SPELLS = 1; // odd, but true to the original
+      this.HPMAX = 8;
+      this.HP = 8;
+      this.STRENGTH = 8;
+      this.INTELLIGENCE = 14;
+      this.WISDOM = 12;
+      this.CONSTITUTION = 8;
+      this.DEXTERITY = 8;
+      this.CHARISMA = 14;
+      let startArmor = createObject(OLEATHER);
+      take(startArmor);
+      this.WEAR = startArmor;
+      take(createObject(OSCROLL, rund(6)));
+      return true;
+    } else if (characterClass === `Rogue`) {
+      learnSpell(`mle`);
+      this.SPELLMAX = 1;
+      this.SPELLS = 1;
+      this.HPMAX = 12;
+      this.HP = 12;
+      this.STRENGTH = 8;
+      this.INTELLIGENCE = 12;
+      this.WISDOM = 8;
+      this.CONSTITUTION = 10;
+      this.DEXTERITY = 14;
+      this.CHARISMA = 6;
+      let startArmor = createObject(OLEATHER);
+      take(startArmor);
+      this.WEAR = startArmor;
+      let startWeapon = createObject(ODAGGER);
+      take(startWeapon);
+      this.WIELD = startWeapon;
+      take(createObject(OSCROLL, 14)); /* stealth */
+      return true;
+    } else if (characterClass === `Adventurer`) {
+      learnSpell(`mle`);
+      learnSpell(`pro`);
+      this.SPELLMAX = 1;
+      this.SPELLS = 1;
+      this.HPMAX = 10;
+      this.HP = 10;
+      this.STRENGTH = 12;
+      this.INTELLIGENCE = 12;
+      this.WISDOM = 12;
+      this.CONSTITUTION = 12;
+      this.DEXTERITY = 12;
+      this.CHARISMA = 12;
+      if (ULARN || getDifficulty() == 0) {
+        let startArmor = createObject(OLEATHER);
+        take(startArmor);
+        this.WEAR = startArmor;
+        let startWeapon = createObject(ODAGGER);
+        take(startWeapon);
+        this.WIELD = startWeapon;
+      }
+      return true;
+    } else if (characterClass === `Dwarf`) {
+      learnSpell(`pro`);
+      this.SPELLMAX = 1;
+      this.SPELLS = 1;
+      this.HPMAX = 12;
+      this.HP = 12;
+      this.STRENGTH = 16;
+      this.INTELLIGENCE = 6;
+      this.WISDOM = 8;
+      this.CONSTITUTION = 16;
+      this.DEXTERITY = 4;
+      this.CHARISMA = 4;
+      let startWeapon = createObject(OSPEAR);
+      take(startWeapon);
+      this.WIELD = startWeapon;
+      return true;
+    } else if (characterClass === `Rambo`) {
+      this.SPELLMAX = 0;
+      this.SPELLS = 0;
+      this.HPMAX = 1;
+      this.HP = 1;
+      this.STRENGTH = 3;
+      this.INTELLIGENCE = 3;
+      this.WISDOM = 3;
+      this.CONSTITUTION = 3;
+      this.DEXTERITY = 3;
+      this.CHARISMA = 3;
+      let startWeapon = createObject(OLANCE);
+      take(startWeapon);
+      this.WIELD = startWeapon;
+      this.ramboflag = true;
+      return true;
+    }
+    return false;
+  };
 
 
 

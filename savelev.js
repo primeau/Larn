@@ -201,6 +201,7 @@ function loadPlayer(saved) {
   }
 
   newPlayer.gender = saved.gender;
+  newPlayer.char_picked = saved.char_picked;
   newPlayer.ramboflag = saved.ramboflag;
   
   newPlayer.knownPotions = saved.knownPotions;

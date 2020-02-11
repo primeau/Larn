@@ -227,7 +227,7 @@ Larn 12.2 - SPOILER ALERT!
 
 11. Improved monster movement performance again.
 
-12. You can now weild '-' to unweild your weapon.
+12. You can now wield '-' to unwield your weapon.
 
 13. Waterlords can now be found in the dungeon, not just when washing at a
     fountain.

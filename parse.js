@@ -365,9 +365,12 @@ function parse(key) {
   if (key == 'v') {
     nomove = 1;
     var larnString = ULARN ? `The Addiction of JS Ularn` : `JS Larn`;
-    updateLog(`${larnString}, Version ${VERSION} build ${BUILD} -- Difficulty ${getDifficulty()}`);
-    if (wizard) updateLog(` Wizard`);
-    if (cheat) updateLog(` Cheater`);
+    updateLog(`${larnString}, Version ${VERSION} Build ${BUILD}`);
+    updateLog(`  ${logname}, Difficulty ${getDifficulty()}`);
+    if (ULARN) appendLog(`, ${player.char_picked}`);
+    if (debug_used) updateLog(`  Debug`);
+    if (wizard) updateLog(`  Wizard`);
+    if (cheat) updateLog(`  Cheater`);
     return;
   }
 
