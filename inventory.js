@@ -273,8 +273,7 @@ function drop_object(index) {
   player.inventory[useindex] = null;
   if (pitflag) {
     updateLog(`  It disappears down the pit.`);
-  }
-  else {
+  } else {
     setItem(player.x, player.y, item);
   }
 
@@ -330,8 +329,7 @@ function drop_object_gold(amount) {
   updateLog(`  You drop ${Number(amount).toLocaleString()} gold pieces`);
   if (pitflag) {
     updateLog(`  The gold disappears down the pit.`);
-  }
-  else  {
+  } else {
     var floorGoldAmount = 0;
     if (goldExists) {
       floorGoldAmount = itemAt(player.x, player.y).arg;
@@ -376,10 +374,12 @@ function pocketempty() {
 
 
 function isCarrying(item) {
-  for (var i = 0; i < player.inventory.length; i++) {
-    var tmpItem = player.inventory[i];
-    if (item.matches(tmpItem)) return tmpItem;
+  let exact = item && (item.matches(OPOTION) || item.matches(OSCROLL));
+  for (let i = 0; i < player.inventory.length; i++) {
+    let tmpItem = player.inventory[i];
+    if (item.matches(tmpItem, exact)) {
+      return tmpItem;
+    }
   }
   return null;
-
 }

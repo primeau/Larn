@@ -54,202 +54,221 @@ const DIV_END = `.png")`;
 
 
 Item.prototype = {
-    id: null,
-    char: `💩`,
-    desc: ``,
-    carry: false,
-    arg: 0,
-    inv: null,
+  id: null,
+  char: `💩`,
+  desc: ``,
+  carry: false,
+  arg: 0,
+  inv: null,
 
-    // TODO: cache this
-    getChar: function() {
 
-      if (amiga_mode) {
-        if (this.id == OWALL.id) {
-          return `${DIV_START}w${this.arg}${DIV_END}`;
-        } else {
-          return `${DIV_START}o${this.id}${DIV_END}`;
-        }
+
+  // TODO: cache this
+  getChar: function () {
+
+    if (amiga_mode) {
+      if (this.id == OWALL.id) {
+        return `${DIV_START}w${this.arg}${DIV_END}`;
+      } else {
+        return `${DIV_START}o${this.id}${DIV_END}`;
       }
-      //
-      else if (!original_objects) {
-        if (this.id == OWALL.id || 
-          this.id == OEMPTY.id ||
-          this.id == OIVTRAPDOOR.id ||
-          this.id == OIVDARTRAP.id ||
-          this.id == OTRAPARROWIV.id ||
-          this.id == OIVTELETRAP.id) {
-          return hack_objnamelist[this.id];
-        } else {
-          return `<b>${hack_objnamelist[this.id]}</b>`;
-        }
+    }
+    //
+    else if (!original_objects) {
+      if (this.id == OWALL.id ||
+        this.id == OEMPTY.id ||
+        this.id == OIVTRAPDOOR.id ||
+        this.id == OIVDARTRAP.id ||
+        this.id == OTRAPARROWIV.id ||
+        this.id == OIVTELETRAP.id) {
+        return hack_objnamelist[this.id];
+      } else {
+        return `<b>${hack_objnamelist[this.id]}</b>`;
       }
-      //
-      else return this.char;
+    }
+    //
+    else return this.char;
 
-      // making walls/empty bold screws up horizontal spacing
-      //return hack_items ? `${hack_objnamelist[this.id]}` : `${this.char}`;
-    },
-
-    matches: function(item) {
-      if (item == null) {
-        //debug(`object.matches() null item`);
-        return false;
-      }
-      return (item != null && this.id == item.id);
-    },
-
-    toString: function(inStore, showAll, tempPlayer) {
-      var description = this.desc;
-      //
-      if (this.matches(OPOTION)) {
-        if (tempPlayer && !isKnownPotion(this, tempPlayer) && showAll) {
-          description += ` (of ${POTION_NAMES[this.arg]})`; // special case for scoreboard
-        }
-        else if (isKnownPotion(this) || inStore || showAll) {
-          description += ` of ${POTION_NAMES[this.arg]}`;
-        }
-      }
-      //
-      else if (this.matches(OSCROLL)) {
-        if (tempPlayer && !isKnownScroll(this, tempPlayer) && showAll) {
-          description += ` (of ${SCROLL_NAMES[this.arg]})`; // special case for scoreboard
-        }
-        else if (isKnownScroll(this) || inStore || showAll) {
-          description += ` of ` + SCROLL_NAMES[this.arg];
-        }
-      }
-      //
-      else if (this.matches(OOPENDOOR) ||
-        this.matches(OCLOSEDDOOR) ||
-        this.matches(OTHRONE) ||
-        this.matches(ODEADTHRONE) ||
-        this.matches(OBOOK) ||
-        this.matches(OCHEST) ||
-        this.matches(OAMULET) ||
-        (this.isRing() && inStore && !showAll) ||
-        this.isGem()) {
-        // do nothing
-      }
-      //
-      else {
-        if (this.arg > 0) {
-          description += ` +` + this.arg;
-        } else if (this.arg < 0) {
-          description += ` ` + this.arg;
-        }
-      }
-      if (!tempPlayer) tempPlayer = player;
-      if ((this === tempPlayer.WEAR || this === tempPlayer.SHIELD) && !inStore) {
-        description += ` (being worn)`
-      }
-      if (this === tempPlayer.WIELD && !inStore) {
-        description += ` (weapon in hand)`
-      }
-      return description;
-    },
-
-    // we can wield more things than we show during wield inventory check
-    // this is everything that a player can actually wield
-    canWield: function() {
-      /*
-      v12.4.5 - this list is much reduced
-      */
-      return this.isWeapon() || this.isArmor() || this.isRing();
-    },
+    // making walls/empty bold screws up horizontal spacing
+    //return hack_items ? `${hack_objnamelist[this.id]}` : `${this.char}`;
+  },
 
 
-    // we can wield more things than we show during wield inventory check
-    // this is what we show during an inventory check while wielding
-    isWeapon: function() {
-      var weapon = false;
-      weapon |= this.matches(OSHIELD);
-      weapon |= this.matches(ODAGGER);
-      weapon |= this.matches(OSPEAR);
-      weapon |= this.matches(OFLAIL);
-      weapon |= this.matches(OBATTLEAXE);
-      weapon |= this.matches(OLONGSWORD);
-      weapon |= this.matches(O2SWORD);
-      weapon |= this.matches(OSWORD);
-      weapon |= this.matches(OLANCE);
-      weapon |= this.matches(OSWORDofSLASHING);
-      weapon |= this.matches(OHAMMER);
-      weapon |= this.matches(OBELT);
-      weapon |= this.matches(OVORPAL);
-      weapon |= this.matches(OSLAYER);
-      weapon |= this.matches(OPSTAFF);
-      return weapon;
-    },
 
-    isArmor: function() {
-      var armor = false;
-      armor |= this.matches(OSHIELD);
-      armor |= this.matches(OLEATHER);
-      armor |= this.matches(OSTUDLEATHER);
-      armor |= this.matches(ORING);
-      armor |= this.matches(OCHAIN);
-      armor |= this.matches(OSPLINT);
-      armor |= this.matches(OPLATE);
-      armor |= this.matches(OPLATEARMOR);
-      armor |= this.matches(OSSPLATE);
-      armor |= this.matches(OELVENCHAIN);
-      return armor;
-    },
-
-    isGem: function() {
-      var gem = false;
-      gem |= this.matches(ODIAMOND);
-      gem |= this.matches(ORUBY);
-      gem |= this.matches(OEMERALD);
-      gem |= this.matches(OSAPPHIRE);
-      return gem;
-    },
-
-    isRing: function() {
-      var ring = false;
-      ring |= this.matches(ORINGOFEXTRA);
-      ring |= this.matches(ODEXRING);
-      ring |= this.matches(ODAMRING);
-      ring |= this.matches(OREGENRING);
-      ring |= this.matches(OSTRRING);
-      ring |= this.matches(OPROTRING);
-      ring |= this.matches(OCLEVERRING);
-      ring |= this.matches(OENERGYRING);
-      return ring;
-    },
-
-    isStore: function() {
-      var store = false;
-      store |= this.matches(OENTRANCE);
-      store |= this.matches(OBANK);
-      store |= this.matches(OBANK2);
-      store |= this.matches(OLRS);
-      store |= this.matches(OHOME);
-      store |= this.matches(ODNDSTORE);
-      store |= this.matches(OVOLUP);
-      store |= this.matches(OVOLDOWN);
-      store |= this.matches(OSCHOOL);
-      store |= this.matches(OTRADEPOST);
-      store |= this.matches(OPAD);
-      return store;
-    },
-
-    getSortCode: function() {
-      var invcode = this.inv ? this.inv : 0;
-      var sortcode = (sortorder.indexOf(this.id) + 1) * 10000 + invcode;
-
-      // sort unknown scrolls and potions above known
-      // sort unknown scrolls and potions in inventory order
-      // sort known scrolls and potions in inventory order
-      if (isKnownScroll(this) || isKnownPotion(this)) {
-        sortcode += (this.arg + 1) * 100;
-      }
-
-      return sortcode;
+  matches: function (item, exact) {
+    if (item == null) {
+      //debug(`object.matches() null item`);
+      return false;
     }
 
+    let isMatch = this.id == item.id;
+    if (exact) isMatch &= this.arg == item.arg;
 
-  } // ITEM OBJECT
+    return isMatch;
+  },
+
+
+
+  toString: function (inStore, showAll, tempPlayer) {
+    var description = this.desc;
+    //
+    if (this.matches(OPOTION)) {
+      if (tempPlayer && !isKnownPotion(this, tempPlayer) && showAll) {
+        description += ` (of ${POTION_NAMES[this.arg]})`; // special case for scoreboard
+      } else if (isKnownPotion(this) || inStore || showAll) {
+        description += ` of ${POTION_NAMES[this.arg]}`;
+      }
+    }
+    //
+    else if (this.matches(OSCROLL)) {
+      if (tempPlayer && !isKnownScroll(this, tempPlayer) && showAll) {
+        description += ` (of ${SCROLL_NAMES[this.arg]})`; // special case for scoreboard
+      } else if (isKnownScroll(this) || inStore || showAll) {
+        description += ` of ` + SCROLL_NAMES[this.arg];
+      }
+    }
+    //
+    else if (this.matches(OOPENDOOR) ||
+      this.matches(OCLOSEDDOOR) ||
+      this.matches(OTHRONE) ||
+      this.matches(ODEADTHRONE) ||
+      this.matches(OBOOK) ||
+      this.matches(OCHEST) ||
+      this.matches(OAMULET) ||
+      (this.isRing() && inStore && !showAll) ||
+      this.isGem()) {
+      // do nothing
+    }
+    //
+    else {
+      if (this.arg > 0) {
+        description += ` +` + this.arg;
+      } else if (this.arg < 0) {
+        description += ` ` + this.arg;
+      }
+    }
+    if (!tempPlayer) tempPlayer = player;
+    if ((this === tempPlayer.WEAR || this === tempPlayer.SHIELD) && !inStore) {
+      description += ` (being worn)`
+    }
+    if (this === tempPlayer.WIELD && !inStore) {
+      description += ` (weapon in hand)`
+    }
+    return description;
+  },
+
+  // we can wield more things than we show during wield inventory check
+  // this is everything that a player can actually wield
+  canWield: function () {
+    /*
+    v12.4.5 - this list is much reduced
+    */
+    return this.isWeapon() || this.isArmor() || this.isRing();
+  },
+
+
+
+  // we can wield more things than we show during wield inventory check
+  // this is what we show during an inventory check while wielding
+  isWeapon: function () {
+    var weapon = false;
+    weapon |= this.matches(OSHIELD);
+    weapon |= this.matches(ODAGGER);
+    weapon |= this.matches(OSPEAR);
+    weapon |= this.matches(OFLAIL);
+    weapon |= this.matches(OBATTLEAXE);
+    weapon |= this.matches(OLONGSWORD);
+    weapon |= this.matches(O2SWORD);
+    weapon |= this.matches(OSWORD);
+    weapon |= this.matches(OLANCE);
+    weapon |= this.matches(OSWORDofSLASHING);
+    weapon |= this.matches(OHAMMER);
+    weapon |= this.matches(OBELT);
+    weapon |= this.matches(OVORPAL);
+    weapon |= this.matches(OSLAYER);
+    weapon |= this.matches(OPSTAFF);
+    return weapon;
+  },
+
+
+
+  isArmor: function () {
+    var armor = false;
+    armor |= this.matches(OSHIELD);
+    armor |= this.matches(OLEATHER);
+    armor |= this.matches(OSTUDLEATHER);
+    armor |= this.matches(ORING);
+    armor |= this.matches(OCHAIN);
+    armor |= this.matches(OSPLINT);
+    armor |= this.matches(OPLATE);
+    armor |= this.matches(OPLATEARMOR);
+    armor |= this.matches(OSSPLATE);
+    armor |= this.matches(OELVENCHAIN);
+    return armor;
+  },
+
+
+
+  isGem: function () {
+    var gem = false;
+    gem |= this.matches(ODIAMOND);
+    gem |= this.matches(ORUBY);
+    gem |= this.matches(OEMERALD);
+    gem |= this.matches(OSAPPHIRE);
+    return gem;
+  },
+
+
+
+  isRing: function () {
+    var ring = false;
+    ring |= this.matches(ORINGOFEXTRA);
+    ring |= this.matches(ODEXRING);
+    ring |= this.matches(ODAMRING);
+    ring |= this.matches(OREGENRING);
+    ring |= this.matches(OSTRRING);
+    ring |= this.matches(OPROTRING);
+    ring |= this.matches(OCLEVERRING);
+    ring |= this.matches(OENERGYRING);
+    return ring;
+  },
+
+
+
+  isStore: function () {
+    var store = false;
+    store |= this.matches(OENTRANCE);
+    store |= this.matches(OBANK);
+    store |= this.matches(OBANK2);
+    store |= this.matches(OLRS);
+    store |= this.matches(OHOME);
+    store |= this.matches(ODNDSTORE);
+    store |= this.matches(OVOLUP);
+    store |= this.matches(OVOLDOWN);
+    store |= this.matches(OSCHOOL);
+    store |= this.matches(OTRADEPOST);
+    store |= this.matches(OPAD);
+    return store;
+  },
+
+
+
+  getSortCode: function () {
+    var invcode = this.inv ? this.inv : 0;
+    var sortcode = (sortorder.indexOf(this.id) + 1) * 10000 + invcode;
+
+    // sort unknown scrolls and potions above known
+    // sort unknown scrolls and potions in inventory order
+    // sort known scrolls and potions in inventory order
+    if (isKnownScroll(this) || isKnownPotion(this)) {
+      sortcode += (this.arg + 1) * 100;
+    }
+
+    return sortcode;
+  }
+
+
+} // ITEM OBJECT
 
 
 
@@ -392,6 +411,7 @@ function itemAt(x, y) {
 }
 
 
+
 function setItem(x, y, item) {
   if (x == null || y == null) {
     return null;
@@ -405,6 +425,7 @@ function setItem(x, y, item) {
   player.level.items[x][y] = item;
   return item;
 }
+
 
 
 function isItemAt(x, y) {
@@ -492,11 +513,13 @@ function lookforobject(do_ident, do_pickup, do_action) {
   else if (item.matches(ODEADFOUNTAIN)) {
     if (nearbymonst()) return;
     if (do_ident) updateLog(`There is a dead fountain here`);
-  }
+  } 
+  //
   else if (ULARN && item.matches(OOPENDOOR)) {
     if (nearbymonst()) return;
     if (do_ident) updateLog(`There is an open door here.`);
-  }
+  } 
+  //
   else if (item.matches(ODNDSTORE)) {
     if (nearbymonst()) return;
     if (do_ident) updateLog(`There is a DND store here`, formatHint('e', 'to go inside'));
@@ -583,7 +606,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if ((level == DBOTTOM) || (level == VBOTTOM)) {
       var trapMessage = ``;
       if (ULARN) trapMessage = `leading straight to HELL`;
-       updateLog(`You fell through a bottomless trap door ${trapMessage}!`);
+      updateLog(`You fell through a bottomless trap door ${trapMessage}!`);
       //nap(2000);
       died(DIED_BOTTOMLESS_TRAPDOOR, false); /* fell through a bottomless trap door */
     }
@@ -599,60 +622,67 @@ function lookforobject(do_ident, do_pickup, do_action) {
   else if (item.matches(OANNIHILATION)) {
     if (isCarrying(OSPHTALISMAN)) {
       updateLog(`The Talisman of the Sphere protects you from annihilation!`);
-    }
-    else {
+    } else {
       updateLog(`You have been enveloped by the zone of nothingness!`);
       died(DIED_ANNIHILATED, false); /* annihilated in a sphere */
       return;
     }
   }
-
+  //
   else if (item.matches(OSTAIRSUP) || item.matches(OVOLUP)) {
     let stairMessage = `You have found ${item}`;
     if (ULARN) stairMessage = `There is a circular staircase here`;
     if (do_ident) updateLog(stairMessage, formatHint('<', 'go up'));
-  }
+  } 
+  //
   else if (item.matches(OSTAIRSDOWN) || item.matches(OVOLDOWN)) {
     let stairMessage = `You have found ${item}`;
     if (ULARN) stairMessage = `There is a circular staircase here`;
     if (do_ident) updateLog(stairMessage, formatHint('>', 'go down'));
-  }
-
+  } 
+  //
   else if (item.matches(OELEVATORUP)) {
     updateLog(`You have found ${item}`);
     oelevator(1);
-  }
+  } 
+  //
   else if (item.matches(OELEVATORDOWN)) {
     updateLog(`You have found ${item}`);
     oelevator(-1);
-  }
+  } 
+  //
   else if (item.matches(OBRASSLAMP)) {
     updateLog(`You find ${item}. [<b>R</b> to rub]`);
-  }
-
+  } 
+  //
   else if (item.matches(OPOTION)) {
     if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'q', 'to quaff'));
-  }
+  } 
+  //
   else if (item.matches(OSCROLL) || item.matches(OBOOK)) {
     if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'r', 'to read'));
-  }
+  } 
+  //
   else if (item.isArmor()) {
     if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'W', 'to wear'));
-  }
+  } 
+  //
   else if (item.isWeapon()) {
     if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'w', 'to wield'));
-  }
+  } 
+  //
   else if (item.matches(OCHEST)) {
     if (do_ident) updateLog(`There is a chest here`, formatHint('t', 'to take', 'o', 'to open'));
-  }
+  } 
+  //
   else if (item.matches(OCOOKIE)) {
     if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'E', 'to eat'));
-  }
+  } 
+  //
   else if (item.carry) {
     if (ULARN) {
       if (do_ident) updateLog(`You find ${item}.`, formatHint('t', 'to take'));
-    }
-    else {
+    } else {
       if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take'));
     }
   }
@@ -662,8 +692,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
     if (do_ident && !item.matches(OWALL)) {
       if (ULARN) {
         updateLog(`You find ${item}.`);
-      }
-      else {
+      } else {
         updateLog(`You have found ${item}`);
       }
     }
@@ -763,7 +792,7 @@ function oelevator(direction) {
       updateLog(`  and it leads straight to HELL!`);
       beep();
       //nap(3000);
-      died(DIED_BOTTOMLESS_ELEVATOR);
+      died(DIED_BOTTOMLESS_ELEVATOR, false);
       return;
     }
     player.x = rnd(MAXX - 2);
@@ -803,8 +832,7 @@ function oteleport(err) {
       if (player.WTW == 0) {
         updateLog(`You are trapped in solid rock!`)
         died(DIED_SOLID_ROCK, false); /* trapped in solid rock */
-      }
-      else {
+      } else {
         updateLog(`You feel lucky!`)
       }
     }
@@ -863,8 +891,7 @@ function readbook(book) {
   if (lev <= 3) {
     spell = splev[lev];
     spellIndex = rund((spell) ? spell : 1);
-  }
-  else {
+  } else {
     spell = splev[lev] - 9;
     spellIndex = rnd((spell) ? spell : 1) + 9;
   }
