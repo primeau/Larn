@@ -366,9 +366,10 @@ function parse(key) {
     nomove = 1;
     var larnString = ULARN ? `The Addiction of JS Ularn` : `JS Larn`;
     updateLog(`${larnString}, Version ${VERSION} Build ${BUILD}`);
-    updateLog(`  ${logname}, Difficulty ${getDifficulty()}`);
+    updateLog(`  ${logname}`);
     if (ULARN) appendLog(`, ${player.char_picked}`);
     if (ULARN) appendLog(`, ${player.gender}`); 
+    appendLog(`, Difficulty ${getDifficulty()}`); 
     if (debug_used) updateLog(`  Debug`);
     if (wizard) updateLog(`  Wizard`);
     if (cheat) updateLog(`  Cheater`);

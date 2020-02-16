@@ -609,6 +609,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
       updateLog(`You fell through a bottomless trap door ${trapMessage}!`);
       //nap(2000);
       died(DIED_BOTTOMLESS_TRAPDOOR, false); /* fell through a bottomless trap door */
+      return;
     }
     var dmg = rnd(5 + level);
     updateLog(`You fall through a trap door!  You lose ${dmg} hit points`);
@@ -832,6 +833,7 @@ function oteleport(err) {
       if (player.WTW == 0) {
         updateLog(`You are trapped in solid rock!`)
         died(DIED_SOLID_ROCK, false); /* trapped in solid rock */
+        return;
       } else {
         updateLog(`You feel lucky!`)
       }
