@@ -70,7 +70,7 @@ var w1x;
 var w1y;
 var spheres = [];
 var auto_pickup = false;
-var side_inventory = true;
+var side_inventory = false;
 
 
 

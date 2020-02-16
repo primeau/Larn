@@ -105,8 +105,9 @@ function setname(name) {
     setDifficulty(0);
   }
 
+  player = new Player(); /* gender and character class are set later on */
+
   if (no_intro) {
-    player = new Player();
     startgame(getDifficulty());
     return 1;
   }
@@ -114,11 +115,12 @@ function setname(name) {
   if (winner) {
     // force difficulty to be one harder
     setDifficulty(getDifficulty() + 1);
+    clearBlinkingCursor();
     readmail();
     // clear the mail flag
     localStorageRemoveItem(logname);
+    return 1;
   } else if (savegame || checkpoint) {
-    player = new Player();
     if (savegame) {
       loadSavedGame(saveddata, false);
     } else {
@@ -208,7 +210,7 @@ makeplayer()
 subroutine to create the player and the players attributes
 this is called at the beginning of a game and at no other time
 */
-function makeplayer() {
+  function makeplayer() {
 
   /* much of this work has been moved elsewhere */
   // player = new Player();
@@ -231,7 +233,7 @@ function makeplayer() {
     eventToggleDebugAwareness();
     // player.updateStealth(100000);
     // keyboard_hints = true;
-    wizardmode(`pvnert(x)`);
+    // wizardmode(`pvnert(x)`);
     // //player.GOLD = 1000000;
 
     // var startShield = createObject(OSHIELD);
@@ -336,8 +338,6 @@ function setdiff(hard) {
     setGameDifficulty(hard);
   }
 
-  player = new Player();
-
   if (ULARN) {
     clear();
     lprcat(`The Addiction of Ularn\n\n`);
@@ -369,7 +369,6 @@ function setdiff(hard) {
 
 function setclass(classpick) {
 
-  console.log(`classpick: ${classpick}`);
   let characterClass;
 
   if (classpick === `a` || classpick === `Ogre`) {
@@ -394,13 +393,63 @@ function setclass(classpick) {
 
   if (characterClass) {
     player.setCharacterClass(characterClass);
-    localStorageSetObject('character_class', characterClass);
+    recalc();
+    changedWC = 0; // don't highlight AC & WC on game start
+    changedAC = 0;
+
+    if (ULARN) {
+      localStorageSetObject('character_class', characterClass);
+      clear();
+      lprcat(`The Addiction of Ularn\n\n`);
+      lprcat(`\tPick a gender...\n\n`);
+      lprcat(`\ta)  Male\n`);
+      lprcat(`\tb)  Female\n`);
+      lprcat(`\tc)  I prefer to not be defined by traditional gender norms\n`);
+      cursors();
+
+      player.gender = localStorageGetObject('gender') || 'Male';
+
+      lprcat(`So, what are ya? [<b>${player.gender}</b>]:`);
+      lflush();
+      blinken(player.gender.length + 23, 24);
+      setCharCallback(setgender);
+    } else {
+      setgender(`Male`);
+      return true;
+    }
+  } else {
+    return false;
+  }
+}
+
+
+
+function setgender(genderpick) {
+
+  let gender;
+
+  if (genderpick === `a` || genderpick === `Male`) {
+    gender = `Male`;
+  } else if (genderpick === `b` || genderpick === `Female`) {
+    gender = `Female`;
+  } else if (genderpick === `c` || genderpick === `Other`) {
+    gender = `Other`;
+  } else if (genderpick === ENTER) {
+    gender = player.gender; /* default to the one set from local storage */
+  }
+
+  if (gender) {
+    player.setGender(gender);
+    if (ULARN) {
+      localStorageSetObject('gender', gender);
+    }
     startgame(getDifficulty());
     clearBlinkingCursor();
     return true;
   } else {
     return false;
   }
+
 }
 
 
@@ -429,6 +478,7 @@ function startgame(hard) {
 
   GAMEOVER = false;
   setMazeMode(true);
+  side_inventory = true;
 
   // wizardmode(`pvnert(x)`);
 

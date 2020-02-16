@@ -368,6 +368,7 @@ function parse(key) {
     updateLog(`${larnString}, Version ${VERSION} Build ${BUILD}`);
     updateLog(`  ${logname}, Difficulty ${getDifficulty()}`);
     if (ULARN) appendLog(`, ${player.char_picked}`);
+    if (ULARN) appendLog(`, ${player.gender}`); 
     if (debug_used) updateLog(`  Debug`);
     if (wizard) updateLog(`  Wizard`);
     if (cheat) updateLog(`  Cheater`);

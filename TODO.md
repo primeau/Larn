@@ -3,15 +3,9 @@ If you're only after flex-grow, use the property directly rather than through th
 
 ULARN:
 - SUPPORT FOR OLDER BROWSERS
-- gender selection
-- character class selection
-  - Who are you?
-  - Pick a character class...
-  - So, what are ya?
 - scoreboard
 - Dealer McDopes
 - OHANDofFEAR
-- bill.c
 - update README.spoilers doc
 - can you get back stolen items? YES -> int stealsomething()
   -- give all monsters inventory
@@ -23,6 +17,7 @@ ULARN:
 - monster.canfly, hashead?
 - mimic
 - amiga icons: magic items, demons & lucifer, elevator
+- replace "." objects with larger dots
 - eye of larn appraisal in bank
 - need to redo all movement code to make hand of fear / scare monsters work
 - async/await for keyboard input?
@@ -34,6 +29,7 @@ ULARN:
 - player.raiseexperience (x)
 check
 - movemonst.c
+- make sure gender seletion works for winning/losing conditions on scoreboard
 
 
 
@@ -54,9 +50,13 @@ todo:
 - Save id to name and name to id map
 - update history
 - beep()
-- help files (items/scrolls/potions/features/monsters/etc)
+- help wiki (items/scrolls/potions/features/monsters/etc)
 - most referenced to player.level should be replaced with functions
 - what happens with haste self and haste monster at the same time?
+- allow hitting escape while naps are happening (interrupt settimeout?)
+- store local games with gameid
+
+
 
 bugs:
 * lots of monsters walking through wall. is there a problem with movesmart()?

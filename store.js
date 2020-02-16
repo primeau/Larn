@@ -920,8 +920,8 @@ async function ohome() {
     if (ULARN) {
       lprint(`However... the doctor has the sad duty to inform you that your daughter\n`);
       lprint(`has died! You didn't make it in time. In your agony, you kill the doctor,\nyour `);
-      if (player.gender == MALE) lprcat(`wife`);
-      else if (player.gender == FEMALE) lprcat(`husband`);
+      if (player.gender === `Male`) lprcat(`wife`);
+      else if (player.gender == `Female`) lprcat(`husband`);
       else lprcat(`partner`);
       lprint(` and yourself! Too bad...\n\n`);
     } else {
@@ -958,8 +958,8 @@ async function ohome() {
     if (ULARN) {
       lprint(`The doctor has the sad duty to inform you that your daughter has died!\n`);
       lprint(`You didn't make it in time. In your agony, you kill the doctor, your\n`);
-      if (player.gender == MALE) lprcat(`wife`);
-      else if (player.gender == FEMALE) lprcat(`husband`);
+      if (player.gender == `Male`) lprcat(`wife`);
+      else if (player.gender == `Female`) lprcat(`husband`);
       else lprcat(`partner`);
       lprint(` and yourself! Too bad...\n\n`);
     } else {
@@ -1003,7 +1003,7 @@ async function win(key) {
   lprintf(`Congratulations!\n\n`);
   await nap(2000);
   napping = false;
-  died(263, false); /* a winner! */
+  died(DIED_WINNER, false); /* a winner! */
   return 1;
 }
 
