@@ -64,6 +64,7 @@ function newsphere(x, y, dir, life, lev) {
       rmsphere(x, y); /* remove any spheres that are here */
       //nap(2000);
       died(DIED_ANNIHILATED_SELF, false); /* self - annihilated */
+      return;
     }
   }
 

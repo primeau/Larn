@@ -61,8 +61,6 @@ todo:
 bugs:
 * lots of monsters walking through wall. is there a problem with movesmart()?
 * HAS + PER bug slow monsters (H,x,r,etc) move every moves, or totally paralyzed?
-* fall through bottomless trap door on E15 drops you into V1
-- casting SPH against an outer wall kills the player 3 times. that seems excessive
 - closing a door (from on top of the door) when a monster is in the spot you were
   just in drops you back on the monsters spot. the monster reappears when you move.
 - can't load game stats from local scoreboard (can't find game sdkjfhsdfkj)
