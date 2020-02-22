@@ -1,18 +1,22 @@
 'use strict';
 
 
-var highestScore;
+var winnerHardlev;
+var winnerLetterGender = 'Male';
 
-/*
-BUG: if a player wins at a lower/same difficulty, with a lower
-score, this will indicate more taxes are due. On the other hand,
-taxes don't need to be paid, so I'm ignoring it.
-*/
 function readmail() {
-  var scores = localStorageGetObject('winners', []).sort(sortScore);
-  highestScore = getHighScore(scores, logname);
   var gold = 0;
-  if (highestScore) gold = highestScore.score;
+  winnerHardlev = 0;
+  try {
+    var winner = localStorageGetObject(logname);
+    if (winner) {
+      winnerLetterGender = winner.gender;
+      gold = winner.score;
+      winnerHardlev = winner.hardlev + 1;
+    }      
+  } catch (error) {
+    console.error(`readmail: caught ${error}`);
+  }
   letter1(gold);
 }
 
@@ -52,8 +56,8 @@ function letter1(gold) {
 function letter2(key) {
 
   let letter2title = `Champion`;
-  if (getLetterGender() === `Male`) letter2title = `Knight`;
-  if (getLetterGender() === `Female`) letter2title = `Lady`;
+  if (winnerLetterGender === `Male`) letter2title = `Knight`;
+  if (winnerLetterGender === `Female`) letter2title = `Lady`;
 
   if (key != ' ') return 0;
 
@@ -83,8 +87,8 @@ function letter2(key) {
 function letter3(key) {
 
   let letter3insult = `Jerk`;
-  if (getLetterGender() === `Male`) letter3insult = `Bastard`;
-  if (getLetterGender() === `Female`) letter3insult = `Bitch`;
+  if (winnerLetterGender === `Male`) letter3insult = `Bastard`;
+  if (winnerLetterGender === `Female`) letter3insult = `Bitch`;
 
   if (key != ' ') return 0;
 
@@ -139,8 +143,8 @@ function letter4(key) {
 function letter5(key) {
 
   let letter5plea = `person's`;
-  if (getLetterGender() === `Male`) letter5plea = `man's`;
-  if (getLetterGender() === `Female`) letter5plea = `woman's`;
+  if (winnerLetterGender === `Male`) letter5plea = `man's`;
+  if (winnerLetterGender === `Female`) letter5plea = `woman's`;
 
   if (key != ' ') return 0;
 
@@ -203,12 +207,4 @@ function letter6(key) {
   }
 
   return (1);
-}
-
-
-
-function getLetterGender() {
-  var gender = localStorageGetObject('gender') || 'Male';
-  if (!ULARN) gender = `Male`;
-  return gender;
 }

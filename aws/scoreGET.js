@@ -1,4 +1,4 @@
-module.exports.scoreGET = async(dynamo, gameID, event, context) => {
+module.exports.scoreGET = async(dynamo, gameID, isUlarn, event, context) => {
 
     const params = {
         Key: {
@@ -6,6 +6,8 @@ module.exports.scoreGET = async(dynamo, gameID, event, context) => {
         },
         TableName: "games"
     };
+
+    if (isUlarn) params.TableName = `ularn_${params.TableName}`;
 
     try {
         console.log(`scoreGET: attempting to load game: ${gameID}\n`);

@@ -1,7 +1,7 @@
-module.exports.scoreboardGET = async(dynamo, event, context) => {
+module.exports.scoreboardGET = async(dynamo, isUlarn, event, context) => {
 
-    var winners = await this.scoreboard(dynamo, true);
-    var visitors = await this.scoreboard(dynamo, false);
+    var winners = await this.scoreboard(dynamo, true, isUlarn);
+    var visitors = await this.scoreboard(dynamo, false, isUlarn);
 
     if (winners.statusCode == 200 && visitors.statusCode == 200) {
         return {
@@ -19,12 +19,14 @@ module.exports.scoreboardGET = async(dynamo, event, context) => {
 
 
 
-module.exports.scoreboard = async(dynamo, winner, event, context) => {
+module.exports.scoreboard = async(dynamo, winner, isUlarn, event, context) => {
 
     const params = {
         ReturnConsumedCapacity: 'TOTAL',
         TableName: winner ? 'winners' : 'visitors'
     };
+
+    if (isUlarn) params.TableName = `ularn_${params.TableName}`;
 
     console.log(`scoreboardGET: getting ${params.TableName}\n`);
 

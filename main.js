@@ -82,10 +82,11 @@ function setname(name) {
   var winner = false;
   var savegame = false;
 
-  /* if saveddata == winner, player won last time around */
+  /* if saveddata.winner == true or saveddata == 'winner', player won last time around */
   /* otherwise if saveddata exits, it's the save game file */
   if (saveddata != null) {
-    winner = saveddata == `winner`;
+    winner = saveddata.winner;
+    if (winner == null) winner = (saveddata == `winner`); /* backwards compatibility */
     savegame = !winner;
   }
   /* check for a checkpoint file */
@@ -100,11 +101,6 @@ function setname(name) {
   var diff = Number(localStorageGetObject('difficulty') || 0);
   setDifficulty(diff);
 
-  if (getDifficulty() == null || getDifficulty() == `` || isNaN(Number(getDifficulty()))) {
-    // console.log(`HARDGAME == ${getDifficulty()}, setting to 0`);
-    setDifficulty(0);
-  }
-
   player = new Player(); /* gender and character class are set later on */
 
   if (no_intro) {
@@ -113,12 +109,9 @@ function setname(name) {
   }
 
   if (winner) {
-    // force difficulty to be one harder
-    setDifficulty(getDifficulty() + 1);
     clearBlinkingCursor();
     readmail();
-    // clear the mail flag
-    localStorageRemoveItem(logname);
+    localStorageRemoveItem(logname); /* clear the mail flag */
     return 1;
   } else if (savegame || checkpoint) {
     if (savegame) {
@@ -221,62 +214,6 @@ this is called at the beginning of a game and at no other time
   player.x = rnd(MAXX - 2);
   player.y = rnd(MAXY - 2);
 
-  var DEVMODE = false;
-  if (DEVMODE) {
-    enableDebug();
-    eventToggleDebugWTW();
-    eventToggleDebugStairs();
-    eventToggleDebugOutput();
-    eventToggleDebugKnowAll();
-    eventToggleDebugStats();
-    eventToggleDebugImmortal();
-    eventToggleDebugAwareness();
-    // player.updateStealth(100000);
-    // keyboard_hints = true;
-    // wizardmode(`pvnert(x)`);
-    // //player.GOLD = 1000000;
-
-    // var startShield = createObject(OSHIELD);
-    // take(startShield);
-    take(createObject(OLARNEYE));
-    take(createObject(ONOTHEFT));
-    take(createObject(OSPHTALISMAN));
-    // var startDagger = createObject(ODAGGER, -9);
-    // var startSlayer = createObject(OSLAYER);
-    // var startVorpy = createObject(OVORPAL);
-    // take(startDagger);
-    // take(startSlayer);
-    // take(startVorpy);
-    // player.WIELD = startVorpy;
-    // player.SHIELD = startShield;
-    // take(createObject(OPOTION, 21));
-    // take(createObject(OBRASSLAMP));
-    // gtime = 0;
-
-    // auto_pickup = true;
-
-    // // for (var i = 2; i < 26; i+=2) {
-    // //   take(createObject(OSCROLL, rnd(5)));
-    // //   take(createObject(OPOTION, rnd(5)));
-    // // }
-    // // player.updateHoldMonst(100000);
-    // player.updateStealth(100000);
-    // // player.updateAltPro(100000);
-    // // player.updateTimeStop(10);
-    // // player.updateGiantStr(100000);
-    // // player.updateDexCount(100000);
-    // // player.updateUndeadPro(100000);
-    // // player.updateStrCount(100000);
-    // // player.updateSpiritPro(100000);
-    // // player.updateCharmCount(100000);
-    // // player.updateHasteSelf(100000);
-    // // player.updateProtectionTime(100000);
-    // // player.updateCancellation(100000);
-    // // player.updateScareMonst(100000);
-    // // player.updateInvisibility(100000);
-    // // player.updateFireResistance(100000);
-  }
-
   recalc();
   changedWC = 0; // don't highlight AC & WC on game start
   changedAC = 0;
@@ -330,9 +267,10 @@ function setdiff(hard) {
   // clear the blinking cursor after setting difficulty
   clearBlinkingCursor();
 
-  if (highestScore) {
+  /* force difficulty to be one harder */
+  if (winnerHardlev) {
     /* these are very ambiguous method names -- sorry. */
-    setDifficulty(highestScore.hardlev + 1);
+    setDifficulty(winnerHardlev);
     setGameDifficulty(getDifficulty());
   } else {
     setGameDifficulty(hard);
@@ -480,11 +418,67 @@ function startgame(hard) {
   setMazeMode(true);
   side_inventory = true;
 
-  // wizardmode(`pvnert(x)`);
+  //DEVMODE();
 
   return 1;
 }
 
+
+
+function DEVMODE() {
+    // enableDebug();
+    // eventToggleDebugWTW();
+    // eventToggleDebugStairs();
+    // eventToggleDebugOutput();
+    // eventToggleDebugKnowAll();
+    // eventToggleDebugStats();
+    // eventToggleDebugImmortal();
+    // eventToggleDebugAwareness();
+    // player.updateStealth(100000);
+    // keyboard_hints = true;
+    // wizardmode(`pvnert(x)`);
+    player.GOLD = 1000001;
+
+    // var startShield = createObject(OSHIELD);
+    // take(startShield);
+    take(createObject(OLARNEYE));
+    take(createObject(ONOTHEFT));
+    take(createObject(OSPHTALISMAN));
+    // var startDagger = createObject(ODAGGER, -9);
+    // var startSlayer = createObject(OSLAYER);
+    // var startVorpy = createObject(OVORPAL);
+    // take(startDagger);
+    // take(startSlayer);
+    // take(startVorpy);
+    // player.WIELD = startVorpy;
+    // player.SHIELD = startShield;
+    take(createObject(OPOTION, 21));
+    // take(createObject(OBRASSLAMP));
+    // gtime = 0;
+
+    // auto_pickup = true;
+
+    // // for (var i = 2; i < 26; i+=2) {
+    // //   take(createObject(OSCROLL, rnd(5)));
+    // //   take(createObject(OPOTION, rnd(5)));
+    // // }
+    // // player.updateHoldMonst(100000);
+    // player.updateStealth(100000);
+    // // player.updateAltPro(100000);
+    // // player.updateTimeStop(10);
+    // // player.updateGiantStr(100000);
+    // // player.updateDexCount(100000);
+    // // player.updateUndeadPro(100000);
+    // // player.updateStrCount(100000);
+    // // player.updateSpiritPro(100000);
+    // // player.updateCharmCount(100000);
+    // // player.updateHasteSelf(100000);
+    // // player.updateProtectionTime(100000);
+    // // player.updateCancellation(100000);
+    // // player.updateScareMonst(100000);
+    // // player.updateInvisibility(100000);
+    // // player.updateFireResistance(100000);
+}
 
 
 function setAmigaMode() {

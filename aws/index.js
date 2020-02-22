@@ -16,6 +16,11 @@ exports.handler = async(event) => {
     // PARSE GAMEID
     //
     var gameID = parseGameID(event);
+
+    //
+    // PARSE IF ULARN
+    //
+    let ULARN = isUlarn(event);
     
     //
     // RUN TEST
@@ -30,7 +35,7 @@ exports.handler = async(event) => {
     //
     if (event.newScore) {
         console.log(`INDEX: writing new game ${event.newScore.gameID}\n`);
-        return dbWriter.scorePUT(dynamo, event.newScore);
+        return dbWriter.scorePUT(dynamo, event.newScore, ULARN);
     }
 
     //
@@ -38,7 +43,7 @@ exports.handler = async(event) => {
     //
     if (gameID == 'board') {
         console.log(`INDEX: getting scoreboard\n`);
-        return scoreboardReader.scoreboardGET(dynamo);
+        return scoreboardReader.scoreboardGET(dynamo, ULARN);
     }
 
     //
@@ -46,7 +51,7 @@ exports.handler = async(event) => {
     //
     if (gameID) {
         console.log(`INDEX: loading game: ${gameID}\n`);
-        return gameReader.scoreGET(dynamo, gameID);
+        return gameReader.scoreGET(dynamo, gameID, ULARN);
     }
 
 };
@@ -70,4 +75,12 @@ function parseGameID(event) {
     }
     console.log(`INDEX:   end with gameID: ${gameID}\n`);
     return gameID;
+}
+
+
+
+function isUlarn(event) {
+    var gamename = event.gamename;
+    console.log(`INDEX: gamename: ${gamename}\n`);
+    return gamename && gamename === `Ularn`;
 }

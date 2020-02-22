@@ -11,11 +11,12 @@ const EXTRA_GTIME = 3;
 
 var LocalScore = function() {
   this.createdAt = Date.now();
-  var isWinner = lastmonst == DIED_WINNER;
-  var winBonus = isWinner ? 100000 * getDifficulty() : 0;
+  this.winner = lastmonst == DIED_WINNER;
+  var winBonus = this.winner ? 100000 * getDifficulty() : 0;
   this.who = logname; /* the name of the character */
+  this.gender = player.gender; /* ularn gender */
+  this.character = player.char_picked; /* ularn character class */
   this.hardlev = getDifficulty(); /* the level of difficulty player played at */
-  this.winner = isWinner;
   this.score = player.GOLD + player.BANKACCOUNT + winBonus; /* the score of the player */
   this.timeused = Math.floor(gtime / 100); /* the time used in mobuls to win the game */
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
@@ -40,7 +41,7 @@ var LocalScore = function() {
   // START HACK -- we don't want to save the level
   var x = player.level;
   player.level = null;
-  this.player = JSON.stringify(player);
+  this.player = JSON.stringify(player); // ULARN TODO: WHY IS THIS STRINGIFIED???
   player.level = x;
   // END HACK -- we don't want to save the level
 
@@ -56,6 +57,8 @@ LocalScore.prototype.toString = function() {
 
 function getStatString(score, addDate) {
 
+  if (!score) return `no info`;
+
     var stats = ``;
 
     if (addDate) {
@@ -70,6 +73,7 @@ function getStatString(score, addDate) {
     }
 
     stats += `Player: ${score.who}\n`;
+    if (ULARN && score.character) stats += `Class:  ${score.character}\n`;
     stats += `Winner: ${score.winner ? 'Yes' : 'No'}\n`;
     stats += `Diff:   ${score.hardlev}\n`;
     stats += `Score:  ${score.score}\n`;
@@ -166,7 +170,8 @@ var scoreIndex = 0;
 const MAX_SCORES_PER_PAGE = 18;
 const MAX_SCORES_TO_READ = 18*4;
 const MIN_TIME_PLAYED = 50;
-
+const ENDPOINT = 'test'; // 'score';
+var ONLINE = true;
 
 
 function loadScores(newScore, showWinners, showLosers) {
@@ -189,12 +194,12 @@ function loadScores(newScore, showWinners, showLosers) {
 function dbQueryHighScores(newScore, showWinners, showLosers) {
 
     var params = {
-        FunctionName : 'score',
-        Payload: `{ "gameID" : "board" }`,
+        FunctionName: ENDPOINT,
+        Payload: `{ "gamename" : "${GAMENAME}", "gameID" : "board" }`,
         InvocationType : 'RequestResponse',
         LogType : 'None' // 'Tail' // 'None' // 
     };
-  
+      
     lambda.invoke(params, function(error, data) {
         var payload = data ? JSON.parse(data.Payload) : null;
         var status = payload ? payload.statusCode : 444;
@@ -209,11 +214,13 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
             losers = newData[1].slice(0, MAX_SCORES_TO_READ);
             console.log(`loaded visitors: ${losers.length}`);
 
+            ONLINE = true;
             showScores(newScore, false, showWinners, showLosers, 0);
         }
         else if (status == 404) {
           let stats = `Couldn't find global scoreboard, showing local scoreboard`;
-            showScores(newScore, true, showWinners, showLosers, 0);
+          ONLINE = false;
+          showScores(newScore, !ONLINE, showWinners, showLosers, 0);
             setDiv(`STATS`, stats);
         }
         else {
@@ -221,7 +228,8 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
             console.log(`lambda error: lambda status=${statuscode} larn status=${status}`);
             if (error) console.log(error, error.stack);
             let stats = `Error loading global scoreboard, showing local scoreboard`;
-            showScores(newScore, true, showWinners, showLosers, 0);
+            ONLINE = false;
+            showScores(newScore, !ONLINE, showWinners, showLosers, 0);
             setDiv(`STATS`, stats);
         }
     });	
@@ -256,16 +264,16 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
   clear();
 
   if (local) {
-    lprcat(`                   <b>${GAMENAME} Scoreboard</b> (Global scoreboard not available)\n`);
+    lprcat(`                    <b>${GAMENAME} Scoreboard</b> (Global scoreboard not available)\n`);
     winners = localStorageGetObject('winners', []);
     losers = localStorageGetObject('losers', []);
   } else {
     if (showWinners && !showLosers)
-      lprcat(`                    <b>Winners Scoreboard</b>\n`);
+      lprcat(`                  <b>${GAMENAME} Winners Scoreboard</b>\n`);
     else if (showLosers && !showWinners)
-      lprcat(`                    <b>Visitors Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
+      lprcat(`                  <b>${GAMENAME} Visitors Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
     else
-      lprcat(`                    <b>Global ${GAMENAME} Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
+      lprcat(`                  <b>${GAMENAME} Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
   }
 
   if (winners.length != 0 || losers.length != 0) {
@@ -291,11 +299,13 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
 
 function printWinnerScoreBoard(winners, newScore, offset) {
   var header = `\n     Score   Difficulty   Winner                    Time Needed\n`;
+  if (ULARN) header = `\n     Score  Diff  Winner                   Class       Time Needed\n`;
   // TODO duplication
   function printout(p) {
-    var scoreId = p.gameID || p.who;
-    var local = p.gameID == null; // FIXME p.gameID is never null now 
+    var scoreId = p.gameID;
+    var local = !ONLINE;
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${padString(p.who, -25)}${padString(`` + p.timeused, 5)} Mobuls`;
+    if (ULARN) score = `${padString(Number(p.score).toLocaleString(), 10)}  ${padString(``+p.hardlev, 4)}  ${padString(p.who, -23)}  ${padString(p.character, -10)}  ${padString(`` + p.timeused, 5)} Mobuls`;
     var endcode = GAMEOVER ? `<br>` : ``;
     lprc(`<a href='javascript:dbQueryLoadGame("${scoreId}", ${local}, true)'>${score}</a>${endcode}`);
     if (!GAMEOVER) lprc(`\n`);
@@ -307,11 +317,13 @@ function printWinnerScoreBoard(winners, newScore, offset) {
 
 function printLoserScoreBoard(losers, newScore, offset) {
   var header = (`\n     Score   Difficulty   Visitor                   Fate\n`);
+  if (ULARN) header = (`\n     Score  Diff  Visitor                  Class       Fate\n`);
   // TODO duplication
   function printout(p) {
-    var scoreId = p.gameID || p.who;
-    var local = p.gameID == null; // FIXME p.gameID is never null now 
+    var scoreId = p.gameID;
+    var local = !ONLINE;
     var score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${padString(p.who, -25)} ${p.what} on ${p.level}`;
+    if (ULARN) score = `${padString(Number(p.score).toLocaleString(), 10)}  ${padString(``+p.hardlev, 4)}  ${padString(p.who, -23)}  ${padString(p.character, -10)}  ${p.what} on ${p.level}`;
     var endcode = GAMEOVER ? `<br>` : ``;
     lprc(`<a href='javascript:dbQueryLoadGame("${scoreId}", ${local}, false)'>${score}</a>${endcode}`);
     if (!GAMEOVER) lprc(`\n`);
@@ -327,7 +339,7 @@ function printScoreBoard(board, newScore, header, printout, offset) {
 
     var scoreboard = board;
 
-    var isWinningScore = false;
+    var isWinningScore;
     var newScorePrinted = false;
 
     lprcat(header);
@@ -381,8 +393,8 @@ function dbQueryLoadGame(gameId, local, winner) {
     console.log(`loading game: ${gameId}`);
 
     var params = {
-        FunctionName: 'score',
-        Payload: `{ "gameID" : "${gameId}" }`,
+        FunctionName: ENDPOINT,
+        Payload: `{ "gamename" : "${GAMENAME}", "gameID" : "${gameId}" }`,
         InvocationType: 'RequestResponse',
         LogType: 'None' // 'Tail'
     };
@@ -391,6 +403,7 @@ function dbQueryLoadGame(gameId, local, winner) {
         var status = payload ? payload.statusCode : 666;
         var stats = ``;
         if (status == 200) {
+            ONLINE = true;
             var newData = JSON.parse(payload.body);
             stats = getStatString(newData, true);
         } else if (status == 404) {
@@ -431,19 +444,19 @@ function localWriteHighScore(newScore) {
     let winners = localStorageGetObject('winners', []);
     if (isHighestScoreForPlayer(winners, newScore)) {
       let scoreArrayIndex = getHighScoreIndex(winners, newScore.who);
-      console.log(`writing high score to winners scoreboard`);
+      console.log(`writing high score to local winners scoreboard`);
       winners[scoreArrayIndex] = newScore;
       localStorageSetObject('winners', winners);
     }
 
-    // always write trigger to show mail next time
-    localStorageSetObject(newScore.who, 'winner');
+    // trigger to show mail next time
+    localStorageSetObject(newScore.who, newScore);
 
   } else {
     let losers = localStorageGetObject('losers', []);
     if (isHighestScoreForPlayer(losers, newScore)) {
       let scoreArrayIndex = getHighScoreIndex(losers, newScore.who);
-      console.log(`writing high score to visitors scoreboard`);
+      console.log(`writing high score to local visitors scoreboard`);
       losers[scoreArrayIndex] = newScore;
       localStorageSetObject('losers', losers);
     }
@@ -456,8 +469,8 @@ function dbWriteHighScore(newScore) {
     console.log(`dbWriteHighScore: ${newScore.gameID}`);
 
     var params = {
-        FunctionName: 'score',
-        Payload: `{ "newScore" : ${JSON.stringify(newScore)} }`,
+        FunctionName: ENDPOINT,
+        Payload: `{ "gamename" : "${GAMENAME}", "newScore" : ${JSON.stringify(newScore)} }`,
         InvocationType: 'RequestResponse',
         LogType: 'None' // 'Tail'
     };
@@ -467,6 +480,7 @@ function dbWriteHighScore(newScore) {
             var payload = JSON.parse(data.Payload);
             var status = payload.statusCode;
             if (status == 200) {
+                ONLINE = true;
                 console.log(`dbWriteHighScore: success: ` + newScore.who + ` ` + newScore.score + ` ` + newScore.hardlev);
             } else if (status == 404) {
                 console.log(`Couldn't save game ${gameId}`);
@@ -498,19 +512,19 @@ function dbWriteHighScore(newScore) {
 
 
 
-function getHighScore(scoreboard, playername) {
-  //console.log(getHighScoreIndex(scoreboard, playername));
-  return scoreboard[getHighScoreIndex(scoreboard, playername)];
+function getHighScore(scoreboard, gameID) {
+  //console.log(getHighScoreIndex(scoreboard, gameID));
+  return scoreboard[getHighScoreIndex(scoreboard, gameID)];
 }
 
 
 
-function getHighScoreIndex(scoreboard, playername) {
+function getHighScoreIndex(scoreboard, gameID) {
   var i = 0;
   for (i = 0; i < scoreboard.length; i++) {
     var tmp = scoreboard[i];
-    //console.log(`i: ` + i + tmp.who + `, ` + playername);
-    if (tmp.who == playername) return i;
+    //console.log(`i: ` + i + tmp.who + `, ` + gameID);
+    if (tmp.gameID == gameID) return i;
   }
   return i; // no high score found, signal to append at end of array
 }
@@ -647,8 +661,6 @@ function died(reason, slain) {
     printFunc(`(sorry, wizard scores are not recorded)`);
     else if (cheat)
     printFunc(`(sorry, cheater scores are not recorded)`);
-    else if (ULARN)
-    printFunc(`(sorry, Ularn scores are not recorded (yet))`);
 
     writeScoreToDatabase();
     setCharCallback(endgame);
@@ -678,10 +690,10 @@ function writeScoreToDatabase() {
 
   console.log(`wizard == ` + wizard);
   console.log(`cheater == ` + cheat);
+  console.log(`debug == ` + debug_used);
   console.log(`endGameScore.score == ` + endGameScore.score);
 
-  // ULARN TODO: ADD SAVE GAMES
-  if (!ULARN && ((endGameScore.score > 0 || endGameScore.winner) && !wizard && !cheat)) {
+  if ((endGameScore.score > 0 || endGameScore.winner) && !wizard && !cheat) {
     localWriteHighScore(endGameScore);
     dbWriteHighScore(endGameScore);
   }

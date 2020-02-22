@@ -321,6 +321,7 @@ function pad(str, width, bold) {
 
 const HIGHLIGHT_DELAY = 700; // left align with -width, otherwise right align
 function padString(str, width, lastHighlightTime) {
+  if (!str) return Array(Math.abs(width)).join(` `);
   if (!width || width == 0) return str;
   var now = millis();
   var numspaces = Math.max(0, Math.abs(width) + 1 - str.length);
@@ -352,6 +353,7 @@ function compareArrays(a1, a2) {
 
 
 function localStorageSetObject(key, value) {
+  if (ULARN) key += `_ularn`;
   try {
     console.log(`setObject: ${key} ${value}`);
     localStorage.setObject(key, value);
@@ -366,6 +368,7 @@ function localStorageSetObject(key, value) {
 
 
 function localStorageGetObject(key, failValue) {
+  if (ULARN) key += `_ularn`;
   try {
     console.log(`getObject: ${key}`);
     var retrievedObject = localStorage.getObject(key);
@@ -382,6 +385,7 @@ function localStorageGetObject(key, failValue) {
 
 
 function localStorageRemoveItem(key) {
+  if (ULARN) key += `_ularn`;
   try {
     console.log(`removeItem: ${key}`);
     localStorage.removeItem(key);

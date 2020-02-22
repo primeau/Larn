@@ -1,6 +1,6 @@
 const scoreboardReader = require('./scoreboardGET');
 
-module.exports.scorePUT = async(dynamo, game, event, context) => {
+module.exports.scorePUT = async (dynamo, game, isUlarn, event, context) => {
 
     /*
         game.who = "TESTING";
@@ -9,26 +9,26 @@ module.exports.scorePUT = async(dynamo, game, event, context) => {
     */
 
     console.log(`scorePUT: start writing game: ${game.gameID}\n`);
-    var response = await DBWrite(dynamo, game, false);
+    var response = await DBWrite(dynamo, game, false, isUlarn);
     console.log(`scorePUT done writing game: ${game.gameID} got ${response.statusCode}\n`);
 
     // if we successfully write the game to the database
     // check to see if we need to update the high score board
     if (response.statusCode == 200) {
         console.log(`scorePUT: start check for high score eligibility\n`);
-        var lowest = await getLowestScore(dynamo, game);
+        var lowest = await getLowestScore(dynamo, game, isUlarn);
         console.log(`scorePUT: done check for high score eligibility\n`);
-        if (lowest.gameID == game.gameID) {
+        if (lowest && lowest.gameID == game.gameID) {
             console.log(`scorePUT: game ${game.gameID} NOT a high score\n`);
-        }
+        } 
         else {
             console.log(`scorePUT: game ${game.gameID} IS a high score\n`);
             console.log(`scorePUT: start writing high score: ${game.who} ${game.winner} ${game.hardlev} ${game.timeused} ${game.score}\n`);
-            response = await DBWrite(dynamo, game, true);
+            response = await DBWrite(dynamo, game, true, isUlarn);
             console.log(`scorePUT: done writing high score with response ${response.statusCode}\n`);
         }
         return response;
-    }
+    } 
     else {
         return {
             statusCode: response.statusCode,
@@ -39,9 +39,9 @@ module.exports.scorePUT = async(dynamo, game, event, context) => {
 
 
 
-async function DBWrite(dynamo, game, highScore) {
+async function DBWrite(dynamo, game, highScore, isUlarn) {
 
-    var params = setParams(game, highScore);
+    var params = setParams(game, highScore, isUlarn);
     var response;
 
     try {
@@ -53,7 +53,7 @@ async function DBWrite(dynamo, game, highScore) {
                 statusCode: 200,
                 body: `${game.gameID}`
             };
-        }
+        } 
         else {
             console.log(`DBWrite failed write to ${params.TableName} table: ${game.gameID}\n`);
             response = {
@@ -61,7 +61,7 @@ async function DBWrite(dynamo, game, highScore) {
                 body: `DBWrite error 400 writing game ${game.gameID}`
             };
         }
-    }
+    } 
     catch (error) {
         console.log(`DBWrite: failure writing to db: ${game.gameID}\n, error`);
         response = {
@@ -75,28 +75,32 @@ async function DBWrite(dynamo, game, highScore) {
 
 
 
-async function getLowestScore(dynamo, game) {
+async function getLowestScore(dynamo, game, isUlarn) {
 
     // quick checks -- don't bother with debug and old games
     if (game.debug == 1) return game;
     if (game.version && game.version == 1244) return game;
 
     // more quick checks, we know there are scores better than these   
-    if (game.winner) {
-        if (game.hardlev <= 3) return game;
-    }
-    else {
-        if (game.timeused < 50) return game;
-        if (game.hardlev <= 6) return game;
+    if (!isUlarn) {
+        if (game.winner) {
+            if (game.hardlev <= 3) return game;
+        } 
+        else {
+            if (game.timeused < 50) return game;
+            if (game.hardlev <= 6) return game;
+        }
     }
 
     // we have a potential scoreboard contender
-    var response = await scoreboardReader.scoreboard(dynamo, game.winner);
+    var response = await scoreboardReader.scoreboard(dynamo, game.winner, isUlarn);
     var board = response.body;
 
     if (response.statusCode == 200) {
         // if the player has a lower score, replace that
-        var prevPlayerScore = board.find(function(x) { return x.who == game.who; });
+        var prevPlayerScore = board.find(function (x) {
+            return x.who == game.who || x.playerID == game.playerID;
+        });
         if (prevPlayerScore) {
             console.log(`getLowestScoreA:`, prevPlayerScore.hardlev, game.hardlev, scoreboardReader.compareScore(prevPlayerScore, game), `\n`);
             if (scoreboardReader.compareScore(prevPlayerScore, game) > 0) {
@@ -116,9 +120,11 @@ async function getLowestScore(dynamo, game) {
             }
             return game;
         }
-
-        return game;
-    }
+        else {
+            console.log(`getLowestScoreC: there was no lowest score\n`);
+            return null;
+        }
+    } 
     else {
         console.log(response.statusCode, response.body);
         console.log(`getLowestScore: dynamo error checking high score table: ${game.gameID}\n`);
@@ -130,7 +136,7 @@ async function getLowestScore(dynamo, game) {
 
 
 
-function setParams(score, highScore) {
+function setParams(score, highScore, isUlarn) {
     var params;
 
     if (highScore) {
@@ -173,6 +179,9 @@ function setParams(score, highScore) {
             TableName: 'games'
         };
     }
+
+    if (isUlarn) params.TableName = `ularn_${params.TableName}`;
+    if (isUlarn) params.Item.character = score.character;
 
     return params;
 }
