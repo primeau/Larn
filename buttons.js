@@ -166,7 +166,15 @@ function setButtons() {
         if (player && mazeMode) {
             addButton(BUTTON_HELP);
             var hintsLabel = keyboard_hints ? `on` : `off`;
-            addButton(createVariableButton(`!`, `Keyboard Hints: ${hintsLabel}`));
+            var pickupLabel = auto_pickup ? `on` : `off`;
+            var inventoryLabel = side_inventory ? `on` : `off`;
+            var boldLabel = bold_objects ? `on` : `off`;
+            var colorLabel = show_color ? `on` : `off`;
+            addButton(createVariableButton(`!`, `Keyboard hints: ${hintsLabel}`));
+            addButton(createVariableButton(`@`, `Auto pickup: ${pickupLabel}`));
+            addButton(createVariableButton(`#`, `Show inventory: ${inventoryLabel}`));
+            addButton(createVariableButton(`$`, `Show color: ${colorLabel}`));
+            addButton(createVariableButton(`%`, `Bold objects: ${boldLabel}`));
         }
         setDiv(`FOOTER`, BUTTONS);
         return; // disable everything else for now

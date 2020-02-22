@@ -117,6 +117,11 @@ function loadState(state) {
   mazeMode = state.mazeMode;
   napping = state.napping;
   original_objects = state.original_objects;
+  keyboard_hints = state.keyboard_hints;
+  auto_pickup = state.auto_pickup;
+  side_inventory = state.side_inventory;
+  show_color = state.show_color;
+  bold_objects = state.bold_objects;
   dnd_item = state.dnd_item;
   genocide = state.genocide;
   amiga_mode = state.amiga_mode;
@@ -154,7 +159,6 @@ function loadState(state) {
   w1x = state.w1x;
   w1y = state.w1y;
   spheres = state.spheres;
-  auto_pickup = state.auto_pickup;
 }
 
 
@@ -212,8 +216,6 @@ function loadPlayer(saved) {
 
   newPlayer.x = saved.x;
   newPlayer.y = saved.y;
-
-  //setDifficulty(saved.HARDGAME);
 
   newPlayer.STRENGTH = saved.STRENGTH;
   newPlayer.INTELLIGENCE = saved.INTELLIGENCE;

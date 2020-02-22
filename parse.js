@@ -636,22 +636,6 @@ function parse(key) {
     return;
   }
 
-  // toggle auto pickup
-  if (key == '@') {
-    nomove = 1;
-    auto_pickup = !auto_pickup;
-    updateLog(`Auto-pickup: ${auto_pickup ? `on` : `off`}`);
-    return;
-  }
-
-  // toggle inventory on right side
-  if (key == '#') {
-    nomove = 1;
-    side_inventory = !side_inventory;
-    updateLog(`Inventory view: ${side_inventory ? `on` : `off`}`);
-    return;
-  }
-
   //
   // help screen
   //
@@ -669,8 +653,45 @@ function parse(key) {
   if (key == '!') {
     nomove = 1;
     keyboard_hints = !keyboard_hints;
+    updateLog(`Keyboard hints: ${keyboard_hints ? `on` : `off`}`);
     if (keyboard_hints)
       lookforobject(true, false, false);
+    return;
+  }
+
+  // toggle auto pickup
+  if (key == '@') {
+    nomove = 1;
+    auto_pickup = !auto_pickup;
+    updateLog(`Auto-pickup: ${auto_pickup ? `on` : `off`}`);
+    return;
+  }
+
+  // toggle inventory on right side
+  if (key == '#') {
+    nomove = 1;
+    side_inventory = !side_inventory;
+    updateLog(`Inventory view: ${side_inventory ? `on` : `off`}`);
+    return;
+  }
+
+  //
+  // toggle color
+  //
+  if (key == '$') {
+    nomove = 1;
+    show_color = !show_color;
+    updateLog(`Colors: ${show_color ? `on` : `off`}`);
+    return;
+  }
+
+  //
+  // toggle bold
+  //
+  if (key == '%') {
+    nomove = 1;
+    bold_objects = !bold_objects;
+    updateLog(`Bold objects: ${bold_objects ? `on` : `off`}`);
     return;
   }
 

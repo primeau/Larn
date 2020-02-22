@@ -18,12 +18,16 @@ var GAMEOVER = true;
 var mazeMode = false;
 var napping = false; /* prevent keyboard input while a nap event is happening */
 var original_objects = true;
+var keyboard_hints = false;
+var auto_pickup = false;
+var side_inventory = false;
+var show_color = true;
+var bold_objects = true;
 var dnd_item = null;
 var genocide = [];
 var amiga_mode = false;
 var gameID = Math.random().toString(36).substr(2, 10);
 var debug_used = 0;
-var keyboard_hints = false;
 
 var logname = `Adventurer`;
 var cheat = 0; /* 1 if the player has fudged save file */
@@ -69,8 +73,6 @@ var lasttime = 0; /* last time in bank */
 var w1x;
 var w1y;
 var spheres = [];
-var auto_pickup = false;
-var side_inventory = false;
 
 
 
@@ -84,6 +86,11 @@ function GameState() {
   this.mazeMode = mazeMode;
   this.napping = napping;
   this.original_objects = original_objects;
+  this.keyboard_hints = keyboard_hints;
+  this.auto_pickup = auto_pickup;
+  this.side_inventory = side_inventory;
+  this.show_color = show_color;
+  this.bold_objects = bold_objects;
   this.dnd_item = dnd_item;
   this.genocide = genocide;
   this.amiga_mode = amiga_mode;
@@ -114,5 +121,4 @@ function GameState() {
   this.w1x = w1x;
   this.w1y = w1y;
   this.spheres = spheres;
-  this.auto_pickup = auto_pickup;
 }
