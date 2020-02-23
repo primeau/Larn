@@ -360,6 +360,7 @@ function localStorageSetObject(key, value) {
   }
   catch (err) {
       console.log(`set: cookies are disabled`);
+      console.log(`set: ${err}`);
       updateLog(`Cookies are disabled, games cannot be loaded or saved`);
       NOCOOKIES = true;
   }
@@ -376,6 +377,7 @@ function localStorageGetObject(key, failValue) {
   }
   catch (err) {
     console.log(`get: cookies are disabled`);
+    console.log(`get: ${err}`);
     updateLog(`Cookies are disabled, games cannot be loaded or saved`);
     NOCOOKIES = true;
     return failValue;
@@ -392,6 +394,7 @@ function localStorageRemoveItem(key) {
   }
   catch (err) {
     console.log(`remove: cookies are disabled`);
+    console.log(`remove: ${err}`);
     updateLog(`Cookies are disabled, games cannot be loaded or saved`);
     NOCOOKIES = true;
   }

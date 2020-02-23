@@ -43,28 +43,6 @@ function setGameConfig() {
     FORTUNES = COMMON_FORTUNES.concat(ULARN ? ULARN_FORTUNES : LARN_FORTUNES);
 
     if (ULARN) {
-        OSTAIRSUP.char = `<b><font color='green'>%</font></b>`;
-        OSTAIRSDOWN.char = `<b><font color='blue'>%</font></b>`;
-
-        ORINGOFEXTRA.char = `<b>|</b>`;
-        OREGENRING.char = `<b>|</b>`;
-        OPROTRING.char = `<b>|</b>`;
-        OENERGYRING.char = `<b>|</b>`;
-        ODEXRING.char = `<b>|</b>`;
-        OSTRRING.char = `<b>|</b>`;
-        OCLEVERRING.char = `<b>|</b>`;
-        ODAMRING.char = `<b>|</b>`;
-
-        OAMULET.char = `<b><font color='white'>.</font></b>`;
-        OSPIRITSCARAB.char = `<b><font color='green'>.</font></b>`;
-        OCUBEofUNDEAD.char = `<b><font color='purple'>.</font></b>`;
-        ONOTHEFT.char = `<b><font color='yellow'>.</font></b>`;
-
-        ODIAMOND.char = `<b><font color='white'><</font></b>`;
-        ORUBY.char = `<b><font color='red'><</font></b>`;
-        OEMERALD.char = `<b><font color='green'><</font></b>`;
-        OSAPPHIRE.char = `<b><font color='blue'><</font></b>`;
-
         DEATH_REASONS.set(DIED_BOTTOMLESS_TRAPDOOR, `fell through a trap door to HELL`);
         DEATH_REASONS.set(DIED_BOTTOMLESS_PIT, `fell into a pit to HELL`);
         // ularn todo update this:

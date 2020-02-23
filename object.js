@@ -2,13 +2,13 @@
 
 const itemlist = [];
 
-const hack_objnamelist = `·:\\~^<_{%^6|2>_55}$'+▒~[[[))))))========-?!?&~~~~~****899)))[[[[[)^·[1$$$·^^·3·/4\\0,u...//))]8 :::::@`;
-
-
-
-var Item = function Item(id, char, desc, carry, arg, inv) {
+var Item = function Item(id, char, hackchar, ularnchar, color, bold, desc, carry, arg, inv) {
   this.id = id;
   this.char = char;
+  this.hackchar = hackchar;
+  this.ularnchar = ularnchar;
+  this.bold = bold;
+  this.color = color;
   this.desc = desc;
   this.carry = carry;
   this.arg = arg;
@@ -34,7 +34,7 @@ function createObject(item, arg) {
     item = itemlist[item];
   }
 
-  var newItem = new Item(item.id, item.char, item.desc, item.carry, item.arg, item.inv);
+  var newItem = new Item(item.id, item.char, item.hackchar, item.ularnchar, item.color, item.bold, item.desc, item.carry, item.arg, item.inv);
 
   if (arg) {
     newItem.arg = arg;
@@ -56,6 +56,10 @@ const DIV_END = `.png")`;
 Item.prototype = {
   id: null,
   char: `💩`,
+  hackchar: ``,
+  ularnchar: ``,
+  color: null,
+  bold: true,
   desc: ``,
   carry: false,
   arg: 0,
@@ -64,8 +68,10 @@ Item.prototype = {
 
 
   // TODO: cache this
+  // let buffer = [numobjects]
+  // if !buffer.get buffer.put
+  // flush when resetting mode/bold/color
   getChar: function () {
-
     if (amiga_mode) {
       if (this.id == OWALL.id) {
         return `${DIV_START}w${this.arg}${DIV_END}`;
@@ -73,24 +79,28 @@ Item.prototype = {
         return `${DIV_START}o${this.id}${DIV_END}`;
       }
     }
-    //
-    else if (!original_objects) {
-      if (this.id == OWALL.id ||
-        this.id == OEMPTY.id ||
-        this.id == OIVTRAPDOOR.id ||
-        this.id == OIVDARTRAP.id ||
-        this.id == OTRAPARROWIV.id ||
-        this.id == OIVTELETRAP.id) {
-        return hack_objnamelist[this.id];
-      } else {
-        return `<b>${hack_objnamelist[this.id]}</b>`;
+
+    let char = null;
+    if (original_objects) {
+      if (ULARN) {
+        char = this.ularnchar;
+      }
+      else {
+        char = this.char;
       }
     }
-    //
-    else return this.char;
+    else {
+       char = this.hackchar;
+    }
+    
+    if (show_color && this.color) {
+      char = `<font color='${this.color}'>${char}</font>`;
+    }
+    if (bold_objects && this.bold) {
+      char = `<b>${char}</b>`;
+    }
 
-    // making walls/empty bold screws up horizontal spacing
-    //return hack_items ? `${hack_objnamelist[this.id]}` : `${this.char}`;
+     return char;
   },
 
 
@@ -273,107 +283,114 @@ Item.prototype = {
 
 
 
-const OEMPTY = new Item(0, `·`, `empty space`, false); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
-const OALTAR = new Item(1, `<b>A</b>`, `a holy altar`, false);
-const OTHRONE = new Item(2, `<b>T</b>`, `a handsome jewel encrusted throne`, false);
-const OORB = new Item(3, `<b><font color='green'>o</font></b>`, `an orb of enlightenment`, true); // ULARN
-const OPIT = new Item(4, `<b>P</b>`, `a pit`, false);
-const OSTAIRSUP = new Item(5, `<b>&lt</b>`, `a staircase going up`, false); // use &lt to prevent bugginess when dropping a ! or ? to the right
-const OELEVATORUP = new Item(6, `<b><font color='green'>^</font></b>`, `an express elevator going up`, false); // ULARN
-const OFOUNTAIN = new Item(7, `<b>F</b>`, `a bubbling fountain`, false);
-const OSTATUE = new Item(8, `<b>&</b>`, `a great marble statue`, false);
-const OTELEPORTER = new Item(9, `<b>^</b>`, `a teleport trap`, false);
-const OSCHOOL = new Item(10, `<b>+</b>`, `the College of Larn`, false);
-const OMIRROR = new Item(11, `<b>M</b>`, `a mirror`, false);
-const ODNDSTORE = new Item(12, `<b>=</b>`, `the DND store`, false);
-const OSTAIRSDOWN = new Item(13, `<b>&gt</b>`, `a staircase going down`, false);
-const OELEVATORDOWN = new Item(14, `<b><font color='blue'>^</font></b>`, `an express elevator going down`, false); // ULARN
-const OBANK2 = new Item(15, `<b>$</b>`, `the Nth branch of the Bank of Larn`, false);
-const OBANK = new Item(16, `<b>$</b>`, `the bank of Larn`, false);
-const ODEADFOUNTAIN = new Item(17, `<b>f</b>`, `a dead fountain`, false);
-const OGOLDPILE = new Item(18, `<b>*</b>`, `some gold`, true, 0);
-const OOPENDOOR = new Item(19, `<b>O</b>`, `an open door`, false);
-const OCLOSEDDOOR = new Item(20, `<b>D</b>`, `a closed door`, false);
-const OWALL = new Item(21, `▒`, `a wall`, false);
-const OLARNEYE = new Item(22, `<b><font color='green'>~</font></b>`, `The Eye of Larn`, true);
-const OPLATE = new Item(23, `<b>]</b>`, `plate mail`, true);
-const OCHAIN = new Item(24, `<b>[</b>`, `chain mail`, true);
-const OLEATHER = new Item(25, `<b>[</b>`, `leather armor`, true);
-const OSWORDofSLASHING = new Item(26, `<b><font color='green'>)</font></b>`, `a sword of slashing`, true);
-const OHAMMER = new Item(27, `<b><font color='green'>)</font></b>`, `Bessman's flailing hammer`, true);
-const OSWORD = new Item(28, `<b>)</b>`, `a sunsword`, true);
-const O2SWORD = new Item(29, `<b>(</b>`, `a two handed sword`, true);
-const OSPEAR = new Item(30, `<b>(</b>`, `a spear`, true);
-const ODAGGER = new Item(31, `<b>(</b>`, `a dagger`, true);
-const ORINGOFEXTRA = new Item(32, `<b>=</b>`, `ring of extra regeneration`, true);
-const OREGENRING = new Item(33, `<b>=</b>`, `a ring of regeneration`, true);
-const OPROTRING = new Item(34, `<b>=</b>`, `a ring of protection`, true);
-const OENERGYRING = new Item(35, `<b>=</b>`, `an energy ring`, true);
-const ODEXRING = new Item(36, `<b>=</b>`, `a ring of dexterity`, true);
-const OSTRRING = new Item(37, `<b>=</b>`, `a ring of strength`, true);
-const OCLEVERRING = new Item(38, `<b>=</b>`, `a ring of cleverness`, true);
-const ODAMRING = new Item(39, `<b>=</b>`, `a ring of increase damage`, true);
-const OBELT = new Item(40, `<b>{</b>`, `a belt of striking`, true);
-const OSCROLL = new Item(41, `<b>?</b>`, `a magic scroll`, true);
-const OPOTION = new Item(42, `<b>!</b>`, `a magic potion`, true);
-const OBOOK = new Item(43, `<b>B</b>`, `a book`, true);
-const OCHEST = new Item(44, `<b>C</b>`, `a chest`, true);
-const OAMULET = new Item(45, `<b>}</b>`, `an amulet of invisibility`, true);
-const OORBOFDRAGON = new Item(46, `<b><font color='blue'>o</font></b>`, `an orb of dragon slaying`, true);
-const OSPIRITSCARAB = new Item(47, `<b><font color='green'>:</font></b>`, `a scarab of negate spirit`, true);
-const OCUBEofUNDEAD = new Item(48, `<b><font color='purple'>;</font></b>`, `a cube of undead control`, true);
-const ONOTHEFT = new Item(49, `<b><font color='yellow'>,</font></b>`, `device of theft prevention`, true);
-const ODIAMOND = new Item(50, `<b>@</b>`, `a brilliant diamond`, true);
-const ORUBY = new Item(51, `<b>@</b>`, `a ruby`, true);
-const OEMERALD = new Item(52, `<b>@</b>`, `an enchanting emerald`, true);
-const OSAPPHIRE = new Item(53, `<b>@</b>`, `a sparkling sapphire`, true);
-const OENTRANCE = new Item(54, `<b>E</b>`, `the dungeon entrance`, false);
-const OVOLDOWN = new Item(55, `<b>V</b>`, `a volcanic shaft leaning downward`, false);
-const OVOLUP = new Item(56, `<b>V</b>`, `the base of a volcanic shaft`, false);
-const OBATTLEAXE = new Item(57, `<b>)</b>`, `a battle axe`, true);
-const OLONGSWORD = new Item(58, `<b>)</b>`, `a longsword`, true);
-const OFLAIL = new Item(59, `<b>(</b>`, `a flail`, true);
-const ORING = new Item(60, `<b>[</b>`, `ring mail`, true);
-const OSTUDLEATHER = new Item(61, `<b>[</b>`, `studded leather armor`, true);
-const OSPLINT = new Item(62, `<b>]</b>`, `splint mail`, true);
-const OPLATEARMOR = new Item(63, `<b>]</b>`, `plate armor`, true);
-const OSSPLATE = new Item(64, `<b>]</b>`, `stainless plate armor`, true);
-const OLANCE = new Item(65, `<b>)</b>`, `a lance of death`, true);
-const OTRAPARROW = new Item(66, `<b>^</b>`, `an arrow trap`, false);
-const OTRAPARROWIV = new Item(67, OEMPTY.char, `an arrow trap`, false);
-const OSHIELD = new Item(68, `<b>[</b>`, `a shield`, true);
-const OHOME = new Item(69, `<b>H</b>`, `your home`, false);
+const BOLD = true;
+const NO_BOLD = false;
+const NO_COLOR = null;
+const CARRY = true;
+const NO_CARRY = false;
+
+/* id, char, hackchar, ularnchar, color, bold, desc, carry, arg, inv */
+const OEMPTY = new Item(0, `·`, `·`, `·`, NO_COLOR, NO_BOLD, `empty space`, NO_CARRY); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
+const OALTAR = new Item(1, `A`, `:`, `A`, `orchid`, BOLD, `a holy altar`, NO_CARRY);
+const OTHRONE = new Item(2, `T`, `\\`, `T`, `gold`, BOLD, `a handsome jewel encrusted throne`, NO_CARRY);
+const OORB = new Item(3, `o`, `~`, `o`, `plum`, BOLD, `an orb of enlightenment`, CARRY); // ULARN
+const OPIT = new Item(4, `P`, `^`, `P`, `sandybrown`, BOLD, `a pit`, NO_CARRY);
+const OSTAIRSUP = new Item(5, `&lt`, `&lt`, `%`, `mediumseagreen`, BOLD, `a staircase going up`, NO_CARRY); // use &lt to prevent bugginess when dropping a ! or ? to the right
+const OELEVATORUP = new Item(6, `^`, `_`, `^`, `mediumseagreen`, BOLD, `an express elevator going up`, NO_CARRY); // ULARN
+const OFOUNTAIN = new Item(7, `F`, `{`, `F`, `cornflowerblue`, BOLD, `a bubbling fountain`, NO_CARRY);
+const OSTATUE = new Item(8, `&`, `%`, `&`, `ivory`, BOLD, `a great marble statue`, NO_CARRY);
+const OTELEPORTER = new Item(9, `^`, `^`, `^`, `mediumpurple`, BOLD, `a teleport trap`, NO_CARRY);
+const OSCHOOL = new Item(10, `+`, `6`, `+`, `plum`, BOLD, `the College of Larn`, NO_CARRY);
+const OMIRROR = new Item(11, `M`, `|`, `M`, `silver`, BOLD, `a mirror`, NO_CARRY);
+const ODNDSTORE = new Item(12, `=`, `2`, `=`, `pink`, BOLD, `the DND store`, NO_CARRY);
+const OSTAIRSDOWN = new Item(13, `&gt`, `&gt`, `%`, `sandybrown`, BOLD, `a staircase going down`, NO_CARRY);
+const OELEVATORDOWN = new Item(14, `^`, `_`, `^`, `sandybrown`, BOLD, `an express elevator going down`, NO_CARRY); // ULARN
+const OBANK2 = new Item(15, `$`, `5`, `$`, `gold`, BOLD, `the Nth branch of the Bank of Larn`, NO_CARRY);
+const OBANK = new Item(16, `$`, `5`, `$`, `gold`, BOLD, `the bank of Larn`, NO_CARRY);
+const ODEADFOUNTAIN = new Item(17, `f`, `}`, `f`, `lightgray`, BOLD, `a dead fountain`, NO_CARRY);
+const OGOLDPILE = new Item(18, `*`, `$`, `*`, `gold`, BOLD, `some gold`, CARRY, 0);
+const OOPENDOOR = new Item(19, `O`, `'`, `O`, NO_COLOR, BOLD, `an open door`, NO_CARRY);
+const OCLOSEDDOOR = new Item(20, `D`, `+`, `D`, NO_COLOR, BOLD, `a closed door`, NO_CARRY);
+const OWALL = new Item(21, `▒`, `▒`, `▒`, NO_COLOR, NO_BOLD, `a wall`, NO_CARRY);
+const OLARNEYE = new Item(22, `~`, `~`, `~`, `magenta`, BOLD, `The Eye of Larn`, CARRY);
+const OPLATE = new Item(23, `]`, `[`, `]`, NO_COLOR, BOLD, `plate mail`, CARRY);
+const OCHAIN = new Item(24, `[`, `[`, `[`, NO_COLOR, BOLD, `chain mail`, CARRY);
+const OLEATHER = new Item(25, `[`, `[`, `[`, NO_COLOR, BOLD, `leather armor`, CARRY);
+const OSWORDofSLASHING = new Item(26, `)`, `)`, `)`, `steelblue`, BOLD, `a sword of slashing`, CARRY);
+const OHAMMER = new Item(27, `)`, `)`, `)`, `darkgoldenrod`, BOLD, `Bessman's flailing hammer`, CARRY);
+const OSWORD = new Item(28, `)`, `)`, `)`, NO_COLOR, BOLD, `a sunsword`, CARRY);
+const O2SWORD = new Item(29, `(`, `)`, `(`, NO_COLOR, BOLD, `a two handed sword`, CARRY);
+const OSPEAR = new Item(30, `(`, `)`, `(`, NO_COLOR, BOLD, `a spear`, CARRY);
+const ODAGGER = new Item(31, `(`, `)`, `(`, NO_COLOR, BOLD, `a dagger`, CARRY);
+const ORINGOFEXTRA = new Item(32, `=`, `=`, `|`, NO_COLOR, BOLD, `ring of extra regeneration`, CARRY);
+const OREGENRING = new Item(33, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of regeneration`, CARRY);
+const OPROTRING = new Item(34, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of protection`, CARRY);
+const OENERGYRING = new Item(35, `=`, `=`, `|`, NO_COLOR, BOLD, `an energy ring`, CARRY);
+const ODEXRING = new Item(36, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of dexterity`, CARRY);
+const OSTRRING = new Item(37, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of strength`, CARRY);
+const OCLEVERRING = new Item(38, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of cleverness`, CARRY);
+const ODAMRING = new Item(39, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of increase damage`, CARRY);
+const OBELT = new Item(40, `{`, `-`, `{`, `darkgoldenrod`, BOLD, `a belt of striking`, CARRY);
+const OSCROLL = new Item(41, `?`, `?`, `?`, `tan`, BOLD, `a magic scroll`, CARRY);
+const OPOTION = new Item(42, `!`, `!`, `!`, `mediumpurple`, BOLD, `a magic potion`, CARRY);
+const OBOOK = new Item(43, `B`, `?`, `B`, `darkgoldenrod`, BOLD, `a book`, CARRY);
+const OCHEST = new Item(44, `C`, `&`, `C`, `khaki`, BOLD, `a chest`, CARRY);
+const OAMULET = new Item(45, `}`, `~`, `.`, `gold`, BOLD, `an amulet of invisibility`, CARRY);
+const OORBOFDRAGON = new Item(46, `o`, `~`, `o`, `skyblue`, BOLD, `an orb of dragon slaying`, CARRY);
+const OSPIRITSCARAB = new Item(47, `:`, `~`, `.`, `lightgreen`, BOLD, `a scarab of negate spirit`, CARRY);
+const OCUBEofUNDEAD = new Item(48, `;`, `~`, `.`, `plum`, BOLD, `a cube of undead control`, CARRY);
+const ONOTHEFT = new Item(49, `,`, `~`, `.`, `khaki`, BOLD, `device of theft prevention`, CARRY);
+const ODIAMOND = new Item(50, `@`, `*`, `&lt`, `white`, BOLD, `a brilliant diamond`, CARRY);
+const ORUBY = new Item(51, `@`, `*`, `&lt`, `crimson`, BOLD, `a ruby`, CARRY);
+const OEMERALD = new Item(52, `@`, `*`, `&lt`, `seagreen`, BOLD, `an enchanting emerald`, CARRY);
+const OSAPPHIRE = new Item(53, `@`, `*`, `&lt`, `dodgerblue`, BOLD, `a sparkling sapphire`, CARRY);
+const OENTRANCE = new Item(54, `E`, `8`, `E`, `mediumseagreen`, BOLD, `the dungeon entrance`, NO_CARRY);
+const OVOLDOWN = new Item(55, `V`, `9`, `V`, `crimson`, BOLD, `a volcanic shaft leaning downward`, NO_CARRY);
+const OVOLUP = new Item(56, `V`, `9`, `V`, `mediumseagreen`, BOLD, `the base of a volcanic shaft`, NO_CARRY);
+const OBATTLEAXE = new Item(57, `)`, `)`, `)`, NO_COLOR, BOLD, `a battle axe`, CARRY);
+const OLONGSWORD = new Item(58, `)`, `)`, `)`, NO_COLOR, BOLD, `a longsword`, CARRY);
+const OFLAIL = new Item(59, `(`, `)`, `(`, NO_COLOR, BOLD, `a flail`, CARRY);
+const ORING = new Item(60, `[`, `[`, `[`, NO_COLOR, BOLD, `ring mail`, CARRY);
+const OSTUDLEATHER = new Item(61, `[`, `[`, `[`, NO_COLOR, BOLD, `studded leather armor`, CARRY);
+const OSPLINT = new Item(62, `]`, `[`, `]`, NO_COLOR, BOLD, `splint mail`, CARRY);
+const OPLATEARMOR = new Item(63, `]`, `[`, `]`, NO_COLOR, BOLD, `plate armor`, CARRY);
+const OSSPLATE = new Item(64, `]`, `[`, `]`, NO_COLOR, BOLD, `stainless plate armor`, CARRY);
+const OLANCE = new Item(65, `)`, `)`, `)`, NO_COLOR, BOLD, `a lance of death`, CARRY);
+const OTRAPARROW = new Item(66, `^`, `^`, `^`, NO_COLOR, BOLD, `an arrow trap`, NO_CARRY);
+const OTRAPARROWIV = new Item(67, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `an arrow trap`, NO_CARRY);
+const OSHIELD = new Item(68, `[`, `[`, `[`, NO_COLOR, BOLD, `a shield`, CARRY);
+const OHOME = new Item(69, `H`, `1`, `H`, `cornflowerblue`, BOLD, `your home`, NO_CARRY);
 //#define OMAXGOLD 70
 //#define OKGOLD 71
 //#define ODGOLD 72
-const OIVDARTRAP = new Item(73, OEMPTY.char, `a dart trap`, false);
-const ODARTRAP = new Item(74, `<b>^</b>`, `a dart trap`, false);
-const OTRAPDOOR = new Item(75, `<b>^</b>`, `a trapdoor`, false);
-const OIVTRAPDOOR = new Item(76, OEMPTY.char, `a trapdoor`, false);
-const OTRADEPOST = new Item(77, `<b>S</b>`, `the local trading post`, false);
-const OIVTELETRAP = new Item(78, OEMPTY.char, `a teleport trap`, false);
-const ODEADTHRONE = new Item(79, `<b>t</b>`, `a massive throne`, false);
-const OLRS = new Item(80, `<b>L</b>`, `the Larn Revenue Service`, false);
+const OIVDARTRAP = new Item(73, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a dart trap`, NO_CARRY);
+const ODARTRAP = new Item(74, `^`, `^`, `^`, `lightgreen`, BOLD, `a dart trap`, NO_CARRY);
+const OTRAPDOOR = new Item(75, `^`, `^`, `^`, `sandybrown`, BOLD, `a trapdoor`, NO_CARRY);
+const OIVTRAPDOOR = new Item(76, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a trapdoor`, NO_CARRY);
+const OTRADEPOST = new Item(77, `S`, `3`, `S`, `tan`, BOLD, `the local trading post`, NO_CARRY);
+const OIVTELETRAP = new Item(78, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a teleport trap`, NO_CARRY);
+const ODEADTHRONE = new Item(79, `t`, `/`, `t`, NO_COLOR, BOLD, `a massive throne`, NO_CARRY);
+const OLRS = new Item(80, `L`, `4`, `L`, NO_COLOR, BOLD, `the Larn Revenue Service`, NO_CARRY);
 //#define OTHRONE2 81
-const OANNIHILATION = new Item(82, `<b>s</b>`, `a sphere of annihilation`, false);
-const OCOOKIE = new Item(83, `<b>c</b>`, `a fortune cookie`, true);
-const OURN = new Item(84, `<b><font color='yellow'>u</font></b>`, `a golden urn`, true); // ULARN NOT IMPLEMENTED
-/* need amiga */ const OBRASSLAMP = new Item(85, `<b><font color='yellow'>.</font></b>`, `a brass lamp`, true); // ULARN
-/* need amiga */ const OHANDofFEAR = new Item(86, `<b><font color='red'>.</font></b>`, `The Hand of Fear`, true); // ULARN
-/* need amiga */ const OSPHTALISMAN = new Item(87, `<b><font color='blue'>.</font></b>`, `The Talisman of the Sphere`, true); // ULARN
-/* need amiga */ const OWWAND = new Item(88, `<b><font color='green'>/</font></b>`, `a wand of wonder`, true); // ULARN
-/* need amiga */ const OPSTAFF = new Item(89, `<b><font color='blue'>/</font></b>`, `a staff of power`, true); // ULARN
-/* need amiga */ const OVORPAL = new Item(90, `<b><font color='blue'>)</font></b>`, `the Vorpal Blade`, true); // ULARN
-/* need amiga */ const OSLAYER = new Item(91, `<b><font color='red'>)</font></b>`, `Slayer`, true); // ULARN
-/* need amiga */ const OELVENCHAIN = new Item(92, `<b><font color='green'>]</font></b>`, `elven chain`, true); // ULARN
-const OHOMEENTRANCE = new Item(93, OEMPTY.char, `exit to home level`, false);
-const OUNKNOWN = new Item(94, ' ', `... nothing`, false);
-/* need amiga */ const OSPEED = new Item(95, `<b>:</b>`, `some speed`, true); // ULARN
-/* need amiga */ const OACID = new Item(96, `<b>:</b>`, `some LSD`, true); // ULARN
-/* need amiga */ const OHASH = new Item(97, `<b>:</b>`, `some hashish`, true); // ULARN
-/* need amiga */ const OSHROOMS = new Item(98, `<b>:</b>`, `some magic mushrooms`, true); // ULARN
-/* need amiga */ const OCOKE = new Item(99, `<b>:</b>`, `some cocaine`, true); // ULARN
-/* need amiga */ const OPAD = new Item(100, `<b><font color='green'>@</font></b>`, `Dealer McDope's Pad`, false); // ULARN
+const OANNIHILATION = new Item(82, `s`, `0`, `s`, `crimson`, BOLD, `a sphere of annihilation`, NO_CARRY);
+const OCOOKIE = new Item(83, `c`, `,`, `c`, `tan`, BOLD, `a fortune cookie`, CARRY);
+//#define OURN 84
+/* need amiga */ const OBRASSLAMP = new Item(85, `.`, `.`, `.`, `gold`, BOLD, `a brass lamp`, CARRY); // ULARN
+/* need amiga */ const OHANDofFEAR = new Item(86, `.`, `.`, `.`, `crimson`, BOLD, `The Hand of Fear`, CARRY); // ULARN
+/* need amiga */ const OSPHTALISMAN = new Item(87, `.`, `.`, `.`, `skyblue`, BOLD, `The Talisman of the Sphere`, CARRY); // ULARN
+/* need amiga */ const OWWAND = new Item(88, `/`, `/`, `/`, `lightgreen`, BOLD, `a wand of wonder`, CARRY); // ULARN
+/* need amiga */ const OPSTAFF = new Item(89, `/`, `/`, `/`, `plum`, BOLD, `a staff of power`, CARRY); // ULARN
+/* need amiga */ const OVORPAL = new Item(90, `)`, `)`, `)`, `skyblue`, BOLD, `the Vorpal Blade`, CARRY); // ULARN
+/* need amiga */ const OSLAYER = new Item(91, `)`, `)`, `)`, `crimson`, BOLD, `Slayer`, CARRY); // ULARN
+/* need amiga */ const OELVENCHAIN = new Item(92, `]`, `]`, `]`, `lightgreen`, BOLD, `elven chain`, CARRY); // ULARN
+const OHOMEENTRANCE = new Item(93, OEMPTY.char, `8`, OEMPTY.char, NO_COLOR, NO_BOLD, `exit to home level`, NO_CARRY);
+const OUNKNOWN = new Item(94, ' ', ` `, ` `, NO_COLOR, NO_BOLD, `... nothing`, NO_CARRY);
+/* need amiga */ const OSPEED = new Item(95, `:`, `:`, `:`, `paleblue`, BOLD, `some speed`, CARRY); // ULARN
+/* need amiga */ const OACID = new Item(96, `:`, `:`, `:`, `mediumpurple`, BOLD, `some LSD`, CARRY); // ULARN
+/* need amiga */ const OHASH = new Item(97, `:`, `:`, `:`, `sandybrown`, BOLD, `some hashish`, CARRY); // ULARN
+/* need amiga */ const OSHROOMS = new Item(98, `:`, `:`, `:`, `tan`, BOLD, `some magic mushrooms`, CARRY); // ULARN
+/* need amiga */ const OCOKE = new Item(99, `:`, `:`, `:`, `snow`, BOLD, `some cocaine`, CARRY); // ULARN
+/* need amiga */ const OPAD = new Item(100, `@`, `@`, `@`, `lightgreen`, BOLD, `Dealer McDope's Pad`, NO_CARRY); // ULARN
 
 
 
