@@ -45,8 +45,6 @@ function setGameConfig() {
     if (ULARN) {
         DEATH_REASONS.set(DIED_BOTTOMLESS_TRAPDOOR, `fell through a trap door to HELL`);
         DEATH_REASONS.set(DIED_BOTTOMLESS_PIT, `fell into a pit to HELL`);
-        // ularn todo update this:
-        DEATH_REASONS.set(DIED_FAILED, `killed his family and committed suicide`);
     }
 
 }

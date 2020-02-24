@@ -38,6 +38,17 @@ function regen() {
     }
   }
 
+  if (player.COKED) {
+    if (--player.COKED <= 0) {
+      player.setStrength(player.STRENGTH - 34);
+      player.setIntelligence(player.INTELLIGENCE - 34);
+      player.setWisdom(player.WISDOM - 34);
+      player.setConstitution(player.CONSTITUTION - 34);
+      player.setDexterity(player.DEXTERITY - 34);
+      player.setCharisma(player.CHARISMA - 34);
+    }
+  }
+
   if (player.STEALTH)        player.updateStealth(-1);
   if (player.UNDEADPRO)      player.updateUndeadPro(-1);
   if (player.SPIRITPRO)      player.updateSpiritPro(-1);

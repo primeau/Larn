@@ -223,16 +223,26 @@ function parse(key) {
       enter();
       return;
     }
-    if (player.TIMESTOP == 0)
+    if (player.TIMESTOP == 0) {
       if (item.matches(OCOOKIE)) {
         outfortune();
         forget();
-      } else {
+      } 
+      else if (item.matches(OSHROOMS)) {
+        eatShrooms();
+        forget();
+      } 
+      else if (item.matches(OACID)) {
+        dropAcid();
+        forget();
+      } 
+      else {
         updateLog(`What do you want to eat [<b>space</b> to view] ? `);
         setCharCallback(act_eatcookie);
       }
+    }
     return;
-  }
+    }
 
   //
   // TIDY UP AT FOUNTAIN
@@ -345,8 +355,24 @@ function parse(key) {
   // sit on throne
   //
   if (key == 's') {
-    sit_on_throne();
-    dropflag = 1;
+    if (player.TIMESTOP == 0) {
+      if (item.matches(OSPEED)) {
+        doSpeed();
+        forget();
+      } 
+      else if (item.matches(OHASH)) {
+        smokeHash();
+        forget();
+      } 
+      else if (item.matches(OCOKE)) {
+        doCoke();
+        forget();
+      } 
+      else {
+        sit_on_throne();
+        dropflag = 1;
+      }
+    }
     return;
   }
 

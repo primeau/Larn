@@ -3,7 +3,6 @@ If you're only after flex-grow, use the property directly rather than through th
 
 ULARN:
 - SUPPORT FOR OLDER BROWSERS
-- scoreboard
 - Dealer McDopes
 - OHANDofFEAR
 - update README.spoilers doc
@@ -17,7 +16,6 @@ ULARN:
 - monster.canfly, hashead?
 - mimic
 - amiga icons: magic items, demons & lucifer, elevator
-- replace "." objects with larger dots
 - eye of larn appraisal in bank
 - need to redo all movement code to make hand of fear / scare monsters work
 - async/await for keyboard input?
@@ -37,12 +35,11 @@ todo:
 - check chrome audit tab
 - colors for dragons? other monsters
 - config page
-  - color monsters, artifacts, etc
   - colors on/off
-  - walls as block, #, or joined ascii
+  - keyboard hints
+  - walls as block or joined ascii
   - no-beep
   - no-nap
-  - keyboard hints
 - "sorry, no mobile" message for larn.html
 - warn if changing names because it's annoying on the scoreboard
 - click / farlook to identify object
@@ -54,20 +51,21 @@ todo:
 - most referenced to player.level should be replaced with functions
 - what happens with haste self and haste monster at the same time?
 - allow hitting escape while naps are happening (interrupt settimeout?)
-- store local games with gameid
+  - make buying / selling items etc faster 
+- loading fullstory+ games from wizard console
 
 
 
 bugs:
 * lots of monsters walking through wall. is there a problem with movesmart()?
 * HAS + PER bug slow monsters (H,x,r,etc) move every moves, or totally paralyzed?
+* long user names aren't truncated on the start screen
 - closing a door (from on top of the door) when a monster is in the spot you were
   just in drops you back on the monsters spot. the monster reappears when you move.
 - can't load game stats from local scoreboard (can't find game sdkjfhsdfkj)
 - half speed monsters don't move with HAS on opposite move
 - arrow buttons on help screen are truncated in amiga mode
 - amiga mode: viewing scoreboard resets to classic mode (partially fixed)
-- last local game shows as winner and loser
 - better inventory layout, font selection with react?
 - amiga mode: strikethrough missing on taxes owing after victory
 - blindness
@@ -82,6 +80,7 @@ bugs:
 extras:
 - url for scoreboard
 - mle bounce off demon
+- no teleport away for demon
 - cloud save via password
 - game start/end stats
 - ipad support

@@ -53,6 +53,7 @@ var Player = function Player() {
     this.STREXTRA = 0;
     this.GIANTSTR = 0;
     this.HERO = 0;
+    this.COKED = 0; // ULARN
     this.AWARENESS = 0;
     this.SEEINVISIBLE = 0;
     this.SPIRITPRO = 0;

@@ -51,8 +51,7 @@ function enter() {
     return;
   }
   if (building.matches(OPAD)) {
-    updateLog(`You try the door, but it's locked. Maybe another time.`);
-    setMazeMode(true);
+    opad();
     return;
   }
 

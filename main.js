@@ -426,24 +426,27 @@ function startgame(hard) {
 
 
 function DEVMODE() {
-    // enableDebug();
+
+  createArtifact(OPAD, player.PAD, true);
+
+    enableDebug();
     // eventToggleDebugWTW();
     // eventToggleDebugStairs();
     // eventToggleDebugOutput();
     // eventToggleDebugKnowAll();
-    // eventToggleDebugStats();
+    eventToggleDebugStats();
     // eventToggleDebugImmortal();
     // eventToggleDebugAwareness();
     // player.updateStealth(100000);
     // keyboard_hints = true;
-    // wizardmode(`pvnert(x)`);
-    player.GOLD = 1000001;
+    wizardmode(`pvnert(x)`);
+    // player.GOLD = 1000001;
 
     // var startShield = createObject(OSHIELD);
     // take(startShield);
-    take(createObject(OLARNEYE));
-    take(createObject(ONOTHEFT));
-    take(createObject(OSPHTALISMAN));
+    // take(createObject(OLARNEYE));
+    // take(createObject(ONOTHEFT));
+    // take(createObject(OSPHTALISMAN));
     // var startDagger = createObject(ODAGGER, -9);
     // var startSlayer = createObject(OSLAYER);
     // var startVorpy = createObject(OVORPAL);
@@ -452,9 +455,9 @@ function DEVMODE() {
     // take(startVorpy);
     // player.WIELD = startVorpy;
     // player.SHIELD = startShield;
-    take(createObject(OPOTION, 21));
+    // take(createObject(OPOTION, 21));
     // take(createObject(OBRASSLAMP));
-    // gtime = 0;
+    // gtime = 40001;
 
     // auto_pickup = true;
 
@@ -759,22 +762,31 @@ function wizardmode(password) {
       var ix = 0;
       var iy = 0;
       var wizi = 0;
-      while (wizi < MAXY) {
-        if (itemlist[++wizi])
+      while (iy < MAXY) {
+        if (itemlist[++wizi]) {
           player.level.items[ix][++iy] = createObject(itemlist[wizi]);
+          if (!ULARN) {
+            if (wizi == OORB.id) --iy;
+            if (wizi == OELEVATORUP.id) --iy;
+            if (wizi == OELEVATORDOWN.id) --iy;
+          }
+        }
       }
       --wizi;
       while (++ix < MAXX - 1) {
-        if (itemlist[++wizi])
+        if (itemlist[++wizi]) {
           player.level.items[ix][iy - 1] = createObject(itemlist[wizi]);
-        else --ix;
+          if (!ULARN && wizi >= OCOOKIE.id) break;
+        } else --ix;
       }
 
-      // 100 items now
-      while (wizi < OPAD.id) {
-        var wizitem = itemlist[++wizi];
-        if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
-          player.level.items[ix][--iy] = createObject(wizitem);
+      if (ULARN) {
+        // 100 items now
+        while (wizi < OPAD.id) {
+          var wizitem = itemlist[++wizi];
+          if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
+            player.level.items[ix][--iy] = createObject(wizitem);
+        }
       }
 
     }

@@ -637,6 +637,13 @@ function died(reason, slain) {
     }
   }
 
+  if (ULARN) {
+    let failGender = `their`;
+    if (player.gender == `Male`) failGender = `his`;
+    if (player.gender == `Female`) failGender = `her`;
+    DEATH_REASONS.set(DIED_FAILED, `killed ${failGender} family and committed suicide`);
+  }
+
   if (!winner) {
     if (slain) {
       updateLog(`You have been slain!`);
