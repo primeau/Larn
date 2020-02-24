@@ -85,10 +85,13 @@ function parse_mcdopes(key) {
 function dodeal(whichdrug, price, index) {
     if (!drug[index]) {
         nomore();
+        return;
     }
     if (player.GOLD < price) {
         nocash();
-    } else if (snag(whichdrug)) {
+        return;
+    } 
+    else if (snag(whichdrug)) {
         player.GOLD -= price;
         drug[index] = false;
     }
@@ -129,7 +132,7 @@ function nocash() {
 function doSpeed() {
     appendLog(" snort!");
     updateLog("Ohwowmanlikethingstotallyseemtoslowdown!");
-    player.HASTESELF += 200 + player.LEVEL;
+    player.updateHasteSelf(200 + player.LEVEL);
     player.HALFDAM += 300 + rnd(200);
     player.setIntelligence(player.INTELLIGENCE - 2);
     player.setWisdom(player.WISDOM - 2);

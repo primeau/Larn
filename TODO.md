@@ -3,7 +3,6 @@ If you're only after flex-grow, use the property directly rather than through th
 
 ULARN:
 - SUPPORT FOR OLDER BROWSERS
-- Dealer McDopes
 - OHANDofFEAR
 - update README.spoilers doc
 - can you get back stolen items? YES -> int stealsomething()
@@ -27,7 +26,6 @@ ULARN:
 - player.raiseexperience (x)
 check
 - movemonst.c
-- make sure gender seletion works for winning/losing conditions on scoreboard
 
 
 
