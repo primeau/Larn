@@ -332,13 +332,25 @@ var Player = function Player() {
       if (item.matches(OPSTAFF)) {
         player.setWisdom(player.WISDOM + (pickup ? 10 : -10));
       }
-      if (item.matches(OORB) & pickup) {
+      if (item.matches(OORB) && pickup) {
         player.AWARENESS++;
       }
 
       if (oldDex != player.DEXTERITY) changedDEX = millis();
       if (oldStr != player.STREXTRA) changedSTR = millis();
       if (oldInt != player.INTELLIGENCE) changedINT = millis();
+
+      if (ULARN && item.matches(OLARNEYE) && player.BLINDCOUNT == 0) {
+        updateLog(`Your sight fades for a moment...`);
+        //await nap(1000); // ULARN TODO, eventually
+        if (pickup) {
+          updateLog(`Your sight returns, and everything looks crystal-clear!`);
+        }
+        else {
+          updateLog(`Your sight returns but everything looks dull and faded.`);
+        }
+      }
+
     };
 
 

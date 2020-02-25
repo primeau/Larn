@@ -489,13 +489,13 @@ function packweight() {
 var NONAP = false;
 
 async function nap(time) {
-
   if (NONAP) time = 10;
-
   //debug(`nap start`, time);
+  //napping = true;
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('resolved');
+      //napping = false;
       //debug(`nap end`, time);
     }, time);
   });

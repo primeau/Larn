@@ -98,11 +98,9 @@ function showquaff(item) {
 
 const sortorder = [
   OLARNEYE.id,
+
   OELVENCHAIN.id,
   OSSPLATE.id,
-  OLANCE.id,
-  OSLAYER.id,
-
   OPLATEARMOR.id,
   OPLATE.id,
   OSPLINT.id,
@@ -113,6 +111,8 @@ const sortorder = [
 
   OSHIELD.id,
 
+  OLANCE.id,
+  OSLAYER.id,
   OHAMMER.id,
   OSWORDofSLASHING.id,
   OVORPAL.id,
@@ -120,6 +120,7 @@ const sortorder = [
   O2SWORD.id,
   OLONGSWORD.id,
   OBATTLEAXE.id,
+  OBELT.id,
   OFLAIL.id,
   OSPEAR.id,
   ODAGGER.id,
@@ -132,8 +133,6 @@ const sortorder = [
   ODEXRING.id,
   OSTRRING.id,
   ODAMRING.id,
-
-  OBELT.id,
 
   OSCROLL.id,
   OPOTION.id,
@@ -158,6 +157,11 @@ const sortorder = [
   OEMERALD.id,
   OSAPPHIRE.id,
 
+  OCOKE.id,
+  OSHROOMS.id,
+  OHASH.id,
+  OACID.id,
+  OSPEED.id,
   OCOOKIE.id,
 ];
 
@@ -199,17 +203,17 @@ function take(item) {
   var limit = Math.min(15 + (player.LEVEL >> 1), MAXINVEN);
   for (var i = 0; i < limit; i++) {
     if (!player.inventory[i]) {
-      player.inventory[i] = item;
+      if (mazeMode) {
+        updateLog(`  You pick up:`);
+        updateLog(`${getCharFromIndex(i)}) ${item}`);
+      }
       if (item.matches(OPOTION) && item.arg == 21) player.hasPickedUpPotion = true;
       item.inv = i; // helper for sorting inventory
       debug(`take(): ` + item);
       limit = 0;
       player.adjustcvalues(item, true);
-      if (mazeMode) {
-        updateLog(`  You pick up:`);
-        updateLog(`${getCharFromIndex(i)}) ${item}`);
-      }
-      return (true);
+      player.inventory[i] = item;
+      return true;
     }
   }
   updateLog(`You can't carry anything else`);
