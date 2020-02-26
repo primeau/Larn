@@ -218,6 +218,7 @@ function loadPlayer(saved) {
   newPlayer.y = saved.y;
 
   newPlayer.STRENGTH = saved.STRENGTH;
+  newPlayer.START_STRENGTH = saved.START_STRENGTH;
   newPlayer.INTELLIGENCE = saved.INTELLIGENCE;
   newPlayer.WISDOM = saved.WISDOM;
   newPlayer.CONSTITUTION = saved.CONSTITUTION;

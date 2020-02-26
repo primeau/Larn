@@ -141,20 +141,27 @@ function quaffpotion(potion, set_known) {
       updateLog(`  You feel more self confident!`);
       break;
 
+      // ZYSZDLKGJ
+
     case 5:
       /* strength */
       /*
       v12.4.5 - HERO fix part 1 of 2
-                i think a strength potion should always restore you to a base
-                12 STR. in older versions, if you have STR < 11 and quaff HERO
-                before quaffing a strength potion, you would only gain 1 STR,
-                and subsequently would go back to < 12 STR after HERO wears off
+                a strength potion should always restore back to the base strength
+                for a character class. for example, an adventurer (base 12 strength)
+                with 5 strength:
+                - quaff HERO:     STR = 16 (5 + 11)  
+                - quaff STRENGTH: STR = 23 (12 + 11)
+                - HERO wears off: STR = 13 (23 - 10)
       */
       if (player.HERO) {
         player.setStrength(player.STRENGTH - 11);
       }
 
-      player.setStrength(Math.max(12, player.STRENGTH + 1));
+      /* 12.5.0 - don't bump to 12 for ularn, use default starting strength 
+                  for the character class
+      */
+      player.setStrength(Math.max(player.START_STRENGTH, player.STRENGTH + 1));
 
       /* v12.4.5 - HERO fix part 2 of 2 */
       if (player.HERO) {

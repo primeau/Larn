@@ -33,6 +33,7 @@ var Player = function Player() {
     this.HP = 10;
     this.HPMAX = 10;
     this.STRENGTH = 12;
+    this.START_STRENGTH = this.STRENGTH;
     this.INTELLIGENCE = 12;
     this.WISDOM = 12;
     this.CONSTITUTION = 12;
@@ -104,7 +105,7 @@ var Player = function Player() {
     this.ORB = false;  // orb of enlightenment
     this.ELVEN = false;
     this.SLASH = false; // sword of slashing
-    this.BESSMANINTEL = 0;
+    this.BESSMANNINTEL = 0;
     this.BESSMANN = false;
     this.SLAY = false;  // slayer
     this.VORPAL = false;
@@ -317,10 +318,10 @@ var Player = function Player() {
         // it's better than it was.
         if (pickup) {
           player.setIntelligence(player.INTELLIGENCE - 10);
-          player.BESSMANINTEL = startIntel - player.INTELLIGENCE;  
+          player.BESSMANNINTEL = startIntel - player.INTELLIGENCE;  
         }
         else {
-          player.setIntelligence(player.INTELLIGENCE + player.BESSMANINTEL);
+          player.setIntelligence(player.INTELLIGENCE + player.BESSMANNINTEL);
         }
       }
       if (item.matches(OSWORDofSLASHING)) {
@@ -596,6 +597,7 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
 
   this.setCharacterClass = function(characterClass) {
     this.char_picked = characterClass;
+    let selected = false;
     if (characterClass === `Ogre`) {
       learnSpell(`mle`);
       this.SPELLMAX = 1;
@@ -610,7 +612,7 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
       this.CHARISMA = 4;
       take(createObject(OPOTION, rund(6)));
       take(createObject(OPOTION, rund(6)));
-      return true;
+      selected = true;
     } else if (characterClass === `Wizard`) {
       learnSpell(`mle`);
       learnSpell(`chm`);
@@ -627,7 +629,7 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
       take(createObject(OSCROLL, rund(6)));
       take(createObject(OSCROLL, rund(6)));
       take(createObject(OPOTION, 19)); /* treasure finding */
-      return true;
+      selected = true;
     } else if (characterClass === `Klingon`) {
       learnSpell(`ssp`);
       this.SPELLMAX = 1;
@@ -644,7 +646,7 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
       take(startArmor);
       this.WEAR = startArmor;
       take(createObject(OPOTION, rund(6)));
-      return true;
+      selected = true;
     } else if (characterClass === `Elf`) {
       learnSpell(`pro`);
       this.SPELLMAX = 2;
@@ -661,7 +663,7 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
       take(startArmor);
       this.WEAR = startArmor;
       take(createObject(OSCROLL, rund(6)));
-      return true;
+      selected = true;
     } else if (characterClass === `Rogue`) {
       learnSpell(`mle`);
       this.SPELLMAX = 1;
@@ -681,7 +683,7 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
       take(startWeapon);
       this.WIELD = startWeapon;
       take(createObject(OSCROLL, 14)); /* stealth */
-      return true;
+      selected = true;
     } else if (characterClass === `Adventurer`) {
       learnSpell(`mle`);
       learnSpell(`pro`);
@@ -703,7 +705,7 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
         take(startWeapon);
         this.WIELD = startWeapon;
       }
-      return true;
+      selected = true;
     } else if (characterClass === `Dwarf`) {
       learnSpell(`pro`);
       this.SPELLMAX = 1;
@@ -719,7 +721,7 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
       let startWeapon = createObject(OSPEAR);
       take(startWeapon);
       this.WIELD = startWeapon;
-      return true;
+      selected = true;
     } else if (characterClass === `Rambo`) {
       this.SPELLMAX = 0;
       this.SPELLS = 0;
@@ -735,9 +737,15 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
       take(startWeapon);
       this.WIELD = startWeapon;
       this.ramboflag = true;
-      return true;
+      selected = true;
     }
-    return false;
+
+    /* 12.5.0 fix for ularn: potion of strength defaulted to min 12,
+              now default to the starting strength of the character 
+    */
+    this.START_STRENGTH = this.STRENGTH; // ularn 
+
+    return selected;
   };
 
 
