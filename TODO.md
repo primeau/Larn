@@ -1,9 +1,11 @@
 One thing that was askew in your initial implementation was flex: 95%
 If you're only after flex-grow, use the property directly rather than through the shorthand flex. Then it becomes easier to spot that flex-grow doesn't take % in but relative integer weights (1, 2, 3...)
 
-ULARN:
+ULARN 12.5.0:
 - SUPPORT FOR OLDER BROWSERS
-- OHANDofFEAR
+- OHANDofFEAR: redo movemonst()
+- player.raiseexperience (x)
+- amiga icons: magic items, demons & lucifer, elevator
 - update README.spoilers doc
 - can you get back stolen items? YES -> int stealsomething()
   -- give all monsters inventory
@@ -11,22 +13,20 @@ ULARN:
   -- start monsters with gold and items in inventory
   -- remove stupid something() function
   -- try to not break savegames
-- monster.isSlow, and different way to decide when to move
-- monster.canfly, hashead?
-- mimic
-- amiga icons: magic items, demons & lucifer, elevator
 - eye of larn appraisal in bank
-- need to redo all movement code to make hand of fear / scare monsters work
-- async/await for keyboard input?
-- update babel to support async/await for nap()
-- eye of larn pickup/drop message
-- why is bessman:1 for every old game?
 - make sure ULARN ? x : y is wrapped in ()
 - search for ULARN TODO
-- player.raiseexperience (x)
 check
-- movemonst.c
+- display.c
 
+
+ULARN 12.5.1
+- monster.isSlow, and different way to decide when to move
+- monster.canfly, hashead?
+- async/await for keyboard input?
+- update babel to support async/await for nap()
+- why is bessman:1 for every old game?
+- "we don't accept contraband" when selling drugs at thrift shop
 
 
 todo:
@@ -46,11 +46,12 @@ todo:
 - update history
 - beep()
 - help wiki (items/scrolls/potions/features/monsters/etc)
-- most referenced to player.level should be replaced with functions
+- most references to player.level should be replaced with functions
 - what happens with haste self and haste monster at the same time?
 - allow hitting escape while naps are happening (interrupt settimeout?)
   - make buying / selling items etc faster 
 - loading fullstory+ games from wizard console
+- eye of larn pickup/drop message with proper naps inbetween messages (harder than expected the first time around)
 
 
 
@@ -72,7 +73,6 @@ bugs:
 - rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
-- readmail() can report wrong gold/tax status (related to having a higher local score)
 
 
 extras:

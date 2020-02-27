@@ -69,8 +69,19 @@ Monster.prototype = {
   },
 
   getChar: function () {
+    var tempMonsterArg = this.arg;
+
+    if (this.arg == MIMIC) {
+      if (!this.mimiccounter || this.mimiccounter == 10) {
+        this.mimiccounter = 0;
+        this.mimicarg = rnd(REDDRAGON);
+        if (this.mimicarg == STALKER) this.mimicarg++;
+      }
+      this.mimiccounter++;
+      tempMonsterArg = this.mimicarg;
+    }
+
     if (amiga_mode) {
-      var tempMonsterArg = this.arg;
       if (tempMonsterArg == STALKER) {
         tempMonsterArg = (player.SEEINVISIBLE > 0) ? STALKER : INVISIBLESTALKER;
       }
@@ -82,7 +93,7 @@ Monster.prototype = {
       if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
         return `<font color='red'>${demonchar[this.arg - DEMONLORD]}</font>`;
       }
-      return monsterlist[this.arg].char;
+      return monsterlist[tempMonsterArg].char;
     }
   },
 
@@ -122,7 +133,7 @@ Monster.prototype = {
   /*
    * Can we chop this thing's head off with the Vorpal Blade? 
    */
-  canBeBeheaded() {
+  canBehead() {
     if (this.isDemon()) return false;
     switch (this.arg) {
       case EYE:
@@ -788,7 +799,7 @@ function hitm(x, y, damage) {
   var weapon = player.WIELD;
 
   /* Deal with Vorpy */
-  if (weapon && weapon.matches(OVORPAL) && rnd(20) == 1 && monster.canBeBeheaded()) {
+  if (weapon && weapon.matches(OVORPAL) && rnd(20) == 1 && monster.canBehead()) {
     updateLog(`  The Vorpal Blade beheads the ${monster}!`);
     damage = monster.hitpoints;
   }

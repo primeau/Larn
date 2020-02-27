@@ -427,14 +427,14 @@ function startgame(hard) {
 
 function DEVMODE() {
 
-  createArtifact(OPAD, player.PAD, true);
+  // createArtifact(OPAD, player.PAD, true);
 
-    enableDebug();
+    // enableDebug();
     // eventToggleDebugWTW();
     // eventToggleDebugStairs();
     // eventToggleDebugOutput();
     // eventToggleDebugKnowAll();
-    eventToggleDebugStats();
+    // eventToggleDebugStats();
     // eventToggleDebugImmortal();
     // eventToggleDebugAwareness();
     // player.updateStealth(100000);
@@ -458,6 +458,9 @@ function DEVMODE() {
     // take(createObject(OPOTION, 21));
     // take(createObject(OBRASSLAMP));
     // gtime = 40001;
+
+    // createmonster(MIMIC,30, 0);
+    // eventMagicMap();
 
     // auto_pickup = true;
 
@@ -730,6 +733,7 @@ function wizardmode(password) {
     var startRing = createObject(OPROTRING, 50);
     take(startLance);
     take(startRing);
+    if (ULARN) take(createObject(OSLAYER));
     player.WEAR = null;
     player.WIELD = startLance;
 
