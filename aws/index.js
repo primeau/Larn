@@ -61,6 +61,10 @@ exports.handler = async(event) => {
 function parseGameID(event) {
     var gameID = event.gameID;
     console.log(`INDEX: start with gameID: ${gameID}\n`);
+    if (!gameID && event.newScore) {
+        gameID = event.newScore.gameID;
+        console.log(`INDEX: newScore gameID: ${gameID}\n`);
+    }
     if (!gameID && event.queryStringParameters) {
         gameID = event.queryStringParameters.gameID;
         console.log(`INDEX: queryStringParam gameID: ${gameID}\n`);

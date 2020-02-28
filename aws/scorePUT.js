@@ -110,8 +110,10 @@ async function getLowestScore(dynamo, game, isUlarn) {
             return game;
         }
 
-        // this is a new player, get the lowest score
-        var prevLowestScore = board.pop();
+        // this is a new player, get the lowest score, or skip it if the scoreboard isn't full
+        var prevLowestScore = board.length > 80 ? board.pop() : null;
+        console.log(`getLowestScore current scoreboard size: ${board.length}`);
+        console.log(`getLowestScore previous score is: ${prevLowestScore}`);
         if (prevLowestScore) {
             console.log(`getLowestScoreB:`, prevLowestScore.hardlev, game.hardlev, scoreboardReader.compareScore(prevLowestScore, game), `\n`);
             if (scoreboardReader.compareScore(prevLowestScore, game) > 0) {
@@ -182,6 +184,7 @@ function setParams(score, highScore, isUlarn) {
 
     if (isUlarn) params.TableName = `ularn_${params.TableName}`;
     if (isUlarn) params.Item.character = score.character;
+    if (score.playerIP) params.Item.playerIP = score.playerIP;
 
     return params;
 }
