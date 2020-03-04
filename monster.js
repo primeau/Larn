@@ -411,7 +411,7 @@ function getMonster(direction) {
  */
 function createmonster(mon, x, y) {
   if (mon < 1 || mon > monsterlist.length - 1) /* check for monster number out of bounds */ {
-   // beep();
+    // beep();
     debug(`createmonst invalid ${mon}`);
     //nap(3000);
     return;
@@ -449,8 +449,7 @@ function createmonster(mon, x, y) {
       case VAMPIRE:
         monster.awake = true;
     }
-  }
-  else {
+  } else {
     debug(`failed to createmonst ${mon}, ${x},${y}`)
   }
 }
@@ -567,8 +566,8 @@ function hitplayer(x, y) {
 
   var damageModifier = 1; // will alway be 1 for classic Larn
 
-  if (isCarrying(OSPIRITSCARAB) || player.SPIRITPRO) {
-    if (monster.matches(POLTERGEIST) || monster.matches(SPIRITNAGA)) {
+  if (monster.matches(POLTERGEIST) || monster.matches(SPIRITNAGA)) {
+    if (isCarrying(OSPIRITSCARAB) || player.SPIRITPRO) {
       if (ULARN) {
         /* spirit naga's and poltergeist's damage is halved if scarab of negate spirit */
         damageModifier = 0.5;
@@ -579,8 +578,8 @@ function hitplayer(x, y) {
     }
   }
 
-  if (isCarrying(OCUBEofUNDEAD) || player.UNDEADPRO) {
-    if (monster.matches(VAMPIRE) || monster.matches(WRAITH) || monster.matches(ZOMBIE)) {
+  if (monster.matches(VAMPIRE) || monster.matches(WRAITH) || monster.matches(ZOMBIE)) {
+    if (isCarrying(OCUBEofUNDEAD) || player.UNDEADPRO) {
       if (ULARN) {
         /*	halved if undead and cube of undead control	*/
         damageModifier = 0.5;
@@ -900,6 +899,23 @@ function spattack(monster, attack, xx, yy) {
     }
   }
 
+  /* no special attack for spirit naga if scarab of negate spirit */
+  /* 12.5.0 - seems like this is missing from the original. updated to match 
+              cube of undead behaviour
+  */
+  if (monster.matches(SPIRITNAGA)) {
+    if (isCarrying(OSPIRITSCARAB) || player.SPIRITPRO) {
+      return 0;
+    }
+  }
+
+  /* no drain life if cube or undead protect */
+  if (monster.matches(VAMPIRE) || monster.matches(WRAITH)) {
+    if (isCarrying(OCUBEofUNDEAD) || player.UNDEADPRO) {
+      return 0;
+    }
+  }
+
   /* staff of power cancels demonlords/wraiths/vampires 75% of time */
   /* lucifer is unaffected */
   if (ULARN && !monster.matches(LUCIFER)) {
@@ -995,7 +1011,7 @@ function spattack(monster, attack, xx, yy) {
       }
       if (monster.matches(LUCIFER)) {
         player.loselevel();
-        player.losemspells(2); 
+        player.losemspells(2);
       }
       // beep();
       return 0;
