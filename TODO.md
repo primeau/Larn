@@ -15,6 +15,8 @@ ULARN 12.5.0:
   -- try to not break savegames
 - eye of larn appraisal in bank
 - make sure ULARN ? x : y is wrapped in ()
+- TypeError: null is not an object (evaluating 'newSpellCode.length')
+
 - search for ULARN TODO
 check
 - display.c

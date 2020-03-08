@@ -84,7 +84,6 @@ function regen() {
       }
     }
     if (--player.SEEINVISIBLE <= 0) {
-      monsterlist[STALKER].char = OEMPTY.char;
       if (!player.BLINDCOUNT) {
         updateLog(`You feel your vision return to normal`);
       }

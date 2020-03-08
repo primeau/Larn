@@ -344,7 +344,7 @@ function move_scared(i, j) {
     case HOBGOBLIN:
     case METAMORPH:
     case XVART:
-    case STALKER:
+    case INVISIBLESTALKER:
     case ICELIZARD:
       if (isHalfTime()) return;
   }
@@ -410,7 +410,7 @@ function move_smart(i, j) {
     case HOBGOBLIN:
     case METAMORPH:
     case XVART:
-    case STALKER:
+    case INVISIBLESTALKER:
     case ICELIZARD:
       if (isHalfTime()) return;
   }
@@ -473,7 +473,7 @@ function move_dumb(i, j) {
     case HOBGOBLIN:
     case METAMORPH:
     case XVART:
-    case STALKER:
+    case INVISIBLESTALKER:
     case ICELIZARD:
       if (isHalfTime()) return;
   }

@@ -71,7 +71,7 @@ const LARN_monsterlist = [
   new Monster(`r`, `rothe`,                         7,   15, 5,  0,  3,  100,  50,  250),
   new Monster(`X`, `xorn`,                          7,   0,  6,  0,  13, 0,    60,  300),
   new Monster(`V`, `vampire`,                       7,   3,  4,  6,  17, 0,    50,  1000),
-  new Monster(OEMPTY.char, `invisible stalker`,     7,   3,  6,  0,  5,  0,    50,  350),
+  new Monster(`I`, `invisible stalker`,             7,   3,  6,  0,  5,  0,    50,  350),
   // 40
   /*          CHAR         NAME                     LV   AC  DAM ATT INT GOLD  HP   EXP */
   new Monster(`p`, `poltergeist`,                   8,   1,  4,  0,  3,  0,    50,  450),
@@ -96,8 +96,6 @@ const LARN_monsterlist = [
   new Monster(`u`, `green urchin`,                  10, -3,  12, 0,  3,  0,    85,  5000),
   new Monster(`D`, `red dragon`,                    10, -2,  13, 3,  19, 800,  110, 14000),
   // 57
-  new Monster(OEMPTY.char, `invisible stalker`,     7,   3,  6,  0,  5,  0,    50,  350),
-  // 58
   /*          CHAR         NAME                     LV   AC  DAM ATT INT GOLD  HP  EXP */
   new Monster(OEMPTY.char, `type I demon lord`,     12, -30, 18, 0,  20, 0,    140, 50000),
   new Monster(OEMPTY.char, `type II demon lord`,    13, -30, 18, 0,  21, 0,    160, 75000),
@@ -152,7 +150,7 @@ const ULARN_monsterlist = [
   new Monster(`r`, `rothe`,                         7,   15,   5,  0,   3,  100,    53,     230),
   new Monster(`X`, `xorn`,                          7,    6,   7,  0,  13,    0,    63,     290),
   new Monster(`V`, `vampire`,                       7,    5,   4,  6,  17,    0,    55,     950),
-  new Monster(OEMPTY.char, `invisible stalker`,     7,    5,   6,  0,   5,    0,    55,     330),
+  new Monster(`I`, `invisible stalker`,             7,    5,   6,  0,   5,    0,    55,     330),
   new Monster(`p`, `poltergeist`,                   8,    1,   8,  0,   3,    0,    55,     430),
   new Monster(`q`, `disenchantress`,                8,    3,   1,  9,   3,    0,    57,     500),
   new Monster(`s`, `shambling mound`,               8,   13,   5,  0,   6,    0,    47,     390),
@@ -170,9 +168,7 @@ const ULARN_monsterlist = [
   new Monster(`D`, `platinum dragon`,              10,   -7,  15, 13,  22, 1000,   150,   25000),
   new Monster(`u`, `green urchin`,                 10,   -5,  12,  0,   3,    0,    95,    5000),
   new Monster(`D`, `red dragon`,                   10,   -4,  13,  3,  19,  800,   120,   14000),
-  //  
-  new Monster(OEMPTY.char, `invisible stalker`,     7,    3,   6,  0,   5,    0,    50,     350),
-  //  
+  //   
   new Monster(OEMPTY.char, `type I demon lord`,    12,  -40,  20,  3,  20,    0,   150,   50000),
   new Monster(OEMPTY.char, `type II demon lord`,   13,  -45,  25,  5,  22,    0,   200,   75000),
   new Monster(OEMPTY.char, `type III demon lord`,  14,  -50,  30,  9,  24,    0,   250,  100000),
@@ -226,7 +222,7 @@ const OSEQUIP = 35;
 const ROTHE = 36;
 const XORN = 37;
 const VAMPIRE = 38;
-const STALKER = 39;
+const INVISIBLESTALKER = 39;
 const POLTERGEIST = 40;
 const DISENCHANTRESS = 41;
 const SHAMBLINGMOUND = 42;
@@ -244,7 +240,6 @@ const SILVERDRAGON = 53;
 const PLATINUMDRAGON = 54;
 const GREENURCHIN = 55;
 const REDDRAGON = 56;
-const INVISIBLESTALKER = 57; // JRP this is a dumb hack that i regret
-const DEMONLORD = 58;
-const DEMONPRINCE = 65;
-const LUCIFER = 66;
+const DEMONLORD = 57;
+const DEMONPRINCE = 64;
+const LUCIFER = 65;

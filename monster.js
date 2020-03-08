@@ -69,31 +69,38 @@ Monster.prototype = {
   },
 
   getChar: function () {
-    var tempMonsterArg = this.arg;
+    let monster = this.arg;
 
     if (this.arg == MIMIC) {
       if (!this.mimiccounter || this.mimiccounter == 10) {
         this.mimiccounter = 0;
         this.mimicarg = rnd(REDDRAGON);
-        if (this.mimicarg == STALKER) this.mimicarg++;
+        if (this.mimicarg == INVISIBLESTALKER) this.mimicarg++;
       }
       this.mimiccounter++;
-      tempMonsterArg = this.mimicarg;
+      monster = this.mimicarg;
     }
 
     if (amiga_mode) {
-      if (tempMonsterArg == STALKER) {
-        tempMonsterArg = (player.SEEINVISIBLE > 0) ? STALKER : INVISIBLESTALKER;
+      let prefix = `m`;
+      let suffix = ``;
+      if (monster == INVISIBLESTALKER && player.SEEINVISIBLE) {
+        suffix = `v`;
       }
-      // // ULARN TODO: AMIGA TILES FOR DEMONS
-      // if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
-      // }
-      return `${DIV_START}m${tempMonsterArg}${DIV_END}`;
+      else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
+        suffix = `v`;
+      }
+      return `${DIV_START}${prefix}${monster}${suffix}${DIV_END}`;
     } else {
-      if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
-        return `<font color='red'>${demonchar[this.arg - DEMONLORD]}</font>`;
+      if (monster == INVISIBLESTALKER) {
+        return player.SEEINVISIBLE ? monsterlist[INVISIBLESTALKER].char : OEMPTY.char;
       }
-      return monsterlist[tempMonsterArg].char;
+      else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
+        return `<font color='crimson'>${demonchar[this.arg - DEMONLORD]}</font>`;
+      }
+      else {
+        return monsterlist[monster].char;
+      }
     }
   },
 

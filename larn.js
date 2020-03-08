@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '410';
+const BUILD = '411';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -117,6 +117,7 @@ function initKeyBindings() {
   Mousetrap.bind('!', mousetrap);
   Mousetrap.bind('_', mousetrap);
   Mousetrap.bind('-', mousetrap);
+  Mousetrap.bind('+', mousetrap);
 
   Mousetrap.bind(['(', ')'], mousetrap); // allow () for pvnert(x)
 

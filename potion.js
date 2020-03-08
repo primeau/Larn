@@ -325,7 +325,6 @@ function quaffpotion(potion, set_known) {
     case 23:
       /* see invisible */
       player.SEEINVISIBLE += rnd(1000) + 400;
-      monsterlist[STALKER].char = 'I';
       updateLog(`  You feel your vision sharpen`);
       break;
   }
