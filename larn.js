@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '411';
+const BUILD = '412';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -354,7 +354,6 @@ function eventToggleDebugProximity() {
   nomove = 1;
   debug_used = 1;
   DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
-  if (!DEBUG_PROXIMITY) mazeMode = true;
   updateLog(`DEBUG: PROXIMITY: ` + DEBUG_PROXIMITY);
   paint();
 }
