@@ -21,6 +21,8 @@ function newcavelevel(depth) {
   */
   lasthx = 0;
   lasthy = 0;
+  // eslint-disable-next-line no-global-assign
+  screen = initGrid(MAXX, MAXY); // in case this was causing weird monster movement
 
   if (LEVELS[depth]) { // if we have visited this level before
     player.level = LEVELS[depth];
@@ -479,15 +481,6 @@ function makeobject(depth) {
   froom(2, OSTRRING, 1 + rnd(3)); /* ring of strength */
   froom(2, ORINGOFEXTRA, 0); /* ring of extra regen */
 
-  if (!ULARN) {
-    createArtifact(OORBOFDRAGON,     player.SLAYING,      rnd(151) < 3);
-    createArtifact(OSPIRITSCARAB,    player.NEGATESPIRIT, rnd(151) < 4);
-    createArtifact(OCUBEofUNDEAD,    player.CUBEofUNDEAD, rnd(151) < 4);
-    createArtifact(ONOTHEFT,         player.NOTHEFT,      rnd(151) < 3);
-    createArtifact(OSWORDofSLASHING, player.SLASH,        rnd(151) < 2);
-    createArtifact(OHAMMER,          player.BESSMANN,     rnd(151) < 4);
-  }
-
   if (ULARN) {
     // only one of these per level
     var created = false;
@@ -497,17 +490,23 @@ function makeobject(depth) {
     created |= createArtifact(OSPIRITSCARAB, player.NEGATESPIRIT, !created && rnd(120) < 8);
     created |= createArtifact(OCUBEofUNDEAD, player.CUBEofUNDEAD, !created && rnd(120) < 8);
     created |= createArtifact(ONOTHEFT,      player.NOTHEFT,      !created && rnd(120) < 8);
+    created |= createArtifact(OSWORDofSLASHING, player.SLASH,     !created && rnd(120) < 8);
+    created |= createArtifact(OHAMMER,       player.BESSMANN,     !created && rnd(120) < 8);
     created |= createArtifact(OSPHTALISMAN,  player.TALISMAN,     !created && rnd(120) < 8);
     created |= createArtifact(OHANDofFEAR,   player.HAND,         !created && rnd(120) < 8);
     created |= createArtifact(OORB,          player.ORB,          !created && rnd(120) < 8);
     created |= createArtifact(OELVENCHAIN,   player.ELVEN,        !created && rnd(120) < 8);
-
-    // more than one of these artifacts can be created on a level
-    createArtifact(OSWORDofSLASHING, player.SLASH,    rnd(120) < 8);
-    createArtifact(OHAMMER,          player.BESSMANN, rnd(120) < 8);
-    createArtifact(OSLAYER,          player.SLAY,     depth >= 10 && rnd(100) > (85 - (depth - 10)));
-    createArtifact(OVORPAL,          player.VORPAL,   rnd(120) < 8);
-    createArtifact(OPSTAFF,          player.STAFF,    depth >= 8 && rnd(100) > (85 - (depth - 10)));
+    created |= createArtifact(OSLAYER,       player.SLAY,         !created && depth >= 10 && rnd(100) > (85 - (depth - 10)));
+    created |= createArtifact(OVORPAL,       player.VORPAL,       !created && rnd(120) < 8);
+    created |= createArtifact(OPSTAFF,       player.STAFF,        !created && depth >= 8 && rnd(100) > (85 - (depth - 10)));
+  }
+  else {
+    createArtifact(OORBOFDRAGON,     player.SLAYING,      rnd(151) < 3);
+    createArtifact(OSPIRITSCARAB,    player.NEGATESPIRIT, rnd(151) < 4);
+    createArtifact(OCUBEofUNDEAD,    player.CUBEofUNDEAD, rnd(151) < 4);
+    createArtifact(ONOTHEFT,         player.NOTHEFT,      rnd(151) < 3);
+    createArtifact(OSWORDofSLASHING, player.SLASH,        rnd(151) < 2);
+    createArtifact(OHAMMER,          player.BESSMANN,     rnd(151) < 4);
   }
 
   if (getDifficulty() < 3 || (rnd(4) == 3)) {

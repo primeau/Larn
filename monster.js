@@ -13,6 +13,7 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, in
   this.hitpoints = hitpoints;
   this.experience = experience;
   this.awake = awake;
+  this.moved = false;
 }
 
 
@@ -56,6 +57,7 @@ Monster.prototype = {
   experience: 0,
   awake: false,
   /*  false=sleeping true=awake monst*/
+  moved: false,
 
   matches: function (monsterarg) {
     return this.arg == monsterarg;
@@ -86,18 +88,22 @@ Monster.prototype = {
       let suffix = ``;
       if (monster == INVISIBLESTALKER && player.SEEINVISIBLE) {
         suffix = `v`;
-      }
+      } 
       else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
         suffix = `v`;
       }
+      else if (ULARN && (monster == LEMMING || monster == BITBUG)) {
+        suffix = `u`;
+      }
       return `${DIV_START}${prefix}${monster}${suffix}${DIV_END}`;
-    } else {
+    } 
+    else {
       if (monster == INVISIBLESTALKER) {
         return player.SEEINVISIBLE ? monsterlist[INVISIBLESTALKER].char : OEMPTY.char;
-      }
+      } 
       else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
         return `<font color='crimson'>${demonchar[this.arg - DEMONLORD]}</font>`;
-      }
+      } 
       else {
         return monsterlist[monster].char;
       }
@@ -160,6 +166,54 @@ Monster.prototype = {
       default:
         return true;
     }
+  },
+
+  /*
+   * Can this monster float over a pit / trapdoor?
+   */
+  canFly() {
+    /* lemmings can't fly */
+    if (ULARN && this.arg == LEMMING) return false;
+
+    switch (this.arg) {
+      case BAT:
+      case EYE:
+      case SPIRITNAGA:
+      case PLATINUMDRAGON:
+      case WRAITH:
+      case VAMPIRE:
+      case SILVERDRAGON:
+      case POLTERGEIST:
+      case DEMONLORD:
+      case DEMONLORD + 1:
+      case DEMONLORD + 2:
+      case DEMONLORD + 3:
+      case DEMONLORD + 4:
+      case DEMONLORD + 5:
+      case DEMONLORD + 6:
+      case DEMONPRINCE:
+      case LUCIFER:
+        return true;
+      default:
+        return false;
+    }
+  },
+
+  /*
+   * Is this a half-speed monster
+   */
+  isSlow() {
+    switch (this.arg) {
+      case TROGLODYTE:
+      case HOBGOBLIN:
+      case METAMORPH:
+      case XVART:
+      case INVISIBLESTALKER:
+      case ICELIZARD:
+        // if (isHalfTime()) return;
+        return true;
+    }
+    return false;
   },
 
 
@@ -834,17 +888,8 @@ function hitm(x, y, damage) {
       dropgold(rnd(monster.gold) + monster.gold);
     }
     monster.dropsomething();
-    player.level.monsters[x][y] = null;
+    killMonster(x, y);
 
-    /*
-    v12.4.5
-    clear the last hit monster if it's killed
-    */
-    lasthx = 0;
-    lasthy = 0;
-
-    //player.level.know[x][y] = 0; // HACK FIX FOR BLACK TILE FIX ON OMNIDIRECT
-    //monster = null;
     return (hpoints);
   }
   return (fulldamage);
@@ -1038,14 +1083,12 @@ function spattack(monster, attack, xx, yy) {
         else
           player.setGold(player.GOLD - rnd(1 + (player.GOLD >> 1)));
       } else updateLog(`The ${monster} couldn't find any gold to steal`);
-      player.level.monsters[xx][yy] = null;
+      killMonster(xx, yy);
       player.level.know[xx][yy] &= ~KNOWHERE;
-      // beep();
+      beep();
       /* 12.4.5 and ularn */
       /* put the monster back somewhere on the level */
       fillmonst(monster.arg);
-      if (xx == lasthx) lasthx = 0;
-      if (yy == lasthy) lasthy = 0;
       return 1;
 
     case 9:
@@ -1098,14 +1141,12 @@ function spattack(monster, attack, xx, yy) {
       updateLog(`The ${monster} picks your pocket and takes: `);
       // beep();
       if (stealsomething() == 0) updateLog(`  nothing`);
-      player.level.monsters[xx][yy] = null;
+      killMonster(xx, yy);
       player.level.know[xx][yy] &= ~KNOWHERE;
 
       /* 12.4.5 and ularn */
       /* put the monster back somewhere on the level */
       fillmonst(monster.arg);
-      if (xx == lasthx) lasthx = 0;
-      if (yy == lasthy) lasthy = 0;
 
       recalc();
       return 1;
@@ -1124,4 +1165,15 @@ function spattack(monster, attack, xx, yy) {
 
   recalc();
   return 0;
+}
+
+
+
+function killMonster(x, y) {
+  player.level.monsters[x][y] = null;
+  if (lasthx == x && lasthy == y) {
+    lasthx = 0;
+    lasthy = 0;
+  }
+  player.level.know[x][y] &= ~KNOWHERE;
 }

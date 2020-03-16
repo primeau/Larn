@@ -203,6 +203,7 @@ const RUSTMONSTER = 16;
 const ZOMBIE = 17;
 const ASSASSINBUG = 18;
 const BUGBEAR = 19;
+const BITBUG = 19;
 const HELLHOUND = 20;
 const ICELIZARD = 21;
 const CENTAUR = 22;

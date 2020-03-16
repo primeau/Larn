@@ -376,7 +376,11 @@ function pocketempty() {
 }
 
 
-
+/*
+    routine to tell if player is carrying an item
+    returns *the item* if carrying, else *null*
+    this is *not* obvious, but handy when you know
+*/
 function isCarrying(item) {
   let exact = item && (item.matches(OPOTION) || item.matches(OSCROLL));
   for (let i = 0; i < player.inventory.length; i++) {

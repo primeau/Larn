@@ -3,9 +3,8 @@ If you're only after flex-grow, use the property directly rather than through th
 
 ULARN 12.5.0:
 - SUPPORT FOR OLDER BROWSERS
-- OHANDofFEAR: redo movemonst()
 - player.raiseexperience (x)
-- amiga icons: magic items, demons & lucifer, elevator
+- amiga icons: magic items, demons & lucifer, elevator, lemming, bitbug
 - update README.spoilers doc
 - can you get back stolen items? YES -> int stealsomething()
   -- give all monsters inventory
@@ -13,18 +12,20 @@ ULARN 12.5.0:
   -- start monsters with gold and items in inventory
   -- remove stupid something() function
   -- try to not break savegames
+  -- if the monster has stolen the talisman, they get it's power!
 - eye of larn appraisal in bank
 - make sure ULARN ? x : y is wrapped in ()
 - TypeError: null is not an object (evaluating 'newSpellCode.length')
-
 - search for ULARN TODO
 check
 - display.c
+- all 1.6.3 code
 
 
 ULARN 12.5.1
 - monster.isSlow, and different way to decide when to move
-- monster.canfly, hashead?
+- fix interactions between haste self / haste monster / half-speed monsters (check 1.6.3 hastestep)
+  * HAS + PER bug slow monsters (H,x,r,etc) move every moves, or totally paralyzed?
 - async/await for keyboard input?
 - update babel to support async/await for nap()
 - why is bessman:1 for every old game?
@@ -49,7 +50,6 @@ todo:
 - beep()
 - help wiki (items/scrolls/potions/features/monsters/etc)
 - most references to player.level should be replaced with functions
-- what happens with haste self and haste monster at the same time?
 - allow hitting escape while naps are happening (interrupt settimeout?)
   - make buying / selling items etc faster 
 - loading fullstory+ games from wizard console
@@ -59,12 +59,11 @@ todo:
 
 bugs:
 * lots of monsters walking through wall. is there a problem with movesmart()?
-* HAS + PER bug slow monsters (H,x,r,etc) move every moves, or totally paralyzed?
+  - was this due to smart ripple[] not being cleared?
 * long user names aren't truncated on the start screen
 - closing a door (from on top of the door) when a monster is in the spot you were
   just in drops you back on the monsters spot. the monster reappears when you move.
 - can't load game stats from local scoreboard (can't find game sdkjfhsdfkj)
-- half speed monsters don't move with HAS on opposite move
 - arrow buttons on help screen are truncated in amiga mode
 - amiga mode: viewing scoreboard resets to classic mode (partially fixed)
 - better inventory layout, font selection with react?

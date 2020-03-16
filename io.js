@@ -136,6 +136,21 @@ var HACK_URL_TEXT = `url`;
 function os_put_font(ch, x, y, markup) {
   if (x >= 0 && x < 80 && y >= 0 && y < 24) {
     if (!amiga_mode) {
+
+      if (DEBUG_PROXIMITY) {
+        if (!screen[x] || !screen[x][y] || screen[x][y] == 127 || screen[x][y] == 0) {
+          // do nothing
+        } else {
+          if (!monsterAt(x, y)) {
+            ch = (screen[x][y] < 10) ? `` + screen[x][y] : `` + (screen[x][y] % 10);
+          }
+          else {
+            ch = `<b>${ch}</b>`;
+          }
+        }
+        if (x == player.x && y == player.y) ch = `<b>#</b>`;
+      }
+
       display[x][y] = ch;
 
       // TODO: setup for not repainting in text mode

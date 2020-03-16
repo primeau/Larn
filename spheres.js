@@ -108,7 +108,7 @@ function rmsphere(x, y) {
       /* is sphere on this level? */
       if (x == sp.x && y == sp.y) /* locate sphere at this location */ {
         setItem(x, y, OEMPTY);
-        player.level.monsters[x][y] = null;
+        // player.level.monsters[x][y] = null;
         player.level.know[x][y] = 1;
         show1cell(x, y); /* show the now missing sphere */
         spheres.splice(i, 1); // remove the sphere from the list
