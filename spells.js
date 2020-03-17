@@ -45,10 +45,9 @@ function getSpellCode(key, showAllSpells) {
   if (key == 'I' || key == ` `) {
     seemagic(true, showAllSpells );
     setCharCallback(parse_see_spells);
-    //if (!newSpellCode) updateLog(eys);
     return 0;
   }
-  if (key == DEL && newSpellCode.length >= 1) {
+  if (key == DEL && newSpellCode && newSpellCode.length >= 1) {
     newSpellCode = newSpellCode.substring(0, newSpellCode.length - 1);
     var line = deleteLog();
     updateLog(line.substring(0, line.length - 1));
@@ -1116,8 +1115,8 @@ function annihilate() {
           // JRP: Everyone gets an easter egg. This one is mine.
           monster.arg != LAMANOBE) {
           k += monster.experience;
-          player.level.monsters[i][j] = null;
-          player.level.know[i][j] &= ~KNOWHERE;
+          killMonster(i, j);
+
         } else {
           updateLog(`  The ${monster} barely escapes being annihilated!`);
           monster.hitpoints = (monster.hitpoints >> 1) + 1; /* lose half hit points*/

@@ -418,7 +418,7 @@ function startgame(hard) {
   setMazeMode(true);
   side_inventory = true;
 
-  //DEVMODE();
+  // DEVMODE();
 
   return 1;
 }
@@ -427,63 +427,39 @@ function startgame(hard) {
 
 function DEVMODE() {
 
-  // createArtifact(OPAD, player.PAD, true);
-
-    // enableDebug();
-    // eventToggleDebugWTW();
-    // eventToggleDebugStairs();
-    // eventToggleDebugOutput();
-    // eventToggleDebugKnowAll();
-    // eventToggleDebugStats();
-    // eventToggleDebugImmortal();
-    // eventToggleDebugAwareness();
+    enableDebug();
+    eventToggleDebugWTW();
+    eventToggleDebugStairs();
+    eventToggleDebugOutput();
+    eventToggleDebugKnowAll();
+    eventToggleDebugStats();
+    eventToggleDebugImmortal();
+    eventToggleDebugAwareness();
     // player.updateStealth(100000);
-    // keyboard_hints = true;
+    player.updateCancellation(100000);
+
     wizardmode(`pvnert(x)`);
-    // player.GOLD = 1000001;
 
     // var startShield = createObject(OSHIELD);
     // take(startShield);
-    // take(createObject(OLARNEYE));
-    // take(createObject(ONOTHEFT));
-    // take(createObject(OSPHTALISMAN));
     // var startDagger = createObject(ODAGGER, -9);
     // var startSlayer = createObject(OSLAYER);
-    // var startVorpy = createObject(OVORPAL);
     // take(startDagger);
     // take(startSlayer);
-    // take(startVorpy);
-    // player.WIELD = startVorpy;
     // player.SHIELD = startShield;
-    // take(createObject(OPOTION, 21));
+    take(createObject(OPOTION, 21));
+    take(createObject(OSPHTALISMAN));
+    // take(createObject(OHANDofFEAR));
+    take(createObject(OLARNEYE));
+    // take(createObject(ONOTHEFT));
+    // take(createObject(OSPHTALISMAN));
     // take(createObject(OBRASSLAMP));
-    // gtime = 40001;
+    // gtime = 30001;
+    // player.GOLD = 1;
 
     // createmonster(MIMIC,30, 0);
     // eventMagicMap();
 
-    // auto_pickup = true;
-
-    // // for (var i = 2; i < 26; i+=2) {
-    // //   take(createObject(OSCROLL, rnd(5)));
-    // //   take(createObject(OPOTION, rnd(5)));
-    // // }
-    // // player.updateHoldMonst(100000);
-    // player.updateStealth(100000);
-    // // player.updateAltPro(100000);
-    // // player.updateTimeStop(10);
-    // // player.updateGiantStr(100000);
-    // // player.updateDexCount(100000);
-    // // player.updateUndeadPro(100000);
-    // // player.updateStrCount(100000);
-    // // player.updateSpiritPro(100000);
-    // // player.updateCharmCount(100000);
-    // // player.updateHasteSelf(100000);
-    // // player.updateProtectionTime(100000);
-    // // player.updateCancellation(100000);
-    // // player.updateScareMonst(100000);
-    // // player.updateInvisibility(100000);
-    // // player.updateFireResistance(100000);
 }
 
 
