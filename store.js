@@ -888,7 +888,7 @@ async function ohome() {
 
   setMazeMode(false);
 
-  napping = true;
+  napping = false;
   dropflag = 1;
 
   setCharCallback(parse_home);
