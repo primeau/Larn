@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '415';
+const BUILD = '416';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -39,6 +39,8 @@ function play() {
   });
 
   initKeyBindings();
+
+  document.addEventListener("click", onMouseClick);
 
   /* warn the player that closing their window will kill the game.
      this is a bit annoying, and I'm tempted to get rid of it now
@@ -270,6 +272,14 @@ function eventToggleDebugKnowAll() {
   nomove = 1;
   debug_used = 1;
   DEBUG_KNOW_ALL = true;
+  learnAll();
+  updateLog(`DEBUG_KNOW_ALL: ` + DEBUG_KNOW_ALL);
+  paint();
+}
+
+
+
+function learnAll() {
   for (let i = 0; i < spelcode.length; i++) {
     learnSpell(spelcode[i]);
   }
@@ -279,8 +289,6 @@ function eventToggleDebugKnowAll() {
   for (let i = 0; i < POTION_NAMES.length; i++) {
     learnPotion(createObject(OPOTION, i));
   }
-  updateLog(`DEBUG_KNOW_ALL: ` + DEBUG_KNOW_ALL);
-  paint();
 }
 
 
@@ -356,4 +364,106 @@ function eventToggleDebugProximity() {
   DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
   updateLog(`DEBUG: PROXIMITY: ` + DEBUG_PROXIMITY);
   paint();
+}
+
+
+
+function onMouseClick(event) {
+  try {
+
+    let xy, x, y;
+
+    if (amiga_mode) {
+      if (!event.target.attributes.id) return; // clicking outside the 80,24 window
+      xy = event.target.attributes.id.value.split(`,`);
+      x = xy[0];
+      y = xy[1];
+    }
+    else {
+
+      return;
+
+      /*
+      // this is too unreliable to ship
+      let el = document.getElementById('LARN');
+      let style = window.getComputedStyle(el, null).getPropertyValue('font-size');
+      let fontSize = parseFloat(style);
+      let fontWidth = getTextWidth("0", fontSize + 'pt dos');
+      // console.log(`fontwidth: ${fontWidth} fontSize: ${fontSize}`);
+
+      // console.log(event.layerX, event.layerY);
+      // console.log(event.clientX, event.clientY);
+
+      let offx = 25; // event.target.offsetLeft;
+      let offy = 25; // event.target.offsetTop);
+      // let offx = event.target.offsetLeft;
+      // let offy = event.target.offsetTop;
+      console.log(offx, offy);
+      
+      let clickX = event.clientX - offx;
+      let clickY = event.clientY - offy;
+      // console.log(`clickX`, clickX, `clickY`, clickY);
+
+      x = clickX / fontWidth;
+      y = clickY / fontSize;
+      console.log(x, y);
+
+      let weirdHackX = (66/59.52);
+      let weirdHackY = (16/18.45);
+      x = Math.floor((clickX / fontWidth) * weirdHackX);
+      y = Math.floor((clickY / fontSize) * weirdHackY);
+      */
+
+    } 
+
+    let monster = monsterAt(x, y);
+    let item = itemAt(x, y);
+
+    if (!item) return; // clicking outside the 67,17 maze
+
+    let description = ``;
+    let prefix = `It's `;
+    let sayEmpty = false;
+
+    // console.log(event);
+    // console.log(x, y);
+    // updateLog(`${x}, ${y}`);
+
+    // check for invisible monsters on items
+    if (monster) {
+      if (monster.matches(INVISIBLESTALKER)) {
+        // can only see invisible stalker when see invisible
+        sayEmpty = !player.SEEINVISIBLE;
+      }
+      if (monster.isDemon()) {
+        // only see demon if ularn and carrying eye
+        sayEmpty = !(ULARN && isCarrying(OLARNEYE)); 
+      }
+      // no help if you're blind!
+      if (player.BLINDCOUNT) sayEmpty = true;
+      if (sayEmpty) monster = null; // what monster?
+    }
+
+    if (x == player.x && y == player.y) {
+      description = `our Hero`;
+    }
+    else if (monster) {
+      description = monster.toString();
+      if (monster.matches(MIMIC)) description = monsterlist[monster.mimicarg].toString();
+      let firstChar = description.substring(0, 1).toLocaleLowerCase();
+      prefix = `It's a `;
+      if (`aeiou`.indexOf(firstChar) >= 0) prefix = `It's an `;
+    } else {
+      if (sayEmpty || item.matches(OIVDARTRAP) || item.matches(OIVTELETRAP) || item.matches(OIVTRAPDOOR) || item.matches(OTRAPARROWIV)) {
+        description = OEMPTY.desc;
+      } else {
+        description = item.desc;
+      }
+    }
+    description = prefix + description;
+    updateLog(description);
+    paint();
+  } catch (error) {
+    console.log(`onMouseClick`, error);
+  }
 }

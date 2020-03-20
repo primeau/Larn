@@ -140,9 +140,11 @@ Item.prototype = {
     //
     else if (this.matches(OOPENDOOR) ||
       this.matches(OCLOSEDDOOR) ||
-      this.matches(OTHRONE) ||
+      this.matches(OWALL) ||
+      this.matches(OGOLDPILE) ||
       this.matches(ODEADTHRONE) ||
       this.matches(OBOOK) ||
+      this.matches(OCHEST) ||
       this.matches(OCHEST) ||
       this.matches(OAMULET) ||
       (this.isRing() && inStore && !showAll) ||
@@ -290,9 +292,9 @@ const CARRY = true;
 const NO_CARRY = false;
 
 /* id, char, hackchar, ularnchar, color, bold, desc, carry, arg, inv */
-const OEMPTY = new Item(0, `·`, `·`, `·`, NO_COLOR, NO_BOLD, `empty space`, NO_CARRY); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
+const OEMPTY = new Item(0, `·`, `·`, `·`, NO_COLOR, NO_BOLD, `the dungeon floor`, NO_CARRY); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
 const OANNIHILATION = new Item(82, `s`, `0`, `s`, `crimson`, BOLD, `a sphere of annihilation`, NO_CARRY);
-const OHOMEENTRANCE = new Item(93, OEMPTY.char, `8`, OEMPTY.char, NO_COLOR, NO_BOLD, `exit to home level`, NO_CARRY);
+const OHOMEENTRANCE = new Item(93, OEMPTY.char, `8`, OEMPTY.char, NO_COLOR, NO_BOLD, `the exit to the home level`, NO_CARRY);
 const OUNKNOWN = new Item(94, ' ', ` `, ` `, NO_COLOR, NO_BOLD, `... nothing`, NO_CARRY);
 
 // buildings / home level
@@ -379,7 +381,7 @@ const OSHIELD = new Item(68, `[`, `[`, `[`, NO_COLOR, BOLD, `a shield`, CARRY);
 /* need amiga */ const OELVENCHAIN = new Item(92, `]`, `]`, `]`, `cornflowerblue`, BOLD, `elven chain`, CARRY); // ULARN
 
 // rings
-const ORINGOFEXTRA = new Item(32, `=`, `=`, `|`, NO_COLOR, BOLD, `ring of extra regeneration`, CARRY);
+const ORINGOFEXTRA = new Item(32, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of extra regeneration`, CARRY);
 const OREGENRING = new Item(33, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of regeneration`, CARRY);
 const OPROTRING = new Item(34, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of protection`, CARRY);
 const OENERGYRING = new Item(35, `=`, `=`, `|`, NO_COLOR, BOLD, `an energy ring`, CARRY);
@@ -394,7 +396,7 @@ const OAMULET = new Item(45, `}`, `~`, `.`, `gold`, BOLD, `an amulet of invisibi
 const OORBOFDRAGON = new Item(46, `o`, `~`, `o`, `skyblue`, BOLD, `an orb of dragon slaying`, CARRY);
 const OSPIRITSCARAB = new Item(47, `:`, `~`, `.`, `darkorange`, BOLD, `a scarab of negate spirit`, CARRY);
 const OCUBEofUNDEAD = new Item(48, `;`, `~`, `.`, `plum`, BOLD, `a cube of undead control`, CARRY);
-const ONOTHEFT = new Item(49, `,`, `~`, `.`, `cornflowerblue`, BOLD, `device of theft prevention`, CARRY);
+const ONOTHEFT = new Item(49, `,`, `~`, `.`, `cornflowerblue`, BOLD, `a device of theft prevention`, CARRY);
 const OORB = new Item(3, `o`, `~`, `o`, `plum`, BOLD, `an orb of enlightenment`, CARRY); // ULARN
 /* need amiga */ const OBRASSLAMP = new Item(85, `.`, `.`, `.`, `gold`, BOLD, `a brass lamp`, CARRY); // ULARN
 /* need amiga */ const OHANDofFEAR = new Item(86, `.`, `.`, `.`, `crimson`, BOLD, `The Hand of Fear`, CARRY); // ULARN

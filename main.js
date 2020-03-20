@@ -435,8 +435,10 @@ function DEVMODE() {
     eventToggleDebugStats();
     eventToggleDebugImmortal();
     eventToggleDebugAwareness();
-    // player.updateStealth(100000);
+    player.updateStealth(100000);
     player.updateCancellation(100000);
+
+    // player.raiseexperience(220 * MEG);
 
     wizardmode(`pvnert(x)`);
 
@@ -448,6 +450,8 @@ function DEVMODE() {
     // take(startSlayer);
     // player.SHIELD = startShield;
     take(createObject(OPOTION, 21));
+    take(createObject(OPOTION, 2));
+
     take(createObject(OSPHTALISMAN));
     // take(createObject(OHANDofFEAR));
     take(createObject(OLARNEYE));
@@ -458,7 +462,7 @@ function DEVMODE() {
     // player.GOLD = 1;
 
     // createmonster(MIMIC,30, 0);
-    // eventMagicMap();
+    // revealLevel();
 
 }
 
@@ -480,22 +484,22 @@ function setAmigaMode() {
 
 
 
-// /**
-//  * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
-//  * 
-//  * @param {String} text The text to be rendered.
-//  * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
-//  * 
-//  * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
-//  */
-// function getTextWidth(text, font) {
-//   // re-use canvas object for better performance
-//   var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-//   var context = canvas.getContext("2d");
-//   context.font = font;
-//   var metrics = context.measureText(text);
-//   return metrics.width;
-// }
+/**
+ * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
+ * 
+ * @param {String} text The text to be rendered.
+ * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
+ * 
+ * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+ */
+function getTextWidth(text, font) {
+  // re-use canvas object for better performance
+  var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+  var context = canvas.getContext("2d");
+  context.font = font;
+  var metrics = context.measureText(text);
+  return metrics.width;
+}
 
 
 

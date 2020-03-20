@@ -37,7 +37,7 @@ function setGameConfig() {
 
     OLRS.desc = `the ${GAMENAME} Revenue Service`;
 
-    if (ULARN) OTRADEPOST.desc = `You have found the Ularn trading Post`;
+    if (ULARN) OTRADEPOST.desc = `the Ularn trading Post`;
 
     // ITEMS
     FORTUNES = COMMON_FORTUNES.concat(ULARN ? ULARN_FORTUNES : LARN_FORTUNES);
