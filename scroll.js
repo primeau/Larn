@@ -180,10 +180,7 @@ function read_scroll(scroll) {
     case 15:
       /* magic mapping */
       if (printMessage) updateLog(`  You have been granted enlightenment!`);
-      for (let i = 0; i < MAXX; i++)
-        for (let j = 0; j < MAXY; j++)
-          player.level.know[i][j] = KNOWALL;
-      //draws(0, MAXX, 0, MAXY);
+      revealLevel();
       break;
 
     case 16:

@@ -486,6 +486,15 @@ function packweight() {
 }
 
 
+
+function revealLevel() {
+  for (let i = 0; i < MAXX; i++) // magic map
+    for (let j = 0; j < MAXY; j++)
+      player.level.know[i][j] = KNOWALL;
+}
+
+
+
 var NONAP = false;
 
 async function nap(time) {

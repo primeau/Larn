@@ -3,8 +3,7 @@ If you're only after flex-grow, use the property directly rather than through th
 
 ULARN 12.5.0:
 - SUPPORT FOR OLDER BROWSERS
-- player.raiseexperience (x)
-- amiga icons: magic items, demons & lucifer, elevator, lemming, bitbug
+- better amiga icons: magic items, demons & lucifer, elevator, lemming, bitbug
 - update README.spoilers doc
 - can you get back stolen items? YES -> int stealsomething()
   -- give all monsters inventory
@@ -15,14 +14,16 @@ ULARN 12.5.0:
   -- if the monster has stolen the talisman, they get it's power!
 - eye of larn appraisal in bank
 - make sure ULARN ? x : y is wrapped in ()
-- TypeError: null is not an object (evaluating 'newSpellCode.length')
 - search for ULARN TODO
+- fall down pit, area around player isn't exposed, classic mode only -> add paint()?
+- lama nobe graphic?
 check
 - display.c
 - all 1.6.3 code
 
 
 ULARN 12.5.1
+- click / farlook to identify object
 - monster.isSlow, and different way to decide when to move
 - fix interactions between haste self / haste monster / half-speed monsters (check 1.6.3 hastestep)
   * HAS + PER bug slow monsters (H,x,r,etc) move every moves, or totally paralyzed?
@@ -30,7 +31,7 @@ ULARN 12.5.1
 - update babel to support async/await for nap()
 - why is bessman:1 for every old game?
 - "we don't accept contraband" when selling drugs at thrift shop
-
+- amiga mode: unseen walls should be flat
 
 todo:
 - check chrome audit tab
@@ -43,7 +44,7 @@ todo:
   - no-nap
 - "sorry, no mobile" message for larn.html
 - warn if changing names because it's annoying on the scoreboard
-- click / farlook to identify object
+- click / farlook to identify object (hack and classic mode)
 - show time in side inventory
 - Save id to name and name to id map
 - update history
@@ -52,13 +53,12 @@ todo:
 - most references to player.level should be replaced with functions
 - allow hitting escape while naps are happening (interrupt settimeout?)
   - make buying / selling items etc faster 
-- loading fullstory+ games from wizard console
 - eye of larn pickup/drop message with proper naps inbetween messages (harder than expected the first time around)
 
 
 
 bugs:
-* lots of monsters walking through wall. is there a problem with movesmart()?
+* lots of monsters walking through wall. (fixed?)
   - was this due to smart ripple[] not being cleared?
 * long user names aren't truncated on the start screen
 - closing a door (from on top of the door) when a monster is in the spot you were
@@ -77,6 +77,7 @@ bugs:
 
 
 extras:
+- change font to dynamically fit window
 - url for scoreboard
 - mle bounce off demon
 - no teleport away for demon

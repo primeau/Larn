@@ -260,7 +260,41 @@ var Player = function Player() {
         beep();
         changedLevel = millis();
         updateLog(`Welcome to level ` + player.LEVEL); /* if we changed levels */
+
+        switch (player.LEVEL) {
+          case 94:
+            /* earth guardian */
+            player.WTW = 99999;
+            break;
+          case 95:
+            /* air guardian */
+            player.INVISIBILITY = 99999;
+            break;
+          case 96:
+            /* fire guardian */
+            player.FIRERESISTANCE = 99999;
+            break;
+          case 97:
+            /* water guardian */
+            player.CANCELLATION = 99999;
+            break;
+          case 98:
+            /* time guardian */
+            player.HASTESELF = 99999;
+            break;
+          case 99:
+            /* ethereal guardian */
+            player.STEALTH = 99999;
+            player.SPIRITPRO = 99999;
+            break;
+          case 100:
+            updateLog(`You are now The Creator!`);
+            learnAll();
+            revealLevel();
+            break;
+        }
       }
+
     };
 
 
