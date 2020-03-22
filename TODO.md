@@ -5,7 +5,6 @@ ULARN 12.5.0:
 - SUPPORT FOR OLDER BROWSERS
 - better amiga icons: magic items, demons & lucifer, elevator, lemming, bitbug
 - update README.spoilers doc
-- if the monster has stolen the talisman, they get it's power!
 - eye of larn appraisal in bank
 - search for ULARN TODO
 - lama nobe graphic?

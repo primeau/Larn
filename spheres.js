@@ -80,7 +80,14 @@ function newsphere(x, y, dir, life, lev) {
 
   updateWalls(x, y, 1);
 
-  player.level.monsters[x][y] = null;
+  /* talisman protects monsters too */
+  if (monster && monster.isCarrying(OSPHTALISMAN)) {
+    updateLog(`The ${monster} is unaffected by the sphere of annihilation!`);
+  }
+  else {
+    killMonster(x,y);
+  }
+
   player.level.know[x][y] = 1;
   show1cell(x, y); /* show the new sphere */
 
@@ -135,7 +142,12 @@ function sphboom(x, y) {
   for (var j = Math.max(1, x - 2); j < Math.min(x + 3, MAXX - 1); j++) {
     for (var i = Math.max(1, y - 2); i < Math.min(y + 3, MAXY - 1); i++) {
       setItem(j, i, OEMPTY);
-      player.level.monsters[j][i] = null;
+      let monster = monsterAt(j, i);
+      if (monster && monster.isCarrying(OSPHTALISMAN)) {
+        updateLog(`The ${monster} is unaffected by the blast!`);
+      } else {
+        killMonster(j, i);
+      }
       show1cell(j, i);
       if (!isCarrying(OSPHTALISMAN)) { // sphere of talisman protects
         if (player.x == j && player.y == i) {
