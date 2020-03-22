@@ -428,7 +428,7 @@ function seemagic(onlyspells, allspells) {
   var buffer = [];
 
   var spellstring = `  The magic spells you have discovered thus far:`;
-  if (allspells) spellstring = `Availible spells are:`;
+  if (allspells) spellstring = `Available spells are:`;
   var spellfunc = function(spell, buffer) {
     return padString(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
   }

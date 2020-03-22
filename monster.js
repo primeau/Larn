@@ -14,6 +14,7 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, in
   this.experience = experience;
   this.awake = awake;
   this.moved = false;
+  this.inventory = [];
 }
 
 
@@ -36,6 +37,8 @@ function createMonster(monst) {
     monst.awake);
 
   monster.arg = arg;
+
+  monster.initInventory();
 
   return monster;
 }
@@ -91,8 +94,8 @@ Monster.prototype = {
       } 
       else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
         suffix = `v`;
-      }
-      else if (ULARN && (monster == LEMMING || monster == BITBUG)) {
+      } 
+      else if (ULARN && (monster == LEMMING || monster == BITBUG /* || monster == LAMANOBE */)) {
         suffix = `u`;
       }
       return `${DIV_START}${prefix}${monster}${suffix}${DIV_END}`;
@@ -114,15 +117,15 @@ Monster.prototype = {
     return this.arg >= DEMONLORD;
   },
 
-  /*
-   *  dropsomething(monst)    Function to create an object when a monster dies
-   *      int monst;
-   *
-   *  Function to create an object near the player when certain monsters are killed
-   *  Enter with the monster number
-   *  Returns nothing of value.
-   */
-  dropsomething: function () {
+  initInventory: function () {
+    if (!this.inventory) { // TODO for old savegame -- delete june 2021
+      this.inventory = [];
+    }
+    this.addInventory();
+    this.addGold();
+  },
+
+  addInventory: function () {
     switch (this.arg) {
       case ORC:
       case NYMPH:
@@ -134,13 +137,47 @@ Monster.prototype = {
       case PLATINUMDRAGON:
       case GNOMEKING:
       case REDDRAGON:
-        something(level, false);
+        this.pickup(createRandomItem(level));
+        if (rnd(101) < 8) this.addInventory();
         return;
       case LEPRECHAUN:
-        if (rnd(101) >= 75) creategem(false);
-        if (rnd(5) == 1) this.dropsomething(LEPRECHAUN);
+        if (rnd(101) >= 75) this.pickup(createGem());
+        if (rnd(5) == 1) this.addInventory();
         return;
     }
+  },
+
+  addGold: function () {
+    if (this.gold <= 0) return;
+    let amount = rnd(this.gold) + this.gold;
+    this.pickup(createGold(amount));
+    return;
+  },
+
+  pickup: function (item) {
+    if (!item) {
+      return;
+    }
+    if (!this.inventory) this.initInventory(); // TODO for old savegame -- delete june 2021
+    this.inventory.push(item);
+  },
+
+  dropInventory: function (x, y) {
+    if (!this.inventory) this.initInventory(); // TODO for old savegame -- delete june 2021
+    while (this.inventory.length > 0) {
+      dropItem(x, y, this.inventory.pop());
+    }
+  },
+
+  isCarrying: function (item) {
+    if (!item) return false;
+    for (let i = 0; i < this.inventory.length; i++) {
+      let tmpItem = this.inventory[i];
+      if (item.matches(tmpItem)) {
+        return true;
+      }
+    }
+    return false;
   },
 
   /*
@@ -231,42 +268,6 @@ function randmonst() {
     rmst = 120 - (level << 2);
     fillmonst(makemonst(level));
   }
-}
-
-
-
-/*
- *  dropgold(amount)    Function to drop some gold around player
- *      int amount;
- *
- *  Enter with the number of gold pieces to drop
- *  Returns nothing of value.
- */
-function dropgold(amount, nearPlayer) {
-  if (amount > 250) {
-    amount = Math.round(amount / 100) * 100;
-  }
-  createitem(OGOLDPILE, amount, nearPlayer);
-}
-
-
-
-/*
- *  Function to create a random item around player
- *
- *  Function to create an item from a designed probability around player
- *  Enter with the cave level on which something is to be dropped
- *  Returns nothing of value.
- */
-
-/* 12.4.5
-killing a monster with a ranged spell will drop loot beside the 
-monster, not the player
-*/
-function something(lv, nearPlayer) {
-  if (lv < 0 || lv > MAXLEVEL + MAXVLEVEL) return; /* correct level? */
-  if (rnd(101) < 8) something(lv, nearPlayer); /* possibly more than one item */
-  createitem(newobject(lv), 0, nearPlayer);
 }
 
 
@@ -472,27 +473,26 @@ function getMonster(direction) {
  */
 function createmonster(mon, x, y) {
   if (mon < 1 || mon > monsterlist.length - 1) /* check for monster number out of bounds */ {
-    // beep();
     debug(`createmonst invalid ${mon}`);
-    //nap(3000);
     return;
   }
   while (isGenocided(mon) && mon < monsterlist.length - 1) mon++; /* genocided? */
 
-  // JRP force creation and use exact co-ordinates if they are given
-  if (x != null && y != null) {
-    // get rid of any monster that might be there already if we want to force creation
-    player.level.monsters[x][y] = null;
-  }
+  if (!x) x = player.x;
+  if (!y) y = player.y;
+
+  let dx = x;
+  let dy = y;
+
   var oktocreate = (x != null && y != null && cgood(x, y, 0, 1));
   var i = oktocreate ? 0 : -8;
 
   /* choose direction, then try all */
   for (var k = rnd(8); i < 0; i++, k++) {
     if (k > 8) k = 1; /* wraparound the diroff arrays */
-    x = player.x + diroffx[k];
-    y = player.y + diroffy[k];
-    if (cgood(x, y, 0, 1)) /* if we can create here */ {
+    dx = x + diroffx[k];
+    dy = y + diroffy[k];
+    if (cgood(dx, dy, 0, 1)) /* if we can create here */ {
       oktocreate = true;
       i = 0;
     }
@@ -501,8 +501,8 @@ function createmonster(mon, x, y) {
   if (oktocreate) {
     var monster = createMonster(mon);
     if (!monster) return;
-    player.level.monsters[x][y] = monster;
-    player.level.know[x][y] &= ~KNOWHERE;
+    player.level.monsters[dx][dy] = monster;
+    player.level.know[dx][dy] &= ~KNOWHERE;
     monster.awake = false;
     switch (mon) {
       case ROTHE:
@@ -511,7 +511,7 @@ function createmonster(mon, x, y) {
         monster.awake = true;
     }
   } else {
-    debug(`failed to createmonst ${mon}, ${x},${y}`)
+    debug(`failed to createmonst ${mon}, ${dx},${dy}`)
   }
 }
 
@@ -604,6 +604,32 @@ function createitem(item, arg, nearPlayer) {
     }
 
     firstTry = false;
+  }
+}
+
+
+
+function dropItemNearPlayer(item) {
+  dropItem(player.x, player.y, item);
+}
+
+
+
+function dropItem(x, y, item) {
+  if (cgood(x, y, 1, 0)) {
+    setItem(x, y, item);
+    return;
+  } else {
+    let dx, dy;
+    for (let k = rnd(8), i = -8; i < 0; i++, k++) /* choose direction, then try all */ {
+      if (k > 8) k = 1; /* wraparound the diroff arrays */
+      dx = x + diroffx[k];
+      dy = y + diroffy[k];
+      if (cgood(dx, dy, 1, 0)) /* if we can create here */ {
+        setItem(dx, dy, item);
+        return;
+      }
+    }
   }
 }
 
@@ -884,10 +910,7 @@ function hitm(x, y, damage) {
     player.MONSTKILLED++;
     updateLog(`  The ${monster} died!`);
     player.raiseexperience(monster.experience);
-    if (monster.gold > 0) {
-      dropgold(rnd(monster.gold) + monster.gold);
-    }
-    monster.dropsomething();
+    monster.dropInventory(x, y);
     killMonster(x, y);
 
     return (hpoints);
@@ -1083,24 +1106,22 @@ function spattack(monster, attack, xx, yy) {
         else
           player.setGold(player.GOLD - rnd(1 + (player.GOLD >> 1)));
       } else updateLog(`The ${monster} couldn't find any gold to steal`);
-      killMonster(xx, yy);
-      player.level.know[xx][yy] &= ~KNOWHERE;
-      beep();
       /* 12.4.5 and ularn */
       /* put the monster back somewhere on the level */
-      fillmonst(monster.arg);
+      teleportMonster(xx, yy);
+      beep();
       return 1;
 
     case 9:
       for (var j = 50;;) {
         /* disenchant */
         var rndItem = rund(26);
-        var item = player.inventory[rndItem]; /* randomly select item */
+        let item = player.inventory[rndItem]; /* randomly select item */
         if (item && item.arg > 0 && !item.matches(OSCROLL) && !item.matches(OPOTION)) {
           if ((item.arg -= 3) < 0) item.arg = 0;
           updateLog(`The ${monster} hits you with a spell of disenchantment!`);
           updateLog(`  ${getCharFromIndex(rndItem)}) ${item}`);
-          // beep();
+          beep();
           recalc();
           return 0;
         }
@@ -1132,25 +1153,24 @@ function spattack(monster, attack, xx, yy) {
       player.losehp(damage);
       return 0;
 
-    case 14: // ULARN TODO: put the stolen item into the monster's inventory
+    case 14: {
       if (isCarrying(ONOTHEFT)) return 0; /* he has device of no theft */
       if (emptyhanded() == 1) {
         updateLog(`The ${monster} couldn't find anything to steal`);
         break;
       }
       updateLog(`The ${monster} picks your pocket and takes: `);
-      // beep();
-      if (stealsomething() == 0) updateLog(`  nothing`);
-      killMonster(xx, yy);
-      player.level.know[xx][yy] &= ~KNOWHERE;
-
+      let item = stealsomething();
+      if (!item) updateLog(`  nothing`);
+      /* put the stolen item into the monsters inventory */
+      monsterAt(xx, yy).pickup(item);
       /* 12.4.5 and ularn */
       /* put the monster back somewhere on the level */
-      fillmonst(monster.arg);
-
+      teleportMonster(xx, yy);
+      beep();
       recalc();
       return 1;
-
+    }
     case 15: // bugbear
       damage = rnd(10) + 5 - armorclass;
       // fall through
@@ -1165,6 +1185,19 @@ function spattack(monster, attack, xx, yy) {
 
   recalc();
   return 0;
+}
+
+
+
+function teleportMonster(x, y) {
+  let oldMonster = monsterAt(x, y);
+  killMonster(x, y);
+
+  let newMonster = fillmonst(oldMonster.arg);
+
+  /* restore inventory & hp */
+  newMonster.inventory = oldMonster.inventory;
+  newMonster.hitpoints = oldMonster.hitpoints;
 }
 
 

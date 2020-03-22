@@ -109,7 +109,8 @@ function read_scroll(scroll) {
 
     case 5:
       /* create artifact */
-      something(level, true);
+      dropItemNearPlayer(createRandomitem(level));
+      if (rnd(101) < 8) dropItemNearPlayer(createRandomitem(level)); // chance for 2 items
       break;
 
     case 6:

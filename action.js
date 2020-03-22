@@ -87,11 +87,12 @@ function act_open_chest(x, y) {
     }
     setItem(x, y, OEMPTY); /* destroy the chest */
     if (rnd(100) < 69) {
-      creategem(true); /* gems from the chest */
+      dropItemNearPlayer(createGem()); /* gems from the chest */
     }
-    dropgold(rnd(110 * chest.arg + 200), true);
+    dropItemNearPlayer(createGold(rnd(110 * chest.arg + 200)));
     for (var i = 0; i < rnd(4); i++) {
-      something(chest.arg + 2, true);
+      dropItemNearPlayer(createRandomItem(chest.arg + 2));
+      if (rnd(101) < 8) i--; // chance of another item
     }
   } else
     updateLog(`  Nothing happens`);

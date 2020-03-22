@@ -144,30 +144,42 @@ function recalc() {
 
 
 
-/*
-    function to create a gem on a square near the player
- */
-function creategem(nearPlayer) {
-  var i, j;
+function createGem() {
+  var gem, arg;
   switch (rnd(4)) {
     case 1:
-      i = ODIAMOND;
-      j = 50;
+      gem = ODIAMOND;
+      arg = 50;
       break;
     case 2:
-      i = ORUBY;
-      j = 40;
+      gem = ORUBY;
+      arg = 40;
       break;
     case 3:
-      i = OEMERALD;
-      j = 30;
+      gem = OEMERALD;
+      arg = 30;
       break;
     default:
-      i = OSAPPHIRE;
-      j = 20;
+      gem = OSAPPHIRE;
+      arg = 20;
       break;
   }
-  createitem(i, rnd(j) + j / 10, nearPlayer);
+  return createObject(gem, rnd(arg) + arg / 10);
+}
+
+
+
+function createGold(amount) {
+  if (amount > 250) {
+    amount = Math.round(amount / 100) * 100;
+  }
+  return createObject(OGOLDPILE, amount);
+}
+
+
+
+function createRandomItem(lev) {
+  return newobject(lev);
 }
 
 
@@ -384,7 +396,7 @@ function makemonst(lev) {
 
 /*
  * function to steal an item from the players pockets
- * returns 1 if steals something else returns 0
+ * returns the item if steals something else returns null
  */
 function stealsomething() {
   var j = 100;
@@ -395,9 +407,9 @@ function stealsomething() {
       updateLog(`  ${getCharFromIndex(i)}) ${item}`);
       player.adjustcvalues(item, false);
       player.inventory[i] = null;
-      return 1;
+      return item;
     }
-    if (--j <= 0) return 0;
+    if (--j <= 0) return null;
   }
 }
 

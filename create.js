@@ -108,7 +108,7 @@ function cannedlevel(depth) {
           items[x][y] = createObject(OCLOSEDDOOR, rnd(30));
           break;
         case '-':
-          items[x][y] = newobject(depth + 1);
+          items[x][y] = createRandomItem(depth + 1);
           break;
         case '.':
           if (depth < (ULARN ? MAXLEVEL - 6: MAXLEVEL)) break;
@@ -303,7 +303,7 @@ function treasureroom(lv) {
  *  the coordinate given is that of the upper left corner of the room
  */
 function troom(lv, xsize, ysize, tx, ty, glyph) {
-  var i, j, tp1, tp2;
+  var i, j;
 
   var empty = OEMPTY; //createObject(OEMPTY);
   var item = player.level.items;
@@ -341,29 +341,26 @@ function troom(lv, xsize, ysize, tx, ty, glyph) {
       break;
   }
 
-  tp1 = player.x;
-  tp2 = player.y;
-
-  player.y = ty + (ysize >> 1);
+  let tmpy = ty + (ysize >> 1);
 
   if (getDifficulty() < 2) {
-    for (player.x = tx + 1; player.x <= tx + xsize - 2; player.x += 2) {
+    for (let tmpx = tx + 1; tmpx <= tx + xsize - 2; tmpx += 2) {
       for (i = 0, j = rnd(6); i <= j; i++) {
-        something(lv + 2, true);
-        createmonster(makemonst(lv + (ULARN ? 2 : 1)));
+        dropItem(tmpx, tmpy, createRandomItem(lv + 2));
+        if (rnd(101) < 8) i--; // chance of another item
+        createmonster(makemonst(lv + (ULARN ? 2 : 1)), tmpx, tmpy);
       }
     }
   } else {
-    for (player.x = tx + 1; player.x <= tx + xsize - 2; player.x += 2) {
+    for (let tmpx = tx + 1; tmpx <= tx + xsize - 2; tmpx += 2) {
       for (i = 0, j = rnd(4); i <= j; i++) {
-        something(lv + 2, true);
-        createmonster(makemonst(lv + (ULARN ? 4 : 3)));
+        dropItem(tmpx, tmpy, createRandomItem(lv + 2));
+        if (rnd(101) < 8) i--; // chance of another item
+        createmonster(makemonst(lv + (ULARN ? 4 : 3)), tmpx, tmpy);
       }
     }
   }
 
-  player.x = tp1;
-  player.y = tp2;
 }
 
 
@@ -623,10 +620,10 @@ function fillmonst(what, awake) {
       player.level.monsters[x][y] = monster;
       if (awake) monster.awake = awake;
       player.level.know[x][y] &= ~KNOWHERE;
-      return (0);
+      return monster;
     }
   }
-  return (-1); /* creation failure */
+  return null; /* creation failure */
 }
 
 
@@ -675,7 +672,7 @@ function sethp(flg) {
     if ((level >= MAXLEVEL - 5) && (level < MAXLEVEL)) {
       numdemons = level - 10;
       for (let j = 1 ; j <= numdemons ; j++) {
-        if (fillmonst(DEMONLORD + rund(7)) == -1) {
+        if (!fillmonst(DEMONLORD + rund(7))) {
           j--;
         }
       }
@@ -690,7 +687,7 @@ function sethp(flg) {
     else if (level >= MAXLEVEL) {
       numdemons = level - MAXLEVEL + 1;
       for (let j = 1 ; j <= numdemons ; j++){
-        if (fillmonst(DEMONPRINCE) == -1) {
+        if (!fillmonst(DEMONPRINCE)) {
           j--;
         }
       }

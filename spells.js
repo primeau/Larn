@@ -592,7 +592,6 @@ function spell_polymorph(direction) {
   if (isconfuse())
     return; /* if he is confused, he can't aim his magic */
 
-  //dirsub( & x, & y);
   var x = player.x + diroffx[direction];
   var y = player.y + diroffy[direction];
 

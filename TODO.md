@@ -5,25 +5,15 @@ ULARN 12.5.0:
 - SUPPORT FOR OLDER BROWSERS
 - better amiga icons: magic items, demons & lucifer, elevator, lemming, bitbug
 - update README.spoilers doc
-- can you get back stolen items? YES -> int stealsomething()
-  -- give all monsters inventory
-  -- player.take, monster.take
-  -- start monsters with gold and items in inventory
-  -- remove stupid something() function
-  -- try to not break savegames
-  -- if the monster has stolen the talisman, they get it's power!
+- if the monster has stolen the talisman, they get it's power!
 - eye of larn appraisal in bank
-- make sure ULARN ? x : y is wrapped in ()
 - search for ULARN TODO
-- fall down pit, area around player isn't exposed, classic mode only -> add paint()?
 - lama nobe graphic?
-check
-- display.c
-- all 1.6.3 code
+- "you have found" vs "you find"
+- check all 1.6.3 code
 
 
 ULARN 12.5.1
-- click / farlook to identify object
 - monster.isSlow, and different way to decide when to move
 - fix interactions between haste self / haste monster / half-speed monsters (check 1.6.3 hastestep)
   * HAS + PER bug slow monsters (H,x,r,etc) move every moves, or totally paralyzed?
@@ -35,13 +25,6 @@ ULARN 12.5.1
 
 todo:
 - check chrome audit tab
-- colors for dragons? other monsters
-- config page
-  - colors on/off
-  - keyboard hints
-  - walls as block or joined ascii
-  - no-beep
-  - no-nap
 - "sorry, no mobile" message for larn.html
 - warn if changing names because it's annoying on the scoreboard
 - click / farlook to identify object (hack and classic mode)
@@ -60,13 +43,14 @@ todo:
 bugs:
 * lots of monsters walking through wall. (fixed?)
   - was this due to smart ripple[] not being cleared?
+* fall down pit, area around player isn't exposed
+   - only when player doesn't fall down on the first 'try'
 * long user names aren't truncated on the start screen
 - closing a door (from on top of the door) when a monster is in the spot you were
   just in drops you back on the monsters spot. the monster reappears when you move.
 - can't load game stats from local scoreboard (can't find game sdkjfhsdfkj)
 - arrow buttons on help screen are truncated in amiga mode
 - amiga mode: viewing scoreboard resets to classic mode (partially fixed)
-- better inventory layout, font selection with react?
 - amiga mode: strikethrough missing on taxes owing after victory
 - blindness
   - black tile when opening door when blind
@@ -78,9 +62,17 @@ bugs:
 
 extras:
 - change font to dynamically fit window
+- better inventory layout, font selection with react?
 - url for scoreboard
 - mle bounce off demon
 - no teleport away for demon
+- colors for dragons? other monsters
+- config page
+  - colors on/off
+  - keyboard hints
+  - walls as block or joined ascii
+  - no-beep
+  - no-nap
 - cloud save via password
 - game start/end stats
 - ipad support

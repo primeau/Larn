@@ -528,8 +528,8 @@ function mmove(sx, sy, dx, dy) {
 
   if (monster.matches(LEPRECHAUN)) {
     /* leprechaun takes gold and gems */
-    // ULARN TODO, PUT IN INVENTORY
     if (item.matches(OGOLDPILE) || item.isGem()) {
+      monster.pickup(item);
       setItem(dx, dy, OEMPTY);
     }
   }
@@ -565,10 +565,15 @@ function mmove(sx, sy, dx, dy) {
         monst_killed = 1;
       }
     } else {
-      /* monster annihilated */
-      trap_msg = `The ${monster} is destroyed by the sphere of annihilation!`;
-      killMonster(dx, dy);
-      monst_killed = 1;
+      if (monster.isCarrying(OSPHTALISMAN)) {
+        /* talisman protects monster */
+        trap_msg = `The ${monster} is unaffected by the sphere of annihilation!`;
+      } else {
+        /* monster annihilated */
+        trap_msg = `The ${monster} is destroyed by the sphere of annihilation!`;
+        killMonster(dx, dy);
+        monst_killed = 1;
+      }
     }
   } else if (item.matches(OTRAPARROW)) {
     what = `An arrow`;
@@ -580,9 +585,7 @@ function mmove(sx, sy, dx, dy) {
     /* monster hits teleport trap */
     if (!monster.isDemon()) {
       trap_msg = `The ${monster} gets teleported.`;
-      // teleportmonst(dx, dy, mitem[dx][dy].mon); // ULARN TODO
-      fillmonst(monster.arg);
-      killMonster(dx, dy);
+      teleportMonster(dx, dy);
       dx = movedx;
       dy = movedy;
     }

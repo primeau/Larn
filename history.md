@@ -27,6 +27,8 @@ elsewhere on the same level.
 
 1. [new] The Sword of Slashing doesn't rust.
 
+1. [new] Stolen items can be recovered if you can find the monster again.
+
 1. [balance] 'Smart' monsters in a closed room never moved. Now they follow
 player movement, except for demons, who stand guard to protect the Eye of Larn
 and potion of cure Dianthroritis.

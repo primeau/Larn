@@ -32,7 +32,7 @@ function act_remove_gems(arg) {
   var k = rnd(101);
   if (k < 25) {
     for (var i = 0; i < rnd(4); i++) {
-      creategem(true); /* gems pop off the throne */
+      dropItemNearPlayer(createGem()); /* gems pop off the throne */
     }
     var throneArg = itemAt(player.x, player.y).arg;
     setItem(player.x, player.y, createObject(ODEADTHRONE, throneArg));
