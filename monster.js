@@ -610,13 +610,13 @@ function createitem(item, arg, nearPlayer) {
 
 
 function dropItemNearPlayer(item) {
-  dropItem(player.x, player.y, item);
+  dropItem(player.x, player.y, item, true);
 }
 
 
 
-function dropItem(x, y, item) {
-  if (cgood(x, y, 1, 0)) {
+function dropItem(x, y, item, scatter) {
+  if (!scatter && cgood(x, y, 1, 0)) {
     setItem(x, y, item);
     return;
   } else {

@@ -2,7 +2,6 @@ One thing that was askew in your initial implementation was flex: 95%
 If you're only after flex-grow, use the property directly rather than through the shorthand flex. Then it becomes easier to spot that flex-grow doesn't take % in but relative integer weights (1, 2, 3...)
 
 ULARN 12.5.0:
-- SUPPORT FOR OLDER BROWSERS
 - better amiga icons: magic items, demons & lucifer, elevator, lemming, bitbug
 - update README.spoilers doc
 - eye of larn appraisal in bank
@@ -11,9 +10,9 @@ ULARN 12.5.0:
 - check all 1.6.3 code
 
 ULARN 12.5.1
-- monster.isSlow, and different way to decide when to move
 - fix interactions between haste self / haste monster / half-speed monsters (check 1.6.3 hastestep)
   * HAS + PER bug slow monsters (H,x,r,etc) move every moves, or totally paralyzed?
+  - monster.isSlow, and different way to decide when to move
 - async/await for keyboard input?
 - update babel to support async/await for nap()
 - why is bessman:1 for every old game?
