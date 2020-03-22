@@ -19,7 +19,6 @@ ULARN 12.5.1
 - async/await for keyboard input?
 - update babel to support async/await for nap()
 - why is bessman:1 for every old game?
-- "we don't accept contraband" when selling drugs at thrift shop
 - amiga mode: unseen walls should be flat
 
 todo:

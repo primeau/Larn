@@ -265,6 +265,18 @@ Item.prototype = {
 
 
 
+  isDrug: function () {
+    var drug = false;
+    drug |= this.matches(OSPEED);
+    drug |= this.matches(OACID);
+    drug |= this.matches(OHASH);
+    drug |= this.matches(OSHROOMS);
+    drug |= this.matches(OCOKE);
+    return drug;
+  },
+
+
+
   getSortCode: function () {
     var invcode = this.inv ? this.inv : 0;
     var sortcode = (sortorder.indexOf(this.id) + 1) * 10000 + invcode;

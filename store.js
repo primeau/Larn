@@ -612,6 +612,12 @@ function parse_tradepost(key) {
       //nap(2000);
       return 0;
     }
+    if (item.isDrug()) {
+      storemessage(`Sorry, we can't accept contraband`, 700);
+      //nap(2000);
+      return 0;
+    }
+
     if (item.matches(OLANCE) && player.ramboflag) {
       storemessage(`You don't *really* want to sell that, now do you?`, 1000);
       //nap(2000);
