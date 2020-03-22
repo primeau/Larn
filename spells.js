@@ -43,7 +43,7 @@ function matchesSpell(spell) {
 
 function getSpellCode(key, showAllSpells) {
   if (key == 'I' || key == ` `) {
-    seemagic(true, showAllSpells );
+    seemagic(true, showAllSpells);
     setCharCallback(parse_see_spells);
     return 0;
   }
@@ -66,8 +66,7 @@ function getSpellCode(key, showAllSpells) {
   appendLog(key);
   if (newSpellCode.length < 3) {
     return 0;
-  }
-  else {
+  } else {
     return newSpellCode;
   }
 }
@@ -296,7 +295,8 @@ function speldamage(x) {
 
       return;
     }
-      /* ----- LEVEL 4 SPELLS ----- */
+
+    /* ----- LEVEL 4 SPELLS ----- */
 
     case 21:
       /* dehydration */
@@ -1110,12 +1110,14 @@ function annihilate() {
       var monster = monsterAt(i, j);
       if (monster) {
         /* if a monster there */
-        if (!monster.isDemon() &&
+        if (!monster.isDemon()) {
           // JRP: Everyone gets an easter egg. This one is mine.
-          monster.arg != LAMANOBE) {
-          k += monster.experience;
-          killMonster(i, j);
-
+          if (!ULARN && monster.arg == LAWLESS) {
+            updateLog(`Lawless resists!`);
+          } else {
+            k += monster.experience;
+            killMonster(i, j);
+          }
         } else {
           updateLog(`  The ${monster} barely escapes being annihilated!`);
           monster.hitpoints = (monster.hitpoints >> 1) + 1; /* lose half hit points*/
@@ -1138,7 +1140,6 @@ function isGenocided(monsterId) {
 
 
 
-
 function setGenocide(monsterId) {
   genocide.push(monsterId);
 }
@@ -1156,10 +1157,10 @@ function genmonst(key) {
 
   appendLog(key);
 
-  for (var j = 0; j < monsterlist.length; j++)
-    if (monsterlist[j].char == key) {
+  for (var j = 0; j < monsterlist.length; j++) {
+    if (monsterlist[j].char == key && !isGenocided(j)) {
       var monstname;
-      if (j != LAMANOBE) setGenocide(j); // JRP see below
+      if (!(!ULARN && j == LAWLESS)) setGenocide(j); // JRP see below
       switch (j) {
         case JACULI:
           monstname = `jaculi`;
@@ -1179,13 +1180,17 @@ function genmonst(key) {
         case DISENCHANTRESS:
           monstname = `disenchantresses`;
           break;
-        case LAMANOBE:
+        case LAWLESS:
           // JRP: Everyone gets an easter egg. This one is mine.
-          updateLog(`  Lawless resists!`);
-          return 1;
-        default:
-          monstname = monsterlist[j] + `s`;
-          break;
+          if (!ULARN) {
+            updateLog(`  Lawless resists!`);
+            return 1;
+          }
+          // lama nobe falls through
+          // eslint-disable-next-line no-fallthrough
+          default:
+            monstname = monsterlist[j] + `s`;
+            break;
       }
 
       updateLog(`  There will be no more ${monstname}`);
@@ -1194,7 +1199,7 @@ function genmonst(key) {
       paint();
       return 1;
     }
-
+  }
   updateLog(`  You sense failure!`);
   return 1;
 }

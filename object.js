@@ -144,7 +144,7 @@ Item.prototype = {
       this.matches(OGOLDPILE) ||
       this.matches(ODEADTHRONE) ||
       this.matches(OBOOK) ||
-      this.matches(OCHEST) ||
+      this.matches(OTHRONE) ||
       this.matches(OCHEST) ||
       this.matches(OAMULET) ||
       (this.isRing() && inStore && !showAll) ||

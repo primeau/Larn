@@ -420,10 +420,10 @@ function emptyhanded() {
   for (var i = 0; i < 26; i++) {
     var item = player.inventory[i];
     if (item && item !== player.WIELD && item !== player.WEAR && item !== player.SHIELD) {
-      return 0;
+      return false;
     }
   }
-  return 1;
+  return true;
 }
 
 

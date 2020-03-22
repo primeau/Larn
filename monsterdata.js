@@ -218,6 +218,7 @@ const ZILLER = 30;
 const VIOLETFUNGI = 31;
 const WRAITH = 32;
 const FORVALAKA = 33;
+const LAWLESS = 34;
 const LAMANOBE = 34;
 const OSEQUIP = 35;
 const ROTHE = 36;

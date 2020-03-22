@@ -95,7 +95,7 @@ Monster.prototype = {
       else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
         suffix = `v`;
       } 
-      else if (ULARN && (monster == LEMMING || monster == BITBUG /* || monster == LAMANOBE */)) {
+      else if (ULARN && (monster == LEMMING || monster == BITBUG || monster == LAMANOBE)) {
         suffix = `u`;
       }
       return `${DIV_START}${prefix}${monster}${suffix}${DIV_END}`;
@@ -1155,7 +1155,7 @@ function spattack(monster, attack, xx, yy) {
 
     case 14: {
       if (isCarrying(ONOTHEFT)) return 0; /* he has device of no theft */
-      if (emptyhanded() == 1) {
+      if (emptyhanded()) {
         updateLog(`The ${monster} couldn't find anything to steal`);
         break;
       }

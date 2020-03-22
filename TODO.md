@@ -7,10 +7,8 @@ ULARN 12.5.0:
 - update README.spoilers doc
 - eye of larn appraisal in bank
 - search for ULARN TODO
-- lama nobe graphic?
 - "you have found" vs "you find"
 - check all 1.6.3 code
-
 
 ULARN 12.5.1
 - monster.isSlow, and different way to decide when to move
