@@ -13,17 +13,17 @@ function pad_hd() {
     cursor(1, 1);
     lprcat(`Hey man, welcome to Dealer McDope's Pad! I gots the some of the finest shit\n`);
     lprcat(`you'll find anywhere in Ularn -- check it out...\n\n\n`);
-    lprcat(`\t\t    The Stash\t\t\tThe Cash\n\n`);
+    lprcat(`                    The Stash                   The Cash\n\n`);
 
-    if (drug[0]) lprcat(`\t\ta)  Killer Speed\t\t100 bucks`);
+    if (drug[0]) lprcat(`                a)  Killer Speed                100 bucks`);
     lprc(`\n`);
-    if (drug[1]) lprcat(`\t\tb)  Groovy Acid\t\t\t250 bucks`);
+    if (drug[1]) lprcat(`                b)  Groovy Acid                 250 bucks`);
     lprc(`\n`);
-    if (drug[2]) lprcat(`\t\tc)  Monster Hash\t\t500 bucks`);
+    if (drug[2]) lprcat(`                c)  Monster Hash                500 bucks`);
     lprc(`\n`);
-    if (drug[3]) lprcat(`\t\td)  Trippy Shrooms\t\t1000 bucks`);
+    if (drug[3]) lprcat(`                d)  Trippy Shrooms              1000 bucks`);
     lprc(`\n`);
-    if (drug[4]) lprcat(`\t\te)  Cool Coke\t\t\t5000 bucks`);
+    if (drug[4]) lprcat(`                e)  Cool Coke                   5000 bucks`);
     lprc(`\n`);
 
     let plural = player.GOLD == 1 ? `` : `s`;

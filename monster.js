@@ -89,7 +89,7 @@ Monster.prototype = {
     if (amiga_mode) {
       let prefix = `m`;
       let suffix = ``;
-      if (monster == INVISIBLESTALKER && player.SEEINVISIBLE) {
+      if (monster == INVISIBLESTALKER && player.SEEINVISIBLE > 0) {
         suffix = `v`;
       } 
       else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
@@ -102,7 +102,7 @@ Monster.prototype = {
     } 
     else {
       if (monster == INVISIBLESTALKER) {
-        return player.SEEINVISIBLE ? monsterlist[INVISIBLESTALKER].char : OEMPTY.char;
+        return player.SEEINVISIBLE > 0 ? monsterlist[INVISIBLESTALKER].char : OEMPTY.char;
       } 
       else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
         return `<font color='crimson'>${demonchar[this.arg - DEMONLORD]}</font>`;
@@ -251,6 +251,19 @@ Monster.prototype = {
         return true;
     }
     return false;
+  },
+
+  /*
+   * Can our Hero see this monster right now
+   */
+  isVisible() {
+    if (this.isDemon()) {
+      return ULARN && isCarrying(OLARNEYE);
+    }
+    if (this.matches(INVISIBLESTALKER)) {
+      return player.SEEINVISIBLE > 0;
+    }
+    return true;
   },
 
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '423';
+const BUILD = '424';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -378,7 +378,7 @@ function onMouseClick(event) {
       xy = event.target.attributes.id.value.split(`,`);
       x = xy[0];
       y = xy[1];
-    }
+    } 
     else {
 
       return;
@@ -414,7 +414,7 @@ function onMouseClick(event) {
       y = Math.floor((clickY / fontSize) * weirdHackY);
       */
 
-    } 
+    }
 
     let monster = monsterAt(x, y);
     let item = itemAt(x, y);
@@ -429,37 +429,33 @@ function onMouseClick(event) {
     // console.log(x, y);
     // updateLog(`${x}, ${y}`);
 
-    // check for invisible monsters on items
     if (monster) {
-      if (monster.matches(INVISIBLESTALKER)) {
-        // can only see invisible stalker when see invisible
-        sayEmpty = !player.SEEINVISIBLE;
-      }
-      if (monster.isDemon()) {
-        // only see demon if ularn and carrying eye
-        sayEmpty = !(ULARN && isCarrying(OLARNEYE)); 
-      }
-      // no help if you're blind!
-      if (player.BLINDCOUNT) sayEmpty = true;
-      if (sayEmpty) monster = null; // what monster?
+      // no help for invisible monsters or if you're blind
+      sayEmpty = !monster.isVisible() || player.BLINDCOUNT > 0;
     }
 
-    if (x == player.x && y == player.y) {
-      description = `our Hero`;
+    if (sayEmpty) monster = null; // what monster?
+
+    if (!player.level.know[x][y]) {
+      description = `a mystery`;
     }
+    else if (x == player.x && y == player.y) {
+      description = `our Hero`;
+    } 
     else if (monster) {
       description = monster.toString();
       if (monster.matches(MIMIC)) description = monsterlist[monster.mimicarg].toString();
       let firstChar = description.substring(0, 1).toLocaleLowerCase();
       prefix = `It's a `;
       if (`aeiou`.indexOf(firstChar) >= 0) prefix = `It's an `;
-    } else {
-      if (sayEmpty || item.matches(OIVDARTRAP) || item.matches(OIVTELETRAP) || item.matches(OIVTRAPDOOR) || item.matches(OTRAPARROWIV)) {
-        description = OEMPTY.desc;
-      } else {
-        description = item.desc;
-      }
     }
+    else if (sayEmpty || item.matches(OIVDARTRAP) || item.matches(OIVTELETRAP) || item.matches(OIVTRAPDOOR) || item.matches(OTRAPARROWIV)) {
+      description = OEMPTY.desc;
+    }
+    else {
+      description = item.desc;
+    }
+
     description = prefix + description;
     updateLog(description);
     paint();

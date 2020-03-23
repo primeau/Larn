@@ -218,7 +218,7 @@ function quaffpotion(potion, set_known) {
       for (let i = 0; i < MAXX; i++)
         for (let j = 0; j < MAXY; j++) {
           var monster = monsterAt(i, j);
-          if (monster && (monster.getChar() != OEMPTY.getChar())) {
+          if (monster && monster.isVisible()) {
             player.level.know[i][j] = HAVESEEN;
             show1cell(i, j);
           }

@@ -19,11 +19,11 @@ function loadImages() {
   console.log(`loading images`);
 
   var img;
-  for (let monsterIndex = 0; monsterIndex <= 64; monsterIndex++) {
+  for (let monsterIndex = 0; monsterIndex <= 65; monsterIndex++) {
     img = `img/m${monsterIndex}.png`;
     images[img] = createImage(img);
   }
-  for (let objectIndex = 0; objectIndex <= 94; objectIndex++) {
+  for (let objectIndex = 0; objectIndex <= 100; objectIndex++) {
     img = `img/o${objectIndex}.png`;
     images[img] = createImage(img);
   }
