@@ -242,7 +242,7 @@ function parse(key) {
       }
     }
     return;
-    }
+  }
 
   //
   // TIDY UP AT FOUNTAIN
@@ -394,8 +394,8 @@ function parse(key) {
     updateLog(`${larnString}, Version ${VERSION} Build ${BUILD}`);
     updateLog(`  ${logname}`);
     if (ULARN) appendLog(`, ${player.char_picked}`);
-    if (ULARN) appendLog(`, ${player.gender}`); 
-    appendLog(`, Difficulty ${getDifficulty()}`); 
+    if (ULARN) appendLog(`, ${player.gender}`);
+    appendLog(`, Difficulty ${getDifficulty()}`);
     if (debug_used) updateLog(`  Debug`);
     if (wizard) updateLog(`  Wizard`);
     if (cheat) updateLog(`  Cheater`);
@@ -558,7 +558,7 @@ function parse(key) {
       updateLog(`Your armor is off`);
     } else
       updateLog(`You aren't wearing anything`);
-      nomove = 1;
+    nomove = 1;
     return;
   }
 
@@ -712,6 +712,17 @@ function parse(key) {
   }
 
   //
+  // toggle retro fonts
+  //
+  if (key == '{') {
+    nomove = 1;
+    retro_mode = !retro_mode;
+    updateLog(`Retro fonts: ${retro_mode ? `on` : `off`}`);
+    setFontMode(retro_mode);
+    return;
+  }
+
+  //
   // toggle bold
   //
   if (key == '%') {
@@ -734,4 +745,32 @@ function parse(key) {
   // if we get here, it's an invalid key, and shouldn't take any time
   nomove = 1;
 
+}
+
+
+
+function setFontMode(mode) {
+  let fontSize = 22;
+  let fontFamily = `Courier New`;
+  let textColour = `lightgrey`;
+  let letterSpacing = `normal`;
+
+  if (mode) {
+    fontSize = 25;
+    fontFamily = `'dos437'`;
+    textColour = `#ABABAB`;
+    letterSpacing = '-1px';
+  }
+
+  if (amiga_mode) {
+    fontSize = 20;
+  }
+
+  let font = `${fontSize}px ${fontFamily}`;
+
+  document.body.style.font = font;
+  document.body.style.color = textColour;
+  document.body.style.letterSpacing = letterSpacing;
+
+  localStorageSetObject('retro', mode);
 }

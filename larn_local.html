@@ -12,6 +12,9 @@
     <!-- <link rel='apple-touch-icon' href='apple-touch-icon.png'> -->
 
     <style>
+
+        @font-face { font-family: dos437; src: url('img/dos437.ttf'); } 
+
         section {
             width: 1060px;
             float: left;
@@ -65,7 +68,7 @@
         body {
             font-family: 'dos', 'Courier New', Courier, monospace;
             font-size: 22px;
-            color: lightgrey;
+            color: #ABABAB;
             margin: 25px;
             background-color: #000000;
         }
@@ -122,9 +125,8 @@
         }
     </style>
 
-
-    <script src="util/rollbar.js"></script>
-    <script src="util/lambda.min.js"></script>
+    <script src='util/rollbar.js'></script>
+    <script src='util/lambda.min.js'></script>
     <script src='util/forge.min.js'></script>
     <script src='util/mousetrap.min.js'></script>
 
@@ -174,18 +176,29 @@
 </head>
 
 <body>
-
-    <!--[if lt IE 10]>
-            <p class='browserupgrade'>Unfortunately if you're seeing this page it means that your browser isn't quite new enough. Please upgrade to Firefox 15+, IE 10+, or any version of Chrome or Safari.</p>
-        <![endif]-->
-
     <section>
         <div id='LARN'>
-            LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or MORIA, but with a different feel
-            and winning criteria. Unfortunately if you're seeing this page it means that there was an error loading the
-            game. Please send a message to "eye (at) larn.org" and I'll get to the bottom of it!
+LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or
+MORIA, but with a different feel and winning criteria. 
 
+Unfortunately if you're seeing this page it means that there was an error
+loading the game.
+
+This version of Larn requires a browser from circa 2016 to work properly.
+Please check to make sure you are running Firefox 52+, Chrome 55+, Edge 80+,
+or Safari 11+. Internet Explorer is not supported.
+
+If you're still having trouble, please send a message to "eye (at) larn.org"
+and I'll get to the bottom of it!
         </div>
+        <p></p>
+        <hr>
+        <p><b>NOTE: This is a BETA version, especially for Ularn</b></p> 
+        Please email <a href="mailto:eye@larn.org?&subject=Ularn%20Beta">eye@larn.org</a> if you notice anything strange.
+
+        <ul> Ularn To-Do List
+            <li>Better Amiga icons for new Ularn items & monsters</li>
+        </ul>
     </section>
 
     <aside>
@@ -203,7 +216,6 @@
         var newplayer = false;
         var mobile = false;
         var altrender = false;
-
         play();
     </script>
 

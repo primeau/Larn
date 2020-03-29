@@ -15,7 +15,7 @@ function welcome() {
   lprcat(helppages[0]);
   cursors();
 
-  logname = localStorageGetObject('logname', logname);
+  logname = localStorageGetObject('logname', logname);  
 
   var tmpID = Math.random().toString(36).substr(2, 5);
   playerID = localStorageGetObject('playerID', tmpID);
@@ -41,6 +41,9 @@ function welcome() {
   } else {
     setname(logname);
   }
+
+  retro_mode = localStorageGetObject('retro', false);
+  setFontMode(retro_mode);
 
   blt();
 }
@@ -438,9 +441,7 @@ function DEVMODE() {
     player.updateStealth(100000);
     player.updateCancellation(100000);
 
-    // player.raiseexperience(220 * MEG);
-
-    wizardmode(`pvnert(x)`);
+    // wizardmode(`pvnert(x)`);
 
     // var startShield = createObject(OSHIELD);
     // take(startShield);
@@ -449,19 +450,21 @@ function DEVMODE() {
     // take(startDagger);
     // take(startSlayer);
     // player.SHIELD = startShield;
-    take(createObject(OPOTION, 21));
-    take(createObject(OPOTION, 2));
+    // take(createObject(OPOTION, 2));
+    // take(createObject(OPOTION, 10));
+    // take(createObject(OPOTION, 21));
+    // take(createObject(OPOTION, 23));
 
-    take(createObject(OSPHTALISMAN));
+    // take(createObject(OSPHTALISMAN));
     // take(createObject(OHANDofFEAR));
     take(createObject(OLARNEYE));
     // take(createObject(ONOTHEFT));
-    // take(createObject(OSPHTALISMAN));
     // take(createObject(OBRASSLAMP));
     // gtime = 30001;
-    // player.GOLD = 1;
+    // player.GOLD = 250000;
 
     // createmonster(MIMIC,30, 0);
+    // createmonster(NYMPH);
     // revealLevel();
 
 }

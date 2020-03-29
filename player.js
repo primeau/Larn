@@ -130,8 +130,12 @@ var Player = function Player() {
     this.getChar = function() {
       if (amiga_mode)
         return `${DIV_START}player${DIV_END}`;
-      else
-        return this.char;
+      else if (retro_mode) {
+        return `<b><font color='lightgray'>@</font></b>`;
+      }
+      else {
+        return `▓`;
+      }
     };
 
     /*

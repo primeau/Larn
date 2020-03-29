@@ -67,16 +67,16 @@ helppages[1] =
   c  cast a spell             C  close a door             >  go down stairs     \n\
   d  drop an item             D  drink at a fountain                            \n\
   e  eat something            E  enter a store, dungeon   ^  identify a trap    \n\
-  f  tidy up at a fountain       or volcanic shaft        :  look at object you \n\
-  g  get present pack weight                                 are standing on    \n\
-  i  inventory your pockets   I  list all known items                           \n\
-  o  open a door or chest                                 !  toggle key hints   \n\
-  p  pray at an altar         P  give tax status          @  toggle auto-pickup \n\
-  q  quaff a potion           Q  quit the game            #  toggle inventory   \n\
-  r  read a scroll or book    R  remove gems from throne                        \n\
-  s  sit on a throne          S  save the game            }  toggle between     \n\
-  t  take an item             T  take off armor              classic, hack,     \n\
-  v  print program version                                   and amiga graphics \n\
+  f  tidy up at a fountain       or volcanic shaft                              \n\
+  g  get present pack weight                              !  toggle key hints   \n\
+  i  inventory your pockets   I  list all known items     @  toggle auto-pickup \n\
+  o  open a door or chest                                 #  toggle inventory   \n\
+  p  pray at an altar         P  give tax status                                \n\
+  q  quaff a potion           Q  quit the game            {  toggle retro fonts \n\
+  r  read a scroll or book    R  remove gems from throne  }  toggle between     \n\
+  s  sit on a throne          S  save the game               classic, hack,     \n\
+  t  take an item             T  take off armor              and amiga graphics \n\
+  v  print program version                                                      \n\
   w  wield a weapon           W  wear armor                                     \n\
   z  show scores              Z  teleport yourself        ?  this help screen   \n\
   `;

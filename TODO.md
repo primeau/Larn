@@ -10,6 +10,8 @@ ULARN 12.5.0:
 - check all 1.6.3 code
 
 ULARN 12.5.1
+- crumble altars faster? 1/20?
+- make +9 items worth less? cap out around 116k (v3 chest in Larn)?
 - fix interactions between haste self / haste monster / half-speed monsters (check 1.6.3 hastestep)
   * HAS + PER bug slow monsters (H,x,r,etc) move every moves, or totally paralyzed?
   - monster.isSlow, and different way to decide when to move
@@ -17,6 +19,8 @@ ULARN 12.5.1
 - update babel to support async/await for nap()
 - why is bessman:1 for every old game?
 - amiga mode: unseen walls should be flat
+- widget of spine tingling 
+- life preserver
 
 todo:
 - check chrome audit tab
@@ -68,6 +72,8 @@ extras:
   - walls as block or joined ascii
   - no-beep
   - no-nap
+  - player tile
+  - monster tile / names
 - cloud save via password
 - game start/end stats
 - ipad support
@@ -77,8 +83,8 @@ extras:
 - start new game without reloading
 - copy local scores to global
 - color (mcolor/ocolor)
-- more authentic font
 - beep support
 - stats on most dangerous monster, level, moves/kills/spells ratio
   - win/death ratio per difficulty
 - speedrun mode
+- lantern - radiates light out from hero for x spaces?

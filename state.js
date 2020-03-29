@@ -23,6 +23,7 @@ var auto_pickup = false;
 var side_inventory = false;
 var show_color = true;
 var bold_objects = true;
+var retro_mode = false;
 var dnd_item = null;
 var genocide = [];
 var amiga_mode = false;

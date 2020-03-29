@@ -313,7 +313,7 @@ const OUNKNOWN = new Item(94, ' ', ` `, ` `, NO_COLOR, NO_BOLD, `... nothing`, N
 const OHOME = new Item(69, `H`, `1`, `H`, `cornflowerblue`, BOLD, `your home`, NO_CARRY);
 const ODNDSTORE = new Item(12, `=`, `2`, `=`, `orchid`, BOLD, `the DND store`, NO_CARRY);
 const OTRADEPOST = new Item(77, `S`, `3`, `S`, `tan`, BOLD, `the local trading post`, NO_CARRY);
-const OLRS = new Item(80, `L`, `4`, `L`, NO_COLOR, BOLD, `the Larn Revenue Service`, NO_CARRY);
+const OLRS = new Item(80, `L`, `4`, `L`, `lightgray`, BOLD, `the Larn Revenue Service`, NO_CARRY);
 const OBANK = new Item(16, `$`, `5`, `$`, `gold`, BOLD, `the bank of Larn`, NO_CARRY);
 const OBANK2 = new Item(15, `$`, `5`, `$`, `gold`, BOLD, `the Nth branch of the Bank of Larn`, NO_CARRY);
 const OSCHOOL = new Item(10, `+`, `6`, `+`, `darkorange`, BOLD, `the College of Larn`, NO_CARRY);
@@ -325,7 +325,7 @@ const OVOLDOWN = new Item(55, `V`, `9`, `V`, `crimson`, BOLD, `a volcanic shaft 
 const OWALL = new Item(21, `▒`, `▒`, `▒`, NO_COLOR, NO_BOLD, `a wall`, NO_CARRY);
 const OALTAR = new Item(1, `A`, `:`, `A`, `orchid`, BOLD, `a holy altar`, NO_CARRY);
 const OTHRONE = new Item(2, `T`, `\\`, `T`, `gold`, BOLD, `a handsome jewel encrusted throne`, NO_CARRY);
-const ODEADTHRONE = new Item(79, `t`, `/`, `t`, NO_COLOR, BOLD, `a massive throne`, NO_CARRY);
+const ODEADTHRONE = new Item(79, `t`, `/`, `t`, `lightgray`, BOLD, `a massive throne`, NO_CARRY);
 const OPIT = new Item(4, `P`, `^`, `P`, `sandybrown`, BOLD, `a pit`, NO_CARRY);
 const OVOLUP = new Item(56, `V`, `9`, `V`, `mediumseagreen`, BOLD, `the base of a volcanic shaft`, NO_CARRY);
 const OSTAIRSUP = new Item(5, `&lt`, `&lt`, `%`, `mediumseagreen`, BOLD, `a staircase going up`, NO_CARRY); // use &lt to prevent bugginess when dropping a ! or ? to the right
@@ -336,14 +336,14 @@ const OFOUNTAIN = new Item(7, `F`, `{`, `F`, `cornflowerblue`, BOLD, `a bubbling
 const ODEADFOUNTAIN = new Item(17, `f`, `}`, `f`, `lightgray`, BOLD, `a dead fountain`, NO_CARRY);
 const OSTATUE = new Item(8, `&`, `%`, `&`, `ivory`, BOLD, `a great marble statue`, NO_CARRY);
 const OMIRROR = new Item(11, `M`, `|`, `M`, `silver`, BOLD, `a mirror`, NO_CARRY);
-const OOPENDOOR = new Item(19, `O`, `'`, `O`, NO_COLOR, BOLD, `an open door`, NO_CARRY);
-const OCLOSEDDOOR = new Item(20, `D`, `+`, `D`, NO_COLOR, BOLD, `a closed door`, NO_CARRY);
+const OOPENDOOR = new Item(19, `O`, `'`, `O`, `lightgray`, BOLD, `an open door`, NO_CARRY);
+const OCLOSEDDOOR = new Item(20, `D`, `+`, `D`, `lightgray`, BOLD, `a closed door`, NO_CARRY);
 
 // traps
 const OIVTELETRAP = new Item(78, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a teleport trap`, NO_CARRY);
 const OTELEPORTER = new Item(9, `^`, `^`, `^`, `mediumpurple`, BOLD, `a teleport trap`, NO_CARRY);
 const OTRAPARROWIV = new Item(67, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `an arrow trap`, NO_CARRY);
-const OTRAPARROW = new Item(66, `^`, `^`, `^`, NO_COLOR, BOLD, `an arrow trap`, NO_CARRY);
+const OTRAPARROW = new Item(66, `^`, `^`, `^`, `lightgray`, BOLD, `an arrow trap`, NO_CARRY);
 const ODARTRAP = new Item(74, `^`, `^`, `^`, `lightgreen`, BOLD, `a dart trap`, NO_CARRY);
 const OIVDARTRAP = new Item(73, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a dart trap`, NO_CARRY);
 const OTRAPDOOR = new Item(75, `^`, `^`, `^`, `sandybrown`, BOLD, `a trapdoor`, NO_CARRY);
@@ -362,15 +362,15 @@ const OSAPPHIRE = new Item(53, `@`, `*`, `&lt`, `dodgerblue`, BOLD, `a sparkling
 const OCOOKIE = new Item(83, `c`, `,`, `c`, `tan`, BOLD, `a fortune cookie`, CARRY);
 
 // weapons
-const OSWORD = new Item(28, `)`, `)`, `)`, NO_COLOR, BOLD, `a sunsword`, CARRY);
-const O2SWORD = new Item(29, `(`, `)`, `(`, NO_COLOR, BOLD, `a two handed sword`, CARRY);
-const OSPEAR = new Item(30, `(`, `)`, `(`, NO_COLOR, BOLD, `a spear`, CARRY);
-const ODAGGER = new Item(31, `(`, `)`, `(`, NO_COLOR, BOLD, `a dagger`, CARRY);
+const OSWORD = new Item(28, `)`, `)`, `)`, `lightgray`, BOLD, `a sunsword`, CARRY);
+const O2SWORD = new Item(29, `(`, `)`, `(`, `lightgray`, BOLD, `a two handed sword`, CARRY);
+const OSPEAR = new Item(30, `(`, `)`, `(`, `lightgray`, BOLD, `a spear`, CARRY);
+const ODAGGER = new Item(31, `(`, `)`, `(`, `lightgray`, BOLD, `a dagger`, CARRY);
 const OBELT = new Item(40, `{`, `-`, `{`, `darkgoldenrod`, BOLD, `a belt of striking`, CARRY);
-const OBATTLEAXE = new Item(57, `)`, `)`, `)`, NO_COLOR, BOLD, `a battle axe`, CARRY);
-const OLONGSWORD = new Item(58, `)`, `)`, `)`, NO_COLOR, BOLD, `a longsword`, CARRY);
-const OFLAIL = new Item(59, `(`, `)`, `(`, NO_COLOR, BOLD, `a flail`, CARRY);
-const OLANCE = new Item(65, `)`, `)`, `)`, NO_COLOR, BOLD, `a lance of death`, CARRY);
+const OBATTLEAXE = new Item(57, `)`, `)`, `)`, `lightgray`, BOLD, `a battle axe`, CARRY);
+const OLONGSWORD = new Item(58, `)`, `)`, `)`, `lightgray`, BOLD, `a longsword`, CARRY);
+const OFLAIL = new Item(59, `(`, `)`, `(`, `lightgray`, BOLD, `a flail`, CARRY);
+const OLANCE = new Item(65, `)`, `)`, `)`, `lightgray`, BOLD, `a lance of death`, CARRY);
 
 // special weapons
 const OSWORDofSLASHING = new Item(26, `)`, `)`, `)`, `cornflowerblue`, BOLD, `a sword of slashing`, CARRY);
@@ -379,28 +379,28 @@ const OHAMMER = new Item(27, `)`, `)`, `)`, `darkgoldenrod`, BOLD, `Bessman's fl
 /* need amiga */ const OSLAYER = new Item(91, `)`, `)`, `)`, `crimson`, BOLD, `Slayer`, CARRY); // ULARN
 
 // armour
-const OLEATHER = new Item(25, `[`, `[`, `[`, NO_COLOR, BOLD, `leather armor`, CARRY);
-const OSTUDLEATHER = new Item(61, `[`, `[`, `[`, NO_COLOR, BOLD, `studded leather armor`, CARRY);
-const ORING = new Item(60, `[`, `[`, `[`, NO_COLOR, BOLD, `ring mail`, CARRY);
-const OCHAIN = new Item(24, `[`, `[`, `[`, NO_COLOR, BOLD, `chain mail`, CARRY);
-const OSPLINT = new Item(62, `]`, `[`, `]`, NO_COLOR, BOLD, `splint mail`, CARRY);
-const OPLATE = new Item(23, `]`, `[`, `]`, NO_COLOR, BOLD, `plate mail`, CARRY);
-const OPLATEARMOR = new Item(63, `]`, `[`, `]`, NO_COLOR, BOLD, `plate armor`, CARRY);
-const OSSPLATE = new Item(64, `]`, `[`, `]`, NO_COLOR, BOLD, `stainless plate armor`, CARRY);
-const OSHIELD = new Item(68, `[`, `[`, `[`, NO_COLOR, BOLD, `a shield`, CARRY);
+const OLEATHER = new Item(25, `[`, `[`, `[`, `lightgray`, BOLD, `leather armor`, CARRY);
+const OSTUDLEATHER = new Item(61, `[`, `[`, `[`, `lightgray`, BOLD, `studded leather armor`, CARRY);
+const ORING = new Item(60, `[`, `[`, `[`, `lightgray`, BOLD, `ring mail`, CARRY);
+const OCHAIN = new Item(24, `[`, `[`, `[`, `lightgray`, BOLD, `chain mail`, CARRY);
+const OSPLINT = new Item(62, `]`, `[`, `]`, `lightgray`, BOLD, `splint mail`, CARRY);
+const OPLATE = new Item(23, `]`, `[`, `]`, `lightgray`, BOLD, `plate mail`, CARRY);
+const OPLATEARMOR = new Item(63, `]`, `[`, `]`, `lightgray`, BOLD, `plate armor`, CARRY);
+const OSSPLATE = new Item(64, `]`, `[`, `]`, `lightgray`, BOLD, `stainless plate armor`, CARRY);
+const OSHIELD = new Item(68, `[`, `[`, `[`, `lightgray`, BOLD, `a shield`, CARRY);
 
 // special armour
 /* need amiga */ const OELVENCHAIN = new Item(92, `]`, `]`, `]`, `cornflowerblue`, BOLD, `elven chain`, CARRY); // ULARN
 
 // rings
-const ORINGOFEXTRA = new Item(32, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of extra regeneration`, CARRY);
-const OREGENRING = new Item(33, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of regeneration`, CARRY);
-const OPROTRING = new Item(34, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of protection`, CARRY);
-const OENERGYRING = new Item(35, `=`, `=`, `|`, NO_COLOR, BOLD, `an energy ring`, CARRY);
-const ODEXRING = new Item(36, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of dexterity`, CARRY);
-const OSTRRING = new Item(37, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of strength`, CARRY);
-const OCLEVERRING = new Item(38, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of cleverness`, CARRY);
-const ODAMRING = new Item(39, `=`, `=`, `|`, NO_COLOR, BOLD, `a ring of increase damage`, CARRY);
+const ORINGOFEXTRA = new Item(32, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of extra regeneration`, CARRY);
+const OREGENRING = new Item(33, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of regeneration`, CARRY);
+const OPROTRING = new Item(34, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of protection`, CARRY);
+const OENERGYRING = new Item(35, `=`, `=`, `|`, `lightgray`, BOLD, `an energy ring`, CARRY);
+const ODEXRING = new Item(36, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of dexterity`, CARRY);
+const OSTRRING = new Item(37, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of strength`, CARRY);
+const OCLEVERRING = new Item(38, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of cleverness`, CARRY);
+const ODAMRING = new Item(39, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of increase damage`, CARRY);
 
 // special objects
 const OLARNEYE = new Item(22, `~`, `~`, `~`, `magenta`, BOLD, `The Eye of Larn`, CARRY);

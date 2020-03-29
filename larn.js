@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '424';
+const BUILD = '425';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -106,20 +106,20 @@ function confirmExit() {
 
 
 function initKeyBindings() {
-  Mousetrap.bind('.', mousetrap);
-  Mousetrap.bind(',', mousetrap);
-  Mousetrap.bind('<', mousetrap);
-  Mousetrap.bind('>', mousetrap);
-  Mousetrap.bind('^', mousetrap);
-  Mousetrap.bind(':', mousetrap);
-  Mousetrap.bind('@', mousetrap);
-  Mousetrap.bind('#', mousetrap);
-  Mousetrap.bind('}', eventToggleMode);
-  Mousetrap.bind('?', mousetrap);
-  Mousetrap.bind('!', mousetrap);
-  Mousetrap.bind('_', mousetrap);
-  Mousetrap.bind('-', mousetrap);
-  Mousetrap.bind('+', mousetrap);
+  Mousetrap.bind('.', mousetrap); // stay here
+  Mousetrap.bind(',', mousetrap); // take
+  Mousetrap.bind('<', mousetrap); // go up
+  Mousetrap.bind('>', mousetrap); // go down
+  Mousetrap.bind('^', mousetrap); // identify traps
+  Mousetrap.bind('!', mousetrap); // keyboard hints
+  Mousetrap.bind('@', mousetrap); // auto-pickup
+  Mousetrap.bind('#', mousetrap); // inventory 
+  Mousetrap.bind('{', mousetrap); // retro fonts
+  Mousetrap.bind('}', eventToggleMode); // classic/hack/amiga 
+  Mousetrap.bind('?', mousetrap); // help
+  Mousetrap.bind('_', mousetrap); // password
+  Mousetrap.bind('-', mousetrap); // disarm 
+  Mousetrap.bind('+', mousetrap); // load games via password
 
   Mousetrap.bind(['(', ')'], mousetrap); // allow () for pvnert(x)
 
@@ -174,7 +174,7 @@ function eventToggleMode(event, key, quiet) {
   nomove = 1;
   // classic => hack
   if (original_objects && !amiga_mode) {
-    document.body.style.fontSize = '22px';
+    document.body.style.fontSize = retro_mode ? '25px' : '22px';
     original_objects = false;
     if (!quiet) updateLog(`Switching to Hack mode`);
   }
@@ -197,7 +197,7 @@ function eventToggleMode(event, key, quiet) {
   }
   // amiga mode => classic
   else {
-    document.body.style.fontSize = '22px';
+    document.body.style.fontSize = retro_mode ? '25px' : '22px';
     amiga_mode = false;
     original_objects = true;
     if (!quiet) updateLog(`Switching to Classic mode`);
