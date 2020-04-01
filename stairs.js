@@ -10,14 +10,12 @@ function up_stairs() {
 
   if (item.matches(OSTAIRSDOWN)) {
     updateLog(`  The stairs don't go up!`);
-    nomove = 1;
     dropflag = 1;
   } else if (item.matches(OVOLUP))
     act_up_shaft();
 
   else if (!item.matches(OSTAIRSUP)) {
     updateLog(`  I see no way to go up here!`);
-    nomove = 1;
     dropflag = 1;
   } else
     act_up_stairs();
@@ -34,7 +32,6 @@ function down_stairs() {
 
   if (item.matches(OSTAIRSUP)) {
     updateLog(`  The stairs don't go down!`);
-    nomove = 1;
     dropflag = 1;
   } else if (item.matches(OVOLDOWN))
     act_down_shaft();
@@ -44,7 +41,6 @@ function down_stairs() {
 
   else if (!item.matches(OSTAIRSDOWN)) {
     updateLog(`  I see no way to go down here!`);
-    nomove = 1;
     dropflag = 1;
   } else
     act_down_stairs();
@@ -61,7 +57,6 @@ function act_up_stairs() {
     newcavelevel(level - 1);
   } else {
     updateLog(`  The stairs lead to a dead end!`);
-    nomove = 1;
     dropflag = 1;
   }
 }
@@ -77,7 +72,6 @@ function act_down_stairs() {
     newcavelevel(level + 1);
   } else {
     updateLog(`  The stairs lead to a dead end!`);
-    nomove = 1;
     dropflag = 1;
   }
 }
@@ -93,7 +87,6 @@ function act_down_shaft() {
   setMazeMode(true);
 
   if (level != 0) {
-    nomove = 1;
     updateLog(`  The shaft only extends 5 feet downward!`);
     return;
   }
@@ -104,7 +97,6 @@ function act_down_shaft() {
             way to prevent that from happening.
   */
   if (LEVELS[1] == null && !wizard) {
-    nomove = 1;
     updateLog(`  You feel a foreboding sense of doom, and back away`);
     return;
   }
@@ -131,7 +123,6 @@ function act_up_shaft() {
   setMazeMode(true);
 
   if (level != MAXLEVEL) {
-    nomove = 1;
     updateLog(`  The shaft only extends 8 feet upwards before you find a blockage!`);
     return;
   }

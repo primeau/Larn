@@ -225,10 +225,8 @@ function drink_fountain() {
   var item = itemAt(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
     updateLog(`There is no water to drink!`);
-    nomove = 1;
   } else if (!item.matches(OFOUNTAIN)) {
     updateLog(`I see no fountain to drink from here!`);
-    nomove = 1;
   } else {
     act_drink_fountain();
   }
@@ -244,10 +242,8 @@ function wash_fountain() {
   var item = itemAt(player.x, player.y);
   if (item.matches(ODEADFOUNTAIN)) {
     updateLog(`There is no water to wash in!`);
-    nomove = 1;
   } else if (!item.matches(OFOUNTAIN)) {
     updateLog(`I see no fountain to wash at here!`);
-    nomove = 1;
   } else {
     act_wash_fountain();
   }
