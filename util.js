@@ -207,7 +207,7 @@ function blinken(x, y) {
     function() {
       var xpos = x + KEYBOARD_INPUT.length;
       cursor(xpos, y);
-      lprc(BLINKEN ? `` : BLINKENCHAR);
+      lprc(BLINKEN ? ` ` : BLINKENCHAR);
       cltoeoln();
       cursor(xpos, y);
       BLINKEN = !BLINKEN;

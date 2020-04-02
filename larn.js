@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '425';
+const BUILD = '426';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -182,6 +182,7 @@ function eventToggleMode(event, key, quiet) {
   else if (!original_objects && !amiga_mode) {
     document.body.style.fontSize = '20px';
     amiga_mode = true;
+    retro_mode = true; // force retro mode
     original_objects = true;
     for (var y = 0; y < 24; y++) {
       for (var x = 0; x < 80; x++) {
@@ -202,6 +203,8 @@ function eventToggleMode(event, key, quiet) {
     original_objects = true;
     if (!quiet) updateLog(`Switching to Classic mode`);
   }
+
+  setFontMode(retro_mode);
 
   paint();
 }

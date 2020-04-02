@@ -170,13 +170,14 @@ function setButtons() {
             var inventoryLabel = side_inventory ? `on` : `off`;
             var boldLabel = bold_objects ? `on` : `off`;
             var colorLabel = show_color ? `on` : `off`;
-            var retroLabel = retro_mode ? `on` : `off`;
+            var retroLabel = retro_mode ? `DOS` : `modern`;
+            if (amiga_mode) retroLabel = retro_mode ? `Amiga 500` : `Amiga 1200`;
             addButton(createVariableButton(`!`, `Keyboard hints: ${hintsLabel}`));
             addButton(createVariableButton(`@`, `Auto pickup: ${pickupLabel}`));
             addButton(createVariableButton(`#`, `Show inventory: ${inventoryLabel}`));
             addButton(createVariableButton(`$`, `Show color: ${colorLabel}`));
             addButton(createVariableButton(`%`, `Bold objects: ${boldLabel}`));
-            addButton(createVariableButton(`{`, `Retro fonts: ${retroLabel}`));
+            addButton(createVariableButton(`{`, `Font: ${retroLabel}`));
         }
         setDiv(`FOOTER`, BUTTONS);
         return; // disable everything else for now

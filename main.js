@@ -12,6 +12,11 @@ function welcome() {
   createLevelNames();
 
   initHelpPages();
+
+  retro_mode = localStorageGetObject('retro', false);
+  setFontMode(retro_mode);
+  setAmigaMode();
+
   lprcat(helppages[0]);
   cursors();
 
@@ -41,9 +46,6 @@ function welcome() {
   } else {
     setname(logname);
   }
-
-  retro_mode = localStorageGetObject('retro', false);
-  setFontMode(retro_mode);
 
   blt();
 }
@@ -259,7 +261,7 @@ function getIP() {
       });
     });
   } catch (e) {
-    console.error(`caught: ${e}`);
+    // do nothing
   }
 }
 
@@ -413,8 +415,6 @@ function startgame(hard) {
     updateLog(`Cookies are disabled, games cannot be loaded or saved`);
   }
 
-  setAmigaMode();
-
   showcell(player.x, player.y);
 
   GAMEOVER = false;
@@ -441,7 +441,7 @@ function DEVMODE() {
     player.updateStealth(100000);
     player.updateCancellation(100000);
 
-    // wizardmode(`pvnert(x)`);
+    wizardmode(`pvnert(x)`);
 
     // var startShield = createObject(OSHIELD);
     // take(startShield);
@@ -697,6 +697,10 @@ function wizardmode(password) {
   // other valid passwords to add in the future
   // main(){}
   // frobozz
+  //
+  // amiga?
+  // ularn 1.6?
+  // ularn 1.5?
   if (password === 'pvnert(x)') {
     //updateLog(`disabling wizard mode`);
     wizard = 1;

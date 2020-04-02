@@ -8,6 +8,7 @@ ULARN 12.5.0:
 - search for ULARN TODO
 - "you have found" vs "you find"
 - check all 1.6.3 code
+- prevent weild and wear at the same time
 
 ULARN 12.5.1
 - crumble altars faster? 1/20?
@@ -21,6 +22,8 @@ ULARN 12.5.1
 - amiga mode: unseen walls should be flat
 - widget of spine tingling 
 - life preserver
+- just pray option at altar
+- wash at fountain clears itching
 
 todo:
 - check chrome audit tab

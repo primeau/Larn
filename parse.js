@@ -294,7 +294,6 @@ function parse(key) {
         prepare_direction_event(open_something);
       } else {
         updateLog(`There is nothing to open!`);
-        nomove = 1;
       }
     }
     dropflag = 1;
@@ -450,7 +449,6 @@ function parse(key) {
         prepare_direction_event(close_something);
       } else {
         updateLog(`There is nothing to close!`);
-        nomove = 1;
       }
       dropflag = 1;
       return;
@@ -558,7 +556,6 @@ function parse(key) {
       updateLog(`Your armor is off`);
     } else
       updateLog(`You aren't wearing anything`);
-    nomove = 1;
     return;
   }
 
@@ -717,7 +714,9 @@ function parse(key) {
   if (key == '{') {
     nomove = 1;
     retro_mode = !retro_mode;
-    updateLog(`Retro fonts: ${retro_mode ? `on` : `off`}`);
+    let fontStatus = retro_mode ? `DOS` : `Modern`;
+    if (amiga_mode) fontStatus = retro_mode ? `Amiga 500` : `Amiga 1200`;
+    updateLog(`Font: ${fontStatus}`);
     setFontMode(retro_mode);
     return;
   }
@@ -750,20 +749,26 @@ function parse(key) {
 
 
 function setFontMode(mode) {
-  let fontSize = 22;
+  // modern font settings
+  let fontSize = 20;
   let fontFamily = `Courier New`;
   let textColour = `lightgrey`;
   let letterSpacing = `normal`;
 
+  // retro mode settings
   if (mode) {
-    fontSize = 25;
+    fontSize = 23;
     fontFamily = `'dos437'`;
-    textColour = `#ABABAB`;
+    // textColour = `#ABABAB`;
+    textColour = `lightgrey`;
     letterSpacing = '-1px';
   }
 
+  // change to amiga font for amiga graphics
   if (amiga_mode) {
     fontSize = 20;
+    fontFamily = mode ? `'amiga500'` : `'amiga1200'`;
+    letterSpacing = `normal`;
   }
 
   let font = `${fontSize}px ${fontFamily}`;
@@ -773,4 +778,6 @@ function setFontMode(mode) {
   document.body.style.letterSpacing = letterSpacing;
 
   localStorageSetObject('retro', mode);
+
+  setButtons();
 }
