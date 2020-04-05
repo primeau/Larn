@@ -2,13 +2,14 @@ One thing that was askew in your initial implementation was flex: 95%
 If you're only after flex-grow, use the property directly rather than through the shorthand flex. Then it becomes easier to spot that flex-grow doesn't take % in but relative integer weights (1, 2, 3...)
 
 ULARN 12.5.0:
-- better amiga icons: magic items, demons & lucifer, elevator, lemming, bitbug
 - update README.spoilers doc
 - eye of larn appraisal in bank
 - search for ULARN TODO
 - "you have found" vs "you find"
 - check all 1.6.3 code
 - prevent weild and wear at the same time
+- increase/decrease font size, including amiga?
+- should running increase gtime?
 
 ULARN 12.5.1
 - crumble altars faster? 1/20?
@@ -33,7 +34,6 @@ todo:
 - show time in side inventory
 - Save id to name and name to id map
 - update history
-- beep()
 - help wiki (items/scrolls/potions/features/monsters/etc)
 - most references to player.level should be replaced with functions
 - allow hitting escape while naps are happening (interrupt settimeout?)
@@ -52,7 +52,6 @@ bugs:
   just in drops you back on the monsters spot. the monster reappears when you move.
 - can't load game stats from local scoreboard (can't find game sdkjfhsdfkj)
 - arrow buttons on help screen are truncated in amiga mode
-- amiga mode: viewing scoreboard resets to classic mode (partially fixed)
 - amiga mode: strikethrough missing on taxes owing after victory
 - blindness
   - black tile when opening door when blind

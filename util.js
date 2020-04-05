@@ -300,19 +300,6 @@ function isnum(str) {
 
 
 
-Storage.prototype.setObject = function(key, value) {
-  this.setItem(key, JSON.stringify(value));
-}
-
-
-
-Storage.prototype.getObject = function(key) {
-  var value = this.getItem(key);
-  return value && JSON.parse(value);
-}
-
-
-
 function pad(str, width, bold) {
   return padString(`` + str, width, bold);
 }
@@ -351,34 +338,60 @@ function compareArrays(a1, a2) {
 }
 
 
+const COMPRESSED_DATA = `_COMPRESSED`;
+
+
+Storage.prototype.setObject = function(key, value) {
+  /* compress if it's big */
+  value = JSON.stringify(value);
+  if (value.length > 100000) {
+    this.setItem(key, COMPRESSED_DATA);
+    console.log('setObject: start size', value.length);
+    value = LZString.compressToUTF16(value);
+    console.log('setObject: end size', value.length);
+    key = key + COMPRESSED_DATA;
+  }
+  this.setItem(key, value);
+}
 
 function localStorageSetObject(key, value) {
   if (ULARN) key += `_ularn`;
   try {
     console.log(`setObject: ${key} ${value}`);
     localStorage.setObject(key, value);
+    NOCOOKIES = false;
   }
   catch (err) {
-      console.log(`set: cookies are disabled`);
-      console.log(`set: ${err}`);
-      updateLog(`Cookies are disabled, games cannot be loaded or saved`);
+      console.log(`setObject: ${err}`);
       NOCOOKIES = true;
+      return err;
   }
 }
 
 
+
+Storage.prototype.getObject = function(key) {
+  var value = this.getItem(key);
+  /* decompress if it's big */
+  if (value === COMPRESSED_DATA) {
+    value = this.getItem(key + COMPRESSED_DATA);
+    console.log('getObject: start size', value.length);
+    value = LZString.decompressFromUTF16(value);
+    console.log('getObject: end size', value.length);
+  }
+  return value && JSON.parse(value);
+}
 
 function localStorageGetObject(key, failValue) {
   if (ULARN) key += `_ularn`;
   try {
     console.log(`getObject: ${key}`);
     var retrievedObject = localStorage.getObject(key);
+    NOCOOKIES = false;
     return retrievedObject || failValue;
   }
   catch (err) {
-    console.log(`get: cookies are disabled`);
-    console.log(`get: ${err}`);
-    updateLog(`Cookies are disabled, games cannot be loaded or saved`);
+    console.log(`getObject: ${err}`);
     NOCOOKIES = true;
     return failValue;
   }
@@ -391,11 +404,11 @@ function localStorageRemoveItem(key) {
   try {
     console.log(`removeItem: ${key}`);
     localStorage.removeItem(key);
+    localStorage.removeItem(key + COMPRESSED_DATA);
+    NOCOOKIES = false;
   }
   catch (err) {
-    console.log(`remove: cookies are disabled`);
-    console.log(`remove: ${err}`);
-    updateLog(`Cookies are disabled, games cannot be loaded or saved`);
+    console.log(`removeItem: ${err}`);
     NOCOOKIES = true;
   }
 }
