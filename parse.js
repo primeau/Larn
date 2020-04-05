@@ -218,7 +218,7 @@ function parse(key) {
   //
   // EAT COOKIE
   //
-  if (key == 'E' || key == 'e') {
+  if (key == 'e') {
     if (item.isStore()) {
       enter();
       return;
@@ -538,8 +538,7 @@ function parse(key) {
   //
   if (key == 'S') {
     nomove = 1;
-    saveGame();
-    if (!NOCOOKIES) died(DIED_SAVED_GAME, false); /* saved game */
+    if (saveGame()) died(DIED_SAVED_GAME, false); /* saved game */
     return;
   }
 
@@ -709,6 +708,32 @@ function parse(key) {
   }
 
   //
+  // toggle between classic, hack and amiga mode
+  //
+  if (key == '}') {
+    nomove = 1;
+    // classic => hack
+    if (original_objects && !amiga_mode) {
+      original_objects = false;
+      updateLog(`Switching to Hack mode`);
+    }
+    // hack mode => amiga
+    else if (!original_objects && !amiga_mode) {
+      amiga_mode = true;
+      original_objects = true;
+      updateLog(`Switching to Amiga mode`);
+    }
+    // amiga mode => classic
+    else {
+      amiga_mode = false;
+      original_objects = true;
+      updateLog(`Switching to Classic mode`);
+    }
+    setMode(amiga_mode, retro_mode, original_objects);
+    return;
+  }
+
+  //
   // toggle retro fonts
   //
   if (key == '{') {
@@ -717,7 +742,7 @@ function parse(key) {
     let fontStatus = retro_mode ? `DOS` : `Modern`;
     if (amiga_mode) fontStatus = retro_mode ? `Amiga 500` : `Amiga 1200`;
     updateLog(`Font: ${fontStatus}`);
-    setFontMode(retro_mode);
+    setMode(amiga_mode, retro_mode, original_objects);
     return;
   }
 
@@ -744,40 +769,4 @@ function parse(key) {
   // if we get here, it's an invalid key, and shouldn't take any time
   nomove = 1;
 
-}
-
-
-
-function setFontMode(mode) {
-  // modern font settings
-  let fontSize = 20;
-  let fontFamily = `Courier New`;
-  let textColour = `lightgrey`;
-  let letterSpacing = `normal`;
-
-  // retro mode settings
-  if (mode) {
-    fontSize = 23;
-    fontFamily = `'dos437'`;
-    // textColour = `#ABABAB`;
-    textColour = `lightgrey`;
-    letterSpacing = '-1px';
-  }
-
-  // change to amiga font for amiga graphics
-  if (amiga_mode) {
-    fontSize = 20;
-    fontFamily = mode ? `'amiga500'` : `'amiga1200'`;
-    letterSpacing = `normal`;
-  }
-
-  let font = `${fontSize}px ${fontFamily}`;
-
-  document.body.style.font = font;
-  document.body.style.color = textColour;
-  document.body.style.letterSpacing = letterSpacing;
-
-  localStorageSetObject('retro', mode);
-
-  setButtons();
 }

@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '427';
+const BUILD = '432';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -42,7 +42,7 @@ function play() {
 
   document.addEventListener("click", onMouseClick);
 
-  /* warn the player that closing their window will kill the game.
+    /* warn the player that closing their window will kill the game.
      this is a bit annoying, and I'm tempted to get rid of it now
      that there are checkpoints in place */
   if (location.hostname === 'localhost') {
@@ -115,7 +115,7 @@ function initKeyBindings() {
   Mousetrap.bind('@', mousetrap); // auto-pickup
   Mousetrap.bind('#', mousetrap); // inventory 
   Mousetrap.bind('{', mousetrap); // retro fonts
-  Mousetrap.bind('}', eventToggleMode); // classic/hack/amiga 
+  Mousetrap.bind('}', mousetrap); // classic/hack/amiga 
   Mousetrap.bind('?', mousetrap); // help
   Mousetrap.bind('_', mousetrap); // password
   Mousetrap.bind('-', mousetrap); // disarm 
@@ -169,20 +169,32 @@ function enableDebug() {
 
 
 
-// toggle between classic, hack and amiga mode
-function eventToggleMode(event, key, quiet) {
-  nomove = 1;
-  // classic => hack
-  if (original_objects && !amiga_mode) {
-    document.body.style.fontSize = retro_mode ? '25px' : '22px';
-    original_objects = false;
-    if (!quiet) updateLog(`Switching to Hack mode`);
+function setMode(amiga, retro, original) {
+
+  amiga_mode = amiga;
+  retro_mode = retro;
+  original_objects = original;
+
+  // modern font settings
+  let fontSize = 20;
+  let fontFamily = `Courier New`;
+  let textColour = `lightgrey`;
+  let letterSpacing = `normal`;
+
+  // retro mode settings
+  if (retro_mode) {
+    fontSize = 23;
+    fontFamily = `'dos437'`;
+    // textColour = `#ABABAB`;
+    textColour = `lightgrey`;
+    letterSpacing = '-1px';
   }
-  // hack mode => amiga
-  else if (!original_objects && !amiga_mode) {
-    document.body.style.fontSize = '20px';
-    amiga_mode = true;
-    retro_mode = true; // force retro mode
+
+  // change to amiga font for amiga graphics
+  if (amiga_mode) {
+    fontSize = 20;
+    fontFamily = retro_mode ? `'amiga500'` : `'amiga1200'`;
+    letterSpacing = `normal`;
     original_objects = true;
     for (var y = 0; y < 24; y++) {
       for (var x = 0; x < 80; x++) {
@@ -193,20 +205,19 @@ function eventToggleMode(event, key, quiet) {
       loadImages();
     }
     bltDocument();
-    if (!quiet) updateLog(`Switching to Amiga mode`);
     clear();
   }
-  // amiga mode => classic
-  else {
-    document.body.style.fontSize = retro_mode ? '25px' : '22px';
-    amiga_mode = false;
-    original_objects = true;
-    if (!quiet) updateLog(`Switching to Classic mode`);
-  }
 
-  setFontMode(retro_mode);
+  let font = `${fontSize}px ${fontFamily}`;
 
-  paint();
+  document.body.style.font = font;
+  document.body.style.color = textColour;
+  document.body.style.letterSpacing = letterSpacing;
+
+  localStorageSetObject('retro', retro_mode);
+
+  setButtons();
+
 }
 
 

@@ -13,9 +13,9 @@ function welcome() {
 
   initHelpPages();
 
-  retro_mode = localStorageGetObject('retro', false);
-  setFontMode(retro_mode);
-  setAmigaMode();
+  amiga_mode = PARAMS.mode && PARAMS.mode == `amiga`;
+  retro_mode = localStorageGetObject('retro', true);
+  setMode(amiga_mode, retro_mode, original_objects);
 
   lprcat(helppages[0]);
   cursors();
@@ -412,7 +412,7 @@ function startgame(hard) {
   updateLog(introMessage);
 
   if (NOCOOKIES) {
-    updateLog(`Cookies are disabled, games cannot be loaded or saved`);
+    updateLog(`Are cookies disabled? You may not be able to save your game!`);
   }
 
   showcell(player.x, player.y);
@@ -422,13 +422,15 @@ function startgame(hard) {
   side_inventory = true;
 
   // DEVMODE();
-
+  
   return 1;
 }
 
 
 
 function DEVMODE() {
+
+    Rollbar.configure({enabled: false});
 
     enableDebug();
     eventToggleDebugWTW();
@@ -467,16 +469,6 @@ function DEVMODE() {
     // createmonster(NYMPH);
     // revealLevel();
 
-}
-
-
-function setAmigaMode() {
-  if (PARAMS.mode && PARAMS.mode == `amiga`) {
-    console.log(`switching to Amiga mode`);
-    amiga_mode = false;
-    original_objects = false;
-    eventToggleMode(null, null, true);
-  }
 }
 
 
@@ -669,16 +661,28 @@ function run(dir) {
 function wizardmode(password) {
 
   if (password === 'checkpoint') {
-    updateLog(`reload to restart from backup checkpoint`);
     var checkpoint = localStorageGetObject('checkpointbackup');
-    localStorageSetObject('checkpoint', checkpoint);
+    let error = localStorageSetObject('checkpoint', checkpoint);
+    if (!error) {
+      updateLog(`Reload to restart from backup checkpoint`);
+    }
+    else {
+      updateLog(`Sorry, no checkpoint found (or cookies are disabled)`);
+      updateLog(`${error}`);
+    }
     return 1;
   }
 
   if (password === 'savegame') {
-    updateLog(`reload to restart from backup save game`);
     var savegame = localStorageGetObject(logname + 'backup');
-    localStorageSetObject(logname, savegame);
+    let error = localStorageSetObject(logname, savegame);
+    if (!error) {
+      updateLog(`Reload to restart from backup save game`);
+    }
+    else {
+      updateLog(`Sorry, no backup save game found (or cookies are disabled)`);
+      updateLog(`${error}`);
+    }
     return 1;
   }
 

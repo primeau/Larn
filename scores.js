@@ -174,12 +174,13 @@ const ENDPOINT = 'test'; // 'score';
 var ONLINE = true;
 
 
-function loadScores(newScore, showWinners, showLosers) {
-  if (NOCOOKIES) {
-    updateLog(`Sorry, the scoreboard can't be retrieved when cookies are disabled`);
-    return;
-  }
+let A, R, O; // saved state for exiting scoreboard
 
+function loadScores(newScore, showWinners, showLosers) {
+
+  A = amiga_mode;
+  R = retro_mode;
+  O = original_objects;
   mazeMode = false;
   amiga_mode = false;
   clear();
@@ -238,12 +239,11 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
 
 
 
-
 function showScores(newScore, local, showWinners, showLosers, offset) {
   var exitscores = function(key) {
     if (key == ESC || key == ENTER) {
       scoreIndex = 0;
-      setAmigaMode();
+      setMode(A, R, O);
       nomove = 1;
       return exitbuilding();
     }
