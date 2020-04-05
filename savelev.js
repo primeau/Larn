@@ -2,52 +2,54 @@
 
 function saveGame(isCheckPoint) {
 
-  if (NOCOOKIES) {
-    if (!isCheckPoint)
-    updateLog(`Cookies are disabled, games cannot be loaded or saved`);
-    return;
-  }
-
-  if (wizard || cheat) {
-    if (isCheckPoint) {
-      // console.log(`not saving wizard/cheater checkpoint`);
-      return;
-    }
-  }
-
   var saveName = isCheckPoint ? 'checkpoint' : logname;
+  let error;
 
-  // START HACK to not store player.level
+  /*
+     START HACK to not store player.level
+  */
   var x = player.level;
   player.level = null;
 
-  var state = new GameState();
-  var bytes;
+  try {
+    var state = new GameState();
 
-  /* v304 -- i've decided to remove the automatic reloading checkpoint feature
-     for accidentally closed windows because it's too easy to cheat.
-     if a game is lost it still can be restored with the 'checkpoint command'
-  */
-  if (saveName != 'checkpoint') {
-    localStorageSetObject(saveName, state);
+    /* 
+      v304 -- i've decided to remove the automatic reloading checkpoint feature
+      for accidentally closed windows because it's too easy to cheat.
+      if a game is lost it still can be restored with the 'checkpoint command'
+    */
+    if (saveName != 'checkpoint') {
+      error = localStorageSetObject(saveName, state);
+    }
+
+    /* 
+      save checkpointbackup, or an emergency backup which can 
+      be restored via new wizard passwords 
+    */
+    localStorageSetObject(saveName + 'backup', state);
+  } catch (error) {
+    console.log(`saveGame(): caught: ${error}`);
   }
 
-  /* save an emergency backup */
-  localStorageSetObject(saveName + 'backup', state);
-
-  var hash = forge.md.sha512.create();
-  hash.update(bytes = JSON.stringify(state));
-
+  /*
+     END HACK to not store player.level
+  */
   player.level = x;
-  // END HACK to not store player.level
 
   if (!isCheckPoint) {
-    updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
+    if (!error) {
+      var bytes = JSON.stringify(state);
+      updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
+    }
+    else {
+      updateLog(`${error}`);
+      updateLog(`Sorry, your game couldn't be saved! Are cookies disabled?`);
+      return false;
+    }
   }
 
-  // console.log(JSON.stringify(state));
-  // console.log(`saved hash: ` + hash.digest().toHex());
-  localStorageSetObject('hash', hash.digest().toHex());
+  return true;
 }
 
 
@@ -60,41 +62,34 @@ function loadSavedGame(savedState, isCheckPoint) {
 
   loadState(savedState);
 
-  // check for cheaters:
-  // 1. hash everything important
-  // 2. load the saved hash
-  // 3. are they the same?
-  var hash = forge.md.sha512.create();
-  hash.update(JSON.stringify(savedState));
-  // console.log(JSON.stringify(savedState));
+  /* 
+    save game integrity check (mostly for development)
+    1) stringify saved state
+    2) stringify current state that was loaded from saved state
+    3) compare
+  */
+  let savedStateString = JSON.stringify(savedState);
+  var x = player.level;
+  player.level = null;
+  var currentState = new GameState();
+  let currentStateString = JSON.stringify(currentState);
+  player.level = x;  
+  let integrityCheck = savedStateString === currentStateString;
+  console.log(`save game integrity check: ${integrityCheck}`);
+  if (integrityCheck) {
+    Rollbar.error("failed integrity check");
+  }
 
-  // console.log(`computed hash: ` + hash.digest().toHex());
-
-  var savedHash = localStorageGetObject('hash', []);
-  // console.log(`saved hash: ` + savedHash);
-
-  cheat = cheat || hash.digest().toHex() != savedHash;
-  console.log(`cheater? ` + cheat);
-
+  /* delete / clear the saved game file */
+  // console.log("NOT DELETING SAVE GAME");
+  localStorageRemoveItem(logname);
+  localStorageRemoveItem('checkpoint');
+ 
   if (isCheckPoint) {
     updateLog(`Did you quit accidentally? I restored your last game just in case.`);
   } else {
     updateLog(`Welcome back. (Your save file has now been been deleted)`);
   }
-
-  /* v304 -- disabling cheating funcionality for now. It's really more
-     of a tool for me to check for savegame consistency at this point
-  */
-  if (cheat) {
-    // updateLog(`Have you been cheating?`);
-    updateLog(`*** Hey, you should tell <b>eye@larn.org</b> about this game`);
-    updateLog(`    ${GAMENAME} thinks you're cheating (but you're probably not)`);
-    cheat = false;
-  }
-
-  /* clear the saved game file */
-  localStorageRemoveItem(logname);
-  localStorageRemoveItem('checkpoint');
 
 }
 
@@ -127,11 +122,7 @@ function loadState(state) {
   amiga_mode = state.amiga_mode;
   gameID = state.gameID;
 
-  if (amiga_mode) {
-    amiga_mode = false;
-    original_objects = false;
-    eventToggleMode(null, null, true);
-  }
+  setMode(amiga_mode, retro_mode, original_objects);
 
   debug_used = state.debug_used;
 
@@ -171,12 +162,12 @@ function loadLevels(savedLevels) {
     }
     debug(`loading: ${lev}`);
     var tempLev = savedLevels[lev];
-    var items = tempLev.items;
-    var monsters = tempLev.monsters;
+    var items = initGrid(MAXX, MAXY);
+    var monsters = initGrid(MAXX, MAXY);
     for (var x = 0; x < MAXX; x++) {
       for (var y = 0; y < MAXY; y++) {
-        items[x][y] = createObject(items[x][y]);
-        monsters[x][y] = createMonster(monsters[x][y]);
+        items[x][y] = createObject(tempLev.items[x][y]);
+        monsters[x][y] = createMonster(tempLev.monsters[x][y]);
       }
     }
     LEVELS[lev] = Object.create(Level);

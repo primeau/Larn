@@ -1,7 +1,74 @@
 'use strict';
 
 
-var Monster = function Monster(char, desc, level, armorclass, damage, attack, intelligence, gold, hitpoints, experience, awake) {
+
+/* defines for the monsters as objects */
+const BAT = 1;
+const LEMMING = 1;
+const GNOME = 2;
+const HOBGOBLIN = 3;
+const JACKAL = 4;
+const KOBOLD = 5;
+const ORC = 6;
+const SNAKE = 7;
+const CENTIPEDE = 8;
+const JACULI = 9;
+const TROGLODYTE = 10;
+const ANT = 11;
+const EYE = 12;
+const LEPRECHAUN = 13;
+const NYMPH = 14;
+const QUASIT = 15;
+const RUSTMONSTER = 16;
+const ZOMBIE = 17;
+const ASSASSINBUG = 18;
+const BUGBEAR = 19;
+const BITBUG = 19;
+const HELLHOUND = 20;
+const ICELIZARD = 21;
+const CENTAUR = 22;
+const TROLL = 23;
+const YETI = 24;
+const WHITEDRAGON = 25;
+const ELF = 26;
+const CUBE = 27;
+const METAMORPH = 28;
+const VORTEX = 29;
+const ZILLER = 30;
+const VIOLETFUNGI = 31;
+const WRAITH = 32;
+const FORVALAKA = 33;
+const LAWLESS = 34;
+const LAMANOBE = 34;
+const OSEQUIP = 35;
+const ROTHE = 36;
+const XORN = 37;
+const VAMPIRE = 38;
+const INVISIBLESTALKER = 39;
+const POLTERGEIST = 40;
+const DISENCHANTRESS = 41;
+const SHAMBLINGMOUND = 42;
+const YELLOWMOLD = 43;
+const UMBERHULK = 44;
+const GNOMEKING = 45;
+const MIMIC = 46;
+const WATERLORD = 47;
+const BRONZEDRAGON = 48;
+const GREENDRAGON = 49;
+const PURPLEWORM = 50;
+const XVART = 51;
+const SPIRITNAGA = 52;
+const SILVERDRAGON = 53;
+const PLATINUMDRAGON = 54;
+const GREENURCHIN = 55;
+const REDDRAGON = 56;
+const DEMONLORD = 57;
+const DEMONPRINCE = 64;
+const LUCIFER = 65;
+
+
+
+var Monster = function Monster(char, desc, level, armorclass, damage, attack, intelligence, gold, hitpoints, experience, awake, inventory) {
   this.char = char;
   this.desc = desc;
   this.level = level;
@@ -15,6 +82,16 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, in
   this.awake = awake;
   this.moved = false;
   this.inventory = [];
+
+  if (inventory) {
+    for (let index = 0; index < inventory.length; index++) {
+      this.inventory[index] = createObject(inventory[index]);
+    }
+  }
+  else {
+    this.initInventory();
+  }
+
 }
 
 
@@ -34,11 +111,14 @@ function createMonster(monst) {
   var monster = new Monster(monst.char, monst.desc, monst.level,
     monst.armorclass, monst.damage, monst.attack,
     monst.intelligence, monst.gold, monst.hitpoints, monst.experience,
-    monst.awake);
+    monst.awake, monst.inventory);
 
   monster.arg = arg;
 
-  monster.initInventory();
+  if (arg == MIMIC) {
+    monster.mimicarg = monst.mimicarg;
+    monster.mimiccounter = monst.mimiccounter;
+  } 
 
   return monster;
 }
