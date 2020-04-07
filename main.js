@@ -755,11 +755,11 @@ function wizardmode(password) {
       }
 
       var ix = 0;
-      var iy = 0;
+      var iy = 1;
       var wizi = 0;
       while (iy < MAXY) {
         if (itemlist[++wizi]) {
-          player.level.items[ix][++iy] = createObject(itemlist[wizi]);
+          player.level.items[ix][iy++] = createObject(itemlist[wizi]);
           if (!ULARN) {
             if (wizi == OORB.id) --iy;
             if (wizi == OELEVATORUP.id) --iy;
@@ -767,7 +767,6 @@ function wizardmode(password) {
           }
         }
       }
-      --wizi;
       while (++ix < MAXX - 1) {
         if (itemlist[++wizi]) {
           player.level.items[ix][iy - 1] = createObject(itemlist[wizi]);

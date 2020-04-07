@@ -32,6 +32,8 @@ function saveGame(isCheckPoint) {
     console.log(`saveGame(): caught: ${error}`);
   }
 
+  var bytes = JSON.stringify(state);
+
   /*
      END HACK to not store player.level
   */
@@ -39,7 +41,6 @@ function saveGame(isCheckPoint) {
 
   if (!isCheckPoint) {
     if (!error) {
-      var bytes = JSON.stringify(state);
       updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
     }
     else {
@@ -71,12 +72,15 @@ function loadSavedGame(savedState, isCheckPoint) {
   let savedStateString = JSON.stringify(savedState);
   var x = player.level;
   player.level = null;
+  // console.log(`saved`, savedState);
   var currentState = new GameState();
+  // console.log(`current`, currentState);
+  // console.log(`level`, player.level);
   let currentStateString = JSON.stringify(currentState);
   player.level = x;  
   let integrityCheck = savedStateString === currentStateString;
-  console.log(`save game integrity check: ${integrityCheck}`);
-  if (integrityCheck) {
+  if (!integrityCheck) {
+    console.log(`save game integrity check failed`);
     Rollbar.error("failed integrity check");
   }
 

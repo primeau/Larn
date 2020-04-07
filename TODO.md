@@ -2,6 +2,7 @@ One thing that was askew in your initial implementation was flex: 95%
 If you're only after flex-grow, use the property directly rather than through the shorthand flex. Then it becomes easier to spot that flex-grow doesn't take % in but relative integer weights (1, 2, 3...)
 
 ULARN 12.5.0:
+- create monster creates monster under hero
 - update README.spoilers doc
 - eye of larn appraisal in bank
 - search for ULARN TODO
@@ -10,6 +11,10 @@ ULARN 12.5.0:
 - prevent weild and wear at the same time
 - increase/decrease font size, including amiga?
 - should running increase gtime?
+- save game stutter
+  - create "reference object", "reference monster" to reduce save size?
+- character issue in amiga help screen, windows only
+- explain that . drops gold
 
 ULARN 12.5.1
 - crumble altars faster? 1/20?
@@ -39,7 +44,7 @@ todo:
 - allow hitting escape while naps are happening (interrupt settimeout?)
   - make buying / selling items etc faster 
 - eye of larn pickup/drop message with proper naps inbetween messages (harder than expected the first time around)
-
+- repeat function
 
 
 bugs:

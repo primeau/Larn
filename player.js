@@ -130,7 +130,7 @@ var Player = function Player() {
     this.getChar = function() {
       if (amiga_mode)
         return `${DIV_START}player${DIV_END}`;
-      else if (retro_mode) {
+      else if (ULARN && retro_mode) {
         return `<b><font color='lightgray'>@</font></b>`;
       }
       else {

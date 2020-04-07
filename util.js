@@ -388,6 +388,7 @@ function localStorageGetObject(key, failValue) {
     console.log(`getObject: ${key}`);
     var retrievedObject = localStorage.getObject(key);
     NOCOOKIES = false;
+    if (retrievedObject === false) return false;
     return retrievedObject || failValue;
   }
   catch (err) {
