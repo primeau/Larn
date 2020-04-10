@@ -2,125 +2,45 @@
 
 const itemlist = [];
 
-var Item = function Item(id, char, hackchar, ularnchar, color, bold, desc, carry, arg, inv) {
-  this.id = id;
-  this.char = char;
-  this.hackchar = hackchar;
-  this.ularnchar = ularnchar;
-  this.bold = bold;
-  this.color = color;
-  this.desc = desc;
-  this.carry = carry;
-  this.arg = arg;
-  this.inv = inv;
-
-  if (!arg) this.arg = 0;
-
-  if (!itemlist[id])
-    itemlist[id] = this;
-
-}
 
 
-
-function createObject(item, arg) {
-
-  if (!item) return null;
-
-  // create item via an ID (used in dnd_store, wizard mode)
-  // otherwise the item passed in is already an item to be duplicated
-  //if (!isNaN(Number(item)) && item != ``) {
-  if (typeof item == 'number') {
-    item = itemlist[item];
+/* 
+This is the base object for every item in the game
+It only has 2 fields to reduce the size of saved games since localstorage is limited to 5MB
+*/
+class Item {
+  constructor(id, arg) {
+    this.id = id;
+    this.arg = arg ? arg : 0;
   }
 
-  var newItem = new Item(item.id, item.char, item.hackchar, item.ularnchar, item.color, item.bold, item.desc, item.carry, item.arg, item.inv);
 
-  if (arg) {
-    newItem.arg = arg;
-  } else if (item.arg) {
-    newItem.arg = item.arg;
-  } else {
-    newItem.arg = 0;
+
+  getChar () {
+    return itemlist[this.id].getChar(this.arg);
   }
 
-  return newItem;
-}
 
 
-const DIV_START = `url("img/`;
-const DIV_END = `.png")`;
-
-
-
-Item.prototype = {
-  id: null,
-  char: `💩`,
-  hackchar: ``,
-  ularnchar: ``,
-  color: null,
-  bold: true,
-  desc: ``,
-  carry: false,
-  arg: 0,
-  inv: null,
+  getDescription () {
+    return itemlist[this.id].desc;
+  }
 
 
 
-  // TODO: cache this
-  // let buffer = [numobjects]
-  // if !buffer.get buffer.put
-  // flush when resetting mode/bold/color
-  getChar: function () {
-    if (amiga_mode) {
-      if (this.id == OWALL.id) {
-        return `${DIV_START}w${this.arg}${DIV_END}`;
-      } else {
-        return `${DIV_START}o${this.id}${DIV_END}`;
-      }
-    }
-
-    let char = null;
-    if (original_objects) {
-      if (ULARN) {
-        char = this.ularnchar;
-      } 
-      else {
-        char = this.char;
-      }
-    } 
-    else {
-      char = this.hackchar;
-    }
-
-    if (show_color && this.color) {
-      char = `<font color='${this.color}'>${char}</font>`;
-    }
-    if (bold_objects && this.bold) {
-      char = `<b>${char}</b>`;
-    }
-
-    return char;
-  },
-
-
-
-  matches: function (item, exact) {
-    if (item == null) {
-      //debug(`object.matches() null item`);
+  matches (item, exact) {
+    if (!item) {
       return false;
     }
-
     let isMatch = this.id == item.id;
     if (exact) isMatch &= this.arg == item.arg;
-
     return isMatch;
-  },
+  }
 
 
 
-  toString: function (inStore, showAll, tempPlayer) {
-    var description = this.desc;
+  toString (inStore, showAll, tempPlayer) {
+    var description = this.getDescription();
     //
     if (this.matches(OPOTION)) {
       if (tempPlayer && !isKnownPotion(this, tempPlayer) && showAll) {
@@ -167,22 +87,21 @@ Item.prototype = {
       description += ` (weapon in hand)`
     }
     return description;
-  },
+  }
 
   // we can wield more things than we show during wield inventory check
   // this is everything that a player can actually wield
-  canWield: function () {
+  canWield () {
     /*
     v12.4.5 - this list is much reduced
     */
     return this.isWeapon() || this.isArmor() || this.isRing();
-  },
+  }
 
 
 
-  // we can wield more things than we show during wield inventory check
   // this is what we show during an inventory check while wielding
-  isWeapon: function () {
+  isWeapon () {
     var weapon = false;
     weapon |= this.matches(OSHIELD);
     weapon |= this.matches(ODAGGER);
@@ -200,11 +119,11 @@ Item.prototype = {
     weapon |= this.matches(OSLAYER);
     weapon |= this.matches(OPSTAFF);
     return weapon;
-  },
+  }
 
 
 
-  isArmor: function () {
+  isArmor () {
     var armor = false;
     armor |= this.matches(OSHIELD);
     armor |= this.matches(OLEATHER);
@@ -217,22 +136,22 @@ Item.prototype = {
     armor |= this.matches(OSSPLATE);
     armor |= this.matches(OELVENCHAIN);
     return armor;
-  },
+  }
 
 
 
-  isGem: function () {
+  isGem () {
     var gem = false;
     gem |= this.matches(ODIAMOND);
     gem |= this.matches(ORUBY);
     gem |= this.matches(OEMERALD);
     gem |= this.matches(OSAPPHIRE);
     return gem;
-  },
+  }
 
 
 
-  isRing: function () {
+  isRing () {
     var ring = false;
     ring |= this.matches(ORINGOFEXTRA);
     ring |= this.matches(ODEXRING);
@@ -243,11 +162,11 @@ Item.prototype = {
     ring |= this.matches(OCLEVERRING);
     ring |= this.matches(OENERGYRING);
     return ring;
-  },
+  }
 
 
 
-  isStore: function () {
+  isStore () {
     var store = false;
     store |= this.matches(OENTRANCE);
     store |= this.matches(OBANK);
@@ -261,11 +180,11 @@ Item.prototype = {
     store |= this.matches(OTRADEPOST);
     store |= this.matches(OPAD);
     return store;
-  },
+  }
 
 
 
-  isDrug: function () {
+  isDrug () {
     var drug = false;
     drug |= this.matches(OSPEED);
     drug |= this.matches(OACID);
@@ -273,166 +192,243 @@ Item.prototype = {
     drug |= this.matches(OSHROOMS);
     drug |= this.matches(OCOKE);
     return drug;
-  },
+  }
 
 
-
-  getSortCode: function () {
-    var invcode = this.inv ? this.inv : 0;
-    var sortcode = (sortorder.indexOf(this.id) + 1) * 10000 + invcode;
-
+  
+  getSortCode () {
+    var sortcode = (sortorder.indexOf(this.id) + 1) * 10000;
     // sort unknown scrolls and potions above known
     // sort unknown scrolls and potions in inventory order
     // sort known scrolls and potions in inventory order
     if (isKnownScroll(this) || isKnownPotion(this)) {
       sortcode += (this.arg + 1) * 100;
     }
-
     return sortcode;
   }
 
 
-} // ITEM OBJECT
+}
 
 
 
-
+const DIV_START = `url("img/`;
+const DIV_END = `.png")`;
 const BOLD = true;
 const NO_BOLD = false;
 const NO_COLOR = null;
 const CARRY = true;
 const NO_CARRY = false;
 
-/* id, char, hackchar, ularnchar, color, bold, desc, carry, arg, inv */
-const OEMPTY = new Item(0, `·`, `·`, `·`, NO_COLOR, NO_BOLD, `the dungeon floor`, NO_CARRY); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
-const OANNIHILATION = new Item(82, `s`, `0`, `s`, `crimson`, BOLD, `a sphere of annihilation`, NO_CARRY);
-const OHOMEENTRANCE = new Item(93, OEMPTY.char, `8`, OEMPTY.char, NO_COLOR, NO_BOLD, `the exit to the home level`, NO_CARRY);
-const OUNKNOWN = new Item(94, ' ', ` `, ` `, NO_COLOR, NO_BOLD, `... nothing`, NO_CARRY);
+
+
+/* 
+DungeonObject extends Item and is used to store static characteristics
+of anything that can be found in the dungeon
+*/
+class DungeonObject extends Item {
+
+  /*
+    DungeonObject Constructor
+  */
+  constructor(id, char, hackchar, ularnchar, color, bold, desc, carry) {
+    super(id, 0);
+    this.char = char;
+    this.hackchar = hackchar;
+    this.ularnchar = ularnchar;
+    this.color = color;
+    this.bold = bold;
+    this.desc = desc;
+    this.carry = carry;
+    if (!itemlist[id]) itemlist[id] = this;
+  }
+
+  /*
+    DungeonObject getChar()
+  */
+  getChar(arg) {
+    // TODO: cache this
+    // let buffer = [numobjects]
+    // if !buffer.get buffer.put
+    // flush when resetting mode/bold/color
+    if (amiga_mode) {
+      if (this.id == OWALL.id) {
+        return `${DIV_START}w${arg}${DIV_END}`;
+      } else {
+        return `${DIV_START}o${this.id}${DIV_END}`;
+      }
+    }
+    let char = null;
+    if (original_objects) {
+      if (ULARN) {
+        char = this.ularnchar;
+      } else {
+        char = this.char;
+      }
+    } else {
+      char = this.hackchar;
+    }
+    if (show_color && this.color) {
+      char = `<font color='${this.color}'>${char}</font>`;
+    }
+    if (bold_objects && this.bold) {
+      char = `<b>${char}</b>`;
+    }
+    return char;
+  }
+
+} /* DungeonObject */
+
+
+
+function createObject(item, arg) {
+
+  if (!item) return null;
+
+  // create item via an ID (used in dnd_store, wizard mode)
+  // otherwise the item passed in is already an item to be duplicated
+  //if (!isNaN(Number(item)) && item != ``) {
+  if (typeof item == 'number') {
+    item = itemlist[item];
+  }
+
+  var newItem = new Item(item.id, item.arg);
+
+  if (arg) {
+    newItem.arg = arg;
+  } else if (item.arg) {
+    newItem.arg = item.arg;
+  } else {
+    newItem.arg = 0;
+  }
+
+  return newItem;
+}
+
+
+
+/* id, char, hackchar, ularnchar, color, bold, desc, carry, arg */
+const OEMPTY = new DungeonObject(0, `·`, `·`, `·`, NO_COLOR, NO_BOLD, `the dungeon floor`, NO_CARRY); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
+const OANNIHILATION = new DungeonObject(82, `s`, `0`, `s`, `crimson`, BOLD, `a sphere of annihilation`, NO_CARRY);
+const OHOMEENTRANCE = new DungeonObject(93, OEMPTY.char, `8`, OEMPTY.char, NO_COLOR, NO_BOLD, `the exit to the home level`, NO_CARRY);
+const OUNKNOWN = new DungeonObject(94, ` `, ` `, ` `, NO_COLOR, NO_BOLD, `... nothing`, NO_CARRY);
 
 // buildings / home level
-const OHOME = new Item(69, `H`, `1`, `H`, `cornflowerblue`, BOLD, `your home`, NO_CARRY);
-const ODNDSTORE = new Item(12, `=`, `2`, `=`, `orchid`, BOLD, `the DND store`, NO_CARRY);
-const OTRADEPOST = new Item(77, `S`, `3`, `S`, `tan`, BOLD, `the local trading post`, NO_CARRY);
-const OLRS = new Item(80, `L`, `4`, `L`, `lightgray`, BOLD, `the Larn Revenue Service`, NO_CARRY);
-const OBANK = new Item(16, `$`, `5`, `$`, `gold`, BOLD, `the bank of Larn`, NO_CARRY);
-const OBANK2 = new Item(15, `$`, `5`, `$`, `gold`, BOLD, `the Nth branch of the Bank of Larn`, NO_CARRY);
-const OSCHOOL = new Item(10, `+`, `6`, `+`, `darkorange`, BOLD, `the College of Larn`, NO_CARRY);
-const OENTRANCE = new Item(54, `E`, `8`, `E`, `mediumseagreen`, BOLD, `the dungeon entrance`, NO_CARRY);
-const OVOLDOWN = new Item(55, `V`, `9`, `V`, `crimson`, BOLD, `a volcanic shaft leaning downward`, NO_CARRY);
-/* need amiga */ const OPAD = new Item(100, `@`, `@`, `@`, `lightgreen`, BOLD, `Dealer McDope's Hideout!`, NO_CARRY); // ULARN
+const OHOME = new DungeonObject(69, `H`, `1`, `H`, `cornflowerblue`, BOLD, `your home`, NO_CARRY);
+const ODNDSTORE = new DungeonObject(12, `=`, `2`, `=`, `orchid`, BOLD, `the DND store`, NO_CARRY);
+const OTRADEPOST = new DungeonObject(77, `S`, `3`, `S`, `tan`, BOLD, `the local trading post`, NO_CARRY);
+const OLRS = new DungeonObject(80, `L`, `4`, `L`, `lightgray`, BOLD, `the Larn Revenue Service`, NO_CARRY);
+const OBANK = new DungeonObject(16, `$`, `5`, `$`, `gold`, BOLD, `the bank of Larn`, NO_CARRY);
+const OBANK2 = new DungeonObject(15, `$`, `5`, `$`, `gold`, BOLD, `the Nth branch of the Bank of Larn`, NO_CARRY);
+const OSCHOOL = new DungeonObject(10, `+`, `6`, `+`, `darkorange`, BOLD, `the College of Larn`, NO_CARRY);
+const OENTRANCE = new DungeonObject(54, `E`, `8`, `E`, `mediumseagreen`, BOLD, `the dungeon entrance`, NO_CARRY);
+const OVOLDOWN = new DungeonObject(55, `V`, `9`, `V`, `crimson`, BOLD, `a volcanic shaft leaning downward`, NO_CARRY);
+// ULARN
+const OPAD = new DungeonObject(100, `@`, `@`, `@`, `lightgreen`, BOLD, `Dealer McDope's Hideout!`, NO_CARRY);
 
 // dungeon features
-const OWALL = new Item(21, `▒`, `▒`, `▒`, NO_COLOR, NO_BOLD, `a wall`, NO_CARRY);
-const OALTAR = new Item(1, `A`, `:`, `A`, `orchid`, BOLD, `a holy altar`, NO_CARRY);
-const OTHRONE = new Item(2, `T`, `\\`, `T`, `gold`, BOLD, `a handsome jewel encrusted throne`, NO_CARRY);
-const ODEADTHRONE = new Item(79, `t`, `/`, `t`, `lightgray`, BOLD, `a massive throne`, NO_CARRY);
-const OPIT = new Item(4, `P`, `^`, `P`, `sandybrown`, BOLD, `a pit`, NO_CARRY);
-const OVOLUP = new Item(56, `V`, `9`, `V`, `mediumseagreen`, BOLD, `the base of a volcanic shaft`, NO_CARRY);
-const OSTAIRSUP = new Item(5, `&lt`, `&lt`, `%`, `mediumseagreen`, BOLD, `a staircase going up`, NO_CARRY); // use &lt to prevent bugginess when dropping a ! or ? to the right
-const OSTAIRSDOWN = new Item(13, `&gt`, `&gt`, `%`, `sandybrown`, BOLD, `a staircase going down`, NO_CARRY);
-const OELEVATORUP = new Item(6, `_`, `_`, `_`, `mediumseagreen`, BOLD, `an express elevator going up`, NO_CARRY); // ULARN
-const OELEVATORDOWN = new Item(14, `_`, `_`, `_`, `sandybrown`, BOLD, `an express elevator going down`, NO_CARRY); // ULARN
-const OFOUNTAIN = new Item(7, `F`, `{`, `F`, `cornflowerblue`, BOLD, `a bubbling fountain`, NO_CARRY);
-const ODEADFOUNTAIN = new Item(17, `f`, `}`, `f`, `lightgray`, BOLD, `a dead fountain`, NO_CARRY);
-const OSTATUE = new Item(8, `&`, `%`, `&`, `ivory`, BOLD, `a great marble statue`, NO_CARRY);
-const OMIRROR = new Item(11, `M`, `|`, `M`, `silver`, BOLD, `a mirror`, NO_CARRY);
-const OOPENDOOR = new Item(19, `O`, `'`, `O`, `lightgray`, BOLD, `an open door`, NO_CARRY);
-const OCLOSEDDOOR = new Item(20, `D`, `+`, `D`, `lightgray`, BOLD, `a closed door`, NO_CARRY);
+const OWALL = new DungeonObject(21, `▒`, `▒`, `▒`, NO_COLOR, NO_BOLD, `a wall`, NO_CARRY);
+const OALTAR = new DungeonObject(1, `A`, `:`, `A`, `orchid`, BOLD, `a holy altar`, NO_CARRY);
+const OTHRONE = new DungeonObject(2, `T`, `\\`, `T`, `gold`, BOLD, `a handsome jewel encrusted throne`, NO_CARRY);
+const ODEADTHRONE = new DungeonObject(79, `t`, `/`, `t`, `lightgray`, BOLD, `a massive throne`, NO_CARRY);
+const OPIT = new DungeonObject(4, `P`, `^`, `P`, `sandybrown`, BOLD, `a pit`, NO_CARRY);
+const OVOLUP = new DungeonObject(56, `V`, `9`, `V`, `mediumseagreen`, BOLD, `the base of a volcanic shaft`, NO_CARRY);
+const OSTAIRSUP = new DungeonObject(5, `&lt`, `&lt`, `%`, `mediumseagreen`, BOLD, `a staircase going up`, NO_CARRY); // use &lt to prevent bugginess when dropping a ! or ? to the right
+const OSTAIRSDOWN = new DungeonObject(13, `&gt`, `&gt`, `%`, `sandybrown`, BOLD, `a staircase going down`, NO_CARRY);
+const OFOUNTAIN = new DungeonObject(7, `F`, `{`, `F`, `cornflowerblue`, BOLD, `a bubbling fountain`, NO_CARRY);
+const ODEADFOUNTAIN = new DungeonObject(17, `f`, `}`, `f`, `lightgray`, BOLD, `a dead fountain`, NO_CARRY);
+const OSTATUE = new DungeonObject(8, `&`, `%`, `&`, `ivory`, BOLD, `a great marble statue`, NO_CARRY);
+const OMIRROR = new DungeonObject(11, `M`, `|`, `M`, `silver`, BOLD, `a mirror`, NO_CARRY);
+const OOPENDOOR = new DungeonObject(19, `O`, `'`, `O`, `lightgray`, BOLD, `an open door`, NO_CARRY);
+const OCLOSEDDOOR = new DungeonObject(20, `D`, `+`, `D`, `lightgray`, BOLD, `a closed door`, NO_CARRY);
+// ULARN
+const OELEVATORUP = new DungeonObject(6, `_`, `_`, `_`, `mediumseagreen`, BOLD, `an express elevator going up`, NO_CARRY);
+const OELEVATORDOWN = new DungeonObject(14, `_`, `_`, `_`, `sandybrown`, BOLD, `an express elevator going down`, NO_CARRY);
 
 // traps
-const OIVTELETRAP = new Item(78, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a teleport trap`, NO_CARRY);
-const OTELEPORTER = new Item(9, `^`, `^`, `^`, `mediumpurple`, BOLD, `a teleport trap`, NO_CARRY);
-const OTRAPARROWIV = new Item(67, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `an arrow trap`, NO_CARRY);
-const OTRAPARROW = new Item(66, `^`, `^`, `^`, `lightgray`, BOLD, `an arrow trap`, NO_CARRY);
-const ODARTRAP = new Item(74, `^`, `^`, `^`, `lightgreen`, BOLD, `a dart trap`, NO_CARRY);
-const OIVDARTRAP = new Item(73, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a dart trap`, NO_CARRY);
-const OTRAPDOOR = new Item(75, `^`, `^`, `^`, `sandybrown`, BOLD, `a trapdoor`, NO_CARRY);
-const OIVTRAPDOOR = new Item(76, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a trapdoor`, NO_CARRY);
+const OIVTELETRAP = new DungeonObject(78, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a teleport trap`, NO_CARRY);
+const OTELEPORTER = new DungeonObject(9, `^`, `^`, `^`, `mediumpurple`, BOLD, `a teleport trap`, NO_CARRY);
+const OTRAPARROWIV = new DungeonObject(67, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `an arrow trap`, NO_CARRY);
+const OTRAPARROW = new DungeonObject(66, `^`, `^`, `^`, `lightgray`, BOLD, `an arrow trap`, NO_CARRY);
+const ODARTRAP = new DungeonObject(74, `^`, `^`, `^`, `lightgreen`, BOLD, `a dart trap`, NO_CARRY);
+const OIVDARTRAP = new DungeonObject(73, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a dart trap`, NO_CARRY);
+const OTRAPDOOR = new DungeonObject(75, `^`, `^`, `^`, `sandybrown`, BOLD, `a trapdoor`, NO_CARRY);
+const OIVTRAPDOOR = new DungeonObject(76, OEMPTY.char, OEMPTY.char, OEMPTY.char, NO_COLOR, NO_BOLD, `a trapdoor`, NO_CARRY);
 
 // dungeon items
-const OGOLDPILE = new Item(18, `*`, `$`, `*`, `gold`, BOLD, `some gold`, CARRY, 0);
-const OSCROLL = new Item(41, `?`, `?`, `?`, `tan`, BOLD, `a magic scroll`, CARRY);
-const OPOTION = new Item(42, `!`, `!`, `!`, `mediumpurple`, BOLD, `a magic potion`, CARRY);
-const OBOOK = new Item(43, `B`, `?`, `B`, `darkgoldenrod`, BOLD, `a book`, CARRY);
-const OCHEST = new Item(44, `C`, `&`, `C`, `khaki`, BOLD, `a chest`, CARRY);
-const ODIAMOND = new Item(50, `@`, `*`, `&lt`, `white`, BOLD, `a brilliant diamond`, CARRY);
-const ORUBY = new Item(51, `@`, `*`, `&lt`, `crimson`, BOLD, `a ruby`, CARRY);
-const OEMERALD = new Item(52, `@`, `*`, `&lt`, `seagreen`, BOLD, `an enchanting emerald`, CARRY);
-const OSAPPHIRE = new Item(53, `@`, `*`, `&lt`, `dodgerblue`, BOLD, `a sparkling sapphire`, CARRY);
-const OCOOKIE = new Item(83, `c`, `,`, `c`, `tan`, BOLD, `a fortune cookie`, CARRY);
+const OGOLDPILE = new DungeonObject(18, `*`, `$`, `*`, `gold`, BOLD, `some gold`, CARRY, 0);
+const OSCROLL = new DungeonObject(41, `?`, `?`, `?`, `tan`, BOLD, `a magic scroll`, CARRY);
+const OPOTION = new DungeonObject(42, `!`, `!`, `!`, `mediumpurple`, BOLD, `a magic potion`, CARRY);
+const OBOOK = new DungeonObject(43, `B`, `?`, `B`, `darkgoldenrod`, BOLD, `a book`, CARRY);
+const OCHEST = new DungeonObject(44, `C`, `&`, `C`, `khaki`, BOLD, `a chest`, CARRY);
+const ODIAMOND = new DungeonObject(50, `@`, `*`, `&lt`, `white`, BOLD, `a brilliant diamond`, CARRY);
+const ORUBY = new DungeonObject(51, `@`, `*`, `&lt`, `crimson`, BOLD, `a ruby`, CARRY);
+const OEMERALD = new DungeonObject(52, `@`, `*`, `&lt`, `seagreen`, BOLD, `an enchanting emerald`, CARRY);
+const OSAPPHIRE = new DungeonObject(53, `@`, `*`, `&lt`, `dodgerblue`, BOLD, `a sparkling sapphire`, CARRY);
+const OCOOKIE = new DungeonObject(83, `c`, `,`, `c`, `tan`, BOLD, `a fortune cookie`, CARRY);
 
 // weapons
-const OSWORD = new Item(28, `)`, `)`, `)`, `lightgray`, BOLD, `a sunsword`, CARRY);
-const O2SWORD = new Item(29, `(`, `)`, `(`, `lightgray`, BOLD, `a two handed sword`, CARRY);
-const OSPEAR = new Item(30, `(`, `)`, `(`, `lightgray`, BOLD, `a spear`, CARRY);
-const ODAGGER = new Item(31, `(`, `)`, `(`, `lightgray`, BOLD, `a dagger`, CARRY);
-const OBELT = new Item(40, `{`, `-`, `{`, `darkgoldenrod`, BOLD, `a belt of striking`, CARRY);
-const OBATTLEAXE = new Item(57, `)`, `)`, `)`, `lightgray`, BOLD, `a battle axe`, CARRY);
-const OLONGSWORD = new Item(58, `)`, `)`, `)`, `lightgray`, BOLD, `a longsword`, CARRY);
-const OFLAIL = new Item(59, `(`, `)`, `(`, `lightgray`, BOLD, `a flail`, CARRY);
-const OLANCE = new Item(65, `)`, `)`, `)`, `lightgray`, BOLD, `a lance of death`, CARRY);
+const OSWORD = new DungeonObject(28, `)`, `)`, `)`, `lightgray`, BOLD, `a sunsword`, CARRY);
+const O2SWORD = new DungeonObject(29, `(`, `)`, `(`, `lightgray`, BOLD, `a two handed sword`, CARRY);
+const OSPEAR = new DungeonObject(30, `(`, `)`, `(`, `lightgray`, BOLD, `a spear`, CARRY);
+const ODAGGER = new DungeonObject(31, `(`, `)`, `(`, `lightgray`, BOLD, `a dagger`, CARRY);
+const OBELT = new DungeonObject(40, `{`, `-`, `{`, `darkgoldenrod`, BOLD, `a belt of striking`, CARRY);
+const OBATTLEAXE = new DungeonObject(57, `)`, `)`, `)`, `lightgray`, BOLD, `a battle axe`, CARRY);
+const OLONGSWORD = new DungeonObject(58, `)`, `)`, `)`, `lightgray`, BOLD, `a longsword`, CARRY);
+const OFLAIL = new DungeonObject(59, `(`, `)`, `(`, `lightgray`, BOLD, `a flail`, CARRY);
+const OLANCE = new DungeonObject(65, `)`, `)`, `)`, `lightgray`, BOLD, `a lance of death`, CARRY);
 
 // special weapons
-const OSWORDofSLASHING = new Item(26, `)`, `)`, `)`, `cornflowerblue`, BOLD, `a sword of slashing`, CARRY);
-const OHAMMER = new Item(27, `)`, `)`, `)`, `darkgoldenrod`, BOLD, `Bessman's flailing hammer`, CARRY);
-/* need amiga */ const OVORPAL = new Item(90, `)`, `)`, `)`, `darkorange`, BOLD, `the Vorpal Blade`, CARRY); // ULARN
-/* need amiga */ const OSLAYER = new Item(91, `)`, `)`, `)`, `crimson`, BOLD, `Slayer`, CARRY); // ULARN
+const OSWORDofSLASHING = new DungeonObject(26, `)`, `)`, `)`, `cornflowerblue`, BOLD, `a sword of slashing`, CARRY);
+const OHAMMER = new DungeonObject(27, `)`, `)`, `)`, `darkgoldenrod`, BOLD, `Bessman's flailing hammer`, CARRY);
+// ULARN
+const OVORPAL = new DungeonObject(90, `)`, `)`, `)`, `darkorange`, BOLD, `the Vorpal Blade`, CARRY);
+const OSLAYER = new DungeonObject(91, `)`, `)`, `)`, `crimson`, BOLD, `Slayer`, CARRY);
 
 // armour
-const OLEATHER = new Item(25, `[`, `[`, `[`, `lightgray`, BOLD, `leather armor`, CARRY);
-const OSTUDLEATHER = new Item(61, `[`, `[`, `[`, `lightgray`, BOLD, `studded leather armor`, CARRY);
-const ORING = new Item(60, `[`, `[`, `[`, `lightgray`, BOLD, `ring mail`, CARRY);
-const OCHAIN = new Item(24, `[`, `[`, `[`, `lightgray`, BOLD, `chain mail`, CARRY);
-const OSPLINT = new Item(62, `]`, `[`, `]`, `lightgray`, BOLD, `splint mail`, CARRY);
-const OPLATE = new Item(23, `]`, `[`, `]`, `lightgray`, BOLD, `plate mail`, CARRY);
-const OPLATEARMOR = new Item(63, `]`, `[`, `]`, `lightgray`, BOLD, `plate armor`, CARRY);
-const OSSPLATE = new Item(64, `]`, `[`, `]`, `lightgray`, BOLD, `stainless plate armor`, CARRY);
-const OSHIELD = new Item(68, `[`, `[`, `[`, `lightgray`, BOLD, `a shield`, CARRY);
-
-// special armour
-/* need amiga */ const OELVENCHAIN = new Item(92, `]`, `]`, `]`, `cornflowerblue`, BOLD, `elven chain`, CARRY); // ULARN
+const OLEATHER = new DungeonObject(25, `[`, `[`, `[`, `lightgray`, BOLD, `leather armor`, CARRY);
+const OSTUDLEATHER = new DungeonObject(61, `[`, `[`, `[`, `lightgray`, BOLD, `studded leather armor`, CARRY);
+const ORING = new DungeonObject(60, `[`, `[`, `[`, `lightgray`, BOLD, `ring mail`, CARRY);
+const OCHAIN = new DungeonObject(24, `[`, `[`, `[`, `lightgray`, BOLD, `chain mail`, CARRY);
+const OSPLINT = new DungeonObject(62, `]`, `[`, `]`, `lightgray`, BOLD, `splint mail`, CARRY);
+const OPLATE = new DungeonObject(23, `]`, `[`, `]`, `lightgray`, BOLD, `plate mail`, CARRY);
+const OPLATEARMOR = new DungeonObject(63, `]`, `[`, `]`, `lightgray`, BOLD, `plate armor`, CARRY);
+const OSSPLATE = new DungeonObject(64, `]`, `[`, `]`, `lightgray`, BOLD, `stainless plate armor`, CARRY);
+const OSHIELD = new DungeonObject(68, `[`, `[`, `[`, `lightgray`, BOLD, `a shield`, CARRY);
+// ULARN
+const OELVENCHAIN = new DungeonObject(92, `]`, `]`, `]`, `cornflowerblue`, BOLD, `elven chain`, CARRY);
 
 // rings
-const ORINGOFEXTRA = new Item(32, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of extra regeneration`, CARRY);
-const OREGENRING = new Item(33, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of regeneration`, CARRY);
-const OPROTRING = new Item(34, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of protection`, CARRY);
-const OENERGYRING = new Item(35, `=`, `=`, `|`, `lightgray`, BOLD, `an energy ring`, CARRY);
-const ODEXRING = new Item(36, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of dexterity`, CARRY);
-const OSTRRING = new Item(37, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of strength`, CARRY);
-const OCLEVERRING = new Item(38, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of cleverness`, CARRY);
-const ODAMRING = new Item(39, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of increase damage`, CARRY);
+const ORINGOFEXTRA = new DungeonObject(32, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of extra regeneration`, CARRY);
+const OREGENRING = new DungeonObject(33, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of regeneration`, CARRY);
+const OPROTRING = new DungeonObject(34, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of protection`, CARRY);
+const OENERGYRING = new DungeonObject(35, `=`, `=`, `|`, `lightgray`, BOLD, `an energy ring`, CARRY);
+const ODEXRING = new DungeonObject(36, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of dexterity`, CARRY);
+const OSTRRING = new DungeonObject(37, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of strength`, CARRY);
+const OCLEVERRING = new DungeonObject(38, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of cleverness`, CARRY);
+const ODAMRING = new DungeonObject(39, `=`, `=`, `|`, `lightgray`, BOLD, `a ring of increase damage`, CARRY);
 
 // special objects
-const OLARNEYE = new Item(22, `~`, `~`, `~`, `magenta`, BOLD, `The Eye of Larn`, CARRY);
-const OAMULET = new Item(45, `}`, `~`, `.`, `gold`, BOLD, `an amulet of invisibility`, CARRY);
-const OORBOFDRAGON = new Item(46, `o`, `~`, `o`, `skyblue`, BOLD, `an orb of dragon slaying`, CARRY);
-const OSPIRITSCARAB = new Item(47, `:`, `~`, `.`, `darkorange`, BOLD, `a scarab of negate spirit`, CARRY);
-const OCUBEofUNDEAD = new Item(48, `;`, `~`, `.`, `plum`, BOLD, `a cube of undead control`, CARRY);
-const ONOTHEFT = new Item(49, `,`, `~`, `.`, `cornflowerblue`, BOLD, `a device of theft prevention`, CARRY);
-const OORB = new Item(3, `o`, `~`, `o`, `plum`, BOLD, `an orb of enlightenment`, CARRY); // ULARN
-/* need amiga */ const OBRASSLAMP = new Item(85, `.`, `.`, `.`, `gold`, BOLD, `a brass lamp`, CARRY); // ULARN
-/* need amiga */ const OHANDofFEAR = new Item(86, `.`, `.`, `.`, `crimson`, BOLD, `The Hand of Fear`, CARRY); // ULARN
-/* need amiga */ const OSPHTALISMAN = new Item(87, `.`, `.`, `.`, `skyblue`, BOLD, `The Talisman of the Sphere`, CARRY); // ULARN
-/* need amiga */ const OWWAND = new Item(88, `/`, `/`, `/`, `mediumseagreen`, BOLD, `a wand of wonder`, CARRY); // ULARN
-/* need amiga */ const OPSTAFF = new Item(89, `/`, `/`, `/`, `darkorange`, BOLD, `a staff of power`, CARRY); // ULARN
+const OLARNEYE = new DungeonObject(22, `~`, `~`, `~`, `magenta`, BOLD, `The Eye of Larn`, CARRY);
+const OAMULET = new DungeonObject(45, `}`, `~`, `.`, `gold`, BOLD, `an amulet of invisibility`, CARRY);
+const OORBOFDRAGON = new DungeonObject(46, `o`, `~`, `o`, `skyblue`, BOLD, `an orb of dragon slaying`, CARRY);
+const OSPIRITSCARAB = new DungeonObject(47, `:`, `~`, `.`, `darkorange`, BOLD, `a scarab of negate spirit`, CARRY);
+const OCUBEofUNDEAD = new DungeonObject(48, `;`, `~`, `.`, `plum`, BOLD, `a cube of undead control`, CARRY);
+const ONOTHEFT = new DungeonObject(49, `,`, `~`, `.`, `cornflowerblue`, BOLD, `a device of theft prevention`, CARRY);
+const OORB = new DungeonObject(3, `o`, `~`, `o`, `plum`, BOLD, `an orb of enlightenment`, CARRY);
+// ULARN
+const OBRASSLAMP = new DungeonObject(85, `.`, `.`, `.`, `gold`, BOLD, `a brass lamp`, CARRY);
+const OHANDofFEAR = new DungeonObject(86, `.`, `.`, `.`, `crimson`, BOLD, `The Hand of Fear`, CARRY);
+const OSPHTALISMAN = new DungeonObject(87, `.`, `.`, `.`, `skyblue`, BOLD, `The Talisman of the Sphere`, CARRY);
+const OWWAND = new DungeonObject(88, `/`, `/`, `/`, `mediumseagreen`, BOLD, `a wand of wonder`, CARRY);
+const OPSTAFF = new DungeonObject(89, `/`, `/`, `/`, `darkorange`, BOLD, `a staff of power`, CARRY);
 
-// drugs
-/* need amiga */ const OSPEED = new Item(95, `:`, `:`, `:`, `paleblue`, BOLD, `some speed`, CARRY); // ULARN
-/* need amiga */ const OACID = new Item(96, `:`, `:`, `:`, `mediumpurple`, BOLD, `some LSD`, CARRY); // ULARN
-/* need amiga */ const OHASH = new Item(97, `:`, `:`, `:`, `sandybrown`, BOLD, `some hashish`, CARRY); // ULARN
-/* need amiga */ const OSHROOMS = new Item(98, `:`, `:`, `:`, `tan`, BOLD, `some magic mushrooms`, CARRY); // ULARN
-/* need amiga */ const OCOKE = new Item(99, `:`, `:`, `:`, `snow`, BOLD, `some cocaine`, CARRY); // ULARN
-
-
-
-function isItem(x, y, compareItem) {
-  var levelItem = player.level.items[x][y];
-  if (levelItem.id == compareItem.id) {
-    return true;
-  } else {
-    return false;
-  }
-}
+// ULARN drugs
+const OSPEED = new DungeonObject(95, `:`, `:`, `:`, `paleblue`, BOLD, `some speed`, CARRY);
+const OACID = new DungeonObject(96, `:`, `:`, `:`, `mediumpurple`, BOLD, `some LSD`, CARRY);
+const OHASH = new DungeonObject(97, `:`, `:`, `:`, `sandybrown`, BOLD, `some hashish`, CARRY);
+const OSHROOMS = new DungeonObject(98, `:`, `:`, `:`, `tan`, BOLD, `some magic mushrooms`, CARRY);
+const OCOKE = new DungeonObject(99, `:`, `:`, `:`, `snow`, BOLD, `some cocaine`, CARRY);
 
 
 
@@ -445,39 +441,26 @@ function getItemDir(direction) {
 
 
 function itemAt(x, y) {
-  if (x == null || y == null) {
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
     return null;
   }
-  if (x < 0 || x >= MAXX) {
-    return null;
-  }
-  if (y < 0 || y >= MAXY) {
-    return null;
-  }
-  var item = player.level.items[x][y];
-  return item;
+  return player.level.items[x][y];
 }
 
 
 
 function setItem(x, y, item) {
-  if (x == null || y == null) {
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
     return null;
   }
-  if (x < 0 || x >= MAXX) {
-    return null;
-  }
-  if (y < 0 || y >= MAXY) {
-    return null;
-  }
-  player.level.items[x][y] = item;
+  player.level.items[x][y] = createObject(item, item.arg);
   return item;
 }
 
 
 
 function isItemAt(x, y) {
-  var item = player.level.items[x][y];
+  var item = itemAt(x, y);
   return (item && !item.matches(OEMPTY));
 }
 
@@ -500,11 +483,9 @@ function setWallArg(x, y) {
 
 
 
-function lookforobject(do_ident, do_pickup, do_action) {
+function lookforobject(do_ident, do_pickup) {
   // do_ident;   /* identify item: T/F */
   // do_pickup;  /* pickup item:   T/F */
-  // do_action;  /* prompt for actions on object: T/F */
-
 
   /* can't find objects if time is stopped    */
   if (player.TIMESTOP)
@@ -512,7 +493,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
 
   showcell(player.x, player.y);
 
-  var item = player.level.items[player.x][player.y];
+  var item = itemAt(player.x, player.y);
 
   if (item.matches(OEMPTY)) {
     // do nothing
@@ -586,9 +567,9 @@ function lookforobject(do_ident, do_pickup, do_action) {
   else if (item.matches(OIVTELETRAP)) {
     if (rnd(11) < 6)
       return;
-    setItem(player.x, player.y, createObject(OTELEPORTER));
+    setItem(player.x, player.y, OTELEPORTER);
     player.level.know[player.x][player.y] = KNOWALL;
-    lookforobject(do_ident, do_pickup, do_action);
+    lookforobject(do_ident, do_pickup);
     /* fall through to OTELEPORTER case below!!! */
   }
   //
@@ -602,10 +583,10 @@ function lookforobject(do_ident, do_pickup, do_action) {
     /* for an arrow trap */
     if (rnd(17) < 13)
       return;
-    setItem(player.x, player.y, createObject(OTRAPARROW));
+    setItem(player.x, player.y, OTRAPARROW);
     player.level.know[player.x][player.y] = KNOWALL;
     /* fall through to OTRAPARROW case below!!! */
-    lookforobject(do_ident, do_pickup, do_action);
+    lookforobject(do_ident, do_pickup);
     return;
   }
   //
@@ -620,10 +601,10 @@ function lookforobject(do_ident, do_pickup, do_action) {
     /* for a dart trap */
     if (rnd(17) < 13)
       return;
-    setItem(player.x, player.y, createObject(ODARTRAP));
+    setItem(player.x, player.y, ODARTRAP);
     player.level.know[player.x][player.y] = KNOWALL;
     /* fall through to ODARTRAP case below!!! */
-    lookforobject(do_ident, do_pickup, do_action);
+    lookforobject(do_ident, do_pickup);
     return;
   }
   //
@@ -639,10 +620,10 @@ function lookforobject(do_ident, do_pickup, do_action) {
     /* for a trap door */
     if (rnd(17) < 13)
       return;
-    setItem(player.x, player.y, createObject(OTRAPDOOR));
+    setItem(player.x, player.y, OTRAPDOOR);
     player.level.know[player.x][player.y] = KNOWALL;
     /* fall through to OTRAPDOOR case below!!! */
-    lookforobject(do_ident, do_pickup, do_action);
+    lookforobject(do_ident, do_pickup);
     return;
   }
   //
@@ -727,23 +708,28 @@ function lookforobject(do_ident, do_pickup, do_action) {
   else if (item.matches(OCOOKIE)) {
     if (do_ident) updateLog(`You have found ${item}`, formatHint('t', 'to take', 'E', 'to eat'));
   }
+  //
   else if (item.matches(OSPEED)) {
     if (do_ident) updateLog(`You find some speed. [<b>s</b> to snort]`);
   }
+  //
   else if (item.matches(OSHROOMS)) {
     if (do_ident) updateLog(`You find some magic mushrooms. [<b>e</b> to eat]`);
   }
+  //
   else if (item.matches(OACID)) {
     if (do_ident) updateLog(`You find some LSD. [<b>e</b> to eat]`);
   }
+  //
   else if (item.matches(OHASH)) {
     if (do_ident) updateLog(`You find some hashish. [<b>s</b> to smoke]`);
   }
+  //
   else if (item.matches(OCOKE)) {
     if (do_ident) updateLog(`You find some cocaine. [<b>s</b> to snort]`);
   }
   //
-  else if (item.carry) {
+  else if (canTake(item)) {
     if (ULARN) {
       if (do_ident) updateLog(`You find ${item}.`, formatHint('t', 'to take'));
     } else {
@@ -763,7 +749,7 @@ function lookforobject(do_ident, do_pickup, do_action) {
   }
 
   if (do_pickup) {
-    if (item.carry && take(item)) {
+    if (canTake(item) && take(item)) {
       forget(); // remove from board
     } else {
       nomove = 1;

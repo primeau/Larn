@@ -436,23 +436,30 @@ function DEVMODE() {
     eventToggleDebugWTW();
     eventToggleDebugStairs();
     eventToggleDebugOutput();
-    eventToggleDebugKnowAll();
+    // eventToggleDebugKnowAll();
     eventToggleDebugStats();
     eventToggleDebugImmortal();
     eventToggleDebugAwareness();
     player.updateStealth(100000);
     player.updateCancellation(100000);
 
-    wizardmode(`pvnert(x)`);
+    // wizardmode(`pvnert(x)`);
 
     // var startShield = createObject(OSHIELD);
     // take(startShield);
-    // var startDagger = createObject(ODAGGER, -9);
-    // var startSlayer = createObject(OSLAYER);
-    // take(startDagger);
-    // take(startSlayer);
     // player.SHIELD = startShield;
+    var startWeapon = createObject(OLANCE);
+    take(startWeapon);
+    player.WIELD = startWeapon;
+    var startArmor = createObject(OSSPLATE, 25);
+    take(startArmor);
+    player.WEAR = startArmor;
+
+
+    player.raiseexperience(5000000);
+
     // take(createObject(OPOTION, 2));
+    // take(createObject(OPOTION, 9));
     // take(createObject(OPOTION, 10));
     // take(createObject(OPOTION, 21));
     // take(createObject(OPOTION, 23));
@@ -469,6 +476,7 @@ function DEVMODE() {
     // createmonster(NYMPH);
     // revealLevel();
 
+  
 }
 
 
@@ -571,7 +579,7 @@ function mainloop(key) {
 
   /* see if there is an object here. */
   if (dropflag == 0) {
-    lookforobject(true, auto_pickup, false);
+    lookforobject(true, auto_pickup);
   } else {
     dropflag = 0; /* don't show it just dropped an item */
   }
@@ -745,13 +753,13 @@ function wizardmode(password) {
       for (var scrolli = 0; scrolli < SCROLL_NAMES.length; scrolli++) {
         var scroll = createObject(OSCROLL, scrolli);
         learnScroll(scroll);
-        player.level.items[scrolli][0] = scroll;
+        setItem(scrolli, 0, scroll);
       }
 
       for (var potioni = MAXX - 1; potioni > MAXX - 1 - POTION_NAMES.length; potioni--) {
         var potion = createObject(OPOTION, MAXX - 1 - potioni);
         learnPotion(potion);
-        player.level.items[potioni][0] = potion;
+        setItem(potioni, 0, potion);
       }
 
       var ix = 0;
@@ -759,7 +767,7 @@ function wizardmode(password) {
       var wizi = 0;
       while (iy < MAXY) {
         if (itemlist[++wizi]) {
-          player.level.items[ix][iy++] = createObject(itemlist[wizi]);
+          setItem(ix, iy++, itemlist[wizi]);
           if (!ULARN) {
             if (wizi == OORB.id) --iy;
             if (wizi == OELEVATORUP.id) --iy;
@@ -769,7 +777,7 @@ function wizardmode(password) {
       }
       while (++ix < MAXX - 1) {
         if (itemlist[++wizi]) {
-          player.level.items[ix][iy - 1] = createObject(itemlist[wizi]);
+          setItem(ix, iy - 1, itemlist[wizi]);
           if (!ULARN && wizi >= OCOOKIE.id) break;
         } else --ix;
       }
@@ -778,8 +786,9 @@ function wizardmode(password) {
         // 100 items now
         while (wizi < OPAD.id) {
           var wizitem = itemlist[++wizi];
+          // if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
           if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
-            player.level.items[ix][--iy] = createObject(wizitem);
+            setItem(ix, --iy, wizitem);
         }
       }
 

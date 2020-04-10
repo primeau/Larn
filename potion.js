@@ -199,7 +199,7 @@ function quaffpotion(potion, set_known) {
       for (let i = 0; i < MAXX; i++)
         for (let j = 0; j < MAXY; j++) {
           let item = itemAt(i, j);
-          if (item.carry &&
+          if (canTake(item) &&
             !item.isGem() &&
             !item.matches(OLARNEYE) &&
             !item.matches(OGOLDPILE)) {

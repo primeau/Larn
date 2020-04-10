@@ -5,6 +5,11 @@ Added Ularn functionality. Primarily follows the 1.5 codebase with some
 inspiration from 1.6. Maintains the new/balance/fix items of version 12.4.5 
 where it seems to make sense.
 
+1. [new] Also playable with Amiga-style graphics thanks to the new sprites
+created by Chris Yewchuck and Jerome Lecomte.
+
+1. [new] Toggle added for retro-style fonts and two different Amiga fonts.
+
 
 JS Larn 12.4.5
 --------------

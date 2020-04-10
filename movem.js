@@ -637,7 +637,7 @@ function mmove(sx, sy, dx, dy) {
   /* if blind don't show where monsters are */
   if (player.BLINDCOUNT) return;
 
-  if (player.level.know[dx][dy] != OUNKNOWN) {
+  if (player.level.know[dx][dy] != null) {
     if (trap_msg) {
       updateLog(trap_msg);
       beep();

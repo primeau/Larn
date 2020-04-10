@@ -92,23 +92,20 @@ function cannedlevel(depth) {
 
   var canned = loadcanned();
 
-  var items = player.level.items;
   var monsters = player.level.monsters;
-
-  var empty = OEMPTY; //createObject(OEMPTY);
 
   var pt = 0;
   for (var y = 0; y < MAXY; y++) {
     for (var x = 0; x < MAXX; x++) {
       switch (canned[pt++]) {
         case '#':
-          items[x][y] = createObject(OWALL);
+          setItem(x, y, OWALL);
           break;
         case 'D':
-          items[x][y] = createObject(OCLOSEDDOOR, rnd(30));
+          setItem(x, y, createObject(OCLOSEDDOOR, rnd(30)));
           break;
         case '-':
-          items[x][y] = createRandomItem(depth + 1);
+          setItem(x, y, createRandomItem(depth + 1));
           break;
         case '.':
           if (depth < (ULARN ? MAXLEVEL - 6: MAXLEVEL)) break;
@@ -116,17 +113,17 @@ function cannedlevel(depth) {
           break;
         case '~':
           if (depth != DBOTTOM) break;
-          items[x][y] = createObject(OLARNEYE);
+          setItem(x, y, OLARNEYE);
           ULARN ? create_guardian(DEMONPRINCE, x, y) : create_guardian(rund(8) + DEMONLORD, x, y);
           break;
         case '!':
           if (depth != VBOTTOM) break;
-          items[x][y] = createObject(OPOTION, 21);
+          setItem(x, y, createObject(OPOTION, 21));
           ULARN ? create_guardian(LUCIFER, x, y) : create_guardian(DEMONPRINCE, x, y);
           break;
       } // switch
-      if (!items[x][y]) {
-        items[x][y] = empty;
+      if (!itemAt(x, y)) {
+        setItem(x, y, OEMPTY);
       }
     } // for
   } // for
@@ -155,19 +152,22 @@ function makemaze(k) {
     return;
   }
 
-  var empty = OEMPTY; //createObject(OEMPTY);
-  var item = player.level.items;
   var mitem = player.level.monsters;
 
-  for (let i = 0; i < MAXY; i++)
-    for (let j = 0; j < MAXX; j++)
-      item[j][i] = (k == 0) ? empty : createObject(OWALL);
+  for (let i = 0; i < MAXY; i++) {
+    for (let j = 0; j < MAXX; j++) {
+      if (k == 0)
+        setItem(j, i, OEMPTY);
+      else
+        setItem(j, i, OWALL);
+    }
+  }
 
   if (k == 0) return;
 
   eat(1, 1);
 
-  if (k == 1) item[33][MAXY - 1] = OHOMEENTRANCE;
+  if (k == 1) setItem(33, MAXY - 1, OHOMEENTRANCE);
 
   /*  now for open spaces */
   var tmp2 = rnd(3) + 3;
@@ -192,7 +192,7 @@ function makemaze(k) {
 
     for (var i = mxl; i < mxh; i++)
       for (var j = myl; j < myh; j++) {
-        item[i][j] = empty;
+        setItem(i, j, OEMPTY);
         mitem[i][j] = mon ? createMonster(mon) : null;
       }
   }
@@ -200,7 +200,7 @@ function makemaze(k) {
 
   my = rnd(MAXY - 2);
   for (let i = 1; i < MAXX - 1; i++)
-    item[i][my] = empty;
+    setItem(i, my, OEMPTY);
 
   if (k > (ULARN ? 4 : 1)) {
     treasureroom(k);
@@ -235,40 +235,37 @@ function eat(xx, yy) {
   var dir = rnd(4);
   var tries = 2;
 
-  var empty = OEMPTY;
-  var item = player.level.items;
-
   while (tries) {
     switch (dir) {
       case 1:
         if (xx <= 2) break; /* west */
-        if (!item[xx - 1][yy].matches(OWALL) || !item[xx - 2][yy].matches(OWALL)) break;
-        item[xx - 1][yy] = empty;
-        item[xx - 2][yy] = empty;
+        if (!itemAt(xx - 1, yy).matches(OWALL) || !itemAt(xx - 2,yy).matches(OWALL)) break;
+        setItem(xx - 1, yy, OEMPTY);
+        setItem(xx - 2, yy, OEMPTY);
         eat(xx - 2, yy);
         break;
 
       case 2:
         if (xx >= MAXX - 3) break; /* east */
-        if (!item[xx + 1][yy].matches(OWALL) || !item[xx + 2][yy].matches(OWALL)) break;
-        item[xx + 1][yy] = empty;
-        item[xx + 2][yy] = empty;
+        if (!itemAt(xx + 1, yy).matches(OWALL) || !itemAt(xx + 2, yy).matches(OWALL)) break;
+        setItem(xx + 1, yy, OEMPTY);
+        setItem(xx + 2, yy, OEMPTY);
         eat(xx + 2, yy);
         break;
 
       case 3:
         if (yy <= 2) break; /* south */
-        if (!item[xx][yy - 1].matches(OWALL) || !item[xx][yy - 2].matches(OWALL)) break;
-        item[xx][yy - 1] = empty;
-        item[xx][yy - 2] = empty;
+        if (!itemAt(xx, yy - 1).matches(OWALL) || !itemAt(xx, yy - 2).matches(OWALL)) break;
+        setItem(xx, yy - 1, OEMPTY);
+        setItem(xx, yy - 2, OEMPTY);
         eat(xx, yy - 2);
         break;
 
       case 4:
         if (yy >= MAXY - 3) break; /* north */
-        if (!item[xx][yy + 1].matches(OWALL) || !item[xx][yy + 2].matches(OWALL)) break;
-        item[xx][yy + 1] = empty;
-        item[xx][yy + 2] = empty;
+        if (!itemAt(xx, yy + 1).matches(OWALL) || !itemAt(xx, yy + 2).matches(OWALL)) break;
+        setItem(xx, yy + 1, OEMPTY);
+        setItem(xx, yy + 2, OEMPTY);
         eat(xx, yy + 2);
         break;
     }
@@ -305,39 +302,36 @@ function treasureroom(lv) {
 function troom(lv, xsize, ysize, tx, ty, glyph) {
   var i, j;
 
-  var empty = OEMPTY; //createObject(OEMPTY);
-  var item = player.level.items;
   var mitem = player.level.monsters;
 
   for (j = ty - 1; j <= ty + ysize; j++)
     for (i = tx - 1; i <= tx + xsize; i++)
-      item[i][j] = empty; /* clear out space for room */
+      setItem(i, j, OEMPTY); /* clear out space for room */
 
   /* now put in the walls */
   for (j = ty; j < ty + ysize; j++)
     for (i = tx; i < tx + xsize; i++) {
-      item[i][j] = createObject(OWALL);
+      setItem(i, j, OWALL);
       mitem[i][j] = null;
     }
 
   for (j = ty + 1; j < ty + ysize - 1; j++)
     for (i = tx + 1; i < tx + xsize - 1; i++)
-      item[i][j] = empty; /* now clear out interior */
+    setItem(i, j, OEMPTY); /* now clear out interior */
 
   switch (rnd(2)) /* locate the door on the treasure room */ {
     case 1:
       /* on horizontal walls */
       i = tx + rund(xsize);
       j = ty + (ysize - 1) * rund(2);
-      item[i][j] = createObject(OCLOSEDDOOR, glyph);
+      setItem(i, j, createObject(OCLOSEDDOOR, glyph));
       break;
 
     case 2:
       /* on vertical walls */
       i = tx + (xsize - 1) * rund(2);
       j = ty + rund(ysize);
-      item[i][j] = OCLOSEDDOOR;
-      item[i][j] = createObject(OCLOSEDDOOR, glyph);
+      setItem(i, j, createObject(OCLOSEDDOOR, glyph));
       break;
   }
 
@@ -523,7 +517,7 @@ function makeobject(depth) {
 function createArtifact(artifact, exists, odds) {
   var createdArtifact = false;
   if (!exists && odds) {
-    fillroom(artifact);
+    artifact = fillroom(artifact);
     createdArtifact = true;
     debug(`created ${artifact} on ${level}`);
   }
@@ -585,7 +579,7 @@ function fillroom(what, arg) {
   var safe = 100;
   var x = rnd(MAXX - 2);
   var y = rnd(MAXY - 2);
-  while (!isItem(x, y, OEMPTY)) {
+  while (!itemAt(x, y).matches(OEMPTY)) {
     x += rnd(3) - 2;
     y += rnd(3) - 2;
     if (x > MAXX - 2) x = 1;
@@ -599,6 +593,7 @@ function fillroom(what, arg) {
   }
   var newItem = createObject(what, arg);
   setItem(x, y, newItem);
+  return newItem;
   //debug(`fillroom(): ${newItem}`);
 }
 
@@ -613,8 +608,8 @@ function fillmonst(what, awake) {
   for (var trys = 10; trys > 0; --trys) /* max # of creation attempts */ {
     var x = rnd(MAXX - 2);
     var y = rnd(MAXY - 2);
-    //debug(`fillmonst: ${x},${y} ${player.level.items[x][y]}`);
-    if ((player.level.items[x][y].matches(OEMPTY)) && //
+    //debug(`fillmonst: ${x},${y} ${itemAt(x, y)}`);
+    if ((itemAt(x, y).matches(OEMPTY)) && //
       (!player.level.monsters[x][y]) && //
       ((player.x != x) || (player.y != y))) {
       player.level.monsters[x][y] = monster;

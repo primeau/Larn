@@ -56,7 +56,7 @@ function act_drink_fountain() {
 
   if (rnd(12) < 3) {
     updateLog(`  The fountains bubbling slowly quiets`);
-    setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
+    setItem(player.x, player.y, ODEADFOUNTAIN); /* dead fountain */
     player.level.know[player.x][player.y] = 0;
   }
 }
@@ -108,7 +108,7 @@ function act_wash_fountain() {
   */
   if (rnd(12) < 3) {
     updateLog(`  The fountains bubbling slowly quiets`);
-    setItem(player.x, player.y, createObject(ODEADFOUNTAIN)); /* dead fountain */
+    setItem(player.x, player.y, ODEADFOUNTAIN); /* dead fountain */
     player.level.know[player.x][player.y] = 0;
   }
 }

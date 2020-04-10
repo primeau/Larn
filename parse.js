@@ -380,7 +380,7 @@ function parse(key) {
   //
   if (key == 't' || key == ',') {
     /* pickup, don't identify or prompt for action */
-    lookforobject(false, true, false);
+    lookforobject(false, true);
     return;
   }
 
@@ -654,7 +654,7 @@ function parse(key) {
   if (key == ':') {
     nomove = 1; /* assumes look takes no time */
     /* identify, don't pick up or prompt for action */
-    lookforobject(true, false, false);
+    lookforobject(true, false);
     return;
   }
 
@@ -677,7 +677,7 @@ function parse(key) {
     keyboard_hints = !keyboard_hints;
     updateLog(`Keyboard hints: ${keyboard_hints ? `on` : `off`}`);
     if (keyboard_hints)
-      lookforobject(true, false, false);
+      lookforobject(true, false);
     return;
   }
 

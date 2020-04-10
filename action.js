@@ -141,7 +141,7 @@ function act_open_door(x, y) {
     }
   } else {
     updateLog(`  The door opens`);
-    setItem(x, y, createObject(OOPENDOOR));
+    setItem(x, y, OOPENDOOR);
     return (1);
   }
 }

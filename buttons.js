@@ -293,7 +293,7 @@ function setButtons() {
         if (item.matches(OSTAIRSDOWN)) {
             addButton(BUTTON_DOWNSTAIRS);
         }
-        if (item.carry && !pocketfull()) {
+        if (canTake(item) && !pocketfull()) {
             addButton(BUTTON_TAKE);
         }
         if (item.matches(OEMPTY)) {

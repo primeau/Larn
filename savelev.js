@@ -69,19 +69,23 @@ function loadSavedGame(savedState, isCheckPoint) {
     2) stringify current state that was loaded from saved state
     3) compare
   */
-  let savedStateString = JSON.stringify(savedState);
   var x = player.level;
   player.level = null;
-  // console.log(`saved`, savedState);
+  let savedStateString = JSON.stringify(savedState);
+  debug(`saved`, savedStateString.length, savedState);
   var currentState = new GameState();
-  // console.log(`current`, currentState);
-  // console.log(`level`, player.level);
+
   let currentStateString = JSON.stringify(currentState);
-  player.level = x;  
+  debug(`current`, currentStateString.length, currentState);
   let integrityCheck = savedStateString === currentStateString;
+  let playernullcheck = player.level == null;
+  debug(`player`, player.level);
+  player.level = x;  
+  
   if (!integrityCheck) {
     console.log(`save game integrity check failed`);
-    Rollbar.error("failed integrity check");
+    console.log(`player.level null == ${playernullcheck}`);
+    Rollbar.error(`failed integrity check, player.level == ${playernullcheck}`);
   }
 
   /* delete / clear the saved game file */

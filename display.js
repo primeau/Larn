@@ -236,7 +236,6 @@ function drawmaze() {
         }
       } else {
         lprc(OUNKNOWN.getChar(), i, j);
-        //mitem[i][j] = item[i][j] = 0;
       }
     }
   }
@@ -340,8 +339,8 @@ function moveplayer(dir) {
     return (0);
   }
 
-  var item = player.level.items[k][m];
-  var monster = player.level.monsters[k][m];
+  var item = itemAt(k, m);
+  var monster = monsterAt(k, m);
 
   /* prevent the player from moving onto a wall, or a closed door when
      in command mode, unless the character has Walk-Through-Walls.
@@ -391,7 +390,7 @@ function moveNear(item, exact) {
   // find the item
   for (var x = 0; x < MAXX; x++) {
     for (var y = 0; y < MAXY; y++) {
-      if (isItem(x, y, item)) {
+      if (itemAt(x, y).matches(item)) {
         //debug(`movenear: found: ` + item.id + ` at ` + xy(x, y));
         positionplayer(x, y, exact);
         return true;

@@ -8,13 +8,15 @@ ULARN 12.5.0:
 - search for ULARN TODO
 - "you have found" vs "you find"
 - check all 1.6.3 code
-- prevent weild and wear at the same time
+- prevent wield and wear at the same time
 - increase/decrease font size, including amiga?
 - should running increase gtime?
 - save game stutter
   - create "reference object", "reference monster" to reduce save size?
 - character issue in amiga help screen, windows only
 - explain that . drops gold
+- should smart monsters be able to walk around sleeping monsters?
+- when blind, killing a monster shouldn't reveal gold dropped
 
 ULARN 12.5.1
 - crumble altars faster? 1/20?
@@ -95,3 +97,13 @@ extras:
   - win/death ratio per difficulty
 - speedrun mode
 - lantern - radiates light out from hero for x spaces?
+
+
+hardmode ideas:
+- can only wield actual weapons
+- prevent wield and wear at the same time
+- altar donation aren't just 10%, min 50
+- stop time doesn't prevent falling in pits
+- demons don't respect stealth, hold is less effective
+- guardians are never asleep 
+- reduce blessed ularn item sale prices

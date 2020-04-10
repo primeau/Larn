@@ -41,7 +41,7 @@ var LocalScore = function() {
   // START HACK -- we don't want to save the level
   var x = player.level;
   player.level = null;
-  this.player = JSON.stringify(player); // ULARN TODO: WHY IS THIS STRINGIFIED???
+  this.player = JSON.stringify(player);
   player.level = x;
   // END HACK -- we don't want to save the level
 

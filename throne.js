@@ -37,7 +37,7 @@ function act_remove_gems(arg) {
     player.level.know[player.x][player.y] = 0;
   } else if (k < 40 && arg == 0 && !isGenocided(GNOMEKING)) {
     createmonster(GNOMEKING);
-    player.level.items[player.x][player.y].arg = 1;
+    itemAt(player.x, player.y).arg = 1;
     player.level.know[player.x][player.y] = 0;
   } else {
     updateLog(`  Nothing happens`);
@@ -77,7 +77,7 @@ function act_sit_throne(arg) {
   var k = rnd(101);
   if (k < 30 && arg == 0 && !isGenocided(GNOMEKING)) {
     createmonster(GNOMEKING);
-    player.level.items[player.x][player.y].arg = 1;
+    itemAt(player.x, player.y).arg = 1;
     player.level.know[player.x][player.y] = 0;
   } else if (k < 35) {
     updateLog(`  Zaaaappp!  You've been teleported!`);

@@ -57,7 +57,7 @@ journey into these caverns.\n\
 `;
 
 helppages[1] =
-`                      <b>Help File for The Caverns of ${GAMENAME}</b>                 \n\
+`                       <b>Help File for The Caverns of ${GAMENAME}</b>                 \n\
                                                                           shift+\n\
  y|Y  move|run northwest  k|K  move|run up    u|U  move|run northeast      ↖↑↗  \n\
  h|H  move|run left        .   stay here      l|L  move|run right         ←    →\n\
@@ -83,15 +83,15 @@ helppages[1] =
 
 
 helppages[2] =
-`                                <b>Special Notes</b> \n\
+`                                 <b>Special Notes</b> \n\
 \n\
-When dropping gold, if you type '<b>*</b>' as your amount, all your gold is dropped.\n\
+When <b>dropping gold<b>, if you type '<b>*</b>' as your amount, all your gold is dropped.\n\
 In general, typing in '<b>*</b>' means all of what you're interested in. This is true\n\
 when visiting the bank, or when contributing at altars.\n\
 \n\
 When in the store, trading post, school, or home, an <b>escape</b> will get you out.\n\
 \n\
-When casting a spell, if you need a list of spells you can cast, type <b>space</b> \n\
+When casting a spell, if you need a list of spells you can cast, type <b>space</b> \n\
 at any time and the available list of spells will be shown.\n\
 \n\
 When an inventory list is on the screen from a drop, quaff, read, or similar\n\
@@ -105,7 +105,7 @@ turn.\n\
 `;
 
 helppages[3] =
-`                     <b>Background Information for ${GAMENAME}</b> \n\
+`                      <b>Background Information for ${GAMENAME}</b> \n\
 \n\
     Welcome to the game of ${GAMENAME}. At this moment, you face a great problem.\n\
 Your daughter has contracted a strange disease, and none of your home remedies\n\
@@ -128,7 +128,7 @@ journey into these caverns.\n\
 `;
 
 helppages[4] =
-`                 <b>Explanation of the ${GAMENAME} scoreboard facility</b> \n\
+`                  <b>Explanation of the ${GAMENAME} scoreboard facility </b> \n\
 \n\
 ${GAMENAME} supports TWO scoreboards, one for winners, and one for deceased\n\
 characters. Each player (by the name entered when you start the game)\n\

@@ -344,7 +344,7 @@ const COMPRESSED_DATA = `_COMPRESSED`;
 Storage.prototype.setObject = function(key, value) {
   /* compress if it's big */
   value = JSON.stringify(value);
-  if (value.length > 100000) {
+  if (value.length > 1000000) {
     this.setItem(key, COMPRESSED_DATA);
     console.log('setObject: start size', value.length);
     value = LZString.compressToUTF16(value);

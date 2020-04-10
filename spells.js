@@ -421,7 +421,6 @@ function speldamage(x) {
       /* alter reality */
       var savemon = [];
       var saveitm = [];
-      var empty = OEMPTY;
       let i, j;
       for (j = 0; j < MAXY; j++) {
         for (i = 0; i < MAXX; i++) /* save all items and monsters */ {
@@ -448,10 +447,9 @@ function speldamage(x) {
       }
       if (level != 0) eat(1, 1);
       if (level == 1)
-        setItem(33, MAXY - 1, createObject(OHOMEENTRANCE));
+        setItem(33, MAXY - 1, OHOMEENTRANCE);
       for (j = rnd(MAXY - 2), i = 1; i < MAXX - 1; i++) {
-        // JRP: I'm not sure why we do this, but it's in the original code
-        setItem(i, j, empty);
+        setItem(i, j, OEMPTY);
       }
       /* put objects back in level */
       while (saveitm.length > 0) {
@@ -1081,7 +1079,7 @@ function makewall(direction) {
     if (!item.matches(OWALL)) { // not a wall
       if (item.matches(OEMPTY)) { // no other items there
         if (!monster) { // no monsters
-          setItem(x, y, createObject(OWALL));
+          setItem(x, y, OWALL);
           updateWalls(player.x, player.y, 2);
         } else {
           updateLog(`  there's a monster there!`);

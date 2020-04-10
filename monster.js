@@ -6,7 +6,7 @@
 
 
 
-var Monster = function Monster(char, desc, level, armorclass, damage, attack, intelligence, gold, hitpoints, experience, arg, awake) {
+var Monster = function Monster(char, desc, level, armorclass, damage, attack, intelligence, gold, hitpoints, experience, arg, awake, moved) {
   this.arg = arg;
 
   this.char = char;
@@ -22,7 +22,7 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, in
   this.inventory = [];
   this.hitpoints = hitpoints;
   this.awake = awake;
-  this.moved = false;
+  this.moved = moved;
 }
 
 
@@ -42,7 +42,7 @@ function createMonster(monst) {
   var monster = new Monster(monst.char, monst.desc, monst.level,
     monst.armorclass, monst.damage, monst.attack,
     monst.intelligence, monst.gold, monst.hitpoints, monst.experience,
-    monst.arg, monst.awake);
+    monst.arg, monst.awake, monst.moved);
 
   if (monst.inventory.length > 0) {
     for (let index = 0; index < monst.inventory.length; index++) {
@@ -515,7 +515,8 @@ function createmonster(mon, x, y) {
   let dx = x;
   let dy = y;
 
-  var oktocreate = (x != null && y != null && cgood(x, y, 0, 1));
+  let onPlayer = x == player.x && y == player.y;
+  var oktocreate = (x != null && y != null && !onPlayer && cgood(x, y, 0, 1));
   var i = oktocreate ? 0 : -8;
 
   /* choose direction, then try all */

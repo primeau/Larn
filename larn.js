@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '437';
+const BUILD = '438';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -169,6 +169,7 @@ function enableDebug() {
 
 
 
+let QQQ = 12;
 function setMode(amiga, retro, original) {
 
   amiga_mode = amiga;
@@ -176,29 +177,31 @@ function setMode(amiga, retro, original) {
   original_objects = original;
 
   // modern font settings
-  let fontSize = 20;
+  let fontSize = 22;
   let fontFamily = `Courier New`;
   let textColour = `lightgrey`;
   let letterSpacing = `normal`;
 
   // retro mode settings
   if (retro_mode) {
-    fontSize = 23;
-    fontFamily = `'dos437'`;
-    // textColour = `#ABABAB`;
-    textColour = `lightgrey`;
+    fontSize = 25;
+    fontFamily = `dos437`;
+    textColour = `#ABABAB`;
     letterSpacing = '-1px';
   }
 
   // change to amiga font for amiga graphics
   if (amiga_mode) {
-    fontSize = 20;
-    fontFamily = retro_mode ? `'amiga500'` : `'amiga1200'`;
+    fontSize = 22;
+    fontFamily = retro_mode ? `amiga500` : `amiga1200`;
+    textColour = `lightgrey`;
     letterSpacing = `normal`;
     original_objects = true;
+    let width = QQQ;
+    let height = width * 2;
     for (var y = 0; y < 24; y++) {
       for (var x = 0; x < 80; x++) {
-        display[x][y] = createDiv(x, y);
+        display[x][y] = createDiv(x, y, width, height);
       }
     }
     if (!images) {
@@ -222,7 +225,9 @@ function setMode(amiga, retro, original) {
 
 
 
-function createDiv(x, y) {
+function createDiv(x, y, w, h) {
+  if (!w) w = QQQ;
+  if (!h) h = w * 2;
   var callback = ``;
   if (mobile) {
     var key = `.`;
@@ -235,11 +240,14 @@ function createDiv(x, y) {
     else if (x < 22 && y <= 16) key = `b`;
     else if (x <= 44 && y <= 16) key = `j`;
     else if (x <= 67 && y <= 16) key = `n`;
-    callback = `onclick='mousetrap(null, "${key}")'`;
+    callback = ` onclick='mousetrap(null, "${key}")'`;
   }
-  return `<div id='${x},${y}' class='image' ${callback}></div>`;
+  // return `<div id='${x},${y}' class='image'${callback}></div>`;
+  return `<div id='${x},${y}' class='image' style="width:${w}px; height:${h}px;"${callback}></div>`;
 }
 
+
+{/* <div id="2,0" class="image" width="16px" height="32px" style="font-weight: normal; background-image: url(&quot;img/o41.png&quot;);"> </div> */}
 
 
 function eventToggleDebugStats() {
@@ -467,7 +475,7 @@ function onMouseClick(event) {
       description = OEMPTY.desc;
     }
     else {
-      description = item.desc;
+      description = item.getDescription();
     }
 
     description = prefix + description;

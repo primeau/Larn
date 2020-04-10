@@ -171,11 +171,7 @@ function inv_sort(a, b) {
   if (a == null && b == null) return 0;
   if (a == null) return 1;
   if (b == null) return -1;
-
-  var asort = a.getSortCode();
-  var bsort = b.getSortCode();
-
-  return asort - bsort;
+  return a.getSortCode() - b.getSortCode();
 }
 
 
@@ -192,12 +188,18 @@ function parse_inventory(key) {
 
 
 
+function canTake(item) {
+  return itemlist[item.id].carry;
+}
+
+
+
 /*
     function to put something in the players inventory
     returns true if success, false if a failure
 */
 function take(item) {
-  if (item.carry == false) {
+  if (canTake(item) == false) {
     return false;
   }
   var limit = Math.min(15 + (player.LEVEL >> 1), MAXINVEN);
@@ -208,7 +210,6 @@ function take(item) {
         updateLog(`${getCharFromIndex(i)}) ${item}`);
       }
       if (item.matches(OPOTION) && item.arg == 21) player.hasPickedUpPotion = true;
-      item.inv = i; // helper for sorting inventory
       debug(`take(): ` + item);
       limit = 0;
       player.adjustcvalues(item, true);
@@ -385,7 +386,7 @@ function isCarrying(item) {
   let exact = item && (item.matches(OPOTION) || item.matches(OSCROLL));
   for (let i = 0; i < player.inventory.length; i++) {
     let tmpItem = player.inventory[i];
-    if (item.matches(tmpItem, exact)) {
+    if (tmpItem && item.matches(tmpItem, exact)) {
       return tmpItem;
     }
   }
