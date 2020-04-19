@@ -32,6 +32,12 @@ function lprint(str) {
 
 function lprcat(str, width) {
   DEBUG_LPRCAT++;
+
+  if (alternativeDisplay) {
+    alternativeDisplay += str;
+    return;
+  }
+
   if (width) {
     lprintf(str, width);
     return;
@@ -110,6 +116,11 @@ function cursors() {
 
 function lprc(ch, markup) {
   DEBUG_LPRC++;
+
+  if (alternativeDisplay) {
+    alternativeDisplay += ch;
+    return;
+  }
 
   if (ch == '\b') {
     cursorx--;

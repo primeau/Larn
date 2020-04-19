@@ -15,12 +15,13 @@ var PARAMS = {};
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 var GAMEOVER = true;
+var game_started = false;
 var mazeMode = false;
 var napping = false; /* prevent keyboard input while a nap event is happening */
 var original_objects = true;
 var keyboard_hints = false;
 var auto_pickup = false;
-var side_inventory = false;
+var side_inventory = true;
 var show_color = true;
 var bold_objects = true;
 var retro_mode = false;

@@ -42,11 +42,10 @@ function welcome() {
 
   if (!no_intro) {
     setTextCallback(setname);
-    setButtons();
   } else {
     setname(logname);
   }
-
+  setButtons();
   blt();
 }
 
@@ -109,7 +108,8 @@ function setname(name) {
   player = new Player(); /* gender and character class are set later on */
 
   if (no_intro) {
-    startgame(getDifficulty());
+    //startgame(getDifficulty());
+    setclass(`Adventurer`);
     return 1;
   }
 
@@ -281,18 +281,18 @@ function setdiff(hard) {
     setGameDifficulty(hard);
   }
 
-  if (ULARN) {
+  if (ULARN && !no_intro) {
     clear();
     lprcat(`The Addiction of Ularn\n\n`);
-    lprcat(`\tPick a character class...\n\n`);
-    lprcat(`\ta)  Ogre          Exceptional strength, but thick as a brick\n`);
-    lprcat(`\tb)  Wizard        Smart, good at magic, but very weak\n`);
-    lprcat(`\tc)  Klingon       Strong and average IQ, but unwise & very ugly\n`);
-    lprcat(`\td)  Elf           OK at magic, but a mediocre fighter\n`);
-    lprcat(`\te)  Rogue         Nimble and smart, but only average strength\n`);
-    lprcat(`\tf)  Adventurer    Jack of all trades, master of none\n`);
-    lprcat(`\tg)  Dwarf         Strong and healthy, but not good at magic\n`);
-    lprcat(`\th)  Rambo         Bad at everything, but has a Lance of Death\n`);
+    lprcat(`     Pick a character class...\n\n`);
+    lprcat(`     a)  Ogre          Exceptional strength, but thick as a brick\n`);
+    lprcat(`     b)  Wizard        Smart, good at magic, but very weak\n`);
+    lprcat(`     c)  Klingon       Strong and average IQ, but unwise & very ugly\n`);
+    lprcat(`     d)  Elf           OK at magic, but a mediocre fighter\n`);
+    lprcat(`     e)  Rogue         Nimble and smart, but only average strength\n`);
+    lprcat(`     f)  Adventurer    Jack of all trades, master of none\n`);
+    lprcat(`     g)  Dwarf         Strong and healthy, but not good at magic\n`);
+    lprcat(`     h)  Rambo         Bad at everything, but has a Lance of Death\n`);
     cursors();
 
     player.char_picked = localStorageGetObject('character_class') || 'Adventurer';
@@ -340,14 +340,14 @@ function setclass(classpick) {
     changedWC = 0; // don't highlight AC & WC on game start
     changedAC = 0;
 
-    if (ULARN) {
+    if (ULARN && !no_intro) {
       localStorageSetObject('character_class', characterClass);
       clear();
       lprcat(`The Addiction of Ularn\n\n`);
-      lprcat(`\tPick a gender...\n\n`);
-      lprcat(`\ta)  Male\n`);
-      lprcat(`\tb)  Female\n`);
-      lprcat(`\tc)  I prefer to not be defined by traditional gender norms\n`);
+      lprcat(`     Pick a gender...\n\n`);
+      lprcat(`     a)  Male\n`);
+      lprcat(`     b)  Female\n`);
+      lprcat(`     c)  I prefer to not be defined by traditional gender norms\n`);
       cursors();
 
       player.gender = localStorageGetObject('gender') || 'Male';
@@ -419,129 +419,18 @@ function startgame(hard) {
 
   GAMEOVER = false;
   setMazeMode(true);
-  side_inventory = true;
+  game_started = true;
 
-  // DEVMODE();
-  
+  // DEVMODE(); // this must be commented out for production releases
+
   return 1;
 }
 
 
-
-function DEVMODE() {
-
-    Rollbar.configure({enabled: false});
-
-    enableDebug();
-    eventToggleDebugWTW();
-    eventToggleDebugStairs();
-    eventToggleDebugOutput();
-    // eventToggleDebugKnowAll();
-    eventToggleDebugStats();
-    eventToggleDebugImmortal();
-    eventToggleDebugAwareness();
-    player.updateStealth(100000);
-    player.updateCancellation(100000);
-
-    // wizardmode(`pvnert(x)`);
-
-    // var startShield = createObject(OSHIELD);
-    // take(startShield);
-    // player.SHIELD = startShield;
-    var startWeapon = createObject(OLANCE);
-    take(startWeapon);
-    player.WIELD = startWeapon;
-    var startArmor = createObject(OSSPLATE, 25);
-    take(startArmor);
-    player.WEAR = startArmor;
-
-
-    player.raiseexperience(5000000);
-
-    // take(createObject(OPOTION, 2));
-    // take(createObject(OPOTION, 9));
-    // take(createObject(OPOTION, 10));
-    // take(createObject(OPOTION, 21));
-    // take(createObject(OPOTION, 23));
-
-    // take(createObject(OSPHTALISMAN));
-    // take(createObject(OHANDofFEAR));
-    take(createObject(OLARNEYE));
-    // take(createObject(ONOTHEFT));
-    // take(createObject(OBRASSLAMP));
-    // gtime = 30001;
-    // player.GOLD = 250000;
-
-    // createmonster(MIMIC,30, 0);
-    // createmonster(NYMPH);
-    // revealLevel();
-
-  
-}
-
-
-
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
 
-
-
-/**
- * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
- * 
- * @param {String} text The text to be rendered.
- * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
- * 
- * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
- */
-function getTextWidth(text, font) {
-  // re-use canvas object for better performance
-  var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-  var context = canvas.getContext("2d");
-  context.font = font;
-  var metrics = context.measureText(text);
-  return metrics.width;
-}
-
-
-
-// function makeItFit() {
-
-//   var el = document.getElementById('LARN');
-//   var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
-//   var fontSize = parseFloat(style); 
-//   // now you have a proper float for the font size (yes, it can be a float, not just an integer)
-
-//   var browserWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-//   var browserHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-//   fontSize = parseFloat(100);
-//   var safe = 100;
-//   var fontWidth = getTextWidth("0", fontSize + 'pt dos');
-//   // while (fontWidth * 80.0 < browserWidth) {
-//   //   fontWidth = getTextWidth("0", fontSize + 'pt dos');
-//   //   fontSize += 0.1;
-//   //   el.style.fontSize = (fontSize) + 'px';
-//   //   //console.log("+W", fontWidth, fontWidth*80.0, browserWidth, fontSize);
-//   //   if (safe-- < 0) return;
-//   // }
-
-//   // safe = 100;
-//   // if (fontWidth * 80.0 > browserWidth) {
-//   //   fontWidth = getTextWidth("0", fontSize + 'pt dos');
-//   //   fontSize -= 0.1;
-//   //   el.style.fontSize = (fontSize) + 'px';
-//   //   //console.log("-W", fontWidth, fontWidth*80.0, browserWidth, fontSize);
-//   //   if (safe-- < 0) return;
-//   // }
-
-//     var suggestedSize = Math.max(10, ((browserHeight-100) / 24.0));
-// console.log(suggestedSize, fontSize);
-//     suggestedSize = Math.min(suggestedSize, fontSize);
-//     el.style.fontSize = (suggestedSize-1) + 'px';
-
-// }
 
 /*
   JRP
@@ -549,8 +438,6 @@ function getTextWidth(text, font) {
   turn the original main loop a little bit inside-out
 */
 function mainloop(key) {
-
-  // makeItFit();
 
   if (napping) {
     debug(`napping`);
@@ -786,7 +673,6 @@ function wizardmode(password) {
         // 100 items now
         while (wizi < OPAD.id) {
           var wizitem = itemlist[++wizi];
-          // if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
           if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
             setItem(ix, --iy, wizitem);
         }

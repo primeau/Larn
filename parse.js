@@ -694,6 +694,7 @@ function parse(key) {
     nomove = 1;
     side_inventory = !side_inventory;
     updateLog(`Inventory view: ${side_inventory ? `on` : `off`}`);
+    setMode(amiga_mode, retro_mode, original_objects);
     return;
   }
 
@@ -739,6 +740,7 @@ function parse(key) {
   if (key == '{') {
     nomove = 1;
     retro_mode = !retro_mode;
+    localStorageSetObject('retro', retro_mode);
     let fontStatus = retro_mode ? `DOS` : `Modern`;
     if (amiga_mode) fontStatus = retro_mode ? `Amiga 500` : `Amiga 1200`;
     updateLog(`Font: ${fontStatus}`);

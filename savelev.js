@@ -99,6 +99,8 @@ function loadSavedGame(savedState, isCheckPoint) {
     updateLog(`Welcome back. (Your save file has now been been deleted)`);
   }
 
+  game_started = true;
+
 }
 
 

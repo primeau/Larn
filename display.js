@@ -41,14 +41,23 @@ function blt() {
 
 
 
+let alternativeDisplay;
+function detachDisplay() {
+  display = null;
+  alternativeDisplay = ` `;
+}
+
 function bltDocument() {
-  var output = ``;
-  for (var y = 0; y < 24; y++) {
-    for (var x = 0; x < 80; x++) {
-      output += display[x][y] != null ? display[x][y] : ' ';
-    } // inner for
-    output += `\n`;
-  } // outer for
+  var output = alternativeDisplay;
+  if (!output) {
+    output = ``;
+    for (var y = 0; y < 24; y++) {
+      for (var x = 0; x < 80; x++) {
+        output += display[x][y] != null ? display[x][y] : ' ';
+      } // inner for
+      output += `\n`;
+    } // outer for
+  }
   setDiv(`LARN`, output);
 }
 
@@ -68,18 +77,40 @@ function setChar(x, y, c, markup) {
 
 
 
+function createDiv(x, y, w, h) {
+  if (!w) w = 12;
+  if (!h) h = w * 2;
+  var callback = ``;
+  if (mobile) {
+    var key = `.`;
+    if (x < 22 && y <= 5) key = `y`;
+    else if (x <= 44 && y <= 5) key = `k`;
+    else if (x <= 67 && y <= 5) key = `u`;
+    else if (x < 22 && y <= 11) key = `h`;
+    else if (x <= 44 && y <= 11) key = `.`;
+    else if (x <= 67 && y <= 11) key = `l`;
+    else if (x < 22 && y <= 16) key = `b`;
+    else if (x <= 44 && y <= 16) key = `j`;
+    else if (x <= 67 && y <= 16) key = `n`;
+    callback = ` onclick='mousetrap(null, "${key}")'`;
+  }
+  return `<div id='${x},${y}' class='image' style="width:${w}px; height:${h}px;"${callback}> </div>`;
+}
+
+
+
 function setDiv(id, data, markup) {
-  var doc = document.getElementById(id); // CACHE THIS?
-  if (doc) {
+  var div = document.getElementById(id);
+  if (div) {
     // optimization:
     // most of the time, we're just repainting the same data into each div.
     // therefore, only repaint when the data is different, or there
     // is a BOLD being applied where there wasn't one before
     //
     // START_MARK is still a special snowflake for amiga mode though
-    if (data === doc.innerHTML && markup != START_MARK) {
-      if (markup != START_BOLD && doc.style.fontWeight == 'normal' ||
-          markup == START_BOLD && doc.style.fontWeight == 'bold') {
+    if (data === div.innerHTML && markup != START_MARK) {
+      if (markup != START_BOLD && div.style.fontWeight == 'normal' ||
+        markup == START_BOLD && div.style.fontWeight == 'bold') {
         return;
       }
     }
@@ -87,15 +118,15 @@ function setDiv(id, data, markup) {
     //   console.log("DATA: " + data);
     //   console.log("DOC:  " + doc.innerHTML);
     // }
-    doc.innerHTML = data;
+    div.innerHTML = data;
     if (markup == START_BOLD) {
-      doc.style.fontWeight = 'bold';
+      div.style.fontWeight = 'bold';
     } else if (markup == START_MARK) {
       // probably would be better to set a different bg and font color
       // doc.style.color = markup == 'highlight' ? 'green' : 'lightgrey';
-      doc.innerHTML = `<mark>${data}</mark>`;
+      div.innerHTML = `<mark>${data}</mark>`;
     } else {
-      doc.style.fontWeight = 'normal';
+      div.style.fontWeight = 'normal';
     }
   } else {
     console.log(`null document: ${id}`);
@@ -128,8 +159,131 @@ function setImage(x, y, img) {
 
 
 
+function onResize() {
+  setMode(amiga_mode, retro_mode, original_objects);
+}
+
+
+
+function setMode(amiga, retro, original) {
+
+  amiga_mode = amiga;
+  retro_mode = retro;
+  original_objects = original;
+  let spriteWidth = computeSpriteWidth();
+
+  // modern font settings
+  let fontSize = spriteWidth * 1.66;
+  let fontFamily = `Courier New`;
+  let textColour = `lightgrey`;
+  let letterSpacing = `normal`;
+
+  // retro mode settings
+  if (retro_mode) {
+    fontSize = spriteWidth * 1.88;
+    fontFamily = `dos437`;
+    textColour = `#ABABAB`;
+    letterSpacing = '-1px';
+  }
+
+  // change to amiga font for amiga graphics
+  if (amiga_mode) {
+    fontSize = spriteWidth * 1.66;
+    fontFamily = retro_mode ? `amiga500` : `amiga1200`;
+    textColour = `lightgrey`;
+    letterSpacing = `normal`;
+    original_objects = true;
+    let ele = document.getElementById('0,0');
+    if (!ele) {
+      /* first time */
+      for (var y = 0; y < 24; y++) {
+        for (var x = 0; x < 80; x++) {
+            display[x][y] = createDiv(x, y, spriteWidth, spriteWidth * 2);
+        }
+      }
+      bltDocument();
+    } else {
+      /* update divs if the size has changed */
+      if (`${spriteWidth}px` != ele.style.width) {
+        let divs = document.getElementsByClassName('image');
+        for (let index = 0; index < divs.length; index++) {
+          const div = divs[index];
+          div.style.width = `${spriteWidth}px`;
+          div.style.height = `${spriteWidth * 2}px`;
+        }
+      }
+    }
+    if (!images) {
+      loadImages();
+    }
+  }
+
+  let font = `${fontSize}px ${fontFamily}`;
+
+  document.body.style.font = font;
+  document.body.style.fontFamily = fontFamily;
+  document.body.style.color = textColour;
+  document.body.style.letterSpacing = letterSpacing;
+
+  setButtons();
+
+  /* todo, later */
+  // let buttons = document.getElementsByClassName('variablebutton');
+  // for (let index = 0; index < buttons.length; index++) {
+  //   // buttons[index].style.fontFamily = fontFamily;
+  //   buttons[index].style.font = font;
+  //   buttons[index].style.fontSize = 12;
+  // }
+  // buttons = document.getElementsByClassName('button');
+  // for (let index = 0; index < buttons.length; index++) {
+  //   buttons[index].style.font = font;
+  //   buttons[index].style.fontSize = 12;
+  //   // buttons[index].style.fontFamily = fontFamily;
+  // }
+
+  paint();
+
+}
+
+
+
+function computeSpriteWidth() {
+  var browserWidth = window.innerWidth;
+  var browserHeight = window.innerHeight;
+
+  /* we are working with fixed width fonts, so this is a lot less complicated
+     "a) a magic potion of cure dianthroritis" -> 39 characters
+     width: 80 for game area, 39 for side inventory, 75 pixels buffer
+     height: 24 for game area, 125 pixel buffer
+  */
+  let rawSpriteW = (browserWidth - 75) / (80 + (side_inventory ? 39 : 0));
+  let rawSpriteH = (browserHeight - 125) / 24;
+
+  let spriteWidth = Math.min(rawSpriteW, rawSpriteH / 2);
+  // spriteWidth *= 10;
+  spriteWidth = Math.floor(spriteWidth); // chrome needs whole numbers to have smooth amiga graphics
+  // spriteWidth /= 10;
+  spriteWidth = Math.max(10, spriteWidth);
+
+  // console.log(`spriteWidth`, spriteWidth);
+
+  return spriteWidth;
+}
+
+
+
 function printStats() {
-  setDiv(`STATS`, DEBUG_STATS ? debug_stats() : game_stats(player));
+  let stats = ``;
+  if (!player) return;
+  if (DEBUG_STATS) {
+    stats = debug_stats();
+  }
+  else {
+    if (game_started && side_inventory) {
+      stats = game_stats(player);
+    }
+  }
+  setDiv(`STATS`, stats);
 }
 
 
@@ -428,20 +582,20 @@ function seemagic(onlyspells, allspells) {
 
   var spellstring = `  The magic spells you have discovered thus far:`;
   if (allspells) spellstring = `Available spells are:`;
-  var spellfunc = function(spell, buffer) {
+  var spellfunc = function (spell, buffer) {
     return padString(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
   }
   printknown(spellstring, spelldata, spellfunc, buffer, true);
 
   if (!onlyspells) {
     var scrollstring = `  The magic scrolls you have found to date are:`;
-    var scrollfunc = function(scroll) {
+    var scrollfunc = function (scroll) {
       return padString(`${SCROLL_NAMES[scroll.arg]}`, -26);
     }
     printknown(scrollstring, player.knownScrolls, scrollfunc, buffer, true);
 
     var potionstring = `  The magic potions you have found to date are:`;
-    var potionfunc = function(potion) {
+    var potionfunc = function (potion) {
       return padString(`${POTION_NAMES[potion.arg]}`, -26);
     }
     printknown(potionstring, player.knownPotions, potionfunc, buffer, false);
@@ -553,4 +707,116 @@ function appendLog(text) {
 function deleteLog() {
   if (!LOG) return;
   return LOG.pop();
+}
+
+
+
+/**
+ * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
+ * 
+ * @param {String} text The text to be rendered.
+ * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
+ * 
+ * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+ */
+function getTextWidth(text, font) {
+  // re-use canvas object for better performance
+  var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+  var context = canvas.getContext("2d");
+  context.font = font;
+  var metrics = context.measureText(text);
+  return metrics.width;
+}
+
+
+
+function onMouseClick(event) {
+  try {
+
+    let xy, x, y;
+
+    if (amiga_mode) {
+      if (!event.target.attributes.id) return; // clicking outside the 80,24 window
+      xy = event.target.attributes.id.value.split(`,`);
+      x = xy[0];
+      y = xy[1];
+    } else {
+
+      return;
+
+      /*
+      // this is too unreliable to ship
+      let el = document.getElementById('LARN');
+      let style = window.getComputedStyle(el, null).getPropertyValue('font-size');
+      let fontSize = parseFloat(style);
+      let fontWidth = getTextWidth("0", fontSize + 'pt dos');
+      // console.log(`fontwidth: ${fontWidth} fontSize: ${fontSize}`);
+
+      // console.log(event.layerX, event.layerY);
+      // console.log(event.clientX, event.clientY);
+
+      let offx = 25; // event.target.offsetLeft;
+      let offy = 25; // event.target.offsetTop);
+      // let offx = event.target.offsetLeft;
+      // let offy = event.target.offsetTop;
+      console.log(offx, offy);
+      
+      let clickX = event.clientX - offx;
+      let clickY = event.clientY - offy;
+      // console.log(`clickX`, clickX, `clickY`, clickY);
+
+      x = clickX / fontWidth;
+      y = clickY / fontSize;
+      console.log(x, y);
+
+      let weirdHackX = (66/59.52);
+      let weirdHackY = (16/18.45);
+      x = Math.floor((clickX / fontWidth) * weirdHackX);
+      y = Math.floor((clickY / fontSize) * weirdHackY);
+      */
+
+    }
+
+    let monster = monsterAt(x, y);
+    let item = itemAt(x, y);
+
+    if (!item) return; // clicking outside the 67,17 maze
+
+    let description = ``;
+    let prefix = `It's `;
+    let sayEmpty = false;
+
+    // console.log(event);
+    // console.log(x, y);
+    // updateLog(`${x}, ${y}`);
+
+    if (monster) {
+      // no help for invisible monsters or if you're blind
+      sayEmpty = !monster.isVisible() || player.BLINDCOUNT > 0;
+    }
+
+    if (sayEmpty) monster = null; // what monster?
+
+    if (!player.level.know[x][y]) {
+      description = `a mystery`;
+    } else if (x == player.x && y == player.y) {
+      description = `our Hero`;
+    } else if (monster) {
+      description = monster.toString();
+      if (monster.matches(MIMIC)) description = monsterlist[monster.mimicarg].toString();
+      let firstChar = description.substring(0, 1).toLocaleLowerCase();
+      prefix = `It's a `;
+      if (`aeiou`.indexOf(firstChar) >= 0) prefix = `It's an `;
+    } else if (sayEmpty || item.matches(OIVDARTRAP) || item.matches(OIVTELETRAP) || item.matches(OIVTRAPDOOR) || item.matches(OTRAPARROWIV)) {
+      description = OEMPTY.desc;
+    } else {
+      description = item.getDescription();
+    }
+
+    description = prefix + description;
+    updateLog(description);
+    paint();
+  } catch (error) {
+    console.log(`onMouseClick`, error);
+  }
 }

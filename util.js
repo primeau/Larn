@@ -341,17 +341,43 @@ function compareArrays(a1, a2) {
 const COMPRESSED_DATA = `_COMPRESSED`;
 
 
+/* compressionWorker callback to compress large files to be written to localstorage */
+function onCompressed(event) {
+  let key = event.data[0];
+  let value = event.data[1];
+  debug(`onCompressed: compression end size: ${key} ${value.length}`);
+  localStorage.setItem(key, value);
+}
+
+
 Storage.prototype.setObject = function(key, value) {
-  /* compress if it's big */
   value = JSON.stringify(value);
-  if (value.length > 1000000) {
+
+  let usedWorker = false;
+
+  /* compress if it's big */
+  if (value.length > 25000) {
+    /* store a record that the data is compressed */
     this.setItem(key, COMPRESSED_DATA);
-    console.log('setObject: start size', value.length);
-    value = LZString.compressToUTF16(value);
-    console.log('setObject: end size', value.length);
+    /* create a new key that will store the compressed data */
     key = key + COMPRESSED_DATA;
+    debug(`setObject: compression start size: ${value.length}`);
+    /* try to do the compression in a worker outside of the main thread */
+    if (compressionWorker) {
+      usedWorker = true;
+      /* send the data to the worker (which will call back via onCompressed()) */
+      compressionWorker.postMessage([key, value]);
+    }
+    else {
+      value = LZString.compressToUTF16(value);
+      debug(`setObject: compression end size: ${value.length}`);
+    }
   }
-  this.setItem(key, value);
+
+  /* if the web worker couldn't be found, then write the data from here */
+  if (!usedWorker) {
+    this.setItem(key, value);
+  }
 }
 
 function localStorageSetObject(key, value) {
@@ -375,9 +401,11 @@ Storage.prototype.getObject = function(key) {
   /* decompress if it's big */
   if (value === COMPRESSED_DATA) {
     value = this.getItem(key + COMPRESSED_DATA);
-    console.log('getObject: start size', value.length);
-    value = LZString.decompressFromUTF16(value);
-    console.log('getObject: end size', value.length);
+    if (value) {
+      console.log('getObject: start size', value.length);
+      value = LZString.decompressFromUTF16(value);
+      console.log('getObject: end size', value.length);
+    }
   }
   return value && JSON.parse(value);
 }
@@ -392,7 +420,7 @@ function localStorageGetObject(key, failValue) {
     return retrievedObject || failValue;
   }
   catch (err) {
-    console.log(`getObject: ${err}`);
+    console.log(`getObject: "${key}" ${err}`);
     NOCOOKIES = true;
     return failValue;
   }

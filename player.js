@@ -130,7 +130,7 @@ var Player = function Player() {
     this.getChar = function() {
       if (amiga_mode)
         return `${DIV_START}player${DIV_END}`;
-      else if (ULARN && retro_mode) {
+      else if (retro_mode) {
         return `<b><font color='lightgray'>@</font></b>`;
       }
       else {
@@ -1052,14 +1052,6 @@ function wear(index) {
 
 function game_stats(p, endgame) {
 
-  //console.log(1);
-  // return if inventory and stats are off
-  if (!side_inventory || !debug_stats) return ``;
-  //console.log(!mazeMode, typeof p == 'undefined');
-
-  // return if showing the scoreboard, but not a high score
-  if (!mazeMode && typeof p == 'undefined') return ``;
-
   if (!p) p = player;
 
   var s = endgame ? `Inventory:\n` : ``;
@@ -1071,7 +1063,18 @@ function game_stats(p, endgame) {
   for (var i = 0; i < inv.length; i++) {
     var item = inv[i][1];
     if (item) {
-      s += inv[i][0] + `) ` + item.toString(false, endgame || DEBUG_STATS, p) + `\n`;
+      let itemString = inv[i][0] + `) ` + item.toString(false, endgame || DEBUG_STATS, p);
+      let itemParts = [itemString];
+      if (itemString.length > 39)
+        itemParts = itemString.split(`(`);
+      itemString = padString(itemParts[0], -39);
+      if (itemParts.length >= 2) { /* (being worn) */
+        itemString += `\n   (` + itemParts[1];
+      }
+      if (itemParts.length == 3) { /* (being worn) (weapon in hand) */
+        itemString += `(` + itemParts[2];
+      }
+      s += itemString + `\n`;
     }
   }
 
@@ -1095,8 +1098,8 @@ function game_stats(p, endgame) {
 
 
 function debug_stats(p, score) {
-  if (!player) return;
   if (!p) p = player;
+  if (!p) return;
 
   var tmpgtime = gtime;
   var tmprmst = rmst;

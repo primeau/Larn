@@ -1,12 +1,9 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '438';
+const BUILD = '439';
 
 var ULARN = false; // are we playing LARN or ULARN?
-
-const IMG_HEIGHT = 24;
-const IMG_WIDTH = 12;
 
 var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
@@ -17,8 +14,10 @@ var DEBUG_LPRCAT = 0;
 var DEBUG_LPRC = 0;
 var DEBUG_PROXIMITY = false;
 
-var dofs = false;
-var lambda;
+var dofs = false; /* use fullstory */
+var lambda; /* AWS lambda database handle */
+let compressionWorker; /* web worker to compress save games outside of main thread */
+let workersAvailable = window.location.protocol != `file:`; /* can't read file:// */
 
 function play() {
 
@@ -41,11 +40,17 @@ function play() {
   initKeyBindings();
 
   document.addEventListener("click", onMouseClick);
+  window.addEventListener("resize", onResize);
+
+  if (window.Worker && workersAvailable) {
+    compressionWorker = new Worker('worker.js');
+    compressionWorker.onmessage = onCompressed;
+  }
 
     /* warn the player that closing their window will kill the game.
      this is a bit annoying, and I'm tempted to get rid of it now
      that there are checkpoints in place */
-  if (location.hostname === 'localhost') {
+  if (location.hostname === 'localhost' || location.hostname === '') {
     enableDebug();
   } else {
     window.onbeforeunload = confirmExit;
@@ -154,6 +159,7 @@ function initKeyBindings() {
 
 function enableDebug() {
   debug_used = 1;
+  console.log(`DEBUG_MODE: ON`);
   Mousetrap.bind('alt+`', eventToggleDebugStats);
   Mousetrap.bind('alt+1', eventToggleDebugOutput);
   Mousetrap.bind('alt+2', eventToggleDebugWTW);
@@ -167,87 +173,6 @@ function enableDebug() {
   Mousetrap.bind('alt+0', eventToggleDebugProximity);
 }
 
-
-
-let QQQ = 12;
-function setMode(amiga, retro, original) {
-
-  amiga_mode = amiga;
-  retro_mode = retro;
-  original_objects = original;
-
-  // modern font settings
-  let fontSize = 22;
-  let fontFamily = `Courier New`;
-  let textColour = `lightgrey`;
-  let letterSpacing = `normal`;
-
-  // retro mode settings
-  if (retro_mode) {
-    fontSize = 25;
-    fontFamily = `dos437`;
-    textColour = `#ABABAB`;
-    letterSpacing = '-1px';
-  }
-
-  // change to amiga font for amiga graphics
-  if (amiga_mode) {
-    fontSize = 22;
-    fontFamily = retro_mode ? `amiga500` : `amiga1200`;
-    textColour = `lightgrey`;
-    letterSpacing = `normal`;
-    original_objects = true;
-    let width = QQQ;
-    let height = width * 2;
-    for (var y = 0; y < 24; y++) {
-      for (var x = 0; x < 80; x++) {
-        display[x][y] = createDiv(x, y, width, height);
-      }
-    }
-    if (!images) {
-      loadImages();
-    }
-    bltDocument();
-    clear();
-  }
-
-  let font = `${fontSize}px ${fontFamily}`;
-
-  document.body.style.font = font;
-  document.body.style.color = textColour;
-  document.body.style.letterSpacing = letterSpacing;
-
-  localStorageSetObject('retro', retro_mode);
-
-  setButtons();
-
-}
-
-
-
-function createDiv(x, y, w, h) {
-  if (!w) w = QQQ;
-  if (!h) h = w * 2;
-  var callback = ``;
-  if (mobile) {
-    var key = `.`;
-    if (x < 22 && y <= 5) key = `y`;
-    else if (x <= 44 && y <= 5) key = `k`;
-    else if (x <= 67 && y <= 5) key = `u`;
-    else if (x < 22 && y <= 11) key = `h`;
-    else if (x <= 44 && y <= 11) key = `.`;
-    else if (x <= 67 && y <= 11) key = `l`;
-    else if (x < 22 && y <= 16) key = `b`;
-    else if (x <= 44 && y <= 16) key = `j`;
-    else if (x <= 67 && y <= 16) key = `n`;
-    callback = ` onclick='mousetrap(null, "${key}")'`;
-  }
-  // return `<div id='${x},${y}' class='image'${callback}></div>`;
-  return `<div id='${x},${y}' class='image' style="width:${w}px; height:${h}px;"${callback}></div>`;
-}
-
-
-{/* <div id="2,0" class="image" width="16px" height="32px" style="font-weight: normal; background-image: url(&quot;img/o41.png&quot;);"> </div> */}
 
 
 function eventToggleDebugStats() {
@@ -386,102 +311,4 @@ function eventToggleDebugProximity() {
   DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
   updateLog(`DEBUG: PROXIMITY: ` + DEBUG_PROXIMITY);
   paint();
-}
-
-
-
-function onMouseClick(event) {
-  try {
-
-    let xy, x, y;
-
-    if (amiga_mode) {
-      if (!event.target.attributes.id) return; // clicking outside the 80,24 window
-      xy = event.target.attributes.id.value.split(`,`);
-      x = xy[0];
-      y = xy[1];
-    } 
-    else {
-
-      return;
-
-      /*
-      // this is too unreliable to ship
-      let el = document.getElementById('LARN');
-      let style = window.getComputedStyle(el, null).getPropertyValue('font-size');
-      let fontSize = parseFloat(style);
-      let fontWidth = getTextWidth("0", fontSize + 'pt dos');
-      // console.log(`fontwidth: ${fontWidth} fontSize: ${fontSize}`);
-
-      // console.log(event.layerX, event.layerY);
-      // console.log(event.clientX, event.clientY);
-
-      let offx = 25; // event.target.offsetLeft;
-      let offy = 25; // event.target.offsetTop);
-      // let offx = event.target.offsetLeft;
-      // let offy = event.target.offsetTop;
-      console.log(offx, offy);
-      
-      let clickX = event.clientX - offx;
-      let clickY = event.clientY - offy;
-      // console.log(`clickX`, clickX, `clickY`, clickY);
-
-      x = clickX / fontWidth;
-      y = clickY / fontSize;
-      console.log(x, y);
-
-      let weirdHackX = (66/59.52);
-      let weirdHackY = (16/18.45);
-      x = Math.floor((clickX / fontWidth) * weirdHackX);
-      y = Math.floor((clickY / fontSize) * weirdHackY);
-      */
-
-    }
-
-    let monster = monsterAt(x, y);
-    let item = itemAt(x, y);
-
-    if (!item) return; // clicking outside the 67,17 maze
-
-    let description = ``;
-    let prefix = `It's `;
-    let sayEmpty = false;
-
-    // console.log(event);
-    // console.log(x, y);
-    // updateLog(`${x}, ${y}`);
-
-    if (monster) {
-      // no help for invisible monsters or if you're blind
-      sayEmpty = !monster.isVisible() || player.BLINDCOUNT > 0;
-    }
-
-    if (sayEmpty) monster = null; // what monster?
-
-    if (!player.level.know[x][y]) {
-      description = `a mystery`;
-    }
-    else if (x == player.x && y == player.y) {
-      description = `our Hero`;
-    } 
-    else if (monster) {
-      description = monster.toString();
-      if (monster.matches(MIMIC)) description = monsterlist[monster.mimicarg].toString();
-      let firstChar = description.substring(0, 1).toLocaleLowerCase();
-      prefix = `It's a `;
-      if (`aeiou`.indexOf(firstChar) >= 0) prefix = `It's an `;
-    }
-    else if (sayEmpty || item.matches(OIVDARTRAP) || item.matches(OIVTELETRAP) || item.matches(OIVTRAPDOOR) || item.matches(OTRAPARROWIV)) {
-      description = OEMPTY.desc;
-    }
-    else {
-      description = item.getDescription();
-    }
-
-    description = prefix + description;
-    updateLog(description);
-    paint();
-  } catch (error) {
-    console.log(`onMouseClick`, error);
-  }
 }
