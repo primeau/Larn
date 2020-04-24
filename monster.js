@@ -1091,10 +1091,16 @@ function spattack(monster, attack, xx, yy) {
       // fall through
 
     case 3: // dragon
-      if (damage == null) damage = rnd(20) + 25 - armorclass;
-      if (player.FIRERESISTANCE) updateLog(`The ${monster}'s flame doesn't faze you!`);
-      else updateLog(`The ${monster} breathes fire at you!`);
-      player.losehp(damage);
+      if (damage == null) {
+        damage = rnd(20) + 25 - armorclass;
+      }
+      if (player.FIRERESISTANCE) { 
+        updateLog(`The ${monster}'s flame doesn't faze you!`);
+      } 
+      else {
+        updateLog(`The ${monster} breathes fire at you!`);
+        player.losehp(damage);
+      }
       return 0;
 
     case 4:
