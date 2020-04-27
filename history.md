@@ -1,14 +1,35 @@
 
 JS U/Larn 12.5.0 (currently beta)
 ----------------
-Added Ularn functionality. Primarily follows the 1.5 codebase with some 
-inspiration from 1.6. Maintains the new/balance/fix items of version 12.4.5 
-where it seems to make sense.
+1. [new] Added Ularn functionality. Primarily follows the 1.5 codebase with 
+some inspiration from 1.6. Maintains the new/balance/fix items of version 
+12.4.5 where it seems to make sense.
 
-1. [new] Also playable with Amiga-style graphics thanks to the new sprites
-created by Chris Yewchuck and Jerome Lecomte.
+1. [new] Ularn also playable with Amiga-style graphics thanks to the new 
+sprites created by Chris Yewchuck and Jerome Lecomte.
 
 1. [new] Toggle added for retro-style fonts and two different Amiga fonts.
+
+1. [new] Stolen items can be recovered if you can find the monster again.
+
+1. [new] The Sword of Slashing doesn't rust.
+
+1. [balance] Selling items is blocked once the potion has been picked up to
+prevent player from inflating their score by selling epic items.   
+
+1. [balance] Demons can no longer be teleported.
+
+1. [fix]/[new] You can drop gold onto an existing pile of gold now, or into
+a pit.
+
+1. [fix]/[new] When a monster is killed with a ranged attack, loot will now be 
+dropped beside the corpse instead of the player.
+
+1. [fix] Bessman's Flailing Hammer could only be created on the first level
+of the dungeon.
+
+1. [fix] Jonathon Kocz fixed the potion of fire resistance, which has
+apparently never worked.
 
 
 JS Larn 12.4.5
@@ -22,17 +43,13 @@ is also available for offline games.
 1. [new] Added an Amiga-style graphics option with help and encouragement of
 Christoper Yewchuck.
 
-1. [new] The LRS is still present, but it's no longer necessary to pay taxes
-because it was so easy to work around in the original game.
-
-1. [new] Washing at a fountain can clean negative weapon or armor class.
-
 1. [new] Monsters that pick your pocket and disappear can now be found
 elsewhere on the same level.
 
-1. [new] The Sword of Slashing doesn't rust.
+1. [new] Washing at a fountain can clean negative weapon or armor class.
 
-1. [new] Stolen items can be recovered if you can find the monster again.
+1. [new] The LRS is still present, but it's no longer necessary to pay taxes
+because it was so easy to work around in the original game.
 
 1. [balance] 'Smart' monsters in a closed room never moved. Now they follow
 player movement, except for demons, who stand guard to protect the Eye of Larn
@@ -50,11 +67,6 @@ goes up.
 a monster will notice when the player passes too closely. Affects difficulty 2
 and higher.
 
-1. [balance] Selling items is blocked once the potion has been picked up to
-prevent player from inflating their score by selling epic items.   
-
-1. [balance] Demons can no longer be teleported.
-
 1. [fix] It's possible to fall into a pit again. This was broken in 12.4.
 
 1. [fix] The last hit monster would chase the player from across the maze after
@@ -69,14 +81,6 @@ properly when the player was running.
 
 1. [fix] After casting Stop Time, monsters would still chase the player when
 running. 
-
-1. [fix] Bessman's Flailing Hammer could only be created on the first level
-of the dungeon.
-
-1. [fix]/[new] You can drop gold onto an existing pile of gold now.
-
-1. [fix]/[new] When a monster is killed with a ranged attack, loot will now be 
-dropped beside the corpse instead of the player.
 
 1. [un-fix] The history lesson from the College of Larn says that the Eye
 of Larn is protected by a Platinum Dragon, which wasn't the case in the original

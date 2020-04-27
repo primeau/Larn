@@ -30,6 +30,7 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, in
 function createMonster(monst) {
 
   if (!monst) return null;
+  if (DEBUG_NO_MONSTERS) return null;
 
   var arg = monst.arg;
 

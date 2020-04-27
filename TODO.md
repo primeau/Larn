@@ -57,6 +57,7 @@ todo:
   - make buying / selling items etc faster 
 - eye of larn pickup/drop message with proper naps inbetween messages (harder than expected the first time around)
 - repeat function
+- move command
 
 
 bugs:

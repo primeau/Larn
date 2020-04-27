@@ -16,6 +16,7 @@ function DEVMODE() {
     eventToggleDebugStats();
     eventToggleDebugImmortal();
     eventToggleDebugAwareness();
+    // eventToggleDebugNoMonsters();
     player.updateStealth(100000);
     player.updateCancellation(100000);
 

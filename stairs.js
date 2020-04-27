@@ -2,7 +2,7 @@
 
 
 /*
-For command mode.  Checks that player is actually standing at a set up
+For command mode.  Checks that player is actually standing at a set of
 up stairs or volcanic shaft.
 */
 function up_stairs() {
@@ -53,7 +53,10 @@ assumes that cursors() has been called and that a check has been made that
 the user is actually standing at a set of up stairs.
 */
 function act_up_stairs() {
-  if (level > 1 && level != MAXLEVEL) {
+  let deadend = level <= 1;               // no up on H, D1
+  deadend |= level == MAXLEVEL;           // no up on V1
+  if (ULARN) deadend |= level == DBOTTOM; // no up on D15
+  if (!deadend) {
     newcavelevel(level - 1);
   } else {
     updateLog(`  The stairs lead to a dead end!`);
@@ -68,7 +71,11 @@ assumes that cursors() has been called and that a check has been made that
 the user is actually standing at a set of down stairs.
 */
 function act_down_stairs() {
-  if (level != 0 && level != MAXLEVEL-1 && level != MAXLEVEL+MAXVLEVEL-1) {
+  let deadend = level == 0;
+  deadend |= level == DBOTTOM; // no down at bottom of dungeon
+  deadend |= level == VBOTTOM; // no down at bottom of volcano
+  if (ULARN) deadend |= level >= VBOTTOM - 2; // ularn no down stairs on V3/V4
+  if (!deadend) {
     newcavelevel(level + 1);
   } else {
     updateLog(`  The stairs lead to a dead end!`);

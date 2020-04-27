@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0 (beta)';
-const BUILD = '439';
+const BUILD = '442';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -9,6 +9,7 @@ var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
 var DEBUG_STAIRS_EVERYWHERE = false;
 var DEBUG_KNOW_ALL = false;
+var DEBUG_NO_MONSTERS = false;
 var DEBUG_PAINT = 0;
 var DEBUG_LPRCAT = 0;
 var DEBUG_LPRC = 0;
@@ -170,7 +171,8 @@ function enableDebug() {
   Mousetrap.bind('alt+7', eventToggleDebugImmortal);
   Mousetrap.bind('alt+8', eventMagicMap);
   Mousetrap.bind('alt+9', eventEngolden);
-  Mousetrap.bind('alt+0', eventToggleDebugProximity);
+  Mousetrap.bind('alt+0', eventToggleDebugNoMonsters);
+  Mousetrap.bind('alt+-', eventToggleDebugProximity);
 }
 
 
@@ -179,7 +181,7 @@ function eventToggleDebugStats() {
   nomove = 1;
   debug_used = 1;
   DEBUG_STATS = !DEBUG_STATS;
-  updateLog(`DEBUG_STATS: ` + DEBUG_STATS);
+  updateLog(`DEBUG_STATS: ${DEBUG_STATS}`);
   paint();
 }
 
@@ -189,7 +191,7 @@ function eventToggleDebugOutput() {
   nomove = 1;
   debug_used = 1;
   DEBUG_OUTPUT = !DEBUG_OUTPUT;
-  updateLog(`DEBUG_OUTPUT: ` + DEBUG_OUTPUT);
+  updateLog(`DEBUG_OUTPUT: ${DEBUG_OUTPUT}`);
   paint();
 }
 
@@ -199,7 +201,7 @@ function eventToggleDebugWTW() {
   nomove = 1;
   debug_used = 1;
   player.updateWTW(player.WTW == 0 ? 100000 : -player.WTW);
-  updateLog(`DEBUG_WALK_THROUGH_WALLS: ` + (player.WTW > 0));
+  updateLog(`DEBUG_WALK_THROUGH_WALLS: ${(player.WTW > 0)}`);
   paint();
 }
 
@@ -209,7 +211,7 @@ function eventToggleDebugStairs() {
   nomove = 1;
   debug_used = 1;
   DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
-  updateLog(`DEBUG_STAIRS_EVERYWHERE: ` + DEBUG_STAIRS_EVERYWHERE);
+  updateLog(`DEBUG_STAIRS_EVERYWHERE: ${DEBUG_STAIRS_EVERYWHERE}`);
   paint();
 }
 
@@ -220,7 +222,7 @@ function eventToggleDebugKnowAll() {
   debug_used = 1;
   DEBUG_KNOW_ALL = true;
   learnAll();
-  updateLog(`DEBUG_KNOW_ALL: ` + DEBUG_KNOW_ALL);
+  updateLog(`DEBUG_KNOW_ALL: ${DEBUG_KNOW_ALL}`);
   paint();
 }
 
@@ -305,10 +307,20 @@ function eventToggleDebugImmortal() {
 
 
 
+function eventToggleDebugNoMonsters() {
+  nomove = 1;
+  debug_used = 1;
+  DEBUG_NO_MONSTERS = !DEBUG_NO_MONSTERS;
+  updateLog(`DEBUG: NO MONSTERS: ${DEBUG_NO_MONSTERS}`);
+  paint();
+}
+
+
+
 function eventToggleDebugProximity() {
   nomove = 1;
   debug_used = 1;
   DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
-  updateLog(`DEBUG: PROXIMITY: ` + DEBUG_PROXIMITY);
+  updateLog(`DEBUG: PROXIMITY: ${DEBUG_PROXIMITY}`);
   paint();
 }
