@@ -480,21 +480,22 @@ function makeobject(depth) {
   if (ULARN) {
     // only one of these per level
     var created = false;
-    created |= createArtifact(OBRASSLAMP,    player.LAMP,         !created && rnd(120) < 8);
-    created |= createArtifact(OWWAND,        player.WAND,         !created && rnd(120) < 8);
-    created |= createArtifact(OORBOFDRAGON,  player.SLAYING,      !created && rnd(120) < 8);
-    created |= createArtifact(OSPIRITSCARAB, player.NEGATESPIRIT, !created && rnd(120) < 8);
-    created |= createArtifact(OCUBEofUNDEAD, player.CUBEofUNDEAD, !created && rnd(120) < 8);
-    created |= createArtifact(ONOTHEFT,      player.NOTHEFT,      !created && rnd(120) < 8);
-    created |= createArtifact(OSWORDofSLASHING, player.SLASH,     !created && rnd(120) < 8);
-    created |= createArtifact(OHAMMER,       player.BESSMANN,     !created && rnd(120) < 8);
-    created |= createArtifact(OSPHTALISMAN,  player.TALISMAN,     !created && rnd(120) < 8);
-    created |= createArtifact(OHANDofFEAR,   player.HAND,         !created && rnd(120) < 8);
-    created |= createArtifact(OORB,          player.ORB,          !created && rnd(120) < 8);
-    created |= createArtifact(OELVENCHAIN,   player.ELVEN,        !created && rnd(120) < 8);
-    created |= createArtifact(OSLAYER,       player.SLAY,         !created && depth >= 10 && rnd(100) > (85 - (depth - 10)));
-    created |= createArtifact(OVORPAL,       player.VORPAL,       !created && rnd(120) < 8);
-    created |= createArtifact(OPSTAFF,       player.STAFF,        !created && depth >= 8 && rnd(100) > (85 - (depth - 10)));
+    created |= createArtifact(OBRASSLAMP,       player.LAMP,         !created && rnd(120) < 8);
+    created |= createArtifact(OWWAND,           player.WAND,         !created && rnd(120) < 8);
+    created |= createArtifact(OORBOFDRAGON,     player.SLAYING,      !created && rnd(120) < 8);
+    created |= createArtifact(OSPIRITSCARAB,    player.NEGATESPIRIT, !created && rnd(120) < 8);
+    created |= createArtifact(OCUBEofUNDEAD,    player.CUBEofUNDEAD, !created && rnd(120) < 8);
+    created |= createArtifact(ONOTHEFT,         player.NOTHEFT,      !created && rnd(120) < 8);
+    created |= createArtifact(OSWORDofSLASHING, player.SLASH,        !created && rnd(120) < 8);
+    created |= createArtifact(OHAMMER,          player.BESSMANN,     !created && rnd(120) < 8);
+    created |= createArtifact(OSPHTALISMAN,     player.TALISMAN,     !created && rnd(120) < 8);
+    created |= createArtifact(OHANDofFEAR,      player.HAND,         !created && rnd(120) < 8);
+    created |= createArtifact(OORB,             player.ORB,          !created && rnd(120) < 8);
+    created |= createArtifact(OELVENCHAIN,      player.ELVEN,        !created && rnd(120) < 8);
+    created |= createArtifact(OSLAYER,          player.SLAY,         !created && depth >= 10 && rnd(100) > (85 - (depth - 10)));
+    created |= createArtifact(OVORPAL,          player.VORPAL,       !created && rnd(120) < 8);
+    created |= createArtifact(OPSTAFF,          player.STAFF,        !created && depth >= 8 && rnd(100) > (85 - (depth - 10)));
+    created |= createArtifact(OLIFEPRESERVER,   player.PRESERVER,    !created && depth >= 5 && rnd(120) < 8); // different than Ularn 1.6
   }
   else {
     createArtifact(OORBOFDRAGON,     player.SLAYING,      rnd(151) < 3);
@@ -528,25 +529,26 @@ function createArtifact(artifact, exists, odds) {
   }
   if (createdArtifact) {
     switch (artifact.id) {
-      case OBRASSLAMP.id:       player.LAMP = true;         break;
-      case OWWAND.id:           player.WAND = true;         break;
-      case OORBOFDRAGON.id:     player.SLAYING = true;      break;
-      case OSPIRITSCARAB.id:    player.NEGATESPIRIT = true; break;
-      case OCUBEofUNDEAD.id:    player.CUBEofUNDEAD = true; break;
-      case ONOTHEFT.id:         player.NOTHEFT = true;      break;
-      case OSPHTALISMAN.id:     player.TALISMAN = true;     break;
-      case OHANDofFEAR.id:      player.HAND = true;         break;
-      case OORB.id:             player.ORB = true;          break;
-      case OELVENCHAIN.id:      player.ELVEN = true;        break;
-      case OSWORDofSLASHING.id: player.SLASH = true;        break;
-      case OHAMMER.id:          player.BESSMANN = true;     break;
-      case OSLAYER.id:          player.SLAY = true;         break;
-      case OVORPAL.id:          player.VORPAL = true;       break;
-      case OPSTAFF.id:          player.STAFF = true;        break;
+      case OBRASSLAMP.id:       player.LAMP = true;           break;
+      case OWWAND.id:           player.WAND = true;           break;
+      case OORBOFDRAGON.id:     player.SLAYING = true;        break;
+      case OSPIRITSCARAB.id:    player.NEGATESPIRIT = true;   break;
+      case OCUBEofUNDEAD.id:    player.CUBEofUNDEAD = true;   break;
+      case ONOTHEFT.id:         player.NOTHEFT = true;        break;
+      case OSPHTALISMAN.id:     player.TALISMAN = true;       break;
+      case OHANDofFEAR.id:      player.HAND = true;           break;
+      case OORB.id:             player.ORB = true;            break;
+      case OELVENCHAIN.id:      player.ELVEN = true;          break;
+      case OSWORDofSLASHING.id: player.SLASH = true;          break;
+      case OHAMMER.id:          player.BESSMANN = true;       break;
+      case OSLAYER.id:          player.SLAY = true;           break;
+      case OVORPAL.id:          player.VORPAL = true;         break;
+      case OPSTAFF.id:          player.STAFF = true;          break;
+      case OLIFEPRESERVER.id:   player.OLIFEPRESERVER = true; break;
 
-      case OPAD.id:             player.PAD = true;          break;
-      case OELEVATORUP.id:      player.ELEVUP = true;       break;
-      case OELEVATORDOWN.id:    player.ELEVDOWN = true;     break;
+      case OPAD.id:             player.PAD = true;            break;
+      case OELEVATORUP.id:      player.ELEVUP = true;         break;
+      case OELEVATORDOWN.id:    player.ELEVDOWN = true;       break;
 
       default:
         debug(`unidentified artifact created: ${artifact}`);

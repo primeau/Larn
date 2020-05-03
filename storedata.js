@@ -194,5 +194,6 @@ const ULARN_STORE_INVENTORY = [
   [3000,   OSPHTALISMAN.id,     0,  0],
   [1500,   OWWAND.id,           0,  0],
   [500,    OBRASSLAMP.id,       0,  0],
-  [95000,  OPSTAFF.id,          0,  0]
+  [95000,  OPSTAFF.id,          0,  0],
+  [100000, OLIFEPRESERVER.id,   0,  0]
 ];

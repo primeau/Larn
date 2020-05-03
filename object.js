@@ -422,6 +422,7 @@ const OHANDofFEAR = new DungeonObject(86, `.`, `.`, `.`, `crimson`, BOLD, `The H
 const OSPHTALISMAN = new DungeonObject(87, `.`, `.`, `.`, `skyblue`, BOLD, `The Talisman of the Sphere`, CARRY);
 const OWWAND = new DungeonObject(88, `/`, `/`, `/`, `mediumseagreen`, BOLD, `a wand of wonder`, CARRY);
 const OPSTAFF = new DungeonObject(89, `/`, `/`, `/`, `darkorange`, BOLD, `a staff of power`, CARRY);
+const OLIFEPRESERVER = new DungeonObject(101, `"`, `"`, `"`, `orange`, BOLD, `an amulet of life preservation`, CARRY);
 
 // ULARN drugs
 const OSPEED = new DungeonObject(95, `:`, `:`, `:`, `paleblue`, BOLD, `some speed`, CARRY);

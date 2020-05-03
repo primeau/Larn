@@ -110,6 +110,7 @@ var Player = function Player() {
     this.SLAY = false;  // slayer
     this.VORPAL = false;
     this.STAFF = false;
+    this.PRESERVER = false;
     this.PAD = false;
     this.ELEVDOWN = false;
     this.ELEVUP = false;

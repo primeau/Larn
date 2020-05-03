@@ -1118,6 +1118,10 @@ function spattack(monster, attack, xx, yy) {
       return 0;
 
     case 6:
+      if (isCarrying(OLIFEPRESERVER)) {
+        /* Life preserver prevents all drain life attacks */
+        return 0;
+      }
       updateLog(`The ${monster} drains you of your life energy!`);
       player.loselevel();
       if (monster.matches(DEMONPRINCE)) {

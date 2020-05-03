@@ -670,8 +670,8 @@ function wizardmode(password) {
       }
 
       if (ULARN) {
-        // 100 items now
-        while (wizi < OPAD.id) {
+        // 101 items now
+        while (wizi < OLIFEPRESERVER.id) {
           var wizitem = itemlist[++wizi];
           if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
             setItem(ix, --iy, wizitem);

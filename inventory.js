@@ -151,6 +151,7 @@ const sortorder = [
   OHANDofFEAR.id,
   OORB.id,
   OPSTAFF.id,
+  OLIFEPRESERVER.id,
 
   ODIAMOND.id,
   ORUBY.id,
