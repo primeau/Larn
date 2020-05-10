@@ -33,7 +33,7 @@ function pray_at_altar() {
 */
 function act_donation_pray(offering) {
   if (offering == ESC) {
-    appendLog(` cancelled`);
+    appendLog(` cancelled${period}`);
     nomove = 1;
     prayed = 0;
     return 1;

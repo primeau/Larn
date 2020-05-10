@@ -872,7 +872,7 @@ function wield(index) {
 
   // player is over a weapon
   if (item.isWeapon()) {
-    appendLog(` wield`);
+    appendLog(` wield${period}`);
     if (take(item)) {
       forget(); // remove from board
     } else {
@@ -908,7 +908,7 @@ function wield(index) {
         updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
-        appendLog(` cancelled`);
+        appendLog(` cancelled${period}`);
         nomove = 1;
       }
       setMazeMode(true);
@@ -960,7 +960,7 @@ function wear(index) {
 
   // player is over some armor
   if (item.isArmor()) {
-    appendLog(` wear`);
+    appendLog(` wear${period}`);
     if (take(item)) {
       forget(); // remove from board
     } else {
@@ -987,7 +987,7 @@ function wear(index) {
         updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
-        appendLog(` cancelled`);
+        appendLog(` cancelled${period}`);
         nomove = 1;
       }
       setMazeMode(true);

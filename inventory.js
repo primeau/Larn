@@ -256,7 +256,7 @@ function drop_object(index) {
       updateLog(`  You don't have item ${index}!`);
     }
     if (useindex <= -1) {
-      appendLog(` cancelled`);
+      appendLog(` cancelled${period}`);
       nomove = 1;
     }
     setMazeMode(true);
@@ -305,7 +305,7 @@ function drop_object_gold(amount) {
   var pitflag = itemAt(player.x, player.y).matches(OPIT);
 
   if (amount == ESC) {
-    appendLog(` cancelled`);
+    appendLog(` cancelled${period}`);
     nomove = 1;
     return 1;
   }

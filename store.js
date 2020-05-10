@@ -169,9 +169,9 @@ function dnd_parse(key) {
   if (i >= 0 && i <= 26) {
     i += dndindex;
     if (i >= MAXITM) {
-      storemessage(`Sorry, but we are out of that item.`, 700);
+      storemessage(`Sorry, but we are out of that item${period}`, 700);
     } else if (dnd_item[i].qty <= 0) {
-      storemessage(`Sorry, but we are out of that item.`, 700);
+      storemessage(`Sorry, but we are out of that item${period}`, 700);
     } else if (pocketfull()) {
       storemessage(`You can't carry anything more!`, 700);
     } else if (player.GOLD < dnd_item[i].price) {
@@ -195,7 +195,7 @@ function dnd_parse(key) {
         boughtItem.arg = Math.max(1, boughtItem.arg - getDifficulty());
       }
 
-      storemessage(`  You pick up: ${invindex}) ${boughtItem}`, 1000);
+      storemessage(`  You pick up: ${invindex}) ${boughtItem}${period}`, 1000);
       if (dnd_item[i].qty == 0) dnditem(i);
       updategold();
       lprc(key); /* echo the byte */
@@ -341,21 +341,21 @@ function bank_parse(key) {
   }
 
   if (key == 'd') {
-    lprcat(`deposit\n`);
+    lprcat(`deposit${period}\n`);
     cltoeoln();
     lprcat(`How much? [<b>*</b> for all] `);
     setNumberCallback(bank_deposit, true);
   }
 
   if (key == 'w') {
-    lprcat(`withdraw\n`);
+    lprcat(`withdraw${period}\n`);
     cltoeoln();
     lprcat(`How much? [<b>*</b> for all] `);
     setNumberCallback(bank_withdraw, true);
   }
 
   if (key == 's') {
-    lprcat(`sell\n`);
+    lprcat(`sell${period}\n`);
     cltoeoln();
     lprcat(`Which stone would you like to sell? [<b>*</b> for all] `);
     setCharCallback(bank_sell);
@@ -393,7 +393,7 @@ function bankmessage(str, duration) {
 
 function bank_deposit(amt) {
   if (amt == ESC) {
-    bankmessage(`  cancelled`, 700);
+    bankmessage(`  cancelled${period}`, 700);
     return 1;
   }
 
@@ -406,7 +406,7 @@ function bank_deposit(amt) {
   if (amt < 0) {
     bankmessage(`Sorry, but we can't take negative gold!`, 700);
   } else if (amt > player.GOLD) {
-    bankmessage(`You don't have that much.`, 700);
+    bankmessage(`You don't have that much${period}`, 700);
   } else {
     player.setGold(player.GOLD - amt);
     player.BANKACCOUNT += amt;
@@ -419,7 +419,7 @@ function bank_deposit(amt) {
 
 function bank_withdraw(amt) {
   if (amt == ESC) {
-    bankmessage(`  cancelled`, 700);
+    bankmessage(`  cancelled${period}`, 700);
     return 1;
   }
 
@@ -445,7 +445,7 @@ function bank_withdraw(amt) {
 
 function bank_sell(key) {
   if (key == ESC) {
-    bankmessage(`  cancelled`, 700);
+    bankmessage(`  cancelled${period}`, 700);
   } else if (key == '*') {
     var gems_sold = false;
     for (let i = 0; i < 26; i++) {
@@ -608,12 +608,12 @@ function parse_tradepost(key) {
     }
     if (item.matches(OSCROLL) && !isKnownScroll(item) ||
       item.matches(OPOTION) && !isKnownPotion(item)) {
-      storemessage(`Sorry, we can't accept unidentified objects`, 700);
+      storemessage(`Sorry, we can't accept unidentified objects${period}`, 700);
       //nap(2000);
       return 0;
     }
     if (item.isDrug()) {
-      storemessage(`Sorry, we can't accept contraband`, 700);
+      storemessage(`Sorry, we don't accept contraband${period}`, 700);
       //nap(2000);
       return 0;
     }
@@ -638,7 +638,7 @@ function parse_tradepost(key) {
         }
       }
       if (found == MAXITM) {
-        storemessage(`Sorry, we can't accept unidentified objects`, 700);
+        storemessage(`Sorry, we can't accept unidentified objects${period}`, 700);
         //nap(2000);
         return 0;
       }
@@ -663,7 +663,7 @@ function parse_tradepost(key) {
       }
     }
   } else {
-    storemessage(`Sorry, but we are not authorized to accept that item`, 700);
+    storemessage(`Sorry, but we are not authorized to accept that item${period}`, 700);
     return 0;
   }
 
@@ -691,7 +691,7 @@ function parse_sellitem(key) {
   if (key == ESC || key == 'N' || key == 'n') {
     cursor(63 + priceString.length, 24);
     setCharCallback(parse_tradepost);
-    lprcat(`no thanks`);
+    lprcat(`no thanks${period}`);
     //nap(500);
 
     napping = true;
@@ -702,7 +702,7 @@ function parse_sellitem(key) {
   if (key == 'Y' || key == 'y') {
     cursor(63 + priceString.length, 24);
     setCharCallback(parse_tradepost);
-    lprcat(`yes`);
+    lprcat(`yes${period}`);
 
     napping = true;
     setTimeout(storemessage, 700, ``);
@@ -793,7 +793,7 @@ function parse_class(key) {
   cursor(1, 21);
 
   if (i < 0 || i >= 8 || course[i]) {
-    lprcat(`\nSorry, but that class is filled`);
+    lprcat(`\nSorry, but that class is filled${period}`);
   } else if (player.GOLD < 250) {
     lprcat(`\nYou don't have enough gold to pay for that!`);
   } else {
@@ -811,7 +811,7 @@ function parse_class(key) {
         if (!course[0]) {
           player.setGold(player.GOLD + 250);
           time_used = -10000;
-          lprcat(`\nSorry, but this class has a prerequisite of Fighter Training I`);
+          lprcat(`\nSorry, but this class has a prerequisite of Fighter Training I${period}`);
           break;
         }
         player.setStrength(player.STRENGTH + 2);
@@ -828,7 +828,7 @@ function parse_class(key) {
         if (!course[2]) {
           player.setGold(player.GOLD + 250);
           time_used = -10000;
-          lprcat(`\nSorry, but this class has a prerequisite of Introduction to Wizardry`);
+          lprcat(`\nSorry, but this class has a prerequisite of Introduction to Wizardry${period}`);
           break;
         }
         player.setIntelligence(player.INTELLIGENCE + 2);
@@ -856,7 +856,7 @@ function parse_class(key) {
           lprcat(`\nWow! e = mc^2!`);
         } else {
           lprcat(`\nYour instructor told you that the Eye of Larn is rumored to be guarded`);
-          lprcat(`\nby a platinum dragon who possesses psionic abilities`);
+          lprcat(`\nby a platinum dragon who possesses psionic abilities${period}`);
         }
         break;
     }
@@ -1039,7 +1039,7 @@ function parse_lrs(key) {
   }
   if (key == 'p') {
     setNumberCallback(parse_lrs_pay, true);
-    lprcat(`pay taxes\nHow much? `);
+    lprcat(`pay taxes${period}\nHow much? `);
   }
 }
 
@@ -1049,11 +1049,11 @@ function parse_lrs_pay(amount) {
   amount = Number(amount);
 
   if (amount > player.GOLD) {
-    lprcat(`\n  You don't have that much\n`);
+    lprcat(`\n  You don't have that much${period}\n`);
   } else {
     amount = paytaxes(amount);
     player.setGold(player.GOLD - amount);
-    lprcat(`\n  You pay ${amount} gold pieces\n`);
+    lprcat(`\n  You pay ${amount} gold pieces${period}\n`);
   }
 
   setTimeout(olrs, 700);

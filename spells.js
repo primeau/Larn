@@ -54,7 +54,7 @@ function getSpellCode(key, showAllSpells) {
     return 0;
   }
   if (key == ESC) {
-    appendLog(`  aborted`);
+    appendLog(`  aborted${period}`);
     newSpellCode = null;
     return 1;
   }

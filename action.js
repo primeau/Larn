@@ -228,7 +228,7 @@ function act_eatcookie(index) {
         nomove = 1;
       }
       if (useindex <= -1) {
-        appendLog(` cancelled`);
+        appendLog(` cancelled${period}`);
         nomove = 1;
       }
     } else {

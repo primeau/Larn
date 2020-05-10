@@ -48,7 +48,7 @@ function act_read_something(index) {
         updateLog(`  You don't have item ${index}!`);
       }
       if (useindex <= -1) {
-        appendLog(` cancelled`);
+        appendLog(` cancelled${period}`);
         nomove = 1;
       }
     } else {
