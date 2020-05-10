@@ -15,8 +15,6 @@ const monstlevel = [5, 11, 17, 22, 27, 33, 39, 42, 46, 50, 53, 56];
 
 var monsterlist;
 
-//new Monster(`<font color='red'>B</font>`, `bat`, 1, 0, 1, 0, 0, 3, 0, 1, 1), // this works, but is not HTML5
-//new Monster(`<p style='color:red'>G</p>`, `gnome`, 1, 10, 1, 0, 0, 8, 30, 2, 2), // using CSS messes up the screen badly
 const LARN_monsterlist = [
   // 0
   /*          CHAR         NAME                     LV   AC  DAM ATT INT GOLD  HP   EXP     ARG */

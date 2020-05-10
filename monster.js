@@ -23,6 +23,8 @@ var Monster = function Monster(char, desc, level, armorclass, damage, attack, in
   this.hitpoints = hitpoints;
   this.awake = awake;
   this.moved = moved;
+
+  this.color = NO_COLOR;
 }
 
 
@@ -127,7 +129,12 @@ Monster.prototype = {
         return `<font color='crimson'>${demonchar[this.arg - DEMONLORD]}</font>`;
       } 
       else {
-        return monsterlist[monster].char;
+        if (monsterlist[this.arg].color) {
+          return `<font color='${monsterlist[this.arg].color}'>${monsterlist[monster].char}</font>`;
+        }
+        else {
+          return monsterlist[monster].char;
+        }
       }
     }
   },
@@ -823,12 +830,12 @@ function hitmonster(x, y) {
   var difficultyModifier = 0 /* getDifficulty() */ ;
 
   if ((rnd(20) < hitSkill - difficultyModifier) || (rnd(71) < 5)) /* need at least random chance to hit */ {
-    updateLog(`You hit the ` + (blind ? `monster` : monster));
+    updateLog(`You hit the ${blind ? `monster` : monster}${period}`);
     hitMonster = true;
     damage = fullhit(1);
     if (damage < 9999) damage = rnd(damage) + 1;
   } else {
-    updateLog(`You missed the ` + (blind ? `monster` : monster));
+    updateLog(`You missed the ${blind ? `monster` : monster}${period}`);
     hitMonster = false;
   }
   if (hitMonster) {

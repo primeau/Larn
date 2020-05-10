@@ -50,4 +50,13 @@ function setGameConfig() {
     // MISC NIT-PICKING FOR MESSAGES
     youFound = ULARN ? `You find` : `You have found`;
     period = ULARN ? `.` : ``;
+
+    // MONSTER COLOURS
+    monsterlist[WHITEDRAGON].color = `white`;
+    monsterlist[BRONZEDRAGON].color = `goldenrod`;
+    monsterlist[GREENDRAGON].color = `mediumseagreen`;
+    monsterlist[SILVERDRAGON].color = `darkgray`;
+    monsterlist[PLATINUMDRAGON].color = `gainsboro`;
+    monsterlist[REDDRAGON].color = `crimson`;
+
 }
