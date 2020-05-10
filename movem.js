@@ -710,11 +710,13 @@ function valid_monst_move(x, y, monster) {
    */
   monster_special = (monster.matches(VAMPIRE)) && (item.matches(OMIRROR));
 
-  //// ULARN TODO?? this looks ridiculous! -- jrp
-  // if (monster.matches(DEMONPRINCE) || monster.matches(LUCIFER)) {
-  //   /* walls and closed doors are no hindrance to a demon prince or above */
-  //   blocked = false;
-  // }
+  // scary! -- jrp
+  if (ULARN) {
+    if (monster.matches(DEMONPRINCE) || monster.matches(LUCIFER)) {
+      /* walls and closed doors are no hindrance to a demon prince or above */
+      blocked = false;
+    }
+  }
 
   if (at_entrance || blocked || monster_special) {
     /* Return false to indicate illegal position */
