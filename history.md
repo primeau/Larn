@@ -14,8 +14,10 @@ sprites created by Chris Yewchuck and Jerome Lecomte.
 
 1. [new] The Sword of Slashing doesn't rust.
 
+1. [new] Added the Amulet of Life Preservation from Ularn 1.6.
+
 1. [balance] Selling items is blocked once the potion has been picked up to
-prevent player from inflating their score by selling epic items.   
+prevent inflated scores by selling epic items.   
 
 1. [balance] Demons can no longer be teleported.
 
@@ -23,13 +25,19 @@ prevent player from inflating their score by selling epic items.
 a pit.
 
 1. [fix]/[new] When a monster is killed with a ranged attack, loot will now be 
-dropped beside the corpse instead of the player.
+dropped beside the corpse instead of our Hero.
 
 1. [fix] Bessman's Flailing Hammer could only be created on the first level
 of the dungeon.
 
 1. [fix] Jonathon Kocz fixed the potion of fire resistance, which has
 apparently never worked.
+
+1. [fix] Some missile spells could insta-kill demons when our Hero was wielding 
+Slayer.
+
+1. [fix] Some spells could behead monsters when our Hero was wielding the Vorpal 
+Blade.
 
 
 JS Larn 12.4.5
@@ -52,24 +60,24 @@ elsewhere on the same level.
 because it was so easy to work around in the original game.
 
 1. [balance] 'Smart' monsters in a closed room never moved. Now they follow
-player movement, except for demons, who stand guard to protect the Eye of Larn
-and potion of cure Dianthroritis.
+our Hero's movement, except for demons, who stand guard to protect the Eye of 
+Larn and potion of cure Dianthroritis.
 
-1. [balance] Players could donate or 'just pray' their way into unreasonable
+1. [balance] Our Hero could donate or 'just pray' their way into unreasonable
 WC/AC gains. Now altars will randomly crumble to dust.
 
-1. [balance] The list of things the player can wield is considerably shorter.
+1. [balance] The list of things our Hero can wield is considerably shorter.
 
 1. [balance] The chest and book at the store decline in quality as difficulty
 goes up.
 
 1. [balance] The scroll of Stealth was much too powerful. Now there is a chance
-a monster will notice when the player passes too closely. Affects difficulty 2
+a monster will notice when our Hero passes too closely. Affects difficulty 2
 and higher.
 
 1. [fix] It's possible to fall into a pit again. This was broken in 12.4.
 
-1. [fix] The last hit monster would chase the player from across the maze after
+1. [fix] The last hit monster would chase our Hero from across the maze after
 teleporting away. This bug could also cause other monsters to become 'possessed'
 and move very erratically in rare situations.
 
@@ -77,9 +85,9 @@ and move very erratically in rare situations.
 weapon against rusting monsters. Thanks to Will Oprisko for finding this one.
 
 1. [fix] Half-speed monsters (Hobgoblins, Ice Monsters, etc) didn't move
-properly when the player was running.
+properly when our Hero was running.
 
-1. [fix] After casting Stop Time, monsters would still chase the player when
+1. [fix] After casting Stop Time, monsters would still chase our Hero when
 running. 
 
 1. [un-fix] The history lesson from the College of Larn says that the Eye
