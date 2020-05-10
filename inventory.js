@@ -218,7 +218,7 @@ function take(item) {
       return true;
     }
   }
-  updateLog(`You can't carry anything else`);
+  updateLog(`You can't carry anything else${period}`);
   return false;
 }
 
@@ -265,7 +265,7 @@ function drop_object(index) {
 
   if (!pitflag && isItemAt(player.x, player.y)) {
     beep();
-    updateLog(`  There's something here already`);
+    updateLog(`  There's something here already${period}`);
     setMazeMode(true);
     return 1;
   }
@@ -278,7 +278,7 @@ function drop_object(index) {
 
   player.inventory[useindex] = null;
   if (pitflag) {
-    updateLog(`  It disappears down the pit.`);
+    updateLog(`  It disappears down the pit${period}`);
   } else {
     setItem(player.x, player.y, item);
   }
@@ -327,14 +327,14 @@ function drop_object_gold(amount) {
   var goldExists = itemAt(player.x, player.y).matches(OGOLDPILE);
   if (!pitflag && isItemAt(player.x, player.y) && !goldExists) {
     beep();
-    updateLog(`  There's something here already`);
+    updateLog(`  There's something here already${period}`);
     return 1;
   }
 
   player.setGold(player.GOLD - amount);
   updateLog(`  You drop ${Number(amount).toLocaleString()} gold pieces`);
   if (pitflag) {
-    updateLog(`  The gold disappears down the pit.`);
+    updateLog(`  The gold disappears down the pit${period}`);
   } else {
     var floorGoldAmount = 0;
     if (goldExists) {

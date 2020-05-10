@@ -109,7 +109,7 @@ function act_down_shaft() {
   }
 
   if (packweight() > 45 + 3 * (player.STRENGTH + player.STREXTRA)) {
-    updateLog(`  You slip and fall down the shaft`);
+    updateLog(`  You slip and fall down the shaft${period}`);
     lastnum = DIED_VOLCANO_SLIP; /* slipped on a volcano shaft */
     player.losehp(30 + rnd(20));
   }
@@ -135,7 +135,7 @@ function act_up_shaft() {
   }
 
   if (packweight() > (ULARN ? 40 : 45) + 5 * (player.STRENGTH + player.STREXTRA)) {
-    updateLog(`  You slip and fall down the shaft`);
+    updateLog(`  You slip and fall down the shaft${period}`);
     lastnum = DIED_VOLCANO_SLIP; /* slipped on a volcano shaft */
     player.losehp(15 + rnd(20));
     return;

@@ -54,7 +54,7 @@ function act_open_chest(x, y) {
     return;
   }
   if (rnd(101) < 40) {
-    updateLog(`  The chest explodes as you open it`);
+    updateLog(`  The chest explodes as you open it${period}`);
     beep();
     var damage = rnd(10);
     if (damage > player.hitpoints) damage = player.hitpoints;
@@ -92,7 +92,7 @@ function act_open_chest(x, y) {
       if (rnd(101) < 8) i--; // chance of another item
     }
   } else
-    updateLog(`  Nothing happens`);
+    updateLog(`  Nothing happens${period}`);
   return;
 }
 
@@ -113,34 +113,34 @@ function act_open_door(x, y) {
   if (rnd(11) < 7) {
     switch (door.arg) {
       case 6:
-        updateLog(`  The door makes an awful groan, but remains stuck`);
+        updateLog(`  The door makes an awful groan, but remains stuck${period}`);
         player.AGGRAVATE += rnd(400);
         break;
       case 8:
         // no level loss in ularn, fall through to electric shock
         if (!ULARN) {
-          updateLog(`  You feel drained`);
+          updateLog(`  You feel drained${period}`);
           player.loselevel();
           break;
         }
         // eslint-disable-next-line no-fallthrough
         case 7:
-          updateLog(`  You are jolted by an electric shock`);
+          updateLog(`  You are jolted by an electric shock!`);
           lastnum = DIED_ELECTRIC_SHOCK; /* fried by an electric shock */
           player.losehp(rnd(20));
           break;
 
         case 9:
-          updateLog(`  You suddenly feel weaker`);
+          updateLog(`  You suddenly feel weaker${period}`);
           player.setStrength(player.STRENGTH - 1);
           break;
 
         default:
-          updateLog(`  The door doesn't budge`);
+          updateLog(`  The door doesn't budge${period}`);
           return (0);
     }
   } else {
-    updateLog(`  The door opens`);
+    updateLog(`  The door opens${period}`);
     setItem(x, y, OOPENDOOR);
     return (1);
   }
@@ -176,7 +176,7 @@ function close_something(direction) {
       return;
     }
     setItem(x, y, createObject(OCLOSEDDOOR, 0));
-    updateLog(`  The door closes`);
+    updateLog(`  The door closes${period}`);
     if (direction == 0) {
       player.x = lastpx;
       player.y = lastpy;
@@ -192,7 +192,7 @@ function close_something(direction) {
 
 
 function outfortune() {
-  updateLog(`The cookie was delicious.`);
+  updateLog(`The cookie was delicious${period}`);
   if (player.BLINDCOUNT)
     return;
 
@@ -245,11 +245,11 @@ function act_eatcookie(index) {
 function act_rub_lamp() {
   cursors();
   // we can assume the player is over the lamp
-  updateLog("You rub the lamp.");
+  updateLog(`You rub the lamp${period}`);
 
   /* angry genie! */
   if (rnd(100) > 90) {
-    updateLog("  The magic genie was very upset at being disturbed!");
+    updateLog(`  The magic genie was very upset at being disturbed!`);
     lastnum = DIED_GENIE;
     player.losehp(player.HP / 2 + 1);
     return;
@@ -258,16 +258,16 @@ function act_rub_lamp() {
 
   /* higher level, better chance of spell */
   else if ((rnd(100) + player.LEVEL / 2) > 80) {
-    updateLog("  A magic genie appears!");
+    updateLog(`  A magic genie appears!`);
     updateLog(`  What spell would you like? : `);
 
     setCharCallback(wish); // capture spell keyboard input
 
   } else {
-    updateLog("  nothing happened.");
+    updateLog(`  nothing happened${period}`);
     /* bad luck */
     if (rnd(100) < 15) {
-      updateLog("The genie prefers not to be disturbed again!");
+      updateLog(`The genie prefers not to be disturbed again!`);
       forget();
       player.LAMP = false; /* chance of finding lamp again */
     }
@@ -291,11 +291,11 @@ function wish(key) {
 
   if (spellIndex >= 0) {
     updateLog(`Spell '<b>${spelcode[spellIndex]}</b>': ${spelname[spellIndex]}`);
-    updateLog(`  ${speldescript[spellIndex]}`);
+    updateLog(`  ${speldescript[spellIndex]}${period}`);
   } else {
-    updateLog("  The genie has never heard of such a spell!");
+    updateLog(`  The genie has never heard of such a spell!`);
   }
-  updateLog(`The genie prefers not to be disturbed again.`);
+  updateLog(`The genie prefers not to be disturbed again${period}`);
   forget();
   return 1;
 }

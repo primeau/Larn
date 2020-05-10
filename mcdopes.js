@@ -130,8 +130,8 @@ function nocash() {
 
 
 function doSpeed() {
-    appendLog(" snort!");
-    updateLog("Ohwowmanlikethingstotallyseemtoslowdown!");
+    appendLog(` snort!`);
+    updateLog(`Ohwowmanlikethingstotallyseemtoslowdown!`);
     player.updateHasteSelf(200 + player.LEVEL);
     player.HALFDAM += 300 + rnd(200);
     player.setIntelligence(player.INTELLIGENCE - 2);
@@ -144,8 +144,8 @@ function doSpeed() {
 
 
 function eatShrooms() {
-    appendLog(" eat!");
-    updateLog("Things start to get real spacey...");
+    appendLog(` eat!`);
+    updateLog(`Things start to get real spacey...`);
     player.HASTEMONST += rnd(75) + 25;
     player.CONFUSE += 30 + rnd(10);
     player.setWisdom(player.WISDOM + 2);
@@ -156,8 +156,8 @@ function eatShrooms() {
 
 
 function dropAcid() {
-    appendLog(" eat!");
-    updateLog("You are now frying your ass off!");
+    appendLog(` eat!`);
+    updateLog(`You are now frying your ass off!`);
     player.CONFUSE += 30 + rnd(10);
     player.setIntelligence(player.INTELLIGENCE + 2);
     player.setWisdom(player.WISDOM + 2);
@@ -173,8 +173,8 @@ function dropAcid() {
 
 
 function smokeHash() {
-    appendLog(" smoke!");
-    updateLog("WOW! You feel stooooooned...");
+    appendLog(` smoke!`);
+    updateLog(`WOW! You feel stooooooned...`);
     player.HASTEMONST += rnd(75) + 25;
     player.setIntelligence(player.INTELLIGENCE + 2);
     player.setWisdom(player.WISDOM + 2);
@@ -187,8 +187,8 @@ function smokeHash() {
 
 
 function doCoke() {
-    appendLog(" snort!");
-    updateLog("Your nose begins to bleed!");
+    appendLog(` snort!`);
+    updateLog(`Your nose begins to bleed!`);
     player.setDexterity(player.DEXTERITY - 2);
     player.setConstitution(player.CONSTITUTION - 2);
     player.setCharisma(player.CHARISMA + 3);

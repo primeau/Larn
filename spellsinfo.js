@@ -281,20 +281,20 @@ const LARN_spelweird = [
  // JRP i would love to use arrow functions here, but it's way too new of a feature
 var spelmes = [ 
 /*  0 */ ``, /* spell has no effect on the monster */
-/*  1 */ function(monster) { return `the web had no effect on the ${monster}`; },
-/*  2 */ function(monster) { return `the ${monster} changed shape to avoid the web`; },
-/*  3 */ function(monster) { return `the ${monster} isn't afraid of you`; },
-/*  4 */ function(monster) { return `the ${monster} isn't affected`; },
-/*  5 */ function(monster) { return `the ${monster} can see you with its infravision`; },
-/*  6 */ function(monster) { return `the ${monster} vaporizes your missile`; },
-/*  7 */ function(monster) { return `your missile bounces off the ${monster}`; },
-/*  8 */ function(monster) { return `the ${monster} doesn't sleep`; },
-/*  9 */ function(monster) { return `the ${monster} resists`; },
-/* 10 */ function(monster) { return `the ${monster} can't hear the noise`; },
-/* 11 */ function(monster) { return `the ${monster}'s tail cuts it free of the web`; },
-/* 12 */ function(monster) { return `the ${monster} burns through the web`; },
-/* 13 */ function(monster) { return `your missiles pass right through the ${monster}`; },
-/* 14 */ function(monster) { return `the ${monster} sees through your illusions`; },
+/*  1 */ function(monster) { return `the web had no effect on the ${monster}${period}`; },
+/*  2 */ function(monster) { return `the ${monster} changed shape to avoid the web${period}`; },
+/*  3 */ function(monster) { return `the ${monster} isn't afraid of you${period}`; },
+/*  4 */ function(monster) { return `the ${monster} isn't affected${period}`; },
+/*  5 */ function(monster) { return `the ${monster} can see you with its infravision${period}`; },
+/*  6 */ function(monster) { return `the ${monster} vaporizes your missile${period}`; },
+/*  7 */ function(monster) { return `your missile bounces off the ${monster}${period}`; },
+/*  8 */ function(monster) { return `the ${monster} doesn't sleep${period}`; },
+/*  9 */ function(monster) { return `the ${monster} resists${period}`; },
+/* 10 */ function(monster) { return `the ${monster} can't hear the noise${period}`; },
+/* 11 */ function(monster) { return `the ${monster}'s tail cuts it free of the web${period}`; },
+/* 12 */ function(monster) { return `the ${monster} burns through the web${period}`; },
+/* 13 */ function(monster) { return `your missiles pass right through the ${monster}${period}`; },
+/* 14 */ function(monster) { return `the ${monster} sees through your illusions${period}`; },
 /* 15 */ function(monster) { return `the ${monster} loves the cold!`; },
 /* 16 */ function(monster) { return `the ${monster} loves the water!`; },
 /* 17 */ function(monster) { return `the demon is terrified of the ${monster}!`; },
@@ -325,15 +325,15 @@ const PER = 38;
 
 
 const attackmessage = [];
-attackmessage[MLE] = function(monster, i) { return `  Your missile${(player.LEVEL >= 2) ? `s` : ``} hit the ${monster}`; };
-attackmessage[SLE] = function(monster, i) { return `  While the ${monster} slept, you smashed it ${i} times`; };
-attackmessage[SSP] = function(monster, i) { return `  The sound damages the ${monster}`; };
-attackmessage[WEB] = function(monster, i) { return `  While the ${monster} is entangled, you hit ${i} times`; };
+attackmessage[MLE] = function(monster, i) { return `  Your missile${(player.LEVEL >= 2) ? `s` : ``} hit the ${monster}${period}`; };
+attackmessage[SLE] = function(monster, i) { return `  While the ${monster} slept, you smashed it ${i} times${period}`; };
+attackmessage[SSP] = function(monster, i) { return `  The sound damages the ${monster}${period}`; };
+attackmessage[WEB] = function(monster, i) { return `  While the ${monster} is entangled, you hit ${i} times${period}`; };
 attackmessage[PHA] = function(monster, i) { return `  The ${monster} believed!`; };
-attackmessage[BAL] = function(monster, i) { return `  The fireball hits the ${monster}`; };
-attackmessage[CLD] = function(monster, i) { return `  Your cone of cold strikes the ${monster}`; };
-attackmessage[DRY] = function(monster, i) { return `  The ${monster} shrivels up`; };
-attackmessage[LIT] = function(monster, i) { return `  A lightning bolt hits the ${monster}`; };
+attackmessage[BAL] = function(monster, i) { return `  The fireball hits the ${monster}${period}`; };
+attackmessage[CLD] = function(monster, i) { return `  Your cone of cold strikes the ${monster}${period}`; };
+attackmessage[DRY] = function(monster, i) { return `  The ${monster} shrivels up${period}`; };
+attackmessage[LIT] = function(monster, i) { return `  A lightning bolt hits the ${monster}${period}`; };
 attackmessage[DRL] = function(monster, i) { return ``;  };
-attackmessage[FGR] = function(monster, i) { return `  The ${monster}'s heart stopped`; };
-attackmessage[SUM] = function(monster, i) { return `  The demon strikes at the ${monster}`; };
+attackmessage[FGR] = function(monster, i) { return `  The ${monster}'s heart stopped${period}`; };
+attackmessage[SUM] = function(monster, i) { return `  The demon strikes at the ${monster}${period}`; };

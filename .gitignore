@@ -3,6 +3,8 @@
 Icon
 fullstory.js
 config
+tools
 node_modules
 *.json
 aws/aws-sdk.js
+util/ga.js

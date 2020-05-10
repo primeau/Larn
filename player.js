@@ -264,7 +264,7 @@ var Player = function Player() {
       if (player.LEVEL != oldLevel) {
         beep();
         changedLevel = millis();
-        updateLog(`Welcome to level ` + player.LEVEL); /* if we changed levels */
+        updateLog(`Welcome to level ${player.LEVEL}${period}`); /* if we changed levels */
 
         switch (player.LEVEL) {
           case 94:
@@ -387,7 +387,7 @@ var Player = function Player() {
           updateLog(`Your sight returns, and everything looks crystal-clear!`);
         }
         else {
-          updateLog(`Your sight returns but everything looks dull and faded.`);
+          updateLog(`Your sight returns but everything looks dull and faded${period}`);
         }
       }
 
@@ -893,7 +893,7 @@ function wield(index) {
     }
     if (index == '-') {
       if (player.WIELD) {
-        updateLog(`You unwield your weapon`);
+        updateLog(`You unwield your weapon${period}`);
         player.WIELD = null;
       }
       setMazeMode(true);
@@ -929,7 +929,7 @@ function wield(index) {
     return 1;
   }
 
-  // ULARN: can't wield and wear at the same time
+  // ULARN TODO: can't wield and wear at the same time
   // but there was no corresponding code to prevent wearing, then wielding
   // so i'm not including this
   // if (ULARN) {
@@ -1000,7 +1000,7 @@ function wear(index) {
   // I was going to add this for LARN/ULARN but it's kind of annoying
   // if (ULARN) {
   //   if (player.WEAR) {
-  //     updateLog(`  You are already wearing some armor.`);
+  //     updateLog(`  You are already wearing some armor${period}`);
   //     setMazeMode(true);
   //     return 1;
   //   }
@@ -1025,7 +1025,7 @@ function wear(index) {
       // I was going to add this for LARN/ULARN but it's kind of annoying
       // if (ULARN) {
       //   if (player.SHIELD) {
-      //     updateLog(`  You are already wearing a shield.`);
+      //     updateLog(`  You are already wearing a shield${period}`);
       //     setMazeMode(true);
       //     return 1;
       //   }

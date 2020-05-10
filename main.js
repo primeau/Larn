@@ -593,14 +593,10 @@ function wizardmode(password) {
     return 1;
   }
 
-  // other valid passwords to add in the future
-  // main(){}
-  // frobozz
-  //
-  // amiga?
-  // ularn 1.6?
-  // ularn 1.5?
-  if (password === 'pvnert(x)') {
+  // there have been many wizard passwords over the years
+  let wizardPasswords = [`pvnert(x)`, `frobozz`, `fizban`, `main(){}`, `amiga`];
+
+  if (wizardPasswords.includes(password)) {
     //updateLog(`disabling wizard mode`);
     wizard = 1;
 
@@ -680,7 +676,7 @@ function wizardmode(password) {
 
     }
   } else {
-    updateLog(`Sorry`);
+    updateLog(`Sorry${period}`);
     return 1;
   }
 

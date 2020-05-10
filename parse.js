@@ -488,9 +488,9 @@ function parse(key) {
   if (key == 'P') {
     nomove = 1;
     if (outstanding_taxes > 0)
-      updateLog(`You presently owe ${outstanding_taxes} gold pieces in taxes`);
+      updateLog(`You presently owe ${outstanding_taxes} gold pieces in taxes${period}`);
     else
-      updateLog(`You do not owe any taxes`);
+      updateLog(`You do not owe any taxes${period}`);
     return;
   }
 
@@ -548,13 +548,13 @@ function parse(key) {
   if (key == 'T') {
     if (player.SHIELD) {
       player.SHIELD = null;
-      updateLog(`Your shield is off`);
+      updateLog(`Your shield is off${period}`);
     } else
     if (player.WEAR) {
       player.WEAR = null;
-      updateLog(`Your armor is off`);
+      updateLog(`Your armor is off${period}`);
     } else
-      updateLog(`You aren't wearing anything`);
+      updateLog(`You aren't wearing anything${period}`);
     return;
   }
 
@@ -580,7 +580,7 @@ function parse(key) {
       return;
     }
     cursors();
-    updateLog(`As yet, you don't have enough experience to use teleportation`);
+    updateLog(`As yet, you don't have enough experience to use teleportation${period}`);
     return;
   }
 
@@ -638,13 +638,13 @@ function parse(key) {
           case OPIT.id:
           case OELEVATORUP.id:
           case OELEVATORDOWN.id:
-            updateLog(`It's ${trap}`);
+            updateLog(`It's ${trap}${period}`);
             flag++;
         }
       }
     }
     if (flag == 0)
-      updateLog(`No traps are visible`);
+      updateLog(`No traps are visible${period}`);
     return;
   }
 

@@ -47,4 +47,7 @@ function setGameConfig() {
         DEATH_REASONS.set(DIED_BOTTOMLESS_PIT, `fell into a pit to HELL`);
     }
 
+    // MISC NIT-PICKING FOR MESSAGES
+    youFound = ULARN ? `You find` : `You have found`;
+    period = ULARN ? `.` : ``;
 }

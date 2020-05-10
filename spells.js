@@ -88,7 +88,7 @@ function cast(key) {
     speldamage(spellnum);
   } else {
     nomove = 0;
-    updateLog(`  Nothing Happened `);
+    updateLog(`  Nothing Happened${period}`);
   }
   newSpellCode = null;
   return 1;
@@ -109,7 +109,7 @@ function speldamage(x) {
 
   /* not if time stopped */
   if (player.TIMESTOP) {
-    updateLog(`  It didn't seem to work`);
+    updateLog(`  It didn't seem to work${period}`);
     return;
   }
 
@@ -121,7 +121,7 @@ function speldamage(x) {
   }
   if (playerLev * 3 + 2 < x) {
     nomove = 0;
-    updateLog(`  Nothing happens.  You seem inexperienced at this`);
+    updateLog(`  Nothing happens.  You seem inexperienced at this${period}`);
     return;
   }
 
@@ -401,7 +401,7 @@ function speldamage(x) {
       if (rnd(100) > 30) {
         prepare_direction_event(spell_summon);
       } else if (rnd(100) > 15) {
-        updateLog(`  Nothing seems to have happened`);
+        updateLog(`  Nothing seems to have happened${period}`);
       } else {
         updateLog(`  The demon turned on you and vanished!`);
         beep();
@@ -555,7 +555,7 @@ function spell_finger(direction) {
   if (player.WISDOM > rnd(10) + 10) {
     direct(FGR, direction, 2000, 0);
   } else {
-    updateLog(`  It didn't work`);
+    updateLog(`  It didn't work${period}`);
   }
 }
 
@@ -781,7 +781,7 @@ function direct(spnum, direction, dam, arg) {
       }
       return;
     } else if (spnum == WEB) /* web */ {
-      updateLog(`  You get stuck in your own web! `);
+      updateLog(`  You get stuck in your own web!`);
       beep();
       arg += 2;
       while (arg-- > 0) {
@@ -920,7 +920,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       level < VBOTTOM - (ULARN ? 2 : 0) &&
       x < MAXX - 1 && y < MAXY - 1 &&
       x != 0 && y != 0) {
-      updateLog(`  The wall crumbles`);
+      updateLog(`  The wall crumbles${period}`);
       setItem(x, y, OEMPTY);
 
       updateWalls(x, y, 1);
@@ -931,7 +931,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     cursors();
     updateLog(str(`door`));
     if (dam >= 40) {
-      updateLog(`  The door is blasted apart`);
+      updateLog(`  The door is blasted apart${period}`);
       setItem(x, y, OEMPTY);
     }
     dam = 0;
@@ -942,7 +942,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       var doCrumble = getDifficulty() < 3;
       if (ULARN) doCrumble = getDifficulty() <= 3 && rnd(60) < 30;
       if (doCrumble) {
-        updateLog(`  The statue crumbles`);
+        updateLog(`  The statue crumbles${period}`);
         setItem(x, y, createObject(OBOOK, level));
       }
     }
@@ -1191,7 +1191,7 @@ function genmonst(key) {
             break;
       }
 
-      updateLog(`  There will be no more ${monstname}`);
+      updateLog(`  There will be no more ${monstname}${period}`);
 
       newcavelevel(level); /* now wipe out monsters on this level */
       paint();

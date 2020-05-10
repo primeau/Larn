@@ -213,7 +213,7 @@ function enchantarmor(enchant_source) {
   } else {
     cursors();
     beep();
-    if (enchant_source != ENCH_FOUNTAIN) updateLog(`You feel a sense of loss.`);
+    if (enchant_source != ENCH_FOUNTAIN) updateLog(`You feel a sense of loss${period}`);
     return false;
   }
   if (!armor.matches(OSCROLL) && !armor.matches(OPOTION)) {
@@ -235,7 +235,7 @@ function enchantarmor(enchant_source) {
       if (armor.arg >= 10) {
         if (enchant_source == ENCH_ALTAR) {
           armor.arg--;
-          updateLog(`Your ${armor.toString(true)} glows briefly.`);
+          updateLog(`Your ${armor.toString(true)} glows briefly${period}`);
           return false;
         } else if (rnd(10) <= 9) {
           destroyInventory(armor);
@@ -243,7 +243,7 @@ function enchantarmor(enchant_source) {
           return false;
         }
       } else {
-        updateLog(`  Your ${armorMessage} glows for a moment.`);
+        updateLog(`  Your ${armorMessage} glows for a moment${period}`);
         return true;
       }
     } // end ULARN
@@ -264,8 +264,8 @@ function enchweapon(enchant_source) {
     cursors();
     beep();
     if (!enchant_source != ENCH_FOUNTAIN) {
-      if (ULARN) updateLog(`  You feel depressed.`);
-      else updateLog(`  You feel a sense of loss`);
+      if (ULARN) updateLog(`  You feel depressed${period}`);
+      else updateLog(`  You feel a sense of loss${period}`);
     }
     return false;
   }
@@ -286,7 +286,7 @@ function enchweapon(enchant_source) {
       if (weapon.arg >= 10 && rnd(10) <= 9) {
         if (enchant_source == ENCH_ALTAR) {
           weapon.arg--;
-          updateLog(`  Your weapon glows a little.`);
+          updateLog(`  Your weapon glows a little${period}`);
           return false;
         } else {
           destroyInventory(weapon);
@@ -294,12 +294,12 @@ function enchweapon(enchant_source) {
           return false;
         }
       } else {
-        updateLog(`  Your weapon glows for a moment.`);
+        updateLog(`  Your weapon glows for a moment${period}`);
         return true;
       }
     } // end ULARN
     else {
-      updateLog(`  You feel your weapon vibrate for a moment`);
+      updateLog(`  You feel your weapon vibrate for a moment${period}`);
       return true;
     }
   }

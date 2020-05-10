@@ -68,9 +68,9 @@ function regen() {
   if (player.PROTECTIONTIME) player.updateProtectionTime(-1);
 
   if (player.GLOBE)          if (--player.GLOBE <= 0)          player.setMoreDefenses(player.MOREDEFENSES - 10);
-  if (player.BLINDCOUNT)     if (--player.BLINDCOUNT <= 0)     updateLog(`The blindness lifts`);
-  if (player.CONFUSE)        if (--player.CONFUSE <= 0)        updateLog(`You regain your senses`);
-  if (player.HALFDAM)        if (--player.HALFDAM <= 0)        updateLog(`You now feel better`);
+  if (player.BLINDCOUNT)     if (--player.BLINDCOUNT <= 0)     updateLog(`The blindness lifts${period}`);
+  if (player.CONFUSE)        if (--player.CONFUSE <= 0)        updateLog(`You regain your senses${period}`);
+  if (player.HALFDAM)        if (--player.HALFDAM <= 0)        updateLog(`You now feel better${period}`);
 
   if (player.AGGRAVATE)      --player.AGGRAVATE;
   if (player.AWARENESS)      if (!isCarrying(OORB)) --player.AWARENESS;
@@ -85,7 +85,7 @@ function regen() {
     }
     if (--player.SEEINVISIBLE <= 0) {
       if (!player.BLINDCOUNT) {
-        updateLog(`You feel your vision return to normal`);
+        updateLog(`You feel your vision return to normal${period}`);
       }
     }
   }

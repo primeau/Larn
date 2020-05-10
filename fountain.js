@@ -29,11 +29,11 @@ function act_drink_fountain() {
       player.losehp(hitloss);
     } else if (x < 14) {
       player.HALFDAM += 200 + rnd(200);
-      updateLog(`  The water makes you vomit.`);
+      updateLog(`  The water makes you vomit${period}`);
     } else if (x < 17) {
       quaffpotion(createObject(OPOTION, 17), false); /* giant strength, but don't know the potion */
     } else if (x < 45) {
-      updateLog(`  Nothing seems to have happened`);
+      updateLog(`  Nothing seems to have happened${period}`);
     } else if (rnd(3) != 2) {
       fntchange(1); /*  change char levels upward   */
     } else {
@@ -42,11 +42,11 @@ function act_drink_fountain() {
   } else {
     if (x < 7) {
       player.HALFDAM += 200 + rnd(200);
-      updateLog(`  You feel a sickness coming on`);
+      updateLog(`  You feel a sickness coming on${period}`);
     } else if (x < 13) {
       quaffpotion(createObject(OPOTION, 23), false); /* see invisible, but don't know the potion */
     } else if (x < 45) {
-      updateLog(`  Nothing seems to have happened`);
+      updateLog(`  Nothing seems to have happened${period}`);
     } else if (rnd(3) != 2) {
       fntchange(1); /*  change char levels upward   */
     } else {
@@ -55,7 +55,7 @@ function act_drink_fountain() {
   }
 
   if (rnd(12) < 3) {
-    updateLog(`  The fountains bubbling slowly quiets`);
+    updateLog(`  The fountains bubbling slowly quiets${period}`);
     setItem(player.x, player.y, ODEADFOUNTAIN); /* dead fountain */
     player.level.know[player.x][player.y] = 0;
   }
@@ -78,7 +78,7 @@ function act_wash_fountain() {
     lastnum = DIED_BAD_WATER; /* drank some poisonous water */
     player.losehp(hitloss);
   } else if (rnd(100) < 29) {
-    if (ULARN) updateLog(`  You are now clean.`);
+    if (ULARN) updateLog(`  You are now clean${period}`);
     else updateLog(`  You got the dirt off!`);
 
     /* 12.4.5
@@ -96,18 +96,18 @@ function act_wash_fountain() {
 
   } else if (rnd(100) < 31) {
     if (ULARN) updateLog(`  This water seems to be hard water! The dirt didn't come off!`);
-    else updateLog(`  This water needs soap -- the dirt didn't come off.`);
+    else updateLog(`  This water needs soap -- the dirt didn't come off${period}`);
   } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {
     createmonster(WATERLORD); /*    make water lord     */
   } else {
-    updateLog(`  Nothing seems to have happened`);
+    updateLog(`  Nothing seems to have happened${period}`);
   }
 
   /* 12.4.5
      since getting the dirt off is a good bonus, need to limit it somehow
   */
   if (rnd(12) < 3) {
-    updateLog(`  The fountains bubbling slowly quiets`);
+    updateLog(`  The fountains bubbling slowly quiets${period}`);
     setItem(player.x, player.y, ODEADFOUNTAIN); /* dead fountain */
     player.level.know[player.x][player.y] = 0;
   }
@@ -212,7 +212,7 @@ function exclaim(num) {
   if (num > 1) {
     appendLog(`s!`);
   } else {
-    appendLog('!');
+    appendLog(`!`);
   }
 }
 
