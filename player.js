@@ -132,7 +132,7 @@ var Player = function Player() {
     if (amiga_mode)
       return `${DIV_START}player${DIV_END}`;
     else if (retro_mode) {
-      return `<b><font color='lightgray'>@</font></b>`;
+      return `<b><font color='white'>@</font></b>`;
     } else {
       return `▓`;
     }

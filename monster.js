@@ -129,8 +129,8 @@ Monster.prototype = {
         return `<font color='crimson'>${demonchar[this.arg - DEMONLORD]}</font>`;
       } 
       else {
-        if (monsterlist[this.arg].color) {
-          return `<font color='${monsterlist[this.arg].color}'>${monsterlist[monster].char}</font>`;
+        if (show_color && monsterlist[monster].color) {
+          return `<font color='${monsterlist[monster].color}'>${monsterlist[monster].char}</font>`;
         }
         else {
           return monsterlist[monster].char;

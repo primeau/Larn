@@ -49,8 +49,9 @@ function DEVMODE() {
     // gtime = 30001;
     player.GOLD = 250000;
 
-    // createmonster(MIMIC,30, 0);
-    // createmonster(NYMPH);
+    // for (let index = 1; index < monsterlist.length; index++) {
+    //     createmonster(index, 1+index, 2);
+    // }
     // revealLevel();
 
   
