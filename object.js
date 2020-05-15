@@ -322,19 +322,20 @@ const OLRS = new DungeonObject(80, `L`, `4`, `L`, `lightgray`, BOLD, `the Larn R
 const OBANK = new DungeonObject(16, `$`, `5`, `$`, `gold`, BOLD, `the bank of Larn`, NO_CARRY);
 const OBANK2 = new DungeonObject(15, `$`, `5`, `$`, `gold`, BOLD, `the Nth branch of the Bank of Larn`, NO_CARRY);
 const OSCHOOL = new DungeonObject(10, `+`, `6`, `+`, `darkorange`, BOLD, `the College of Larn`, NO_CARRY);
-const OENTRANCE = new DungeonObject(54, `E`, `8`, `E`, `mediumseagreen`, BOLD, `the dungeon entrance`, NO_CARRY);
+const OENTRANCE = new DungeonObject(54, `E`, `8`, `E`, `yellowgreen`, BOLD, `the dungeon entrance`, NO_CARRY);
 const OVOLDOWN = new DungeonObject(55, `V`, `9`, `V`, `crimson`, BOLD, `a volcanic shaft leaning downward`, NO_CARRY);
 // ULARN
 const OPAD = new DungeonObject(100, `@`, `@`, `@`, `lightgreen`, BOLD, `Dealer McDope's Hideout!`, NO_CARRY);
 
 // dungeon features
 const OWALL = new DungeonObject(21, `▒`, `▒`, `▒`, NO_COLOR, NO_BOLD, `a wall`, NO_CARRY);
-const OALTAR = new DungeonObject(1, `A`, `:`, `A`, `orchid`, BOLD, `a holy altar`, NO_CARRY);
+// const OALTAR = new DungeonObject(1, `A`, `:`, `A`, `orchid`, BOLD, `a holy altar`, NO_CARRY);
+const OALTAR = new DungeonObject(1, `A`, `:`, `A`, `lightslategray`, BOLD, `a holy altar`, NO_CARRY);
 const OTHRONE = new DungeonObject(2, `T`, `\\`, `T`, `gold`, BOLD, `a handsome jewel encrusted throne`, NO_CARRY);
 const ODEADTHRONE = new DungeonObject(79, `t`, `/`, `t`, `lightgray`, BOLD, `a massive throne`, NO_CARRY);
 const OPIT = new DungeonObject(4, `P`, `^`, `P`, `sandybrown`, BOLD, `a pit`, NO_CARRY);
-const OVOLUP = new DungeonObject(56, `V`, `9`, `V`, `mediumseagreen`, BOLD, `the base of a volcanic shaft`, NO_CARRY);
-const OSTAIRSUP = new DungeonObject(5, `&lt`, `&lt`, `%`, `mediumseagreen`, BOLD, `a staircase going up`, NO_CARRY); // use &lt to prevent bugginess when dropping a ! or ? to the right
+const OVOLUP = new DungeonObject(56, `V`, `9`, `V`, `yellowgreen`, BOLD, `the base of a volcanic shaft`, NO_CARRY);
+const OSTAIRSUP = new DungeonObject(5, `&lt`, `&lt`, `%`, `yellowgreen`, BOLD, `a staircase going up`, NO_CARRY); // use &lt to prevent bugginess when dropping a ! or ? to the right
 const OSTAIRSDOWN = new DungeonObject(13, `&gt`, `&gt`, `%`, `sandybrown`, BOLD, `a staircase going down`, NO_CARRY);
 const OFOUNTAIN = new DungeonObject(7, `F`, `{`, `F`, `cornflowerblue`, BOLD, `a bubbling fountain`, NO_CARRY);
 const ODEADFOUNTAIN = new DungeonObject(17, `f`, `}`, `f`, `lightgray`, BOLD, `a dead fountain`, NO_CARRY);
@@ -343,7 +344,7 @@ const OMIRROR = new DungeonObject(11, `M`, `|`, `M`, `silver`, BOLD, `a mirror`,
 const OOPENDOOR = new DungeonObject(19, `O`, `'`, `O`, `lightgray`, BOLD, `an open door`, NO_CARRY);
 const OCLOSEDDOOR = new DungeonObject(20, `D`, `+`, `D`, `lightgray`, BOLD, `a closed door`, NO_CARRY);
 // ULARN
-const OELEVATORUP = new DungeonObject(6, `_`, `_`, `_`, `mediumseagreen`, BOLD, `an express elevator going up`, NO_CARRY);
+const OELEVATORUP = new DungeonObject(6, `_`, `_`, `_`, `yellowgreen`, BOLD, `an express elevator going up`, NO_CARRY);
 const OELEVATORDOWN = new DungeonObject(14, `_`, `_`, `_`, `sandybrown`, BOLD, `an express elevator going down`, NO_CARRY);
 
 // traps
@@ -359,12 +360,12 @@ const OIVTRAPDOOR = new DungeonObject(76, OEMPTY.char, OEMPTY.char, OEMPTY.char,
 // dungeon items
 const OGOLDPILE = new DungeonObject(18, `*`, `$`, `*`, `gold`, BOLD, `some gold`, CARRY, 0);
 const OSCROLL = new DungeonObject(41, `?`, `?`, `?`, `tan`, BOLD, `a magic scroll`, CARRY);
-const OPOTION = new DungeonObject(42, `!`, `!`, `!`, `mediumpurple`, BOLD, `a magic potion`, CARRY);
+const OPOTION = new DungeonObject(42, `!`, `!`, `!`, `plum`, BOLD, `a magic potion`, CARRY);
 const OBOOK = new DungeonObject(43, `B`, `?`, `B`, `darkgoldenrod`, BOLD, `a book`, CARRY);
 const OCHEST = new DungeonObject(44, `C`, `&`, `C`, `khaki`, BOLD, `a chest`, CARRY);
 const ODIAMOND = new DungeonObject(50, `@`, `*`, `&lt`, `white`, BOLD, `a brilliant diamond`, CARRY);
 const ORUBY = new DungeonObject(51, `@`, `*`, `&lt`, `crimson`, BOLD, `a ruby`, CARRY);
-const OEMERALD = new DungeonObject(52, `@`, `*`, `&lt`, `seagreen`, BOLD, `an enchanting emerald`, CARRY);
+const OEMERALD = new DungeonObject(52, `@`, `*`, `&lt`, `springgreen`, BOLD, `an enchanting emerald`, CARRY);
 const OSAPPHIRE = new DungeonObject(53, `@`, `*`, `&lt`, `dodgerblue`, BOLD, `a sparkling sapphire`, CARRY);
 const OCOOKIE = new DungeonObject(83, `c`, `,`, `c`, `tan`, BOLD, `a fortune cookie`, CARRY);
 

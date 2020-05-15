@@ -52,17 +52,17 @@ function setGameConfig() {
     period = ULARN ? `.` : ``;
 
     // MONSTER COLOURS
-    if (ULARN) monsterlist[LEMMING].color = null; else monsterlist[BAT].color = `brown`;
+    if (ULARN) monsterlist[LEMMING].color = `rosybrown`; else monsterlist[BAT].color = `rosybrown`;
     monsterlist[GNOME].color = `darkkhaki`;
     monsterlist[HOBGOBLIN].color = `salmon`;
     monsterlist[JACKAL].color = `sandybrown`;
-    monsterlist[KOBOLD].color = `indianred`;
+    monsterlist[KOBOLD].color = `brown`;
     monsterlist[ORC].color = `tan`;
     monsterlist[SNAKE].color = `olivedrab`;
     monsterlist[CENTIPEDE].color = `orangered`;
     monsterlist[JACULI].color = `burlywood`;
     monsterlist[TROGLODYTE].color = `navajowhite`;
-    monsterlist[ANT].color = `tomato`;
+    monsterlist[ANT].color = `indianred`;
     monsterlist[EYE].color = `mediumorchid`;
     monsterlist[LEPRECHAUN].color = `mediumseagreen`;
     monsterlist[NYMPH].color = `lightpink`;
@@ -92,16 +92,16 @@ function setGameConfig() {
     monsterlist[VAMPIRE].color = `slategray`;
     monsterlist[INVISIBLESTALKER].color = null;
     monsterlist[POLTERGEIST].color = `lavender`;
-    monsterlist[DISENCHANTRESS].color = `royalblue`;
+    monsterlist[DISENCHANTRESS].color = `antiquewhite`;
     monsterlist[SHAMBLINGMOUND].color = `olivedrab`;
-    monsterlist[YELLOWMOLD].color = `yellow`;
+    monsterlist[YELLOWMOLD].color = `palegoldenrod`;
     monsterlist[UMBERHULK].color = `peru`;
-    monsterlist[GNOMEKING].color = `deepskyblue`;
+    monsterlist[GNOMEKING].color = `steelblue`;
     monsterlist[MIMIC].color = `beige`;
     monsterlist[WATERLORD].color = `cornflowerblue`;
     monsterlist[BRONZEDRAGON].color = `goldenrod`;
-    monsterlist[GREENDRAGON].color = `mediumseagreen`;
-    monsterlist[PURPLEWORM].color = `mediumpurple`;
+    monsterlist[GREENDRAGON].color = `palegreen`;
+    monsterlist[PURPLEWORM].color = `purple`;
     monsterlist[XVART].color = `teal`;
     monsterlist[SPIRITNAGA].color = `mediumslateblue`;
     monsterlist[SILVERDRAGON].color = `paleturquoise`;
