@@ -31,13 +31,18 @@ Someone made 12.4 through 12.4.2, possibly copx according to
 roguebasin. Edwin Denicholas took 12.4 alpha 2 and caressed it into
 12.4.3 for Win32. Version 12.4.4 includes a bugfix from Joe Neff.
 
-Other editions of Larn have been distributed by others, namely
-LARN13, Ultra-Larn, and NLarn.
+Ularn was written in 1987 by Phil Cordier at UC Santa Cruz. 
+Version 1.5.1 was released by David Richerby and future 1.5.x versions
+were developed by Josh Brandt. Version 1.6 was a Windows 32 conversion 
+and refactor by Julian Olds. Ularn is currently maintained by Josh Bressers.
 
-This is a JavaScript port of Larn, by Jason Primeau. It primarily uses
-the 12.4.4 codebase and includes a couple of small fixes, a global scoreboard,
-and minor updates to balance the game at higher difficulties, bumping the
-version number to 12.4.5.
+Other editions of Larn have been distributed by others, namely
+LARN13, dLarn, NLarn, ReLarn, and XLarn.
+
+JSLarn 12.5.0 is a JavaScript port of Larn and Ularn, by Jason Primeau. 
+It primarily references the Larn 12.4.4 and Ularn 1.5.4 codebases but takes 
+inspiration from other versions as well. It includes bug fixes, a global 
+scoreboard, and updates to balance the game at higher difficulties.
 
 I hope you enjoy this version of LARN.
 
@@ -61,7 +66,7 @@ but it was already pretty easy to cheat before. Be honorable, always.
 
 MIT License
 -----------
-Copyright (c) 2017 Jason Primeau
+Copyright (c) 2015-present Jason Primeau
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

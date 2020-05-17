@@ -52,11 +52,11 @@ function setGameConfig() {
     period = ULARN ? `.` : ``;
 
     // MONSTER COLOURS
-    if (ULARN) monsterlist[LEMMING].color = `rosybrown`; else monsterlist[BAT].color = `rosybrown`;
+    if (ULARN) monsterlist[LEMMING].color = `rosybrown`; else monsterlist[BAT].color = `brown`;
     monsterlist[GNOME].color = `darkkhaki`;
     monsterlist[HOBGOBLIN].color = `salmon`;
     monsterlist[JACKAL].color = `sandybrown`;
-    monsterlist[KOBOLD].color = `brown`;
+    if (ULARN) monsterlist[KOBOLD].color = `brown` ; else monsterlist[KOBOLD].color = `rosybrown`;
     monsterlist[ORC].color = `tan`;
     monsterlist[SNAKE].color = `olivedrab`;
     monsterlist[CENTIPEDE].color = `orangered`;

@@ -694,7 +694,7 @@ function hitplayer(x, y) {
   var damageModifier = 1; // will alway be 1 for classic Larn
 
   if (monster.matches(POLTERGEIST) || monster.matches(SPIRITNAGA)) {
-    if (isCarrying(OSPIRITSCARAB) || player.SPIRITPRO) {
+    if (player.SPIRITPRO || isCarrying(OSPIRITSCARAB)) {
       if (ULARN) {
         /* spirit naga's and poltergeist's damage is halved if scarab of negate spirit */
         damageModifier = 0.5;
@@ -706,7 +706,7 @@ function hitplayer(x, y) {
   }
 
   if (monster.matches(VAMPIRE) || monster.matches(WRAITH) || monster.matches(ZOMBIE)) {
-    if (isCarrying(OCUBEofUNDEAD) || player.UNDEADPRO) {
+    if (player.UNDEADPRO || isCarrying(OCUBEofUNDEAD)) {
       if (ULARN) {
         /*	halved if undead and cube of undead control	*/
         damageModifier = 0.5;
@@ -1013,12 +1013,11 @@ function spattack(monster, attack, xx, yy) {
     }
   }
 
-  /* no special attack for spirit naga if scarab of negate spirit */
-  /* 12.5.0 - seems like this is missing from the original. updated to match 
-              cube of undead behaviour
+  /* 12.5.0 - seems like this is missing from the original. updated to no special attack 
+     for naga with spirit protection, but leave at 50% if scarab of negate spirit (done in hitplayer())
   */
-  if (monster.matches(SPIRITNAGA)) {
-    if (isCarrying(OSPIRITSCARAB) || player.SPIRITPRO) {
+  if (ULARN && monster.matches(SPIRITNAGA)) {
+    if (player.SPIRITPRO) {
       return 0;
     }
   }

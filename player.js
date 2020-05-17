@@ -929,7 +929,8 @@ function wield(index) {
   /* can't wield and wear at the same time */
   if (ULARN) {
     if (player.SHIELD == item || player.WEAR == item) {
-      updateLog(`  You can't wield something and wear too!`);
+      let arm = item.matches(OSHIELD) ?  `shield` : `armor`;
+      updateLog(`  You can't wield your ${arm} while you're wearing it!`);
       return 1;
     }
   }
@@ -992,19 +993,12 @@ function wear(index) {
 
   // common cases for both
 
-  // I was going to add this for LARN/ULARN but it's kind of annoying
-  // if (ULARN) {
-  //   if (player.WEAR) {
-  //     updateLog(`  You are already wearing some armor${period}`);
-  //     setMazeMode(true);
-  //     return 1;
-  //   }
-  // }
   if (item.isArmor()) {
     /* can't wield and wear at the same time */
     if (ULARN) {
       if (player.WIELD == item) {
-        updateLog(`  You can't wear something and wield it too!`);
+        let arm = item.matches(OSHIELD) ?  `shield` : `armor`;
+        updateLog(`  You can't wear your ${arm} while you're wielding it!`);  
         return 1;
       }
     }

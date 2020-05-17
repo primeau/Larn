@@ -1,5 +1,5 @@
 
-JS U/Larn 12.5.0 (currently beta)
+JS U/Larn 12.5.0
 ----------------
 1. [new] Added Ularn functionality. Primarily follows the 1.5 codebase with 
 some inspiration from 1.6. Maintains the new/balance/fix items of version 
@@ -8,13 +8,15 @@ some inspiration from 1.6. Maintains the new/balance/fix items of version
 1. [new] Ularn also playable with Amiga-style graphics thanks to the new 
 sprites created by Chris Yewchuck and Jerome Lecomte.
 
-1. [new] Toggle added for retro-style fonts and two different Amiga fonts.
-
 1. [new] Stolen items can be recovered if you can find the monster again.
 
 1. [new] The Sword of Slashing doesn't rust.
 
 1. [new] Added the Amulet of Life Preservation from Ularn 1.6.
+
+1. [new] Added colours for monsters and objects.
+
+1. [new] Toggle added for retro-style fonts and two different Amiga fonts.
 
 1. [balance] Selling items is blocked once the potion has been picked up to
 prevent inflated scores by selling epic items.   
@@ -36,8 +38,8 @@ apparently never worked.
 1. [fix] Some missile spells could insta-kill demons when our Hero was wielding 
 Slayer.
 
-1. [fix] Some spells could behead monsters when our Hero was wielding the Vorpal 
-Blade.
+1. [fix] Some spells could behead monsters when our Hero was wielding the 
+Vorpal Blade.
 
 
 JS Larn 12.4.5

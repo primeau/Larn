@@ -85,7 +85,9 @@ helppages[1] =
 helppages[2] =
 `                                 <b>Special Notes</b> \n\
 \n\
-When <b>dropping gold<b>, if you type '<b>*</b>' as your amount, all your gold is dropped.\n\
+To drop gold, press '<b>.</b>' after pressing '<b>d</b>'. When dropping gold, if you\n\
+type '<b>*</b>' as your amount, all your gold is dropped.\n\
+\n\
 In general, typing in '<b>*</b>' means all of what you're interested in. This is true\n\
 when visiting the bank, or when contributing at altars.\n\
 \n\

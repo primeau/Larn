@@ -1,14 +1,14 @@
-# Ularn Spoiler Guide
+# Ularn Spoiler Guide (Updated 2020)
 
 Adapted from Phil Cordier's web site:
 http://www.cordier.com/ularn/index.html
 
 
 ## A Note on Lemmings - 2020
-Lemmings are annoying but they have been in the game for 30 years so they
-aren't being changed now. The best strategy is to fight them in a 
-dead-end hallway so they can't reproduce. Also, don't forget that they are
-Rambo's best friend.
+Lemmings are annoying, but they have been part of the game for 30+ years and
+they aren't being changed now. Your best strategy is to fight them in a 
+dead-end hallway so they can't reproduce. Also, don't forget that they can
+be Rambo's best friend.
 
 ## Lance of Death & Strategy
 
@@ -34,7 +34,8 @@ monsters that show up at low levels:
 - level 14: 4 demon lords
 - level 15: 5 demon lords + 1 demon prince guarding the Eye of Larn.
 
-The stairs up from level 15 lead to a dead end.
+The stairs up from level 15 lead to a dead end. You'll need to find another
+way up.
 
 Levels 1 - 5 of the Volcano contain:
 - level 1: 1 demon prince
@@ -132,7 +133,7 @@ Carrying the staff of power will cancel any attack by a demon lord,
 demon prince, wraith, or vampire 75% of the time. It increases wisdom by 10.
 
 #### Slayer
-Demon lords and demon princes attacks are halved if you are weilding the sword
+Demon lords and demon princes attacks are halved if you are wielding the sword
 Slayer. Slayer essentially acts as a Lance of Death, but only against
 demons. It is otherwise a good strong weapon against other monsters. You
 will only find Slayer somewhere below dungeon level 10, or in the volcano.
@@ -176,3 +177,4 @@ not worth the trouble.
 ## NOTES
 - NEVER NEVER cast 'vpr' when you are next to an altar!
 - Interesting things may happen when you sit on a dead throne.
+- Ularn hates a cheapskate at the altar.
