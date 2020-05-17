@@ -47,7 +47,7 @@ function createMonster(monst) {
     monst.intelligence, monst.gold, monst.hitpoints, monst.experience,
     monst.arg, monst.awake, monst.moved);
 
-  if (monst.inventory.length > 0) {
+  if (monst.inventory && monst.inventory.length > 0) {
     for (let index = 0; index < monst.inventory.length; index++) {
       monster.inventory[index] = createObject(monst.inventory[index]);
     }
