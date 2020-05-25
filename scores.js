@@ -241,6 +241,13 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
 
 
 
+const WINNER_HEADER_LARN =   `     <b>Score   Difficulty   Winner                    Time Needed</b>                      `;
+const WINNER_HEADER_ULARN =  `     <b>Score  Diff  Winner                   Class        Time Needed</b>                         `;
+const VISITOR_HEADER_LARN =  `     <b>Score   Difficulty   Visitor                   Fate</b>                             `;
+const VISITOR_HEADER_ULARN = `     <b>Score  Diff  Visitor                  Class       Fate</b>                                 `;
+
+
+
 function showScores(newScore, local, showWinners, showLosers, offset) {
   var exitscores = function(key) {
     if (key == ESC || key == ENTER) {
@@ -266,21 +273,40 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
   if (!GAMEOVER) clear();
 
   if (local) {
-    lprcat(`                    <b>${GAMENAME} Scoreboard</b> (Global scoreboard not available)\n`);
+    lprcat(`                    <b>${GAMENAME} Scoreboard</b> (Global scoreboard not available)\n\n`);
     winners = localStorageGetObject('winners', []);
     losers = localStorageGetObject('losers', []);
   } else {
     if (showWinners && !showLosers)
-      lprcat(`                  <b>${GAMENAME} Winners Scoreboard</b>\n`);
+      lprcat(`                  <b>${GAMENAME} Winners Scoreboard</b>\n\n`);
     else if (showLosers && !showWinners)
-      lprcat(`                  <b>${GAMENAME} Visitors Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
+      lprcat(`                  <b>${GAMENAME} Visitors Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n\n`);
     else
-      lprcat(`                  <b>${GAMENAME} Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n`);
+      lprcat(`                  <b>${GAMENAME} Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n\n`);
+  }
+
+  if (GAMEOVER) {
+    lprc(`<b>This game</b> (Click score for more info)`);
+    lprc(`<hr>`);
+    if (newScore.winner) {
+      printWithoutSpacesAtTheEnd(ULARN ? WINNER_HEADER_ULARN : WINNER_HEADER_LARN);
+    }
+    else {
+      printWithoutSpacesAtTheEnd(ULARN ? VISITOR_HEADER_ULARN : VISITOR_HEADER_LARN);
+    }
+    lprc(`\n`);
+    printScore(newScore);
+    lprc(`<hr>\n`);
   }
 
   if (winners.length != 0 || losers.length != 0) {
-    if (showWinners) printWinnerScoreBoard(winners, newScore, offset);
-    if (showLosers) printLoserScoreBoard(losers, newScore, offset);
+    if (showWinners) {
+      printScoreBoard(winners, newScore, ULARN ? WINNER_HEADER_ULARN : WINNER_HEADER_LARN, printScore, offset);
+      lprc(`\n`);
+    }
+    if (showLosers) {
+      printScoreBoard(losers, newScore, ULARN ? VISITOR_HEADER_ULARN : VISITOR_HEADER_LARN, printScore, offset);
+    }
   } else {
     lprcat(`\n  The scoreboard is empty`);
   }
@@ -300,50 +326,28 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
 
 
 
-function printWinnerScoreBoard(winners, newScore, offset) {
-  var header = `\n     Score   Difficulty   Winner                    Time Needed                     `;
-  if (ULARN) header = `\n     Score  Diff  Winner                   Class        Time Needed                        `;
-  // TODO duplication
-  function printout(p) {
-    var scoreId = p.gameID;
-    var local = !ONLINE;
-    let score;
+function printScore(p) {
+  let score;
+  if (p.winner) {
     if (ULARN) {
       score = `${padString(Number(p.score).toLocaleString(), 10)}  ${padString(``+p.hardlev, 4)}  ${padString(p.who, -23)}  ${padString(p.character, -10)}  ${padString(`` + p.timeused, 5)} Mobuls`;
     }
     else {
       score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${padString(p.who, -25)}${padString(`` + p.timeused, 5)} Mobuls`;
     }
-    var endcode = GAMEOVER ? `<br>` : ``;
-    lprc(`<a href='javascript:dbQueryLoadGame("${scoreId}", ${local}, true)'>`);
-    printWithoutSpacesAtTheEnd(`${score}</a>${endcode}`);
-    if (!GAMEOVER) lprc(`\n`);
   }
-  printScoreBoard(winners, newScore, header, printout, offset);
-}
-
-
-
-function printLoserScoreBoard(losers, newScore, offset) {
-  var header = (`\n     Score   Difficulty   Visitor                   Fate                            `);
-  if (ULARN) header = (`\n     Score  Diff  Visitor                  Class       Fate                                `);
-  // TODO duplication
-  function printout(p) {
-    var scoreId = p.gameID;
-    var local = !ONLINE;
-    let score;
+  else {
     if (ULARN) {
       score = `${padString(Number(p.score).toLocaleString(), 10)}  ${padString(``+p.hardlev, 4)}  ${padString(p.who, -23)}  ${padString(p.character, -10)}  ${p.what} on ${p.level}`;
     }
     else {
       score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${padString(p.who, -25)} ${p.what} on ${p.level}`;
     }
-    var endcode = GAMEOVER ? `<br>` : ``;
-    lprc(`<a href='javascript:dbQueryLoadGame("${scoreId}", ${local}, false)'>`);
-    printWithoutSpacesAtTheEnd(`${score}</a>${endcode}`);
-    if (!GAMEOVER) lprc(`\n`);
   }
-  printScoreBoard(losers, newScore, header, printout, offset);
+  var endcode = GAMEOVER ? `<br>` : ``;
+  lprc(`<a href='javascript:dbQueryLoadGame("${p.gameID}", ${!ONLINE}, ${p.winner})'>`);
+  printWithoutSpacesAtTheEnd(`${score}</a>${endcode}`);
+  if (!GAMEOVER) lprc(`\n`);
 }
 
 
@@ -360,50 +364,33 @@ function printWithoutSpacesAtTheEnd(inputString) {
 
 function printScoreBoard(board, newScore, header, printout, offset) {
 
-    // BUG: due to how lprc() works, a maximum of 80 scores will be printed per board
-    // 2020.04.18 -- not true any more, but 80 seems like a decent number anyways
-
-    var scoreboard = board;
-
-    var isWinningScore;
-    var newScorePrinted = false;
-
     printWithoutSpacesAtTheEnd(header);
     lprc(`\n`); 
 
     var i = GAMEOVER ? 0 : scoreIndex - offset;
-    for (var count = 0; i < scoreboard.length ; i++, scoreIndex++) {
+    for (var count = 0; i < board.length ; i++, scoreIndex++) {
 
-        if (!GAMEOVER && ++count > MAX_SCORES_PER_PAGE ) {
+        if (!GAMEOVER && ++count > MAX_SCORES_PER_PAGE) {
             break;
         }
 
-        var p = scoreboard[i];
+        var p = board[i];
         //console.log(i + ` ` + p.gameID + ` ` + p.who + `, ` + p.score);
 
-        isWinningScore = p.winner;
         var isNewScore = newScore ? p.gameID == newScore.gameID : false;
 
         if (isNewScore) {
-            lprc(`<b>`);
+            lprc(START_BOLD);
         }
 
         printout(p);
 
         if (isNewScore) {
-            lprc(`</b>`);
-            newScorePrinted = true;
+            lprc(END_BOLD);
         }
 
     } // end for
 
-    /* if this score didn't make the high score board, print it out at the bottom  */
-    if (!newScorePrinted && newScore && newScore.winner == isWinningScore) {
-        lprc(`<b>`);
-        printout(newScore);
-        lprc(`</b>`);
-        //lprcat(`\n`);
-    }
 }
 
 
