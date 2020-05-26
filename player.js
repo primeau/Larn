@@ -1161,6 +1161,7 @@ function debug_stats(p, score) {
   if (ULARN) s += `SLAYR: ${booleanToNumberString(p.SLAY)}\n`;
   if (ULARN) s += `VORP:  ${booleanToNumberString(p.VORPAL)}\n`;
   if (ULARN) s += `STAFF: ${booleanToNumberString(p.STAFF)}\n`;
+  if (ULARN) s += `PRSVR: ${booleanToNumberString(p.PRESERVER)}\n`;
   if (ULARN) s += `PAD:   ${booleanToNumberString(p.PAD)}\n`;
   if (ULARN) s += `ELEDN: ${booleanToNumberString(p.ELEVDOWN)}\n`;
   if (ULARN) s += `ELEUP: ${booleanToNumberString(p.ELEVUP)}\n`;

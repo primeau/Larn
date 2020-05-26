@@ -69,24 +69,34 @@ function loadSavedGame(savedState, isCheckPoint) {
     2) stringify current state that was loaded from saved state
     3) compare
   */
-  var x = player.level;
-  player.level = null;
-  let savedStateString = JSON.stringify(savedState);
-  debug(`saved`, savedStateString.length, savedState);
-  var currentState = new GameState();
 
-  let currentStateString = JSON.stringify(currentState);
-  debug(`current`, currentStateString.length, currentState);
-  let integrityCheck = savedStateString === currentStateString;
+  // we don't save player.level in savegames, so remove it until later
+  let x = player.level;
+  player.level = null;
+
+  let savedStateString = JSON.stringify(savedState);
+
+  let currentState = new GameState();
   let playernullcheck = player.level == null;
-  debug(`player`, player.level);
-  player.level = x;  
+  let currentStateString = JSON.stringify(currentState);
+
+  let integrityCheck = savedStateString === currentStateString;
   
   if (!integrityCheck) {
-    console.log(`save game integrity check failed`);
-    console.log(`player.level null == ${playernullcheck}`);
-    Rollbar.error(`failed integrity check, player.level == ${playernullcheck}`);
+    if (playernullcheck) { // true is expected
+      Rollbar.error(`${ULARN} failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length}`);
+      console.log(`failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length}`);
+      // console.log(`saved`, savedStateString.length, savedState);
+      // console.log(`current`, currentStateString.length, currentState);
+    }
+    else {
+      Rollbar.error(`${ULARN} failed integrity check, player.level != null`);
+      console.log(`failed integrity check, player.level != null`);
+    }
   }
+
+  // reload player.level
+  player.level = x;  
 
   /* delete / clear the saved game file */
   // console.log("NOT DELETING SAVE GAME");
@@ -293,6 +303,7 @@ function loadPlayer(saved) {
   newPlayer.SLAY = saved.SLAY;
   newPlayer.VORPAL = saved.VORPAL;
   newPlayer.STAFF = saved.STAFF;
+  newPlayer.PRESERVER = saved.PRESERVER;
   newPlayer.PAD = saved.PAD;
   newPlayer.ELEVDOWN = saved.ELEVDOWN;
   newPlayer.ELEVUP = saved.ELEVUP;

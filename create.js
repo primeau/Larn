@@ -544,7 +544,7 @@ function createArtifact(artifact, exists, odds) {
       case OSLAYER.id:          player.SLAY = true;           break;
       case OVORPAL.id:          player.VORPAL = true;         break;
       case OPSTAFF.id:          player.STAFF = true;          break;
-      case OLIFEPRESERVER.id:   player.OLIFEPRESERVER = true; break;
+      case OLIFEPRESERVER.id:   player.PRESERVER = true;      break;
 
       case OPAD.id:             player.PAD = true;            break;
       case OELEVATORUP.id:      player.ELEVUP = true;         break;
