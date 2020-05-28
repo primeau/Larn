@@ -33,7 +33,7 @@ var debug_used = 0;
 
 var logname = `Adventurer`;
 var cheat = 0; /* 1 if the player has fudged save file */
-var level = 0; /* cavelevel player is on = cdesc[CAVELEVEL] */
+var level = -1; /* cavelevel player is on = cdesc[CAVELEVEL] */
 var wizard = 0; /* the wizard mode flag */
 var gtime = 0; /* the clock for the game */
 var HARDGAME = 0; /* game difficulty */

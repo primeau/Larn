@@ -41,6 +41,10 @@ Slayer.
 1. [fix] Some spells could behead monsters when our Hero was wielding the 
 Vorpal Blade.
 
+1. [fix] Restoring a saved game would clear the teleport flag and change the
+level indicator back from '?' to the actual level. Now our Hero will still be
+lost on restore.
+
 
 JS Larn 12.4.5
 --------------

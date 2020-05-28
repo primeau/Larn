@@ -511,10 +511,10 @@ function dbWriteHighScore(newScore) {
     try {
       if (Rollbar) {
         if (newScore.winner) {
-          Rollbar.info(`winner: ${GAMENAME}, ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
+          Rollbar.info(`${BUILD} ${GAMENAME} winner: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
         } else {
           if (ULARN && newScore.timeused > 5 || (newScore.hardlev > 5 && newScore.timeused > 50)) {
-            Rollbar.info(`visitor: ${GAMENAME}, ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
+            Rollbar.info(`${BUILD} ${GAMENAME} visitor: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
           }
         }
       }

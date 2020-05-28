@@ -252,6 +252,20 @@ function initFS() {
 
 
 
+function initRB() {
+  try {
+    Rollbar.configure({
+      payload: {
+        environment: `${BUILD}`
+      }
+    });
+  } catch (error) {
+    // do nothing
+  }
+}
+
+
+
 function getIP() {
   try {
     fetch(`https://www.cloudflare.com/cdn-cgi/trace`).then(function (response) {

@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0';
-const BUILD = '457';
+const BUILD = '458';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -37,6 +37,8 @@ function play() {
     region: 'us-east-1',
     apiVersion: '2015-03-31'
   });
+
+  initRB();
 
   initKeyBindings();
 

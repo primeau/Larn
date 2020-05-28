@@ -81,17 +81,25 @@ function loadSavedGame(savedState, isCheckPoint) {
   let currentStateString = JSON.stringify(currentState);
 
   let integrityCheck = savedStateString === currentStateString;
-  
   if (!integrityCheck) {
-    if (playernullcheck) { // true is expected
-      Rollbar.error(`${ULARN} failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length}`);
-      console.log(`failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length}`);
-      // console.log(`saved`, savedStateString.length, savedState);
-      // console.log(`current`, currentStateString.length, currentState);
-    }
-    else {
-      Rollbar.error(`${ULARN} failed integrity check, player.level != null`);
-      console.log(`failed integrity check, player.level != null`);
+    try {
+      let diff = ``;
+      let dmp = new diff_match_patch();
+      diff = dmp.diff_main(savedStateString, currentStateString);
+      dmp.diff_cleanupSemantic(diff);
+      diff = dmp.diff_prettyHtml(diff);
+
+      if (playernullcheck) { // true is expected
+        Rollbar.error(`${BUILD} ${GAMENAME} failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length} DIFF=${diff}`);
+        console.log(`failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length}`);
+        // console.log(`saved`, savedStateString.length, savedState);
+        // console.log(`current`, currentStateString.length, currentState);
+      } else {
+        Rollbar.error(`${BUILD} ${GAMENAME} failed integrity check, player.level != null`);
+        console.log(`failed integrity check, player.level != null`);
+      }
+    } catch (error) {
+      Rollbar.error(`${BUILD} ${GAMENAME} failed integrity check: ${error}`);
     }
   }
 
