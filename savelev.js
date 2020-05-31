@@ -75,42 +75,42 @@ function loadSavedGame(savedState, isCheckPoint) {
   player.level = null;
 
   let savedStateString = JSON.stringify(savedState);
-
   let currentState = new GameState();
-  let playernullcheck = player.level == null;
   let currentStateString = JSON.stringify(currentState);
 
-  let integrityCheck = savedStateString === currentStateString;
-  if (!integrityCheck) {
-    try {
-      let diff = ``;
-      let dmp = new diff_match_patch();
-      diff = dmp.diff_main(savedStateString, currentStateString);
-      dmp.diff_cleanupSemantic(diff);
-      diff = dmp.diff_prettyHtml(diff);
-
-      if (playernullcheck) { // true is expected
-        Rollbar.error(`${BUILD} ${GAMENAME} failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length} DIFF=${diff}`);
-        console.log(`failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length}`);
-        // console.log(`saved`, savedStateString.length, savedState);
-        // console.log(`current`, currentStateString.length, currentState);
-      } else {
-        Rollbar.error(`${BUILD} ${GAMENAME} failed integrity check, player.level != null`);
-        console.log(`failed integrity check, player.level != null`);
-      }
-    } catch (error) {
-      Rollbar.error(`${BUILD} ${GAMENAME} failed integrity check: ${error}`);
-    }
-  }
+  let difftool = new diff_match_patch();
+  let diff = difftool.diff_main(savedStateString, currentStateString);
+  difftool.diff_cleanupSemantic(diff);
 
   // reload player.level
-  player.level = x;  
+  player.level = x;
+
+  // failed integrity check
+  if (diff.length != 1) {
+
+    // Rollbar chokes on large messages, and these could get up to 500k+
+    // truncate down to what actually matters
+    try {
+      let errorMessage = `${BUILD} ${GAMENAME} failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length} diff=\n`;
+      for (let index = 0; index < diff.length; index++) {
+        let fragment = diff[index][1];
+        if (fragment.length > 200) {
+          fragment = `${fragment.substring(0, 100)}\n   ...\n   ${fragment.substring(fragment.length - 100)}`;
+        }
+        errorMessage += `${index}: ${fragment}\n`;
+      }
+      Rollbar.error(`${errorMessage}`);
+      console.log(`${errorMessage}`);
+    } catch (error) {
+      console.log(`failed integrity check: caught: ${error}`);
+    }
+  }
 
   /* delete / clear the saved game file */
   // console.log("NOT DELETING SAVE GAME");
   localStorageRemoveItem(logname);
   localStorageRemoveItem('checkpoint');
- 
+
   if (isCheckPoint) {
     updateLog(`Did you quit accidentally? I restored your last game just in case.`);
   } else {
