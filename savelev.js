@@ -266,6 +266,7 @@ function loadPlayer(saved) {
   newPlayer.CONFUSE = saved.CONFUSE;
   newPlayer.ALTPRO = saved.ALTPRO;
   newPlayer.HERO = saved.HERO;
+  newPlayer.COKED = saved.COKED;
   newPlayer.CHARMCOUNT = saved.CHARMCOUNT;
   newPlayer.INVISIBILITY = saved.INVISIBILITY;
   newPlayer.CANCELLATION = saved.CANCELLATION;

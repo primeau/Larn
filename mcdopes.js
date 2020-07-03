@@ -105,7 +105,8 @@ function snag(itm) {
         cltoeoln();
         return false;
     }
-    take(itm);
+    let contraband = createObject(itm);
+    take(contraband);
     lprcat(`\nOk, here ya go.`);
     cltoeoln();
     return true;
