@@ -832,9 +832,7 @@ function oelevator(direction) {
     // in volcano
     else {
       var newLevel = DBOTTOM + rund(level - DBOTTOM);
-      console.log(MAXLEVEL, level, newLevel);
       if (newLevel == DBOTTOM) newLevel = 0;
-      console.log(MAXLEVEL, level, newLevel);
       newcavelevel(newLevel);
     }
   }

@@ -85,6 +85,14 @@ function movemonst() {
   for (let j = move_yl; j < move_yh; j++) {
     for (let i = move_xl; i < move_xh; i++) {
       let monster = monsterAt(i, j);
+
+      if (monster && monster.arg == MIMIC) {
+        if (monster.mimiccounter % 10 == 0) {
+          monster.mimicarg = createMimicArg();
+        }
+        monster.mimiccounter++;
+      }
+      
       if (monster && !monster.moved) {
         /* if there is a monster to move and it isn't already moved */
         if (player.AGGRAVATE || !player.STEALTH || monster.awake) {
