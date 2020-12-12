@@ -873,9 +873,13 @@ function forget() {
 /*
  * subroutine to handle a teleport trap +/- 1 level maximum
  */
-function oteleport(err) {
-  if (err) {
+function oteleport(teleportSelf) {
+  if (teleportSelf && level != 0) {
     if (rnd(151) < 3) {
+
+      // idea: (rnd(151) < 3 + getDifficulty()) or + rnd(getDifficulty()) ? 
+      // might be too fast of a progression. would be smoother to go from 1 in 75 to 1 in 74 etc
+ 
       /*
       12.4.5 - you shouldn't get trapped in solid rock with WTW
       This was also added in ularn 1.6.3

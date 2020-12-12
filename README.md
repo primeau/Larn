@@ -1,7 +1,7 @@
 [You can play Larn online here](https://larn.org "You can play Larn online here")
 
 
-JS LARN version 12.4.5
+JS LARN version 12.5.0
 ======================
 
 Introduction

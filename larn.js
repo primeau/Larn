@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0';
-const BUILD = '461';
+const BUILD = '462';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -50,9 +50,7 @@ function play() {
     compressionWorker.onmessage = onCompressed;
   }
 
-    /* warn the player that closing their window will kill the game.
-     this is a bit annoying, and I'm tempted to get rid of it now
-     that there are checkpoints in place */
+  /* warn the player that closing their window will kill the game */
   if (location.hostname === 'localhost' || location.hostname === '') {
     enableDebug();
   } else {

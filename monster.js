@@ -56,7 +56,7 @@ function createMonster(monst) {
     monster.initInventory();
   }
 
-  if (arg == MIMIC) {
+  if (ULARN && arg == MIMIC) {
     monster.mimicarg = monst.mimicarg ? monst.mimicarg : createMimicArg();
     monster.mimiccounter = monst.mimiccounter ? monst.mimiccounter : 0;
   } 
@@ -105,7 +105,7 @@ Monster.prototype = {
   getChar: function () {
     let monster = this.arg;
 
-    if (this.arg == MIMIC && this.mimicarg) {
+    if (ULARN && this.arg == MIMIC && this.mimicarg) {
       monster = this.mimicarg;
     }
 

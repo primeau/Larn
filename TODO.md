@@ -1,6 +1,4 @@
 
-
-
 Ularn 12.5.0:
 - check all 1.6.3 code
 - check scorePUT
@@ -19,8 +17,6 @@ Ularn balance ideas:
 - make +9 items worth less? cap out around 116k (v3 chest in Larn)?
 
 todo:
-- show current game at top of scoreboard after death
-- explain that . drops gold
 - warn if changing names because it's annoying on the scoreboard
 - help wiki (items/scrolls/potions/features/monsters/etc)
 - click / farlook to identify object (hack and classic mode)
@@ -53,6 +49,7 @@ todo:
   - another cheater: meesa/DooDoo
   - serverside known cheaters list
   - check fs for games from localhost/file:
+- get rid of player.level
 
 extras:
 - wash at fountain clears itching
@@ -75,7 +72,9 @@ extras:
 - move command
 
 bugs:
-* lots of monsters walking through wall. (fixed?)
+* last hit monster still chases from a distance if dumb
+* larn (not ularn) post win: start with no spells, diff is still 0, next game has spells
+* lots of monsters walking through walls (fixed?)
   - was this due to smart ripple[] not being cleared?
 * fall down pit, area around player isn't exposed
    - only when player doesn't fall down on the first 'try'
@@ -89,7 +88,8 @@ bugs:
   just in drops you back on the monsters spot. the monster reappears when you move.
 - can't load game stats from local scoreboard (can't find game sdkjfhsdfkj)
 - arrow buttons on help screen are truncated in amiga mode
-- amiga mode: strikethrough missing on taxes owing after victory
+- amiga: you owe <strike>1234</strike> in taxes
+- amiga: gap between maze and spells isn't cleared on loading saved game
 - blindness
   - black tile when opening door when blind
   - when blind, a monster from an unknown tile will reveal the tile its standing on during attack
@@ -102,7 +102,7 @@ hardmode ideas:
 - can only wield actual weapons
 - prevent wield and wear at the same time
 - altar donation aren't just 10%, min 50
-- stop time doesn't prevent falling in pits
+- stop time doesn't prevent falling in pits, hitting traps
 - demons don't respect stealth, hold is less effective
 - guardians are never asleep 
 - reduce blessed ularn item sale prices

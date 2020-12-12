@@ -86,7 +86,7 @@ function movemonst() {
     for (let i = move_xl; i < move_xh; i++) {
       let monster = monsterAt(i, j);
 
-      if (monster && monster.arg == MIMIC) {
+      if (ULARN && monster && monster.arg == MIMIC) {
         if (monster.mimiccounter % 10 == 0) {
           monster.mimicarg = createMimicArg();
         }
