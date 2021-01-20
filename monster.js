@@ -1244,6 +1244,7 @@ function teleportMonster(x, y) {
   killMonster(x, y);
 
   let newMonster = fillmonst(oldMonster.arg);
+  if (!newMonster) return; // fillmonst failed, so bail out
 
   /* restore inventory & hp */
   newMonster.inventory = oldMonster.inventory;

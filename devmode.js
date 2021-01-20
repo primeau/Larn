@@ -17,8 +17,8 @@ function DEVMODE() {
     eventToggleDebugImmortal();
     eventToggleDebugAwareness();
     // eventToggleDebugNoMonsters();
-    player.updateStealth(100000);
-    player.updateCancellation(100000);
+    // player.updateStealth(100000);
+    // player.updateCancellation(100000);
 
     wizardmode(`pvnert(x)`);
 
@@ -36,19 +36,20 @@ function DEVMODE() {
 
     // take(createObject(OPOTION, 2));
     // take(createObject(OPOTION, 9));
-    take(createObject(OPOTION, 11));
+    // take(createObject(OPOTION, 11));
     // take(createObject(OPOTION, 10));
     // take(createObject(OPOTION, 21));
-    take(createObject(OPOTION, 23));
+    // take(createObject(OPOTION, 23));
 
     // take(createObject(OSPHTALISMAN));
     // take(createObject(OHANDofFEAR));
-    take(createObject(OLARNEYE));
+    // take(createObject(OLARNEYE));
     // take(createObject(ONOTHEFT));
     // take(createObject(OBRASSLAMP));
     // gtime = 30001;
     player.GOLD = 250000;
 
+    // createmonster(NYMPH);
     // for (let index = 1; index < monsterlist.length; index++) {
     //     createmonster(index, 1+index, 2);
     // }

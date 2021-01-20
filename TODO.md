@@ -17,10 +17,11 @@ Ularn balance ideas:
 - make +9 items worth less? cap out around 116k (v3 chest in Larn)?
 
 todo:
+* help wiki (items/scrolls/potions/features/monsters/etc)
 - warn if changing names because it's annoying on the scoreboard
-- help wiki (items/scrolls/potions/features/monsters/etc)
 - click / farlook to identify object (hack and classic mode)
 - mobile support
+- max diff 101
 
 - Navigator.cookieEnabled Read only
    Returns false if setting a cookie will be ignored and true otherwise.
@@ -54,6 +55,8 @@ todo:
 extras:
 - wash at fountain clears itching
 - url for scoreboard
+- 'twitch' mode to broadcast / watch games
+- "dungeon of the week"
 - config page
   - colors on/off
   - keyboard hints
@@ -90,6 +93,7 @@ bugs:
 - arrow buttons on help screen are truncated in amiga mode
 - amiga: you owe <strike>1234</strike> in taxes
 - amiga: gap between maze and spells isn't cleared on loading saved game
+- there are a bunch of 404's for the older source code in history.html
 - blindness
   - black tile when opening door when blind
   - when blind, a monster from an unknown tile will reveal the tile its standing on during attack

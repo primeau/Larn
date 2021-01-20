@@ -78,7 +78,7 @@ function setChar(x, y, c, markup) {
 
 
 function createDiv(x, y, w, h) {
-  if (!w) w = 12;
+  if (!w) w = 12; // change this for altrender?
   if (!h) h = w * 2;
   var callback = ``;
   if (mobile) {
@@ -803,7 +803,7 @@ function onMouseClick(event) {
       description = `our Hero`;
     } else if (monster) {
       description = monster.toString();
-      if (monster.matches(MIMIC)) description = monsterlist[monster.mimicarg].toString();
+      if (ULARN && monster.matches(MIMIC)) description = monsterlist[monster.mimicarg].toString();
       let firstChar = description.substring(0, 1).toLocaleLowerCase();
       prefix = `It's a `;
       if (`aeiou`.indexOf(firstChar) >= 0) prefix = `It's an `;
