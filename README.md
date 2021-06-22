@@ -2,7 +2,7 @@
 
 
 ## Play Online
-[You can play Larn online by cicking this link](https://larn.org "You can play Larn online here")
+[You can play Larn online at larn.org](https://larn.org "You can play Larn online here")
 
 
 ## To Play Locally 
@@ -13,9 +13,9 @@
 
 ## Build Instructions For Development
 ```
-- git clone https://github.com/primeau/Larn.git
-- #npm install
-- #npm run build
+$ git clone https://github.com/primeau/Larn.git
+$ npm install
+$ npm run build
 ```
 
 ## Introduction
