@@ -14,7 +14,8 @@
     "betabuild": "npm run betaclean ; npm run transpile ; npm run minify ; npm run betacopy",
     "prodbuild": "npm run prodclean ; npm run transpile ; npm run minify ; npm run prodcopy",
     "clean": "npm run tempclean ; npm run betaclean ; npm run prodclean",
-    "build": "npm run clean ; npm run transpile ; npm run minify ; npm run betacopy ; npm run prodcopy ; npm run tempclean"
+    "build": "npm run clean ; npm run transpile ; npm run minify ; npm run betacopy ; npm run prodcopy ; npm run tempclean",
+    "server": "python -m SimpleHTTPServer 8000"
   },
   "repository": {
     "type": "git",

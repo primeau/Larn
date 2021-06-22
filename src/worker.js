@@ -1,6 +1,6 @@
 'use strict';
 
-importScripts('util/lz-string.min.js');
+importScripts('lib/lz-string.min.js');
 
 onmessage = function (event) {
     let key = event.data[0];
