@@ -1,7 +1,8 @@
 .DS_Store
 .dropbox
+.vscode
 Icon
-#larn_config.js
+larn_config.js
 tools
 node_modules
 aws-sdk.js
