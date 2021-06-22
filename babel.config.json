@@ -7,5 +7,5 @@
     "safari": "11.1",
     "ie": "11"
   },
-  "ignore": ["*/util/*", "*/aws/*", "*/node_modules/*"]
+  "ignore": ["*/lib/*", "*/aws/*", "*/node_modules/*"]
 }
