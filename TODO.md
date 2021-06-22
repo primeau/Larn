@@ -115,6 +115,6 @@ hardmode ideas:
 Jay@80.209.166.82 / 20200506 / Asdfgh01
 
 Larn % python -m SimpleHTTPServer 8000
-http://localhost:8000/deploy/larn/larn.html
+http://localhost:8000/dist/larn/larn.html
 file:///Users/jay/Dropbox/Desktop/LARN/JLarn/larn/larn_local.html?ularn=true
 

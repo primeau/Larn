@@ -14,8 +14,12 @@
 ## Build Instructions For Development
 ```
 $ git clone https://github.com/primeau/Larn.git
+$ cd Larn
 $ npm install
 $ npm run build
+$ python -m SimpleHTTPServer 8000
+$ http://localhost:8000/dist/larn/larn.html
+
 ```
 
 ## Introduction
