@@ -1,18 +1,30 @@
-[You can play Larn online here](https://larn.org "You can play Larn online here")
+# JS LARN Version 12.5.0
 
 
-JS LARN version 12.5.0
-======================
+## Play Online
+[You can play Larn online by cicking this link](https://larn.org "You can play Larn online here")
 
-Introduction
-------------
+
+## To Play Locally 
+- download a zipfile of the repository
+- open larn_local.html in your browser and play
+- viewing the scoreboard and recording high scores won't work
+
+
+## Build Instructions For Development
+```
+- git clone https://github.com/primeau/Larn.git
+- #npm install
+- #npm run build
+```
+
+## Introduction
 
 LARN is a dungeon type adventure game similar in concept to HACK, ROGUE
 or MORIA, but with a different feel and winning criteria.
 
 
-History and Other Information
------------------------------
+## History and Other Information
 Noah Morgan originally created LARN 12.0 and released the UNIX
 version to the USENET in 1986.  Don Kneller ported the UNIX
 version to MSDOS (both IBM PCs and DEC Rainbows).
@@ -49,11 +61,10 @@ I hope you enjoy this version of LARN.
 [Larn's version history can be found here](https://github.com/primeau/Larn/blob/master/history.md "Larn's version history can be found here")
 
 
-WIZARD mode
------------
+## WIZARD mode
 There is a WIZARD mode for testing features of the game.  To get into WIZARD
 mode, type in an underscore '_' and answer the prompt for the password with
-'pvnert(x)' (do not enter the quotes).  Wizards are non-scoring characters that
+'`pvnert(x)`' (do not enter the quotes).  Wizards are non-scoring characters that
 get magic mapping, everlasting expanded awareness and one of every object in
 the game.
 
@@ -64,8 +75,7 @@ will resurrect a previous save game. Obviously this can be used to cheat,
 but it was already pretty easy to cheat before. Be honorable, always.
 
 
-MIT License
------------
+## MIT License
 Copyright (c) 2015-present Jason Primeau
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -87,8 +97,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-Acknowledgements
-----------------
+## Acknowledgements
 
 Many thanks to BrowserStack for supporting this open source project with a free
 license to improve cross-browser support.
