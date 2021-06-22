@@ -1,10 +1,9 @@
 .DS_Store
 .dropbox
 Icon
-fullstory.js
-config
+#larn_config.js
 tools
 node_modules
-*.json
-aws/aws-sdk.js
-util/ga.js
+aws-sdk.js
+ga.js
+deploy

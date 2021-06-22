@@ -1,0 +1,41 @@
+{
+  "name": "larn",
+  "version": "12.5.0",
+  "description": "JS Larn",
+  "main": "larn.js",
+  "scripts": {
+    "prodclean": "rm -r deploy/history ; rm -r deploy/img ; rm -r deploy/larn ; rm deploy/*.xml ; rm deploy/*.html ; rm deploy/*.png ; rm deploy/*.css ; rm deploy/*.txt || true",
+    "betaclean": "rm -r deploy/beta || true",
+    "tempclean": "rm -r larn-temp || true",
+    "transpile": "babel src --out-dir larn-temp/",
+    "minify": "uglifyjs --mangle --compress -o larn-temp/larn.min.js larn-temp/fullstory.js larn-temp/util.js larn-temp/config/larn_config.js larn-temp/config.js larn-temp/larn.js larn-temp/main.js larn-temp/object.js larn-temp/global.js larn-temp/monster.js larn-temp/monsterdata.js larn-temp/player.js larn-temp/mazes.js larn-temp/level.js larn-temp/create.js larn-temp/data.js larn-temp/parse.js larn-temp/buttons.js larn-temp/scores.js larn-temp/inventory.js larn-temp/movem.js larn-temp/action.js larn-temp/io.js larn-temp/display.js larn-temp/storedata.js larn-temp/store.js larn-temp/mcdopes.js larn-temp/savelev.js larn-temp/spells.js larn-temp/spellsinfo.js larn-temp/regen.js larn-temp/spheres.js larn-temp/help.js larn-temp/state.js larn-temp/bill.js larn-temp/altar.js larn-temp/fountain.js larn-temp/potion.js larn-temp/scroll.js larn-temp/stairs.js larn-temp/throne.js larn-temp/devmode.js",
+    "betacopy": "mkdir -p deploy/beta/util ; mkdir deploy/beta/img ; cp src/util/*.js deploy/beta/util ; cp src/img/* deploy/beta/img ; cp src/larn.html deploy/beta ; cp larn-temp/larn.min.js deploy/beta ; cp larn-temp/worker.js deploy/beta ; cp src/larn.css deploy/beta || true",
+    "prodcopy": "mkdir -p deploy/larn/util ; mkdir deploy/larn/img ; cp src/util/*.js deploy/larn/util ; cp src/img/* deploy/larn/img ; cp -r larn-www/* deploy ; cp src/larn.html deploy/larn ; cp larn-temp/larn.min.js deploy/larn ; cp larn-temp/worker.js deploy/larn || true",
+    "betabuild": "npm run betaclean ; npm run transpile ; npm run minify ; npm run betacopy",
+    "prodbuild": "npm run prodclean ; npm run transpile ; npm run minify ; npm run prodcopy",
+    "clean": "npm run tempclean ; npm run betaclean ; npm run prodclean",
+    "build": "npm run clean ; npm run transpile ; npm run minify ; npm run betacopy ; npm run prodcopy ; npm run tempclean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/primeau/Larn.git"
+  },
+  "keywords": [
+    "larn",
+    "roguelike",
+    "game"
+  ],
+  "author": "Jason Primeau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/primeau/Larn/issues"
+  },
+  "homepage": "https://github.com/primeau/Larn#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
+    "uglify-js": "^3.13.9"
+  }
+}
