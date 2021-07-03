@@ -1,8 +1,10 @@
 .dropbox
 .DS_Store
 .vscode
+.eslintrc.json
 Icon
 dist
+larn-temp
 node_modules
 tools
 src/env/larn_config.js

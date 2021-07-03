@@ -1,11 +1,10 @@
 {
   "presets": ["@babel/preset-env"],
   "targets": {
-    "edge": "80",
-    "firefox": "52",
+    "edge": "15",
+    "firefox": "53",
     "chrome": "55",
-    "safari": "11.1",
-    "ie": "11"
+    "safari": "11.1"
   },
   "ignore": ["*/lib/*", "*/aws/*", "*/node_modules/*"]
 }
