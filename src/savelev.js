@@ -99,8 +99,8 @@ function loadSavedGame(savedState, isCheckPoint) {
         }
         errorMessage += `${index}: ${fragment}\n`;
       }
-      Rollbar.error(`${errorMessage}`);
       console.log(`${errorMessage}`);
+      Rollbar.error(`${errorMessage}`);
     } catch (error) {
       console.log(`failed integrity check: caught: ${error}`);
     }
