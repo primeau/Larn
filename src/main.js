@@ -272,15 +272,13 @@ function getIP() {
     // console.error(`offline`);
     return;
   }
-  try {
-    fetch(`https://api.db-ip.com/v2/free/self`).then(function(response) {
+  fetch(`https://api.db-ip.com/v2/free/self`)
+    .then(function(response) {
       response.json().then(function(text) {
         playerIP = text.ipAddress;
       });
-    });
-  } catch (e) {
-    // do nothing
-  }
+    })
+    .catch(error => console.log("no ip"));
 }
 
 

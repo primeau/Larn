@@ -200,11 +200,7 @@ function letter6(key) {
   cursors();
   lprcat(`                --- press <b>space</b> to continue ---\n`);
 
-  if (ULARN) {
-    setCharCallback(setdiff);
-  } else {
-    setCharCallback(startgame);
-  }
+  setCharCallback(setdiff);
 
   return (1);
 }
