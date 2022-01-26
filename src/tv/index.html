@@ -1,0 +1,74 @@
+<!doctype html>
+<html class='no-js' lang=''>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='x-ua-compatible' content='ie=edge'>
+    <title>Larn TV</title>
+    <meta name='description' content='Larn TV'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" type="text/css" href="larn.css">
+    <!-- <link rel='apple-touch-icon' href='apple-touch-icon.png'> -->
+</head>
+
+<body>
+
+    <!-- warning: whitespace matters a lot because we are using pre tags -->
+    <table>
+        <tbody>
+            <!-- one row with two columns -->
+            <tr>
+                <td>
+                    <!-- game board -->
+                    <div id='TV_LARN'></div>
+                    <!-- button footer -->
+                    <div id='TV_FOOTER'></div>
+                </td>
+                <!-- inventory -->
+                <td style="padding-left:20px;">
+                    <div id='TV_STATS'></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <tr>
+        <div id='LARN_LIST'>
+        </div>
+    </tr>
+    <tr>
+        <div id='ULARN_LIST'>
+        </div>
+    </tr>
+
+    <script src='lib/rollbar.js'></script>
+    <script src='lib/lambda.min.js'></script>
+    <script src='lib/lz-string.min.js'></script>
+    <script src='lib/mousetrap.min.js'></script>
+    <script src='lib/diff.js'></script>
+
+    <script src='env/larn_config.js'></script>
+    <script src='util.js'></script>
+    <script src='lambda.js'></script>
+    <script src='frame.js'></script>
+    <script src='movie.js'></script>
+    <script src='patch.js'></script>
+    <script src='roll.js'></script>
+    <script src='list.js'></script>
+    <script src='watch.js'></script>
+    <script src='index.js'></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YJ6CZ37DXF"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-YJ6CZ37DXF');
+    </script>
+
+</body>
+
+</html>

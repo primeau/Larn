@@ -1,3 +1,9 @@
+NOW:
+*** warn if changing names because it's annoying on the scoreboard
+*** find a better way to get ip addresses
+*** default fonts are still stretched out in some browsers
+
+IDEA: use createElement for all rendering?
 
 Ularn 12.5.0:
 - check all 1.6.3 code
@@ -22,6 +28,7 @@ todo:
 - click / farlook to identify object (hack and classic mode)
 - mobile support
 - max diff 101
+- if error writing savegame due to space issues, delete all backup cookies
 
 - Navigator.cookieEnabled Read only
    Returns false if setting a cookie will be ignored and true otherwise.
@@ -98,9 +105,10 @@ bugs:
   - black tile when opening door when blind
   - when blind, a monster from an unknown tile will reveal the tile its standing on during attack
   - when blind, killing a monster shouldn't reveal gold dropped, or anything else?
-  - rothe/poltergeist/vampire are born awake -> should they move during stealth?
+- rothe/poltergeist/vampire are born awake -> should they move during stealth?
 - monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
+- While Haste Self is active, hitting a monster with a projectile causes said monster to move once at normal speed
 
 hardmode ideas:
 - can only wield actual weapons
@@ -110,6 +118,7 @@ hardmode ideas:
 - demons don't respect stealth, hold is less effective
 - guardians are never asleep 
 - reduce blessed ularn item sale prices
+- get potion -> permanent aggravate monsters (be sure to disable remove curse)
 
 
 Jay@80.209.166.82 / 20200506 / Asdfgh01

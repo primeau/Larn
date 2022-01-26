@@ -51,15 +51,14 @@ function createMonster(monst) {
     for (let index = 0; index < monst.inventory.length; index++) {
       monster.inventory[index] = createObject(monst.inventory[index]);
     }
-  }
-  else {
+  } else {
     monster.initInventory();
   }
 
   if (ULARN && arg == MIMIC) {
     monster.mimicarg = monst.mimicarg ? monst.mimicarg : createMimicArg();
     monster.mimiccounter = monst.mimiccounter ? monst.mimiccounter : 0;
-  } 
+  }
 
   return monster;
 }
@@ -91,18 +90,18 @@ Monster.prototype = {
   /*  false=sleeping true=awake monst*/
   moved: false,
 
-  matches: function (monsterarg) {
+  matches: function(monsterarg) {
     return this.arg == monsterarg;
   },
 
-  toString: function () {
+  toString: function() {
     if (player.BLINDCOUNT == 0)
       return this.desc;
     else
       return `monster`;
   },
 
-  getChar: function () {
+  getChar: function() {
     let monster = this.arg;
 
     if (ULARN && this.arg == MIMIC && this.mimicarg) {
@@ -114,38 +113,32 @@ Monster.prototype = {
       let suffix = ``;
       if (monster == INVISIBLESTALKER && player.SEEINVISIBLE > 0) {
         suffix = `v`;
-      } 
-      else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
+      } else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
         suffix = `v`;
-      } 
-      else if (ULARN && (monster == LEMMING || monster == BITBUG || monster == LAMANOBE)) {
+      } else if (ULARN && (monster == LEMMING || monster == BITBUG || monster == LAMANOBE)) {
         suffix = `u`;
       }
       return `${DIV_START}${prefix}${monster}${suffix}${DIV_END}`;
-    } 
-    else {
+    } else {
       if (monster == INVISIBLESTALKER) {
         return player.SEEINVISIBLE > 0 ? monsterlist[INVISIBLESTALKER].char : OEMPTY.char;
-      } 
-      else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
+      } else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
         return `<font color='crimson'>${demonchar[this.arg - DEMONLORD]}</font>`;
-      } 
-      else {
+      } else {
         if (show_color && monsterlist[monster].color) {
           return `<font color='${monsterlist[monster].color}'>${monsterlist[monster].char}</font>`;
-        }
-        else {
+        } else {
           return monsterlist[monster].char;
         }
       }
     }
   },
 
-  isDemon: function () {
+  isDemon: function() {
     return this.arg >= DEMONLORD;
   },
 
-  initInventory: function () {
+  initInventory: function() {
     if (!this.inventory) { // TODO for old savegame -- delete june 2021
       this.inventory = [];
     }
@@ -153,7 +146,7 @@ Monster.prototype = {
     this.addGold();
   },
 
-  addInventory: function () {
+  addInventory: function() {
     switch (this.arg) {
       case ORC:
       case NYMPH:
@@ -175,14 +168,14 @@ Monster.prototype = {
     }
   },
 
-  addGold: function () {
+  addGold: function() {
     if (this.gold <= 0) return;
     let amount = rnd(this.gold) + this.gold;
     this.pickup(createGold(amount));
     return;
   },
 
-  pickup: function (item) {
+  pickup: function(item) {
     if (!item) {
       return;
     }
@@ -190,14 +183,14 @@ Monster.prototype = {
     this.inventory.push(item);
   },
 
-  dropInventory: function (x, y) {
+  dropInventory: function(x, y) {
     if (!this.inventory) this.initInventory(); // TODO for old savegame -- delete june 2021
     while (this.inventory.length > 0) {
       dropItem(x, y, this.inventory.pop());
     }
   },
 
-  isCarrying: function (item) {
+  isCarrying: function(item) {
     if (!item) return false;
     for (let i = 0; i < this.inventory.length; i++) {
       let tmpItem = this.inventory[i];
@@ -579,7 +572,19 @@ function cgood(x, y, itm, monst) {
      - dungeon entrance
   */
   var item = itemAt(x, y);
+
+  // debugging: there is an issue with player.level.item[][] having a null 
+  // in it. 
+  if (!item) {
+    let errorMessage = `cgood(): null item: x=${x} y=${y} itm=${itm} monst=${monst}`;
+    console.log(errorMessage);
+    Rollbar.error(`${errorMessage}`);
+    return false;
+  }
+
+
   if (((y < 0) || (y > MAXY - 1) || (x < 0) || (x > MAXX - 1)) ||
+    (!item) ||
     (item.matches(OWALL)) ||
     (item.matches(OCLOSEDDOOR)) ||
     (item.matches(OHOMEENTRANCE))) return (false);
@@ -1102,10 +1107,9 @@ function spattack(monster, attack, xx, yy) {
       if (damage == null) {
         damage = rnd(20) + 25 - armorclass;
       }
-      if (player.FIRERESISTANCE) { 
+      if (player.FIRERESISTANCE) {
         updateLog(`The ${monster}'s flame doesn't faze you!`);
-      } 
-      else {
+      } else {
         updateLog(`The ${monster} breathes fire at you!`);
         player.losehp(damage);
       }

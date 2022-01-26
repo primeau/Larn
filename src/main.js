@@ -20,7 +20,7 @@ function welcome() {
   lprcat(helppages[0]);
   cursors();
 
-  logname = localStorageGetObject('logname', logname);  
+  logname = localStorageGetObject('logname', logname);
 
   var tmpID = Math.random().toString(36).substr(2, 5);
   playerID = localStorageGetObject('playerID', tmpID);
@@ -208,7 +208,7 @@ makeplayer()
 subroutine to create the player and the players attributes
 this is called at the beginning of a game and at no other time
 */
-  function makeplayer() {
+function makeplayer() {
 
   /* much of this work has been moved elsewhere */
   // player = new Player();
@@ -268,16 +268,17 @@ function initRB() {
 
 
 function getIP() {
-  try {
-    fetch(`https://www.cloudflare.com/cdn-cgi/trace`).then(function (response) {
-      response.text().then(function (text) {
-        var tmp = text.split(`\n`)[2];
-        playerIP = tmp.split(`=`)[1];
-      });
-    });
-  } catch (e) {
-    // do nothing
+  if (!navigator.onLine) {
+    // console.error(`offline`);
+    return;
   }
+  fetch(`https://api.db-ip.com/v2/free/self`)
+    .then(function(response) {
+      response.json().then(function(text) {
+        playerIP = text.ipAddress;
+      });
+    })
+    .catch(error => console.log("no ip"));
 }
 
 
@@ -452,7 +453,7 @@ function startgame(hard) {
   since we're running in a event-driven system we need to
   turn the original main loop a little bit inside-out
 */
-function mainloop(key) {
+function mainloop(e, key) {
 
   if (napping) {
     debug(`napping`);
@@ -461,7 +462,7 @@ function mainloop(key) {
 
   nomove = 0;
 
-  parse(key);
+  parse(e, key);
 
   setButtons();
 
@@ -575,8 +576,7 @@ function wizardmode(password) {
     let error = localStorageSetObject('checkpoint', checkpoint);
     if (!error) {
       updateLog(`Reload to restart from backup checkpoint`);
-    }
-    else {
+    } else {
       updateLog(`Sorry, no checkpoint found (or cookies are disabled)`);
       updateLog(`${error}`);
     }
@@ -588,8 +588,7 @@ function wizardmode(password) {
     let error = localStorageSetObject(logname, savegame);
     if (!error) {
       updateLog(`Reload to restart from backup save game`);
-    }
-    else {
+    } else {
       updateLog(`Sorry, no backup save game found (or cookies are disabled)`);
       updateLog(`${error}`);
     }

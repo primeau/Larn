@@ -122,7 +122,8 @@ function cannedlevel(depth) {
           ULARN ? create_guardian(LUCIFER, x, y) : create_guardian(DEMONPRINCE, x, y);
           break;
       } // switch
-      if (!itemAt(x, y)) {
+      // if (!itemAt(x, y)) { // for debugging
+      if (!player.level.items[x][y]) {
         setItem(x, y, OEMPTY);
       }
     } // for

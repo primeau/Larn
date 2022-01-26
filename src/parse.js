@@ -48,6 +48,16 @@ var keyboard_input_callback;
 
 
 
+/* extra handling to allow running on keyboards with numpads */
+Mousetrap.prototype.handleKey = function(char, mod, evt) {
+  // add extra argument to the keyboard event to signify if shift key is being held
+  arguments[2].shift = mod[0] === `shift`; 
+  var self = this;
+  return self._handleKey.apply(self, arguments);
+};
+
+
+
 function mousetrap(e, key) {
 
   // if (BLOCKING) {
@@ -55,10 +65,10 @@ function mousetrap(e, key) {
   //   return;
   // }
 
-  // debug(`mousetrap: ` + key);
+  // console.log(`mousetrap: ${key} ${JSON.stringify(e)}`);
   if (key == SPACE) key = ' ';
   if (key == TAB) return false;
-  mainloop(key);
+  mainloop(e, key);
   return false; // disable default browser behaviour
 }
 
@@ -88,9 +98,9 @@ function setNumberCallback(func, allowAsterisk) {
 
 
 
-function shouldRun(key) {
-  var run = key.indexOf('shift+') >= 0 || key.match(/[YKUHLBJN]/);
-  return run;
+function shouldRun(e, key) {
+  // var run = key.indexOf('shift+') >= 0 || key.match(/[YKUHLBJN]/);
+  return e.shift;
 }
 
 
@@ -127,7 +137,7 @@ function parseDirectionKeys(key) {
 
 
 
-function parse(key) {
+function parse(e, key) {
   // console.log(`parse(): got: ${key}`);
 
   // if (keyboard_input_callback)
@@ -178,7 +188,7 @@ function parse(key) {
   //
   var dir = parseDirectionKeys(key);
   if (dir > 0) {
-    if (shouldRun(key)) {
+    if (shouldRun(e, key)) {
       run(dir);
     } else {
       moveplayer(dir);

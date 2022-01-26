@@ -12,7 +12,7 @@ function saveGame(isCheckPoint) {
   player.level = null;
 
   try {
-    var state = new GameState();
+    var state = new GameState(true);
 
     /* 
       v304 -- i've decided to remove the automatic reloading checkpoint feature
@@ -42,8 +42,7 @@ function saveGame(isCheckPoint) {
   if (!isCheckPoint) {
     if (!error) {
       updateLog(`Game saved. ${Number(bytes.length).toLocaleString()} bytes written.`);
-    }
-    else {
+    } else {
       updateLog(`${error}`);
       updateLog(`Sorry, your game couldn't be saved! Are cookies disabled?`);
       return false;
@@ -57,7 +56,7 @@ function saveGame(isCheckPoint) {
 
 function loadSavedGame(savedState, isCheckPoint) {
   if (!savedState) {
-    updateLog(`Sorry, I can't find your save game file!`);
+    updateLog(`Sorry, your saved game can't be found!`);
     return;
   }
 
@@ -75,7 +74,7 @@ function loadSavedGame(savedState, isCheckPoint) {
   player.level = null;
 
   let savedStateString = JSON.stringify(savedState);
-  let currentState = new GameState();
+  let currentState = new GameState(false);
   let currentStateString = JSON.stringify(currentState);
 
   let difftool = new diff_match_patch();
@@ -99,15 +98,15 @@ function loadSavedGame(savedState, isCheckPoint) {
         }
         errorMessage += `${index}: ${fragment}\n`;
       }
-      Rollbar.error(`${errorMessage}`);
       console.log(`${errorMessage}`);
+      Rollbar.error(`${errorMessage}`);
     } catch (error) {
       console.log(`failed integrity check: caught: ${error}`);
     }
   }
 
   /* delete / clear the saved game file */
-  // console.log("NOT DELETING SAVE GAME");
+  // console.log(`NOT DELETING SAVE GAME`);
   localStorageRemoveItem(logname);
   localStorageRemoveItem('checkpoint');
 
@@ -134,6 +133,8 @@ function loadState(state) {
   player = loadPlayer(savedPlayer);
 
   player.level = LEVELS[state.level];
+
+  setRecordingInfo(state.recording);
 
   newsphereflag = state.newsphereflag;
   GAMEOVER = state.GAMEOVER;
@@ -226,7 +227,7 @@ function loadPlayer(saved) {
   newPlayer.gender = saved.gender;
   newPlayer.char_picked = saved.char_picked;
   newPlayer.ramboflag = saved.ramboflag;
-  
+
   newPlayer.knownPotions = saved.knownPotions;
   newPlayer.knownScrolls = saved.knownScrolls;
   newPlayer.knownSpells = saved.knownSpells;
