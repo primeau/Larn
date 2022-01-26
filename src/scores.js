@@ -669,8 +669,8 @@ function died(reason, slain) {
     var printFunc = mazeMode ? updateLog : lprcat;
     lastmonst = reason; // for scoreboard
 
+    let extraNL = (printFunc == lprcat) ? `\n` : ``;
     try {
-      let extraNL = (printFunc == lprcat) ? `\n` : ``;
       let linkText = window.location.href.split(`?`)[0];
       linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
       printFunc(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>${extraNL}${extraNL}`);
