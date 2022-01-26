@@ -507,9 +507,8 @@ function revealLevel() {
 
 
 
-var NONAP = false;
-
 async function nap(time) {
+  let NONAP = PARAMS.nonap ? PARAMS.nonap == `true` : false;
   if (NONAP) time = 10;
   //debug(`nap start`, time);
   //napping = true;

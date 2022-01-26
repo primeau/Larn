@@ -190,9 +190,19 @@ function dnd_parse(key) {
         to balance the game on higher difficulties the chest and book
         from the store are special and are reduced in resale value and
         quality as difficulty goes up
+
+        v12.5.0: 
+        this can be turned off via the "unbalance" param
       */
       if (!ULARN && (boughtItem.matches(OBOOK) || boughtItem.matches(OCHEST))) {
-        boughtItem.arg = Math.max(1, boughtItem.arg - getDifficulty());
+        let unbalance = PARAMS.unbalance ? PARAMS.unbalance == `true` : false;
+        if (unbalance) {
+          // keep these games off the scoreboard
+          debug_used = true; // this should probably be moved somewhere more generic
+        } else {
+          // normal case
+          boughtItem.arg = Math.max(1, boughtItem.arg - getDifficulty());
+        }
       }
 
       storemessage(`  You pick up: ${invindex}) ${boughtItem}${period}`, 1000);
@@ -899,15 +909,26 @@ function parse_class(key) {
  */
 async function ohome() {
 
+  var hasPotion = isCarrying(createObject(OPOTION, 21));
+  var inTime = gtime <= TIMELIMIT;
+
+  try {
+    if (hasPotion || !inTime) {
+      let linkText = window.location.href.split(`?`)[0];
+      linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
+      updateLog(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b`);
+    }
+  } catch (error) {
+    // do nothing
+  }
+
+  
   setMazeMode(false);
 
   napping = false;
   dropflag = 1;
 
   setCharCallback(parse_home);
-
-  var hasPotion = isCarrying(createObject(OPOTION, 21));
-  var inTime = gtime <= TIMELIMIT;
 
   if (hasPotion) {
     lprint(`Congratulations. You found the potion of cure dianthroritis!\n\n`);

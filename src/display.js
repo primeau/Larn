@@ -15,7 +15,7 @@ function paint() {
     bottomline();
   }
 
-  printStats();
+  printStats(); // todo this should probably move
   blt();
 
   DEBUG_PAINT++;
@@ -32,11 +32,15 @@ function blt() {
     // TODO: this will break scoreboard rendering
     if (altrender) {
       // do nothing
-    }
-    else {
+    } else {
       bltDocument();
     }
   }
+
+  let divs = {};
+  divs.LARN = document.getElementById(`LARN`).innerHTML;
+  divs.STATS = document.getElementById(`STATS`).innerHTML;
+  recordFrame(divs);
 }
 
 
@@ -198,7 +202,7 @@ function setMode(amiga, retro, original) {
       /* first time */
       for (var y = 0; y < 24; y++) {
         for (var x = 0; x < 80; x++) {
-            display[x][y] = createDiv(x, y, spriteWidth, spriteWidth * 2);
+          display[x][y] = createDiv(x, y, spriteWidth, spriteWidth * 2);
         }
       }
       bltDocument();
@@ -277,8 +281,7 @@ function printStats() {
   if (!player) return;
   if (DEBUG_STATS) {
     stats = debug_stats();
-  }
-  else {
+  } else {
     if (game_started && side_inventory) {
       stats = game_stats(player);
     }
@@ -494,6 +497,9 @@ function moveplayer(dir) {
   }
 
   var item = itemAt(k, m);
+
+  // ?? rollbar implies that item is null sometimes and fails on matches()
+
   var monster = monsterAt(k, m);
 
   /* prevent the player from moving onto a wall, or a closed door when
@@ -582,20 +588,20 @@ function seemagic(onlyspells, allspells) {
 
   var spellstring = `  The magic spells you have discovered thus far:`;
   if (allspells) spellstring = `Available spells are:`;
-  var spellfunc = function (spell, buffer) {
+  var spellfunc = function(spell, buffer) {
     return padString(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
   }
   printknown(spellstring, spelldata, spellfunc, buffer, true);
 
   if (!onlyspells) {
     var scrollstring = `  The magic scrolls you have found to date are:`;
-    var scrollfunc = function (scroll) {
+    var scrollfunc = function(scroll) {
       return padString(`${SCROLL_NAMES[scroll.arg]}`, -26);
     }
     printknown(scrollstring, player.knownScrolls, scrollfunc, buffer, true);
 
     var potionstring = `  The magic potions you have found to date are:`;
-    var potionfunc = function (potion) {
+    var potionfunc = function(potion) {
       return padString(`${POTION_NAMES[potion.arg]}`, -26);
     }
     printknown(potionstring, player.knownPotions, potionfunc, buffer, false);

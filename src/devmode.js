@@ -8,19 +8,21 @@ function DEVMODE() {
         //
     }
 
+    console.error("DEVMODE IN USE");
+
     enableDebug();
     eventToggleDebugWTW();
     eventToggleDebugStairs();
     eventToggleDebugOutput();
-    eventToggleDebugKnowAll();
-    eventToggleDebugStats();
+   eventToggleDebugKnowAll();
+   eventToggleDebugStats();
     eventToggleDebugImmortal();
     eventToggleDebugAwareness();
     // eventToggleDebugNoMonsters();
     // player.updateStealth(100000);
     // player.updateCancellation(100000);
 
-    wizardmode(`pvnert(x)`);
+   wizardmode(`pvnert(x)`);
 
     // var startShield = createObject(OSHIELD);
     // take(startShield);

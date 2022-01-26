@@ -9,4 +9,3 @@ node_modules
 tools
 src/env/larn_config.js
 aws-sdk.js
-ga.js

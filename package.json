@@ -8,14 +8,19 @@
     "betaclean": "rm -r dist/beta || true",
     "tempclean": "rm -r larn-temp || true",
     "transpile": "babel src --out-dir larn-temp/",
-    "minify": "uglifyjs --mangle --compress -o larn-temp/larn.min.js larn-temp/fullstory.js larn-temp/util.js larn-temp/env/larn_config.js larn-temp/config.js larn-temp/larn.js larn-temp/main.js larn-temp/object.js larn-temp/global.js larn-temp/monster.js larn-temp/monsterdata.js larn-temp/player.js larn-temp/mazes.js larn-temp/level.js larn-temp/create.js larn-temp/data.js larn-temp/parse.js larn-temp/buttons.js larn-temp/scores.js larn-temp/inventory.js larn-temp/movem.js larn-temp/action.js larn-temp/io.js larn-temp/display.js larn-temp/storedata.js larn-temp/store.js larn-temp/mcdopes.js larn-temp/savelev.js larn-temp/spells.js larn-temp/spellsinfo.js larn-temp/regen.js larn-temp/spheres.js larn-temp/help.js larn-temp/state.js larn-temp/bill.js larn-temp/altar.js larn-temp/fountain.js larn-temp/potion.js larn-temp/scroll.js larn-temp/stairs.js larn-temp/throne.js larn-temp/devmode.js",
+    "minify": "uglifyjs --mangle --compress -o larn-temp/larn.min.js larn-temp/fullstory.js larn-temp/util.js larn-temp/env/larn_config.js larn-temp/config.js larn-temp/larn.js larn-temp/main.js larn-temp/object.js larn-temp/global.js larn-temp/monster.js larn-temp/monsterdata.js larn-temp/player.js larn-temp/mazes.js larn-temp/level.js larn-temp/create.js larn-temp/data.js larn-temp/parse.js larn-temp/buttons.js larn-temp/scores.js larn-temp/inventory.js larn-temp/movem.js larn-temp/action.js larn-temp/io.js larn-temp/display.js larn-temp/storedata.js larn-temp/store.js larn-temp/mcdopes.js larn-temp/savelev.js larn-temp/spells.js larn-temp/spellsinfo.js larn-temp/regen.js larn-temp/spheres.js larn-temp/help.js larn-temp/state.js larn-temp/bill.js larn-temp/altar.js larn-temp/fountain.js larn-temp/potion.js larn-temp/scroll.js larn-temp/stairs.js larn-temp/throne.js larn-temp/devmode.js larn-temp/fullstory.js larn-temp/tv/frame.js larn-temp/tv/lambda.js larn-temp/tv/movie.js larn-temp/tv/patch.js larn-temp/tv/roll.js",
     "betacopy": "mkdir -p dist/beta/lib ; mkdir dist/beta/img ; cp src/lib/*.js dist/beta/lib ; cp src/img/* dist/beta/img ; cp src/larn.html dist/beta ; cp src/larn.css dist/beta ; cp larn-temp/larn.min.js dist/beta ; cp larn-temp/worker.js dist/beta || true",
     "prodcopy": "mkdir -p dist/larn/lib ; mkdir dist/larn/img ; cp src/lib/*.js dist/larn/lib ; cp src/img/* dist/larn/img ; cp src/larn.html dist/larn ; cp src/larn.css dist/larn ; cp larn-temp/larn.min.js dist/larn ; cp larn-temp/worker.js dist/larn ; cp -r larn-www/* dist || true",
+    "tvcopy": "mkdir -p dist/beta/tv/env ; mkdir dist/beta/tv/lib ; mkdir dist/beta/tv/img ; cp larn-temp/tv/* dist/beta/tv ; cp larn-temp/util.js dist/beta/tv ; cp larn-temp/env/larn_config.js dist/beta/tv/env ; cp src/lib/*.js dist/beta/tv/lib ; cp src/img/favicon.png dist/beta/tv/img ; cp src/larn.css dist/beta/tv ; cp src/tv/index.html dist/beta/tv || true",
     "betabuild": "npm run betaclean ; npm run transpile ; npm run minify ; npm run betacopy",
     "prodbuild": "npm run prodclean ; npm run transpile ; npm run minify ; npm run prodcopy",
     "clean": "npm run tempclean ; npm run betaclean ; npm run prodclean",
-    "build": "npm run clean ; npm run transpile ; npm run minify ; npm run betacopy ; npm run prodcopy ; npm run tempclean",
-    "server": "python -m SimpleHTTPServer 8000"
+    "build": "npm run clean ; npm run transpile ; npm run minify ; npm run betacopy ; npm run prodcopy ; npm run tvcopy ; npm run tempclean ; npm run dist",
+    "fastbuild": "npm run minify ; npm run betacopy ; npm run prodcopy ; npm run tvcopy",
+    "watch": "npm run clean ; babel src --watch --out-dir larn-temp/",
+    "server": "cd ../larn-deploy ; python -m SimpleHTTPServer 8000",
+    "localserver": "python -m SimpleHTTPServer 8000",
+    "dist": "cd .. ; rm -rf larn-deploy/beta ; rm -rf larn-deploy/larn ; mv larn/dist/beta larn-deploy/ ; mv larn/dist/larn larn-deploy/ || true"
   },
   "repository": {
     "type": "git",

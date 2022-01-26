@@ -12,6 +12,7 @@ var playerID;
 var playerIP = `0`;
 var NOCOOKIES = false;
 var PARAMS = {};
+var recording = {};
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 var GAMEOVER = true;
@@ -78,10 +79,18 @@ var spheres = [];
 
 
 
-function GameState() {
+function GameState(save) {
   this.LEVELS = LEVELS;
   this.LOG = LOG;
   this.player = player;
+  this.recording = getRecordingInfo();
+  if (save) {
+    this.recording.frames += 3; // hack because three more frames get added before a game is done saving
+  }
+  else {
+    this.recording.frames -= 1; // hack because 1 frame is added before a game is loaded
+    this.recording.rolls -= 1; // hack because 1 roll is added before a game is loaded
+  }
 
   this.newsphereflag = newsphereflag;
   this.GAMEOVER = GAMEOVER;

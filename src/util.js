@@ -203,7 +203,7 @@ const BLINKENCHAR = `_`;
 
 function blinken(x, y) {
   clearBlinkingCursor();
-  BLINKENCURSOR = setInterval (
+  BLINKENCURSOR = setInterval(
     function() {
       var xpos = x + KEYBOARD_INPUT.length;
       cursor(xpos, y);
@@ -334,7 +334,7 @@ function millis() {
 
 function compareArrays(a1, a2) {
   if (!a1 && !a2) return true;
-  return a1 && a2 && a1.length == a2.length && a1.every((v,i)=> v === a2[i]);
+  return a1 && a2 && a1.length == a2.length && a1.every((v, i) => v === a2[i]);
 }
 
 
@@ -367,8 +367,7 @@ Storage.prototype.setObject = function(key, value) {
       usedWorker = true;
       /* send the data to the worker (which will call back via onCompressed()) */
       compressionWorker.postMessage([key, value]);
-    }
-    else {
+    } else {
       value = LZString.compressToUTF16(value);
       debug(`setObject: compression end size: ${value.length}`);
     }
@@ -383,14 +382,13 @@ Storage.prototype.setObject = function(key, value) {
 function localStorageSetObject(key, value) {
   if (ULARN) key += `_ularn`;
   try {
-    console.log(`setObject: ${key} ${value}`);
+    // console.log(`setObject: ${key} ${value}`);
     localStorage.setObject(key, value);
     NOCOOKIES = false;
-  }
-  catch (err) {
-      console.log(`setObject: ${err}`);
-      NOCOOKIES = true;
-      return err;
+  } catch (err) {
+    console.log(`setObject: ${err}`);
+    NOCOOKIES = true;
+    return err;
   }
 }
 
@@ -413,13 +411,12 @@ Storage.prototype.getObject = function(key) {
 function localStorageGetObject(key, failValue) {
   if (ULARN) key += `_ularn`;
   try {
-    console.log(`getObject: ${key}`);
+    // console.log(`getObject: ${key}`);
     var retrievedObject = localStorage.getObject(key);
     NOCOOKIES = false;
     if (retrievedObject === false) return false;
     return retrievedObject || failValue;
-  }
-  catch (err) {
+  } catch (err) {
     console.log(`getObject: "${key}" ${err}`);
     NOCOOKIES = true;
     return failValue;
@@ -435,10 +432,20 @@ function localStorageRemoveItem(key) {
     localStorage.removeItem(key);
     localStorage.removeItem(key + COMPRESSED_DATA);
     NOCOOKIES = false;
-  }
-  catch (err) {
+  } catch (err) {
     console.log(`removeItem: ${err}`);
     NOCOOKIES = true;
   }
 }
 
+
+
+function loadURLParameters() {
+  // internet explorer doesn't support "URLSearchParams" yet
+  let urlParams = {};
+  location.search.substr(1).split("&").forEach(function(item) {
+    urlParams[item.split("=")[0]] = item.split("=")[1]
+  });
+  console.log(`url parameters`, urlParams);
+  return urlParams;
+}

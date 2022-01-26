@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0';
-const BUILD = '475';
+const BUILD = '476b';
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -21,6 +21,8 @@ let compressionWorker; /* web worker to compress save games outside of main thre
 let workersAvailable = window.location.protocol != `file:`; /* can't read file:// */
 
 function play() {
+
+  console.log(`${gameID}`);
 
   // this role only has access to invoke the lambda score function 
   AWS.config.accessKeyId = "AWS_CONFIG_ACCESSKEYID";
@@ -42,8 +44,8 @@ function play() {
 
   initKeyBindings();
 
-  document.addEventListener("click", onMouseClick);
-  window.addEventListener("resize", onResize);
+  document.addEventListener('click', onMouseClick);
+  window.addEventListener('resize', onResize);
 
   if (window.Worker && workersAvailable) {
     compressionWorker = new Worker('worker.js');
@@ -54,7 +56,7 @@ function play() {
   if (location.hostname === 'localhost' || location.hostname === '') {
     enableDebug();
   } else {
-    window.onbeforeunload = confirmExit;
+     window.onbeforeunload = confirmExit;
   }
 
   // TODO: setup for not repainting in text mode
@@ -74,7 +76,7 @@ function play() {
     bltDocument();
   }
 
-  loadURLParameters();
+  PARAMS = loadURLParameters();
 
   no_intro = PARAMS.nointro ? PARAMS.nointro == `true` : false;
   mobile = PARAMS.mobile ? PARAMS.mobile == `true` : false;
@@ -89,17 +91,6 @@ function play() {
     welcome(); // show welcome screen, start the game
   }
 
-}
-
-
-
-function loadURLParameters() {
-  // internet explorer doesn't support "URLSearchParams" yet
-  PARAMS = {};
-  location.search.substr(1).split("&").forEach(function (item) {
-    PARAMS[item.split("=")[0]] = item.split("=")[1]
-  });
-  console.log(`url parameters`, PARAMS);
 }
 
 

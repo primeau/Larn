@@ -447,6 +447,18 @@ function itemAt(x, y) {
   if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
     return null;
   }
+
+  // debugging: there is an issue with a null player.level.item[][]
+  if (!player.level.items[x][y]) {
+    let errorMessage = `itemAt(): null item: x=${x} y=${y}`;
+    console.log(errorMessage);
+    try {
+      Rollbar.error(`${errorMessage}`);
+    } catch (error) {
+      // do nothing      
+    }
+  }
+  
   return player.level.items[x][y];
 }
 
@@ -930,6 +942,8 @@ function oteleport(teleportSelf) {
   */
   lasthx = 0;
   lasthy = 0;
+
+  updateLog(`Zaaaappp!`);
 
   if (level != newLevel) {
     newcavelevel(newLevel);
