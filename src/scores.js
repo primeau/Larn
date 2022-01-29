@@ -55,6 +55,18 @@ LocalScore.prototype.toString = function() {
 
 
 
+function createLocalScore() {
+  let ls = new LocalScore();
+  ls.gamelog = null;
+  ls.player = null;
+  ls.extra = null;
+  ls.browser = null;
+  ls.ularn = ULARN;
+  return ls;
+}
+
+
+
 function getStatString(score, addDate) {
 
   if (!score) return `no info`;
@@ -62,6 +74,20 @@ function getStatString(score, addDate) {
   var stats = ``;
 
   if (addDate) {
+    try {
+      let build = score.extra[EXTRA_BUILD];
+      if (build) {
+        build = build.substr(0, 3);
+        if (Number(build) >= 481) {
+          let linkText = window.location.href.split(`?`)[0];
+          linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${score.gameID.split(`+`)[0]}`;
+          linkText = `<b><a href='${linkText}'>Watch this game</a></b>`;
+          stats += `${linkText}\n\n`;
+        }
+      }
+    } catch (error) {
+      // do nothing
+    }
     stats += `Date: ${new Date(score.createdAt)}\n`;
   }
 
@@ -674,8 +700,7 @@ function died(reason, slain) {
       let linkText = window.location.href.split(`?`)[0];
       linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
       printFunc(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>${extraNL}${extraNL}`);
-    }
-    catch (error) {
+    } catch (error) {
       // do nothing
     }
 

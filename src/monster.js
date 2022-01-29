@@ -519,7 +519,7 @@ function createmonster(mon, x, y) {
   let dy = y;
 
   let onPlayer = x == player.x && y == player.y;
-  var oktocreate = (x != null && y != null && !onPlayer && cgood(x, y, 0, 1));
+  var oktocreate = (x != null && y != null && !onPlayer && cgood(x, y, false, true));
   var i = oktocreate ? 0 : -8;
 
   /* choose direction, then try all */
@@ -527,7 +527,7 @@ function createmonster(mon, x, y) {
     if (k > 8) k = 1; /* wraparound the diroff arrays */
     dx = x + diroffx[k];
     dy = y + diroffy[k];
-    if (cgood(dx, dy, 0, 1)) /* if we can create here */ {
+    if (cgood(dx, dy, false, true)) /* if we can create here */ {
       oktocreate = true;
       i = 0;
     }
@@ -573,33 +573,25 @@ function cgood(x, y, itm, monst) {
   */
   var item = itemAt(x, y);
 
-  // debugging: there is an issue with player.level.item[][] having a null 
-  // in it. 
-  if (!item) {
-    let errorMessage = `cgood(): null item: x=${x} y=${y} itm=${itm} monst=${monst}`;
-    console.log(errorMessage);
-    Rollbar.error(`${errorMessage}`);
-    return false;
-  }
-
-
   if (((y < 0) || (y > MAXY - 1) || (x < 0) || (x > MAXX - 1)) ||
     (!item) ||
     (item.matches(OWALL)) ||
     (item.matches(OCLOSEDDOOR)) ||
-    (item.matches(OHOMEENTRANCE))) return (false);
+    (item.matches(OHOMEENTRANCE))) {
+      return false;
+    }
 
-  /* if checking for an item, return False if one there already
-   */
-  if (itm && !item.matches(OEMPTY))
-    return (false);
+  /* if checking for an item, return False if one there already */
+  if (itm && !item.matches(OEMPTY)) {
+    return false;
+  }
 
   /* if checking for a monster, return False if one there already _or_
      there is a pit/trap there.
   */
   if (monst) {
     if (monsterAt(x, y)) {
-      return (false);
+      return false;
     }
     switch (item.id) {
       /* note: not invisible traps, since monsters are not affected
@@ -613,12 +605,12 @@ function cgood(x, y, itm, monst) {
       case OTRAPDOOR.id:
       case OELEVATORUP.id:
       case OELEVATORDOWN.id:
-        return (false);
+        return false;
       default:
         break;
     }
   }
-  return (true);
+  return true;
 }
 
 
@@ -645,7 +637,7 @@ function createitem(item, arg, nearPlayer) {
       y = lasthy + (firstTry ? 0 : diroffy[k]);
     }
 
-    if (cgood(x, y, 1, 0)) /* if we can create here */ {
+    if (cgood(x, y, true, false)) /* if we can create here */ {
       setItem(x, y, createObject(item, arg));
       return;
     }
@@ -663,7 +655,7 @@ function dropItemNearPlayer(item) {
 
 
 function dropItem(x, y, item, scatter) {
-  if (!scatter && cgood(x, y, 1, 0)) {
+  if (!scatter && cgood(x, y, true, false)) {
     setItem(x, y, item);
     return;
   } else {
@@ -672,7 +664,7 @@ function dropItem(x, y, item, scatter) {
       if (k > 8) k = 1; /* wraparound the diroff arrays */
       dx = x + diroffx[k];
       dy = y + diroffy[k];
-      if (cgood(dx, dy, 1, 0)) /* if we can create here */ {
+      if (cgood(dx, dy, true, false)) /* if we can create here */ {
         setItem(dx, dy, item);
         return;
       }
