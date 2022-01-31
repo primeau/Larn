@@ -2,7 +2,7 @@
 
 // TODO need more consistency, error logging
 
-const LAMBDA = TV_ENABLE_REALTIME ? `movie_test` : `movies`;
+const LAMBDA = ENABLE_RECORDING_REALTIME ? `movie_test` : `movies`;
 
 function uploadFile(filename, filecontents, lastFile, gameData) {
   let action = `write`;

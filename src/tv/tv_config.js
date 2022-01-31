@@ -1,3 +1,4 @@
 'use strict';
 
-const TV_ENABLE_REALTIME = false;
+const ENABLE_RECORDING = false;
+const ENABLE_RECORDING_REALTIME = false;

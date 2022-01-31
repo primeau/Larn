@@ -943,7 +943,7 @@ function oteleport(teleportSelf) {
   lasthx = 0;
   lasthy = 0;
 
-  updateLog(`Zaaaappp!`);
+  if (teleportSelf) updateLog(`Zaaaappp!`);
 
   if (level != newLevel) {
     newcavelevel(newLevel);

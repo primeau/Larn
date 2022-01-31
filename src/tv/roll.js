@@ -1,7 +1,7 @@
 'use strict';
 
-const MAX_ROLL_LENGTH = TV_ENABLE_REALTIME ? 10 : 100;
-if (TV_ENABLE_REALTIME) console.error("ROLL LENGTH", MAX_ROLL_LENGTH);
+const MAX_ROLL_LENGTH = ENABLE_RECORDING_REALTIME ? 10 : 100;
+if (ENABLE_RECORDING_REALTIME) console.error("ROLL LENGTH", MAX_ROLL_LENGTH);
 
 // a collection of patches
 class Roll {
@@ -50,7 +50,7 @@ function decompressRoll(compressed) {
 function uploadRoll(roll, num, dataCallback) {
   let gameData;
 
-  if (TV_ENABLE_REALTIME) {
+  if (ENABLE_RECORDING_REALTIME) {
   // datacallback gets a localscore object from the player so we can update 
   // the list of games in progress
   if (dataCallback) gameData = dataCallback();

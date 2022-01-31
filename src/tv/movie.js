@@ -7,7 +7,7 @@ const EMPTY_LARN_FRAME = "                                                      
 class Video {
   constructor(gameID) {
     this.frameBuffer = [];
-    this.recording = true;
+    this.recording = ENABLE_RECORDING;
     this.gameID = gameID;
     this.currentFrameNum = -1;
     this.totalFrames; // total number of frames when replaying

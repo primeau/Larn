@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0';
-const BUILD = '482';
+const BUILD = '483';
 
 const ENABLE_DEVMODE = false;
 
@@ -153,6 +153,7 @@ function initKeyBindings() {
 
 function enableDebug() {
   debug_used = 1;
+  document.body.style.backgroundColor = "#002222";
   console.log(`DEBUG_MODE: ON`);
   Mousetrap.bind('alt+`', eventToggleDebugStats);
   Mousetrap.bind('alt+1', eventToggleDebugOutput);
