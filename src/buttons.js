@@ -160,6 +160,9 @@ function newButtonRow() {
 
 
 function setButtons() {
+
+    if (!game_started) return;
+    
     BUTTONS = '';
 
     if (!mobile) {

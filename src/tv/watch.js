@@ -304,10 +304,7 @@ function bltPrev(frame) {
 
 function blt(frame) {
   if (frame) {
-    // console.log(`stats: ${JSON.stringify(frame.divs.LARN)}`);
-    // TODO: this is a fun NIN reference but we probably could just do nothing
     if (frame.divs.LARN === ``) frame.divs.LARN = EMPTY_LARN_FRAME;
-    // if (frame.divs.LARN === ``) return;
     setDiv(`TV_LARN`, frame.divs.LARN);
     setDiv(`TV_STATS`, frame.divs.STATS);
     updateProgressBar(frame.id, video.lastFrameLoaded.id, video.totalFrames);

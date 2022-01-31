@@ -83,13 +83,15 @@ function GameState(save) {
   this.LEVELS = LEVELS;
   this.LOG = LOG;
   this.player = player;
-  this.recording = getRecordingInfo();
-  if (save) {
-    this.recording.frames += 3; // hack because three more frames get added before a game is done saving
-  }
-  else {
-    this.recording.frames -= 1; // hack because 1 frame is added before a game is loaded
-    this.recording.rolls -= 1; // hack because 1 roll is added before a game is loaded
+
+  if (isRecording()) {
+    this.recording = getRecordingInfo();
+    if (save) {
+      this.recording.frames += 3; // hack because three more frames get added before a game is done saving
+    } else {
+      this.recording.frames -= 1; // hack because 1 frame is added before a game is loaded
+      this.recording.rolls -= 1; // hack because 1 roll is added before a game is loaded
+    }
   }
 
   this.newsphereflag = newsphereflag;

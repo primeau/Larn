@@ -34,8 +34,8 @@ function welcome() {
 
   var nameString = `Welcome to ${GAMENAME}. Please enter your name [<b>${logname}</b>]: `;
 
-  // if (!newplayer)
-  //   nameString = `(Please stick to one name!)`;
+  let chastizing = `Please use only one name to leave room on the scoreboard for others`;
+  setDiv(`FOOTER`, chastizing);
 
   lprcat(nameString);
   blinken(nameString.length - 5, 24);
@@ -45,7 +45,6 @@ function welcome() {
   } else {
     setname(logname);
   }
-  setButtons();
   blt();
 }
 
@@ -65,6 +64,8 @@ function createLevelNames() {
 
 function setname(name) {
 
+  setDiv(`FOOTER`, ``);
+
   // Our Hero could have no name, but this is not Braavos
   name = name.trim();
 
@@ -79,7 +80,7 @@ function setname(name) {
 
   cursors();
   cltoeoln();
-
+  
   var saveddata = localStorageGetObject(logname);
   var checkpoint;
 
@@ -437,7 +438,11 @@ function startgame(hard) {
   setMazeMode(true);
   game_started = true;
 
-  // DEVMODE(); // this must be commented out for production releases
+  setButtons();
+  
+  if (ENABLE_DEVMODE) {
+    DEVMODE(); // this must be commented out for production releases
+  }
 
   return 1;
 }

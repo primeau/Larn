@@ -2,24 +2,41 @@
 
 // TODO need more consistency, error logging
 
+const LAMBDA = TV_ENABLE_REALTIME ? `movie_test` : `movies`;
 
-
-function uploadFile(filename, filecontents, lastFile) {
+function uploadFile(filename, filecontents, lastFile, gameData) {
   let action = `write`;
   if (lastFile) {
     action = `writelast`;
   }
   console.log(`uploadFile(): ${filename}`);
 
+  let paramPayload = {};
+  paramPayload.action = action;
+  paramPayload.gameID = gameID;
+  paramPayload.filename = filename;
+  paramPayload.file = filecontents;
+
+  if (gameData) {
+    paramPayload.gameData = gameData;
+  }
+
+  paramPayload = JSON.stringify(paramPayload);
+
   var params = {
-    FunctionName: `movies`,
-    Payload: `{ "action" : "${action}", "gameID" : "${gameID}", "filename" : "${filename}", "file" : ${JSON.stringify(filecontents)} }`,
+    FunctionName: LAMBDA,
+    Payload: paramPayload,
     InvocationType: 'RequestResponse',
     LogType: 'None'
   };
 
   lambda.invoke(params, function(error, data) {
-    var payload = data ? JSON.parse(data.Payload) : null;
+    var response = data ? JSON.parse(data.Payload) : null;
+
+    // TODO this is awful. need to make statuscode not 200 instead
+    // TODO this is awful. need to make statuscode not 200 instead
+    // TODO this is awful. need to make statuscode not 200 instead
+    if (data.Payload.includes(`Error`)) error = data.Payload;
 
     if (!error) {
       //console.log(`uploadFile(): ${filename} ${data.StatusCode}`);
@@ -27,7 +44,7 @@ function uploadFile(filename, filecontents, lastFile) {
         //
       }
     } else {
-      console.error(`uploadFile(): lambda error: ${error}`);
+      console.error(`uploadFile(): lambda error: ${error}`, response);
     }
   });
 }
@@ -40,7 +57,7 @@ function downloadRoll(gameID, num, callback, frameupdate, successCallback, error
   console.log(`downloadRoll(): ${gameID}/${filename}`);
 
   var params = {
-    FunctionName: `movies`,
+    FunctionName: LAMBDA,
     Payload: `{ "action" : "read", "gameID" : "${gameID}", "filename" : "${filename}"}`,
     InvocationType: 'RequestResponse',
     LogType: 'None' // 'Tail'
@@ -99,7 +116,7 @@ function loadRecordings(callback, frameLimit) {
   let action = `listcompleted`;
 
   var params = {
-    FunctionName: `movies`,
+    FunctionName: LAMBDA,
     Payload: `{ "action" : "${action}", "frameLimit" : "${frameLimit}" }`,
     InvocationType: 'RequestResponse',
     LogType: 'None'
@@ -110,7 +127,7 @@ function loadRecordings(callback, frameLimit) {
     var payload = data ? JSON.parse(data.Payload) : null;
     if (!error) {
       if (data.StatusCode == 200) {
-        console.log(`loadRecordings(): success:`, data);
+        console.log(`loadRecordings(): success`);
       }
       callback(payload.body);
     } else {

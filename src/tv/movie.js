@@ -1,18 +1,20 @@
 'use strict';
 
 let video;
-const EMPTY_LARN_FRAME = "                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                           SCENE MISSING                                        \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n";
+const EMPTY_LARN_FRAME = "                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                            SAVING GAME                                        \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n";
 
 // a collection of rolls of film
 class Video {
   constructor(gameID) {
     this.frameBuffer = [];
+    this.recording = true;
     this.gameID = gameID;
     this.currentFrameNum = -1;
     this.totalFrames; // total number of frames when replaying
     this.rolls = [];
     this.divs = []; // divs to record
     this.lastFrameLoaded;
+    this.dataCallback; // use this to upload LocalScore info for games in progress
   }
 
 
@@ -120,7 +122,7 @@ class Video {
     currentRoll.addPatch(newPatch);
     if (currentRoll.isFull()) {
       // console.log(`video.addframe(): writing roll`);
-      uploadRoll(currentRoll, this.rolls.length - 1);
+      uploadRoll(currentRoll, this.rolls.length - 1, this.dataCallback);
       this.addRoll(new Roll([]));
     }
 
@@ -178,8 +180,23 @@ function errorCallback() {
 }
 
 
+
+// this is called by larn if it can't record (offline/amiga_mode)
+function stopRecording() {
+  if (!video) video = new Video(gameID);
+  video.recording = false;
+}
+
+function isRecording() {
+  if (!video) video = new Video(gameID);
+  return video.recording;
+}
+
+
 // this is called by larn
-function recordFrame(divs) {
+function recordFrame(divs, dataCallback) {
+
+  if (!isRecording()) return;
 
   if (!video) video = new Video(gameID);
 
@@ -188,9 +205,9 @@ function recordFrame(divs) {
     return;
   }
 
-  // amiga games are much bigger. don't record them for now.
-  // (it also totally doesn't work...)
-  if (amiga_mode) return;
+  if (!video.dataCallback) {
+    video.dataCallback = dataCallback;
+  }
 
   let newFrame = new Frame();
   newFrame.id = video.currentFrameNum + 1;
@@ -213,13 +230,15 @@ function recordFrame(divs) {
 // this is called by larn
 function endRecording(endData, isUlarn) {
 
+  if (!isRecording()) return;
+
   if (!navigator.onLine) {
     // console.error(`offline`);
     return;
   }
 
   let currentRoll = video.getCurrentRoll();
-  uploadRoll(currentRoll, video.rolls.length - 1);
+  uploadRoll(currentRoll, video.rolls.length - 1, video.dataCallback);
 
   // don't write a file with a '+' in it
   if (endData.gameID.slice(-1) === `+`) {
@@ -227,6 +246,8 @@ function endRecording(endData, isUlarn) {
   }
   endData.frames = currentRoll.patches[currentRoll.patches.length - 1].id;
   endData.ularn = isUlarn;
+
+  console.log(`endRecording(): enddata: `, endData);
 
   console.log(`endRecording(): frames = ${endData.frames}`);
   uploadFile(`${gameID}.txt`, JSON.stringify(endData), true);
@@ -236,6 +257,9 @@ function endRecording(endData, isUlarn) {
 
 // this is called by larn
 function getRecordingInfo() {
+
+  if (!isRecording()) return;
+
   var recordingInfo = {
     'frames': video.currentFrameNum,
     'rolls': video.rolls.length,
@@ -248,6 +272,10 @@ function getRecordingInfo() {
 
 // this is called by larn for reloading from savegames
 function setRecordingInfo(info) {
+
+  if (!isRecording()) return;
+  if (!info) return;
+
   video = new Video(video.gameID);
   console.log(`setRecordingInfo(): info: ${JSON.stringify(info)}`);
   video.currentFrameNum = parseInt(info.frames);

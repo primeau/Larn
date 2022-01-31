@@ -1,7 +1,9 @@
 'use strict';
 
 const VERSION = '12.5.0';
-const BUILD = '481';
+const BUILD = '482';
+
+const ENABLE_DEVMODE = false;
 
 var ULARN = false; // are we playing LARN or ULARN?
 

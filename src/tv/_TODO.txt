@@ -1,17 +1,13 @@
 
 
 todo:
-* clear up old games
-* if < N frames, delete
+*** fix /tv/aws/index
+* saved games show up as "killed by $lastMonst"
+    * how does TVTOOL see saved games?
 * list filter
 * amiga games are much bigger. don't record them for now. it also totally doesn't work...
-- don't add saved games to viewing list
-- preserve games that make it to the scoreboard
-- resize font to fill screen
-- add "Watch This Game" to top of high score stats or beside high scores list (filter by version #)
 - put a size limit on uploads in the lambda
 - VIDEO.WRITETOS3() <- TODO this could be be basis of cloud savegames too
-- add link to larn tv from scoreboard 
 - hold inventory views (and others?) for a little longer somehow?
 
 live mode:

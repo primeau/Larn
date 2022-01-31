@@ -14,10 +14,10 @@ var LocalScore = function() {
   this.winner = lastmonst == DIED_WINNER;
   var winBonus = this.winner ? 100000 * getDifficulty() : 0;
   this.who = logname; /* the name of the character */
-  this.gender = player.gender; /* ularn gender */
-  this.character = player.char_picked; /* ularn character class */
+  this.gender = player ? player.gender : `Male`; /* ularn gender */
+  this.character = player ? player.char_picked : `Adventurer`; /* ularn character class */
   this.hardlev = getDifficulty(); /* the level of difficulty player played at */
-  this.score = player.GOLD + player.BANKACCOUNT + winBonus; /* the score of the player */
+  this.score = player ? (player.GOLD + player.BANKACCOUNT + winBonus) : 0; /* the score of the player */
   this.timeused = Math.floor(gtime / 100); /* the time used in mobuls to win the game */
   this.what = getWhyDead(lastmonst); /* the number of the monster that killed player */
   this.level = LEVELNAMES[level]; /* the level player was on when he died */
@@ -39,10 +39,12 @@ var LocalScore = function() {
   }
 
   // START HACK -- we don't want to save the level
-  var x = player.level;
-  player.level = null;
-  this.player = JSON.stringify(player);
-  player.level = x;
+  if (player) {
+    var x = player.level;
+    player.level = null;
+    this.player = JSON.stringify(player);
+    player.level = x;
+  }
   // END HACK -- we don't want to save the level
 
   this.browser = `${navigator.vendor} (${navigator.userAgent})`;

@@ -40,7 +40,7 @@ function blt() {
   let divs = {};
   divs.LARN = document.getElementById(`LARN`).innerHTML;
   divs.STATS = document.getElementById(`STATS`).innerHTML;
-  recordFrame(divs);
+  recordFrame(divs, createLocalScore);
 }
 
 
@@ -170,6 +170,8 @@ function onResize() {
 
 
 function setMode(amiga, retro, original) {
+
+  if (amiga && isRecording()) stopRecording();
 
   amiga_mode = amiga;
   retro_mode = retro;

@@ -53,7 +53,6 @@ function displayRecordings(games) {
 
 function addListItem(game) {
   let datestring = new Date(game.createdAt).toLocaleString().split(",")[0];
-  // let score = `${padString(Number(game.score).toLocaleString(), 10)}  ${padString(``+game.hardlev, 4)}  ${padString(game.who, -25)} ${padString(`${game.what} on ${game.level}`, -37)}${padString(`${game.timeused}`, 6)}  ${padString(datestring, 10)}`;
   let score = `${padString(datestring, 10)}${padString(Number(game.score).toLocaleString(), 11)}${padString(``+game.hardlev, 6)}${padString(`${game.timeused}`, 8)}  ${padString(game.who, -25)}${padString(`${game.what} on ${game.level}`, -40)}`;
   //${padString(`${game.frames}`, 6)}  ${padString(game.gameID, -10)}`;
 

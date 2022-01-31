@@ -6,7 +6,7 @@
 
 
 ## To Play Locally 
-- download a zipfile of the repository
+- [download a zipfile of the repository](https://github.com/primeau/Larn/archive/refs/heads/master.zip "download a zipfile of the repository")
 - open larn_local.html in your browser and play
 - viewing the scoreboard and recording high scores won't work
 
