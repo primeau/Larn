@@ -15,7 +15,7 @@ exports.handler = async(event) => {
     // 
     // PARSE GAMEID
     //
-    var gameID = parseGameID(event);
+    let gameID = parseGameID(event);
 
     //
     // PARSE IF ULARN
@@ -59,7 +59,7 @@ exports.handler = async(event) => {
 
 
 function parseGameID(event) {
-    var gameID = event.gameID;
+    let gameID = event.gameID;
     console.log(`INDEX: start with gameID: ${gameID}\n`);
     if (!gameID && event.newScore) {
         gameID = event.newScore.gameID;
@@ -84,7 +84,7 @@ function parseGameID(event) {
 
 
 function isUlarn(event) {
-    var gamename = event.gamename;
+    let gamename = event.gamename;
     console.log(`INDEX: gamename: ${gamename}\n`);
     return gamename && gamename === `Ularn`;
 }

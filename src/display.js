@@ -37,15 +37,18 @@ function blt() {
     }
   }
 
+  // if (!BLINKEN) {
   let divs = {};
   divs.LARN = document.getElementById(`LARN`).innerHTML;
   divs.STATS = document.getElementById(`STATS`).innerHTML;
   recordFrame(divs, createLocalScore);
+  // }
 }
 
 
 
 let alternativeDisplay;
+
 function detachDisplay() {
   display = null;
   alternativeDisplay = ` `;
@@ -178,15 +181,26 @@ function setMode(amiga, retro, original) {
   original_objects = original;
   let spriteWidth = computeSpriteWidth();
 
+  // bold fonts are wider than regular fonts on Safari
+  // Courier New is OK, but many are not
+  // TODO: still need to solve this for dos437
+  const testfont = `12px modern`;
+  const testtext = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
+  const isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
+
+  // console.log(getTextWidth(testtext, testfont, true), getTextWidth(testtext, testfont, false), isBoldWider);
+
   // modern font settings
-  let fontSize = spriteWidth * 1.66;
-  let fontFamily = `Courier New`;
+  let widthMultiple = isBoldWider ? 1.66 : 1.71;
+  let heightMultiple = 1.93;
+  let fontFamily = isBoldWider ? `Courier New` : `modern`;
   let textColour = `lightgrey`;
   let letterSpacing = `normal`;
 
   // retro mode settings
   if (retro_mode) {
-    fontSize = spriteWidth * 1.88;
+    widthMultiple = 1.88;
+    heightMultiple = 1.9;
     fontFamily = `dos437`;
     textColour = `#ABABAB`;
     letterSpacing = '-1px';
@@ -194,7 +208,7 @@ function setMode(amiga, retro, original) {
 
   // change to amiga font for amiga graphics
   if (amiga_mode) {
-    fontSize = spriteWidth * 1.66;
+    widthMultiple = 1.66;
     fontFamily = retro_mode ? `amiga500` : `amiga1200`;
     textColour = `lightgrey`;
     letterSpacing = `normal`;
@@ -224,12 +238,16 @@ function setMode(amiga, retro, original) {
     }
   }
 
+  let fontSize = spriteWidth * widthMultiple;
+  let lineHeight = `${spriteWidth * heightMultiple}px`;
+
   let font = `${fontSize}px ${fontFamily}`;
 
   document.body.style.font = font;
   document.body.style.fontFamily = fontFamily;
   document.body.style.color = textColour;
   document.body.style.letterSpacing = letterSpacing;
+  document.body.style.lineHeight = lineHeight;
 
   setButtons();
 
@@ -249,7 +267,26 @@ function setMode(amiga, retro, original) {
 
   paint();
 
+  try {
+    if (!styleUploaded) {
+      styleUploaded = true;
+      let larnStyle = {};
+      let larnElement = document.getElementById(`LARN`);
+      larnStyle.font = getComputedStyle(larnElement).font;
+      larnStyle.fontFamily = getComputedStyle(larnElement).fontFamily;
+      larnStyle.color = getComputedStyle(larnElement).color;
+      larnStyle.letterSpacing = getComputedStyle(larnElement).letterSpacing;
+      larnStyle.widthMultiple = widthMultiple;
+      larnStyle.heightMultiple = heightMultiple;
+      uploadStyle(larnStyle);
+    }
+  } catch (error) {
+    console.error(`failed to upload style`, error)
+  }
+
 }
+
+let styleUploaded = false;
 
 
 
@@ -269,7 +306,7 @@ function computeSpriteWidth() {
   // spriteWidth *= 10;
   spriteWidth = Math.floor(spriteWidth); // chrome needs whole numbers to have smooth amiga graphics
   // spriteWidth /= 10;
-  spriteWidth = Math.max(10, spriteWidth);
+  spriteWidth = Math.max(9, spriteWidth);
 
   // console.log(`spriteWidth`, spriteWidth);
 
@@ -715,25 +752,6 @@ function appendLog(text) {
 function deleteLog() {
   if (!LOG) return;
   return LOG.pop();
-}
-
-
-
-/**
- * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
- * 
- * @param {String} text The text to be rendered.
- * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
- * 
- * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
- */
-function getTextWidth(text, font) {
-  // re-use canvas object for better performance
-  var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-  var context = canvas.getContext("2d");
-  context.font = font;
-  var metrics = context.measureText(text);
-  return metrics.width;
 }
 
 

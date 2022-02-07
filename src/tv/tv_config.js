@@ -1,4 +1,7 @@
 'use strict';
 
-const ENABLE_RECORDING = false;
+const ENABLE_RECORDING = true;
 const ENABLE_RECORDING_REALTIME = false;
+const ENABLE_RECORDING_LAMBDA_BETA = true;
+
+const MIN_FRAMES_TO_LIST = 1000;

@@ -34,7 +34,7 @@ function welcome() {
 
   var nameString = `Welcome to ${GAMENAME}. Please enter your name [<b>${logname}</b>]: `;
 
-  let chastizing = `Please use only one name to leave room on the scoreboard for others`;
+  let chastizing = `* Please use only one name to leave room on the scoreboard for others`;
   setDiv(`FOOTER`, chastizing);
 
   lprcat(nameString);
@@ -270,7 +270,7 @@ function initRB() {
 
 function getIP() {
   if (!navigator.onLine) {
-    // console.error(`offline`);
+    console.error(`offline`);
     return;
   }
   fetch(`https://api.db-ip.com/v2/free/self`)
@@ -441,7 +441,7 @@ function startgame(hard) {
   setButtons();
   
   if (ENABLE_DEVMODE) {
-    DEVMODE(); // this must be commented out for production releases
+    enableDevmode();
   }
 
   return 1;

@@ -44,25 +44,3 @@ function decompressRoll(compressed) {
   let decompressed = LZString.decompressFromEncodedURIComponent(compressed);
   return createRoll(JSON.parse(decompressed));
 }
-
-
-
-function uploadRoll(roll, num, dataCallback) {
-  let gameData;
-
-  if (ENABLE_RECORDING_REALTIME) {
-  // datacallback gets a localscore object from the player so we can update 
-  // the list of games in progress
-  if (dataCallback) gameData = dataCallback();
-    if (gameData) {
-      gameData.frames = roll.patches[roll.patches.length - 1].id;
-    } else {
-      gameData = null;
-      console.log(`uploadroll: gamedata=null`);
-    }
-  }
-
-  let filename = `${num}.json`;
-  let file = compressRoll(roll);
-  uploadFile(filename, file, false, JSON.stringify(gameData));
-}

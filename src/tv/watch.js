@@ -6,12 +6,12 @@ let SPEED_OPTIONS = [0.5, 1, 1.5, 2, 4, 8];
 let SPEED_UP = true;
 let MAX_WAIT = 2000;
 let MIN_WAIT = 10;
-// let MIN_WAIT = 2000;
 let PLAY = false;
 
 let clock;
 let lastFrameTime = Date.now();
-let STARTED = false;
+
+let style;
 
 function watchMovie(gameID) {
   init(gameID);
@@ -20,7 +20,11 @@ function watchMovie(gameID) {
   video.divs.push(`LARN`);
   video.divs.push(`STATS`);
 
-  downloadRoll(gameID, 0, fillVideoBufferCallback, setTotalVideoFramesCallback, successCallback, errorCallback);
+  // load useful css style settings
+  downloadFile(gameID, `${gameID}.css`, setStyle);
+
+  // kick off the downloading of all video data
+  downloadRoll(video, updateProgressBarCallback);
 }
 
 
@@ -123,13 +127,64 @@ function init(gameID) {
   body.appendChild(toggleButton);
   body.appendChild(fastforwardButton);
   // body.appendChild(document.createElement('br'));
-  // body.appendChild(fontSmallerButton);
-  // body.appendChild(fontEnbiggenButton);
   // body.appendChild(fullscreenButton);
   // body.appendChild(document.createElement('p'));
   // body.appendChild(gameidInput);
   // body.appendChild(gameidLabel);
   // body.appendChild(document.createElement('p'));
+}
+
+
+// TODO: let fontFamily = isBoldWider ? `Courier New` : `modern`;
+// someone could play on chrome, but the replay on safari needs to work
+function setStyle(body, styleIn) {
+  if (!styleIn) {
+    console.log(`setStyle(): no style data available`);
+    return;
+  }
+  style = JSON.parse(styleIn);
+  document.body.style.font = style.font;
+  document.body.style.fontFamily = style.fontFamily;
+  document.body.style.color = style.textColour;
+  onResize();
+}
+
+
+
+function updateProgressBarCallback() {
+  updateProgressBar(video.currentFrameNum, video.frameBuffer.length - 1, video.totalFrames);
+}
+
+
+
+function updateProgressBar(current, loaded, total) {
+  // let currentString = `${current} `;
+  // let totalString = ` ${total}`;
+  let currentString = ``;
+  let totalString = ``;
+
+  currentString = ` `.repeat(totalString.length - currentString.length) + currentString;
+  let totalBlocks = 67 - currentString.length - totalString.length;
+
+  let framesPerChar = total / totalBlocks;
+
+  let blocksDone = Math.ceil(current / framesPerChar);
+  let blocksLoaded = Math.floor((loaded - current) / framesPerChar);
+  let blocksRemaining = Math.max(0, totalBlocks - blocksDone - blocksLoaded);
+  // console.log(blocksDone, blocksLoaded, blocksRemaining, (blocksDone+blocksLoaded+blocksRemaining));
+
+  let progressBar = `▒`.repeat(blocksDone);
+  let loadedBar = `:`.repeat(blocksLoaded);
+  let remainingBar = `·`.repeat(blocksRemaining);
+
+  let message = ``;
+  if (loaded != total) {
+    message = ` (loading)`;
+  }
+
+  // document.getElementById('progressLeft').innerHTML = `${currentString}`;
+  // document.getElementById('progressRight').innerHTML = `${totalString}`;
+  document.getElementById('progressbar').innerHTML = `${progressBar}${loadedBar}${remainingBar}${message}`;
 }
 
 
@@ -140,7 +195,7 @@ function onClickProgressBar(event) {
   let clickX = event.clientX - box.left;
   let percent = clickX / width;
   let newFrameNum = Math.floor(video.totalFrames * percent);
-  if (newFrameNum < video.lastFrameLoaded.id) {
+  if (newFrameNum < video.frameBuffer.length - 1) {
     video.currentFrameNum = newFrameNum;
     // this feels a bit hacky but it works
     clearTimeout(clock);
@@ -307,40 +362,8 @@ function blt(frame) {
     if (frame.divs.LARN === ``) frame.divs.LARN = EMPTY_LARN_FRAME;
     setDiv(`TV_LARN`, frame.divs.LARN);
     setDiv(`TV_STATS`, frame.divs.STATS);
-    updateProgressBar(frame.id, video.lastFrameLoaded.id, video.totalFrames);
+    updateProgressBar(frame.id, video.frameBuffer.length - 1, video.totalFrames);
   }
-}
-
-
-
-function updateProgressBar(current, loaded, total) {
-  // let currentString = `${current} `;
-  // let totalString = ` ${total}`;
-  let currentString = ``;
-  let totalString = ``;
-
-  currentString = ` `.repeat(totalString.length - currentString.length) + currentString;
-  let totalBlocks = 67 - currentString.length - totalString.length;
-
-  let framesPerChar = total / totalBlocks;
-
-  let blocksDone = Math.ceil(current / framesPerChar);
-  let blocksLoaded = Math.floor((loaded - current) / framesPerChar);
-  let blocksRemaining = Math.max(0, totalBlocks - blocksDone - blocksLoaded);
-  // console.log(blocksDone, blocksLoaded, blocksRemaining, (blocksDone+blocksLoaded+blocksRemaining));
-
-  let progressBar = `▒`.repeat(blocksDone);
-  let loadedBar = `:`.repeat(blocksLoaded);
-  let remainingBar = `·`.repeat(blocksRemaining);
-
-  let message = ``;
-  if (loaded != total) {
-    message = ` (loading)`;
-  }
-
-  // document.getElementById('progressLeft').innerHTML = `${currentString}`;
-  // document.getElementById('progressRight').innerHTML = `${totalString}`;
-  document.getElementById('progressbar').innerHTML = `${progressBar}${loadedBar}${remainingBar}${message}`;
 }
 
 
@@ -380,7 +403,7 @@ function setSpeed(newSpeed) {
 
 
 function setDiv(id, data) {
-  var div = document.getElementById(id);
+  let div = document.getElementById(id);
   if (div) {
     // optimization:
     // most of the time, we're just repainting the same data into each div.

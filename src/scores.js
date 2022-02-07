@@ -734,7 +734,9 @@ function died(reason, slain) {
   if (!endGameScore) {
     endGameScore = new LocalScore();
   }
-  endRecording(endGameScore, ULARN); // the endgamescore thing is a mess
+
+  let endData = (reason == DIED_SAVED_GAME) ? null : endGameScore;
+  endRecording(endData, ULARN);
 
 }
 

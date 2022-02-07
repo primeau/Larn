@@ -1,137 +1,116 @@
 'use strict';
 
-// TODO need more consistency, error logging
+const LAMBDA = ENABLE_RECORDING_LAMBDA_BETA ? `movie_test` : `movies`;
 
-const LAMBDA = ENABLE_RECORDING_REALTIME ? `movie_test` : `movies`;
 
-function uploadFile(filename, filecontents, lastFile, gameData) {
-  let action = `write`;
-  if (lastFile) {
-    action = `writelast`;
-  }
-  console.log(`uploadFile(): ${filename}`);
 
-  let paramPayload = {};
-  paramPayload.action = action;
-  paramPayload.gameID = gameID;
-  paramPayload.filename = filename;
-  paramPayload.file = filecontents;
-
-  if (gameData) {
-    paramPayload.gameData = gameData;
-  }
-
-  paramPayload = JSON.stringify(paramPayload);
-
-  var params = {
+function invokeLambda(requestPayload, successCallback, failCallback) {
+  let params = {
     FunctionName: LAMBDA,
-    Payload: paramPayload,
+    Payload: JSON.stringify(requestPayload),
     InvocationType: 'RequestResponse',
     LogType: 'None'
   };
-
   lambda.invoke(params, function(error, data) {
-    var response = data ? JSON.parse(data.Payload) : null;
-
-    // TODO this is awful. need to make statuscode not 200 instead
-    // TODO this is awful. need to make statuscode not 200 instead
-    // TODO this is awful. need to make statuscode not 200 instead
-    if (data.Payload.includes(`Error`)) error = data.Payload;
-
     if (!error) {
-      //console.log(`uploadFile(): ${filename} ${data.StatusCode}`);
-      if (data.StatusCode == 200) {
-        //
+      if (data) {
+        if (data.StatusCode == 200) {
+          if (successCallback) {
+            let responsePayload = JSON.parse(data.Payload);
+            successCallback(responsePayload.body, responsePayload.File, responsePayload.Metadata);
+          }
+        } else {
+          console.error(`invokeLambda(): error ${data.StatusCode}`);
+          document.getElementById(`LARN_LIST`).innerHTML = `couldn't load: ${data.StatusCode}`;
+        }
       }
     } else {
-      console.error(`uploadFile(): lambda error: ${error}`, response);
+      console.error(`invokeLambda(): error: ${error}`);
+      document.getElementById(`LARN_LIST`).innerHTML = `${error}`;
+      if (failCallback) failCallback(error);
     }
   });
 }
 
 
 
-function downloadRoll(gameID, num, callback, frameupdate, successCallback, errorCallback) {
-
-  let filename = `${num}.json`;
-  console.log(`downloadRoll(): ${gameID}/${filename}`);
-
-  var params = {
-    FunctionName: LAMBDA,
-    Payload: `{ "action" : "read", "gameID" : "${gameID}", "filename" : "${filename}"}`,
-    InvocationType: 'RequestResponse',
-    LogType: 'None' // 'Tail'
+function downloadRecordings(recordingsLoadedCallback, limit) {
+  console.log(`downloadRecordings()`);
+  let requestPayload = {
+    action: `listcompleted`,
+    frameLimit: limit
   };
-
-  lambda.invoke(params, function(error, data) {
-    var payload = data ? JSON.parse(data.Payload) : null;
-
-    // TODO this is awful. need to make statuscode not 200 instead
-    // TODO this is awful. need to make statuscode not 200 instead
-    // TODO this is awful. need to make statuscode not 200 instead
-    if (data.Payload.includes(`Error`)) error = data.Payload;
-
-    if (!error) {
-      if (data.StatusCode == 200) {
-
-        if (!payload.File) {
-          let err = `downloadRoll(): ${gameID}/${filename} empty file`;
-          console.error(err);
-          errorCallback(err);
-          return;
-        }
-
-        let roll = decompressRoll(payload.File)
-
-        // console.log(`downloadRoll(): ${JSON.stringify(roll)}`);
-        // console.log(`downloadRoll(): got roll with ${roll.patches.length} frames`);
-
-        if (num === 0) {
-          let meta = JSON.parse(payload.Metadata);
-          console.log(`downloadRoll(): metadata: ${JSON.stringify(meta)}`);
-          if (meta.frames && frameupdate) {
-            frameupdate(parseInt(meta.frames));
-          }
-
-          if (meta.who) {
-            document.title = `LarnTV: ${meta.who} - ${meta.what} - diff ${meta.diff} - score ${meta.score}`;
-          }
-        }
-
-        callback(roll); // this is calling fillBuffer()
-        successCallback();
-      }
-    } else {
-      console.error(`downloadRoll(): lambda error: ${error}`);
-      errorCallback(error);
-    }
-  });
+  invokeLambda(requestPayload, recordingsLoadedCallback, null);
 }
 
 
 
-function loadRecordings(callback, frameLimit) {
-  console.log(`loadRecordings()`);
-
-  let action = `listcompleted`;
-
-  var params = {
-    FunctionName: LAMBDA,
-    Payload: `{ "action" : "${action}", "frameLimit" : "${frameLimit}" }`,
-    InvocationType: 'RequestResponse',
-    LogType: 'None'
-    // LogType: 'Tail'
+function loadStyles(gameID, successCallback) {
+  console.log(`loadStyles()`);
+  let requestPayload = {
+    action: `loadstyle`,
+    gameID: gameID
   };
+  invokeLambda(requestPayload, successCallback, null);
+}
 
-  lambda.invoke(params, function(error, data) {
-    var payload = data ? JSON.parse(data.Payload) : null;
-    if (!error) {
-      if (data.StatusCode == 200) {
-        console.log(`loadRecordings(): success`);
-      }
-      callback(payload.body);
-    } else {
-      console.error(`loadRecordings(): lambda error: ${error}`);
+
+
+function downloadFile(gameID, filename, successCallback, failCallback) {
+  console.log(`downloadFile(): ${gameID}/${filename}`);
+  let requestPayload = {
+    action: `read`,
+    gameID: gameID,
+    filename: filename,
+  };
+  invokeLambda(requestPayload, successCallback, failCallback);
+}
+
+
+
+function downloadRoll(video, successCallback) {
+  let numRolls = video.rolls.length;
+  let filename = `${numRolls}.json`;
+  // console.log(`downloadRoll(): ${gameID}/${filename}`);
+  downloadFile(video.gameID, filename, rollSuccess, null);
+
+  function rollSuccess(body, file, metadata) {
+    if (!file) {
+      console.error(`downloadRoll(): ${video.gameID}/${filename} empty file`);
+      let extra = (numRolls === 0) ? `` : `completely`
+      document.getElementById(`LARN_LIST`).innerHTML = `\nSorry, this game couldn't be loaded ${extra}`;
+      return;
     }
-  });
+
+    let roll = decompressRoll(file)
+    // console.log(`downloadRoll(): ${JSON.stringify(roll)}`);
+    // console.log(`downloadRoll(): got roll with ${roll.patches.length} frames`);
+    if (numRolls === 0) {
+      console.log(`downloadRoll(): metadata`, metadata);
+      if (metadata.frames) {
+        video.totalFrames = Number(metadata.frames);
+      }
+      if (metadata.who) {
+        document.title = `LarnTV: ${metadata.who} - ${metadata.what} - diff ${metadata.diff} - score ${metadata.score}`;
+      }
+    }
+    video.addRollToBuffer(roll);
+    if (successCallback) successCallback();
+  }
+}
+
+
+
+function uploadFile(gameID, filename, filecontents, isLastFile, progressData) {
+  console.log(`uploadFile(): ${gameID}/${filename}`);
+  let requestPayload = {
+    action: isLastFile ? `writelast` : `write`,
+    gameID: gameID,
+    filename: filename,
+    file: filecontents
+  };
+  if (progressData) {
+    requestPayload.progressData = progressData;
+  }
+  invokeLambda(requestPayload, null, null);
 }

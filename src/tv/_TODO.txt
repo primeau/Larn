@@ -1,24 +1,26 @@
 
+bugs:
+*** saving a game 3(?) from the end of a buffer causes a null patch, then error on reload
+- scrolling on safari is wonky. seems to be easier when paused
+- scrolling while loading isn't accurate (probably because it's using framebuffer.length)
+- if you step past the end of a game (ie on speed 8) frames keep advancing
+- probably need to await fonts loading on replay
+- modern font is too wide on replay
 
 todo:
-*** fix /tv/aws/index
-* saved games show up as "killed by $lastMonst"
-    * how does TVTOOL see saved games?
+* don't record intro frames with blinking cursor
 * list filter
 * amiga games are much bigger. don't record them for now. it also totally doesn't work...
 - put a size limit on uploads in the lambda
 - VIDEO.WRITETOS3() <- TODO this could be be basis of cloud savegames too
 - hold inventory views (and others?) for a little longer somehow?
+- clean up s3/dynamo boilerplate
 
 live mode:
 - use smaller batches only when someone is watching
 - write batches every few seconds when someone is watching
 - have a diff file if game is ongoing?
 - page with list of running games
-
-bugs:
-- 
-
 
 
 

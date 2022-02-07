@@ -1,9 +1,9 @@
 'use strict';
 
 const VERSION = '12.5.0';
-const BUILD = '483';
+const BUILD = '484';
 
-const ENABLE_DEVMODE = false;
+const ENABLE_DEVMODE = false;  // this must be set to false for production releases
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -22,7 +22,7 @@ var lambda; /* AWS lambda database handle */
 let compressionWorker; /* web worker to compress save games outside of main thread */
 let workersAvailable = window.location.protocol != `file:`; /* can't read file:// */
 
-function play() {
+async function play() {
 
   console.log(`${gameID}`);
 
@@ -86,6 +86,8 @@ function play() {
 
   setGameConfig();
 
+  await loadFonts();
+
   if (PARAMS.score) {
     player = new Player();
     loadScores(null, true, true);
@@ -93,6 +95,16 @@ function play() {
     welcome(); // show welcome screen, start the game
   }
 
+}
+
+
+
+async function loadFonts() {
+  // make sure fonts are loaded before rendering anything
+  // if we don't wait for this, the main screen will end up
+  // being a different font
+  const testfont = `12px modern`;
+  await document.fonts.load(testfont);
 }
 
 

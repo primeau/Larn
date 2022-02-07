@@ -28,7 +28,7 @@ function go() {
     document.getElementById(`TV_LARN`).innerHTML = introNode;
     document.getElementById(`LARN_LIST`).innerHTML = `(loading)`;
 
-    loadRecordings(displayRecordings, MIN_FRAMES_TO_LIST);
+    downloadRecordings(displayRecordings, MIN_FRAMES_TO_LIST);
   }
 }
 
@@ -36,17 +36,34 @@ function go() {
 
 // copied & adapted from display.js
 function onResize() {
+  const testfont = `12px modern`;
+  const testtext = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
+  const isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
+
+  let canApplyStyle = style && !isBoldWider;
+
+  let widthMultiple = 1.66;
+  let fontFamily = `Courier New`;
   let spriteWidth = computeSpriteWidth();
-  let fontSize = spriteWidth * 1.66;
-  let fontFamily = window.getComputedStyle(document.body).fontFamily;
+  if (canApplyStyle) {
+    widthMultiple = style.widthMultiple;
+    fontFamily = style.fontFamily;
+    document.body.style.letterSpacing = style.letterSpacing;
+  }
+  let fontSize = spriteWidth * widthMultiple;
   let font = `${fontSize}px ${fontFamily}`;
   document.body.style.font = font;
+
+  // do this last for some reason
+  if (canApplyStyle) document.body.style.lineHeight = `${spriteWidth * style.heightMultiple}px`;
 }
+
+
 
 // copied & adapted from display.js
 function computeSpriteWidth() {
-  var browserWidth = window.innerWidth;
-  var browserHeight = window.innerHeight;
+  let browserWidth = window.innerWidth;
+  let browserHeight = window.innerHeight;
 
   let rawSpriteW = (browserWidth - 1) / (80 + 39);
   let rawSpriteH = (browserHeight - 100) / 24;

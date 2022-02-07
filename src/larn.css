@@ -1,4 +1,15 @@
 @font-face {
+    font-family: modern;
+
+    /* works in firefox, not safari */
+    /* src: url('img/PTMono-Regular.ttf');
+
+    /* no firefox or safari */
+    src: url('img/NotoSansMono-Regular.ttf'); 
+    /* src: url('img/NotoSansMono-Light.ttf'); */
+}
+
+@font-face {
     font-family: dos437;
     src: url('img/dos437.ttf');
 }
@@ -53,7 +64,7 @@ strong {
 }
 
 body {
-    font-family: 'dos', 'Courier New', Courier, monospace;
+    font-family: 'modern', 'Courier New', Courier, monospace;
     font-size: 22px;
     color: #ABABAB;
     margin: 25px;
