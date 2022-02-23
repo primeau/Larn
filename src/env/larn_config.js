@@ -1,22 +1,5 @@
-// DO NOT COMMIT THIS FILE!
-// DO NOT COMMIT THIS FILE!
-// DO NOT COMMIT THIS FILE!
-// DO NOT COMMIT THIS FILE!
-// DO NOT COMMIT THIS FILE!
-// DO NOT COMMIT THIS FILE!
-
 'use strict';
-
 function initLambdaCredentials() {
-  // AWS.config.accessKeyId = "AWS_CONFIG_ACCESSKEYID";
-  // AWS.config.secretAccessKey = "AWS_CONFIG_SECRETACCESSKEY";
-  AWS.config.accessKeyId = "AKIAIFMVVQ2YN5IZ7WZQ";
-  AWS.config.secretAccessKey = "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";
+  AWS.config.accessKeyId = "AWS_CONFIG_ACCESSKEYID";
+  AWS.config.secretAccessKey = "AWS_CONFIG_SECRETACCESSKEY";
 }
-
-// DO NOT COMMIT THIS FILE!
-// DO NOT COMMIT THIS FILE!
-// DO NOT COMMIT THIS FILE!
-// DO NOT COMMIT THIS FILE!
-// DO NOT COMMIT THIS FILE!
-// DO NOT COMMIT THIS FILE!

@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.0';
-const BUILD = '486';
+const BUILD = '487';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
 

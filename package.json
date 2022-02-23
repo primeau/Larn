@@ -36,7 +36,8 @@
     "betabuild": "npm run betaclean ; npm run transpile ; npm run minify ; npm run betacopy",
     "prodbuild": "npm run prodclean ; npm run transpile ; npm run minify ; npm run prodcopy",
 
-    "build": "echo '=== STARTING BUILD ==' ; npm run clean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run dist ; npm run clean",
+    "build": "echo '=== STARTING BUILD ==' ; npm run clean ; npm run transpile ; npm run minify ; npm run prodcopy ; npm run webcopy ; npm run dist ; npm run clean",
+    "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run clean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run dist ; npm run clean",
 
     "watch": "npm run tempclean ; babel src --watch --out-dir larn-temp/",
     "server": "cd ../larn-deploy ; python -m SimpleHTTPServer 8000",
