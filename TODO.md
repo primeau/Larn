@@ -1,16 +1,9 @@
-NOW:
-*** warn if changing names because it's annoying on the scoreboard
-*** find a better way to get ip addresses
-*** default fonts are still stretched out in some browsers
-
-IDEA: use createElement for all rendering?
+NOW: UPDATE npm run build to only make dist, make a build prod, beta, alpha
 
 Ularn 12.5.0:
 - check all 1.6.3 code
 - check scorePUT
 - change retro font cookie
-- update savegame test endpoint eventually
-- retro font mode isn't properly monospaced in mac/safari
 
 Ularn 12.5.1
 - search for ULARN TODO
@@ -23,8 +16,14 @@ Ularn balance ideas:
 - make +9 items worth less? cap out around 116k (v3 chest in Larn)?
 
 todo:
+* IDEA: use createElement for all rendering?
+* find a better way to get ip addresses
 * help wiki (items/scrolls/potions/features/monsters/etc)
-- warn if changing names because it's annoying on the scoreboard
+* new video to add: https://larn.org/beta/tv/?gameid=lysnwvbhx8 
+  - diff 0 win with illiterate/thirsty conducts
+- update savegame test endpoint eventually
+- retro font mode isn't properly monospaced in mac/safari
+- re-add volcano sneak?
 - click / farlook to identify object (hack and classic mode)
 - mobile support
 - max diff 101
@@ -54,6 +53,7 @@ todo:
 - cheater beater:
   - re-implement cheater checker from larn source
   - add filtering for cheater high scores
+  - silently don't record cheat high scores
   - another cheater: meesa/DooDoo
   - serverside known cheaters list
   - check fs for games from localhost/file:
@@ -78,12 +78,24 @@ extras:
 - give notification given when haste, aggravate monsters subsides (no?)
 - beep support
 - speedrun mode
-- repeat function
+- repeat function, especially at altars
 - move command
+- conducts
+  - thirsty: never drink a potion
+  - illiterate: never read a book/scroll/fortune cookie
+  - spellbound: never cast a spell
+  - unbanked/cheapskate/goldless: never buy/sell anything, enter bank, use gold (no praying)
+  - one direction: never go down a set of stairs twice (or re-enter volcano/dungeon)
+  - pacifist: never kill a monster / or no wielded weapon?
+  - nudist: never wear armour (rings are ok) (need to make it an option to start without armour)
+  - zen: blind from birth (needs to be an option)
+  - jewleryless: never wear a ring / amulet
+  - identifyless: never read identify
+  - aggravating: permanent aggravate monsters (and remove curse won't fix)
+  - racer: if you see downward stairs, you must take them
 
 bugs:
 * last hit monster still chases from a distance if dumb
-* larn (not ularn) post win: start with no spells, diff is still 0, next game has spells
 * lots of monsters walking through walls (fixed?)
   - was this due to smart ripple[] not being cleared?
 * fall down pit, area around player isn't exposed
@@ -96,7 +108,6 @@ bugs:
   - half speed monster should move at full speed with haste monster on
 - closing a door (from on top of the door) when a monster is in the spot you were
   just in drops you back on the monsters spot. the monster reappears when you move.
-- can't load game stats from local scoreboard (can't find game sdkjfhsdfkj)
 - arrow buttons on help screen are truncated in amiga mode
 - amiga: you owe <strike>1234</strike> in taxes
 - amiga: gap between maze and spells isn't cleared on loading saved game
@@ -109,6 +120,8 @@ bugs:
 - monster movement isn't shown after falling asleep
 - casting sph twice in the same direction will always kill the player
 - While Haste Self is active, hitting a monster with a projectile causes said monster to move once at normal speed
+- game over scoreboard can't load current game (but can load all others) 
+  - it's because most recent game probably isn't a high score and isn't recorded in local winners/losers cache
 
 hardmode ideas:
 - can only wield actual weapons
@@ -119,11 +132,4 @@ hardmode ideas:
 - guardians are never asleep 
 - reduce blessed ularn item sale prices
 - get potion -> permanent aggravate monsters (be sure to disable remove curse)
-
-
-Jay@80.209.166.82 / 20200506 / Asdfgh01
-
-Larn % python -m SimpleHTTPServer 8000
-http://localhost:8000/dist/larn/larn.html
-file:///Users/jay/Dropbox/Desktop/LARN/JLarn/larn/larn_local.html?ularn=true
-
+- if aggravate always get gnome king at throne

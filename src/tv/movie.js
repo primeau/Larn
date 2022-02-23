@@ -10,6 +10,7 @@ class Video {
     this.recording = ENABLE_RECORDING;
     this.gameID = gameID;
     this.currentFrameNum = -1;
+    this.metadata; // set when game is completed
     this.totalFrames; // total number of frames when replaying
     this.rolls = [];
     this.divs = []; // divs to record
@@ -33,12 +34,21 @@ class Video {
       let newFrame = buildFrame(patch, prevFrame);
 
       if (!newFrame) {
-        console.log(`addRollToBuffer(): null newFrame`, patch);
+        // console.log(`addRollToBuffer(): null newFrame`, patch);
         continue;
       }
 
-      this.frameBuffer[newFrame.id] = newFrame;
-      prevFrame = newFrame;
+      if (this.metadata && newFrame.id <= this.totalFrames ||
+        !this.metadata) {
+        this.frameBuffer[newFrame.id] = newFrame;
+        prevFrame = newFrame;
+      } else {
+        // sometimes a couple of extra frames can sneak in
+        // but we don't want to show them
+        console.log(`addRollToBuffer(): extra frame:`, prevFrame.id);
+      }
+
+      if (!this.metadata) this.totalFrames = newFrame.id;
     }
 
     this.addRoll(roll);
@@ -46,11 +56,13 @@ class Video {
       play();
     }
 
-    if (prevFrame.id != this.totalFrames) {
-      // keep downloading
-      downloadRoll(this, updateProgressBarCallback);
-    } else {
+    if (this.metadata && prevFrame.id >= this.metadata.frames) {
       console.log(`addRollToBuffer(): done loading`);
+      updateMessage(``);
+    } else {
+      // keep downloading
+      // console.log(`addRollToBuffer(): prevFrame != totalframes`, prevFrame.id, this.metadata.frames, this.totalFrames);
+      downloadRoll(this, updateProgressBarCallback, waitForNextFile);
     }
 
   }
@@ -130,15 +142,26 @@ class Video {
 
 
   getNextFrame() {
-    this.currentFrameNum++;
+    this.updateCurrentFrame(1);
     let frame = this.getFrame(this.currentFrameNum);
     return frame;
   }
 
 
 
+  updateCurrentFrame(amount) {
+    if (amount > 0) {
+      this.currentFrameNum = Math.min(this.currentFrameNum + amount, this.frameBuffer.length - 1);
+    } else {
+      this.currentFrameNum = Math.max(this.currentFrameNum + amount, 0);
+    }
+    return this.currentFrameNum;
+  }
+
+
+
   getPreviousFrame() {
-    this.currentFrameNum = Math.max(0, this.currentFrameNum - 1);
+    this.updateCurrentFrame(-1);
     let frame = this.getFrame(this.currentFrameNum);
     return frame;
   }
@@ -183,6 +206,7 @@ function uploadRoll(roll, num, progressCallback) {
 
 // this is called by larn if it can't record (offline/amiga_mode)
 function stopRecording() {
+  console.log(`stopping recording`);
   if (!video) video = new Video(gameID);
   video.recording = false;
 }

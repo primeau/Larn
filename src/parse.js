@@ -179,6 +179,10 @@ function parse(e, key) {
     return;
   }
 
+  if (!player) {
+    return;
+  }
+  
   var item = itemAt(player.x, player.y);
 
 

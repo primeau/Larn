@@ -231,7 +231,7 @@ function initFS() {
   try {
     var gameNum = localStorageGetObject('gameNum', 0) + 1;
     localStorageSetObject('gameNum', gameNum);
-    if (gameNum <= 5 || getDifficulty() > 3) {
+    if (gameNum <= 5 || getDifficulty() > 4) {
       dofs = true;
       console.log('dofs: ' + gameNum + ' ' + dofs + ' ' + getDifficulty());
     }
@@ -270,7 +270,7 @@ function initRB() {
 
 function getIP() {
   if (!navigator.onLine) {
-    console.error(`offline`);
+    console.error(`getIP(): offline`);
     return;
   }
   fetch(`https://api.db-ip.com/v2/free/self`)
@@ -428,7 +428,7 @@ function startgame(hard) {
   var introMessage = `Welcome to ${GAMENAME}, ${logname} -- Press <b>?</b> for help`;
   updateLog(introMessage);
 
-  if (NOCOOKIES) {
+  if (!navigator.cookieEnabled) {
     updateLog(`Are cookies disabled? You may not be able to save your game!`);
   }
 

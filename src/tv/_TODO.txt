@@ -2,17 +2,19 @@
 bugs:
 *** saving a game 3(?) from the end of a buffer causes a null patch, then error on reload
 - scrolling on safari is wonky. seems to be easier when paused
-- scrolling while loading isn't accurate (probably because it's using framebuffer.length)
-- if you step past the end of a game (ie on speed 8) frames keep advancing
 - probably need to await fonts loading on replay
 - modern font is too wide on replay
 
 todo:
-* don't record intro frames with blinking cursor
-* list filter
+- set lastframe.id to something interesting in realtime mode
+- Save playback speed via cookie
+- Link from watch screen back to list
 * amiga games are much bigger. don't record them for now. it also totally doesn't work...
+- compress completed games into a single large file, or a few larger files
+  - https://dev.to/lineup-ninja/zip-files-on-s3-with-aws-lambda-and-node-1nm1
+  - https://stackoverflow.com/questions/38633577/create-a-zip-file-on-s3-from-files-on-s3-using-lambda-node/50397276#50397276
 - put a size limit on uploads in the lambda
-- VIDEO.WRITETOS3() <- TODO this could be be basis of cloud savegames too
+- VIDEO.WRITETOS3() <- TODO this could be basis of cloud savegames too
 - hold inventory views (and others?) for a little longer somehow?
 - clean up s3/dynamo boilerplate
 

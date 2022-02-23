@@ -26,9 +26,19 @@ exports.handler = async (event, context) => {
   // GET LIST OF COMPLETED GAMES
   //
   if (action === 'listcompleted') {
-    let gameList = await handler.getGames(dynamo, true, frameLimit);
-    // console.log('listcompleted', gameList);
-    return gameList;
+    let completedGames = handler.getGames(dynamo, true, frameLimit);
+    let gamesInProgress = handler.getGames(dynamo, false);
+
+    let gamesList = await Promise.all([completedGames, gamesInProgress]).then((games) => {
+      console.log(`completed games ${games[0].body.length}`);
+      console.log(`games in progress ${games[1].body.length}`);
+      return games;
+    });
+
+    return {
+      statusCode: (gamesList[0].statusCode + gamesList[1].statusCode) / 2, // LOL
+      body: [gamesList[0].body, gamesList[1].body]
+    }
   }
 
   const gameID = event.gameID;
@@ -51,7 +61,7 @@ exports.handler = async (event, context) => {
   // 
   if (action === 'write' || action === 'writelast') {
 
-    let writeResponse = { 
+    let writeResponse = {
       statusCode: 200,
       info: `${gameID} ${action} ${filename}`,
       body: ``
@@ -82,11 +92,11 @@ exports.handler = async (event, context) => {
       writeResponse.body += `updatecompletedtable=${dynamoResponse.statusCode} : `;
 
       let meta = {
-        frames: event.file.frames,
+        frames: `${event.file.frames}`,
         who: event.file.who,
         what: event.file.what,
-        diff: event.file.hardlev,
-        score: event.file.score
+        diff: `${event.file.hardlev}`,
+        score: `${event.file.score}`
       };
       console.log(`index(): ${gameID} metadata: ${JSON.stringify(meta)}`);
       console.log(`index(): ${gameID} writing metadata into 0.json...`);

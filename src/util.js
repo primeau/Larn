@@ -219,6 +219,7 @@ function blinken(x, y) {
 
 function clearBlinkingCursor() {
   clearInterval(BLINKENCURSOR);
+  BLINKEN = true;  // prevent blinking cursor from creating tons of duplicate frames
 }
 
 
@@ -327,7 +328,7 @@ function padString(str, width, lastHighlightTime) {
 
 
 function millis() {
-  return new Date().getTime();
+  return Date.now();
 }
 
 
@@ -384,10 +385,8 @@ function localStorageSetObject(key, value) {
   try {
     // console.log(`setObject: ${key} ${value}`);
     localStorage.setObject(key, value);
-    NOCOOKIES = false;
   } catch (err) {
     console.log(`setObject: ${err}`);
-    NOCOOKIES = true;
     return err;
   }
 }
@@ -413,12 +412,10 @@ function localStorageGetObject(key, failValue) {
   try {
     // console.log(`getObject: ${key}`);
     var retrievedObject = localStorage.getObject(key);
-    NOCOOKIES = false;
     if (retrievedObject === false) return false;
     return retrievedObject || failValue;
   } catch (err) {
     console.log(`getObject: "${key}" ${err}`);
-    NOCOOKIES = true;
     return failValue;
   }
 }
@@ -431,10 +428,8 @@ function localStorageRemoveItem(key) {
     console.log(`removeItem: ${key}`);
     localStorage.removeItem(key);
     localStorage.removeItem(key + COMPRESSED_DATA);
-    NOCOOKIES = false;
   } catch (err) {
     console.log(`removeItem: ${err}`);
-    NOCOOKIES = true;
   }
 }
 

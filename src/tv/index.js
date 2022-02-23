@@ -2,6 +2,8 @@
 
 let lambda;
 
+let ULARN = false; // this is a hack to get around localstoragegetobject issues
+
 go();
 
 function go() {
@@ -24,11 +26,8 @@ function go() {
   if (urlParams.gameid) {
     watchMovie(urlParams.gameid);
   } else {
-    let introNode = `<h3>LarnTV: Select a game to watch below</h3>`;
-    document.getElementById(`TV_LARN`).innerHTML = introNode;
-    document.getElementById(`LARN_LIST`).innerHTML = `(loading)`;
-
-    downloadRecordings(displayRecordings, MIN_FRAMES_TO_LIST);
+    initList();
+    downloadRecordings(setRecordings, MIN_FRAMES_TO_LIST);
   }
 }
 

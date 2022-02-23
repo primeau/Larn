@@ -14,7 +14,7 @@ let lastFrameTime = Date.now();
 let style;
 
 function watchMovie(gameID) {
-  init(gameID);
+  initPlayer(gameID);
 
   video = new Video(gameID);
   video.divs.push(`LARN`);
@@ -29,7 +29,7 @@ function watchMovie(gameID) {
 
 
 
-function init(gameID) {
+function initPlayer(gameID) {
 
   Mousetrap.bind('space', toggle);
   Mousetrap.bind('>', goFaster);
@@ -38,10 +38,12 @@ function init(gameID) {
   Mousetrap.bind([',', 'left'], rewind);
 
   let progressBar = document.createElement('label');
+  let progressBarMessage = document.createElement('label');
   // let progressBarLeft = document.createElement('label');
   // let progressBarRight = document.createElement('label');
   progressBar.addEventListener('click', onClickProgressBar);
   progressBar.id = `progressbar`;
+  progressBarMessage.id = `progressbarmessage`;
   // progressBarLeft.id = `progressLeft`;
   // progressBarRight.id = `progressRight`;
   progressBar.innerHTML = ``;
@@ -54,7 +56,7 @@ function init(gameID) {
   realtimeCheckbox.checked = true;
   realtimeCheckbox.id = `realtime`;
   realtimeCheckbox.name = `realtime`;
-  realtimeCheckbox.addEventListener('onchange', boxchecked);
+  // realtimeCheckbox.addEventListener('change', boxchecked);
   let realtimeLabel = document.createElement('label');
   realtimeLabel.htmlFor = `realtime`;
   realtimeLabel.innerHTML = `Realtime `;
@@ -116,6 +118,7 @@ function init(gameID) {
   body.appendChild(document.createElement('p'));
   // body.appendChild(progressBarLeft);  
   body.appendChild(progressBar);
+  body.appendChild(progressBarMessage);
   // body.appendChild(progressBarRight);
   body.appendChild(document.createElement('p'));
 
@@ -152,12 +155,24 @@ function setStyle(body, styleIn) {
 
 
 function updateProgressBarCallback() {
+  updateMessage(``);
+
+  clearTimeout(waiter);
+  countdown = newcountdown;
+  numtries = 1;
+
+  pause();
+  play();
+
   updateProgressBar(video.currentFrameNum, video.frameBuffer.length - 1, video.totalFrames);
 }
 
 
 
 function updateProgressBar(current, loaded, total) {
+  // console.log(current, loaded, total);
+  if (current < 0 || loaded < 0 || total < 0) return;
+
   // let currentString = `${current} `;
   // let totalString = ` ${total}`;
   let currentString = ``;
@@ -184,7 +199,8 @@ function updateProgressBar(current, loaded, total) {
 
   // document.getElementById('progressLeft').innerHTML = `${currentString}`;
   // document.getElementById('progressRight').innerHTML = `${totalString}`;
-  document.getElementById('progressbar').innerHTML = `${progressBar}${loadedBar}${remainingBar}${message}`;
+  document.getElementById('progressbar').innerHTML = `${progressBar}${loadedBar}${remainingBar}`;
+  document.getElementById('progressbarmessage').innerHTML = `${message}`;
 }
 
 
@@ -195,7 +211,7 @@ function onClickProgressBar(event) {
   let clickX = event.clientX - box.left;
   let percent = clickX / width;
   let newFrameNum = Math.floor(video.totalFrames * percent);
-  if (newFrameNum < video.frameBuffer.length - 1) {
+  if (newFrameNum >= 0 && newFrameNum < video.frameBuffer.length - 1) {
     video.currentFrameNum = newFrameNum;
     // this feels a bit hacky but it works
     clearTimeout(clock);
@@ -207,9 +223,47 @@ function onClickProgressBar(event) {
 
 
 
-function boxchecked() {
-  console.log(`box ticked`);
+//
+//
+//
+// experimental code for realtime viewing
+//
+//
+//
+
+let waiter;
+let newcountdown = 2;
+let countdown = newcountdown;
+let numtries = 1;
+let maxtries = 10;
+
+function waitForNextFile(video, filename) {
+  if (countdown != 0) {
+    console.log(countdown, video.gameID, filename, video.currentFrameNum, video.totalFrames);
+    if (numtries <= maxtries) {
+      waiter = setTimeout(waitForNextFile, 1000, video, filename);
+      if (video.currentFrameNum == video.totalFrames) {
+        updateMessage(`\nwaiting for more moves (${countdown})`);
+      }
+    } else {
+      updateMessage(`\nno moves detected for a long time. giving up.`);
+    }
+    countdown--;
+  } else {
+    countdown = Math.min(60, Math.pow(newcountdown, numtries));
+    numtries++;
+    downloadRoll(video, updateProgressBarCallback, waitForNextFile);
+  }
+
 }
+
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -244,7 +298,7 @@ function fastforward(event) {
   if (PLAY) {
     goFaster();
   } else {
-    video.currentFrameNum += SPEED_MULTIPLE - 1;
+    video.updateCurrentFrame(SPEED_MULTIPLE - 1);
     lastFrameTime = Date.now();
     next();
   }
@@ -258,7 +312,7 @@ function rewind(event) {
   if (PLAY) {
     goSlower();
   } else {
-    video.currentFrameNum -= SPEED_MULTIPLE - 1;
+    video.updateCurrentFrame(-1 * (SPEED_MULTIPLE - 1));
     lastFrameTime = 0;
     prev();
   }

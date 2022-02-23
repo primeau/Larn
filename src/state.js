@@ -10,7 +10,6 @@ var LOG;
 var player;
 var playerID;
 var playerIP = `0`;
-var NOCOOKIES = false;
 var PARAMS = {};
 var recording = {};
 

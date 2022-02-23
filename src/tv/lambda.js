@@ -1,6 +1,6 @@
 'use strict';
 
-const LAMBDA = ENABLE_RECORDING_LAMBDA_BETA ? `movie_test` : `movies`;
+const LAMBDA = ENABLE_RECORDING_TEST_LAMBDA ? `movie_test` : `movies`;
 
 
 
@@ -21,12 +21,13 @@ function invokeLambda(requestPayload, successCallback, failCallback) {
           }
         } else {
           console.error(`invokeLambda(): error ${data.StatusCode}`);
-          document.getElementById(`LARN_LIST`).innerHTML = `couldn't load: ${data.StatusCode}`;
+          updateMessage(`couldn't load: ${data.StatusCode}`);
+          if (failCallback) failCallback(data.StatusCode);
         }
       }
     } else {
       console.error(`invokeLambda(): error: ${error}`);
-      document.getElementById(`LARN_LIST`).innerHTML = `${error}`;
+      updateMessage(`${error}`);
       if (failCallback) failCallback(error);
     }
   });
@@ -40,7 +41,13 @@ function downloadRecordings(recordingsLoadedCallback, limit) {
     action: `listcompleted`,
     frameLimit: limit
   };
-  invokeLambda(requestPayload, recordingsLoadedCallback, null);
+  invokeLambda(requestPayload, recordingsLoadedCallback, lambdaFail);
+}
+
+
+
+function lambdaFail(err) {
+  console.log(`lambdaFail(): `, err);
 }
 
 
@@ -68,7 +75,7 @@ function downloadFile(gameID, filename, successCallback, failCallback) {
 
 
 
-function downloadRoll(video, successCallback) {
+function downloadRoll(video, successCallback, failCallback) {
   let numRolls = video.rolls.length;
   let filename = `${numRolls}.json`;
   // console.log(`downloadRoll(): ${gameID}/${filename}`);
@@ -77,8 +84,10 @@ function downloadRoll(video, successCallback) {
   function rollSuccess(body, file, metadata) {
     if (!file) {
       console.error(`downloadRoll(): ${video.gameID}/${filename} empty file`);
-      let extra = (numRolls === 0) ? `` : `completely`
-      document.getElementById(`LARN_LIST`).innerHTML = `\nSorry, this game couldn't be loaded ${extra}`;
+      if (numRolls === 0) {
+        updateMessage(`\nSorry, this game couldn't be loaded`);
+      }
+      if (failCallback) failCallback(video, filename);
       return;
     }
 
@@ -87,8 +96,12 @@ function downloadRoll(video, successCallback) {
     // console.log(`downloadRoll(): got roll with ${roll.patches.length} frames`);
     if (numRolls === 0) {
       console.log(`downloadRoll(): metadata`, metadata);
+      if (metadata.diff) metadata.diff = parseInt(metadata.diff);
+      if (metadata.score) metadata.score = parseInt(metadata.score);
+      if (metadata.frames) metadata.frames = parseInt(metadata.frames);
       if (metadata.frames) {
-        video.totalFrames = Number(metadata.frames);
+        video.metadata = metadata;
+        video.totalFrames = metadata.frames;
       }
       if (metadata.who) {
         document.title = `LarnTV: ${metadata.who} - ${metadata.what} - diff ${metadata.diff} - score ${metadata.score}`;

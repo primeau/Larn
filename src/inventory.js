@@ -203,7 +203,7 @@ function take(item) {
   if (canTake(item) == false) {
     return false;
   }
-  var limit = Math.min(15 + (player.LEVEL >> 1), MAXINVEN);
+  var limit = maxcarry();
   for (var i = 0; i < limit; i++) {
     if (!player.inventory[i]) {
       if (mazeMode) {
@@ -347,12 +347,22 @@ function drop_object_gold(amount) {
 
 
 
+/* 
+    routine to tell how many things a player can carry
+*/
+function maxcarry(p) {
+  if (!p) p = player;
+  return Math.min(15 + (p.LEVEL >> 1), MAXINVEN);
+}
+
+
+
 /*
     routine to tell if player can carry one more thing
     returns 1 if pockets are full, else 0
 */
 function pocketfull() {
-  var limit = Math.min(15 + (player.LEVEL >> 1), MAXINVEN);
+  var limit = maxcarry();
   for (var i = 0; i < limit; i++) {
     if (!player.inventory[i]) {
       return (false);
@@ -368,7 +378,7 @@ function pocketfull() {
     returns true if pockets are empty, else false
 */
 function pocketempty() {
-  var limit = Math.min(15 + (player.LEVEL >> 1), MAXINVEN);
+  var limit = maxcarry();
   for (var i = 0; i < limit; i++) {
     if (player.inventory[i]) {
       return (false);

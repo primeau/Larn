@@ -224,6 +224,13 @@ function loadScores(newScore, showWinners, showLosers) {
 
 function dbQueryHighScores(newScore, showWinners, showLosers) {
 
+  if (!navigator.onLine) {
+    ONLINE = false;
+    let msg = `Offline: showing local scoreboard`;
+    showLocalScoreBoard(newScore, showWinners, showLosers, 0, msg);
+    return;
+  }
+
   var params = {
     FunctionName: ENDPOINT,
     Payload: `{ "gamename" : "${GAMENAME}", "gameID" : "board" }`,
@@ -250,19 +257,24 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
     } else if (status == 404) {
       let stats = `Couldn't find global scoreboard, showing local scoreboard`;
       ONLINE = false;
-      showScores(newScore, !ONLINE, showWinners, showLosers, 0);
-      setDiv(`STATS`, stats);
+      showLocalScoreBoard(newScore, showWinners, showLosers, 0, stats);
     } else {
       var statuscode = data ? data.StatusCode : 555;
       console.log(`lambda error: lambda status=${statuscode} larn status=${status}`);
       if (error) console.log(error, error.stack);
       let stats = `Error loading global scoreboard, showing local scoreboard`;
       ONLINE = false;
-      showScores(newScore, !ONLINE, showWinners, showLosers, 0);
-      setDiv(`STATS`, stats);
+      showLocalScoreBoard(newScore, showWinners, showLosers, 0, stats);
     }
   });
 
+}
+
+
+
+function showLocalScoreBoard(newScore, showWinners, showLosers, offset, message) {
+  showScores(newScore, true, showWinners, showLosers, offset);
+  setDiv(`STATS`, message);
 }
 
 
@@ -466,12 +478,7 @@ function dbQueryLoadGame(gameId, local, winner) {
 
 
 function localWriteHighScore(newScore) {
-  //console.log(`localWriteHighScore: ` + newScore);
-
-  // don't write 0 score vistor games
-  if (!newScore.winner && newScore.score <= 0) {
-    return;
-  }
+  // console.log(`localWriteHighScore: ` + newScore);
 
   // write high score to board
   // TODO there is lots of duplication here...
@@ -502,6 +509,12 @@ function localWriteHighScore(newScore) {
 function dbWriteHighScore(newScore) {
 
   console.log(`dbWriteHighScore: ${newScore.gameID}`);
+
+  if (!navigator.onLine) {
+    console.log(`dbWriteHighScore: offline`);
+    ONLINE = false;
+    return;
+  }
 
   var params = {
     FunctionName: ENDPOINT,
@@ -534,7 +547,7 @@ function dbWriteHighScore(newScore) {
       if (newScore.winner) {
         Rollbar.info(`${BUILD} ${GAMENAME} winner: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
       } else {
-        if (ULARN && newScore.timeused > 5 || (newScore.hardlev > 5 && newScore.timeused > 50)) {
+        if (newScore.timeused > 50 && newScore.hardlev > 3) {
           Rollbar.info(`${BUILD} ${GAMENAME} visitor: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
         }
       }

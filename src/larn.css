@@ -1,6 +1,8 @@
 @font-face {
     font-family: modern;
 
+    /* for future font-noodling https://fonts.google.com/?category=Monospace&preview.text=a%E2%96%92%E2%96%92%E2%96%92%C2%B7@%C2%B7%E2%96%92%C2%B7%E2%96%92A!!0%3F&preview.text_type=custom */
+
     /* works in firefox, not safari */
     /* src: url('img/PTMono-Regular.ttf');
 
@@ -29,11 +31,11 @@ a:link {
 }
 
 a:visited {
-    color: #551A8B;
+    color: #FF00FF;
 }
 
 a:hover {
-    color: #FF00FF;
+    color: #FF77FF;
 }
 
 a:active {
@@ -64,7 +66,7 @@ strong {
 }
 
 body {
-    font-family: 'modern', 'Courier New', Courier, monospace;
+    font-family: 'dos', 'Courier New', Courier, monospace;
     font-size: 22px;
     color: #ABABAB;
     margin: 25px;

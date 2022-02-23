@@ -1063,6 +1063,13 @@ function game_stats(p, endgame) {
     }
   }
 
+  let gap = amiga_mode ? ` ` : ``;
+  for (let slot = 0; slot < maxcarry(p); slot++) {
+    if (!p.inventory[slot]) {
+      s += `${getCharFromIndex(slot)}) -${gap}-${gap}-\n`;
+    }
+  }
+
   if (endgame || !pocketempty()) s += `\n`;
   s += `Known Spells:\n`;
   var count = 0;

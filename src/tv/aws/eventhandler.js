@@ -13,13 +13,19 @@ module.exports.getGames = async (dynamo, completed, frameLimit) => {
     TableName: completed ? 'completed' : 'inprogress'
   };
 
-  console.log(`getGames(): getting ${params.TableName}\n`);
+  if (!frameLimit) frameLimit = 0;
+
+  console.log(`getGames(): getting ${params.TableName} games\n`);
 
   try {
     const data = await dynamo.scan(params).promise();
-    console.log(`getGames(): ${params.TableName} ${data.Items.length} items\n`);
+    console.log(`getGames(): got ${params.TableName} ${data.Items.length} items\n`);
 
-    data.Items = data.Items.filter(tmp => Number(tmp.frames) > Number(frameLimit));
+    if (completed) {
+      data.Items = data.Items.filter(tmp => Number(tmp.frames) > Number(frameLimit));
+    } else {
+      data.Items = data.Items.filter(tmp => Number(tmp.updateTime) > Date.now() - 24 * 60 * 60 * 1000);
+    }
     console.log(`getGames(): filter down to ${data.Items.length}`);
 
     return {

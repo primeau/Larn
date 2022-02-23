@@ -37,12 +37,12 @@ function blt() {
     }
   }
 
-  // if (!BLINKEN) {
-  let divs = {};
-  divs.LARN = document.getElementById(`LARN`).innerHTML;
-  divs.STATS = document.getElementById(`STATS`).innerHTML;
-  recordFrame(divs, createLocalScore);
-  // }
+  if (BLINKEN) { // prevent blinking cursor from creating tons of duplicate frames
+    let divs = {};
+    divs.LARN = document.getElementById(`LARN`).innerHTML;
+    divs.STATS = document.getElementById(`STATS`).innerHTML;
+    recordFrame(divs, createLocalScore);
+  }
 }
 
 
