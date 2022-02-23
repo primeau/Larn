@@ -1,6 +1,6 @@
 'use strict';
 
-const ENABLE_RECORDING = false;
+const ENABLE_RECORDING = true;
 const ENABLE_RECORDING_REALTIME = false;
 const ENABLE_RECORDING_TEST_LAMBDA = false;
 
