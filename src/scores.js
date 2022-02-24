@@ -712,9 +712,11 @@ function died(reason, slain) {
 
     let extraNL = (printFunc == lprcat) ? `\n` : ``;
     try {
-      let linkText = window.location.href.split(`?`)[0];
-      linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
-      printFunc(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>${extraNL}${extraNL}`);
+      if (isRecording()) {
+        let linkText = window.location.href.split(`?`)[0];
+        linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
+        printFunc(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>${extraNL}${extraNL}`);
+      }
     } catch (error) {
       // do nothing
     }

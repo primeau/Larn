@@ -29,17 +29,11 @@ todo:
 - max diff 101
 - if error writing savegame due to space issues, delete all backup cookies
 
-- Navigator.cookieEnabled Read only
-   Returns false if setting a cookie will be ignored and true otherwise.
-   if (!navigator.cookieEnabled) { 
-     // The browser does not support or is blocking cookies from being set. 
-   }
 - Navigator.onLine Read only
    Returns a Boolean indicating whether the browser is working online.
    window.addEventListener('offline', function(e) { console.log('offline'); });
    window.addEventListener('online', function(e) { console.log('online'); });
 - async/await for keyboard input?
-- update babel to support async/await for nap()
 - amiga mode: unseen walls should be flat
 - check chrome audit tab
 - "sorry, no mobile" message for larn.html
@@ -101,7 +95,6 @@ bugs:
 * fall down pit, area around player isn't exposed
    - only when player doesn't fall down on the first 'try'
 * long user names aren't truncated on the start screen
-- brief flash of some other font when starting game
 - fix interactions between haste self / haste monster / half-speed monsters (check 1.6.3 hastestep)
   * HAS + PER bug slow monsters (H,x,r,etc) move every moves, or totally paralyzed?
   - monster.isSlow, and different way to decide when to move
@@ -133,3 +126,4 @@ hardmode ideas:
 - reduce blessed ularn item sale prices
 - get potion -> permanent aggravate monsters (be sure to disable remove curse)
 - if aggravate always get gnome king at throne
+- curses last longer

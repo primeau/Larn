@@ -23,6 +23,7 @@
     "_tvcopy": "mkdir -p dist/$envt/tv/env ; cp larn-temp/tv/* dist/$envt/tv ; cp larn-temp/util.js dist/$envt/tv ; cp larn-temp/env/larn_config.js dist/$envt/tv/env ; cp src/tv/index.html dist/$envt/tv || true",
     "alphatv": "export envt=alpha ; npm run _tvcopy",
     "betatv": "export envt=beta ; npm run _tvcopy",
+    "prodtv": "export envt=larn ; npm run _tvcopy",
 
     "_dist": "echo $envt ; rm -rf ../larn-deploy/$envt ; mv dist/$envt ../larn-deploy || true",
     "distalpha": "export envt=alpha ; npm run _dist",
@@ -31,13 +32,12 @@
     "distweb": "npm run webclean ; npm run webcopy || true",
     "dist": "npm run distalpha ; npm run distbeta ; npm run distprod ; npm run distweb || true",
 
-    "fastbuild": "npm run minify ; npm run betacopy ; npm run prodcopy ; npm run tvcopy",
-    "alphabuild": "npm run alphaclean ; npm run transpile ; npm run minify ; npm run alphacopy",
-    "betabuild": "npm run betaclean ; npm run transpile ; npm run minify ; npm run betacopy",
-    "prodbuild": "npm run prodclean ; npm run transpile ; npm run minify ; npm run prodcopy",
+    "buildalpha": "npm run alphaclean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run alphatv ; npm run distalpha",
+    "buildbeta": "npm run betaclean ; npm run transpile ; npm run minify ; npm run betacopy ; npm run betatv ; npm run distbeta",
+    "buildprod": "npm run prodclean ; npm run transpile ; npm run minify ; npm run prodcopy ; npm run prodtv ; npm run distprod",
 
-    "build": "echo '=== STARTING BUILD ==' ; npm run clean ; npm run transpile ; npm run minify ; npm run prodcopy ; npm run webcopy ; npm run dist ; npm run clean",
-    "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run clean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run dist ; npm run clean",
+    "build": "echo '=== STARTING BUILD ==' ; npm run clean ; npm run buildprod ; npm run webcopy ; npm run dist ; npm run clean",
+    "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run clean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run prodtv ; npm run dist ; npm run clean",
 
     "watch": "npm run tempclean ; babel src --watch --out-dir larn-temp/",
     "server": "cd ../larn-deploy ; python -m SimpleHTTPServer 8000",
@@ -51,6 +51,7 @@
   },
   "keywords": [
     "larn",
+    "ularn",
     "roguelike",
     "game"
   ],

@@ -2,6 +2,9 @@
 
 /* subroutine to regenerate player hp and spells */
 function regen() {
+
+  if (!player) return;
+  
   player.MOVESMADE++;
 
   /* for stop time spell */
