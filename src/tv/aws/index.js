@@ -7,7 +7,7 @@ const s3 = new aws.S3();
 const s3bucket = 'larn-movies';
 const dynamo = new aws.DynamoDB.DocumentClient();
 
-
+const MIN_FRAMES = 2500;
 
 
 //
@@ -86,10 +86,16 @@ exports.handler = async (event, context) => {
     // write completed game info to dynamo
     if (action === 'writelast') {
       event.file = JSON.parse(event.file);
-      console.log(`index(): ${gameID} writing completed game info to dynamo...`);
-      let dynamoResponse = await dbtool.DBWrite(dynamo, `completed`, event.file, true);
-      console.log(`index(): ${gameID} writing completed game info to dynamo...`, dynamoResponse);
-      writeResponse.body += `updatecompletedtable=${dynamoResponse.statusCode} : `;
+      console.log(`index(): ${gameID} dynamo save criteria`, event.file.winner, event.file.frames, MIN_FRAMES);
+      if (event.file.winner || event.file.frames >= MIN_FRAMES) {
+        console.log(`index(): ${gameID} writing completed game info to dynamo...`);
+        let dynamoResponse = await dbtool.DBWrite(dynamo, `completed`, event.file, true);
+        console.log(`index(): ${gameID} writing completed game info to dynamo...`, dynamoResponse);
+        writeResponse.body += `updatecompletedtable=${dynamoResponse.statusCode} : `;
+      }
+      else {
+        console.log(`index(): ${gameID} not writing completed game info to dynamo: only ${event.file.frames} frames...`);
+      }
 
       let meta = {
         frames: `${event.file.frames}`,

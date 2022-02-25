@@ -10,3 +10,4 @@ tools
 src/env/larn_config.js
 aws-sdk.js
 .idea
+secrets.sh

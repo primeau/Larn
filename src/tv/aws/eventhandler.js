@@ -22,7 +22,7 @@ module.exports.getGames = async (dynamo, completed, frameLimit) => {
     console.log(`getGames(): got ${params.TableName} ${data.Items.length} items\n`);
 
     if (completed) {
-      data.Items = data.Items.filter(tmp => Number(tmp.frames) > Number(frameLimit));
+      data.Items = data.Items.filter(tmp => Number(tmp.frames) >= Number(frameLimit));
     } else {
       data.Items = data.Items.filter(tmp => Number(tmp.updateTime) > Date.now() - 24 * 60 * 60 * 1000);
     }

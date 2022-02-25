@@ -12,7 +12,7 @@
     "prodclean": "rm -rf ../larn-deploy/larn || true",
     "webclean": "rm ../larn-deploy/*.xml ; rm ../larn-deploy/*.png ; rm ../larn-deploy/*.html ; rm ../larn-deploy/*.css ; rm ../larn-deploy/*.txt || true",
 
-    "transpile": "babel src --out-dir larn-temp/",
+    "transpile": "babel src --out-dir larn-temp/ ; ./secrets.sh 'larn-temp' || true",
     "minify": "uglifyjs --mangle --compress -o larn-temp/larn.min.js larn-temp/fullstory.js larn-temp/util.js larn-temp/env/larn_config.js larn-temp/config.js larn-temp/larn.js larn-temp/main.js larn-temp/object.js larn-temp/global.js larn-temp/monster.js larn-temp/monsterdata.js larn-temp/player.js larn-temp/mazes.js larn-temp/level.js larn-temp/create.js larn-temp/data.js larn-temp/parse.js larn-temp/buttons.js larn-temp/scores.js larn-temp/inventory.js larn-temp/movem.js larn-temp/action.js larn-temp/io.js larn-temp/display.js larn-temp/storedata.js larn-temp/store.js larn-temp/mcdopes.js larn-temp/savelev.js larn-temp/spells.js larn-temp/spellsinfo.js larn-temp/regen.js larn-temp/spheres.js larn-temp/help.js larn-temp/state.js larn-temp/bill.js larn-temp/altar.js larn-temp/fountain.js larn-temp/potion.js larn-temp/scroll.js larn-temp/stairs.js larn-temp/throne.js larn-temp/devmode.js larn-temp/fullstory.js larn-temp/tv/tv_config.js larn-temp/tv/tvutil.js larn-temp/tv/frame.js larn-temp/tv/lambda.js larn-temp/tv/movie.js larn-temp/tv/patch.js larn-temp/tv/roll.js",
 
     "_copy": "echo $envt ; mkdir -p dist/$envt/lib ; mkdir dist/$envt/img ; cp src/lib/*.js dist/$envt/lib ; cp src/img/* dist/$envt/img ; cp src/larn.html dist/$envt ; cp src/larn.css dist/$envt ; cp larn-temp/larn.min.js dist/$envt ; cp larn-temp/worker.js dist/$envt || true",
@@ -41,7 +41,8 @@
 
     "watch": "npm run tempclean ; babel src --watch --out-dir larn-temp/",
     "server": "cd ../larn-deploy ; python -m SimpleHTTPServer 8000",
-    "localserver": "python -m SimpleHTTPServer 8000",
+    "localserver": "cd ../larn-local ; python -m SimpleHTTPServer 8000",
+    
     "deploy_tv_lambda_test": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movie_test --zip-file fileb://function.zip ; rm function.zip",
     "deploy_tv_lambda": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movies --zip-file fileb://function.zip ; rm function.zip"
   },
