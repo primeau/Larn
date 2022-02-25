@@ -1,5 +1,8 @@
 NOW: UPDATE npm run build to only make dist, make a build prod, beta, alpha
 
+- final frames are botched: https://larn.org/larn/tv/?gameid=ai2n1hrgnq
+- show side inventory details on death
+
 Ularn 12.5.0:
 - check all 1.6.3 code
 - check scorePUT

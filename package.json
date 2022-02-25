@@ -36,13 +36,13 @@
     "buildbeta": "npm run betaclean ; npm run transpile ; npm run minify ; npm run betacopy ; npm run betatv ; npm run distbeta",
     "buildprod": "npm run prodclean ; npm run transpile ; npm run minify ; npm run prodcopy ; npm run prodtv ; npm run distprod",
 
-    "build": "echo '=== STARTING BUILD ==' ; npm run clean ; npm run buildprod ; npm run webcopy ; npm run dist ; npm run clean",
+    "build": "echo '=== STARTING BUILD ==' ; npm run distclean ; npm run transpile ; npm run minify ; npm run prodcopy ; npm run tempclean",
     "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run clean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run prodtv ; npm run dist ; npm run clean",
 
     "watch": "npm run tempclean ; babel src --watch --out-dir larn-temp/",
     "server": "cd ../larn-deploy ; python -m SimpleHTTPServer 8000",
     "localserver": "cd ../larn-local ; python -m SimpleHTTPServer 8000",
-    
+
     "deploy_tv_lambda_test": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movie_test --zip-file fileb://function.zip ; rm function.zip",
     "deploy_tv_lambda": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movies --zip-file fileb://function.zip ; rm function.zip"
   },
