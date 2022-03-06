@@ -161,9 +161,6 @@ function updateProgressBarCallback() {
   countdown = newcountdown;
   numtries = 1;
 
-  pause();
-  play();
-
   updateProgressBar(video.currentFrameNum, video.frameBuffer.length - 1, video.totalFrames);
 }
 
@@ -360,9 +357,12 @@ function next(event) {
   waitTime = Math.max(MIN_WAIT, waitTime);
   // console.log(`waiting` ${waitTime}`);
 
-  clock = setTimeout(bltNext, waitTime, frame);
-  lastFrameTime = frame.ts;
+  if (PLAY) {
+    clock = setTimeout(next, waitTime);
+    lastFrameTime = frame.ts;
+  }
 
+  blt(frame);
 }
 
 
@@ -382,34 +382,12 @@ function prev(event) {
     return;
   }
 
-  let waitTime = SPEED;
-  let realtime = document.getElementById('realtime').checked;
-  if (realtime) {
-    // TODO: this isn't the correct wait time
-    waitTime = Math.min(MAX_WAIT, lastFrameTime - frame.ts);
-  }
-  waitTime /= SPEED_MULTIPLE;
-  waitTime = Math.max(MIN_WAIT, waitTime);
-  // console.log(`waiting ${waitTime}`);
-  clock = setTimeout(bltPrev, waitTime, frame);
   lastFrameTime = frame.ts;
-}
 
-
-
-function bltNext(frame) {
-  if (PLAY) {
-    next();
-  }
   blt(frame);
 }
 
-function bltPrev(frame) {
-  if (PLAY) {
-    prev();
-  }
-  blt(frame);
-}
+
 
 function blt(frame) {
   if (frame) {

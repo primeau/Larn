@@ -1,9 +1,10 @@
 'use strict';
 
 const VERSION = '12.5.0';
-const BUILD = '491';
+const BUILD = '493';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
+const ENABLE_MOBILE = false;
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -82,6 +83,7 @@ async function play() {
 
   no_intro = PARAMS.nointro ? PARAMS.nointro == `true` : false;
   mobile = PARAMS.mobile ? PARAMS.mobile == `true` : false;
+  if (ENABLE_MOBILE) mobile = mobile || is_touch_device();
   ULARN = PARAMS.ularn ? PARAMS.ularn == `true` : false;
 
   setGameConfig();

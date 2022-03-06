@@ -916,7 +916,7 @@ async function ohome() {
     if (hasPotion || !inTime) {
       let linkText = window.location.href.split(`?`)[0];
       linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
-      updateLog(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b`);
+      updateLog(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>`);
     }
   } catch (error) {
     // do nothing
@@ -945,6 +945,7 @@ async function ohome() {
     lprint(`Press <b>enter</b> to continue: `);
     napping = false;
     setCharCallback(win);
+    paint();
     return;
   }
 

@@ -1,7 +1,9 @@
 NOW: UPDATE npm run build to only make dist, make a build prod, beta, alpha
 
 - final frames are botched: https://larn.org/larn/tv/?gameid=ai2n1hrgnq
-- show side inventory details on death
+- "V" to view conducts
+- show 'play again' link after death
+- add play options to larntv list
 
 Ularn 12.5.0:
 - check all 1.6.3 code
@@ -11,8 +13,6 @@ Ularn 12.5.0:
 Ularn 12.5.1
 - search for ULARN TODO
 - eye of larn appraisal in bank
-- widget of spine tingling
-- lantern radiates light out from hero for x spaces?
 
 Ularn balance ideas:
 - crumble altars faster? 1/20?
@@ -77,24 +77,28 @@ extras:
 - speedrun mode
 - repeat function, especially at altars
 - move command
+- ularn: widget of spine tingling
+- ularn: lantern radiates light out from hero for x spaces?
 - conducts
-  - thirsty: never drink a potion
-  - illiterate: never read a book/scroll/fortune cookie
-  - spellbound: never cast a spell
-  - unbanked/cheapskate/goldless: never buy/sell anything, enter bank, use gold (no praying)
-  - one direction: never go down a set of stairs twice (or re-enter volcano/dungeon)
-  - pacifist: never kill a monster / or no wielded weapon?
-  - nudist: never wear armour (rings are ok) (need to make it an option to start without armour)
-  - zen: blind from birth (needs to be an option)
-  - jewleryless: never wear a ring / amulet
-  - identifyless: never read identify
-  - aggravating: permanent aggravate monsters (and remove curse won't fix)
-  - racer: if you see downward stairs, you must take them
+  - can test post game
+    - thirsty: never drink a potion
+    - illiterate: never read a book/scroll/fortune cookie
+    - spellbound: never cast a spell
+    - pacifist: never kill a monster
+  - needs extra code
+    - pacifist: no wielded weapon
+    - one direction: never go down a set of stairs twice (or re-enter volcano/dungeon)
+    - unbanked/cheapskate/goldless: never enter bank, store, thrift shop, school, use gold (no praying)
+    - jewleryless: never wear a ring / amulet
+    - racer: if you see downward stairs, you must take them
+  - need starting option:
+    - nudist: never wear armour (rings are ok)
+    - paci(fists): never wield a weapon
+    - zen: blind from birth (remove curse, school, cbl won't fix)
+    - aggravating: permanent aggravate monsters (and remove curse won't fix)
 
 bugs:
 * last hit monster still chases from a distance if dumb
-* lots of monsters walking through walls (fixed?)
-  - was this due to smart ripple[] not being cleared?
 * fall down pit, area around player isn't exposed
    - only when player doesn't fall down on the first 'try'
 * long user names aren't truncated on the start screen
