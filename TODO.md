@@ -81,10 +81,10 @@ extras:
 - ularn: lantern radiates light out from hero for x spaces?
 - conducts
   - can test post game
-    - thirsty: never drink a potion
-    - illiterate: never read a book/scroll/fortune cookie
-    - spellbound: never cast a spell
-    - pacifist: never kill a monster
+    x thirsty: never drink a potion
+    x illiterate: never read a book/scroll/fortune cookie
+    x spellbound: never cast a spell
+    x pacifist: never kill a monster
   - needs extra code
     - pacifist: no wielded weapon
     - one direction: never go down a set of stairs twice (or re-enter volcano/dungeon)

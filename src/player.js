@@ -793,6 +793,31 @@ Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
   }
 
 
+
+  this.getConductString = function(inline) {
+    let spellsknownbychar = 1;
+    if (this.char_picked === `Wizard`) spellsknownbychar = 2;
+    else if (this.char_picked === `Adventurer`) spellsknownbychar = 2;
+    else if (this.char_picked === `Rambo`) spellsknownbychar = 0;
+
+    function count (arr) { return arr.filter(x => x != null).length; }
+  
+    let pacifist = this.MONSTKILLED === 0;
+    let illiterate = count(this.knownScrolls) === 0 && count(this.knownSpells) === spellsknownbychar;
+    let thirsty = count(this.knownPotions) === 1;
+    let spellbound = this.SPELLSCAST === 0;
+    
+    let conductString = ``;
+    const nl = inline ? ` ` : `\n`;
+    if (pacifist) conductString += `pacifist${nl}`;
+    if (thirsty) conductString += `thirsty${nl}`;
+    if (illiterate) conductString += `illiterate${nl}`;
+    if (spellbound) conductString += `spellbound${nl}`;
+    if (conductString === ``) conductString = `none${nl}`;
+
+    return conductString;
+  }
+
 }; // END PLAYER
 
 
@@ -974,6 +999,20 @@ function wear(index) {
       }
       nomove = 1;
       return 0;
+    }
+
+    if (index == '-') {
+      if (player.SHIELD) {
+        player.SHIELD = null;
+        updateLog(`Your shield is off${period}`);
+      } else if (player.WEAR) {
+        player.WEAR = null;
+        updateLog(`Your armor is off${period}`);
+      } else {
+        updateLog(`You aren't wearing anything${period}`);
+      }
+      setMazeMode(true);
+      return 1;
     }
 
     var useindex = getIndexFromChar(index);

@@ -111,17 +111,18 @@ function getStatString(score, addDate) {
   }
   stats += `\n${debug_stats(tempPlayer, score)}\n`;
   if (score.explored) {
-    stats += `Levels Visited:\n`;
-    stats += `${score.explored}\n\n`;
+    stats += `Levels Visited:\n${score.explored}\n\n`;
   }
 
   if (score.gamelog) {
     var logString = score.gamelog.join('\n').trim();
+    if (logString.includes(`Replay`) && !logString.endsWith(`>`)) logString += `>`; // bugfix for missing > in some games
     stats += `Final Moments: \n${logString}\n\n`;
   }
 
-  stats += `Bottom Line:\n`;
-  stats += tempPlayer.getStatString(score.level) + '\n\n';
+  stats += `Bottom Line:\n${tempPlayer.getStatString(score.level)}\n\n`;
+
+  stats += `Conducts observed:\n${tempPlayer.getConductString()}\n\n`;
 
   if (score.debug) {
     stats += `Debug mode used!\n\n`;
@@ -285,27 +286,27 @@ const VISITOR_HEADER_LARN = `     <b>Score   Difficulty   Visitor               
 const VISITOR_HEADER_ULARN = `     <b>Score  Diff  Visitor                  Class       Fate</b>                                 `;
 
 
-
-function showScores(newScore, local, showWinners, showLosers, offset) {
-  var exitscores = function(key) {
-    if (key == ESC || key == ENTER) {
-      scoreIndex = 0;
-      setMode(A, R, O);
-      nomove = 1;
-      return exitbuilding();
-    }
-    if (key == ' ') {
-      if (scoreIndex < winners.length) {
-        showScores(newScore, local, true, false, 0);
-      } else {
-        showScores(newScore, local, false, true, winners.length);
-        if (scoreIndex >= winners.length + losers.length) {
-          scoreIndex = 0;
-        }
+let bound_exitscores; // for button callback comparison
+function exitscores (newScore, local, key) {
+  if (key == ESC || key == ENTER) {
+    scoreIndex = 0;
+    setMode(A, R, O);
+    nomove = 1;
+    return exitbuilding();
+  }
+  if (key == ' ') {
+    if (scoreIndex < winners.length) {
+      showScores(newScore, local, true, false, 0);
+    } else {
+      showScores(newScore, local, false, true, winners.length);
+      if (scoreIndex >= winners.length + losers.length) {
+        scoreIndex = 0;
       }
     }
   }
+}
 
+function showScores(newScore, local, showWinners, showLosers, offset) {
   mazeMode = false;
   if (!GAMEOVER) clear();
 
@@ -353,7 +354,8 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
   lprcat(`                     Click on a score for more information\n`);
   if (!GAMEOVER) {
     lprcat(`             ----  Press <b>space</b> for next page, <b>escape</b> to exit  ----`);
-    setCharCallback(exitscores);
+    bound_exitscores = exitscores.bind(null, newScore, local);
+    setCharCallback(bound_exitscores);
   } else {
     lprcat(`                 ----  Reload your browser to play again  ----`);
   }

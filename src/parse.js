@@ -100,7 +100,7 @@ function setNumberCallback(func, allowAsterisk) {
 
 function shouldRun(e, key) {
   // var run = key.indexOf('shift+') >= 0 || key.match(/[YKUHLBJN]/);
-  return e.shift;
+  return e ? e.shift : false;
 }
 
 
@@ -536,20 +536,6 @@ function parse(e, key) {
     return;
   }
 
-  function parseQuit(key) {
-    nomove = 1;
-    if (key == ESC || key == 'n' || key == 'N') {
-      appendLog(` no${period}`);
-      return 1;
-    }
-    if (key == 'y' || key == 'Y') {
-      appendLog(` yes${period}`);
-      died(DIED_QUITTER, false); /* a quitter */
-      return 1;
-    }
-    return 0;
-  }
-
   //
   // REMOVE GEMS
   //
@@ -599,11 +585,21 @@ function parse(e, key) {
     if (item.isArmor()) {
       wear(item);
     } else {
-      updateLog(`What do you want to wear [<b>space</b> to view] ? `);
+      updateLog(`What do you want to wear (-) for nothing [<b>space</b> to view] ? `);
       setCharCallback(wear);
     }
     return;
   }
+
+
+  //
+  // VIEW CONDUCTS
+  //
+  if (key == 'V') {
+    updateLog(`Conducts observed: ${player.getConductString(true)}`);
+    return;
+  }
+
 
   //
   // TELEPORT
@@ -667,8 +663,8 @@ function parse(e, key) {
   //
   if (key == '^') {
     var flag = 0;
-    for (var j = vy(player.y - 1); j < vy(player.y + 2); j++) {
-      for (var i = vx(player.x - 1); i < vx(player.x + 2); i++) {
+    for (var j = vy(player.y - 1); j <= vy(player.y + 1); j++) {
+      for (var i = vx(player.x - 1); i <= vx(player.x + 1); i++) {
         var trap = itemAt(i, j);
         switch (trap.id) {
           case OTRAPDOOR.id:
@@ -811,4 +807,20 @@ function parse(e, key) {
   // if we get here, it's an invalid key, and shouldn't take any time
   nomove = 1;
 
+}
+
+
+
+function parseQuit(key) {
+  nomove = 1;
+  if (key == ESC || key == 'n' || key == 'N') {
+    appendLog(` no${period}`);
+    return 1;
+  }
+  if (key == 'y' || key == 'Y') {
+    appendLog(` yes${period}`);
+    died(DIED_QUITTER, false); /* a quitter */
+    return 1;
+  }
+  return 0;
 }
