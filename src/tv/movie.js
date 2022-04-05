@@ -26,8 +26,7 @@ class Video {
     let firstPatch = roll.patches[0];
     let frameNum = firstPatch.id;
 
-    let prevFrame;
-    prevFrame = this.getFrame(frameNum - 1);
+    let prevFrame = this.getFrame(frameNum - 1); // this requires previous rolls to be downloaded
 
     for (let i = 0; i < roll.patches.length; i++) {
       const patch = roll.patches[i];
@@ -71,20 +70,30 @@ class Video {
 
   getFrame(frameNum) {
     // console.log(`video.getFrame(): ${frameNum}`);
-
+    
     // build initial frame
     if (frameNum < 0) {
       // console.log(`video.getFrame(): returning blank frame`);
-      let f = new Frame();
-      // populate the first frame with the names of the divs that were recorded
-      this.divs.forEach(div => {
-        // console.log(`video.getFrame(): div: ${div}`);
-        f.divs[div] = ``;
-      });
-      return f;
+      return this.createEmptyFrame();
     } else {
+      // protection for occasional missing frame when returning from saved game
+      if (!this.frameBuffer[frameNum]) {
+        console.error(`video.getFrame(): missing frame: ${frameNum}`);
+        this.frameBuffer[frameNum] = this.createEmptyFrame();
+      }
       return this.frameBuffer[frameNum];
     }
+  }
+
+
+
+  createEmptyFrame() {
+    let newFrame = new Frame();
+    // populate the first frame with the names of the divs that were recorded
+    this.divs.forEach(div => {
+      newFrame.divs[div] = ``;
+    });
+    return newFrame;
   }
 
 
