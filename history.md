@@ -6,7 +6,7 @@ some inspiration from 1.6. Maintains the new/balance/fix items of version
 12.4.5 where it seems to make sense.
 
 1. [new] Ularn also playable with Amiga-style graphics thanks to the new 
-sprites created by Chris Yewchuck and Jerome Lecomte.
+sprites created by Christopher Yewchuk and Jerome Lecomte.
 
 1. [new] Stolen items can be recovered if you can find the monster again.
 
@@ -55,7 +55,7 @@ with the following updates:
 is also available for offline games.
 
 1. [new] Added an Amiga-style graphics option with help and encouragement of
-Christoper Yewchuck.
+Christopher Yewchuk.
 
 1. [new] Monsters that pick your pocket and disappear can now be found
 elsewhere on the same level.
