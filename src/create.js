@@ -43,7 +43,7 @@ function newcavelevel(depth) {
   positionplayer(player.x, player.y, true);
   checkgen(); /* wipe out any genocided monsters */
 
-  if (wizard || level == 0)
+  if (wizard || level == 0 || player.GOD)
     for (var j = 0; j < MAXY; j++)
       for (var i = 0; i < MAXX; i++)
         player.level.know[i][j] = KNOWALL;

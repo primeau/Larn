@@ -5,6 +5,7 @@ const LAMBDA = ENABLE_RECORDING_TEST_LAMBDA ? `movie_test` : `movies`;
 
 
 function invokeLambda(requestPayload, successCallback, failCallback) {
+  return
   let params = {
     FunctionName: LAMBDA,
     Payload: JSON.stringify(requestPayload),

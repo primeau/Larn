@@ -22,7 +22,7 @@ var newSpellCode = null;
 function pre_cast() {
   cursors();
   nomove = 1;
-  if (player.SPELLS > 0) {
+  if (player.SPELLS > 0 || player.GOD) {
     updateLog(`Enter your spell: `);
     setCharCallback(cast);
   } else {
@@ -81,7 +81,7 @@ function cast(key) {
   if (codeCheck !== newSpellCode) {
     return codeCheck;
   }
-  player.setSpells(player.SPELLS - 1);
+  if (!player.GOD) player.setSpells(player.SPELLS - 1);
   player.SPELLSCAST++;
   var spellnum = player.knownSpells.indexOf(newSpellCode.toLowerCase());
   if (spellnum >= 0) {
@@ -108,18 +108,18 @@ function speldamage(x) {
   //if (x >= SPNUM) return;
 
   /* not if time stopped */
-  if (player.TIMESTOP) {
+  if (player.TIMESTOP && !player.GOD) {
     updateLog(`  It didn't seem to work${period}`);
     return;
   }
 
   var playerLev = player.LEVEL;
-  if ((rnd(23) == 7) || (rnd(18) > player.INTELLIGENCE)) {
+  if (((rnd(23) == 7) || (rnd(18) > player.INTELLIGENCE)) && !player.GOD) {
     nomove = 0;
     updateLog(`  It didn't work!`);
     return;
   }
-  if (playerLev * 3 + 2 < x) {
+  if (playerLev * 3 + 2 < x && !player.GOD) {
     nomove = 0;
     updateLog(`  Nothing happens.  You seem inexperienced at this${period}`);
     return;

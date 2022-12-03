@@ -85,10 +85,12 @@ function quaffpotion(potion, set_known) {
     case 0:
       /* sleep */
       updateLog(`  You fall asleep. . .`);
-      var sleeplen = rnd(11) - (player.CONSTITUTION >> 2) + 2;
-      while (--sleeplen > 0) {
-        parse2();
-        //nap(1000);
+      if (!player.GOD) {
+        var sleeplen = rnd(11) - (player.CONSTITUTION >> 2) + 2;
+        while (--sleeplen > 0) {
+          parse2();
+          //nap(1000);
+        }
       }
       updateLog(`  You woke up!`);
       break;
@@ -179,7 +181,7 @@ function quaffpotion(potion, set_known) {
 
     case 7:
       /* dizziness */
-      player.setStrength(player.STRENGTH - 1);
+      if (!player.GOD) player.setStrength(player.STRENGTH - 1);
       updateLog(`  You become dizzy!`);
       break;
 
@@ -228,11 +230,13 @@ function quaffpotion(potion, set_known) {
     case 11:
       /* potion of forgetfulness */
       updateLog(`  You stagger for a moment...`);
-      for (let i = 0; i < MAXX; i++)
-        for (let j = 0; j < MAXY; j++) {
-          player.level.know[i][j] = 0;
-          //nap(1000);
-        }
+      if (!player.GOD) {
+        for (let i = 0; i < MAXX; i++)
+          for (let j = 0; j < MAXY; j++) {
+            player.level.know[i][j] = 0;
+            //nap(1000);
+          }
+      }
       break;
 
     case 12:
@@ -242,13 +246,13 @@ function quaffpotion(potion, set_known) {
 
     case 13:
       /* blindness */
-      player.BLINDCOUNT += 500;
+      if (!player.GOD) player.BLINDCOUNT += 500;
       updateLog(`  You can't see anything!`);
       break;
 
     case 14:
       /* confusion */
-      player.CONFUSE += 20 + rnd(9);
+      if (!player.GOD) player.CONFUSE += 20 + rnd(9);
       updateLog(`  You feel confused${period}`);
       break;
 
@@ -318,7 +322,7 @@ function quaffpotion(potion, set_known) {
 
     case 22:
       /* poison */
-      player.HALFDAM += 200 + rnd(200);
+      if (!player.GOD) player.HALFDAM += 200 + rnd(200);
       updateLog(`  You feel a sickness engulf you${period}`);
       break;
 

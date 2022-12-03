@@ -107,8 +107,8 @@ function loadSavedGame(savedState, isCheckPoint) {
 
   /* delete / clear the saved game file */
   // console.log(`NOT DELETING SAVE GAME`);
-  localStorageRemoveItem(logname);
-  localStorageRemoveItem('checkpoint');
+  // localStorageRemoveItem(logname);
+  // localStorageRemoveItem('checkpoint');
 
   if (isCheckPoint) {
     updateLog(`Did you quit accidentally? I restored your last game just in case.`);

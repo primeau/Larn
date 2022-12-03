@@ -707,7 +707,7 @@ function hitplayer(x, y) {
   if (monster.matches(VAMPIRE) || monster.matches(WRAITH) || monster.matches(ZOMBIE)) {
     if (player.UNDEADPRO || isCarrying(OCUBEofUNDEAD)) {
       if (ULARN) {
-        /*	halved if undead and cube of undead control	*/
+        /*	halved if undead and  control	*/
         damageModifier = 0.5;
       } else {
         /* do nothing */

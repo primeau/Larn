@@ -81,7 +81,9 @@ function setname(name) {
   cursors();
   cltoeoln();
   
+  console.log(`loading savedata for ${logname}`)
   var saveddata = localStorageGetObject(logname);
+  console.log(`data:`, { saveddata })
   var checkpoint;
 
   var winner = false;

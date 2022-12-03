@@ -346,7 +346,7 @@ const COMPRESSED_DATA = `_COMPRESSED`;
 function onCompressed(event) {
   let key = event.data[0];
   let value = event.data[1];
-  debug(`onCompressed: compression end size: ${key} ${value.length}`);
+  console.log(`onCompressed: compression end size: ${key} ${value.length}`);
   localStorage.setItem(key, value);
 }
 
@@ -357,22 +357,22 @@ Storage.prototype.setObject = function(key, value) {
   let usedWorker = false;
 
   /* compress if it's big */
-  if (value.length > 25000) {
-    /* store a record that the data is compressed */
-    this.setItem(key, COMPRESSED_DATA);
-    /* create a new key that will store the compressed data */
-    key = key + COMPRESSED_DATA;
-    debug(`setObject: compression start size: ${value.length}`);
-    /* try to do the compression in a worker outside of the main thread */
-    if (compressionWorker) {
-      usedWorker = true;
-      /* send the data to the worker (which will call back via onCompressed()) */
-      compressionWorker.postMessage([key, value]);
-    } else {
-      value = LZString.compressToUTF16(value);
-      debug(`setObject: compression end size: ${value.length}`);
-    }
-  }
+  // if (value.length > 25000) {
+  //   /* store a record that the data is compressed */
+  //   this.setItem(key, COMPRESSED_DATA);
+  //   /* create a new key that will store the compressed data */
+  //   key = key + COMPRESSED_DATA;
+  //   debug(`setObject: compression start size: ${value.length}`);
+  //   /* try to do the compression in a worker outside of the main thread */
+  //   if (compressionWorker) {
+  //     usedWorker = true;
+  //     /* send the data to the worker (which will call back via onCompressed()) */
+  //     compressionWorker.postMessage([key, value]);
+  //   } else {
+  //     value = LZString.compressToUTF16(value);
+  //     debug(`setObject: compression end size: ${value.length}`);
+  //   }
+  // }
 
   /* if the web worker couldn't be found, then write the data from here */
   if (!usedWorker) {
@@ -384,6 +384,7 @@ function localStorageSetObject(key, value) {
   if (ULARN) key += `_ularn`;
   try {
     // console.log(`setObject: ${key} ${value}`);
+    console.log(`saving '${key}' to local storage:`, value)
     localStorage.setObject(key, value);
   } catch (err) {
     console.log(`setObject: ${err}`);
