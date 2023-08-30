@@ -604,20 +604,20 @@ var Player = function Player() {
 
   //  Spells:  1( 1)  AC: 2    WC: 3    Level 1  Exp: 0           novice explorer
   // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
-  this.getStatString = function (lev) {
+  this.getStatString = function(lev) {
     if (level < 0) return ``;
     var templevel = LEVELNAMES[level];
     if (lev) templevel = lev;
 
     if (level == 0) this.TELEFLAG = 0;
-    var hpstring = `${pad(this.HP,2,changedHP)}(${pad(this.HPMAX, 2,changedHPMax)})`;
+    let hppad = this.HPMAX >= 100 ? 3 : 2;
     var output =
       `Spells: ${pad(this.SPELLS,2,changedSpells)}(${pad(this.SPELLMAX,2,changedSpellsMax)})  \
 AC: ${pad(this.AC,-4,changedAC)} \
 WC: ${pad(this.WCLASS,-4,changedWC)} \
 Level ${pad(this.LEVEL,-2,changedLevel)} \
 Exp: ${pad(this.EXPERIENCE,-10,changedExp)}${pad(CLASSES[this.LEVEL - 1],16,changedLevel)}               \n\
-HP: ${pad(hpstring,-1)} \
+HP: ${pad(this.HP,hppad,changedHP)}(${pad(this.HPMAX, hppad,changedHPMax)}) \
 STR=${pad((this.STRENGTH + this.STREXTRA),-2,changedSTR)} \
 INT=${pad(this.INTELLIGENCE,-2,changedINT)} \
 WIS=${pad(this.WISDOM,-2, changedWIS)} \

@@ -13,7 +13,7 @@ function welcome() {
 
   initHelpPages();
 
-  amiga_mode = PARAMS.mode && PARAMS.mode == `amiga`;
+  amiga_mode = PARAMS.mode && PARAMS.mode == `amiga` || false;
   retro_mode = localStorageGetObject('retro', true);
   setMode(amiga_mode, retro_mode, original_objects);
 
@@ -45,7 +45,7 @@ function welcome() {
   } else {
     setname(logname);
   }
-  blt();
+  paint();
 }
 
 
@@ -231,7 +231,7 @@ function initFS() {
   try {
     var gameNum = localStorageGetObject('gameNum', 0) + 1;
     localStorageSetObject('gameNum', gameNum);
-    if (gameNum <= 5 || getDifficulty() > 4) {
+    if (gameNum <= 5 || getDifficulty() > 10 || rnd(100) < 5) {
       dofs = true;
       console.log('dofs: ' + gameNum + ' ' + dofs + ' ' + getDifficulty());
     }
@@ -269,6 +269,7 @@ function initRB() {
 
 
 function getIP() {
+  if (debug_used) return;
   if (!navigator.onLine) {
     console.error(`getIP(): offline`);
     return;
@@ -279,7 +280,7 @@ function getIP() {
         playerIP = text.ipAddress;
       });
     })
-    .catch(error => console.log("no ip"));
+    .catch(error => console.log(`no ip`));
 }
 
 

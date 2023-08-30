@@ -199,7 +199,7 @@ var scoreIndex = 0;
 const MAX_SCORES_PER_PAGE = 18;
 const MAX_SCORES_TO_READ = 18 * 4;
 const MIN_TIME_PLAYED = 50;
-const ENDPOINT = 'test'; // 'score';
+const ENDPOINT = 'score';
 var ONLINE = true;
 
 

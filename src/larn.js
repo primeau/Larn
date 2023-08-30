@@ -1,10 +1,9 @@
 'use strict';
 
 const VERSION = '12.5.0';
-const BUILD = '495';
+const BUILD = '498';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
-const ENABLE_MOBILE = false;
 
 var ULARN = false; // are we playing LARN or ULARN?
 
@@ -59,7 +58,7 @@ async function play() {
   if (location.hostname === 'localhost' || location.hostname === '') {
     enableDebug();
   } else {
-     window.onbeforeunload = confirmExit;
+    window.onbeforeunload = confirmExit;
   }
 
   // TODO: setup for not repainting in text mode
@@ -82,8 +81,6 @@ async function play() {
   PARAMS = loadURLParameters();
 
   no_intro = PARAMS.nointro ? PARAMS.nointro == `true` : false;
-  mobile = PARAMS.mobile ? PARAMS.mobile == `true` : false;
-  if (ENABLE_MOBILE) mobile = mobile || is_touch_device();
   ULARN = PARAMS.ularn ? PARAMS.ularn == `true` : false;
 
   setGameConfig();
@@ -91,6 +88,7 @@ async function play() {
   await loadFonts();
 
   if (PARAMS.score) {
+    // unfinished scoreboard loading feature
     player = new Player();
     loadScores(null, true, true);
   } else {
@@ -133,6 +131,7 @@ function initKeyBindings() {
   Mousetrap.bind('_', mousetrap); // password
   Mousetrap.bind('-', mousetrap); // disarm 
   Mousetrap.bind('+', mousetrap); // load games via password
+  Mousetrap.bind('cmd+alt+@', reportBug); // report bug
 
   Mousetrap.bind(['(', ')'], mousetrap); // allow () for pvnert(x)
 
@@ -181,6 +180,68 @@ function enableDebug() {
   Mousetrap.bind('alt+9', eventEngolden);
   Mousetrap.bind('alt+0', eventToggleDebugNoMonsters);
   Mousetrap.bind('alt+-', eventToggleDebugProximity);
+}
+
+
+
+function reportBug() {
+  let email = `eye@larn.org`;
+  let subject = `${logname} found a bug in Larn`;
+  let body_message = `
+[Thanks for reporting a bug, please add as much info as you can here]
+
+---- Other useful info ----:
+version:${VERSION} 
+build:${BUILD}
+name:${logname}
+playerID:${playerID}
+gameID:${gameID}
+amiga_mode:${amiga_mode}
+retro_mode:${retro_mode}
+original_objects:${original_objects}
+cookies:${navigator.cookieEnabled}
+host:${location.hostname}
+params:${JSON.stringify(loadURLParameters())}
+screen dimensions:${window.screen.width},${window.screen.height}
+browser dimensions:${window.innerWidth},${window.innerHeight}
+
+GAMEOVER:${GAMEOVER}
+game_started:${game_started}
+mazeMode:${mazeMode}
+napping:${napping}
+keyboard_hints:${keyboard_hints}
+auto_pickup:${auto_pickup}
+side_inventory:${side_inventory}
+show_color:${show_color}
+bold_objects:${bold_objects}
+genocide:${genocide}
+debug_used:${debug_used}
+cheat:${cheat}
+level:${level}
+wizard:${wizard}
+gtime:${gtime}
+HARDGAME:${HARDGAME}
+lastmonst:${lastmonst}
+lastnum:${lastnum}
+hitflag:${hitflag}
+playerx:${player ? player.x : "NA"}
+playery:${player ? player.y : "NA"}
+lastpx:${lastpx}
+lastpy:${lastpy}
+lasthx:${lasthx}
+lasthy:${lasthy}
+prayed:${prayed}
+dropflag:${dropflag}
+rmst:${rmst}
+viewflag:${viewflag}
+lasttime:${lasttime}
+
+bottomline:${player ? player.getStatString() : "NA"}
+useragent:${navigator.userAgent}
+  `;
+  // window.location.href = "mailto:mail@domain.tld"; // this opens in same window which would be bad
+  var mailto_link = 'mailto:' + email + '?subject=' + subject + '&body=' + encodeURIComponent(body_message);
+  window.open(mailto_link, 'emailWindow');
 }
 
 

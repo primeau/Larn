@@ -88,19 +88,6 @@ function createDiv(x, y, w, h) {
   if (!w) w = 12; // change this for altrender?
   if (!h) h = w * 2;
   var callback = ``;
-  if (mobile) {
-    var key = `.`;
-    if (x < 22 && y <= 5) key = `y`;
-    else if (x <= 44 && y <= 5) key = `k`;
-    else if (x <= 67 && y <= 5) key = `u`;
-    else if (x < 22 && y <= 11) key = `h`;
-    else if (x <= 44 && y <= 11) key = `.`;
-    else if (x <= 67 && y <= 11) key = `l`;
-    else if (x < 22 && y <= 16) key = `b`;
-    else if (x <= 44 && y <= 16) key = `j`;
-    else if (x <= 67 && y <= 16) key = `n`;
-    callback = ` onclick='mousetrap(null, "${key}")'`;
-  }
   return `<div id='${x},${y}' class='image' style="width:${w}px; height:${h}px;"${callback}> </div>`;
 }
 
@@ -325,6 +312,7 @@ function printStats() {
       stats = game_stats(player);
     }
   }
+  if (!side_inventory) stats = ``;
   setDiv(`STATS`, stats);
 }
 
@@ -371,9 +359,9 @@ function botside() {
 const blank = `          `;
 
 function botsideline(stat, name, line, bold) {
-  cursor(70, line);
-  var str = padString(stat > 0 ? name : blank, -1, bold);
-  lprcat(str);
+  cursor(68, line);
+  lprcat(padString(`  `));
+  lprcat(padString(stat > 0 ? name : blank, -1, bold));
 }
 
 
@@ -627,20 +615,20 @@ function seemagic(onlyspells, allspells) {
 
   var spellstring = `  The magic spells you have discovered thus far:`;
   if (allspells) spellstring = `Available spells are:`;
-  var spellfunc = function(spell, buffer) {
+  var spellfunc = function (spell, buffer) {
     return padString(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
   }
   printknown(spellstring, spelldata, spellfunc, buffer, true);
 
   if (!onlyspells) {
     var scrollstring = `  The magic scrolls you have found to date are:`;
-    var scrollfunc = function(scroll) {
+    var scrollfunc = function (scroll) {
       return padString(`${SCROLL_NAMES[scroll.arg]}`, -26);
     }
     printknown(scrollstring, player.knownScrolls, scrollfunc, buffer, true);
 
     var potionstring = `  The magic potions you have found to date are:`;
-    var potionfunc = function(potion) {
+    var potionfunc = function (potion) {
       return padString(`${POTION_NAMES[potion.arg]}`, -26);
     }
     printknown(potionstring, player.knownPotions, potionfunc, buffer, false);
@@ -761,6 +749,8 @@ function onMouseClick(event) {
 
     let xy, x, y;
 
+    if (!player) return;
+
     if (amiga_mode) {
       if (!event.target.attributes.id) return; // clicking outside the 80,24 window
       xy = event.target.attributes.id.value.split(`,`);
@@ -771,16 +761,19 @@ function onMouseClick(event) {
       return;
 
       /*
+
+      new idea: don't forget about linespacing stuff in setMode
+
       // this is too unreliable to ship
       let el = document.getElementById('LARN');
       let style = window.getComputedStyle(el, null).getPropertyValue('font-size');
       let fontSize = parseFloat(style);
       let fontWidth = getTextWidth("0", fontSize + 'pt dos');
       // console.log(`fontwidth: ${fontWidth} fontSize: ${fontSize}`);
-
+ 
       // console.log(event.layerX, event.layerY);
       // console.log(event.clientX, event.clientY);
-
+ 
       let offx = 25; // event.target.offsetLeft;
       let offy = 25; // event.target.offsetTop);
       // let offx = event.target.offsetLeft;
@@ -790,11 +783,11 @@ function onMouseClick(event) {
       let clickX = event.clientX - offx;
       let clickY = event.clientY - offy;
       // console.log(`clickX`, clickX, `clickY`, clickY);
-
+ 
       x = clickX / fontWidth;
       y = clickY / fontSize;
       console.log(x, y);
-
+ 
       let weirdHackX = (66/59.52);
       let weirdHackY = (16/18.45);
       x = Math.floor((clickX / fontWidth) * weirdHackX);

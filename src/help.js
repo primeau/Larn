@@ -76,7 +76,7 @@ helppages[1] =
   r  read a scroll or book    R  remove gems from throne  }  toggle between     \n\
   s  sit on a throne          S  save the game               classic, hack,     \n\
   t  take an item             T  take off armor              and amiga graphics \n\
-  v  print program version                                                      \n\
+  v  print program version    V  view conducts                                  \n\
   w  wield a weapon           W  wear armor                                     \n\
   z  show scores              Z  teleport yourself        ?  this help screen   \n\
   `;

@@ -78,12 +78,20 @@ function enter() {
  */
 function dungeon() {
   setMazeMode(true);
-  /* place player in front of entrance on level 1.  newcavelevel()
-     prevents player from landing on a monster/object.
-  */
+
+  // position player for a know = KNOWALL for start square
   player.x = 33;
   player.y = MAXY - 2;
+
   newcavelevel(1);
+
+  // reposition player in case a monster prevented proper placement
+  player.x = 33;
+  player.y = MAXY - 2;
+
+  // move monster away from the entrance
+  shuffleMonster(player.x, player.y);
+
   player.level.know[33][MAXY - 1] = KNOWALL;
   player.level.monsters[33][MAXY - 1] = null;
   //draws( 0, MAXX, 0, MAXY );
@@ -93,7 +101,22 @@ function dungeon() {
 
 
 
-
+function shuffleMonster(oldx, oldy) {
+  let monster = player.level.monsters[oldx][oldy];
+  if (monster) {
+    /* choose direction, then try all */
+    for (let i = -8, k = rnd(8); i < 0; i++, k++) {
+      if (k > 8) k = 1; /* wraparound the diroff arrays */
+      let newx = oldx + diroffx[k];
+      let newy = oldy + diroffy[k];
+      if (cgood(newx, newy, false, true)) /* if we can create here */ {
+        player.level.monsters[oldx][oldy] = null;
+        player.level.monsters[newx][newy] = monster;
+        i = 0;
+      }
+    }
+  }
+}
 
 
 
@@ -190,20 +213,14 @@ function dnd_parse(key) {
         to balance the game on higher difficulties the chest and book
         from the store are special and are reduced in resale value and
         quality as difficulty goes up
-
-        v12.5.0: 
-        this can be turned off via the "unbalance" param
       */
-      if (!ULARN && (boughtItem.matches(OBOOK) || boughtItem.matches(OCHEST))) {
-        let unbalance = PARAMS.unbalance ? PARAMS.unbalance == `true` : false;
-        if (unbalance) {
-          // keep these games off the scoreboard
-          debug_used = true; // this should probably be moved somewhere more generic
-        } else {
-          // normal case
-          boughtItem.arg = Math.max(1, boughtItem.arg - getDifficulty());
-        }
-      }
+      /* 
+      v12.5.1:
+        Removed this feature
+      */
+      // if (!ULARN && (boughtItem.matches(OBOOK) || boughtItem.matches(OCHEST))) {
+      //   boughtItem.arg = Math.max(1, boughtItem.arg - getDifficulty());
+      // }
 
       storemessage(`  You pick up: ${invindex}) ${boughtItem}${period}`, 1000);
       if (dnd_item[i].qty == 0) dnditem(i);
@@ -236,7 +253,7 @@ function dnditem(i) {
   }
 
   var item = createObject(dnd_item[i].itemId, dnd_item[i].arg);
-  lprcat(`${getCharFromIndex(i%26)}) `);
+  lprcat(`${getCharFromIndex(i % 26)}) `);
 
   if (item.matches(OPOTION)) lprintf(`${item.toString(true).substring(8)}`);
   else if (item.matches(OSCROLL)) lprintf(`${item.toString(true).substring(8)}`);
@@ -922,7 +939,6 @@ async function ohome() {
     // do nothing
   }
 
-  
   setMazeMode(false);
 
   napping = false;

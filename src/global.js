@@ -323,9 +323,11 @@ function destroyInventory(item) {
     function to return 1 if a monster is next to the player else returns 0
  */
 function nearbymonst() {
-  for (var tmp = player.x - 1; tmp < player.x + 2; tmp++)
-    for (var tmp2 = player.y - 1; tmp2 < player.y + 2; tmp2++)
-      if (monsterAt(tmp, tmp2)) return (true); /* if monster nearby */
+  for (var tmpx = vx(player.x - 1); tmpx <= vx(player.x + 1); tmpx++) {
+    for (var tmpy = vy(player.y - 1); tmpy <= vy(player.y + 1); tmpy++) {
+      if (monsterAt(tmpx, tmpy)) return (true); /* if monster nearby */
+    }
+  }
   return (false);
 }
 
@@ -333,9 +335,9 @@ function nearbymonst() {
 
 function nearbymonsters() {
   var near = [];
-  for (var x = player.x - 1; x < player.x + 2; x++) {
-    for (var y = player.y - 1; y < player.y + 2; y++) {
-      var monster = monsterAt(x, y);
+  for (var tmpx = vx(player.x - 1); tmpx <= vx(player.x + 1); tmpx++) {
+    for (var tmpy = vy(player.y - 1); tmpy <= vy(player.y + 1); tmpy++) {
+      var monster = monsterAt(tmpx, tmpy);
       if (monster) {
         near.push(monster);
       }
@@ -347,9 +349,11 @@ function nearbymonsters() {
 
 
 function nearPlayer(item) {
-  for (var tmpx = vx(player.x - 1); tmpx < vx(player.x + 2); tmpx++)
-    for (var tmpy = vy(player.y - 1); tmpy < vy(player.y + 2); tmpy++)
+  for (var tmpx = vx(player.x - 1); tmpx <= vx(player.x + 1); tmpx++) {
+    for (var tmpy = vy(player.y - 1); tmpy <= vy(player.y + 1); tmpy++) {
       if (itemAt(tmpx, tmpy).matches(item)) return true;
+    }
+  }
   return false;
 }
 

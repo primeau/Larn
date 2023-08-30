@@ -131,7 +131,7 @@ function larnmousedown(key) {
     var LAST_MOUSE_BUTTON = key;
     mousetrap(null, LAST_MOUSE_BUTTON);
     MOUSE_DOWN_EVENT = setInterval(
-        function() {
+        function () {
             if (MOUSE_EVENTS++ > 4)
                 mousetrap(null, LAST_MOUSE_BUTTON);
         }, 50
@@ -162,242 +162,27 @@ function newButtonRow() {
 function setButtons() {
 
     if (!game_started) return;
-    
+
     BUTTONS = '';
 
-    if (!mobile) {
-        if (player && mazeMode) {
-            addButton(BUTTON_HELP);
-            var hintsLabel = keyboard_hints ? `on` : `off`;
-            var pickupLabel = auto_pickup ? `on` : `off`;
-            var inventoryLabel = side_inventory ? `on` : `off`;
-            var boldLabel = bold_objects ? `on` : `off`;
-            var colorLabel = show_color ? `on` : `off`;
-            var retroLabel = retro_mode ? `DOS` : `modern`;
-            if (amiga_mode) retroLabel = retro_mode ? `Amiga 500` : `Amiga 1200`;
-            addButton(createVariableButton(`!`, `Keyboard hints: ${hintsLabel}`));
-            addButton(createVariableButton(`@`, `Auto pickup: ${pickupLabel}`));
-            addButton(createVariableButton(`#`, `Show inventory: ${inventoryLabel}`));
-            addButton(createVariableButton(`$`, `Show color: ${colorLabel}`));
-            addButton(createVariableButton(`%`, `Bold objects: ${boldLabel}`));
-            addButton(createVariableButton(`{`, `Font: ${retroLabel}`));
-        }
-        setDiv(`FOOTER`, BUTTONS);
-        return; // disable everything else for now
+    if (player && mazeMode) {
+        addButton(BUTTON_HELP);
+        var hintsLabel = keyboard_hints ? `on` : `off`;
+        var pickupLabel = auto_pickup ? `on` : `off`;
+        var inventoryLabel = side_inventory ? `on` : `off`;
+        var boldLabel = bold_objects ? `on` : `off`;
+        var colorLabel = show_color ? `on` : `off`;
+        var retroLabel = retro_mode ? `DOS` : `modern`;
+        if (amiga_mode) retroLabel = retro_mode ? `Amiga 500` : `Amiga 1200`;
+        addButton(createVariableButton(`!`, `Keyboard hints: ${hintsLabel}`));
+        addButton(createVariableButton(`@`, `Auto pickup: ${pickupLabel}`));
+        addButton(createVariableButton(`#`, `Show inventory: ${inventoryLabel}`));
+        addButton(createVariableButton(`$`, `Show color: ${colorLabel}`));
+        addButton(createVariableButton(`%`, `Bold objects: ${boldLabel}`));
+        addButton(createVariableButton(`{`, `Font: ${retroLabel}`));
     }
-
-    if (!player) {
-        if (keyboard_input_callback === setname) {
-            var name = KEYBOARD_INPUT ? KEYBOARD_INPUT : logname;
-            addButton(createVariableButton(ENTER, name));
-            newButtonRow();
-            keyboardButtons();
-        }
-        if (keyboard_input_callback === startgame) {
-            var difficulty = KEYBOARD_INPUT ? KEYBOARD_INPUT : getDifficulty();
-            addButton(createButton(ENTER, difficulty));
-            newButtonRow();
-            numberButtons();
-            newButtonRow();
-            addButton(BUTTON_DEL);
-        }
-        setDiv(`FOOTER`, BUTTONS);
-        return;
-    }
-
-    // TODO not complete
-    if (keyboard_input_callback === act_donation_pray) {
-        numberButtons();
-        setDiv(`FOOTER`, BUTTONS);
-        return;
-    }
-
-    var item = itemAt(player.x, player.y);
-
-
-    if (mazeMode) {
-
-        //newButtonRow();
-        movementButtons();
-
-
-        newButtonRow();
-        if (player.SPELLS > 0 && newSpellCode == null) {
-            addButton(BUTTON_CAST);
-        }
-
-        if (newSpellCode != null) {
-            for (spellIndex = 0; spellIndex < player.knownSpells.length; spellIndex++) {
-                if (player.knownSpells[spellIndex]) {
-                    if (spellIndex % 5 == 0) newButtonRow();
-                    addButton(createButton(spelcode[spellIndex], spelname[spellIndex]));
-                }
-            }
-            newButtonRow();
-            addButton(createButton(ESC, `cancel`));
-            newButtonRow();
-        }
-
-        inventoryButtons(drop_object, showall);
-        inventoryButtons(act_quaffpotion, showquaff);
-        inventoryButtons(act_read_something, showread);
-        inventoryButtons(act_eatcookie, showeat);
-        inventoryButtons(wear, showwear); // need to handle taking off armour (wear '-'?)
-        inventoryButtons(wield, showwield); // TODO should be canWield? // need to handle wielding '-'
-
-
-        addButton(BUTTON_QUAFF); // TODO: only show when over/carrying potion
-        addButton(BUTTON_READ); // TODO: only show when over/carrying scroll/book / disable when blind
-        addButton(BUTTON_WIELD); // TODO: only show when over/carrying weapon
-        addButton(BUTTON_WEAR); // TODO: only show when over/carrying armor
-        newButtonRow();
-        addButton(BUTTON_INVENTORY);
-        addButton(BUTTON_EAT); // TODO: only show when over/carrying cookie
-        addButton(BUTTON_TELEPORT); // TODO: only show when over level 10
-
-        if (item.isStore()) {
-            addButton(BUTTON_ENTER);
-        }
-        if (item.isWeapon()) {
-            //addButton(BUTTON_WIELD);
-        }
-        if (item.isArmor()) {
-            //addButton(BUTTON_WEAR);
-        }
-        if (item.matches(OPOTION)) {
-            //addButton(BUTTON_QUAFF);
-        }
-        if (item.matches(OBOOK) || item.matches(OSCROLL)) {
-            //addButton(BUTTON_READ);
-        }
-        if (item.matches(OCOOKIE)) {
-            //addButton(BUTTON_EAT);
-        }
-
-
-        if (item.matches(OFOUNTAIN)) {
-            addButton(BUTTON_FOUNTAIN_DRINK);
-            addButton(BUTTON_FOUNTAIN_TIDY);
-        }
-        if (item.matches(OTHRONE)) {
-            addButton(BUTTON_THRONE_PRY);
-            addButton(BUTTON_THRONE_SIT);
-        }
-        if (item.matches(ODEADTHRONE)) {
-            addButton(BUTTON_THRONE_SIT);
-        }
-        if (item.matches(OALTAR)) {
-            addButton(BUTTON_ALTAR_PRAY);
-            addButton(BUTTON_ALTAR_DESECRATE);
-        }
-        if (item.matches(OSTAIRSUP)) {
-            addButton(BUTTON_UPSTAIRS);
-        }
-        if (item.matches(OSTAIRSDOWN)) {
-            addButton(BUTTON_DOWNSTAIRS);
-        }
-        if (canTake(item) && !pocketfull()) {
-            addButton(BUTTON_TAKE);
-        }
-        if (item.matches(OEMPTY)) {
-            // TODO: need to deal with invisible traps
-            // TODO: don't show if not carrying anything
-            addButton(BUTTON_DROP);
-        }
-        if (nearPlayer(OCLOSEDDOOR) || nearPlayer(OCHEST)) {
-            addButton(BUTTON_OPEN);
-        }
-        if (nearPlayer(OOPENDOOR)) {
-            addButton(BUTTON_CLOSE);
-        }
-
-    } else {
-        if (keyboard_input_callback) console.log(`kbd`, keyboard_input_callback.name);
-        if (blocking_callback) console.log(`callback`, blocking_callback.name);
-
-        if (item.matches(OBANK) || item.matches(OBANK2)) {
-            if (blocking_callback === bank_parse) {
-                addButton(BUTTON_DEPOSIT);
-                addButton(BUTTON_WITHDRAW);
-                addButton(BUTTON_SELL);
-            }
-            if (keyboard_input_callback === bank_deposit) {
-                addButton(createButton(ENTER, `deposit ${KEYBOARD_INPUT}`));
-                addButton(createButton(`*`, `deposit all`));
-                addButton(BUTTON_CANCEL);
-                newButtonRow();
-                numberButtons();
-            }
-            if (keyboard_input_callback === bank_withdraw) {
-                addButton(createButton(ENTER, `withdraw ${KEYBOARD_INPUT}`));
-                addButton(createButton(`*`, `withdraw all`));
-                addButton(BUTTON_CANCEL);
-                newButtonRow();
-                numberButtons();
-            }
-            if (blocking_callback === bank_sell) {
-                addButton(BUTTON_CANCEL);
-                addButton(createButton(`*`, `sell all`));
-                newButtonRow();
-                alphaButtons(false);
-            }
-            newButtonRow();
-        }
-
-        if (item.matches(OLRS)) {
-            if (blocking_callback === parse_lrs) {
-                addButton(BUTTON_PAY_TAXES);
-            } else if (keyboard_input_callback === parse_lrs_pay) {
-                addButton(createButton(ENTER, `pay ${KEYBOARD_INPUT}`));
-                addButton(BUTTON_CANCEL);
-                newButtonRow();
-                numberButtons();
-            }
-        }
-
-        if (item.matches(ODNDSTORE)) {
-            if (blocking_callback === dnd_parse) {
-                alphaButtons(false);
-            }
-        }
-
-        if (item.matches(OSCHOOL)) {
-            if (blocking_callback === parse_class) {
-                alphaButtons(false, 8);
-            }
-        }
-
-        if (item.matches(OTRADEPOST)) {
-            if (blocking_callback === parse_tradepost) {
-                var numbuttons = 0;
-                for (var i = 0; i < player.inventory.length; i++) {
-                    if (player.inventory[i] != null) {
-                        var label = getCharFromIndex(i);
-                        addButton(createNarrowButton(label, label));
-                        if (++numbuttons == 13) newButtonRow();
-                    }
-                }
-            }
-            if (blocking_callback === parse_sellitem) {
-                addButton(BUTTON_YES);
-                addButton(BUTTON_NO);
-            }
-        }
-
-
-        newButtonRow();
-        addButton(BUTTON_EXIT);
-
-
-    }
-
-    if (BUTTONS === ``) {
-        addButton(BUTTON_SCORES);
-    }
-
     setDiv(`FOOTER`, BUTTONS);
-
-
+    return; // disable everything else for now
 }
 
 

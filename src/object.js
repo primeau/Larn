@@ -453,9 +453,22 @@ function itemAt(x, y) {
     let errorMessage = `itemAt(): null item: x=${x} y=${y}`;
     console.log(errorMessage);
     try {
-      Rollbar.error(`${errorMessage}`);
+      let o = `level:${level}\n`;
+      let m = `monsters:\n`;
+      let k = `know:\n`;
+      for (let y = 0; y < 17; y++) {
+        for (let x = 0; x < 67; x++) {
+          o += player.level.items[x][y] ? itemlist[player.level.items[x][y].id].char : `#=#`;
+          m += player.level.monsters[x][y] ? player.level.monsters[x][y].char : `.`;
+          k += player.level.know[x][y] ? player.level.know[x][y] : `.`;
+        }
+        o += `\n`;
+        m += `\n`;
+        k += `\n`;
+      }
+      Rollbar.error(`${errorMessage}\n${o}\n${m}\n${k}`);
     } catch (error) {
-      // do nothing      
+      // do nothing
     }
   }
   
@@ -576,6 +589,14 @@ function lookforobject(do_ident, do_pickup) {
   else if (item.matches(OPAD)) {
     if (nearbymonst()) return;
     if (do_ident) updateLog(`You have found ${item}`, formatHint('e', 'to go inside'));
+  }
+  else if (item.matches(OVOLDOWN)) {
+    if (nearbymonst()) return;
+    if (do_ident) updateLog(`You have found ${item}${period}`, formatHint('>', 'to climb down'));
+  }
+  else if (item.matches(OVOLUP)) {
+    if (nearbymonst()) return;
+    if (do_ident) updateLog(`You have found ${item}${period}`, formatHint('<', 'to climb up'));
   }
   else if (item.isStore()) {
     if (nearbymonst()) return;
