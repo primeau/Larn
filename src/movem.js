@@ -645,6 +645,19 @@ function mmove(sx, sy, dx, dy) {
   /* if blind don't show where monsters are */
   if (player.BLINDCOUNT) return;
 
+  /*
+  TypeError: undefined is not an object (evaluating 'player.level.know[l][s]')
+  File "https://larn.org/larn/larn.min.js", line 1, in mmove
+  File "https://larn.org/larn/larn.min.js", line 1, in dumb_move
+  File "https://larn.org/larn/larn.min.js", line 1, in movemt
+  File "https://larn.org/larn/larn.min.js", line 1, in movemonst
+  File "https://larn.org/larn/larn.min.js", line 1, in mainloop
+  File "https://larn.org/larn/larn.min.js", line 1, in mousetrap
+  File "https://larn.org/larn/lib/mousetrap.min.js", line 5, in c
+  File "https://larn.org/larn/lib/mousetrap.min.js", line 7, in [anonymous]
+  File "https://larn.org/larn/lib/mousetrap.min.js", line 5, in e
+*/
+
   if (player.level.know[dx][dy] != null) {
     if (trap_msg) {
       updateLog(trap_msg);

@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "npm run tempclean ; npm run distclean",
     "tempclean": "rm -rf larn-temp || true",
+    "deployclean": "rm -rf ../larn-deploy/*",
     "distclean": "rm -rf dist || true",
     "alphaclean": "rm -rf ../larn-deploy/alpha || true",
     "betaclean": "rm -rf ../larn-deploy/beta || true",
@@ -37,14 +38,16 @@
     "buildprod": "npm run prodclean ; npm run transpile ; npm run minify ; npm run prodcopy ; npm run prodtv ; npm run distprod",
 
     "build": "echo '=== STARTING BUILD ==' ; npm run distclean ; npm run transpile ; npm run minify ; npm run prodcopy ; npm run tempclean",
-    "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run clean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run prodtv ; npm run dist ; npm run clean",
+    "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run clean ; npm run deployclean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run prodtv ; npm run dist ; npm run clean",
 
     "watch": "npm run tempclean ; babel src --watch --out-dir larn-temp/",
-    "server": "cd ../larn-deploy ; python -m SimpleHTTPServer 8000",
-    "localserver": "cd ../larn-local ; python -m SimpleHTTPServer 8000",
+    "server": "cd ../larn-deploy ; python3 -m http.server 8000",
+    "localserver": "cd src ; python3 -m http.server 8000",
 
     "deploy_tv_lambda_test": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movie_test --zip-file fileb://function.zip ; rm function.zip",
-    "deploy_tv_lambda": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movies --zip-file fileb://function.zip ; rm function.zip"
+    "deploy_tv_lambda": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movies --zip-file fileb://function.zip ; rm function.zip",
+
+    "deploy_larn_lambda_score": "cd src/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name score --zip-file fileb://function.zip ; rm function.zip"
   },
   "repository": {
     "type": "git",

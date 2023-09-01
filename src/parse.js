@@ -49,9 +49,9 @@ var keyboard_input_callback;
 
 
 /* extra handling to allow running on keyboards with numpads */
-Mousetrap.prototype.handleKey = function(char, mod, evt) {
+Mousetrap.prototype.handleKey = function (char, mod, evt) {
   // add extra argument to the keyboard event to signify if shift key is being held
-  arguments[2].shift = mod[0] === `shift`; 
+  arguments[2].shift = mod[0] === `shift`;
   var self = this;
   return self._handleKey.apply(self, arguments);
 };
@@ -100,7 +100,7 @@ function setNumberCallback(func, allowAsterisk) {
 
 function shouldRun(e, key) {
   // var run = key.indexOf('shift+') >= 0 || key.match(/[YKUHLBJN]/);
-  return e ? e.shift : false;
+  return e ? e.shift : false || key.match(/[YKUHLBJN]/);
 }
 
 
@@ -182,7 +182,7 @@ function parse(e, key) {
   if (!player) {
     return;
   }
-  
+
   var item = itemAt(player.x, player.y);
 
 
@@ -234,22 +234,22 @@ function parse(e, key) {
   //
   if (key == 'e') {
     if (player.TIMESTOP == 0) {
-        if (item.isStore()) {
+      if (item.isStore()) {
         enter();
         return;
       }
       if (item.matches(OCOOKIE)) {
         outfortune();
         forget();
-      } 
+      }
       else if (item.matches(OSHROOMS)) {
         eatShrooms();
         forget();
-      } 
+      }
       else if (item.matches(OACID)) {
         dropAcid();
         forget();
-      } 
+      }
       else {
         updateLog(`What do you want to eat [<b>space</b> to view] ? `);
         setCharCallback(act_eatcookie);
@@ -265,8 +265,8 @@ function parse(e, key) {
     if (player.TIMESTOP == 0) {
       wash_fountain(null);
       dropflag = 1;
-  }
-  return;
+    }
+    return;
   }
 
   //
@@ -379,15 +379,15 @@ function parse(e, key) {
       if (item.matches(OSPEED)) {
         doSpeed();
         forget();
-      } 
+      }
       else if (item.matches(OHASH)) {
         smokeHash();
         forget();
-      } 
+      }
       else if (item.matches(OCOKE)) {
         doCoke();
         forget();
-      } 
+      }
       else {
         sit_on_throne();
         dropflag = 1;
@@ -570,11 +570,11 @@ function parse(e, key) {
       player.SHIELD = null;
       updateLog(`Your shield is off${period}`);
     } else
-    if (player.WEAR) {
-      player.WEAR = null;
-      updateLog(`Your armor is off${period}`);
-    } else
-      updateLog(`You aren't wearing anything${period}`);
+      if (player.WEAR) {
+        player.WEAR = null;
+        updateLog(`Your armor is off${period}`);
+      } else
+        updateLog(`You aren't wearing anything${period}`);
     return;
   }
 
@@ -807,6 +807,14 @@ function parse(e, key) {
   // if we get here, it's an invalid key, and shouldn't take any time
   nomove = 1;
 
+  //
+  // REPORT BUG
+  //
+  if (key == 'cmd+alt+@') {
+    nomove = 1;
+    reportBug();
+    return;
+  }
 }
 
 
