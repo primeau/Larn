@@ -166,6 +166,7 @@ function sethard(hard) {
     hard = 0;
   }
   setDifficulty(Math.max(0, hard));
+  setDifficulty(Math.min(128, hard));
 
   // console.log(`setting difficulty: ` + getDifficulty());
 

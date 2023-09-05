@@ -1,3 +1,7 @@
+JS U/Larn 12.5.1
+----------------
+1. (coming soon) Added support for mobile devices
+
 
 JS U/Larn 12.5.0
 ----------------
@@ -22,6 +26,9 @@ sprites created by Christopher Yewchuk and Jerome Lecomte.
 prevent inflated scores by selling epic items.   
 
 1. [balance] Demons can no longer be teleported.
+
+1. [un-balance] The chest and book at the store no longer decline in quality 
+as difficulty goes up.
 
 1. [fix]/[new] You can drop gold onto an existing pile of gold now, or into
 a pit.

@@ -46,13 +46,17 @@ function getDifficulty() {
     console.log('get: invalid difficulty: ' + HARDGAME);
     console.trace();
   }
-  return HARDGAME;
+  return Math.min(128, HARDGAME);
 }
 
 function setDifficulty(diff) {
   if (diff == null || diff === `` || isNaN(Number(diff))) {
     console.log('set: invalid difficulty: ' + diff);
     console.trace();
+  }
+  if (diff > 128) {
+    console.log(`capping difficulty at 128`);
+    diff = 128;
   }
   HARDGAME = diff;
 }
