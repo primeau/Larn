@@ -1,7 +1,7 @@
 NOW: UPDATE npm run build to only make dist, make a build prod, beta, alpha
 
+- can't load alpha mobile game https://larn.org/larn/tv/?gameid=o0fni21j87 
 - final frames are botched: https://larn.org/larn/tv/?gameid=ai2n1hrgnq
-- "V" to view conducts
 - show 'play again' link after death
 - add play options to larntv list
 
@@ -24,12 +24,10 @@ todo:
 * help wiki (items/scrolls/potions/features/monsters/etc)
 * new video to add: https://larn.org/beta/tv/?gameid=lysnwvbhx8 
   - diff 0 win with illiterate/thirsty conducts
-- update savegame test endpoint eventually
 - retro font mode isn't properly monospaced in mac/safari
 - re-add volcano sneak?
 - click / farlook to identify object (hack and classic mode)
 - mobile support
-- max diff 101
 - if error writing savegame due to space issues, delete all backup cookies
 
 - Navigator.onLine Read only
@@ -39,8 +37,8 @@ todo:
 - async/await for keyboard input?
 - amiga mode: unseen walls should be flat
 - check chrome audit tab
-- "sorry, no mobile" message for larn.html
 - show time in side inventory
+- record elapsed game time, total time, number of saves
 - Save id to name and name to id map
 - most references to player.level should be replaced with functions
 - allow hitting escape while naps are happening (interrupt settimeout?)
@@ -122,6 +120,7 @@ bugs:
 - While Haste Self is active, hitting a monster with a projectile causes said monster to move once at normal speed
 - game over scoreboard can't load current game (but can load all others) 
   - it's because most recent game probably isn't a high score and isn't recorded in local winners/losers cache
+  - or it's because it's a new-ish player and there's a `+` in the gameID for fs
 
 hardmode ideas:
 - can only wield actual weapons

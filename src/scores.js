@@ -380,7 +380,11 @@ function printScore(p) {
     }
   }
   var endcode = GAMEOVER ? `<br>` : ``;
-  lprc(`<a href='javascript:dbQueryLoadGame("${p.gameID}", ${!ONLINE}, ${p.winner})'>`);
+
+  var isNewScore = gameID ? p.gameID == gameID : false;
+  var addplus = isNewScore && dofs ? `+` : ``;
+  // console.log(`score.js`, dofs, gameID, p.gameID, isNewScore, addplus, `${p.gameID}${addplus}`);
+  lprc(`<a href='javascript:dbQueryLoadGame("${p.gameID}${addplus}", ${!ONLINE}, ${p.winner})'>`);
   printWithoutSpacesAtTheEnd(`${score}</a>${endcode}`);
   if (!GAMEOVER) lprc(`\n`);
 }

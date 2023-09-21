@@ -56,7 +56,7 @@ function createLevelNames() {
     LEVELNAMES.push(`${i}`);
   }
   for (let i = 0; i < MAXVLEVEL; i++) {
-    LEVELNAMES.push(`V${i+1}`);
+    LEVELNAMES.push(`V${i + 1}`);
   }
 }
 
@@ -80,7 +80,7 @@ function setname(name) {
 
   cursors();
   cltoeoln();
-  
+
   var saveddata = localStorageGetObject(logname);
   var checkpoint;
 
@@ -232,7 +232,7 @@ function initFS() {
   try {
     var gameNum = localStorageGetObject('gameNum', 0) + 1;
     localStorageSetObject('gameNum', gameNum);
-    if (gameNum <= 5 || getDifficulty() > 10 || rnd(100) < 5) {
+    if (gameNum <= 5 || getDifficulty() > 10 || rnd(100) < 3) {
       dofs = true;
       console.log('dofs: ' + gameNum + ' ' + dofs + ' ' + getDifficulty());
     }
@@ -259,7 +259,11 @@ function initRB() {
     Rollbar.configure({
       payload: {
         code_version: `${BUILD}`,
-        environment: `${BUILD}`
+        client: {
+          javascript: {
+            code_version: `${BUILD}`,
+          }
+        }
       }
     });
   } catch (error) {
@@ -276,8 +280,8 @@ function getIP() {
     return;
   }
   fetch(`https://api.db-ip.com/v2/free/self`)
-    .then(function(response) {
-      response.json().then(function(text) {
+    .then(function (response) {
+      response.json().then(function (text) {
         playerIP = text.ipAddress;
       });
     })
@@ -441,7 +445,7 @@ function startgame(hard) {
   game_started = true;
 
   setButtons();
-  
+
   if (ENABLE_DEVMODE) {
     enableDevmode();
   }
