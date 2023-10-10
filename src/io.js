@@ -172,6 +172,8 @@ function os_put_font(ch, x, y, markup) {
       }
 
     } else {
+      ch = `${ch}`; // workaround: amiga larn bank buttons are numbers, not strings
+
       // HACK HACk HAck Hack hack
       if (ch.substring(0, 3) === HACK_URL_TEXT) {
         setImage(x, y, ch);

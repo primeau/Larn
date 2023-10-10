@@ -1,6 +1,6 @@
 {
   "name": "larn",
-  "version": "12.5.0",
+  "version": "12.5.1",
   "description": "JS Larn",
   "main": "larn.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "betacopy": "export envt=beta ; npm run _copy",
     "prodcopy": "export envt=larn ; npm run _copy",
     "webcopy": "cp -rv ../larn-www/* ../larn-deploy || true",
-    "_tvcopy": "mkdir -p dist/$envt/tv/env ; cp larn-temp/tv/* dist/$envt/tv ; cp larn-temp/util.js dist/$envt/tv ; cp larn-temp/env/larn_config.js dist/$envt/tv/env ; cp src/tv/index.html dist/$envt/tv || true",
+    "_tvcopy": "mkdir -p dist/$envt/tv/env ; cp larn-temp/tv/* dist/$envt/tv ; cp larn-temp/util.js dist/$envt/tv ; cp larn-temp/env/larn_config.js dist/$envt/tv/env ; cp src/tv/index.html dist/$envt/tv ; cp src/tv/larntv.css dist/$envt/tv || true",
     "alphatv": "export envt=alpha ; npm run _tvcopy",
     "betatv": "export envt=beta ; npm run _tvcopy",
     "prodtv": "export envt=larn ; npm run _tvcopy",

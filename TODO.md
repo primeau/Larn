@@ -1,10 +1,3 @@
-NOW: UPDATE npm run build to only make dist, make a build prod, beta, alpha
-
-- can't load alpha mobile game https://larn.org/larn/tv/?gameid=o0fni21j87 
-- final frames are botched: https://larn.org/larn/tv/?gameid=ai2n1hrgnq
-- show 'play again' link after death
-- add play options to larntv list
-
 Ularn 12.5.0:
 - check all 1.6.3 code
 - check scorePUT
@@ -14,22 +7,24 @@ Ularn 12.5.1
 - search for ULARN TODO
 - eye of larn appraisal in bank
 
-Ularn balance ideas:
-- crumble altars faster? 1/20?
-- make +9 items worth less? cap out around 116k (v3 chest in Larn)?
-
 todo:
 * IDEA: use createElement for all rendering?
 * find a better way to get ip addresses
 * help wiki (items/scrolls/potions/features/monsters/etc)
 * new video to add: https://larn.org/beta/tv/?gameid=lysnwvbhx8 
   - diff 0 win with illiterate/thirsty conducts
+* print save / reload game time
+- show 'play again' link after death
+- ularn: if an invisible demon steps on a wall, should it show a dungeon floor tile, or a wall tile? --> wall tile!
+- refactor: move everything out of data, put methods for the use of the thing in the object
+   - object: take() | cancarry() | drop() | use() | thingtoprintwhensteppingonit() | lookforobjectaction() | u/larn/hackname | name, type, color
+   - book | mle(1) | 
+   - scroll | pulverization(15) | 
+   - weapon | dagger(1) | +5
 - retro font mode isn't properly monospaced in mac/safari
-- re-add volcano sneak?
+- close bank after potion discovered
 - click / farlook to identify object (hack and classic mode)
-- mobile support
 - if error writing savegame due to space issues, delete all backup cookies
-
 - Navigator.onLine Read only
    Returns a Boolean indicating whether the browser is working online.
    window.addEventListener('offline', function(e) { console.log('offline'); });
@@ -52,7 +47,6 @@ todo:
   - another cheater: meesa/DooDoo
   - serverside known cheaters list
   - check fs for games from localhost/file:
-- get rid of player.level
 
 extras:
 - wash at fountain clears itching
@@ -94,6 +88,7 @@ extras:
     - paci(fists): never wield a weapon
     - zen: blind from birth (remove curse, school, cbl won't fix)
     - aggravating: permanent aggravate monsters (and remove curse won't fix)
+  - stainless shield ~5k gold +1|2 ac
 
 bugs:
 * last hit monster still chases from a distance if dumb
@@ -108,8 +103,8 @@ bugs:
   just in drops you back on the monsters spot. the monster reappears when you move.
 - arrow buttons on help screen are truncated in amiga mode
 - amiga: you owe <strike>1234</strike> in taxes
-- amiga: gap between maze and spells isn't cleared on loading saved game
 - there are a bunch of 404's for the older source code in history.html
+  * add links to locally hosted copies
 - blindness
   - black tile when opening door when blind
   - when blind, a monster from an unknown tile will reveal the tile its standing on during attack
@@ -133,3 +128,5 @@ hardmode ideas:
 - get potion -> permanent aggravate monsters (be sure to disable remove curse)
 - if aggravate always get gnome king at throne
 - curses last longer
+- stat reduction multiplier on E10/15 and v3/5 (more spells fail etc)
+- can't stack spells/scrolls/potions (ie can't read expanded awareness twice in a row)

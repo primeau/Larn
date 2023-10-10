@@ -2,14 +2,13 @@ const AWS = require('aws-sdk');
 const scoreboardReader = require('./scoreboardGET');
 const dbWriter = require('./scorePUT');
 const gameReader = require('./scoreGET');
-const tester = require('./testfunc');
 
 const dynamo = new AWS.DynamoDB.DocumentClient({
     api_version: '2012-08-10',
 });
 
 
-exports.handler = async(event) => {
+exports.handler = async (event) => {
     console.log("EVENT: " + JSON.stringify(event) + "\n");
 
     // 
@@ -21,15 +20,7 @@ exports.handler = async(event) => {
     // PARSE IF ULARN
     //
     let ULARN = isUlarn(event);
-    
-    //
-    // RUN TEST
-    //
-    if (gameID == 'test') {
-        console.log(`INDEX: running test\n`);
-        return tester.testfunc();
-    }
-    
+
     // 
     // WRITE GAME TO GAMES TABLE, RECORD HIGH SCORE
     //

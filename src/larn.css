@@ -1,13 +1,14 @@
 @font-face {
     font-family: modern;
 
+    /* experiments to try fixing too-wide fonts on non-chrome browsers https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Fundamentals */
     /* for future font-noodling https://fonts.google.com/?category=Monospace&preview.text=a%E2%96%92%E2%96%92%E2%96%92%C2%B7@%C2%B7%E2%96%92%C2%B7%E2%96%92A!!0%3F&preview.text_type=custom */
 
     /* works in firefox, not safari */
-    /* src: url('img/PTMono-Regular.ttf');
+    /* src: url('img/PTMono-Regular.ttf'); */
 
     /* no firefox or safari */
-    src: url('img/NotoSansMono-Regular.ttf'); 
+    src: url('img/NotoSansMono-Regular.ttf');
     /* src: url('img/NotoSansMono-Light.ttf'); */
 }
 
@@ -28,48 +29,33 @@
 
 a:link {
     color: #bbbbbb;
+    text-decoration: none;
 }
 
 a:visited {
     color: #FF00FF;
+    text-decoration: none;
 }
 
 a:hover {
     color: #FF77FF;
+    text-decoration: none;
 }
 
 a:active {
     color: #EE0000;
-}
-
-a:link {
-    text-decoration: none;
-}
-
-a:visited {
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: none;
-}
-
-a:active {
     text-decoration: none;
 }
 
 b,
 strong {
     color: lightgray;
-    /* `<b style="color: #FFDD4B">`; */
-    /* color: #00972C; */
 }
 
 body {
+    /* border: 1px solid orange; */
     font-family: 'dos', 'Courier New', Courier, monospace;
-    font-size: 22px;
-    color: #ABABAB;
-    margin: 25px;
+    margin: 0px;
     background-color: #000000;
 }
 
@@ -77,12 +63,9 @@ div {
     background-position: center center;
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    white-space: pre;
 }
 
-div.image {
-    height: 24px;
-    width: 12px;
+.image {
     display: inline-block;
     background-image: url('img/o94.png');
 }
@@ -94,35 +77,116 @@ mark {
 
 .button,
 .narrowbutton,
-.variablebutton {
-    background-color: #039903;
-    border: none;
+.variablebutton,
+.verticalbutton {
+    /* color: black;
+    background-color: #FFD700; */
     color: lightgrey;
+    background-color: #0071e3;
+    border: none;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 12px;
-    height: 25px;
     cursor: pointer;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
     user-select: none;
 }
 
 .narrowbutton {
-    width: 24px;
+    width: 45px;
 }
 
 .button {
     width: 70px;
 }
 
-table,
-th,
-td {
-    vertical-align: top;
-    padding-top: 0px;
+.verticalbutton {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.button:disabled,
+.narrowbutton:disabled,
+.variablebutton:disabled,
+.verticalbutton:disabled,
+.button[disabled],
+.narrowbutton[disabled],
+.variablebutton[disabled],
+.verticalbutton[disabled] {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+
+
+.box,
+.larngrid {
+    position: absolute;
+    /* border: 1px solid white; */
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+larn {
+    white-space: pre;
+    margin: 0px;
+    /* border: 1px solid green; */
+}
+
+larngrid {
+    /* border: 1px solid blue; */
+    width: 100%;
+    height: 100%;
+}
+
+foot {
+    /* border: 1px solid cyan; */
+}
+
+inventorybuttons {
+    /* border: 1px solid pink; */
+    position: static;
+}
+
+keyboard {
+    /* border: 1px solid lightblue; */
+}
+
+help {
+    /* border: 1px solid violet; */
+}
+
+stats {
+    white-space: pre;
+    /* border: 1px solid yellow; */
+}
+
+movebuttons {
+    /* border: 1px solid orange; */
+}
+
+contextbuttons {
+    /* border: 1px solid brown; */
+}
+
+run {
+    /* border: 1px solid red; */
+    /* background: white; */
+    transform-origin: top left;
+    rotate: 90deg;
 }

@@ -1,4 +1,4 @@
-# JS LARN Version 12.5.0
+# JS LARN Version 12.5.1
 
 
 ## Play Online
@@ -55,10 +55,11 @@ and refactor by Julian Olds. Ularn is currently maintained by Josh Bressers.
 Other editions of Larn have been distributed by others, namely
 LARN13, dLarn, NLarn, ReLarn, and XLarn.
 
-JSLarn 12.5.0 is a JavaScript port of Larn and Ularn, by Jason Primeau. 
+JSLarn 12.5.1 is a JavaScript port of Larn and Ularn, by Jason Primeau. 
 It primarily references the Larn 12.4.4 and Ularn 1.5.4 codebases but takes 
 inspiration from other versions as well. It includes bug fixes, a global 
-scoreboard, and updates to balance the game at higher difficulties.
+scoreboard, mobile support and updates to balance the game at higher 
+difficulties.
 
 I hope you enjoy this version of LARN.
 

@@ -37,6 +37,8 @@ function blt() {
     }
   }
 
+  onResize();
+
   if (BLINKEN) { // prevent blinking cursor from creating tons of duplicate frames
     let divs = {};
     divs.LARN = document.getElementById(`LARN`).innerHTML;
@@ -87,8 +89,8 @@ function setChar(x, y, c, markup) {
 function createDiv(x, y, w, h) {
   if (!w) w = 12; // change this for altrender?
   if (!h) h = w * 2;
-  var callback = ``;
-  return `<div id='${x},${y}' class='image' style="width:${w}px; height:${h}px;"${callback}> </div>`;
+  // TODO: this can be more efficient!
+  return `<div id='${x},${y}' class='image' style="width:${w}px; height:${h}px; "> </div>`;
 }
 
 
@@ -153,7 +155,142 @@ function setImage(x, y, img) {
 
 
 
-function onResize() {
+class Box {
+  constructor(left, top, width, height) {
+    this.left = left;
+    this.top = top;
+    this.width = width;
+    this.height = height;
+  }
+}
+
+function setSize(element, box) {
+  // wacky way to allow mixed units
+  element.style.left = isNaN(box.left) ? box.left : box.left + `vw`;
+  element.style.top = isNaN(box.top) ? box.top : box.top + `vh`;
+  element.style.width = isNaN(box.width) ? box.width : box.width + `vw`;
+  element.style.height = isNaN(box.height) ? box.height : box.height + `vh`;
+}
+
+
+
+function onResize(event) {
+
+  setButtons();
+
+  // let mobilestring = (`onResize():` +
+  //   `w` + `=` + window.innerWidth + ` ` +
+  //   `h` + `=` + window.innerHeight + ` ` +
+  //   `ws` + `=` + window.screen.width + ` ` +
+  //   `hs` + `=` + window.screen.height + ` ` +
+  //   `touch` + `=` + isTouch() + ` ` +
+  //   `phone` + `=` + isPhone() + ` ` +
+  //   `horizontal` + `=` + isHorizontal());
+
+  // if (true) {
+    // console.log(mobilestring);
+    // updateLog(mobilestring);
+
+    // updateLog(navigator.userAgent);
+    // const userAgent = navigator.userAgent.toLowerCase();
+    // const isTablet = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(userAgent);
+    // console.log(isTablet)
+  // }
+
+  let emptyBox = new Box(0, 0, 0, 0);
+  let margin = 1;
+
+  let larn = document.getElementById(`LARN`);
+  let directionButtons = document.getElementById(KEYPAD);
+  let inventoryButtons = document.getElementById(ACTIONS);
+  let contextButtons = document.getElementById(CONTEXT);
+  let runButton = document.getElementById(RUN);
+  let helpButtons = document.getElementById(HELP);
+  let chastize = document.getElementById(`FOOTER`);
+  let inventory = document.getElementById(`STATS`);
+  let keyboard = document.getElementById(KEYBOARD);
+
+  // desktop mode is default layout
+  let inventoryW = side_inventory ? 35 : 0;
+  let larnBox = new Box(margin, margin, 100 - margin * 2 - inventoryW, 95);
+  let inventoryBox = new Box(larnBox.left + larnBox.width, larnBox.top, 100 - larnBox.width - margin * 2, larnBox.height);
+  let chastizeBox = new Box(margin, 95, 100 - margin * 2, 4);
+  let helpBox = new Box(margin, 95, larnBox.width + inventoryW, 4);
+  let runBox = emptyBox;
+  let directionBox = emptyBox;
+  let contextBox = emptyBox;
+  let invButtonsBox = emptyBox;
+  let keyboardBox = emptyBox;
+
+
+  if (isTablet()) {
+    if (isHorizontal()) {
+      side_inventory = true;
+      inventoryW = 35;
+      inventoryBox = new Box(margin + 100 - inventoryW, margin, inventoryW - margin * 2, 50);
+      inventory.style.maxHeight = `30%`;
+    }
+    if (isVertical()) {
+      side_inventory = false;
+      inventoryW = 0;
+      inventoryBox = new Box(margin, 60, 100 - margin * 2, 0);
+    }
+    chastizeBox = new Box(margin, 93, 97, 4);
+    helpBox = new Box(margin, 93, 97, 4);
+    larnBox = new Box(margin, margin, 100 - margin * 2 - inventoryW, 50);
+    let directionH = isHorizontal() ? `25vw` : `25vw`;
+    runBox = new Box(100 - margin, larnBox.top + larnBox.height + margin, directionH, 5);
+    directionBox = new Box(margin, larnBox.height + margin * 2, directionH, directionH);
+    contextBox = new Box(`27vw`, larnBox.height + margin * 2, 15, 0);
+    invButtonsBox = new Box(isHorizontal() ? `78vw` : `72vw`, larnBox.height + margin * 2, contextBox.width, 0);
+    keyboardBox = new Box(isHorizontal() ? margin : 10, larnBox.height + margin + 5, 80, directionH);
+  }
+  else if (isPhone()) {
+    margin = `3px`;
+    side_inventory = false;
+    inventoryBox = emptyBox;
+    if (isHorizontal()) {
+      directionBox = new Box(margin, margin, `25vw`, `25vw`);
+      contextBox = new Box(margin, `27vw`, 15, 0);
+      larnBox = new Box(`27vw`, margin, 52, 66);
+      runBox = new Box(99, margin, `87vh`, 10);
+      invButtonsBox = new Box(79, margin, 15, 0);
+      keyboardBox = new Box(20, 67, 75, 25);
+      chastizeBox = new Box(margin, 91, 97, 4);
+      helpBox = new Box(margin, 91, 97, 4);
+    }
+    if (isVertical()) {
+      directionBox = new Box(margin, 31, 73, 25);
+      contextBox = new Box(margin, 58, 15, 0);
+      larnBox = new Box(margin, margin, 98, 30);
+      runBox = new Box(99, 31, `25vh`, 10);
+      invButtonsBox = new Box(68, 58, 15, 0);
+      keyboardBox = new Box(5, 62, 90, 25);
+      chastizeBox = new Box(margin, 97, 98, 4);
+      helpBox = new Box(margin, 97, 98, 4);
+    }
+  } else /* isDesktop() */ {
+  }
+
+  if (directionButtons.childElementCount == 0) directionBox = emptyBox;
+  if (contextButtons.childElementCount == 0) contextBox = emptyBox;
+  if (inventoryButtons.childElementCount == 0) invButtonsBox = emptyBox;
+  if (keyboard.childElementCount == 0) keyboardBox = emptyBox;
+  if (runButton.childElementCount == 0) runBox = emptyBox;
+  if (chastize.innerHTML == ``) chastizeBox = emptyBox;
+
+  // basic larn
+  setSize(larn, larnBox);
+  setSize(inventory, inventoryBox);
+  setSize(chastize, chastizeBox);
+  setSize(helpButtons, helpBox);
+  // mobile larn
+  setSize(keyboard, keyboardBox);
+  setSize(inventoryButtons, invButtonsBox);
+  setSize(contextButtons, contextBox);
+  setSize(directionButtons, directionBox);
+  setSize(runButton, runBox);
+
   setMode(amiga_mode, retro_mode, original_objects);
 }
 
@@ -161,44 +298,56 @@ function onResize() {
 
 function setMode(amiga, retro, original) {
 
+  // console.log(amiga, retro, original);
+
+  if (isMobile()) {
+    retro = false; // force modern font for mobile devices because the retro font isn't great
+  }
+
   if (amiga && isRecording()) stopRecording();
 
   amiga_mode = amiga;
   retro_mode = retro;
   original_objects = original;
-  let spriteWidth = computeSpriteWidth();
 
   // bold fonts are wider than regular fonts on Safari
   // Courier New is OK, but many are not
-  // TODO: still need to solve this for dos437
-  const testfont = `12px modern`;
+  // TODO: still need to solve this better for dos437
   const testtext = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
-  const isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
+  let testfont = `12px modern`;
+  let isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
 
   // console.log(getTextWidth(testtext, testfont, true), getTextWidth(testtext, testfont, false), isBoldWider);
 
   // modern font settings
-  let widthMultiple = isBoldWider ? 1.66 : 1.71;
+  // let widthMultiple = isBoldWider ? 1.66 : 1.71;
   let heightMultiple = 1.93;
   let fontFamily = isBoldWider ? `Courier New` : `modern`;
   let textColour = `lightgrey`;
   let letterSpacing = `normal`;
+  let spacing = 0;
 
   // retro mode settings
   if (retro_mode) {
-    widthMultiple = 1.88;
+    testfont = `12px dos437`;
+    isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
+    // widthMultiple = 1.88;
     heightMultiple = 1.9;
-    fontFamily = `dos437`;
+    fontFamily = isBoldWider ? `Courier New` : `dos437`;
     textColour = `#ABABAB`;
     letterSpacing = '-1px';
+    spacing = -1;
   }
 
   // change to amiga font for amiga graphics
+  let spriteWidth = computeSpriteWidth();
   if (amiga_mode) {
-    widthMultiple = 1.66;
+    // widthMultiple = 1.66;
+    heightMultiple = 2;
     fontFamily = retro_mode ? `amiga500` : `amiga1200`;
     textColour = `lightgrey`;
     letterSpacing = `normal`;
+    spacing = 0;
     original_objects = true;
     let ele = document.getElementById('0,0');
     if (!ele) {
@@ -225,7 +374,7 @@ function setMode(amiga, retro, original) {
     }
   }
 
-  let fontSize = spriteWidth * widthMultiple;
+  let fontSize = amiga_mode ? spriteWidth * 2 : computeFontSize(fontFamily, spriteWidth, spacing);
   let lineHeight = `${spriteWidth * heightMultiple}px`;
 
   let font = `${fontSize}px ${fontFamily}`;
@@ -236,23 +385,7 @@ function setMode(amiga, retro, original) {
   document.body.style.letterSpacing = letterSpacing;
   document.body.style.lineHeight = lineHeight;
 
-  setButtons();
-
-  /* todo, later */
-  // let buttons = document.getElementsByClassName('variablebutton');
-  // for (let index = 0; index < buttons.length; index++) {
-  //   // buttons[index].style.fontFamily = fontFamily;
-  //   buttons[index].style.font = font;
-  //   buttons[index].style.fontSize = 12;
-  // }
-  // buttons = document.getElementsByClassName('button');
-  // for (let index = 0; index < buttons.length; index++) {
-  //   buttons[index].style.font = font;
-  //   buttons[index].style.fontSize = 12;
-  //   // buttons[index].style.fontFamily = fontFamily;
-  // }
-
-  paint();
+  setButtonFontSize(fontSize);
 
   try {
     if (!styleUploaded) {
@@ -263,7 +396,8 @@ function setMode(amiga, retro, original) {
       larnStyle.fontFamily = getComputedStyle(larnElement).fontFamily;
       larnStyle.color = getComputedStyle(larnElement).color;
       larnStyle.letterSpacing = getComputedStyle(larnElement).letterSpacing;
-      larnStyle.widthMultiple = widthMultiple;
+      // larnStyle.widthMultiple = widthMultiple;
+      larnStyle.widthMultiple = 1.88; // this seems like a mistake
       larnStyle.heightMultiple = heightMultiple;
       uploadStyle(larnStyle);
     }
@@ -278,26 +412,50 @@ let styleUploaded = false;
 
 
 function computeSpriteWidth() {
-  var browserWidth = window.innerWidth;
-  var browserHeight = window.innerHeight;
+  var larnWidth = getElementWidth(`LARN`);
+  var larnHeight = getElementHeight(`LARN`);
+
+  if (larnWidth === 0) {
+    larnWidth = window.innerWidth;
+    larnHeight = window.innerHeight;
+  }
+
+  // updateLog(`csw: browser=` + Math.floor(browserWidth) + `,` + Math.floor(browserHeight) +
+  // ` window=` + window.screen.width + `,` + window.screen.height);
 
   /* we are working with fixed width fonts, so this is a lot less complicated
-     "a) a magic potion of cure dianthroritis" -> 39 characters
-     width: 80 for game area, 39 for side inventory, 75 pixels buffer
-     height: 24 for game area, 125 pixel buffer
+     a) a magic potion of cure dianthroritis -> 39 characters
+     width: 80 for game area, 39 for side inventory
+     height: 24 for game area
   */
-  let rawSpriteW = (browserWidth - 75) / (80 + (side_inventory ? 39 : 0));
-  let rawSpriteH = (browserHeight - 125) / 24;
+  let rawSpriteW = (larnWidth) / 80;
+  let rawSpriteH = (larnHeight) / 24;
 
-  let spriteWidth = Math.min(rawSpriteW, rawSpriteH / 2);
-  // spriteWidth *= 10;
-  spriteWidth = Math.floor(spriteWidth); // chrome needs whole numbers to have smooth amiga graphics
-  // spriteWidth /= 10;
-  spriteWidth = Math.max(9, spriteWidth);
+  let spriteWidth = Math.min(rawSpriteW, rawSpriteH / 2); // take height into account
+  if (amiga_mode) spriteWidth = Math.floor(spriteWidth); // chrome needs whole numbers to have smooth amiga graphics
 
-  // console.log(`spriteWidth`, spriteWidth);
+  return Math.max(4, spriteWidth);
+}
 
-  return spriteWidth;
+
+
+function computeFontSize(fontFamily, spriteWidth, spacing) {
+  let fontSize = spriteWidth;
+  let font = `${fontSize}px ${fontFamily}`;
+
+  do {
+    fontSize += 0.1;
+    font = `${fontSize}px ${fontFamily}`;
+  }
+  while (getTextWidth(`X`, font, false) + spacing < spriteWidth);
+
+  fontSize *= 10; // for some cleaner numbers
+  fontSize = Math.floor(fontSize);
+  fontSize /= 10;
+
+  // console.log(`spritew`, spriteWidth, `fontsize`, fontSize);
+  // updateLog(`spritew` + ": " + spriteWidth + " " + `fontsize` + ": " + fontSize);
+  return fontSize;
 }
 
 
@@ -713,7 +871,7 @@ function updateLog(text, hint) {
     console.log(`LARN: ${text} ${hint ? hint : ``}`);
   }
   if (!LOG) return;
-  if (keyboard_hints && hint) {
+  if (keyboard_hints && hint && !isMobile()) {
     text = `${text} ${hint}`;
   }
   LOG.push(text);

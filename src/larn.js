@@ -1,7 +1,7 @@
 'use strict';
 
-const VERSION = '12.5.0';
-const BUILD = '510';
+const VERSION = '12.5.1';
+const BUILD = '511';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
 
@@ -25,6 +25,7 @@ let workersAvailable = window.location.protocol != `file:`; /* can't read file:/
 async function play() {
 
   console.log(`${gameID}`);
+  console.log(`ismobile`, isMobile(), `isPhone`, isPhone());
 
   // this role only has access to invoke the lambda score function 
   AWS.config.accessKeyId = "AWS_CONFIG_ACCESSKEYID";
@@ -95,6 +96,7 @@ async function play() {
     welcome(); // show welcome screen, start the game
   }
 
+  onResize();
 }
 
 
@@ -202,6 +204,8 @@ original_objects:${original_objects}
 cookies:${navigator.cookieEnabled}
 host:${location.hostname}
 params:${JSON.stringify(loadURLParameters())}
+mobile:${isMobile()}
+phone:${isPhone()}
 screen dimensions:${window.screen.width},${window.screen.height}
 browser dimensions:${window.innerWidth},${window.innerHeight}
 

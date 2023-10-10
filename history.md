@@ -1,6 +1,6 @@
 JS U/Larn 12.5.1
 ----------------
-1. (coming soon) Added support for mobile devices
+1. [new] Added support for mobile devices.
 
 
 JS U/Larn 12.5.0

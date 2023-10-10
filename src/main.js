@@ -444,11 +444,11 @@ function startgame(hard) {
   setMazeMode(true);
   game_started = true;
 
-  setButtons();
-
   if (ENABLE_DEVMODE) {
     enableDevmode();
   }
+
+  onResize();
 
   return 1;
 }
@@ -474,8 +474,6 @@ function mainloop(e, key) {
   nomove = 0;
 
   parse(e, key);
-
-  setButtons();
 
   if (nomove == 1) {
     paint();
@@ -586,7 +584,7 @@ function wizardmode(password) {
     var checkpoint = localStorageGetObject('checkpointbackup');
     let error = localStorageSetObject('checkpoint', checkpoint);
     if (!error) {
-      updateLog(`Reload to restart from backup checkpoint`);
+      updateLog(`Reload to restart from backup checkpoint. High scores will not be recorded.`);
     } else {
       updateLog(`Sorry, no checkpoint found (or cookies are disabled)`);
       updateLog(`${error}`);
@@ -598,7 +596,7 @@ function wizardmode(password) {
     var savegame = localStorageGetObject(logname + 'backup');
     let error = localStorageSetObject(logname, savegame);
     if (!error) {
-      updateLog(`Reload to restart from backup save game`);
+      updateLog(`Reload to restart from backup save game. High scores will not be recorded.`);
     } else {
       updateLog(`Sorry, no backup save game found (or cookies are disabled)`);
       updateLog(`${error}`);

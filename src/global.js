@@ -235,7 +235,7 @@ function enchantarmor(enchant_source) {
       if (armor.arg >= 10) {
         if (enchant_source == ENCH_ALTAR) {
           armor.arg--;
-          updateLog(`Your ${armor.toString(true)} glows briefly${period}`);
+          updateLog(`Your ${armorMessage} glows briefly${period}`);
           return false;
         } else if (rnd(10) <= 9) {
           destroyInventory(armor);

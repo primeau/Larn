@@ -1,0 +1,90 @@
+@font-face {
+    font-family: modern;
+    src: url('../img/NotoSansMono-Regular.ttf');
+}
+
+@font-face {
+    font-family: dos437;
+    src: url('../img/dos437.ttf');
+}
+
+@font-face {
+    font-family: amiga500;
+    src: url('../img/TopazPlus_a500_v1.0.ttf');
+}
+
+@font-face {
+    font-family: amiga1200;
+    src: url('../img/TopazPlus_a1200_v1.0.ttf');
+}
+
+a:link {
+    color: #bbbbbb;
+}
+
+a:visited {
+    color: #FF00FF;
+}
+
+a:hover {
+    color: #FF77FF;
+}
+
+a:active {
+    color: #EE0000;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+b,
+strong {
+    color: lightgray;
+}
+
+body {
+    font-family: 'dos', 'Courier New', Courier, monospace;
+    font-size: 22px;
+    color: #ABABAB;
+    margin: 25px;
+    background-color: #000000;
+}
+
+div {
+    background-position: center center;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    white-space: pre;
+}
+
+div.image {
+    height: 24px;
+    width: 12px;
+    display: inline-block;
+    background-image: url('img/o94.png');
+}
+
+mark {
+    background-color: lightgrey;
+    color: black;
+}
+
+table,
+th,
+td {
+    vertical-align: top;
+    padding-top: 0px;
+}

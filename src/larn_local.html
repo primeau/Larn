@@ -9,6 +9,10 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
     <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="preload" href="img/dos437.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="img/NotoSansMono-Regular.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="img/TopazPlus_a500_v1.0.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="img/TopazPlus_a1200_v1.0.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="stylesheet" type="text/css" href="larn.css">
     <!-- <link rel='apple-touch-icon' href='apple-touch-icon.png'> -->
 
@@ -67,47 +71,44 @@
     <script src='tv/roll.js'></script>
     <script src='tv/patch.js'></script>
     <script src='tv/lambda.js'></script>
+    <script src='tv/tvutil.js'></script>
 </head>
 
 <body>
 
-    <!-- warning: whitespace matters a lot because we are using pre tags -->
+    <larngrid class="larngrid" id="ALL">
+        <larn class="box" id="LARN">
+            LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or
+            MORIA, but with a different feel and winning criteria.
+            
+            Unfortunately if you're seeing this page it means that there was an error
+            loading the game.
+            
+            This version of Larn requires a browser from circa 2016 to work properly.
+            Please check to make sure you are running Firefox 53+, Chrome 55+, Edge 15+,
+            or Safari 11+. Internet Explorer is not supported.
+            
+            Sometimes, you'll get this message when a new version is released. You can
+            usually get the game working again with a full refresh of your browser.
+            - On Windows: Hold down Ctrl and press F5
+            - On Mac:
+              - Chrome & Firefox: Hold down Shift and click the Reload button
+              - Safari: Hold down the Option and Command key then press the ‘E’ key
 
-    <table>
-        <tbody>
-            <!-- one row with two columns -->
-            <tr>
-                <!-- column one has the game board, the button footer, and an optional beta message -->
-                <td>
-                    <!-- game board -->
-                    <!-- beautify ignore:start -->
-                    <div id='LARN'>
-LARN is a dungeon type adventure game similar in concept to HACK, ROGUE or
-MORIA, but with a different feel and winning criteria.
+            If you're still having trouble, please send a message to "eye (at) larn.org"
+            and I'll get to the bottom of it!
+        </larn>
+        <foot class="box" id="FOOTER"></foot>
+        <help class="box" id="HELP"></help>
+        <keyboard class="box" id="KEYBOARD"></keyboard>
+        <stats class="box" id="STATS"></stats>  
+        <inventorybuttons class="box" id="ACTIONS"></inventorybuttons>
+        <run class="box" id="RUN"></run>
+        <movebuttons class="box" id="KEYPAD"></movebuttons>
+        <contextbuttons class="box" id="CONTEXT"></contextbuttons>
+    </larngrid>
 
-Unfortunately if you're seeing this page it means that there was an error
-loading the game.
 
-This version of Larn requires a browser from circa 2016 to work properly.
-Please check to make sure you are running Firefox 53+, Chrome 55+, Edge 15+,
-or Safari 11+. Internet Explorer is not supported.
-
-If you're still having trouble, please send a message to "eye (at) larn.org"
-and I'll get to the bottom of it!
-                    </div>
-                    <!-- beautify ignore:end -->
-                    <!-- button footer -->
-                    <p id='FOOTER'></p>
-                    <!-- beta message -->
-                    <div>
-                    </div>
-                </td> <!-- column one -->
-                <td style="padding-left:20px;">
-                    <div id='STATS'></div>
-                </td> <!-- column two -->
-            </tr>
-        </tbody>
-    </table>
 
     <script>
         'use strict';
@@ -118,6 +119,7 @@ and I'll get to the bottom of it!
             Rollbar.configure({ enabled: false });
         } catch (e) {}
         play();
+        document.getElementById(`LARN`).focus();
     </script>
 
 </body>

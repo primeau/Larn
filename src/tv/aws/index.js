@@ -56,6 +56,35 @@ exports.handler = async (event, context) => {
     return readResponse;
   }
 
+
+  // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+  // EXPERIMENTAL: READ MULTIPLE GAME FILES
+  // 
+  if (action === 'readmultiple') {
+
+    console.log(`index(): ${gameID} reading multiple ${filename}...`);
+
+    // let readResponse = await handler.downloadRoll(s3, s3bucket, gameID, filename);
+    let a = handler.downloadRoll(s3, s3bucket, gameID, filename);
+    let b = handler.downloadRoll(s3, s3bucket, gameID, filename);
+    let c = handler.downloadRoll(s3, s3bucket, gameID, filename);
+    let d = handler.downloadRoll(s3, s3bucket, gameID, filename);
+
+    console.log(`index(): ${gameID} reading multiple ${filename}... done`);
+    console.log(`index(): ${gameID} returning multiple ${filename}`);
+    // return readResponse;
+
+    let gamesList = await Promise.all([a, b, c, d]).then((rolls) => {
+      console.log(`downloaded rolls ${rolls[0].body.length}`);
+      return rolls;
+    });
+  }
+  // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+
+
+
+
   //
   // WRITE GAME FILES
   // 
@@ -92,8 +121,7 @@ exports.handler = async (event, context) => {
         let dynamoResponse = await dbtool.DBWrite(dynamo, `completed`, event.file, true);
         console.log(`index(): ${gameID} writing completed game info to dynamo...`, dynamoResponse);
         writeResponse.body += `updatecompletedtable=${dynamoResponse.statusCode} : `;
-      }
-      else {
+      } else {
         console.log(`index(): ${gameID} not writing completed game info to dynamo: only ${event.file.frames} frames...`);
       }
 

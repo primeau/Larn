@@ -26,7 +26,7 @@ function buildFrame(patch, frame) {
   newFrame.ts = patch.ts;
 
   let divs = Object.entries(patch.divs);
-  // console.log(`buildFrame(): divs: ${divs}`);
+  // console.error(`buildFrame(): divs: ${patch.id} ${divs}`);
 
   for (const [key, value] of divs) {
     // console.log(`buildFrame(): k: ${key}`);

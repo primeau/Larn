@@ -1,38 +1,37 @@
 'use strict';
 
 function saveGame(isCheckPoint) {
-
-  var saveName = isCheckPoint ? 'checkpoint' : logname;
-  let error;
-
   /*
      START HACK to not store player.level
   */
   var x = player.level;
   player.level = null;
 
-  try {
-    var state = new GameState(true);
+  let error;
+  let state = new GameState(true);
 
-    /* 
-      v304 -- i've decided to remove the automatic reloading checkpoint feature
-      for accidentally closed windows because it's too easy to cheat.
-      if a game is lost it still can be restored with the 'checkpoint command'
-    */
-    if (saveName != 'checkpoint') {
-      error = localStorageSetObject(saveName, state);
+  try {
+    // manually saving game
+    if (!isCheckPoint) {
+      error = localStorageSetObject(logname, state);
     }
 
     /* 
       save checkpointbackup, or an emergency backup which can 
       be restored via new wizard passwords 
+
+      v511 -- checkpoints and savegame backups were being badly 
+      abused (1000's/day) by a player for high scores. now these 
+      games won't be recorded
     */
+    state.cheat = true;
+    let saveName = isCheckPoint ? 'checkpoint' : logname;
     localStorageSetObject(saveName + 'backup', state);
   } catch (error) {
     console.log(`saveGame(): caught: ${error}`);
   }
 
-  var bytes = JSON.stringify(state);
+  let bytes = JSON.stringify(state);
 
   /*
      END HACK to not store player.level
@@ -90,7 +89,7 @@ function loadSavedGame(savedState, isCheckPoint) {
     // Rollbar chokes on large messages, and these could get up to 500k+
     // truncate down to what actually matters
     try {
-      let errorMessage = `${BUILD} ${GAMENAME} failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length} diff=\n`;
+      let errorMessage = `${BUILD} ${GAMENAME} ${logname} failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length} diff=\n`;
       for (let index = 0; index < diff.length; index++) {
         let fragment = diff[index][1];
         if (fragment.length > 200) {
@@ -111,12 +110,14 @@ function loadSavedGame(savedState, isCheckPoint) {
   localStorageRemoveItem('checkpoint');
 
   if (isCheckPoint) {
-    updateLog(`Did you quit accidentally? I restored your last game just in case.`);
+    updateLog(`Did you quit accidentally? Your last game has been restored just in case`);
   } else {
     updateLog(`Welcome back. (Your save file has now been been deleted)`);
   }
 
   game_started = true;
+
+  onResize();
 
 }
 

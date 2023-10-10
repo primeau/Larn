@@ -30,7 +30,7 @@ module.exports.scorePUT = async (dynamo, game, isUlarn, event, context) => {
             // if the player name is the same, the game will be overwritten naturally (primary key)
             if (lowest && lowest.who != game.who) {
                 console.log(`scorePUT removing ${lowest.gameID} from the scoreboard...\n`);
-                await DBDelete(dynamo, lowest, isUlarn);
+                await writer.DBDelete(dynamo, lowest, isUlarn);
                 console.log(`scorePUT removing ${lowest.gameID} from the scoreboard... Done\n`);
             }
         }
@@ -119,6 +119,7 @@ module.exports.DBDelete = async (dynamo, game, isUlarn, event, context) => {
 
 
 
+// return current game if it is not a high score, otherwise return the lowest score on the board
 module.exports.getLowestScore = async (dynamo, game, isUlarn, board) => {
 
     // quick checks -- don't bother with debug and old games
@@ -130,14 +131,18 @@ module.exports.getLowestScore = async (dynamo, game, isUlarn, board) => {
         console.log(`getLowestScore: game.version == 1244\n`);
         return game;
     }
+    if (game.extra && game.extra[1] && game.extra[1] < 493) {
+        console.log(`getLowestScore: build < 493\n`);
+        return game;
+    }
 
     // more quick checks, we know there are scores better than these
-    let minWinDiff = isUlarn ? 0 : 3;
-    let minLoseDiff = isUlarn ? 0 : 6;
-    let minTime = isUlarn ? 25 : 50;
+    let minWinDiff = isUlarn ? 6 : 7;
+    let minLoseDiff = isUlarn ? 10 : 12;
+    let minTime = 50;
     if (game.winner) {
         if (game.hardlev < minWinDiff) {
-            console.log(`getLowestScore: min win diff ${game.hardlev} <= ${minWinDiff}\n`);
+            console.log(`getLowestScore: min win diff ${game.hardlev} < ${minWinDiff}\n`);
             return game;
         }
     } else {
@@ -146,11 +151,10 @@ module.exports.getLowestScore = async (dynamo, game, isUlarn, board) => {
             return game;
         }
         if (game.hardlev < minLoseDiff) {
-            console.log(`getLowestScore: min lose diff ${game.hardlev} <= ${minLoseDiff}\n`);
+            console.log(`getLowestScore: min lose diff ${game.hardlev} < ${minLoseDiff}\n`);
             return game;
         }
     }
-
 
     // we have a potential scoreboard contender
     // allow passing in a scoreboard
@@ -172,22 +176,8 @@ module.exports.getLowestScore = async (dynamo, game, isUlarn, board) => {
         // check for games on the scoreboard that have the same ip, player name or playerid
         // it's possible for corner cases where each of these check could yield a different 
         // game, and we should nuke more than one, but i'm fine with this for now.
+        // now we check who last so if there is more than one match at least two will get deleted
 
-        // check who
-        let whoGameDiff;
-        let whoo = board.find(test => test != null && game.who == test.who);
-        if (whoo) {
-            whoGameDiff = scoreboardReader.compareScore(whoo, game);
-            console.log(`getLowestScoreWHO-new:`, game.playerIP, game.who, game.playerID, game.hardlev, game.timeused, game.score, game.level, `\n`);
-            console.log(`getLowestScoreWHO-old:`, whoo.playerIP, whoo.who, whoo.playerID, whoo.hardlev, whoo.timeused, whoo.score, whoo.level, `\n`);
-            /* is the new game higher than the previous game that matches this player name? */
-            if (whoGameDiff > 0) {
-                console.log(`getLowestScoreWHO: ${whoGameDiff} should write new high score for existing player\n`);
-                prevPlayerScore = whoo;
-            }
-        } else {
-            console.log(`getLowestScoreWHO: ${game.who} not found\n`);
-        }
         // check playerip
         let ipGameDiff;
         let ippp = game.playerIP != 0 ? board.find(test => test != null && game.playerIP == test.playerIP) : null;
@@ -217,12 +207,30 @@ module.exports.getLowestScore = async (dynamo, game, isUlarn, board) => {
         } else {
             console.log(`getLowestScoreID: ${game.playerID} not found\n`);
         }
+        // check who
+        let whoGameDiff;
+        let whoo = board.find(test => test != null && game.who == test.who);
+        if (whoo) {
+            whoGameDiff = scoreboardReader.compareScore(whoo, game);
+            console.log(`getLowestScoreWHO-new:`, game.playerIP, game.who, game.playerID, game.hardlev, game.timeused, game.score, game.level, `\n`);
+            console.log(`getLowestScoreWHO-old:`, whoo.playerIP, whoo.who, whoo.playerID, whoo.hardlev, whoo.timeused, whoo.score, whoo.level, `\n`);
+            /* is the new game higher than the previous game that matches this player name? */
+            if (whoGameDiff > 0) {
+                console.log(`getLowestScoreWHO: ${whoGameDiff} should write new high score for existing player\n`);
+                prevPlayerScore = whoo;
+            }
+        } else {
+            console.log(`getLowestScoreWHO: ${game.who} not found\n`);
+        }
 
+
+        // we have found a lower score that matches the player's name, id, or ip so we can return it now
         if (prevPlayerScore) {
             console.log(`getLowestScoreA: should write new high score for existing player\n`);
             return prevPlayerScore; // this game has a higher score, and prev player game should be replaced
         }
 
+        // we have found higher scores that match this player's name, id, or ip so we know this isn't a high score
         if (ipGameDiff && ipGameDiff < 0) return game;
         if (idGameDiff && idGameDiff < 0) return game;
         if (whoGameDiff && whoGameDiff < 0) return game;

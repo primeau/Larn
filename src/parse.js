@@ -730,7 +730,7 @@ function parse(e, key) {
     nomove = 1;
     side_inventory = !side_inventory;
     updateLog(`Inventory view: ${side_inventory ? `on` : `off`}`);
-    setMode(amiga_mode, retro_mode, original_objects);
+    onResize();
     return;
   }
 
@@ -804,9 +804,6 @@ function parse(e, key) {
     return;
   }
 
-  // if we get here, it's an invalid key, and shouldn't take any time
-  nomove = 1;
-
   //
   // REPORT BUG
   //
@@ -815,6 +812,9 @@ function parse(e, key) {
     reportBug();
     return;
   }
+
+  // if we get here, it's an invalid key, and shouldn't take any time
+  nomove = 1;
 }
 
 

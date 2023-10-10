@@ -7,6 +7,7 @@ let ULARN = false; // this is a hack to get around localstoragegetobject issues
 go();
 
 function go() {
+  // TODO: enable rollbar
   try { Rollbar.configure({ enabled: false }) } catch (e) { /**/ }
 
   try {

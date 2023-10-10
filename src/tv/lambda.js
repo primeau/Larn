@@ -11,7 +11,7 @@ function invokeLambda(requestPayload, successCallback, failCallback) {
     InvocationType: 'RequestResponse',
     LogType: 'None'
   };
-  lambda.invoke(params, function(error, data) {
+  lambda.invoke(params, function (error, data) {
     if (!error) {
       if (data) {
         if (data.StatusCode == 200) {
@@ -64,7 +64,7 @@ function loadStyles(gameID, successCallback) {
 
 
 function downloadFile(gameID, filename, successCallback, failCallback) {
-  console.log(`downloadFile(): ${gameID}/${filename}`);
+  if (!ENABLE_RECORDING_REALTIME) console.log(`downloadFile(): ${gameID}/${filename}`);
   let requestPayload = {
     action: `read`,
     gameID: gameID,
@@ -72,6 +72,27 @@ function downloadFile(gameID, filename, successCallback, failCallback) {
   };
   invokeLambda(requestPayload, successCallback, failCallback);
 }
+
+
+// function downloadFileMultiple(gameID, files, successCallback, failCallback) {
+//   if (!ENABLE_RECORDING_REALTIME) console.log(`downloadFile(): ${gameID}/${filename}`);
+//   let requestPayload = {
+//     action: `readmultiple`,
+//     gameID: gameID,
+//     filename: files,
+//   };
+//   invokeLambda(requestPayload, successCallback, failCallback);
+// }
+
+
+
+// Zfunction downloadRolls( ) {
+//   let gamesList = await Promise.all([completedGames, gamesInProgress]).then((games) => {
+//     console.log(`completed games ${games[0].body.length}`);
+//     console.log(`games in progress ${games[1].body.length}`);
+//     return games;
+//   });
+// }
 
 
 
@@ -83,7 +104,7 @@ function downloadRoll(video, successCallback, failCallback) {
 
   function rollSuccess(body, file, metadata) {
     if (!file) {
-      console.error(`downloadRoll(): ${video.gameID}/${filename} empty file`);
+      if (!ENABLE_RECORDING_REALTIME) console.error(`downloadRoll(): ${video.gameID}/${filename} empty file`);
       if (numRolls === 0) {
         updateMessage(`\nSorry, this game couldn't be loaded`);
       }
@@ -91,7 +112,7 @@ function downloadRoll(video, successCallback, failCallback) {
       return;
     }
 
-    let roll = decompressRoll(file)
+    let roll = decompressRoll(file);
     // console.log(`downloadRoll(): ${JSON.stringify(roll)}`);
     // console.log(`downloadRoll(): got roll with ${roll.patches.length} frames`);
     if (numRolls === 0) {

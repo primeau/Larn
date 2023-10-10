@@ -9,7 +9,7 @@ const EXTRA_RMST = 2;
 const EXTRA_GTIME = 3;
 
 
-var LocalScore = function() {
+var LocalScore = function () {
   this.createdAt = Date.now();
   this.winner = lastmonst == DIED_WINNER;
   var winBonus = this.winner ? 100000 * getDifficulty() : 0;
@@ -50,7 +50,7 @@ var LocalScore = function() {
   this.browser = `${navigator.vendor} (${navigator.userAgent})`;
 }
 
-LocalScore.prototype.toString = function() {
+LocalScore.prototype.toString = function () {
   var stats = getStatString(this);
   return stats;
 }
@@ -239,7 +239,7 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
     LogType: 'None' // 'Tail' // 'None' // 
   };
 
-  lambda.invoke(params, function(error, data) {
+  lambda.invoke(params, function (error, data) {
     var payload = data ? JSON.parse(data.Payload) : null;
     var status = payload ? payload.statusCode : 444;
     if (status == 200) {
@@ -287,7 +287,7 @@ const VISITOR_HEADER_ULARN = `     <b>Score  Diff  Visitor                  Clas
 
 
 let bound_exitscores; // for button callback comparison
-function exitscores (newScore, local, key) {
+function exitscores(newScore, local, key) {
   if (key == ESC || key == ENTER) {
     scoreIndex = 0;
     setMode(A, R, O);
@@ -368,15 +368,15 @@ function printScore(p) {
   let score;
   if (p.winner) {
     if (ULARN) {
-      score = `${padString(Number(p.score).toLocaleString(), 10)}  ${padString(``+p.hardlev, 4)}  ${padString(p.who, -23)}  ${padString(p.character, -10)}  ${padString(`` + p.timeused, 5)} Mobuls`;
+      score = `${padString(Number(p.score).toLocaleString(), 10)}  ${padString(`` + p.hardlev, 4)}  ${padString(p.who, -24)}  ${padString(p.character, -10)}  ${padString(`` + p.timeused, 5)} Mobuls`;
     } else {
-      score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${padString(p.who, -25)}${padString(`` + p.timeused, 5)} Mobuls`;
+      score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(`` + p.hardlev, 10)}   ${padString(p.who, -25)}${padString(`` + p.timeused, 5)} Mobuls`;
     }
   } else {
     if (ULARN) {
-      score = `${padString(Number(p.score).toLocaleString(), 10)}  ${padString(``+p.hardlev, 4)}  ${padString(p.who, -23)}  ${padString(p.character, -10)}  ${p.what} on ${p.level}`;
+      score = `${padString(Number(p.score).toLocaleString(), 10)}  ${padString(`` + p.hardlev, 4)}  ${padString(p.who, -24)}  ${padString(p.character, -10)}  ${p.what} on ${p.level}`;
     } else {
-      score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(``+p.hardlev, 10)}   ${padString(p.who, -25)} ${p.what} on ${p.level}`;
+      score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(`` + p.hardlev, 10)}   ${padString(p.who, -25)} ${p.what} on ${p.level}`;
     }
   }
   var endcode = GAMEOVER ? `<br>` : ``;
@@ -451,7 +451,7 @@ function dbQueryLoadGame(gameId, local, winner) {
     InvocationType: 'RequestResponse',
     LogType: 'None' // 'Tail'
   };
-  lambda.invoke(params, function(error, data) {
+  lambda.invoke(params, function (error, data) {
     var payload = data ? JSON.parse(data.Payload) : null;
     var status = payload ? payload.statusCode : 666;
     var stats = ``;
@@ -529,7 +529,7 @@ function dbWriteHighScore(newScore) {
     LogType: 'None' // 'Tail'
   };
 
-  lambda.invoke(params, function(error, data) {
+  lambda.invoke(params, function (error, data) {
     if (data) {
       var payload = JSON.parse(data.Payload);
       var status = payload.statusCode;
@@ -543,8 +543,7 @@ function dbWriteHighScore(newScore) {
         if (error) console.log(error, error.stack);
       }
     } else {
-      console.log(`no data lambda error: `);
-      if (error) console.log(error, error.stack);
+      console.log(`no data lambda error: ${error}`);
     }
   });
 

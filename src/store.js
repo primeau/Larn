@@ -7,7 +7,7 @@ function enter() {
   // cursors() ;
 
   debug(`enter(): entering a building`);
-  mazeMode = false;
+  setMazeMode(false);
 
   var building = itemAt(player.x, player.y);
   if (building.matches(OSCHOOL)) {
@@ -406,9 +406,8 @@ function bankmessage(str, duration) {
 
   setCharCallback(bank_parse);
 
-  blt();
-
   napping = false;
+  blt();
 
   if (duration && duration != 0) {
     napping = true;
@@ -995,8 +994,8 @@ async function ohome() {
     lprcat(`\n     very rare potion of cure dianthroritis. It is rumored that only deep`);
     lprcat(`\n     in the depths of the caves can this potion be found.`);
     lprcat(`\n\n     Press <b>escape</b> to leave: `);
-    paint();
     napping = false;
+    paint();
   }
 
   // doesn't have potion but ran out of time
@@ -1155,8 +1154,8 @@ function storemessage(str, duration) {
   cltoeoln();
   lprcat(str);
   cursor(59, 21);
-  blt();
   napping = false;
+  blt();
   if (duration && duration != 0) {
     napping = true;
     setTimeout(storemessage, duration, ``, 0);

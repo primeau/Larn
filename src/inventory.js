@@ -13,7 +13,7 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
 
   if (callback) nomove = 1; // HACK callback is null when called by game_stats()
 
-  if (printScreen) mazeMode = false;
+  if (printScreen) setMazeMode(false);
   var srcount = 0;
 
   if (callback) setCharCallback(callback);
@@ -76,6 +76,10 @@ function showall(item) {
 
 function showwield(item) {
   return item && item.isWeapon();
+}
+
+function showallwield(item) {
+  return item && item.canWield();
 }
 
 function showwear(item) {
@@ -402,4 +406,67 @@ function isCarrying(item) {
     }
   }
   return null;
+}
+
+
+
+/*
+    routine to tell if player is carrying a weapon
+*/
+function isCarryingWeapon() {
+  return player.inventory.some(itm => itm && itm.canWield());
+}
+
+
+
+/*
+    routine to tell if player is carrying armour
+*/
+function isCarryingArmor() {
+  return player.inventory.some(itm => itm && itm.isArmor());
+}
+
+
+
+/*
+    routine to tell if player is carrying a book
+*/
+function isCarryingBook() {
+  return player.inventory.some(itm => itm && itm.matches(OBOOK));
+}
+
+
+
+/*
+    routine to tell if player is carrying a scroll
+*/
+function isCarryingScroll() {
+  return player.inventory.some(itm => itm && itm.matches(OSCROLL));
+}
+
+
+
+/*
+    routine to tell if player is carrying a potion
+*/
+function isCarryingPotion() {
+  return player.inventory.some(itm => itm && itm.matches(OPOTION));
+}
+
+
+
+/*
+    routine to tell if player is carrying a cookie
+*/
+function isCarryingCookie() {
+  return player.inventory.some(itm => itm && itm.matches(OCOOKIE));
+}
+
+
+
+/*
+    routine to tell if player is carrying a gem
+*/
+function isCarryingGem() {
+  return player.inventory.some(itm => itm && (itm.isGem() || itm.matches(OLARNEYE)));
 }

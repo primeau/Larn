@@ -119,7 +119,7 @@ function echo(key) {
 
 
 function getTextInput(key) {
-  var match = function(key) {
+  var match = function (key) {
     //return isalpha(key) || isnum(key);
     return isextra(key);
   }
@@ -129,7 +129,7 @@ function getTextInput(key) {
 
 
 function getNumberInput(key) {
-  var match = function(key) {
+  var match = function (key) {
     //return isalpha(key) || isnum(key);
     return isnum(key);
   }
@@ -139,10 +139,10 @@ function getNumberInput(key) {
 
 
 function getNumberOrAsterisk(key) {
-  var match = function(key) {
+  var match = function (key) {
     return isnum(key);
   }
-  var extra = function(key) {
+  var extra = function (key) {
     if (key == '*' && KEYBOARD_INPUT.length == 0) { // only if it's the first char
       KEYBOARD_INPUT = key;
       echo(key);
@@ -202,9 +202,12 @@ var BLINKEN = true;
 const BLINKENCHAR = `_`;
 
 function blinken(x, y) {
+
+  if (isMobile()) return;
+
   clearBlinkingCursor();
   BLINKENCURSOR = setInterval(
-    function() {
+    function () {
       var xpos = x + KEYBOARD_INPUT.length;
       cursor(xpos, y);
       lprc(BLINKEN ? ` ` : BLINKENCHAR);
@@ -223,14 +226,14 @@ function clearBlinkingCursor() {
 }
 
 
-String.prototype.nextChar = function(i) {
+String.prototype.nextChar = function (i) {
   var n = (i == null) ? 1 : i;
   return String.fromCharCode(this.charCodeAt(0) + n);
 }
 
 
 
-String.prototype.prevChar = function(i) {
+String.prototype.prevChar = function (i) {
   var n = (i == null) ? 1 : i;
   return String.fromCharCode(this.charCodeAt(0) - n);
 }
@@ -351,7 +354,7 @@ function onCompressed(event) {
 }
 
 
-Storage.prototype.setObject = function(key, value) {
+Storage.prototype.setObject = function (key, value) {
   value = JSON.stringify(value);
 
   let usedWorker = false;
@@ -393,7 +396,7 @@ function localStorageSetObject(key, value) {
 
 
 
-Storage.prototype.getObject = function(key) {
+Storage.prototype.getObject = function (key) {
   var value = this.getItem(key);
   /* decompress if it's big */
   if (value === COMPRESSED_DATA) {
@@ -438,7 +441,7 @@ function localStorageRemoveItem(key) {
 function loadURLParameters() {
   // internet explorer doesn't support "URLSearchParams" yet
   let urlParams = {};
-  location.search.substr(1).split("&").forEach(function(item) {
+  location.search.substr(1).split("&").forEach(function (item) {
     urlParams[item.split("=")[0]] = item.split("=")[1]
   });
   console.log(`url parameters`, urlParams);
@@ -455,11 +458,85 @@ function loadURLParameters() {
  * 
  * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
  */
- function getTextWidth(text, font, bold) {
+function getTextWidth(text, font, bold) {
   var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-  var context = canvas.getContext("2d");
-  if (bold) font = "bold " + font;
+  var context = canvas.getContext(`2d`);
+  if (bold) font = `bold ` + font;
   context.font = font;
   var metrics = context.measureText(text);
   return metrics.width;
+}
+
+
+
+function getElementWidth(el) {
+  if (!el) return 0;
+  // return (getComputedStyle(document.getElementById(el)).width.split(`px`)[0]);
+  return document.getElementById(el).getBoundingClientRect().width;
+}
+
+function getElementHeight(el) {
+  if (!el) return 0;
+  return (getComputedStyle(document.getElementById(el)).height.split(`px`)[0]);
+}
+
+
+
+function isTouch() {
+  return ('ontouchstart' in window || navigator.maxTouchPoints) != 0;
+}
+
+function isMobile() {
+  return isTouch();
+}
+
+function isDesktop() {
+  return !isMobile();
+}
+
+function isHorizontal() {
+  return window.innerWidth >= window.innerHeight;
+}
+
+function isVertical() {
+  return !isHorizontal();
+}
+
+function isPhone() {
+
+  // this has proven to be unreliable -- my ipad get recognized as a phone when using innerwidth
+  // and window.screen flips in the emulator, but not on device, so i don't know what to trust for non-apple devices
+  // reference: https://www.ios-resolution.com/
+  // heuristic: ipads are all 768x1024 or higher, phones are all 428x926 or lower
+  // isVertical() && window.screen.width < 768 ||  (ipad w768 x h1024); 
+  // isHorizontal() && window.screen.height < 768) (ipad w768 x h1024); 
+  // isVertical() && window.innerWidth < 768 ||    (ipad w768 x h908, iphone )
+  // isHorizontal() && window.innerHeight < 768)   (ipad w1024x h752);
+
+
+  /* real world number for an old ipad, an ihpone 13 pro max
+  IPAD
+  horizontal screen 768x1024
+  vertical screen 768x1024
+  horizontal inner 1024x653
+  vertical inner 768x909
+
+  IPAD
+  horizontal screen  428 926 
+  vertical screen 428 926
+  horizontal inner 832 368
+  vertical inner 435 759
+
+  */
+
+  // // this is only going to recognize iphones...
+  // return isMobile() && navigator.userAgent.toLowerCase().includes(`phone`);
+
+  return isMobile() && window.screen.height < 1024;
+
+
+}
+
+function isTablet() {
+  return isMobile() && !isPhone();
 }

@@ -1,11 +1,20 @@
-
 bugs:
 *** saving a game 3(?) from the end of a buffer causes a null patch, then error on reload
 - scrolling on safari is wonky. seems to be easier when paused
 - probably need to await fonts loading on replay
 - modern font is too wide on replay
+- broken replay: https://larn.org/larn/tv/?gameid=d9vaatk563
+- can't load alpha mobile game https://larn.org/larn/tv/?gameid=o0fni21j87 
+- double screen https://larn.org/larn/tv/?gameid=ve9np2m30v
+- made game list but doesn't load 53.json empty file also double screen https://larn.org/larn/tv/?gameid=jch32olu09
+- final frames are botched: https://larn.org/larn/tv/?gameid=ai2n1hrgnq
+- 106.json is broken: https://larn.org/larn/tv/?gameid=n8l1xbhg2j -> coming back from save game
+  --> bug mitigated, but cause is a missing frame on save (or frame # is one too high on reload)
 
 todo:
+- add play options to larntv list
+- download multiple .json in parallel
+- restrict aws uploads to .json/etc
 - set lastframe.id to something interesting in realtime mode
 - Save playback speed via cookie
 - Link from watch screen back to list
