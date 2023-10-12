@@ -8,8 +8,49 @@ const dynamo = new AWS.DynamoDB.DocumentClient({
 });
 
 
+
+/*
+
+API gateway setup steps:
+
+API Gateway -> APIs -> create API
+REST API (not private) -> Build
+  Settings: 
+    - API name: "ip"
+    - Endpoint: Regional
+Resources -> Actions -> Create Resource     
+    - proxy resource: false   
+    - Resource Name / Resource Path: "ip"
+    - enable api gateway cors: false
+Resources -> Actions -> Create Method -> GET
+    - Integration type: lambda
+    - use lambda proxy: false
+    - region: us-east-1
+    - Lambda: "score"
+Resources -> Actions -> GET -> Integration Request -> Mapping Templates
+    - request body passthrough: when there are no templates defined (recommended)
+    - click "add mapping template" and use "application/json" for content-type
+    - template:   { "client_ip": "$context.identity.sourceIp" }
+Resources -> Actions -> /ip -> enable CORS
+    - Access-Control-Allow-Origin: 'https://larn.org'
+Resources -> Actions -> Deploy API
+    - get invoke url (currently https://z0iwtshse6.execute-api.us-east-1.amazonaws.com/prod/ip)
+
+  */
+
+
 exports.handler = async (event) => {
     console.log("EVENT: " + JSON.stringify(event) + "\n");
+
+    //
+    // RETURN IP ADDRESS
+    //
+    if (event.client_ip) {
+        return {
+            statusCode: 200,
+            body: event.client_ip
+        };
+    }
 
     // 
     // PARSE GAMEID

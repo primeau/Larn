@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.1';
-const BUILD = '511';
+const BUILD = '512';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
 
@@ -133,7 +133,8 @@ function initKeyBindings() {
   Mousetrap.bind('_', mousetrap); // password
   Mousetrap.bind('-', mousetrap); // disarm 
   Mousetrap.bind('+', mousetrap); // load games via password
-  Mousetrap.bind('cmd+alt+@', reportBug); // report bug
+  Mousetrap.bind('cmd+alt+@', mousetrap); // report bug
+  // Mousetrap.bind('cmd+alt+#', mousetrap); // hide buttons
 
   Mousetrap.bind(['(', ')'], mousetrap); // allow () for pvnert(x)
 
@@ -247,6 +248,14 @@ useragent:${navigator.userAgent}
   var mailto_link = 'mailto:' + email + '?subject=' + subject + '&body=' + encodeURIComponent(body_message);
   window.open(mailto_link, 'emailWindow');
 }
+
+
+
+// let forceMobileDisabled = false;
+// function disableMobile() {
+//   forceMobileDisabled = true;
+//   onResize();
+// }
 
 
 

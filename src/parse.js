@@ -813,6 +813,15 @@ function parse(e, key) {
     return;
   }
 
+  // //
+  // // DISABLE BUTTONS
+  // //
+  // if (key == 'cmd+alt+#') {
+  //   nomove = 1;
+  //   disableMobile();
+  //   return;
+  // }
+
   // if we get here, it's an invalid key, and shouldn't take any time
   nomove = 1;
 }

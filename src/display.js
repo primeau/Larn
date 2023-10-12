@@ -188,13 +188,9 @@ function onResize(event) {
   //   `horizontal` + `=` + isHorizontal());
 
   // if (true) {
-    // console.log(mobilestring);
-    // updateLog(mobilestring);
-
-    // updateLog(navigator.userAgent);
-    // const userAgent = navigator.userAgent.toLowerCase();
-    // const isTablet = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(userAgent);
-    // console.log(isTablet)
+  // console.log(mobilestring);
+  // updateLog(mobilestring);
+  // updateLog(navigator.userAgent);
   // }
 
   let emptyBox = new Box(0, 0, 0, 0);
@@ -239,10 +235,10 @@ function onResize(event) {
     helpBox = new Box(margin, 93, 97, 4);
     larnBox = new Box(margin, margin, 100 - margin * 2 - inventoryW, 50);
     let directionH = isHorizontal() ? `25vw` : `25vw`;
-    runBox = new Box(100 - margin, larnBox.top + larnBox.height + margin, directionH, 5);
-    directionBox = new Box(margin, larnBox.height + margin * 2, directionH, directionH);
-    contextBox = new Box(`27vw`, larnBox.height + margin * 2, 15, 0);
-    invButtonsBox = new Box(isHorizontal() ? `78vw` : `72vw`, larnBox.height + margin * 2, contextBox.width, 0);
+    runBox = new Box(100 - margin, larnBox.top + larnBox.height + margin * 2, directionH, 5);
+    directionBox = new Box(margin, runBox.top, directionH, directionH);
+    contextBox = new Box(`27vw`, runBox.top, 15, 0);
+    invButtonsBox = new Box(isHorizontal() ? `78vw` : `72vw`, runBox.top, contextBox.width, 0);
     keyboardBox = new Box(isHorizontal() ? margin : 10, larnBox.height + margin + 5, 80, directionH);
   }
   else if (isPhone()) {

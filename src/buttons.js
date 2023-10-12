@@ -165,6 +165,9 @@ function setButtonFontSize(size) {
   buttonCache.forEach(button => {
     if (button && button.style) {
       button.style.fontSize = `${size}px`;
+      if (!isMobile()) button.style.padding = `0px`; // see also: setButton()
+      if (!isMobile()) button.style.paddingLeft = `5px`; // see also: setButton()
+      if (!isMobile()) button.style.paddingRight = `5px`; // see also: setButton()
     }
   });
 }
@@ -278,7 +281,7 @@ function buttonClicked(event) {
   event.preventDefault();
 
   let keyPress = event.srcElement.key;
-  if (keyPress === null) { console.log(`no`); return; }
+  if (keyPress === null) { console.log(`null keypress`); return; }
 
   if (event.srcElement.repeat) {
     if (BUTTON_RUN.isRunning) keyPress = keyPress.toUpperCase();
@@ -940,4 +943,5 @@ function helpButtons(location) {
   if (isMobile()) setButton(location, `BUTTON_SCORES`, VARIABLE, `z`, `Scores`);
   if (isMobile()) setButton(location, `BUTTON_QUIT`, VARIABLE, `Q`, `Quit`);
   setButton(location, `BUTTON_BUGS`, VARIABLE, `cmd+alt+@`, `Report 🐛`);
+  // if (isMobile()) setButton(location, `BUTTON_DISABLE_BUTTONS`, VARIABLE, `cmd+alt+#`, `Hide Buttons`);
 }

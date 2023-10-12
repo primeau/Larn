@@ -232,7 +232,7 @@ function initFS() {
   try {
     var gameNum = localStorageGetObject('gameNum', 0) + 1;
     localStorageSetObject('gameNum', gameNum);
-    if (gameNum <= 5 || getDifficulty() > 10 || rnd(100) < 3) {
+    if (gameNum <= 5 || getDifficulty() > 10 || rnd(100) < 3 || isMobile()) {
       dofs = true;
       console.log('dofs: ' + gameNum + ' ' + dofs + ' ' + getDifficulty());
     }
@@ -279,10 +279,10 @@ function getIP() {
     console.error(`getIP(): offline`);
     return;
   }
-  fetch(`https://api.db-ip.com/v2/free/self`)
+  fetch(`https://z0iwtshse6.execute-api.us-east-1.amazonaws.com/prod/ip`) // score endpoint
     .then(function (response) {
       response.json().then(function (text) {
-        playerIP = text.ipAddress;
+        playerIP = text.body;
       });
     })
     .catch(error => console.log(`no ip`));

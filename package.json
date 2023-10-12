@@ -49,6 +49,7 @@
     "deploy_tv_lambda_test": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movie_test --zip-file fileb://function.zip ; rm function.zip",
     "deploy_tv_lambda": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movies --zip-file fileb://function.zip ; rm function.zip",
 
+    "deploy_larn_lambda_test": "cd src/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name test --zip-file fileb://function.zip ; rm function.zip",
     "deploy_larn_lambda_score": "cd src/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name score --zip-file fileb://function.zip ; rm function.zip"
   },
   "repository": {

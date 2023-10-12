@@ -9,7 +9,6 @@ Ularn 12.5.1
 
 todo:
 * IDEA: use createElement for all rendering?
-* find a better way to get ip addresses
 * help wiki (items/scrolls/potions/features/monsters/etc)
 * new video to add: https://larn.org/beta/tv/?gameid=lysnwvbhx8 
   - diff 0 win with illiterate/thirsty conducts
