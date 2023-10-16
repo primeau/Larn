@@ -32,6 +32,8 @@ function welcome() {
     keyboard_hints = true;
   }
 
+  showConfigButtons = localStorageGetObject(`showConfigButtons`, true);
+
   var nameString = `Welcome to ${GAMENAME}. Please enter your name [<b>${logname}</b>]: `;
 
   let chastizing = `* Please use only one name to leave room on the scoreboard for others`;
@@ -232,7 +234,7 @@ function initFS() {
   try {
     var gameNum = localStorageGetObject('gameNum', 0) + 1;
     localStorageSetObject('gameNum', gameNum);
-    if (gameNum <= 5 || getDifficulty() > 10 || rnd(100) < 3 || isMobile()) {
+    if (gameNum <= 5 || getDifficulty() > 15 || rnd(100) < 3 || isMobile()) {
       dofs = true;
       console.log('dofs: ' + gameNum + ' ' + dofs + ' ' + getDifficulty());
     }
@@ -242,6 +244,7 @@ function initFS() {
       var userVars = {
         'displayName': logname,
         'playerID_str': playerID,
+        'gameID_str': gameID,
         'gameNum_int': gameNum,
       };
       console.log(`fs`, userVars);
@@ -581,6 +584,8 @@ function run(dir) {
 function wizardmode(password) {
 
   if (password === 'checkpoint') {
+    try { Rollbar.info(`${BUILD} ${GAMENAME} checkpoint who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`); } catch (error) { }
+
     var checkpoint = localStorageGetObject('checkpointbackup');
     let error = localStorageSetObject('checkpoint', checkpoint);
     if (!error) {
@@ -593,6 +598,8 @@ function wizardmode(password) {
   }
 
   if (password === 'savegame') {
+    try { Rollbar.info(`${BUILD} ${GAMENAME} checkpoint who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`); } catch (error) { }
+
     var savegame = localStorageGetObject(logname + 'backup');
     let error = localStorageSetObject(logname, savegame);
     if (!error) {
@@ -605,6 +612,8 @@ function wizardmode(password) {
   }
 
   if (password === 'debug') {
+    try { Rollbar.info(`${BUILD} ${GAMENAME} checkpoint who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`); } catch (error) { }
+
     updateLog(`debugging shortcuts enabled`);
     enableDebug();
     return 1;

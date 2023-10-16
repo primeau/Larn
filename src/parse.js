@@ -694,6 +694,19 @@ function parse(e, key) {
     return;
   }
 
+
+
+  //
+  // hide/reveal config buttons
+  //
+  if (key == '⚙️') {
+    nomove = 1;
+    showConfigButtons = !showConfigButtons;
+    localStorageSetObject(`showConfigButtons`, showConfigButtons);
+    onResize();
+    return;
+  }
+
   //
   // help screen
   //
@@ -807,7 +820,7 @@ function parse(e, key) {
   //
   // REPORT BUG
   //
-  if (key == 'cmd+alt+@') {
+  if (key == '🐞') {
     nomove = 1;
     reportBug();
     return;

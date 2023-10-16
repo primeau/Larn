@@ -178,21 +178,6 @@ function onResize(event) {
 
   setButtons();
 
-  // let mobilestring = (`onResize():` +
-  //   `w` + `=` + window.innerWidth + ` ` +
-  //   `h` + `=` + window.innerHeight + ` ` +
-  //   `ws` + `=` + window.screen.width + ` ` +
-  //   `hs` + `=` + window.screen.height + ` ` +
-  //   `touch` + `=` + isTouch() + ` ` +
-  //   `phone` + `=` + isPhone() + ` ` +
-  //   `horizontal` + `=` + isHorizontal());
-
-  // if (true) {
-  // console.log(mobilestring);
-  // updateLog(mobilestring);
-  // updateLog(navigator.userAgent);
-  // }
-
   let emptyBox = new Box(0, 0, 0, 0);
   let margin = 1;
 

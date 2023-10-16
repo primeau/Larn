@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.1';
-const BUILD = '512';
+const BUILD = '513';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
 
@@ -133,8 +133,6 @@ function initKeyBindings() {
   Mousetrap.bind('_', mousetrap); // password
   Mousetrap.bind('-', mousetrap); // disarm 
   Mousetrap.bind('+', mousetrap); // load games via password
-  Mousetrap.bind('cmd+alt+@', mousetrap); // report bug
-  // Mousetrap.bind('cmd+alt+#', mousetrap); // hide buttons
 
   Mousetrap.bind(['(', ')'], mousetrap); // allow () for pvnert(x)
 
@@ -205,7 +203,8 @@ original_objects:${original_objects}
 cookies:${navigator.cookieEnabled}
 host:${location.hostname}
 params:${JSON.stringify(loadURLParameters())}
-mobile:${isMobile()}
+mobile:${isMobile()} 
+mobileString: ${mobileString}
 phone:${isPhone()}
 screen dimensions:${window.screen.width},${window.screen.height}
 browser dimensions:${window.innerWidth},${window.innerHeight}

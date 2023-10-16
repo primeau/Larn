@@ -486,13 +486,38 @@ function isTouch() {
   return ('ontouchstart' in window || navigator.maxTouchPoints) != 0;
 }
 
+var mobileString = ``;
 function isMobile() {
   // if (forceMobileDisabled) return false;
-  return /Android|iPhone|iPad|webOS|Mobi|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); // User agent string method
-  // (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) // don't include touchscreen laptops!
-  // window.orientation !== 'undefined' // Window orientation method is deprecated!
-  // window.getComputedStyle(document.getElementsByTagName('body')[0]).getPropertyValue('content').indexOf('mobile') !== -1 // CSS media queries method doesn't work on startup!
-  // navigator.userAgentData.mobile // not supported in firefox yet!
+
+  // user agent method
+  // this doesn't detect iPads on firefox and safari
+  let uaMobile = /Android|iPhone|iPad|webOS|Mobi|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  // touchpoints method
+  // also catches touchscreen laptops - do not use
+  // (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) 
+
+  // window orientation method
+  // deprecated, but detects iPads on safari and firefox
+  let orMobile = window.orientation !== undefined;
+
+  // media query method
+  // doesn't detect ipad in chrome/firefox/safari, but maybe works for other things?
+  let mqMobile = false;
+  try {
+    if (document.getElementsByTagName('body')[0]) {
+      mqMobile = window.getComputedStyle(document.getElementsByTagName('body')[0]).getPropertyValue('content').indexOf('mobile') !== -1;
+    }
+  } catch (error) {
+  }
+
+  // not supported in firefox yet!
+  // navigator.userAgentData.mobile 
+
+  mobileString = `ua:${uaMobile} or:${orMobile} mq:${mqMobile}`;
+
+  return uaMobile || orMobile || mqMobile;
 }
 
 function isDesktop() {
@@ -508,30 +533,10 @@ function isVertical() {
 }
 
 function isPhone() {
-  return isMobile() && window.screen.height < 1024 && window.screen.width < 1024;
-
-  // this has proven to be unreliable -- my ipad get recognized as a phone when using innerwidth
-  // and window.screen flips in the emulator, but not on device, so i don't know what to trust for non-apple devices
+  // window.screen flips in the emulator, but not on device, so i don't know what to trust for non-apple devices
   // reference: https://www.ios-resolution.com/
   // heuristic: ipads are all 768x1024 or higher, phones are all 428x926 or lower
-  // isVertical() && window.screen.width < 768 ||  (ipad w768 x h1024); 
-  // isHorizontal() && window.screen.height < 768) (ipad w768 x h1024); 
-  // isVertical() && window.innerWidth < 768 ||    (ipad w768 x h908, iphone )
-  // isHorizontal() && window.innerHeight < 768)   (ipad w1024x h752);
-
-  /* real world number for an old ipad and ihpone 13 pro max
-  IPAD
-  horizontal screen 768x1024
-  vertical screen 768x1024
-  horizontal inner 1024x653
-  vertical inner 768x909
-
-  IPHONE
-  horizontal screen  428 926 
-  vertical screen 428 926
-  horizontal inner 832 368
-  vertical inner 435 759
-  */
+  return isMobile() && window.screen.height < 1024 && window.screen.width < 1024;
 }
 
 function isTablet() {

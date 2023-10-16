@@ -160,14 +160,15 @@ function clearButtons() {
 
 
 function setButtonFontSize(size) {
-  if (isMobile()) size += 6;
+  let mobileDevice = isMobile();
+  if (mobileDevice) size += 6;
   else size = Math.max(12, size - 10);
   buttonCache.forEach(button => {
     if (button && button.style) {
       button.style.fontSize = `${size}px`;
-      if (!isMobile()) button.style.padding = `0px`; // see also: setButton()
-      if (!isMobile()) button.style.paddingLeft = `5px`; // see also: setButton()
-      if (!isMobile()) button.style.paddingRight = `5px`; // see also: setButton()
+      if (!mobileDevice) button.style.padding = `0px`; // see also: setButton()
+      if (!mobileDevice) button.style.paddingLeft = `5px`; // see also: setButton()
+      if (!mobileDevice) button.style.paddingRight = `5px`; // see also: setButton()
     }
   });
 }
@@ -758,7 +759,7 @@ function canMoveButton(x, y) {
 
 function startRun() {
   BUTTON_RUN.isRunning = true;
-  BUTTON_RUN.value = `Running`;
+  BUTTON_RUN.value = `Choose Direction`;
 };
 
 function endRun() {
@@ -925,23 +926,28 @@ function spellListButtons(source, exclude) {
 //
 //
 function helpButtons(location) {
-  if (!isMobile()) setButton(location, `BUTTON_HELP`, VARIABLE, `?`, `Help`);
-  let hintsLabel = keyboard_hints ? `on` : `off`;
-  let pickupLabel = auto_pickup ? `on` : `off`;
-  let inventoryLabel = side_inventory ? `on` : `off`;
-  let boldLabel = bold_objects ? `on` : `off`;
-  let colorLabel = show_color ? `on` : `off`;
-  let retroLabel = retro_mode ? `DOS` : `modern`;
-  if (amiga_mode) retroLabel = retro_mode ? `Amiga 500` : `Amiga 1200`;
-  if (!isMobile()) setButton(location, `BUTTON_HINTS`, VARIABLE, `!`, `Keyboard hints: ${hintsLabel}`);
-  setButton(location, `BUTTON_PICKUP`, VARIABLE, `@`, `Auto-pickup: ${pickupLabel}`);
-  if (!isMobile()) setButton(location, `BUTTON_INVENTORY`, VARIABLE, `#`, `Inventory: ${inventoryLabel}`);
-  if (!isMobile()) setButton(location, `BUTTON_COLOR`, VARIABLE, `$`, `Color: ${colorLabel}`);
-  if (!isMobile()) setButton(location, `BUTTON_BOLD`, VARIABLE, `%`, `Bold: ${boldLabel}`);
-  if (!isMobile()) setButton(location, `BUTTON_FONT`, VARIABLE, `{`, `Font: ${retroLabel}`);
-  if (isMobile()) setButton(location, `BUTTON_SAVE`, VARIABLE, `S`, `Save`);
-  if (isMobile()) setButton(location, `BUTTON_SCORES`, VARIABLE, `z`, `Scores`);
-  if (isMobile()) setButton(location, `BUTTON_QUIT`, VARIABLE, `Q`, `Quit`);
-  setButton(location, `BUTTON_BUGS`, VARIABLE, `cmd+alt+@`, `Report 🐛`);
-  // if (isMobile()) setButton(location, `BUTTON_DISABLE_BUTTONS`, VARIABLE, `cmd+alt+#`, `Hide Buttons`);
+  let mobileDevice = isMobile();
+
+  setButton(location, `BUTTON_SHOW_CONFIG`, VARIABLE, `⚙️`, `⚙️`);
+  if (showConfigButtons) {
+    if (!mobileDevice) setButton(location, `BUTTON_HELP`, VARIABLE, `?`, `Help`);
+    let hintsLabel = keyboard_hints ? `on` : `off`;
+    let pickupLabel = auto_pickup ? `on` : `off`;
+    let inventoryLabel = side_inventory ? `on` : `off`;
+    let boldLabel = bold_objects ? `on` : `off`;
+    let colorLabel = show_color ? `on` : `off`;
+    let retroLabel = retro_mode ? `DOS` : `modern`;
+    if (amiga_mode) retroLabel = retro_mode ? `Amiga 500` : `Amiga 1200`;
+    if (!mobileDevice) setButton(location, `BUTTON_HINTS`, VARIABLE, `!`, `Keyboard hints: ${hintsLabel}`);
+    setButton(location, `BUTTON_PICKUP`, VARIABLE, `@`, `Auto-pickup: ${pickupLabel}`);
+    if (!mobileDevice) setButton(location, `BUTTON_INVENTORY`, VARIABLE, `#`, `Inventory: ${inventoryLabel}`);
+    if (!mobileDevice) setButton(location, `BUTTON_COLOR`, VARIABLE, `$`, `Color: ${colorLabel}`);
+    if (!mobileDevice) setButton(location, `BUTTON_BOLD`, VARIABLE, `%`, `Bold: ${boldLabel}`);
+    if (!mobileDevice) setButton(location, `BUTTON_FONT`, VARIABLE, `{`, `Font: ${retroLabel}`);
+    if (mobileDevice) setButton(location, `BUTTON_SAVE`, VARIABLE, `S`, `Save`);
+    if (mobileDevice) setButton(location, `BUTTON_SCORES`, VARIABLE, `z`, `Scores`);
+    if (mobileDevice) setButton(location, `BUTTON_QUIT`, VARIABLE, `Q`, `Quit`);
+    setButton(location, `BUTTON_BUGS`, VARIABLE, `🐞`, `Report 🐞`);
+    // if (mobileDevice) setButton(location, `BUTTON_DISABLE_BUTTONS`, VARIABLE, `cmd+alt+#`, `Hide Buttons`);
+  }
 }

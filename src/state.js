@@ -12,6 +12,7 @@ var playerID;
 var playerIP = `0`;
 var PARAMS = {};
 var recording = {};
+var showConfigButtons = true;
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 var GAMEOVER = true;
