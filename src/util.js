@@ -542,3 +542,26 @@ function isPhone() {
 function isTablet() {
   return isMobile() && !isPhone();
 }
+
+
+
+const ROLLBAR_ERROR = `ERROR`;
+const ROLLBAR_INFO = `INFO`;
+const ROLLBAR_DEBUG = `DEBUG`;
+function doRollbar(notificationLevel, eventTitle, eventDetail) {
+  if (Rollbar) {
+    eventTitle = `${BUILD} ${GAMENAME} ${eventTitle}`;
+    try {
+      if (notificationLevel === ROLLBAR_ERROR) {
+        Rollbar.error(eventTitle, { detail: `${eventDetail}` });
+      } else if (notificationLevel === ROLLBAR_INFO) {
+        Rollbar.info(eventTitle, { detail: `${eventDetail}` });
+      } else if (notificationLevel === ROLLBAR_DEBUG) {
+        Rollbar.debug(eventTitle, { detail: `${eventDetail}` });
+      }
+    } catch (error) {
+      console.error(`rollbar caught: ${error}`);
+    }
+  }
+
+}

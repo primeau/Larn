@@ -89,16 +89,17 @@ function loadSavedGame(savedState, isCheckPoint) {
     // Rollbar chokes on large messages, and these could get up to 500k+
     // truncate down to what actually matters
     try {
-      let errorMessage = `${BUILD} ${GAMENAME} ${logname} failed integrity check, current.length:${currentStateString.length}, saved.length:${savedStateString.length} diff=\n`;
+      let errorMessage = `failed integrity check`;
+      let errorDetail = `${logname} ${gameID} current.length:${currentStateString.length}, saved.length:${savedStateString.length} diff=\n`;
       for (let index = 0; index < diff.length; index++) {
         let fragment = diff[index][1];
         if (fragment.length > 200) {
           fragment = `${fragment.substring(0, 100)}\n   ...\n   ${fragment.substring(fragment.length - 100)}`;
         }
-        errorMessage += `${index}: ${fragment}\n`;
+        errorDetail += `${index}: ${fragment}\n`;
       }
-      console.log(`${errorMessage}`);
-      Rollbar.error(`${errorMessage}`);
+      console.log(errorMessage, errorDetail);
+      doRollbar(ROLLBAR_ERROR, errorMessage, errorDetail);
     } catch (error) {
       console.log(`failed integrity check: caught: ${error}`);
     }

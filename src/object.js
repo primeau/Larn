@@ -466,7 +466,7 @@ function itemAt(x, y) {
         m += `\n`;
         k += `\n`;
       }
-      Rollbar.error(`${errorMessage}\n${o}\n${m}\n${k}`);
+      doRollbar(ROLLBAR_ERROR, `null itemAt()`, `${errorMessage}\n${o}\n${m}\n${k}`);
     } catch (error) {
       // do nothing
     }

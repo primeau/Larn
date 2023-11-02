@@ -47,6 +47,9 @@ function welcome() {
   } else {
     setname(logname);
   }
+
+  updateRB();
+
   paint();
 }
 
@@ -270,7 +273,27 @@ function initRB() {
       }
     });
   } catch (error) {
-    // do nothing
+    console.log(`caught`, error);
+  }
+}
+
+
+
+function updateRB() {
+  try {
+    Rollbar.configure({
+      payload: {
+        person: {
+          id: logname
+        },
+        custom: {
+          playerID: playerID,
+          gameID: gameID
+        }
+      }
+    });
+  } catch (error) {
+    console.log(`caught`, error);
   }
 }
 
@@ -584,7 +607,7 @@ function run(dir) {
 function wizardmode(password) {
 
   if (password === 'checkpoint') {
-    try { Rollbar.info(`${BUILD} ${GAMENAME} checkpoint who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`); } catch (error) { }
+    doRollbar(ROLLBAR_INFO, `checkpoint who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     var checkpoint = localStorageGetObject('checkpointbackup');
     let error = localStorageSetObject('checkpoint', checkpoint);
@@ -598,7 +621,7 @@ function wizardmode(password) {
   }
 
   if (password === 'savegame') {
-    try { Rollbar.info(`${BUILD} ${GAMENAME} checkpoint who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`); } catch (error) { }
+    doRollbar(ROLLBAR_INFO, `savegame who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     var savegame = localStorageGetObject(logname + 'backup');
     let error = localStorageSetObject(logname, savegame);
@@ -612,7 +635,7 @@ function wizardmode(password) {
   }
 
   if (password === 'debug') {
-    try { Rollbar.info(`${BUILD} ${GAMENAME} checkpoint who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`); } catch (error) { }
+    doRollbar(ROLLBAR_INFO, `debug who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     updateLog(`debugging shortcuts enabled`);
     enableDebug();

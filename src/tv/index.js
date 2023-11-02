@@ -7,8 +7,21 @@ let ULARN = false; // this is a hack to get around localstoragegetobject issues
 go();
 
 function go() {
-  // TODO: enable rollbar
-  try { Rollbar.configure({ enabled: false }) } catch (e) { /**/ }
+  try {
+    Rollbar.configure({
+      enabled: true,
+      payload: {
+        code_version: `TV_1`,
+        client: {
+          javascript: {
+            code_version: `TV_1`,
+          }
+        }
+      }
+    });
+  } catch (error) {
+    console.log(`caught`, error);
+  }
 
   try {
     initLambdaCredentials();

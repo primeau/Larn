@@ -547,18 +547,10 @@ function dbWriteHighScore(newScore) {
     }
   });
 
-  try {
-    if (Rollbar) {
-      if (newScore.winner) {
-        Rollbar.info(`${BUILD} ${GAMENAME} winner: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
-      } else {
-        if (newScore.timeused > 50 && newScore.hardlev > 3) {
-          Rollbar.info(`${BUILD} ${GAMENAME} visitor: ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
-        }
-      }
-    }
-  } catch (error) {
-    console.error(`caught: ${error}`);
+  if (newScore.winner) {
+    doRollbar(ROLLBAR_INFO, `winner`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
+  } else if (newScore.timeused > 50 && newScore.hardlev > 3) {
+    doRollbar(ROLLBAR_INFO, `visitor`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
   }
 
 }
