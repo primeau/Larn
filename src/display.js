@@ -253,12 +253,12 @@ function onResize(event) {
   } else /* isDesktop() */ {
   }
 
-  if (directionButtons.childElementCount == 0) directionBox = emptyBox;
-  if (contextButtons.childElementCount == 0) contextBox = emptyBox;
-  if (inventoryButtons.childElementCount == 0) invButtonsBox = emptyBox;
-  if (keyboard.childElementCount == 0) keyboardBox = emptyBox;
-  if (runButton.childElementCount == 0) runBox = emptyBox;
-  if (chastize.innerHTML == ``) chastizeBox = emptyBox;
+  if (directionButtons && directionButtons.childElementCount == 0) directionBox = emptyBox;
+  if (contextButtons && contextButtons.childElementCount == 0) contextBox = emptyBox;
+  if (inventoryButtons && inventoryButtons.childElementCount == 0) invButtonsBox = emptyBox;
+  if (runButton && runButton.childElementCount == 0) runBox = emptyBox;
+  if (keyboard && keyboard.childElementCount == 0) keyboardBox = emptyBox;
+  if (chastize && chastize.innerHTML == ``) chastizeBox = emptyBox;
 
   // basic larn
   setSize(larn, larnBox);

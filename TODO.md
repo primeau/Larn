@@ -8,6 +8,7 @@ Ularn 12.5.1
 - eye of larn appraisal in bank
 
 todo:
+*** record number of saves
 * IDEA: use createElement for all rendering?
 * help wiki (items/scrolls/potions/features/monsters/etc)
 * new video to add: https://larn.org/beta/tv/?gameid=lysnwvbhx8 
