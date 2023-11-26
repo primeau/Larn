@@ -55,6 +55,7 @@ function enter() {
     return;
   }
 
+  nomove = 1;
   debug(`enter(): no building here`);
   setMazeMode(true);
 
@@ -367,6 +368,17 @@ function bank_parse(key) {
     return exitbuilding();
   }
 
+  /* 12.5.2
+  prevent players from selling gems/eye once they have found the potion
+  to prevent them from racking up the scoreboard
+  */
+  if (player.hasPickedUpPotion) {
+    if (`dws`.includes(key)) {
+      storemessage(`Sorry friend, the bank is closed. It's time to go home.`, 1500);
+      return 0;
+    }
+  }
+
   if (key == 'd') {
     lprcat(`deposit${period}\n`);
     cltoeoln();
@@ -612,18 +624,18 @@ function parse_tradepost(key) {
     return 0;
   }
 
-  var value = 0;
-  var i = getIndexFromChar(key);
-
   /* 12.4.5
   prevent players from selling things once they have found the potion
   to prevent them from racking up the scoreboard
   */
   if (player.hasPickedUpPotion) {
-    storemessage(`Sorry friend, the shop is closed. It's time to go home now.`, 1500);
+    storemessage(`Sorry friend, the shop is closed. It's time to go home.`, 1500);
     //nap(2000);
     return 0;
   }
+
+  var value = 0;
+  var i = getIndexFromChar(key);
 
   if (i >= 0 && i <= 26) {
     var item = player.inventory[i];
