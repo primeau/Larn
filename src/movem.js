@@ -12,6 +12,7 @@ let move_xh = -1;
  * FUNCTION: movemonst
  */
 function movemonst() {
+  if (!player) return;
 
   /* no action if time is stopped */
   if (player.TIMESTOP) return;
@@ -92,7 +93,7 @@ function movemonst() {
         }
         monster.mimiccounter++;
       }
-      
+
       if (monster && !monster.moved) {
         /* if there is a monster to move and it isn't already moved */
         if (player.AGGRAVATE || !player.STEALTH || monster.awake) {

@@ -26,10 +26,10 @@ exports.handler = async (event, context) => {
   // GET LIST OF COMPLETED GAMES
   //
   if (action === 'listcompleted') {
-    let completedGames = handler.getGames(dynamo, true, frameLimit);
-    let gamesInProgress = handler.getGames(dynamo, false);
+    let recordedGamesList = handler.getGames(dynamo, true, frameLimit);
+    let liveGamesList = handler.getGames(dynamo, false);
 
-    let gamesList = await Promise.all([completedGames, gamesInProgress]).then((games) => {
+    let gamesList = await Promise.all([recordedGamesList, liveGamesList]).then((games) => {
       console.log(`completed games ${games[0].body.length}`);
       console.log(`games in progress ${games[1].body.length}`);
       return games;

@@ -2,19 +2,21 @@
 
 let lambda;
 
+let GAMENAME = `TV`;
+let BUILD = `TV_1`;
 let ULARN = false; // this is a hack to get around localstoragegetobject issues
 
 go();
 
 function go() {
   try {
-    Rollbar.configure({
-      enabled: true,
+    if (Rollbar) Rollbar.configure({
+      enabled: (location.hostname !== 'localhost' && location.hostname !== ''),
       payload: {
-        code_version: `TV_1`,
+        code_version: BUILD,
         client: {
           javascript: {
-            code_version: `TV_1`,
+            code_version: BUILD,
           }
         }
       }
@@ -39,10 +41,24 @@ function go() {
 
   if (urlParams.gameid) {
     watchMovie(urlParams.gameid);
+  } else if (urlParams.live) {
+    try {
+      initCloudFlare(`larntv:${rund(1000000)}`, urlParams.live, bltLiveFrame);
+      watchLive(urlParams.live);
+    } catch (error) {
+      console.error(error);
+    }
   } else {
     initList();
-    downloadRecordings(setRecordings, MIN_FRAMES_TO_LIST);
+    downloadRecordings(recordedGamesLoaded, MIN_FRAMES_TO_LIST);
+    downloadliveGamesList(liveGamesLoaded);
   }
+}
+
+
+
+function setIP(ip) {
+  // do nothing for larntv
 }
 
 

@@ -88,7 +88,7 @@ function GameState(save) {
   this.LOG = LOG;
   this.player = player;
 
-  if (isRecording()) {
+  if (canRecord()) {
     this.recording = getRecordingInfo();
     if (save) {
       this.recording.frames += 3; // hack because three more frames get added before a game is done saving

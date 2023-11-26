@@ -1,7 +1,7 @@
 'use strict';
 
-const VERSION = '12.5.1';
-const BUILD = '516';
+const VERSION = '12.5.2';
+const BUILD = '519';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
 
@@ -24,7 +24,7 @@ let workersAvailable = window.location.protocol != `file:`; /* can't read file:/
 
 async function play() {
 
-  console.log(`${gameID}`);
+  console.log(`gameID ${gameID}`);
   console.log(`ismobile`, isMobile(), `isPhone`, isPhone());
 
   // this role only has access to invoke the lambda score function 

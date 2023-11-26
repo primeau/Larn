@@ -9,10 +9,10 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
     <link rel="icon" type="image/png" href="img/favicon.png">
-    <link rel="preload" href="img/dos437.ttf" as="font" type="font/ttf" crossorigin>
-    <link rel="preload" href="img/NotoSansMono-Regular.ttf" as="font" type="font/ttf" crossorigin>
-    <link rel="preload" href="img/TopazPlus_a500_v1.0.ttf" as="font" type="font/ttf" crossorigin>
-    <link rel="preload" href="img/TopazPlus_a1200_v1.0.ttf" as="font" type="font/ttf" crossorigin>
+    <!-- <link rel="preload" href="img/dos437.ttf" as="font" type="font/ttf" crossorigin> -->
+    <!-- <link rel="preload" href="img/NotoSansMono-Regular.ttf" as="font" type="font/ttf" crossorigin> -->
+    <!-- <link rel="preload" href="img/TopazPlus_a500_v1.0.ttf" as="font" type="font/ttf" crossorigin> -->
+    <!-- <link rel="preload" href="img/TopazPlus_a1200_v1.0.ttf" as="font" type="font/ttf" crossorigin> -->
     <link rel="stylesheet" type="text/css" href="larn.css">
     <!-- <link rel='apple-touch-icon' href='apple-touch-icon.png'> -->
 
@@ -72,6 +72,7 @@
     <script src='tv/patch.js'></script>
     <script src='tv/lambda.js'></script>
     <script src='tv/tvutil.js'></script>
+    <script src='cloudflare/broadcast.js'></script>
 </head>
 
 <body>
@@ -115,9 +116,6 @@
         var no_intro = false;
         var newplayer = false;
         var altrender = false;
-        try {
-            Rollbar.configure({ enabled: false });
-        } catch (e) {}
         play();
         document.getElementById(`LARN`).focus();
     </script>

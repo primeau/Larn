@@ -1,0 +1,62 @@
+##
+##
+## Remember that this needs to be deployed from larn-local! [npm run deploy [or] npx wrangler deploy]
+##
+##
+
+name = "broadcast"
+workers_dev = true
+compatibility_date = "2021-11-08"
+account_id = "CLOUDFLARE_ACCOUNT_ID"
+
+main = "src/broadcast.mjs"
+
+kv_namespaces = [
+  { binding = "realtime_larn", id = "CLOUDFLARE_KV_ID" }
+]
+
+[durable_objects]
+bindings = [
+  { name = "games", class_name = "GameSession" },
+]
+
+[[migrations]]
+tag = "v1" # Should be unique for each entry
+new_classes = ["GameSession"]
+
+#[[migrations]]
+#tag = "v2"
+#deleted_classes = ["ChatRoom", "RateLimiter"]
+
+
+
+
+
+
+
+
+
+
+### How to uninstall
+#
+#Modify wrangler.toml to remove the durable_objects bindings and add a deleted_classes migration. 
+#The bottom of your wrangler.toml should look like:
+#
+#```
+#[durable_objects]
+#bindings = [
+#]
+#
+## Indicate that you want the ChatRoom and RateLimiter classes to be callable as Durable Objects.
+#[[migrations]]
+#tag = "v1" # Should be unique for each entry
+#new_classes = ["ChatRoom", "RateLimiter"]
+#
+#[[migrations]]
+#tag = "v2"
+#deleted_classes = ["ChatRoom", "RateLimiter"]
+#```
+#
+#Then run `wrangler publish`, which will delete the Durable Objects and all data stored in them.  
+#To remove the Worker, go to [dash.cloudflare.com](dash.cloudflare.com) and navigate to 
+#Workers -> Overview -> edge-chat-demo -> Manage Service -> Delete (bottom of page)

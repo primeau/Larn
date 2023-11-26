@@ -1,3 +1,8 @@
+JS U/Larn 12.5.2
+----------------
+1. [new] Added support for watching live or recorded games.
+
+
 JS U/Larn 12.5.1
 ----------------
 1. [new] Added support for mobile devices.

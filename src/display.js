@@ -43,7 +43,7 @@ function blt() {
     let divs = {};
     divs.LARN = document.getElementById(`LARN`).innerHTML;
     divs.STATS = document.getElementById(`STATS`).innerHTML;
-    recordFrame(divs, createLocalScore);
+    recordFrame(divs);
   }
 }
 
@@ -449,6 +449,9 @@ function printStats() {
   } else {
     if (game_started && side_inventory) {
       stats = game_stats(player);
+      if (numWatchers > 0) {
+        stats += `\n${GAMENAME} fans watching: ${numWatchers} <a href='https://larn.org/larn/tv/index.html' target='_blank'>  (?)</a>`;
+      }
     }
   }
   if (!side_inventory) stats = ``;

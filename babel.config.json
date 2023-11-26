@@ -6,5 +6,5 @@
     "chrome": "55",
     "safari": "11.1"
   },
-  "ignore": ["*/lib/*", "*/aws/*", "*/node_modules/*"]
+  "ignore": ["*/lib/*", "*/aws/*", "*/node_modules/*", "*/cloudflare/broadcast/*" ]
 }

@@ -32,11 +32,7 @@ var LocalScore = function () {
   this.extra[EXTRA_RMST] = rmst;
   this.extra[EXTRA_GTIME] = gtime;
 
-  this.explored = ``;
-  for (var i = 0; i < LEVELS.length; i++) {
-    this.explored += LEVELS[i] ? `${LEVELNAMES[i]}` : `.`;
-    this.explored += (i == level) ? 'x' : ' ';
-  }
+  this.explored = getExploredLevels();
 
   // START HACK -- we don't want to save the level
   if (player) {
@@ -57,14 +53,24 @@ LocalScore.prototype.toString = function () {
 
 
 
-function createLocalScore() {
-  let ls = new LocalScore();
-  ls.gamelog = null;
-  ls.player = null;
-  ls.extra = null;
-  ls.browser = null;
-  ls.ularn = ULARN;
-  return ls;
+let EXPLORED_VIEW_SHORT = `short`;
+let EXPLORED_VIEW_DOTS = `dots`;
+function getExploredLevels(view) {
+  let explored = ``;
+  for (let i = 0; i < LEVELS.length; i++) {
+    let levelname = LEVELNAMES[i];
+    if (view === EXPLORED_VIEW_SHORT) {
+      levelname = levelname.at(levelname.length - 1);
+    }
+    if (view === EXPLORED_VIEW_DOTS) {
+      levelname = (i === DBOTTOM && player.hasPickedUpEye) ? `~` : `+`;
+    }
+    let playerChar = isCarrying(createObject(OPOTION, 21)) ? `@!` : `@ `;
+    let gap = levelname.length === 1 ? ` ` : ``;
+    let expChar = (i === level) ? playerChar : `${levelname}${gap}`;
+    explored += LEVELS[i] ? expChar : `· `;
+  }
+  return explored;
 }
 
 
@@ -517,7 +523,7 @@ function dbWriteHighScore(newScore) {
   console.log(`dbWriteHighScore: ${newScore.gameID}`);
 
   if (!navigator.onLine) {
-    console.log(`dbWriteHighScore: offline`);
+    console.error(`dbWriteHighScore: offline`);
     ONLINE = false;
     return;
   }
@@ -549,7 +555,7 @@ function dbWriteHighScore(newScore) {
 
   if (newScore.winner) {
     doRollbar(ROLLBAR_INFO, `winner`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
-  } else if (newScore.timeused > 50 && newScore.hardlev > 3) {
+  } else if (rnd(100) > 25) {
     doRollbar(ROLLBAR_INFO, `visitor`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
   }
 
@@ -669,8 +675,6 @@ function canProtect(reason) {
  */
 function died(reason, slain) {
 
-  var winner = reason == DIED_WINNER;
-
   if (player.LIFEPROT > 0) {
     if (canProtect(reason)) {
       --player.LIFEPROT;
@@ -681,6 +685,11 @@ function died(reason, slain) {
       return;
     }
   }
+
+  var winner = reason === DIED_WINNER;
+  player.winner = winner;
+  player.reason = reason;
+  GAMEOVER = true;
 
   if (ULARN) {
     let failGender = `their`;
@@ -709,7 +718,7 @@ function died(reason, slain) {
 
     let extraNL = (printFunc == lprcat) ? `\n` : ``;
     try {
-      if (isRecording()) {
+      if (canRecord()) {
         let linkText = window.location.href.split(`?`)[0];
         linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
         printFunc(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>${extraNL}${extraNL}`);
@@ -735,7 +744,6 @@ function died(reason, slain) {
 
     recordFrame({ 'LARN': ``, 'STATS': `` }); // record fade to blank screen so we can easily refresh on reload
 
-    GAMEOVER = true;
     side_inventory = true;
     game_started = false;
     napping = true;
@@ -749,6 +757,14 @@ function died(reason, slain) {
 
   let endData = (reason == DIED_SAVED_GAME) ? null : endGameScore;
   endRecording(endData, ULARN);
+
+  // try {
+  //   console.log(`cloudflare closing stream`);
+  //   currentWebSocket.close();
+  //   currentWebSocket = null;
+  // } catch (error) {
+  //   console.error(`cloudflare caught on quit`, error);
+  // }
 
 }
 

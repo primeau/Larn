@@ -297,6 +297,8 @@ Monster.prototype = {
     subroutine to randomly create monsters if needed
  */
 function randmonst() {
+  if (!player) return;
+
   if (player.TIMESTOP) return; /*  don't make monsters if time is stopped  */
   if (--rmst <= 0) {
     rmst = 120 - (level << 2);
@@ -774,7 +776,8 @@ function hitplayer(x, y) {
     }
 
   if (player.HP <= 0 || lifeCount != player.LIFEPROT) {
-    debug('already killed');
+    // doRollbar(ROLLBAR_DEBUG, `already dead`, `${logname} ${playerID} ${gameID}`);
+    debug('already dead');
     return;
   }
 
@@ -1041,6 +1044,7 @@ function spattack(monster, attack, xx, yy) {
   }
 
   if (player.HP <= 0) {
+    // doRollbar(ROLLBAR_DEBUG, `already dead`, `${logname} ${playerID} ${gameID}`);
     debug('already dead');
     return 0;
   }

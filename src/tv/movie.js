@@ -14,7 +14,6 @@ class Video {
     this.totalFrames; // total number of frames when replaying
     this.rolls = [];
     this.divs = []; // divs to record
-    this.progressCallback; // use this to upload LocalScore info for games in progress
   }
 
   addRollToBuffer(roll) {
@@ -70,7 +69,7 @@ class Video {
 
   getFrame(frameNum) {
     // console.log(`video.getFrame(): ${frameNum}`);
-    
+
     // build initial frame
     if (frameNum < 0) {
       // console.log(`video.getFrame(): returning blank frame`);
@@ -134,7 +133,7 @@ class Video {
     currentRoll.addPatch(newPatch);
     if (currentRoll.isFull()) {
       // console.log(`video.addframe(): writing roll`);
-      uploadRoll(currentRoll, this.rolls.length - 1, this.progressCallback);
+      uploadRoll(currentRoll, this.rolls.length - 1);
       this.addRoll(new Roll([]));
     }
 
@@ -186,29 +185,10 @@ class Video {
 
 
 
-function uploadRoll(roll, num, progressCallback) {
-  let progressData;
-
-  if (ENABLE_RECORDING_REALTIME) {
-    // progresscallback gets a localscore object from the player so we can update 
-    // the list of games in progress
-    if (progressCallback) progressData = progressCallback();
-    if (progressData) {
-      let patch = roll.patches[roll.patches.length - 1];
-      if (patch) {
-        progressData.frames = patch.id;
-      } else {
-        console.error(`null patch for roll=${roll.patches.length - 1} num=${num}`)
-      }
-    } else {
-      progressData = null;
-      console.log(`uploadroll: progressData=null`);
-    }
-  }
-
+function uploadRoll(roll, num) {
   let filename = `${num}.json`;
   let file = compressRoll(roll);
-  uploadFile(gameID, filename, file, false, JSON.stringify(progressData));
+  uploadFile(gameID, filename, file, false);
 }
 
 
@@ -223,24 +203,40 @@ function stopRecording() {
 
 
 function isRecording() {
-  if (!navigator.onLine) return false;
+  return video && video.recordingInfo;
+} // this is called by Larn
+
+
+
+function canRecord() {
   if (!ENABLE_RECORDING) return false;
+  if (!navigator.onLine) return false;
+  if (amiga_mode) return false;
   if (!video) video = new Video(gameID);
   return video.recording;
-}
+} // this is called by Larn
+
+
+
+function canRecordRealtime() {
+  if (!ENABLE_RECORDING_REALTIME) return false;
+  if (!navigator.onLine) return false;
+  if (amiga_mode) return false;
+  return true;
+} // this is called by larn
 
 
 
 // this is called by larn
-function recordFrame(divs, progressCallback) {
+function recordFrame(divs) {
 
-  if (!isRecording()) return;
+  if (canRecordRealtime()) {
+    sendLiveFrame(divs);
+  }
+
+  if (!canRecord()) return;
 
   if (!video) video = new Video(gameID);
-
-  if (!video.progressCallback) {
-    video.progressCallback = progressCallback;
-  }
 
   let newFrame = new Frame();
   newFrame.id = video.currentFrameNum + 1;
@@ -261,9 +257,80 @@ function recordFrame(divs, progressCallback) {
 
 
 // this is called by larn
+let lastLiveFrame;
+let lastLiveFrameTime = Date.now() / 1000;
+let lastLiveDataTime = Date.now() / 1000;
+function sendLiveFrame(divs) {
+  if (lastLiveFrame && lastLiveFrame.LARN == divs.LARN) {
+    // don't send duplicate frames 
+    return;
+  }
+
+  try {
+    let now = Date.now() / 1000;
+    if (currentWebSocket) {
+      if (GAMEOVER || now - lastLiveDataTime > 10 && player.MOVESMADE % 11 === 0) {
+        let metadata = getGameData();
+        writeGameData(metadata);
+        lastLiveDataTime = now;
+      }
+      if (numWatchers > 0 || now - lastLiveFrameTime > 10 && player.MOVESMADE % 29 === 0) {
+        let newFrame = new Frame();
+        newFrame.id = gameID;
+        newFrame.ts = Date.now();
+        for (const [key, value] of Object.entries(divs)) {
+          newFrame.divs[key] = value;
+        }
+        // if (!lastLiveFrame) console.log(`sendLiveFrame() first frame`, player.MOVESMADE);
+        lastLiveFrame = divs;
+        lastLiveFrameTime = now;
+        currentWebSocket.send(JSON.stringify({ message: JSON.stringify(newFrame) }));
+      }
+    }
+  } catch (error) {
+    console.error(`sendliveframe():`, error);
+  }
+
+}
+
+
+
+function getGameData() {
+  let metadata = {};
+  metadata.ularn = ULARN;
+  metadata.difficulty = getDifficulty();
+  metadata.mobuls = elapsedtime();
+  metadata.who = logname;
+  metadata.level = LEVELNAMES[level];
+  metadata.lastmove = Date.now();
+  let deadreason = player.reason === DIED_SAVED_GAME ? `saved game` : `dead`;
+  metadata.explored = GAMEOVER ? (player.winner ? `winner` : deadreason) : getExploredLevels(EXPLORED_VIEW_DOTS);
+  return metadata;
+}
+
+
+
+function writeGameData(metadata) {
+  fetch(`https://${broadcastHostname}/api/gamelist/${gameID}`, {
+    method: "POST",
+    body: JSON.stringify({ metadata }),
+    headers: {
+      "content-type": "text/plain;charset=UTF-8",
+    },
+  })
+    .then(function (response) {
+      // do nothing
+      // console.log(`response`, JSON.stringify(response));
+    })
+    .catch(error => console.error(`writeGameData():`, error));
+}
+
+
+
+// this is called by larn
 function endRecording(endData, isUlarn) {
   try {
-    if (!isRecording()) return;
+    if (!canRecord()) return;
 
     let currentRoll = video.getCurrentRoll();
     uploadRoll(currentRoll, video.rolls.length - 1, video.progressCallback);
@@ -282,7 +349,7 @@ function endRecording(endData, isUlarn) {
       uploadFile(gameID, `${gameID}.txt`, JSON.stringify(endData), true);
     }
   } catch (error) {
-    console.log(`endRecording(): caught: `, error);
+    console.error(`endRecording(): caught: `, error);
   }
 }
 
@@ -291,7 +358,7 @@ function endRecording(endData, isUlarn) {
 // this is called by larn
 function getRecordingInfo() {
 
-  if (!isRecording()) return;
+  if (!canRecord()) return;
 
   let recordingInfo = {
     'frames': video.currentFrameNum,
@@ -306,7 +373,7 @@ function getRecordingInfo() {
 // this is called by larn for reloading from savegames
 function setRecordingInfo(info) {
 
-  if (!isRecording()) return;
+  if (!canRecord()) return;
   if (!info) return;
 
   video = new Video(video.gameID);
@@ -329,7 +396,7 @@ function setRecordingInfo(info) {
 
 // this is called by larn
 function uploadStyle(style) {
-  if (!isRecording()) return;
+  if (!canRecord()) return;
   // console.log(`setStyle(): style: `, style);
   uploadFile(gameID, `${gameID}.css`, JSON.stringify(style));
 }

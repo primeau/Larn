@@ -1,7 +1,7 @@
 'use strict';
 
-let completedGames;
-let gamesInProgress;
+let recordedGamesList;
+let liveGamesList;
 
 
 
@@ -100,7 +100,7 @@ function radioChanged() {
   let completed = completedRadio ? completedRadio.checked : true;
   let larn = document.getElementById(`showLarn`).checked;
 
-  let winnersBox = document.getElementById(`showWinners`); 
+  let winnersBox = document.getElementById(`showWinners`);
   let winners = winnersBox ? winnersBox.checked : true;
   let visitorsBox = document.getElementById(`showVisitors`);
   let visitors = visitorsBox ? visitorsBox.checked : true;
@@ -120,46 +120,46 @@ function boxChecked() {
 }
 
 
-function compareGames(a, b, lastUpdate) {
+function compareGames(a, b) {
   if (!a && !b) return 0;
   if (!a) return -1;
   if (!b) return 1;
-  // sort by date
-  if (lastUpdate) {
-    if (a.updateTime == b.updateTime) return 0;
-    return a.updateTime < b.updateTime ? 1 : -1;
-
-  } else {
-    if (a.createdAt == b.createdAt) return 0;
-    return a.createdAt < b.createdAt ? 1 : -1;
-  }
+  return b.createdAt - a.createdAt;
 }
 
 
 
-function setRecordings(games) {
-  completedGames = games[0];
-  gamesInProgress = games[1];
+function recordedGamesLoaded(games) {
+  if (games && games[0]) {
+    recordedGamesList = games[0];
+  }
+  radioChanged();
+}
+
+
+
+function liveGamesLoaded(games) {
+  liveGamesList = games;
   radioChanged();
 }
 
 
 
 function displayRecordings(completed, larn, winners, visitors) {
-  let headerText = `<b> Last Update  Diff  Mobuls  Player                   Progress</b><br><hr>`;
+  let headerText = `<b> Player                    Explored                                   Difficulty  Mobuls  Last Updated </b><br><hr>`;
   if (completed) {
     headerText = `<b>      Date      Score  Diff  Mobuls  Player                   Fate</b><br><hr>`;
   }
 
   document.getElementById(`LARN_LIST`).innerHTML = headerText;
 
-  let games = completed ? completedGames : gamesInProgress;
+  let games = completed ? recordedGamesList : liveGamesList;
 
   if (!games) {
     console.log(`no games loaded`);
     return;
   }
-  games.sort(compareGames, completed);
+  games.sort(compareGames);
 
   // // todo
   // if (games.length > 0) {
@@ -180,24 +180,26 @@ function addListItem(game, completed, larn, winners, visitors) {
     return;
   }
 
-  if (larn && game.ularn) return;
-  if (!larn && !game.ularn) return;
-  // if (!completed && game.updateTime < Date.now() - 2 * 60 * 60 * 1000) return;
+  if (completed) {
+    if (larn && game.ularn) return;
+    if (!larn && !game.ularn) return;
+  }
 
   let score;
+  let endpoint = `gameid`;
   if (completed) {
     let datestring = new Date(game.createdAt).toLocaleString().split(",")[0];
     let what = game.what;
     if (!game.winner) what += ` on ${game.level}`;
     what = padString(what, -40);
-    score = `${padString(datestring, 10)}${padString(Number(game.score).toLocaleString(), 11)}${padString(``+game.hardlev, 6)}${padString(`${game.timeused}`, 8)}  ${padString(game.who, -25)}${what}`;
-    //${padString(`${game.frames}`, 6)}  ${padString(game.gameID, -10)}`;
+    score = `${padString(datestring, 10)}${padString(Number(game.score).toLocaleString(), 11)}${padString(`` + game.hardlev, 6)}${padString(`${game.timeused}`, 8)}  ${padString(game.who, -25)}${what}`;
   } else {
-    let datestring = new Date(game.updateTime).toLocaleString().split(",")[1];
-    score = `${padString(datestring, 12)}${padString(``+game.hardlev, 6)}${padString(`${game.timeused}`, 8)}  ${padString(game.who, -25)}${padString(`${game.explored}`, -57)}`;
+    endpoint = `live`;
+    let datestring = new Date(game.createdAt).toLocaleString().split(",")[1];
+    score = ` ${padString(game.who, -24)}  ${padString(`${game.explored}`, -42)}  ${padString(`` + game.hardlev, 9)} ${padString(`${game.timeused}`, 7)} ${datestring}`;
   }
 
-  if (game.winner && winners || !game.winner && visitors) {
+  if (!completed || game.winner && winners || !game.winner && visitors) {
     let br = document.createElement('br');
 
     const url = location.origin + location.pathname;
@@ -205,8 +207,8 @@ function addListItem(game, completed, larn, winners, visitors) {
     let linkText = document.createTextNode(score);
     let link = document.createElement('a');
     link.appendChild(linkText);
-    link.title = "click to replay this game";
-    link.href = `${url}?gameid=${game.gameID}`;
+    link.title = "click to watch this game";
+    link.href = `${url}?${endpoint}=${game.gameID}`;
 
     document.getElementById(`LARN_LIST`).appendChild(link);
     document.getElementById(`LARN_LIST`).appendChild(br);

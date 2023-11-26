@@ -133,6 +133,12 @@ function setname(name) {
     clearBlinkingCursor(); // clear after setting name and loading savegame
     setGameDifficulty(getDifficulty());
 
+    try {
+      if (canRecordRealtime()) initCloudFlare(gameID, gameID, null);
+    } catch (error) {
+      console.error(error);
+    }
+
     return 1;
   } else {
     var difficultyString = `What difficulty would you like to play? [<b>${getDifficulty()}</b>]: `;
@@ -262,7 +268,8 @@ function initFS() {
 
 function initRB() {
   try {
-    Rollbar.configure({
+    if (Rollbar) Rollbar.configure({
+      enabled: (location.hostname !== 'localhost' && location.hostname !== ''),
       payload: {
         code_version: `${BUILD}`,
         client: {
@@ -273,7 +280,7 @@ function initRB() {
       }
     });
   } catch (error) {
-    console.log(`caught`, error);
+    console.error(`initRB caught: ${error}`);
   }
 }
 
@@ -281,7 +288,7 @@ function initRB() {
 
 function updateRB() {
   try {
-    Rollbar.configure({
+    if (Rollbar) Rollbar.configure({
       payload: {
         person: {
           id: logname
@@ -293,25 +300,14 @@ function updateRB() {
       }
     });
   } catch (error) {
-    console.log(`caught`, error);
+    console.error(`updateRB caught: ${error}`);
   }
 }
 
 
 
-function getIP() {
-  if (debug_used) return;
-  if (!navigator.onLine) {
-    console.error(`getIP(): offline`);
-    return;
-  }
-  fetch(`https://z0iwtshse6.execute-api.us-east-1.amazonaws.com/prod/ip`) // score endpoint
-    .then(function (response) {
-      response.json().then(function (text) {
-        playerIP = text.body;
-      });
-    })
-    .catch(error => console.log(`no ip`));
+function setIP(ip) {
+  playerIP = ip;
 }
 
 
@@ -449,7 +445,6 @@ function setgender(genderpick) {
 function startgame(hard) {
 
   initFS();
-  getIP();
 
   makeplayer(); /*  make the character that will play  */
 
@@ -475,6 +470,12 @@ function startgame(hard) {
   }
 
   onResize();
+
+  try {
+    if (canRecordRealtime()) initCloudFlare(gameID, gameID, null);
+  } catch (error) {
+    console.error(error);
+  }
 
   return 1;
 }
@@ -503,6 +504,11 @@ function mainloop(e, key) {
 
   if (nomove == 1) {
     paint();
+    return;
+  }
+
+  if (!player) {
+    doRollbar(ROLLBAR_DEBUG, `mainloop !player`, `gtime=${gtime} e=${e} key=${key}`);
     return;
   }
 
@@ -607,7 +613,7 @@ function run(dir) {
 function wizardmode(password) {
 
   if (password === 'checkpoint') {
-    doRollbar(ROLLBAR_INFO, `checkpoint who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
+    doRollbar(ROLLBAR_WARN, `checkpoint who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     var checkpoint = localStorageGetObject('checkpointbackup');
     let error = localStorageSetObject('checkpoint', checkpoint);
@@ -621,7 +627,7 @@ function wizardmode(password) {
   }
 
   if (password === 'savegame') {
-    doRollbar(ROLLBAR_INFO, `savegame who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
+    doRollbar(ROLLBAR_WARN, `savegame who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     var savegame = localStorageGetObject(logname + 'backup');
     let error = localStorageSetObject(logname, savegame);
@@ -635,7 +641,7 @@ function wizardmode(password) {
   }
 
   if (password === 'debug') {
-    doRollbar(ROLLBAR_INFO, `debug who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
+    doRollbar(ROLLBAR_WARN, `debug who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     updateLog(`debugging shortcuts enabled`);
     enableDebug();

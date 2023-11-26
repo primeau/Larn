@@ -8,7 +8,6 @@ Ularn 12.5.1
 - eye of larn appraisal in bank
 
 todo:
-*** record number of saves
 * IDEA: use createElement for all rendering?
 * help wiki (items/scrolls/potions/features/monsters/etc)
 * new video to add: https://larn.org/beta/tv/?gameid=lysnwvbhx8 
@@ -22,13 +21,8 @@ todo:
    - scroll | pulverization(15) | 
    - weapon | dagger(1) | +5
 - retro font mode isn't properly monospaced in mac/safari
-- close bank after potion discovered
 - click / farlook to identify object (hack and classic mode)
 - if error writing savegame due to space issues, delete all backup cookies
-- Navigator.onLine Read only
-   Returns a Boolean indicating whether the browser is working online.
-   window.addEventListener('offline', function(e) { console.log('offline'); });
-   window.addEventListener('online', function(e) { console.log('online'); });
 - async/await for keyboard input?
 - amiga mode: unseen walls should be flat
 - check chrome audit tab
@@ -69,6 +63,7 @@ extras:
 - speedrun mode
 - repeat function, especially at altars
 - move command
+- stainless shield ~5k gold +1|2 ac
 - ularn: widget of spine tingling
 - ularn: lantern radiates light out from hero for x spaces?
 - conducts
@@ -81,14 +76,13 @@ extras:
     - pacifist: no wielded weapon
     - one direction: never go down a set of stairs twice (or re-enter volcano/dungeon)
     - unbanked/cheapskate/goldless: never enter bank, store, thrift shop, school, use gold (no praying)
-    - jewleryless: never wear a ring / amulet
+    - unadorned: never wear a ring / amulet
     - racer: if you see downward stairs, you must take them
   - need starting option:
     - nudist: never wear armour (rings are ok)
     - paci(fists): never wield a weapon
     - zen: blind from birth (remove curse, school, cbl won't fix)
     - aggravating: permanent aggravate monsters (and remove curse won't fix)
-  - stainless shield ~5k gold +1|2 ac
 
 bugs:
 * last hit monster still chases from a distance if dumb

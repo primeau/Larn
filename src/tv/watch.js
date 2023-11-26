@@ -234,6 +234,8 @@ let numtries = 1;
 let maxtries = 10000;
 let countdown = 0;
 
+
+// todo: remove
 function waitForNextFile(video, filename) {
   if (countdown != 0) {
     // console.log(countdown, video.gameID, filename, video.currentFrameNum, video.totalFrames, numtries, maxtries);
@@ -339,13 +341,8 @@ function next(event) {
   if (event) event.preventDefault();
 
   if (video.totalFrames && video.currentFrameNum >= video.totalFrames) {
-    if (!ENABLE_RECORDING_REALTIME) {
-      console.log(`next(): at last frame ${video.currentFrameNum}`);
-      pause();
-    }
-    else {
-      clock = setTimeout(next, 1000);
-    }
+    console.log(`next(): at last frame ${video.currentFrameNum}`);
+    pause();
     return;
   }
 

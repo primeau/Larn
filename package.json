@@ -1,6 +1,6 @@
 {
   "name": "larn",
-  "version": "12.5.1",
+  "version": "12.5.2",
   "description": "JS Larn",
   "main": "larn.js",
   "scripts": {
@@ -16,14 +16,14 @@
     "deployclean": "npm run clean ; npm run alphaclean ; npm run betaclean ; npm run prodclean ; npm run webclean ; npm run histclean ; npm run imgclean",
 
     "transpile": "babel src --out-dir larn-temp/ ; ./secrets.sh 'larn-temp' || true",
-    "minify": "uglifyjs --mangle --compress -o larn-temp/larn.min.js larn-temp/fullstory.js larn-temp/util.js larn-temp/env/larn_config.js larn-temp/config.js larn-temp/larn.js larn-temp/main.js larn-temp/object.js larn-temp/global.js larn-temp/monster.js larn-temp/monsterdata.js larn-temp/player.js larn-temp/mazes.js larn-temp/level.js larn-temp/create.js larn-temp/data.js larn-temp/parse.js larn-temp/buttons.js larn-temp/scores.js larn-temp/inventory.js larn-temp/movem.js larn-temp/action.js larn-temp/io.js larn-temp/display.js larn-temp/storedata.js larn-temp/store.js larn-temp/mcdopes.js larn-temp/savelev.js larn-temp/spells.js larn-temp/spellsinfo.js larn-temp/regen.js larn-temp/spheres.js larn-temp/help.js larn-temp/state.js larn-temp/bill.js larn-temp/altar.js larn-temp/fountain.js larn-temp/potion.js larn-temp/scroll.js larn-temp/stairs.js larn-temp/throne.js larn-temp/devmode.js larn-temp/fullstory.js larn-temp/tv/tv_config.js larn-temp/tv/tvutil.js larn-temp/tv/frame.js larn-temp/tv/lambda.js larn-temp/tv/movie.js larn-temp/tv/patch.js larn-temp/tv/roll.js",
+    "minify": "uglifyjs --mangle --compress -o larn-temp/larn.min.js larn-temp/fullstory.js larn-temp/util.js larn-temp/env/larn_config.js larn-temp/config.js larn-temp/cloudflare/broadcast.js larn-temp/larn.js larn-temp/main.js larn-temp/object.js larn-temp/global.js larn-temp/monster.js larn-temp/monsterdata.js larn-temp/player.js larn-temp/mazes.js larn-temp/level.js larn-temp/create.js larn-temp/data.js larn-temp/parse.js larn-temp/buttons.js larn-temp/scores.js larn-temp/inventory.js larn-temp/movem.js larn-temp/action.js larn-temp/io.js larn-temp/display.js larn-temp/storedata.js larn-temp/store.js larn-temp/mcdopes.js larn-temp/savelev.js larn-temp/spells.js larn-temp/spellsinfo.js larn-temp/regen.js larn-temp/spheres.js larn-temp/help.js larn-temp/state.js larn-temp/bill.js larn-temp/altar.js larn-temp/fountain.js larn-temp/potion.js larn-temp/scroll.js larn-temp/stairs.js larn-temp/throne.js larn-temp/devmode.js larn-temp/fullstory.js larn-temp/tv/tv_config.js larn-temp/tv/tvutil.js larn-temp/tv/frame.js larn-temp/tv/lambda.js larn-temp/tv/movie.js larn-temp/tv/patch.js larn-temp/tv/roll.js",
 
     "_copy": "echo $envt ; mkdir -p dist/$envt/lib ; mkdir dist/$envt/img ; cp src/lib/*.js dist/$envt/lib ; cp src/img/* dist/$envt/img ; cp src/larn.html dist/$envt ; cp src/larn.css dist/$envt ; cp larn-temp/larn.min.js dist/$envt ; cp larn-temp/worker.js dist/$envt || true",
     "alphacopy": "export envt=alpha ; npm run _copy",
     "betacopy": "export envt=beta ; npm run _copy",
     "prodcopy": "export envt=larn ; npm run _copy",
     "webcopy": "cp -rv ../larn-www/* ../larn-deploy || true",
-    "_tvcopy": "mkdir -p dist/$envt/tv/env ; cp larn-temp/tv/* dist/$envt/tv ; cp larn-temp/util.js dist/$envt/tv ; cp larn-temp/env/larn_config.js dist/$envt/tv/env ; cp src/tv/index.html dist/$envt/tv ; cp src/tv/larntv.css dist/$envt/tv || true",
+    "_tvcopy": "mkdir -p dist/$envt/tv/env ; cp larn-temp/tv/* dist/$envt/tv ; cp larn-temp/cloudflare/* dist/$envt/tv ; cp larn-temp/util.js dist/$envt/tv ; cp larn-temp/env/larn_config.js dist/$envt/tv/env ; cp src/tv/index.html dist/$envt/tv ; cp src/tv/larntv.css dist/$envt/tv || true",
     "alphatv": "export envt=alpha ; npm run _tvcopy",
     "betatv": "export envt=beta ; npm run _tvcopy",
     "prodtv": "export envt=larn ; npm run _tvcopy",
@@ -43,8 +43,8 @@
     "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run deployclean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run prodtv ; npm run dist ; npm run clean",
 
     "watch": "npm run tempclean ; babel src --watch --out-dir larn-temp/",
-    "server": "cd ../larn-deploy ; python3 -m http.server 8000",
-    "localserver": "cd src ; python3 -m http.server 8000",
+    "localserver": "cd ../larn-local ; python3 -m http.server 8000",
+    "deplyserver": "cd ../larn-deploy ; python3 -m http.server 8001",
 
     "deploy_tv_lambda_test": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movie_test --zip-file fileb://function.zip ; rm function.zip",
     "deploy_tv_lambda": "cd src/tv/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name movies --zip-file fileb://function.zip ; rm function.zip",

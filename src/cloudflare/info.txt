@@ -1,0 +1,12 @@
+https://developers.cloudflare.com/workers/get-started/guide/
+
+to install:
+npm create cloudflare@latest
+
+*** deploy must be from larn-local
+
+View your deployed application at https://broadcast.larn.workers.dev
+
+Navigate to the new directory: cd broadcast
+Run the development server npm run start
+Deploy your application npm run deploy

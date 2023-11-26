@@ -215,6 +215,7 @@ function take(item) {
         updateLog(`${getCharFromIndex(i)}) ${item}`);
       }
       if (item.matches(OPOTION) && item.arg == 21) player.hasPickedUpPotion = true;
+      if (item.matches(OLARNEYE)) player.hasPickedUpEye = true;
       debug(`take(): ` + item);
       limit = 0;
       player.adjustcvalues(item, true);

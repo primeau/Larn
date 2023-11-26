@@ -325,6 +325,7 @@ function loadPlayer(saved) {
   newPlayer.MONSTKILLED = saved.MONSTKILLED;
 
   newPlayer.hasPickedUpPotion = saved.hasPickedUpPotion;
+  newPlayer.hasPickedUpEye = saved.hasPickedUpEye;
 
   return newPlayer;
 }

@@ -64,6 +64,8 @@ function canMove(x, y) {
     recalc()    function to recalculate the weapon and armor class of the player
  */
 function recalc() {
+  if (!player) return;
+
   var oldAC = player.AC;
   var oldWC = player.WCLASS;
 
@@ -404,7 +406,7 @@ function makemonst(lev) {
  */
 function stealsomething() {
   var j = 100;
-  for (;;) {
+  for (; ;) {
     var i = rund(26);
     var item = player.inventory[i];
     if (item && item !== player.WIELD && item !== player.WEAR && item !== player.SHIELD) {
@@ -514,13 +516,7 @@ function revealLevel() {
 async function nap(time) {
   let NONAP = PARAMS.nonap ? PARAMS.nonap == `true` : false;
   if (NONAP) time = 10;
-  //debug(`nap start`, time);
-  //napping = true;
   return new Promise(resolve => {
-    setTimeout(() => {
-      resolve('resolved');
-      //napping = false;
-      //debug(`nap end`, time);
-    }, time);
+    setTimeout(() => { resolve('resolved'); }, time);
   });
 }

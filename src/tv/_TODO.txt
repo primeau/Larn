@@ -12,13 +12,13 @@ bugs:
   --> bug mitigated, but cause is a missing frame on save (or frame # is one too high on reload)
 
 todo:
-- add play options to larntv list
-- download multiple .json in parallel
-- restrict aws uploads to .json/etc
-- set lastframe.id to something interesting in realtime mode
-- Save playback speed via cookie
-- Link from watch screen back to list
 * amiga games are much bigger. don't record them for now. it also totally doesn't work...
+- download multiple .json in parallel
+- Link from watch screen back to list
+- Save playback speed via cookie
+- move game replays to cloudflare 
+- add play options to larntv list
+- restrict aws uploads to .json/etc
 - compress completed games into a single large file, or a few larger files
   - https://dev.to/lineup-ninja/zip-files-on-s3-with-aws-lambda-and-node-1nm1
   - https://stackoverflow.com/questions/38633577/create-a-zip-file-on-s3-from-files-on-s3-using-lambda-node/50397276#50397276
@@ -28,11 +28,10 @@ todo:
 - clean up s3/dynamo boilerplate
 
 live mode:
-- use smaller batches only when someone is watching
-- write batches every few seconds when someone is watching
-- have a diff file if game is ongoing?
-- page with list of running games
-
+- support classic fonts
+- mobile fonts have big gaps in the walls
+- message to viewer when player disconnects?
+- # of watchers doesn't reset when cf worker restarted
 
 
 alternative data structure

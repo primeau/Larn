@@ -1,42 +1,53 @@
 'use strict';
 
-const LAMBDA = ENABLE_RECORDING_TEST_LAMBDA ? `movie_test` : `movies`;
+const LAMBDA = `movies`;
 
 
 
 function invokeLambda(requestPayload, successCallback, failCallback) {
+  if (AWS.config.accessKeyId === `AWS_CONFIG_ACCESSKEYID`) {
+    console.log(`AWS credentials not set`);
+    return;
+  }
+
   let params = {
     FunctionName: LAMBDA,
     Payload: JSON.stringify(requestPayload),
     InvocationType: 'RequestResponse',
     LogType: 'None'
   };
-  lambda.invoke(params, function (error, data) {
-    if (!error) {
-      if (data) {
-        if (data.StatusCode == 200) {
-          if (successCallback) {
-            let responsePayload = JSON.parse(data.Payload);
-            successCallback(responsePayload.body, responsePayload.File, responsePayload.Metadata);
+
+  try {
+    lambda.invoke(params, function (error, data) {
+      if (!error) {
+        if (data) {
+          if (data.StatusCode == 200) {
+            if (successCallback) {
+              let responsePayload = JSON.parse(data.Payload);
+              successCallback(responsePayload.body, responsePayload.File, responsePayload.Metadata);
+            }
+          } else {
+            console.error(`invokeLambda(): error ${data.StatusCode}`);
+            updateMessage(`couldn't load: ${data.StatusCode}`);
+            if (failCallback) failCallback(data.StatusCode);
           }
-        } else {
-          console.error(`invokeLambda(): error ${data.StatusCode}`);
-          updateMessage(`couldn't load: ${data.StatusCode}`);
-          if (failCallback) failCallback(data.StatusCode);
         }
+      } else {
+        console.error(`invokeLambda(): error: ${error}`);
+        updateMessage(`${error}`);
+        if (failCallback) failCallback(error);
       }
-    } else {
-      console.error(`invokeLambda(): error: ${error}`);
-      updateMessage(`${error}`);
-      if (failCallback) failCallback(error);
-    }
-  });
+    });
+  } catch (error) {
+    console.error(`invokeLambda():`, error);
+  }
+
 }
 
 
 
 function downloadRecordings(recordingsLoadedCallback, limit) {
-  console.log(`downloadRecordings()`);
+  // console.log(`downloadRecordings()`);
   let requestPayload = {
     action: `listcompleted`,
     frameLimit: limit
@@ -64,7 +75,7 @@ function loadStyles(gameID, successCallback) {
 
 
 function downloadFile(gameID, filename, successCallback, failCallback) {
-  if (!ENABLE_RECORDING_REALTIME) console.log(`downloadFile(): ${gameID}/${filename}`);
+  console.log(`downloadFile(): ${gameID}/${filename}`);
   let requestPayload = {
     action: `read`,
     gameID: gameID,
@@ -75,7 +86,7 @@ function downloadFile(gameID, filename, successCallback, failCallback) {
 
 
 // function downloadFileMultiple(gameID, files, successCallback, failCallback) {
-//   if (!ENABLE_RECORDING_REALTIME) console.log(`downloadFile(): ${gameID}/${filename}`);
+//   console.log(`downloadFile(): ${gameID}/${filename}`);
 //   let requestPayload = {
 //     action: `readmultiple`,
 //     gameID: gameID,
@@ -87,7 +98,7 @@ function downloadFile(gameID, filename, successCallback, failCallback) {
 
 
 // Zfunction downloadRolls( ) {
-//   let gamesList = await Promise.all([completedGames, gamesInProgress]).then((games) => {
+//   let gamesList = await Promise.all([recordedGamesList, liveGamesList]).then((games) => {
 //     console.log(`completed games ${games[0].body.length}`);
 //     console.log(`games in progress ${games[1].body.length}`);
 //     return games;
@@ -104,7 +115,7 @@ function downloadRoll(video, successCallback, failCallback) {
 
   function rollSuccess(body, file, metadata) {
     if (!file) {
-      if (!ENABLE_RECORDING_REALTIME) console.error(`downloadRoll(): ${video.gameID}/${filename} empty file`);
+      console.error(`downloadRoll(): ${video.gameID}/${filename} empty file`);
       if (numRolls === 0) {
         updateMessage(`\nSorry, this game couldn't be loaded`);
       }
@@ -135,7 +146,7 @@ function downloadRoll(video, successCallback, failCallback) {
 
 
 
-function uploadFile(gameID, filename, filecontents, isLastFile, progressData) {
+function uploadFile(gameID, filename, filecontents, isLastFile) {
   console.log(`uploadFile(): ${gameID}/${filename}`);
   let requestPayload = {
     action: isLastFile ? `writelast` : `write`,
@@ -143,8 +154,5 @@ function uploadFile(gameID, filename, filecontents, isLastFile, progressData) {
     filename: filename,
     file: filecontents
   };
-  if (progressData) {
-    requestPayload.progressData = progressData;
-  }
   invokeLambda(requestPayload, null, null);
 }

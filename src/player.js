@@ -127,6 +127,8 @@ var Player = function Player() {
   to prevent them from racking up the scoreboard
   */
   this.hasPickedUpPotion = false;
+  // for larntv
+  this.hasPickedUpEye = false;
 
   this.getChar = function () {
     if (amiga_mode)

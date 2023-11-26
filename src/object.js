@@ -17,19 +17,19 @@ class Item {
 
 
 
-  getChar () {
+  getChar() {
     return itemlist[this.id].getChar(this.arg);
   }
 
 
 
-  getDescription () {
+  getDescription() {
     return itemlist[this.id].desc;
   }
 
 
 
-  matches (item, exact) {
+  matches(item, exact) {
     if (!item) {
       return false;
     }
@@ -40,7 +40,7 @@ class Item {
 
 
 
-  toString (inStore, showAll, tempPlayer) {
+  toString(inStore, showAll, tempPlayer) {
     var description = this.getDescription();
     //
     if (this.matches(OPOTION)) {
@@ -92,7 +92,7 @@ class Item {
 
   // we can wield more things than we show during wield inventory check
   // this is everything that a player can actually wield
-  canWield () {
+  canWield() {
     /*
     v12.4.5 - this list is much reduced
     */
@@ -102,7 +102,7 @@ class Item {
 
 
   // this is what we show during an inventory check while wielding
-  isWeapon () {
+  isWeapon() {
     var weapon = false;
     weapon |= this.matches(OSHIELD);
     weapon |= this.matches(ODAGGER);
@@ -124,7 +124,7 @@ class Item {
 
 
 
-  isArmor () {
+  isArmor() {
     var armor = false;
     armor |= this.matches(OSHIELD);
     armor |= this.matches(OLEATHER);
@@ -141,7 +141,7 @@ class Item {
 
 
 
-  isGem () {
+  isGem() {
     var gem = false;
     gem |= this.matches(ODIAMOND);
     gem |= this.matches(ORUBY);
@@ -152,7 +152,7 @@ class Item {
 
 
 
-  isRing () {
+  isRing() {
     var ring = false;
     ring |= this.matches(ORINGOFEXTRA);
     ring |= this.matches(ODEXRING);
@@ -167,7 +167,7 @@ class Item {
 
 
 
-  isStore () {
+  isStore() {
     var store = false;
     store |= this.matches(OENTRANCE);
     store |= this.matches(OBANK);
@@ -185,7 +185,7 @@ class Item {
 
 
 
-  isDrug () {
+  isDrug() {
     var drug = false;
     drug |= this.matches(OSPEED);
     drug |= this.matches(OACID);
@@ -196,8 +196,8 @@ class Item {
   }
 
 
-  
-  getSortCode () {
+
+  getSortCode() {
     var sortcode = (sortorder.indexOf(this.id) + 1) * 10000;
     // sort unknown scrolls and potions above known
     // sort unknown scrolls and potions in inventory order
@@ -471,7 +471,7 @@ function itemAt(x, y) {
       // do nothing
     }
   }
-  
+
   return player.level.items[x][y];
 }
 
@@ -512,6 +512,8 @@ function setWallArg(x, y) {
 
 
 function lookforobject(do_ident, do_pickup) {
+  if (!player) return;
+
   // do_ident;   /* identify item: T/F */
   // do_pickup;  /* pickup item:   T/F */
 
@@ -912,7 +914,7 @@ function oteleport(teleportSelf) {
 
       // idea: (rnd(151) < 3 + getDifficulty()) or + rnd(getDifficulty()) ? 
       // might be too fast of a progression. would be smoother to go from 1 in 75 to 1 in 74 etc
- 
+
       /*
       12.4.5 - you shouldn't get trapped in solid rock with WTW
       This was also added in ularn 1.6.3
