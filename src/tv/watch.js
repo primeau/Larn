@@ -11,17 +11,24 @@ let PLAY = false;
 let clock;
 let lastFrameTime = Date.now();
 
-let style;
+let recordedMetadata;
 
-function watchMovie(gameID) {
-  initPlayer(gameID);
+
+
+function watchRecorded(gameID) {
+  initPlayer();
 
   video = new Video(gameID);
   video.divs.push(`LARN`);
   video.divs.push(`STATS`);
 
+  let recordedFrame = new Frame();
+  recordedFrame.divs.LARN = `Loading...`;
+  recordedFrame.divs.STATS = ``;
+  bltFrame(recordedFrame);
+
   // load useful css style settings
-  downloadFile(gameID, `${gameID}.css`, setStyle);
+  downloadFile(gameID, `${gameID}.css`, setRecordedStyleCallback, null);
 
   // kick off the downloading of all video data
   downloadRoll(video, updateProgressBarCallback);
@@ -29,7 +36,7 @@ function watchMovie(gameID) {
 
 
 
-function initPlayer(gameID) {
+function initPlayer() {
 
   Mousetrap.bind('space', toggle);
   Mousetrap.bind('>', goFaster);
@@ -39,16 +46,10 @@ function initPlayer(gameID) {
 
   let progressBar = document.createElement('label');
   let progressBarMessage = document.createElement('label');
-  // let progressBarLeft = document.createElement('label');
-  // let progressBarRight = document.createElement('label');
   progressBar.addEventListener('click', onClickProgressBar);
   progressBar.id = `progressbar`;
   progressBarMessage.id = `progressbarmessage`;
-  // progressBarLeft.id = `progressLeft`;
-  // progressBarRight.id = `progressRight`;
   progressBar.innerHTML = ``;
-  // progressBarLeft.innerHTML = ``;
-  // progressBarRight.innerHTML = ``;
   progressBar.style.cursor = `pointer`;
 
   let realtimeCheckbox = document.createElement('input');
@@ -56,58 +57,34 @@ function initPlayer(gameID) {
   realtimeCheckbox.checked = true;
   realtimeCheckbox.id = `realtime`;
   realtimeCheckbox.name = `realtime`;
-  // realtimeCheckbox.addEventListener('change', boxchecked);
   let realtimeLabel = document.createElement('label');
   realtimeLabel.htmlFor = `realtime`;
   realtimeLabel.innerHTML = `Realtime `;
+  realtimeCheckbox.label = realtimeLabel;
 
   let speedButton = document.createElement('button');
   speedButton.innerHTML = 'Speed: 1x';
   speedButton.id = `speedbutton`;
   speedButton.addEventListener('click', toggleSpeed);
   speedButton.style.width = '100px';
-  // speedButton.className = `button`;
 
   let rewindButton = document.createElement('button');
   rewindButton.innerHTML = ' << ';
   rewindButton.id = `rewindbutton`;
   rewindButton.addEventListener('click', rewind);
   rewindButton.style.width = '50px';
-  // rewindButton.className = `button`;
 
   let toggleButton = document.createElement('button');
   toggleButton.innerHTML = ' || ';
   toggleButton.id = `togglebutton`;
   toggleButton.addEventListener('click', toggle);
   toggleButton.style.width = '50px';
-  // toggleButton.className = `button`;
 
   let fastforwardButton = document.createElement('button');
   fastforwardButton.innerHTML = ' >> ';
   fastforwardButton.id = `fastforwardbutton`;
   fastforwardButton.addEventListener('click', fastforward);
   fastforwardButton.style.width = '50px';
-  // stopButton.className = `button`;
-
-  // let gameidInput = document.createElement('input');
-  // gameidInput.id = `gameid`;
-  // gameidInput.value = gameID;
-  // gameidInput.addEventListener('keyup', function() {
-  //   if (event.keyCode === 13) {
-  //     event.preventDefault();
-  //     play();
-  //   }
-  // });
-  // let gameidLabel = document.createElement('label');
-  // gameidLabel.htmlFor = `gameid`;
-  // gameidLabel.id = `gameidlabel`;
-  // gameidLabel.innerHTML = `GameID`;
-
-  // let fullscreenButton = document.createElement('button');
-  // fullscreenButton.innerHTML = '\u2921';
-  // fullscreenButton.id = `fullscreenbutton`;
-  // fullscreenButton.addEventListener('click', toggleFullScreen);
-  // // fullscreenButton.className = `button`;
 
   let body = document.getElementById('TV_FOOTER');
   if (!body) return;
@@ -116,10 +93,8 @@ function initPlayer(gameID) {
   }
 
   body.appendChild(document.createElement('p'));
-  // body.appendChild(progressBarLeft);  
   body.appendChild(progressBar);
   body.appendChild(progressBarMessage);
-  // body.appendChild(progressBarRight);
   body.appendChild(document.createElement('p'));
 
   body.appendChild(realtimeCheckbox);
@@ -129,27 +104,13 @@ function initPlayer(gameID) {
   body.appendChild(rewindButton);
   body.appendChild(toggleButton);
   body.appendChild(fastforwardButton);
-  // body.appendChild(document.createElement('br'));
-  // body.appendChild(fullscreenButton);
-  // body.appendChild(document.createElement('p'));
-  // body.appendChild(gameidInput);
-  // body.appendChild(gameidLabel);
-  // body.appendChild(document.createElement('p'));
 }
 
 
-// TODO: let fontFamily = isBoldWider ? `Courier New` : `modern`;
-// someone could play on chrome, but the replay on safari needs to work
-function setStyle(body, styleIn) {
-  if (!styleIn) {
-    console.log(`setStyle(): no style data available`);
-    return;
-  }
-  style = JSON.parse(styleIn);
-  document.body.style.font = style.font;
-  document.body.style.fontFamily = style.fontFamily;
-  document.body.style.color = style.textColour;
-  onResize();
+
+// lambda callback
+function setRecordedStyleCallback(payloadBody, styleIn, payloadMetadata) {
+  if (styleIn) recordedMetadata = JSON.parse(styleIn);
 }
 
 
@@ -170,8 +131,6 @@ function updateProgressBar(current, loaded, total) {
   // console.log(current, loaded, total);
   if (current < 0 || loaded < 0 || total < 0) return;
 
-  // let currentString = `${current} `;
-  // let totalString = ` ${total}`;
   let currentString = ``;
   let totalString = ``;
 
@@ -194,8 +153,6 @@ function updateProgressBar(current, loaded, total) {
     message = ` (loading)`;
   }
 
-  // document.getElementById('progressLeft').innerHTML = `${currentString}`;
-  // document.getElementById('progressRight').innerHTML = `${totalString}`;
   document.getElementById('progressbar').innerHTML = `${progressBar}${loadedBar}${remainingBar}`;
   document.getElementById('progressbarmessage').innerHTML = `${message}`;
 }
@@ -212,7 +169,7 @@ function onClickProgressBar(event) {
     video.currentFrameNum = newFrameNum;
     // this feels a bit hacky but it works
     clearTimeout(clock);
-    blt(video.getFrame(newFrameNum));
+    bltRecordedFrame(video.getFrame(newFrameNum));
     lastFrameTime = Date.now();
     next();
   }
@@ -220,22 +177,12 @@ function onClickProgressBar(event) {
 
 
 
-//
-//
-//
-// experimental code for realtime viewing
-//
-//
-//
-
+// also contains some experimental code for realtime viewing
 let waiter;
 let newcountdown = 0;
 let numtries = 1;
-let maxtries = 10000;
+let maxtries = 10;
 let countdown = 0;
-
-
-// todo: remove
 function waitForNextFile(video, filename) {
   if (countdown != 0) {
     // console.log(countdown, video.gameID, filename, video.currentFrameNum, video.totalFrames, numtries, maxtries);
@@ -256,16 +203,7 @@ function waitForNextFile(video, filename) {
     lastFrameTime = Date.now();
     downloadRoll(video, updateProgressBarCallback, waitForNextFile);
   }
-
 }
-
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -286,7 +224,6 @@ function pause() {
   if (PLAY) {
     PLAY = false;
     clearTimeout(clock);
-    // blt();
   } else {
     // do nothing
   }
@@ -367,7 +304,7 @@ function next(event) {
     lastFrameTime = frame.ts;
   }
 
-  blt(frame);
+  bltRecordedFrame(frame);
 }
 
 
@@ -389,18 +326,16 @@ function prev(event) {
 
   lastFrameTime = frame.ts;
 
-  blt(frame);
+  bltRecordedFrame(frame);
 }
 
 
 
-function blt(frame) {
-  if (frame) {
-    if (frame.divs.LARN === ``) frame.divs.LARN = EMPTY_LARN_FRAME;
-    setDiv(`TV_LARN`, frame.divs.LARN);
-    setDiv(`TV_STATS`, frame.divs.STATS);
-    updateProgressBar(frame.id, video.frameBuffer.length - 1, video.totalFrames);
-  }
+function bltRecordedFrame(frame) {
+  if (!frame) return;
+  updateProgressBar(frame.id, video.frameBuffer.length - 1, video.totalFrames);
+  bltFrame(frame);
+  setStyle(recordedMetadata);
 }
 
 

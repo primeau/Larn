@@ -14,7 +14,7 @@ function initList() {
     return;
   }
 
-  let inprogress = createRadio(`isComplete`, `Games in Progress`, `inprogress`, radioChanged);
+  let inprogress = createRadio(`isComplete`, `Live`, `inprogress`, radioChanged);
   let completed = createRadio(`isComplete`, `Completed Games`, `completed`, radioChanged);
   if (ENABLE_RECORDING_REALTIME) {
     completed.checked = localStorageGetObject(`larntv_select_completed`, true);
@@ -74,6 +74,8 @@ function createRadio(group, label, id, listener) {
   radioLabel.htmlFor = id;
   radioLabel.innerHTML = label;
   radio.label = radioLabel;
+  radio.style.cursor = `pointer`;
+  radioLabel.style.cursor = `pointer`;
   return radio;
 }
 
@@ -90,6 +92,8 @@ function createCheckbox(label, id, listener) {
   checkLabel.htmlFor = id;
   checkLabel.innerHTML = label;
   check.label = checkLabel;
+  check.style.cursor = `pointer`;
+  checkLabel.style.cursor = `pointer`;
   return check;
 }
 
@@ -104,6 +108,17 @@ function radioChanged() {
   let winners = winnersBox ? winnersBox.checked : true;
   let visitorsBox = document.getElementById(`showVisitors`);
   let visitors = visitorsBox ? visitorsBox.checked : true;
+
+  let displayStyle = completed ? `inline` : `none`;
+  document.getElementById(`showLarn`).style.display = displayStyle;
+  document.getElementById(`showLarn`).label.style.display = displayStyle;
+  document.getElementById(`showUlarn`).style.display = displayStyle;
+  document.getElementById(`showUlarn`).label.style.display = displayStyle;
+  document.getElementById(`showWinners`).style.display = displayStyle;
+  document.getElementById(`showWinners`).label.style.display = displayStyle;
+  document.getElementById(`showVisitors`).style.display = displayStyle;
+  document.getElementById(`showVisitors`).label.style.display = displayStyle;
+
 
   localStorageSetObject(`larntv_select_completed`, completed);
   localStorageSetObject(`larntv_select_larn`, larn);

@@ -63,6 +63,32 @@ function initGrid(width, height) {
 
 
 
+const ROLLBAR_ERROR = `ERROR`;
+const ROLLBAR_INFO = `INFO`;
+const ROLLBAR_DEBUG = `DEBUG`;
+const ROLLBAR_WARN = `WARN`;
+function doRollbar(notificationLevel, eventTitle, eventDetail) {
+  try {
+    if (Rollbar) {
+      eventTitle = `${BUILD} ${GAMENAME} ${eventTitle}`;
+      console.log(`ROLLBAR_${notificationLevel}: ${eventTitle}, ${eventDetail}`)
+      if (notificationLevel === ROLLBAR_ERROR) {
+        Rollbar.error(eventTitle, { detail: `${eventDetail}` });
+      } else if (notificationLevel === ROLLBAR_INFO) {
+        Rollbar.info(eventTitle, { detail: `${eventDetail}` });
+      } else if (notificationLevel === ROLLBAR_DEBUG) {
+        Rollbar.debug(eventTitle, { detail: `${eventDetail}` });
+      } else if (notificationLevel === ROLLBAR_WARN) {
+        Rollbar.warning(eventTitle, { detail: `${eventDetail}` });
+      }
+    }
+  } catch (error) {
+    console.error(`doRollbar caught: ${error}`);
+  }
+}
+
+
+
 function debug(text) {
   if (DEBUG_OUTPUT) {
     console.log(`DEBUG: ${text}`);
@@ -345,42 +371,37 @@ function compareArrays(a1, a2) {
 const COMPRESSED_DATA = `_COMPRESSED`;
 
 
-/* compressionWorker callback to compress large files to be written to localstorage */
-function onCompressed(event) {
-  let key = event.data[0];
-  let value = event.data[1];
-  debug(`onCompressed: compression end size: ${key} ${value.length}`);
-  localStorage.setItem(key, value);
-}
-
 
 Storage.prototype.setObject = function (key, value) {
   value = JSON.stringify(value);
 
-  let usedWorker = false;
-
   /* compress if it's big */
-  if (value.length > 25000) {
+  if (value.length > 5000) {
     /* store a record that the data is compressed */
     this.setItem(key, COMPRESSED_DATA);
     /* create a new key that will store the compressed data */
     key = key + COMPRESSED_DATA;
-    debug(`setObject: compression start size: ${value.length}`);
     /* try to do the compression in a worker outside of the main thread */
-    if (compressionWorker) {
-      usedWorker = true;
-      /* send the data to the worker (which will call back via onCompressed()) */
-      compressionWorker.postMessage([key, value]);
+    // WORKER STEP 1 - localStorageCompressionWorker
+    if (localStorageCompressionWorker) {
+      localStorageCompressionWorker.postMessage([key, value, `UTF16`, `localstorage`]);
     } else {
+      // no compression worker
       value = LZString.compressToUTF16(value);
-      debug(`setObject: compression end size: ${value.length}`);
+      this.setItem(key, value);
     }
   }
-
-  /* if the web worker couldn't be found, then write the data from here */
-  if (!usedWorker) {
+  else {
+    // not compressed
     this.setItem(key, value);
   }
+}
+
+// WORKER STEP 3 - localStorageCompressionWorker
+function localStorageCompressionCallback(event) {
+  let key = event.data[0];
+  let value = event.data[1];
+  localStorage.setItem(key, value);
 }
 
 function localStorageSetObject(key, value) {
@@ -450,6 +471,59 @@ function loadURLParameters() {
 
 
 
+
+
+var images = null; // used for 'amiga_mode'
+
+
+
+function loadImages(location) {
+  if (!location) location = `img/`;
+  images = [];
+
+  console.log(`loading images`);
+
+  var img;
+  img = `${location}player.png`;
+  images[img] = createImage(img);
+  for (let objectIndex = 0; objectIndex <= 100; objectIndex++) {
+    img = `${location}o${objectIndex}.png`;
+    images[img] = createImage(img);
+  }
+  for (let monsterIndex = 0; monsterIndex <= 65; monsterIndex++) {
+    img = `${location}m${monsterIndex}.png`;
+    images[img] = createImage(img);
+  }
+  for (let wallIndex = 0; wallIndex <= 30; wallIndex += 2) {
+    img = `${location}w${wallIndex}.png`;
+    images[img] = createImage(img);
+  }
+}
+
+
+
+function createImage(src) {
+  // console.log(`loading: ` + src);
+  var image = new Image();
+  image.onload = function () {
+    // console.log(`loaded: ` + src);
+  }
+  image.src = src;
+  return image;
+}
+
+
+
+async function loadFonts() {
+  // make sure fonts are loaded before rendering anything
+  // if we don't wait for this, the main screen will end up
+  // being a different font
+  await document.fonts.load(`12px dos437`);
+  await document.fonts.load(`12px modern`);
+}
+
+
+
 /**
  * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
  * 
@@ -459,12 +533,32 @@ function loadURLParameters() {
  * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
  */
 function getTextWidth(text, font, bold) {
-  var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-  var context = canvas.getContext(`2d`);
-  if (bold) font = `bold ` + font;
-  context.font = font;
-  var metrics = context.measureText(text);
+  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement(`canvas`));
+  const context = canvas.getContext(`2d`);
+  context.font = bold ? font : `bold ` + font;
+  const metrics = context.measureText(text);
   return metrics.width;
+}
+
+
+
+function computeFontSize(fontFamily, spriteWidth, spacing) {
+  let fontSize = spriteWidth;
+  let font = `${fontSize}px ${fontFamily}`;
+
+  do {
+    fontSize += 0.1;
+    font = `${fontSize}px ${fontFamily}`;
+  }
+  while (getTextWidth(`X`, font, false) + spacing < spriteWidth);
+
+  fontSize *= 10; // for some cleaner numbers
+  fontSize = Math.floor(fontSize);
+  fontSize /= 10;
+
+  // console.log(`spritew`, spriteWidth, `fontsize`, fontSize);
+  // updateLog(`spritew` + ": " + spriteWidth + " " + `fontsize` + ": " + fontSize);
+  return fontSize;
 }
 
 
@@ -478,6 +572,14 @@ function getElementWidth(el) {
 function getElementHeight(el) {
   if (!el) return 0;
   return (getComputedStyle(document.getElementById(el)).height.split(`px`)[0]);
+}
+
+
+
+function updateMessage(message) {
+  if (!document) return;
+  let el = document.getElementById(`LARN_LIST`);
+  if (el) el.innerHTML = message;
 }
 
 
@@ -541,31 +643,4 @@ function isPhone() {
 
 function isTablet() {
   return isMobile() && !isPhone();
-}
-
-
-
-const ROLLBAR_ERROR = `ERROR`;
-const ROLLBAR_INFO = `INFO`;
-const ROLLBAR_DEBUG = `DEBUG`;
-const ROLLBAR_WARN = `WARN`;
-function doRollbar(notificationLevel, eventTitle, eventDetail) {
-  try {
-    if (Rollbar) {
-      eventTitle = `${BUILD} ${GAMENAME} ${eventTitle}`;
-      console.log(`ROLLBAR_${notificationLevel}: ${eventTitle}, ${eventDetail}`)
-      if (notificationLevel === ROLLBAR_ERROR) {
-        Rollbar.error(eventTitle, { detail: `${eventDetail}` });
-      } else if (notificationLevel === ROLLBAR_INFO) {
-        Rollbar.info(eventTitle, { detail: `${eventDetail}` });
-      } else if (notificationLevel === ROLLBAR_DEBUG) {
-        Rollbar.debug(eventTitle, { detail: `${eventDetail}` });
-      } else if (notificationLevel === ROLLBAR_WARN) {
-        Rollbar.warning(eventTitle, { detail: `${eventDetail}` });
-      }
-    }
-  } catch (error) {
-    console.error(`doRollbar caught: ${error}`);
-  }
-
 }

@@ -3,7 +3,7 @@
 function enableDevmode() {
 
     try {
-        Rollbar.configure({enabled: false});        
+        Rollbar.configure({ enabled: false });
     } catch (error) {
         //
     }
@@ -57,7 +57,10 @@ function enableDevmode() {
     // }
     // revealLevel();
 
-  
+    // winner:
+    // take(createObject(OPOTION, 21));
+    // gtime = 50001; // out of time
+
 }
 
 

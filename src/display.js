@@ -23,6 +23,9 @@ function paint() {
 
 
 
+let LAST_LARN_DIV = ``;
+let LAST_STAT_DIV = ``;
+
 function blt() {
   if (amiga_mode) {
     // do nothing
@@ -39,11 +42,18 @@ function blt() {
 
   onResize();
 
-  if (BLINKEN) { // prevent blinking cursor from creating tons of duplicate frames
-    let divs = {};
-    divs.LARN = document.getElementById(`LARN`).innerHTML;
-    divs.STATS = document.getElementById(`STATS`).innerHTML;
-    recordFrame(divs);
+  if (BLINKEN) { // prevent blinking cursor from creating tons of duplicate frames on startup
+    let divs = {
+      LARN: document.getElementById(`LARN`).innerHTML,
+      STATS: document.getElementById(`STATS`).innerHTML
+    };
+
+    if (divs.LARN !== LAST_LARN_DIV || divs.STATS !== LAST_STAT_DIV) {
+      processRecordedFrame(divs);
+      processLiveFrame(divs);
+      LAST_LARN_DIV = divs.LARN;
+      LAST_STAT_DIV = divs.STATS;
+    }
   }
 }
 
@@ -73,9 +83,11 @@ function bltDocument() {
 
 
 function setMazeMode(mode) {
+  if (mazeMode === mode) return;
   mazeMode = mode;
+  // console.log(`mazeMode`, mazeMode);
   clear();
-  paint();
+  // paint(); removed
 }
 
 
@@ -133,21 +145,17 @@ function setDiv(id, data, markup) {
 
 function setImage(x, y, img) {
   if (!amiga_mode) return;
-  var doc = document.getElementById(`${x},${y}`); // CACHE THIS?
+  var doc = document.getElementById(`${x},${y}`);
   if (doc) {
     // OPTIMIZATION: don't set bg image if it's the same
     // this prevents things from being really slow in firefox
     if (doc.style.backgroundImage === img) {
       return;
     }
-    //  else {
-    //    console.log(doc.style.backgroundImage, img);
-    //  }
-
     if (img) {
       doc.style.backgroundImage = img;
     }
-    doc.innerHTML = ` `;
+    doc.innerHTML = ` `; // needed to clear the background image
   } else {
     console.log(`setImage: null doc at ${x},${y}`);
   }
@@ -193,7 +201,7 @@ function onResize(event) {
 
   // desktop mode is default layout
   let inventoryW = side_inventory ? 35 : 0;
-  let larnBox = new Box(margin, margin, 100 - margin * 2 - inventoryW, 95);
+  let larnBox = new Box(margin, margin, 100 - margin * 2 - inventoryW, 94);
   let inventoryBox = new Box(larnBox.left + larnBox.width, larnBox.top, 100 - larnBox.width - margin * 2, larnBox.height);
   let chastizeBox = new Box(margin, 95, 100 - margin * 2, 4);
   let helpBox = new Box(margin, 95, larnBox.width + inventoryW, 4);
@@ -277,6 +285,7 @@ function onResize(event) {
 
 
 
+const testtext = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
 function setMode(amiga, retro, original) {
 
   // console.log(amiga, retro, original);
@@ -285,24 +294,17 @@ function setMode(amiga, retro, original) {
     retro = false; // force modern font for mobile devices because the retro font isn't great
   }
 
-  if (amiga && isRecording()) stopRecording();
-
   amiga_mode = amiga;
   retro_mode = retro;
   original_objects = original;
 
-  // bold fonts are wider than regular fonts on Safari
+  // bold fonts are wider than regular fonts on Safari and Firefox
   // Courier New is OK, but many are not
-  // TODO: still need to solve this better for dos437
-  const testtext = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
+
+  // courier/modern font settings
   let testfont = `12px modern`;
   let isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
-
-  // console.log(getTextWidth(testtext, testfont, true), getTextWidth(testtext, testfont, false), isBoldWider);
-
-  // modern font settings
-  // let widthMultiple = isBoldWider ? 1.66 : 1.71;
-  let heightMultiple = 1.93;
+  let heightMultiple = 1.88; // was 1.93
   let fontFamily = isBoldWider ? `Courier New` : `modern`;
   let textColour = `lightgrey`;
   let letterSpacing = `normal`;
@@ -312,18 +314,18 @@ function setMode(amiga, retro, original) {
   if (retro_mode) {
     testfont = `12px dos437`;
     isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
-    // widthMultiple = 1.88;
-    heightMultiple = 1.9;
-    fontFamily = isBoldWider ? `Courier New` : `dos437`;
-    textColour = `#ABABAB`;
-    letterSpacing = '-1px';
-    spacing = -1;
+    heightMultiple = 1.93; // was 1.9
+    if (!isBoldWider) {
+      fontFamily = `dos437`;
+      textColour = `#ABABAB`;
+      letterSpacing = '-1px';
+      spacing = -1;
+    } // otherwise use the courier/modern settings from above
   }
 
   // change to amiga font for amiga graphics
   let spriteWidth = computeSpriteWidth();
   if (amiga_mode) {
-    // widthMultiple = 1.66;
     heightMultiple = 2;
     fontFamily = retro_mode ? `amiga500` : `amiga1200`;
     textColour = `lightgrey`;
@@ -351,39 +353,25 @@ function setMode(amiga, retro, original) {
       }
     }
     if (!images) {
-      loadImages();
+      loadImages(`img/`);
     }
   }
 
   let fontSize = amiga_mode ? spriteWidth * 2 : computeFontSize(fontFamily, spriteWidth, spacing);
-  let lineHeight = `${spriteWidth * heightMultiple}px`;
-
   let font = `${fontSize}px ${fontFamily}`;
 
   document.body.style.font = font;
   document.body.style.fontFamily = fontFamily;
   document.body.style.color = textColour;
   document.body.style.letterSpacing = letterSpacing;
-  document.body.style.lineHeight = lineHeight;
+  document.body.style.lineHeight = `${spriteWidth * heightMultiple}px`;;
 
   setButtonFontSize(fontSize);
 
-  try {
-    if (!styleUploaded) {
-      styleUploaded = true;
-      let larnStyle = {};
-      let larnElement = document.getElementById(`LARN`);
-      larnStyle.font = getComputedStyle(larnElement).font;
-      larnStyle.fontFamily = getComputedStyle(larnElement).fontFamily;
-      larnStyle.color = getComputedStyle(larnElement).color;
-      larnStyle.letterSpacing = getComputedStyle(larnElement).letterSpacing;
-      // larnStyle.widthMultiple = widthMultiple;
-      larnStyle.widthMultiple = 1.88; // this seems like a mistake
-      larnStyle.heightMultiple = heightMultiple;
-      uploadStyle(larnStyle);
-    }
-  } catch (error) {
-    console.error(`failed to upload style`, error)
+  // upload style information for larntv
+  if (!styleUploaded) {
+    let style = getStyleData();
+    styleUploaded = uploadStyle(style);
   }
 
 }
@@ -404,11 +392,6 @@ function computeSpriteWidth() {
   // updateLog(`csw: browser=` + Math.floor(browserWidth) + `,` + Math.floor(browserHeight) +
   // ` window=` + window.screen.width + `,` + window.screen.height);
 
-  /* we are working with fixed width fonts, so this is a lot less complicated
-     a) a magic potion of cure dianthroritis -> 39 characters
-     width: 80 for game area, 39 for side inventory
-     height: 24 for game area
-  */
   let rawSpriteW = (larnWidth) / 80;
   let rawSpriteH = (larnHeight) / 24;
 
@@ -416,27 +399,6 @@ function computeSpriteWidth() {
   if (amiga_mode) spriteWidth = Math.floor(spriteWidth); // chrome needs whole numbers to have smooth amiga graphics
 
   return Math.max(4, spriteWidth);
-}
-
-
-
-function computeFontSize(fontFamily, spriteWidth, spacing) {
-  let fontSize = spriteWidth;
-  let font = `${fontSize}px ${fontFamily}`;
-
-  do {
-    fontSize += 0.1;
-    font = `${fontSize}px ${fontFamily}`;
-  }
-  while (getTextWidth(`X`, font, false) + spacing < spriteWidth);
-
-  fontSize *= 10; // for some cleaner numbers
-  fontSize = Math.floor(fontSize);
-  fontSize /= 10;
-
-  // console.log(`spritew`, spriteWidth, `fontsize`, fontSize);
-  // updateLog(`spritew` + ": " + spriteWidth + " " + `fontsize` + ": " + fontSize);
-  return fontSize;
 }
 
 
@@ -634,7 +596,7 @@ function show1cell(x, y) {
 
 /*
     moveplayer(dir)
-
+ 
     subroutine to move the player from one room to another
     returns 0 if can't move in that direction or hit a monster or on an object
     else returns 1
@@ -903,9 +865,9 @@ function onMouseClick(event) {
       return;
 
       /*
-
+ 
       new idea: don't forget about linespacing stuff in setMode
-
+ 
       // this is too unreliable to ship
       let el = document.getElementById('LARN');
       let style = window.getComputedStyle(el, null).getPropertyValue('font-size');

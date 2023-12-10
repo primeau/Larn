@@ -205,7 +205,6 @@ var scoreIndex = 0;
 const MAX_SCORES_PER_PAGE = 18;
 const MAX_SCORES_TO_READ = 18 * 4;
 const MIN_TIME_PLAYED = 50;
-const ENDPOINT = 'score';
 var ONLINE = true;
 
 
@@ -239,7 +238,7 @@ function dbQueryHighScores(newScore, showWinners, showLosers) {
   }
 
   var params = {
-    FunctionName: ENDPOINT,
+    FunctionName: AWS_SCORE_FUNCTION,
     Payload: `{ "gamename" : "${GAMENAME}", "gameID" : "board" }`,
     InvocationType: 'RequestResponse',
     LogType: 'None' // 'Tail' // 'None' // 
@@ -452,7 +451,7 @@ function dbQueryLoadGame(gameId, local, winner) {
   console.log(`loading game: ${gameId}`);
 
   var params = {
-    FunctionName: ENDPOINT,
+    FunctionName: AWS_SCORE_FUNCTION,
     Payload: `{ "gamename" : "${GAMENAME}", "gameID" : "${gameId}" }`,
     InvocationType: 'RequestResponse',
     LogType: 'None' // 'Tail'
@@ -529,7 +528,7 @@ function dbWriteHighScore(newScore) {
   }
 
   var params = {
-    FunctionName: ENDPOINT,
+    FunctionName: AWS_SCORE_FUNCTION,
     Payload: `{ "gamename" : "${GAMENAME}", "newScore" : ${JSON.stringify(newScore)} }`,
     InvocationType: 'RequestResponse',
     LogType: 'None' // 'Tail'
@@ -555,7 +554,7 @@ function dbWriteHighScore(newScore) {
 
   if (newScore.winner) {
     doRollbar(ROLLBAR_INFO, `winner`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
-  } else if (rnd(100) > 25) {
+  } else if (rnd(100) < 11) {
     doRollbar(ROLLBAR_INFO, `visitor`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
   }
 
@@ -673,7 +672,7 @@ function canProtect(reason) {
 /*
  * Subroutine to record who played larn, and what the score was
  */
-function died(reason, slain) {
+async function died(reason, slain) {
 
   if (player.LIFEPROT > 0) {
     if (canProtect(reason)) {
@@ -704,7 +703,7 @@ function died(reason, slain) {
     }
   }
 
-  paint();
+  // paint(); // removed
   nomove = 1;
   dropflag = 1;
 
@@ -718,7 +717,7 @@ function died(reason, slain) {
 
     let extraNL = (printFunc == lprcat) ? `\n` : ``;
     try {
-      if (canRecord()) {
+      if (navigator.onLine && ENABLE_RECORDING) {
         let linkText = window.location.href.split(`?`)[0];
         linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
         printFunc(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>${extraNL}${extraNL}`);
@@ -738,11 +737,12 @@ function died(reason, slain) {
 
     paint();
   } else {
+    // game saved
     updateLog(`----  Reload your browser to play again  ----`);
     setCharCallback(dead);
-    paint();
+    paint(); // last live frame will get sent here
 
-    recordFrame({ 'LARN': ``, 'STATS': `` }); // record fade to blank screen so we can easily refresh on reload
+    processRecordedFrame({ 'LARN': ``, 'STATS': `` }); // record fade to blank screen so we can easily refresh on reload
 
     side_inventory = true;
     game_started = false;
@@ -755,16 +755,13 @@ function died(reason, slain) {
     endGameScore = new LocalScore();
   }
 
+  // wait for the final patch to be added to the final roll of the video
+  // this is a terrible hack, but after using web workers to speed up the game 30x in some places
+  // i've spent 2 days trying to get the final frame to show up on a recording and i give up
+  await nap(100);
+
   let endData = (reason == DIED_SAVED_GAME) ? null : endGameScore;
   endRecording(endData, ULARN);
-
-  // try {
-  //   console.log(`cloudflare closing stream`);
-  //   currentWebSocket.close();
-  //   currentWebSocket = null;
-  // } catch (error) {
-  //   console.error(`cloudflare caught on quit`, error);
-  // }
 
 }
 

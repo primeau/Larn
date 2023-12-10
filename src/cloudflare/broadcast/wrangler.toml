@@ -12,7 +12,8 @@ account_id = "CLOUDFLARE_ACCOUNT_ID"
 main = "src/broadcast.mjs"
 
 kv_namespaces = [
-  { binding = "realtime_larn", id = "CLOUDFLARE_KV_ID" }
+  { binding = "realtime_larn", id = "CLOUDFLARE_KV_ID1" },
+  { binding = "larn_tv_watchers", id = "CLOUDFLARE_KV_ID2" },
 ]
 
 [durable_objects]

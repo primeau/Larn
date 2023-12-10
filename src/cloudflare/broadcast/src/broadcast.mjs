@@ -3,6 +3,12 @@
 
 // `fetch` isn't the only handler. If your worker runs on a Cron schedule, it will receive calls
 // to a handler named `scheduled`, which should be exported here in a similar way. 
+
+const WATCHERS_TTL = 300;
+const GAME_TTL = 600;
+
+
+
 export default {
   async fetch(request, env) {
     return await handleErrors(request, async () => {
@@ -30,9 +36,11 @@ async function handleApiRequest(path, request, env) {
   switch (path[0]) {
     case "gamelist": {
 
+      let gameID = path[1];
+
       // request to /api/gamelist
       // send a list of active games
-      if (!path[1]) {
+      if (!gameID) {
         let liveGamesList = await env.realtime_larn.list();
         const json = JSON.stringify(liveGamesList);
         return new Response(json, {
@@ -47,27 +55,38 @@ async function handleApiRequest(path, request, env) {
         // put game metadata into worker KV
         if (request.method === `POST` || request.method === `OPTIONS`) {
 
-          let data = `no data`;
           try {
-            data = JSON.parse(await request.text());
+            // first check to see if someone is watching this game
+            let watchers = await env.larn_tv_watchers.get(gameID) || JSON.stringify([]);
+            watchers = JSON.parse(watchers);
+
+            let data = JSON.parse(await request.text()) || `no data`;
+            if (data.metadata) {
+              data.metadata.watchers = watchers.length;
+              await env.realtime_larn.put(gameID, gameID,
+                {
+                  expirationTtl: GAME_TTL /* seconds */,
+                  metadata: data.metadata
+                }
+              );
+            }
+
+            // Get the client's IP address
+            let ip = request.headers.get("CF-Connecting-IP") || `0`;
+
+            let somoneIsWatchingYou = {
+              watchers: watchers.length,
+              ip: ip,
+            };
+
+            // console.log(`watching`, JSON.stringify(somoneIsWatchingYou));
+
+            return new Response(JSON.stringify(somoneIsWatchingYou), {
+              headers: { "Access-Control-Allow-Origin": "*", },
+            });
           } catch (error) {
             console.error(`oops`, error);
           }
-          let gameID = path[1];
-          if (data.metadata) {
-            await env.realtime_larn.put(gameID, gameID,
-              {
-                expirationTtl: 600 /* seconds */,
-                metadata: data.metadata
-              }
-            );
-          }
-          return new Response(`ok`, {
-            headers: {
-              "content-type": "text/html;charset=UTF-8",
-              "Access-Control-Allow-Origin": "*",
-            },
-          });
         }
 
       }
@@ -149,13 +168,13 @@ export class GameSession {
     // `env` is our environment bindings (discussed earlier).
     this.env = env;
 
-    // rather than use storage, we can put the last frame in a variable
-    this.lastFrame;
-
     // We will put the WebSocket objects for each client, and some metadata, into `sessions`.
     this.sessions = [];
 
-    this.ip = ``;
+    this.lastFrame; // rather than use storage, we can put the last frame in a variable
+    // this.ip = ``; // save to send back to larn
+    this.env.watchlist = []; // list of larntv sessions watching
+    this.env.lastExpiryTime = []; // for making sure watchlist doesn't expire from kv
   }
 
   // The system will call fetch() whenever an HTTP request is sent to this Object. Such requests
@@ -173,8 +192,8 @@ export class GameSession {
             return new Response("expected websocket", { status: 400 });
           }
 
-          // Get the client's IP address
-          this.ip = request.headers.get("CF-Connecting-IP");
+          // // Get the client's IP address
+          // this.ip = request.headers.get("CF-Connecting-IP");
 
           // To accept the WebSocket request, we create a WebSocketPair (which is like a socketpair,
           // i.e. two WebSockets that talk to each other), we return one end of the pair in the
@@ -184,7 +203,8 @@ export class GameSession {
           let pair = new WebSocketPair();
 
           // We're going to take pair[1] as our end, and return pair[0] to the client.
-          await this.handleSession(pair[1], this.ip);
+          // await this.handleSession(pair[1], this.ip);
+          await this.handleSession(pair[1]);
 
           // Now we return the other end of the pair to the client.
           return new Response(null, { status: 101, webSocket: pair[0] });
@@ -202,36 +222,29 @@ export class GameSession {
     // WebSocket in JavaScript, not sending it elsewhere.
     webSocket.accept();
 
-
     // Create our session and add it to the sessions list.
     // We don't send any messages to the client until it has sent us the initial user info
     // message. Until then, we will queue messages in `session.blockedMessages`.
     let session = { webSocket, blockedMessages: [] };
     this.sessions.push(session);
 
-    session.ip = ip;
+    // session.ip = ip;
 
-    let frameToPush;
+    // let frameToPush;
+
     // Queue "join" messages for all online users, to populate the client's roster.
     this.sessions.forEach(otherSession => {
       if (otherSession.name) { // this session doesn't have a name yet
-        if (otherSession.lastFrame) frameToPush = otherSession.lastFrame; // only the game session will have a frame
+        // if (otherSession.lastFrame) frameToPush = otherSession.lastFrame; // only the game session will have a frame
         session.blockedMessages.push(JSON.stringify({ joined: otherSession.name }));
       }
     });
 
-    //
-    //
-    //
-    //
     // // send the last frame to the client if there is one
-    if (frameToPush)
-      session.blockedMessages.push(frameToPush);
-    //
-    //
-    //
-    //
-    //
+    // if (frameToPush) {
+    //   session.blockedMessages.push(frameToPush);
+    //   console.log(`pushing last frame`);
+    // }
 
     // Set event handlers to receive messages.
     let receivedUserInfo = false;
@@ -266,10 +279,14 @@ export class GameSession {
           // Broadcast to all other connections that this user has joined.
           this.broadcast({ joined: session.name });
 
-          webSocket.send(JSON.stringify({ ready: true, ip: session.ip }));
+          // webSocket.send(JSON.stringify({ ready: true, ip: session.ip }));
+          webSocket.send(JSON.stringify({ ready: true }));
 
           // Note that we've now received the user info message.
           receivedUserInfo = true;
+
+          // let larn know the watch list has changed
+          updateWatchList(this.env, session.gameID, this.sessions);
 
           return;
         }
@@ -302,6 +319,9 @@ export class GameSession {
         //
         //
 
+        // let larn know the watch list has changed
+        updateWatchList(this.env, session.gameID, this.sessions);
+
       } catch (err) {
         // Report any exceptions directly back to the client. As with our handleErrors() this
         // probably isn't what you'd want to do in production, but it's convenient when testing.
@@ -318,9 +338,11 @@ export class GameSession {
       if (session.name) {
         this.broadcast({ quit: session.name });
         // delete session from kv, if it's not a larntv session
-        if (session.name == session.gameID) {
+        if (session.name === session.gameID) {
           this.env.realtime_larn.delete(session.gameID);
         }
+        // let larn know the watch list has changed
+        updateWatchList(this.env, session.gameID, this.sessions);
       }
     };
     webSocket.addEventListener("close", closeOrErrorHandler);
@@ -366,3 +388,38 @@ export class GameSession {
     });
   }
 } // END GameSession
+
+
+
+async function updateWatchList(env, gameID, sessions) {
+  try {
+
+    // make a list of open sessions
+    let newWatchList = [];
+    sessions.forEach(session => {
+      if (session.name) {
+        if (session.name !== session.gameID) {
+          newWatchList.push(session.name);
+        }
+      }
+    });
+
+    if (!env.lastExpiryTime[gameID]) env.lastExpiryTime[gameID] = 0;
+    let listsNotEqual = !compareArrays(env.watchlist[gameID], newWatchList); // if this list has changed, notify the player
+    let nearExpiryTime = (Date.now() - env.lastExpiryTime[gameID]) / 1000 > (WATCHERS_TTL - 30); // seconds from expiry
+    if (listsNotEqual || nearExpiryTime) {
+      env.watchlist[gameID] = newWatchList;
+      env.lastExpiryTime[gameID] = Date.now();
+      console.log(`pushing watchlist`, `newinfo:${listsNotEqual}`, `expired:${nearExpiryTime}`, JSON.stringify(env.watchlist[gameID]));
+      await env.larn_tv_watchers.put(gameID, JSON.stringify(env.watchlist[gameID]), { expirationTtl: WATCHERS_TTL });
+    }
+  } catch (error) {
+    console.error(`updatewatchlist():`, error);
+  }
+}
+
+
+function compareArrays(a1, a2) {
+  if (!a1 && !a2) return true;
+  return a1 && a2 && a1.length == a2.length && a1.every((v, i) => v === a2[i]);
+}

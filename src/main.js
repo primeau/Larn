@@ -28,7 +28,6 @@ function welcome() {
 
   // this is probably their first game, turn on keyboard_hints
   if (playerID === tmpID) {
-    newplayer = true;
     keyboard_hints = true;
   }
 
@@ -132,12 +131,6 @@ function setname(name) {
     }
     clearBlinkingCursor(); // clear after setting name and loading savegame
     setGameDifficulty(getDifficulty());
-
-    try {
-      if (canRecordRealtime()) initCloudFlare(gameID, gameID, null);
-    } catch (error) {
-      console.error(error);
-    }
 
     return 1;
   } else {
@@ -305,9 +298,12 @@ function updateRB() {
 }
 
 
-
+let gotIP = false;
 function setIP(ip) {
+  if (gotIP) return;
+  // console.log(`ip:`, ip);
   playerIP = ip;
+  gotIP = true;
 }
 
 
@@ -470,12 +466,6 @@ function startgame(hard) {
   }
 
   onResize();
-
-  try {
-    if (canRecordRealtime()) initCloudFlare(gameID, gameID, null);
-  } catch (error) {
-    console.error(error);
-  }
 
   return 1;
 }

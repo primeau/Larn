@@ -20,33 +20,21 @@
 
 a:link {
     color: #bbbbbb;
+    text-decoration: none;
 }
 
 a:visited {
     color: #FF00FF;
+    text-decoration: none;
 }
 
 a:hover {
     color: #FF77FF;
+    text-decoration: none;
 }
 
 a:active {
     color: #EE0000;
-}
-
-a:link {
-    text-decoration: none;
-}
-
-a:visited {
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: none;
-}
-
-a:active {
     text-decoration: none;
 }
 
@@ -63,6 +51,13 @@ body {
     background-color: #000000;
 }
 
+/* body {
+    font-family: 'dos', 'Courier New', Courier, monospace;
+    margin: 0px;
+    background-color: #000000;
+} */
+
+
 div {
     background-position: center center;
     background-size: 100% 100%;
@@ -71,10 +66,8 @@ div {
 }
 
 div.image {
-    height: 24px;
-    width: 12px;
     display: inline-block;
-    background-image: url('img/o94.png');
+    background-image: url('../img/o94.png');
 }
 
 mark {

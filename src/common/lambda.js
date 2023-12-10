@@ -1,9 +1,5 @@
 'use strict';
 
-const LAMBDA = `movies`;
-
-
-
 function invokeLambda(requestPayload, successCallback, failCallback) {
   if (AWS.config.accessKeyId === `AWS_CONFIG_ACCESSKEYID`) {
     console.log(`AWS credentials not set`);
@@ -11,7 +7,7 @@ function invokeLambda(requestPayload, successCallback, failCallback) {
   }
 
   let params = {
-    FunctionName: LAMBDA,
+    FunctionName: AWS_RECORD_FUNCTION,
     Payload: JSON.stringify(requestPayload),
     InvocationType: 'RequestResponse',
     LogType: 'None'
@@ -147,7 +143,11 @@ function downloadRoll(video, successCallback, failCallback) {
 
 
 function uploadFile(gameID, filename, filecontents, isLastFile) {
-  console.log(`uploadFile(): ${gameID}/${filename}`);
+  if (!filecontents) {
+    console.error(`uploadFile(): no file contents for ${gameID}/${JSON.stringify(filename)}`);
+    return;
+  }
+  console.log(`uploadFile(): ${gameID}/${filename} (${filecontents.length})`);
   let requestPayload = {
     action: isLastFile ? `writelast` : `write`,
     gameID: gameID,

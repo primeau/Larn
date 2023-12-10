@@ -16,17 +16,24 @@
     <link rel="stylesheet" type="text/css" href="larn.css">
     <!-- <link rel='apple-touch-icon' href='apple-touch-icon.png'> -->
 
-    <script src='lib/rollbar.js'></script>
+    <!-- <script src='lib/rollbar.js'></script> -->
     <script src='lib/lambda.min.js'></script>
     <script src='lib/lz-string.min.js'></script>
     <script src='lib/mousetrap.min.js'></script>
-    <script src='lib/diff.js'></script>
+    <script src='lib/diff_match_patch.js'></script>
 
     <!-- <script src='larn.min.js'></script> -->
 
+    <script src='common/util.js'></script>
+    <script src='common/larn_config.js'></script>
+    <script src='common/frame.js'></script>
+    <script src='common/patch.js'></script>
+    <script src='common/roll.js'></script>
+    <script src='common/lambda.js'></script>
+    <script src='common/cloudflare.js'></script>
+    <script src='common/movie.js'></script>
+    <script src='common/live.js'></script>
     <script src='config.js'></script>
-    <script src='util.js'></script>
-    <script src='env/larn_config.js'></script>
     <script src='larn.js'></script>
     <script src='main.js'></script>
     <script src='object.js'></script>
@@ -64,15 +71,7 @@
     <script src='stairs.js'></script>
     <script src='throne.js'></script>
     <script src='devmode.js'></script>
-    <script src='fullstory.js'></script>
-    <script src='tv/tv_config.js'></script>
-    <script src='tv/movie.js'></script>
-    <script src='tv/frame.js'></script>
-    <script src='tv/roll.js'></script>
-    <script src='tv/patch.js'></script>
-    <script src='tv/lambda.js'></script>
-    <script src='tv/tvutil.js'></script>
-    <script src='cloudflare/broadcast.js'></script>
+    <!-- <script src='fullstory.js'></script> -->
 </head>
 
 <body>
@@ -102,7 +101,7 @@
         <foot class="box" id="FOOTER"></foot>
         <help class="box" id="HELP"></help>
         <keyboard class="box" id="KEYBOARD"></keyboard>
-        <stats class="box" id="STATS"></stats>  
+        <stats class="box" id="STATS"></stats>
         <inventorybuttons class="box" id="ACTIONS"></inventorybuttons>
         <run class="box" id="RUN"></run>
         <movebuttons class="box" id="KEYPAD"></movebuttons>
@@ -114,7 +113,6 @@
     <script>
         'use strict';
         var no_intro = false;
-        var newplayer = false;
         var altrender = false;
         play();
         document.getElementById(`LARN`).focus();

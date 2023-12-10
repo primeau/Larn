@@ -7,7 +7,7 @@
 
 ## To Play Locally 
 - [download a zipfile of the repository](https://github.com/primeau/Larn/archive/refs/heads/master.zip "download a zipfile of the repository")
-- open larn_local.html in your browser and play
+- open the `src` folder then open `larn_local.html` in your browser and play
 - viewing the scoreboard and recording high scores won't work
 
 
@@ -19,7 +19,6 @@ $ npm install
 $ npm run build
 $ python3 -m http.server 8000
 $ http://localhost:8000/dist/larn/larn.html
-
 ```
 
 ## Introduction
@@ -78,11 +77,3 @@ button press, or closed tab, there are 2 new 'wizard' passwords. Using the
 password 'checkpoint' will load a backup of a checkpoint file, and 'savegame'
 will resurrect a previous save game. These games are excluded from the 
 scoreboard due to rampant cheating. 
-
-
-## Acknowledgements
-
-Many thanks to BrowserStack for supporting this open source project with a free
-license to improve cross-browser support.
-
-[![BrowserStack](https://larn.org/browserstack.png)](https://www.browserstack.com/)

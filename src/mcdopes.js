@@ -36,7 +36,9 @@ function pad_hd() {
 
 
 function opad() {
-    clear();
+    setMazeMode(false);
+
+    // clear();
     pad_hd();
     setCharCallback(parse_mcdopes);
 }

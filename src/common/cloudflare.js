@@ -1,9 +1,13 @@
+'use strict';
+
 let currentWebSocket = null;
 let username = `username_not_set`;
 let roomname = `roomname_not_set`;
-let broadcastHostname = `broadcast.larn.workers.dev`;
 
 let numWatchers = 0;
+
+
+
 function initCloudFlare(user, room, messageReceivedCallback) {
   if (!ENABLE_RECORDING_REALTIME) return;
 
@@ -14,7 +18,7 @@ function initCloudFlare(user, room, messageReceivedCallback) {
 
   username = user;
   roomname = room;
-  console.log(`initCloudFlare(): `, username, roomname);
+  console.log(`initCloudFlare():`, username, roomname);
 
   join(messageReceivedCallback);
 }
@@ -24,7 +28,7 @@ function initCloudFlare(user, room, messageReceivedCallback) {
 function join(messageReceivedCallback) {
   const wss = document.location.protocol === "http:" ? "ws://" : "wss://";
   console.log(`cloudflare join`, roomname);
-  let ws = new WebSocket(wss + broadcastHostname + "/api/game/" + roomname + "/websocket");
+  let ws = new WebSocket(wss + CF_BROADCAST_HOST + "/api/game/" + roomname + "/websocket");
   let rejoined = false;
   let startTime = Date.now();
 
@@ -42,7 +46,7 @@ function join(messageReceivedCallback) {
 
       // OK, reconnect now!
       try {
-        join();
+        join(messageReceivedCallback);
       } catch (error) {
         console.error(`ws join`, error);
       }
@@ -80,13 +84,13 @@ function join(messageReceivedCallback) {
     if (data.ready) {
       console.log(`cloudflare ready`, data.ready);
     }
-    if (data.ip) {
-      // console.log(`cloudflare ip`, data.ip);
-      setIP(data.ip); // different functions called for Larn and LarnTV
-    }
+    // if (data.ip) {
+    // console.log(`cloudflare ip`, data.ip);
+    // setIP(data.ip); // different functions called for Larn and LarnTV
+    // }
     if (data.joined) {
       if (data.joined !== roomname) {
-        console.log(`cloudflare ${data.joined} joined ${++numWatchers} watchers`);
+        console.log(`cloudflare ${data.joined} joined ${numWatchers} watchers`);
         doRollbar(ROLLBAR_DEBUG, `realtime watcher`, data.joined);
       }
     }
@@ -98,7 +102,7 @@ function join(messageReceivedCallback) {
     }
     if (data.quit) {
       if (data.quit !== roomname) {
-        console.log(`cloudflare ${data.quit} quit ${--numWatchers} watchers`);
+        console.log(`cloudflare ${data.quit} quit ${numWatchers} watchers`);
       }
     }
     if (data.error) {
@@ -108,6 +112,56 @@ function join(messageReceivedCallback) {
     if (messageReceivedCallback) messageReceivedCallback(data);
 
   });
+}
 
 
+
+async function writeGameData(metadata, game) {
+
+  let returnWatchCount = fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/gamelist/${game}`, {
+    method: "POST",
+    body: JSON.stringify({ metadata }),
+    headers: { "content-type": "text/plain;charset=UTF-8" },
+  })
+    .then(async function (response) {
+      try {
+        let responseText = await response.text();
+        let j = JSON.parse(responseText);
+        setIP(j.ip); // todo this should probably be processed elsewhere
+        return j.watchers;
+      } catch (error) {
+        console.error(`writegamedataInner()`, error);
+        return 0;
+      }
+    })
+    .catch(error => {
+      console.error(`writeGameData():`, error);
+      return 0;
+    });
+
+  return returnWatchCount;
+}
+
+
+
+function sendLiveFrame(data, compress) {
+  if (currentWebSocket) {
+    let uncompressed = JSON.stringify(data);
+    // WORKER STEP 1 - liveFrameCompressionWorker
+    if (compress && liveFrameCompressionWorker) {
+      liveFrameCompressionWorker.postMessage([`0`, uncompressed, `UTF16`, `live`]);
+    } else {
+      // send it anyways, game metadata doesn't need compression
+      liveFrameCompressionCallback([`0`, uncompressed]);
+    }
+  }
+}
+
+
+
+// WORKER STEP 3 - liveFrameCompressionWorker
+function liveFrameCompressionCallback(event) {
+  let id = event.data[0];
+  let dataToSend = event.data[1];
+  currentWebSocket.send(JSON.stringify({ message: dataToSend }));
 }

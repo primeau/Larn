@@ -4,12 +4,28 @@
     For command mode.  Perform entering a building.
 */
 function enter() {
-  // cursors() ;
-
-  debug(`enter(): entering a building`);
-  setMazeMode(false);
 
   var building = itemAt(player.x, player.y);
+
+  if (building.matches(OENTRANCE)) {
+    dungeon();
+    return;
+  }
+  if (building.matches(OVOLUP)) {
+    act_up_shaft();
+    return;
+  }
+  if (building.matches(OVOLDOWN)) {
+    act_down_shaft();
+    return;
+  }
+
+  debug(`enter(): entering a building`);
+
+  if (building.matches(OHOME)) {
+    ohome();
+    return;
+  }
   if (building.matches(OSCHOOL)) {
     oschool();
     return;
@@ -26,28 +42,12 @@ function enter() {
     dndstore();
     return;
   }
-  if (building.matches(OENTRANCE)) {
-    dungeon();
-    return;
-  }
   if (building.matches(OTRADEPOST)) {
     otradepost();
     return;
   }
   if (building.matches(OLRS)) {
     olrs();
-    return;
-  }
-  if (building.matches(OHOME)) {
-    ohome();
-    return;
-  }
-  if (building.matches(OVOLUP)) {
-    act_up_shaft();
-    return;
-  }
-  if (building.matches(OVOLDOWN)) {
-    act_down_shaft();
     return;
   }
   if (building.matches(OPAD)) {
@@ -57,7 +57,6 @@ function enter() {
 
   nomove = 1;
   debug(`enter(): no building here`);
-  setMazeMode(true);
 
   updateLog(`There is no place to enter here!`);
 
@@ -132,6 +131,7 @@ function shuffleMonster(oldx, oldy) {
 var dndindex = 0;
 
 function dndstore() {
+  setMazeMode(false);
 
   initpricelist();
 
@@ -283,11 +283,13 @@ function dnditem(i) {
  *
  */
 function obank() {
+  setMazeMode(false);
   banktitle(`Welcome to the First National Bank of ${GAMENAME}.`);
 }
 
 
 function obank2() {
+  setMazeMode(false);
   banktitle(`Welcome to the ${ULARN ? 8 : 5}th level branch office of the First National Bank of ${GAMENAME}.`);
   /* because we state the level in the title, clear the '?' in the
      level display at the bottom, if the user teleported.
@@ -297,7 +299,7 @@ function obank2() {
 
 
 function banktitle(str) {
-  clear();
+  // clear();
   lprcat(str);
   lprcat(`\n\n   Gemstone                 Appraisal      Gemstone                 Appraisal`);
   obanksub();
@@ -584,10 +586,12 @@ function otradiven() {
 
 
 function otradepost() {
+  setMazeMode(false);
+
   setCharCallback(parse_tradepost);
   initpricelist();
 
-  clear();
+  // clear();
 
   lprcat(`Welcome to the ${GAMENAME} Trading Post. We buy items that explorers no longer find\n`);
   lprcat(`useful. Since the condition of the items you bring in is not certain,\n`);
@@ -771,6 +775,8 @@ function parse_sellitem(key) {
 const coursetime = [10, 15, 10, 20, 10, 10, 10, 5];
 
 function oschool() {
+  setMazeMode(false);
+
   setCharCallback(parse_class);
   napping = false;
 
@@ -936,6 +942,7 @@ function parse_class(key) {
  *
  */
 async function ohome() {
+  setMazeMode(false);
 
   var hasPotion = isCarrying(createObject(OPOTION, 21));
   var inTime = gtime <= TIMELIMIT;
@@ -949,8 +956,6 @@ async function ohome() {
   } catch (error) {
     // do nothing
   }
-
-  setMazeMode(false);
 
   napping = false;
   dropflag = 1;
@@ -979,6 +984,7 @@ async function ohome() {
   // has potion but ran out of time
   if (hasPotion && !inTime) {
     if (ULARN) {
+      await nap(1000);
       lprint(`However... the doctor has the sad duty to inform you that your daughter\n`);
       lprint(`has died! You didn't make it in time. In your agony, you kill the doctor,\nyour `);
       if (player.gender === `Male`) lprcat(`wife`);
@@ -986,6 +992,7 @@ async function ohome() {
       else lprcat(`partner`);
       lprint(` and yourself! Too bad...\n\n`);
     } else {
+      await nap(1000);
       lprint(`The doctor has the sad duty to inform you that your daughter died before\n`);
       lprint(`your return. There was nothing that could be done without the potion.\n\n`);
     }
@@ -1111,10 +1118,11 @@ function parse_lrs_pay(amount) {
 
 
 function olrs() {
+  setMazeMode(false);
 
   setCharCallback(parse_lrs);
 
-  clear();
+  // clear();
 
   cursor(1, 4);
   lprcat(`Welcome to the ${GAMENAME} Revenue Service district office  `);

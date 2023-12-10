@@ -8,5 +8,9 @@ npm create cloudflare@latest
 View your deployed application at https://broadcast.larn.workers.dev
 
 Navigate to the new directory: cd broadcast
-Run the development server npm run start
-Deploy your application npm run deploy
+Run the development server: 
+  % npm run start
+Deploy your application:
+  % npm run deploy
+Tail logs: 
+  % npx wrangler tail

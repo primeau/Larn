@@ -11,8 +11,8 @@ var DNDItem = function DNDItem(price, itemId, arg, qty) {
   this.qty = qty;
 }
 
-var STORE_INVENTORY; // set in ularn.js
-var MAXITM;          // set in ularn.js now
+var STORE_INVENTORY; // set in config.js
+var MAXITM;          // set in config.js now
 
 const LARN_STORE_INVENTORY = [
   /* cost  name                arg  how many */

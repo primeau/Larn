@@ -16,18 +16,19 @@ class Patch {
 
 
 
+// construct a frame from a patch
 function buildFrame(patch, frame) {
   let newFrame = new Frame();
-
+  
   // frame number
   newFrame.id = patch.id;
-
+  
   // timestamp;
   newFrame.ts = patch.ts;
-
+  
   let divs = Object.entries(patch.divs);
   // console.error(`buildFrame(): divs: ${patch.id} ${divs}`);
-
+  
   for (const [key, value] of divs) {
     // console.log(`buildFrame(): k: ${key}`);
     // console.log(`buildFrame(): v: ${value}`);
@@ -37,18 +38,19 @@ function buildFrame(patch, frame) {
     newFrame.divs[key] = results[0];
     // console.log(`buildFrame(): frame:\`${newFrame.divs[key]}\``);
   }
+  
+  // console.log(`patch`, patch);
+  // console.log(`newframe`, newFrame);
 
   return newFrame;
 }
 
 
+
 function buildPatch(prevFrame, currentFrame) {
   let newPatch = new Patch();
 
-  // frame number
   newPatch.id = currentFrame.id;
-
-  // timestamp;
   newPatch.ts = currentFrame.ts;
 
   let divs = Object.keys(currentFrame.divs);
@@ -61,10 +63,12 @@ function buildPatch(prevFrame, currentFrame) {
     }
     let patchList = dmp.patch_make(prevFrame.divs[div] || ``, diff);
     newPatch.divs[div] = dmp.patch_toText(patchList);
-
   });
 
   // console.log(`buildPatch(): patch: ${JSON.stringify(newPatch)}`);
+
+  // console.log(`prevframe`, prevFrame);
+  // console.log(`newpatch`, newPatch);
 
   return newPatch;
 }

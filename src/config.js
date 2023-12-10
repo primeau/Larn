@@ -56,7 +56,7 @@ function setGameConfig() {
     monsterlist[GNOME].color = `darkkhaki`;
     monsterlist[HOBGOBLIN].color = `salmon`;
     monsterlist[JACKAL].color = `sandybrown`;
-    if (ULARN) monsterlist[KOBOLD].color = `brown` ; else monsterlist[KOBOLD].color = `rosybrown`;
+    if (ULARN) monsterlist[KOBOLD].color = `brown`; else monsterlist[KOBOLD].color = `rosybrown`;
     monsterlist[ORC].color = `tan`;
     monsterlist[SNAKE].color = `olivedrab`;
     monsterlist[CENTIPEDE].color = `orangered`;

@@ -444,7 +444,7 @@ function getItemDir(direction) {
 
 
 function itemAt(x, y) {
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY || player.level.items == null) {
     return null;
   }
 
@@ -469,6 +469,9 @@ function itemAt(x, y) {
       doRollbar(ROLLBAR_ERROR, `null itemAt()`, `${errorMessage}\n${o}\n${m}\n${k}`);
     } catch (error) {
       // do nothing
+    }
+    finally {
+      return null;
     }
   }
 

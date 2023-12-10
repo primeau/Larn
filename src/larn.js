@@ -1,10 +1,5 @@
 'use strict';
 
-const VERSION = '12.5.2';
-const BUILD = '519';
-
-const ENABLE_DEVMODE = false;  // this must be set to false for production releases
-
 var ULARN = false; // are we playing LARN or ULARN?
 
 var DEBUG_STATS = false;
@@ -19,8 +14,10 @@ var DEBUG_PROXIMITY = false;
 
 var dofs = false; /* use fullstory */
 var lambda; /* AWS lambda database handle */
-let compressionWorker; /* web worker to compress save games outside of main thread */
-let workersAvailable = window.location.protocol != `file:`; /* can't read file:// */
+let localStorageCompressionWorker; /* web worker to compress save games outside of main thread */
+let liveFrameCompressionWorker; /* web worker to compress live frames */
+let rollCompressionWorker; /* web worker to compress recorded frames */
+let buildPatchWorker; /* web worker to build diff patches */
 
 async function play() {
 
@@ -30,6 +27,8 @@ async function play() {
   // this role only has access to invoke the lambda score function 
   AWS.config.accessKeyId = "AWS_CONFIG_ACCESSKEYID";
   AWS.config.secretAccessKey = "AWS_CONFIG_SECRETACCESSKEY";
+
+  initRB();
 
   // real credentials are set here, and not committed
   try {
@@ -43,16 +42,21 @@ async function play() {
     apiVersion: '2015-03-31'
   });
 
-  initRB();
-
   initKeyBindings();
 
   document.addEventListener('click', onMouseClick);
   window.addEventListener('resize', onResize);
 
-  if (window.Worker && workersAvailable) {
-    compressionWorker = new Worker('worker.js');
-    compressionWorker.onmessage = onCompressed;
+  // WORKER STEP 0 - initialization
+  if (window.Worker) {
+    localStorageCompressionWorker = new Worker('workers/compressionWorker.js');
+    localStorageCompressionWorker.onmessage = localStorageCompressionCallback;
+    liveFrameCompressionWorker = new Worker('workers/compressionWorker.js');
+    liveFrameCompressionWorker.onmessage = liveFrameCompressionCallback;
+    rollCompressionWorker = new Worker('workers/compressionWorker.js');
+    rollCompressionWorker.onmessage = rollCompressionCallback;
+    buildPatchWorker = new Worker('workers/patchWorker.js');
+    buildPatchWorker.onmessage = buildPatchCallback;
   }
 
   /* warn the player that closing their window will kill the game */
@@ -73,7 +77,7 @@ async function play() {
     }
 
     if (!images) {
-      loadImages();
+      loadImages(`img/`);
     }
 
     bltDocument();
@@ -97,16 +101,6 @@ async function play() {
   }
 
   onResize();
-}
-
-
-
-async function loadFonts() {
-  // make sure fonts are loaded before rendering anything
-  // if we don't wait for this, the main screen will end up
-  // being a different font
-  const testfont = `12px modern`;
-  await document.fonts.load(testfont);
 }
 
 
