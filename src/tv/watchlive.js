@@ -82,19 +82,19 @@ function getLive(downloadCompleteCallback) {
     .then(function (response) {
       response.json().then(function (data) {
         let tmpList = [];
-        data.keys.forEach(raw => {
-          if (raw.metadata) {
-            tmpList.push({
-              gameID: raw.name,
-              ularn: raw.metadata.ularn,
-              hardlev: raw.metadata.difficulty,
-              timeused: raw.metadata.mobuls,
-              who: raw.metadata.who,
-              level: raw.metadata.level,
-              explored: raw.metadata.explored,
-              createdAt: raw.metadata.lastmove, // use createdAt for sorting
-            });
-          }
+        if (typeof data.keys === `object`) data = data.keys; // temp backwards compatibility
+        data.forEach(game => {
+          if (game.metadata) game = game.metadata; // temp backwards compatibility
+          tmpList.push({
+            gameID: game.gameID,
+            ularn: game.ularn,
+            hardlev: game.difficulty,
+            timeused: game.mobuls,
+            who: game.who,
+            level: game.level,
+            explored: game.explored,
+            createdAt: game.lastmove, // use createdAt for sorting
+          });
         });
         downloadCompleteCallback(tmpList);
       });

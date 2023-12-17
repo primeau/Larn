@@ -1,11 +1,8 @@
-// This section of the code implements a normal Worker that receives HTTP requests from external
-// clients. This part is stateless.
-
-// `fetch` isn't the only handler. If your worker runs on a Cron schedule, it will receive calls
-// to a handler named `scheduled`, which should be exported here in a similar way. 
-
-const WATCHERS_TTL = 300;
-const GAME_TTL = 600;
+const TESTING_CLOUDFLARE_WORKERS = false;
+const WATCHERS_TTL = TESTING_CLOUDFLARE_WORKERS ? 30 : 300;
+const GAME_TTL = TESTING_CLOUDFLARE_WORKERS ? 60 : 600;
+const DEAD_TTL = TESTING_CLOUDFLARE_WORKERS ? 10 : 60;
+const USE_D1 = true; // use D1 or KV
 
 
 
@@ -14,18 +11,29 @@ export default {
     return await handleErrors(request, async () => {
       let url = new URL(request.url);
       let path = url.pathname.slice(1).split('/');
-
       switch (path[0]) {
         case "api":
-          // This is a request for `/api/...`, call the API handler.
           return handleApiRequest(path.slice(1), request, env);
-
         default:
           return new Response("Not found", { status: 404 });
       }
-
     });
-  }
+  },
+
+  async scheduled(event, env, ctx) {
+    if (USE_D1) {
+      // keep the recent games table tidy
+      let result = await env.DB.prepare(`DELETE FROM recent 
+      WHERE 
+      (lastmove < unixepoch() * 1000 - ${GAME_TTL * 1000})
+      OR
+      (gameover = 1 AND lastmove < unixepoch() * 1000 - ${DEAD_TTL * 1000})`
+      ).run();
+
+      // keep the watchers table tidy
+      result = await env.DB.prepare(`DELETE FROM watchers WHERE lastupdate < unixepoch() * 1000 - ${WATCHERS_TTL * 1000}`).run();
+    }
+  },
 }
 
 
@@ -33,7 +41,13 @@ export default {
 async function handleApiRequest(path, request, env) {
   // We've received at API request. Route the request based on the path.
 
+  // my local dev environment wipes out the DB every time i save
+  if (TESTING_CLOUDFLARE_WORKERS && USE_D1) {
+    await initDatabase(env);
+  }
+
   switch (path[0]) {
+
     case "gamelist": {
 
       let gameID = path[1];
@@ -41,8 +55,9 @@ async function handleApiRequest(path, request, env) {
       // request to /api/gamelist
       // send a list of active games
       if (!gameID) {
-        let liveGamesList = await env.realtime_larn.list();
+        let liveGamesList = await getListOfActiveGames(env);
         const json = JSON.stringify(liveGamesList);
+        // console.log(`list:`, json);
         return new Response(json, {
           headers: {
             "content-type": "application/json;charset=UTF-8",
@@ -52,30 +67,24 @@ async function handleApiRequest(path, request, env) {
       } else {
 
         // request to /api/gamelist/<gameid>
-        // put game metadata into worker KV
+        // store the most recent game data
         if (request.method === `POST` || request.method === `OPTIONS`) {
 
           try {
             // first check to see if someone is watching this game
-            let watchers = await env.larn_tv_watchers.get(gameID) || JSON.stringify([]);
-            watchers = JSON.parse(watchers);
+            let numWatchers = await getNumWatchers(env, gameID);
 
             let data = JSON.parse(await request.text()) || `no data`;
             if (data.metadata) {
-              data.metadata.watchers = watchers.length;
-              await env.realtime_larn.put(gameID, gameID,
-                {
-                  expirationTtl: GAME_TTL /* seconds */,
-                  metadata: data.metadata
-                }
-              );
+              data.metadata.watchers = numWatchers;
+              await insertActiveGame(env, data.metadata);
             }
 
             // Get the client's IP address
             let ip = request.headers.get("CF-Connecting-IP") || `0`;
 
             let somoneIsWatchingYou = {
-              watchers: watchers.length,
+              watchers: numWatchers,
               ip: ip,
             };
 
@@ -109,8 +118,16 @@ async function handleApiRequest(path, request, env) {
       // for the specific game.
       let gameID = path[1];
 
+      if (!env.games) {
+        return new Response("durable object error", { status: 503 });
+      }
+
       // Each Durable Object has a 256-bit unique ID. 
       let id = env.games.idFromName(gameID);
+
+      // keep track of durable objects
+      // TODO clean up old DOs somehow?
+      await env.larn_tv_watchers.put(id.toString(), gameID);
 
       // Get the Durable Object stub for this game
       let gameObject = env.games.get(id);
@@ -339,7 +356,8 @@ export class GameSession {
         this.broadcast({ quit: session.name });
         // delete session from kv, if it's not a larntv session
         if (session.name === session.gameID) {
-          this.env.realtime_larn.delete(session.gameID);
+          // this.env.realtime_larn.delete(session.gameID);
+          this.env.realtime_larn.put(session.gameID, session.gameID, { expirationTtl: 60 });
         }
         // let larn know the watch list has changed
         updateWatchList(this.env, session.gameID, this.sessions);
@@ -382,7 +400,8 @@ export class GameSession {
         this.broadcast({ quit: quitter.name });
         // delete session from kv, if it's not a larntv session
         if (quitter.name == quitter.gameID) {
-          this.env.realtime_larn.delete(quitter.gameID);
+          // this.env.realtime_larn.delete(quitter.gameID);
+          this.env.realtime_larn.put(quitter.gameID, quitter.gameID, { expirationTtl: 60 });
         }
       }
     });
@@ -411,7 +430,7 @@ async function updateWatchList(env, gameID, sessions) {
       env.watchlist[gameID] = newWatchList;
       env.lastExpiryTime[gameID] = Date.now();
       console.log(`pushing watchlist`, `newinfo:${listsNotEqual}`, `expired:${nearExpiryTime}`, JSON.stringify(env.watchlist[gameID]));
-      await env.larn_tv_watchers.put(gameID, JSON.stringify(env.watchlist[gameID]), { expirationTtl: WATCHERS_TTL });
+      await insertWatcher(env, gameID, JSON.stringify(env.watchlist[gameID]));
     }
   } catch (error) {
     console.error(`updatewatchlist():`, error);
@@ -422,4 +441,132 @@ async function updateWatchList(env, gameID, sessions) {
 function compareArrays(a1, a2) {
   if (!a1 && !a2) return true;
   return a1 && a2 && a1.length == a2.length && a1.every((v, i) => v === a2[i]);
+}
+
+
+
+
+async function initDatabase(env) {
+  // console.log(`initdb(): dropping table`);
+  // await env.DB.prepare(
+  //   "DROP TABLE IF EXISTS recent;"
+  // ).all();
+
+  console.log(`initdb(): creating recent table`);
+  await env.DB.prepare(
+    "CREATE TABLE IF NOT EXISTS recent (\
+      gameID TEXT PRIMARY KEY, \
+      ularn INTEGER, \
+      build INTEGER, \
+      difficulty INTEGER, \
+      mobuls INTEGER, \
+      who TEXT, \
+      level TEXT, \
+      lastmove INTEGER, \
+      explored TEXT, \
+      gameover INTEGER, \
+      watchers INTEGER, \
+      font TEXT);"
+  ).all();
+
+  console.log(`initdb(): creating watchers table`);
+  await env.DB.prepare(
+    "CREATE TABLE IF NOT EXISTS watchers (\
+      gameID TEXT PRIMARY KEY, \
+      watchlist TEXT, \
+      lastupdate INTEGER);"
+  ).all();
+}
+
+
+
+async function getListOfActiveGames(env) {
+  if (USE_D1) {
+    const { results, success } = await env.DB.prepare("SELECT * FROM recent").all();
+    // console.log(`getListOfActiveGames() D1: `, success, results);
+    return results;
+  } else {
+    let rawlist = await env.realtime_larn.list();
+    let results = [];
+    rawlist.keys.forEach(game => results.push(game.metadata));
+    // console.log(`getListOfActiveGames() KV: `, results);
+    return results;
+  }
+}
+
+
+
+async function insertActiveGame(env, game) {
+  if (USE_D1) {
+    // console.log(`D1 inserting game`, game.gameID);
+    let { success } = await env.DB
+      .prepare(`INSERT OR REPLACE INTO recent 
+    (gameID, ularn, build, difficulty, mobuls, who, level, lastmove, explored, gameover, watchers, font) 
+    VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)`)
+      .bind(
+        game.gameID || ``,
+        game.ularn ? 1 : 0,
+        game.build || 0,
+        game.difficulty || 0,
+        game.mobuls || 0,
+        game.who || ``,
+        game.level || ``,
+        Date.now(), // game.lastmove || 0, <-- lastmove doesn't work when the client clock is wrong
+        game.explored || ``,
+        game.gameover ? 1 : 0,
+        game.watchers || 0,
+        game.fontFamily || ``,
+      )
+      .run();
+    // console.log(`D1 inserting game`, success);
+  } else {
+    // console.log(`KV inserting game`, game.gameID);
+    await env.realtime_larn.put(game.gameID, game.gameID,
+      {
+        expirationTtl: game.gameover ? DEAD_TTL : GAME_TTL /* seconds */,
+        metadata: game
+      }
+    );
+  }
+}
+
+
+
+async function insertWatcher(env, gameID, watchlist) {
+  if (USE_D1) {
+    return await env.DB
+      .prepare(`INSERT OR REPLACE INTO watchers 
+    (gameID, watchlist, lastupdate) 
+    VALUES (?1, ?2, ?3)`)
+      .bind(
+        gameID || ``,
+        watchlist || ``,
+        Date.now(),
+      )
+      .run();
+  } else {
+    return await env.larn_tv_watchers.put(
+      gameID,
+      JSON.stringify(env.watchlist[gameID]),
+      { expirationTtl: WATCHERS_TTL }
+    );
+  }
+}
+
+
+
+async function getNumWatchers(env, gameID) {
+  let numWatchers = 0;
+  if (USE_D1) {
+    let stmt = env.DB.prepare(`SELECT watchlist FROM watchers WHERE gameID = ?1 LIMIT 1`).bind(gameID);
+    let row = await stmt.first();
+    let watchers = row ? JSON.parse(row.watchlist) : [];
+    numWatchers = watchers.length;
+  } else {
+    let watchers = await env.larn_tv_watchers.get(gameID) || JSON.stringify([]);
+    watchers = JSON.parse(watchers);
+    numWatchers = watchers.length;
+  }
+  // console.log(`numwatchers:`, numWatchers);
+  return numWatchers;
 }

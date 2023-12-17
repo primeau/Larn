@@ -1,124 +1,140 @@
 'use strict';
 
-let currentWebSocket = null;
+let currentWebSocket;
+let messageReceivedCallback;
 let username = `username_not_set`;
 let roomname = `roomname_not_set`;
-
 let numWatchers = 0;
 
 
 
-function initCloudFlare(user, room, messageReceivedCallback) {
+function initCloudFlare(user, room, callback) {
   if (!ENABLE_RECORDING_REALTIME) return;
-
   if (!navigator.onLine) {
     console.error(`initCloudFlare(): offline`);
     return;
   };
 
+  console.log(`initCloudFlare():`, user, room);
+
   username = user;
   roomname = room;
-  console.log(`initCloudFlare():`, username, roomname);
+  messageReceivedCallback = callback;
 
-  join(messageReceivedCallback);
+  join();
 }
 
 
 
-function join(messageReceivedCallback) {
+function closeCloudflare() {
+  if (currentWebSocket) {
+    console.log(`closing cloudflare`, roomname);
+    currentWebSocket.removeEventListener(`open`, wsOpenEvent);
+    currentWebSocket.removeEventListener(`close`, wsCloseEvent);
+    currentWebSocket.removeEventListener(`error`, wsErrorEvent);
+    currentWebSocket.removeEventListener(`message`, wsMessageEvent);
+    currentWebSocket.close();
+    currentWebSocket = null;
+  }
+}
+
+
+
+function join() {
+  closeCloudflare(); // clean up old connection if there is one
+
   const wss = document.location.protocol === "http:" ? "ws://" : "wss://";
-  console.log(`cloudflare join`, roomname);
-  let ws = new WebSocket(wss + CF_BROADCAST_HOST + "/api/game/" + roomname + "/websocket");
-  let rejoined = false;
-  let startTime = Date.now();
+  currentWebSocket = new WebSocket(wss + CF_BROADCAST_HOST + "/api/game/" + roomname + "/websocket");
 
-  let rejoin = async () => {
-    if (!rejoined) {
-      rejoined = true;
-      currentWebSocket = null;
+  currentWebSocket.addEventListener("open", wsOpenEvent);
+  currentWebSocket.addEventListener("close", wsCloseEvent);
+  currentWebSocket.addEventListener("error", wsErrorEvent);
+  currentWebSocket.addEventListener("message", wsMessageEvent);
+}
 
-      // Don't try to reconnect too rapidly.
-      let timeSinceLastJoin = Date.now() - startTime;
-      if (timeSinceLastJoin < 10000) {
-        // Less than 10 seconds elapsed since last join. Pause a bit.
-        await new Promise(resolve => setTimeout(resolve, 10000 - timeSinceLastJoin));
-      }
 
-      // OK, reconnect now!
-      try {
-        join(messageReceivedCallback);
-      } catch (error) {
-        console.error(`ws join`, error);
-      }
-    }
+
+let lastJoinTime = 0;
+async function rejoin() {
+  // Don't try to reconnect too rapidly.
+  let timeSinceLastJoin = Date.now() - lastJoinTime;
+  if (timeSinceLastJoin < 10000) {
+    console.log(`cloudflare rejoin waiting`, (10000 - timeSinceLastJoin) / 1000);
+    await new Promise(resolve => setTimeout(resolve, 10000 - timeSinceLastJoin));
   }
 
-  ws.addEventListener("open", event => {
-    currentWebSocket = ws;
-    console.log(`cloudflare open`);
-    try {
-      ws.send(JSON.stringify({ name: username, gameID: roomname }));
-    } catch (error) {
-      console.error(`ws open`, error);
-    }
-  });
-  ws.addEventListener("close", event => {
-    console.log(`cloudflare close`);
-    console.log("WebSocket closed, reconnecting:", event.code, event.reason);
-    rejoin();
-  });
-  ws.addEventListener("error", event => {
-    console.error("WebSocket error, reconnecting:", event);
-    rejoin();
-  });
-
-  ws.addEventListener("message", event => {
-    let data;
-    try {
-      data = JSON.parse(event.data);
-    } catch (error) {
-      console.error(`ws message`, event, error);
-      return;
-    }
-
-    if (data.ready) {
-      console.log(`cloudflare ready`, data.ready);
-    }
-    // if (data.ip) {
-    // console.log(`cloudflare ip`, data.ip);
-    // setIP(data.ip); // different functions called for Larn and LarnTV
-    // }
-    if (data.joined) {
-      if (data.joined !== roomname) {
-        console.log(`cloudflare ${data.joined} joined ${numWatchers} watchers`);
-        doRollbar(ROLLBAR_DEBUG, `realtime watcher`, data.joined);
-      }
-    }
-    if (data.message) {
-      // console.log(`message`, data);
-      // Larn doesn't do anything with messages
-      // LarnTV handles them in the messageReceivedCallback (bltLiveFrame)
-      // TODO: split this handling into a callback for larn, tv
-    }
-    if (data.quit) {
-      if (data.quit !== roomname) {
-        console.log(`cloudflare ${data.quit} quit ${numWatchers} watchers`);
-      }
-    }
-    if (data.error) {
-      console.error(`data error`, data.error);
-    }
-
-    if (messageReceivedCallback) messageReceivedCallback(data);
-
-  });
+  try {
+    join();
+    lastJoinTime = Date.now();
+  } catch (error) {
+    console.error(`ws join error`, error);
+  }
 }
 
 
 
-async function writeGameData(metadata, game) {
+function wsOpenEvent(event) {
+  try {
+    currentWebSocket.send(JSON.stringify({ name: username, gameID: roomname }));
+  } catch (error) {
+    console.error(`wsOpenEvent`, error);
+  }
+}
 
-  let returnWatchCount = fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/gamelist/${game}`, {
+function wsCloseEvent(event) {
+  console.log("wsCloseEvent reconnecting:", event.code, event.reason);
+  rejoin();
+}
+
+function wsErrorEvent(event) {
+  console.error("wsErrorEvent reconnecting:", event);
+  rejoin();
+}
+
+function wsMessageEvent(event) {
+  let data;
+  try {
+    data = JSON.parse(event.data);
+  } catch (error) {
+    console.error(`wsMessageEvent`, event, error);
+    return;
+  }
+
+  if (data.ready) {
+    // console.log(`cloudflare ready`, data.ready);
+  }
+  if (data.joined) {
+    if (data.joined !== roomname) {
+      console.log(`cloudflare ${data.joined} joined`);
+      doRollbar(ROLLBAR_DEBUG, `realtime watcher`, data.joined);
+    }
+  }
+  if (data.message) {
+    // console.log(`message`, data);
+    // Larn doesn't do anything with messages
+    // LarnTV handles them in the messageReceivedCallback (bltLiveFrame)
+    // TODO: split this handling into a callback for larn, tv
+  }
+  if (data.quit) {
+    console.log(`cloudflare ${data.quit} quit`);
+  }
+  if (data.error) {
+    console.error(`data error`, data.error);
+  }
+
+  try {
+    if (messageReceivedCallback) messageReceivedCallback(data);
+  } catch (error) {
+    console.error(`messageReceivedCallback()`, error);
+  }
+
+}
+
+
+
+async function writeGameData(metadata, gameID) {
+
+  let returnWatchCount = fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/gamelist/${gameID}`, {
     method: "POST",
     body: JSON.stringify({ metadata }),
     headers: { "content-type": "text/plain;charset=UTF-8" },
@@ -144,8 +160,14 @@ async function writeGameData(metadata, game) {
 
 
 
-function sendLiveFrame(data, compress) {
+async function sendLiveFrame(data, compress) {
   if (currentWebSocket) {
+    if (!currentWebSocket.readyState) {
+      // this gets called for the first time right after initCloudflare, 
+      // and the websocket might not be open yet
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
     let uncompressed = JSON.stringify(data);
     // WORKER STEP 1 - liveFrameCompressionWorker
     if (compress && liveFrameCompressionWorker) {
@@ -163,5 +185,11 @@ function sendLiveFrame(data, compress) {
 function liveFrameCompressionCallback(event) {
   let id = event.data[0];
   let dataToSend = event.data[1];
-  currentWebSocket.send(JSON.stringify({ message: dataToSend }));
+  let dataString = JSON.stringify({ message: dataToSend });
+  if (currentWebSocket.readyState) {
+    currentWebSocket.send(dataString);
+  }
+  else {
+    console.log(`websocket not ready`);
+  }
 }

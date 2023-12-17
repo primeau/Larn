@@ -12,9 +12,16 @@ account_id = "CLOUDFLARE_ACCOUNT_ID"
 main = "src/broadcast.mjs"
 
 kv_namespaces = [
-  { binding = "realtime_larn", id = "CLOUDFLARE_KV_ID1" },
+  ## list of games currently being played
+  { binding = "realtime_larn", id = "CLOUDFLARE_KV_ID1" }, 
+  ## list of larntv watchers
   { binding = "larn_tv_watchers", id = "CLOUDFLARE_KV_ID2" },
 ]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "larn"
+database_id = "CLOUDFLARE_D1"
 
 [durable_objects]
 bindings = [
@@ -22,12 +29,10 @@ bindings = [
 ]
 
 [[migrations]]
-tag = "v1" # Should be unique for each entry
+## tag = "v1" ## used
+## tag = "v2" ## used
+tag = "v3"
 new_classes = ["GameSession"]
-
-#[[migrations]]
-#tag = "v2"
-#deleted_classes = ["ChatRoom", "RateLimiter"]
 
 
 

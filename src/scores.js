@@ -53,22 +53,23 @@ LocalScore.prototype.toString = function () {
 
 
 
-let EXPLORED_VIEW_SHORT = `short`;
-let EXPLORED_VIEW_DOTS = `dots`;
-function getExploredLevels(view) {
+// dots:    + + + + @! + . . . . ~ . . . 
+// default: H 1 2 3 4 5 6 7 8 9 10 V1 V2 V3
+function getExploredLevels(dots) {
   let explored = ``;
   for (let i = 0; i < LEVELS.length; i++) {
-    let levelname = LEVELNAMES[i];
-    if (view === EXPLORED_VIEW_SHORT) {
-      levelname = levelname.at(levelname.length - 1);
+    if (i === level) {
+      explored += dots && amiga_mode ? `▓` : `@`;
+      if (dots && isCarrying(createObject(OPOTION, 21))) explored += `!`;
+    } else if (LEVELS[i]) {
+      if (dots)
+        explored += (i === DBOTTOM && player.hasPickedUpEye) ? `~` : `+`;
+      else
+        explored += LEVELNAMES[i];
+    } else {
+      explored += `·`;
     }
-    if (view === EXPLORED_VIEW_DOTS) {
-      levelname = (i === DBOTTOM && player.hasPickedUpEye) ? `~` : `+`;
-    }
-    let playerChar = isCarrying(createObject(OPOTION, 21)) ? `@!` : `@ `;
-    let gap = levelname.length === 1 ? ` ` : ``;
-    let expChar = (i === level) ? playerChar : `${levelname}${gap}`;
-    explored += LEVELS[i] ? expChar : `· `;
+    explored += ` `;
   }
   return explored;
 }

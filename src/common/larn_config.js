@@ -1,7 +1,7 @@
 'use strict';
 
 const VERSION = '12.5.2';
-const BUILD = '520';
+const BUILD = '521';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
 
@@ -25,6 +25,3 @@ const CF_BROADCAST_PROTOCOL = CF_LOCAL ? `http://` : `https://`;
 const LIVE_LIST_REFRESH = CF_LOCAL ? 1 : 10; // seconds
 const LIVE_METADATA_WAIT = CF_LOCAL ? 1 : 10; // seconds
 const LIVE_METADATA_MOVES = CF_LOCAL ? 1 : 11; // moves
-const LIVE_FRAME_WAIT = CF_LOCAL ? 1 : 10; // seconds
-const LIVE_FRAME_MOVES = CF_LOCAL ? 1 : 29; // moves
-

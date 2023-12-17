@@ -52,7 +52,8 @@
     "deploy_larn_lambda_test": "cd src/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name test --zip-file fileb://function.zip ; rm function.zip",
     "deploy_larn_lambda_score": "cd src/aws ; zip function.zip *.js ;  aws lambda update-function-code --function-name score --zip-file fileb://function.zip ; rm function.zip",
 
-    "local_cloudflare": "cd ../larn-local/cloudflare/broadcast ; npx wrangler dev"
+    "local_cloudflare": "cd ../larn-local/cloudflare/broadcast ; npx wrangler dev --test-scheduled",
+    "deploy_cloudflare": "cd ../larn-local/cloudflare/broadcast ; npx wrangler deploy ; npx wrangler tail"
   },
   "repository": {
     "type": "git",

@@ -14,3 +14,11 @@ Deploy your application:
   % npm run deploy
 Tail logs: 
   % npx wrangler tail
+
+- test scheduled event: http://localhost:8787/__scheduled?cron=*+*+*+*+*
+
+
+create D1 database
+  % npx wrangler d1 create larn
+create tables
+  % npx wrangler d1 execute larn --local --file=./schema.sql

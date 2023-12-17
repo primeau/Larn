@@ -19,6 +19,7 @@ go();
 async function go() {
   initRollbar();
   initAWS();
+  console.log(`cloudflare`, CF_BROADCAST_HOST);
 
   const urlParams = loadURLParameters();
   window.addEventListener('resize', onResize);
@@ -121,13 +122,18 @@ function onResize() {
 }
 
 
-
+let frameTimeCache = -1;
 function bltFrame(frame) {
   if (!frame) return;
   if (frame.divs.LARN === ``) frame.divs.LARN = EMPTY_LARN_FRAME;
 
-  setDiv(`TV_LARN`, frame.divs.LARN);
-  setDiv(`TV_STATS`, frame.divs.STATS);
+  if (frame.ts > frameTimeCache) {
+    setDiv(`TV_LARN`, frame.divs.LARN);
+    setDiv(`TV_STATS`, frame.divs.STATS);
+  } else {
+    console.log(`bltFrame(): out of order frame`, frame.ts, frameTimeCache);
+    return;
+  }
 
   // for amiga mode
   let sw = computeSpriteWidth();

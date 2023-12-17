@@ -135,11 +135,19 @@ function boxChecked() {
 }
 
 
-function compareGames(a, b) {
+function sortTime(a, b) {
   if (!a && !b) return 0;
   if (!a) return -1;
   if (!b) return 1;
   return b.createdAt - a.createdAt;
+}
+
+function sortName(a, b) {
+  if (!a && !b) return 0;
+  if (!a) return -1;
+  if (!b) return 1;
+  if (b.who === a.who) return b.createdAt - a.createdAt;
+  return b.who.toUpperCase() < a.who.toUpperCase();
 }
 
 
@@ -161,7 +169,7 @@ function liveGamesLoaded(games) {
 
 
 function displayRecordings(completed, larn, winners, visitors) {
-  let headerText = `<b> Player                    Explored                                   Difficulty  Mobuls  Last Updated </b><br><hr>`;
+  let headerText = `<b> Player                    Explored                                   Difficulty  Mobuls  Last Update </b><br><hr>`;
   if (completed) {
     headerText = `<b>      Date      Score  Diff  Mobuls  Player                   Fate</b><br><hr>`;
   }
@@ -174,7 +182,9 @@ function displayRecordings(completed, larn, winners, visitors) {
     console.log(`no games loaded`);
     return;
   }
-  games.sort(compareGames);
+
+  let sortAlgo = completed ? sortTime : sortName;
+  games.sort(sortAlgo);
 
   // // todo
   // if (games.length > 0) {
@@ -210,8 +220,14 @@ function addListItem(game, completed, larn, winners, visitors) {
     score = `${padString(datestring, 10)}${padString(Number(game.score).toLocaleString(), 11)}${padString(`` + game.hardlev, 6)}${padString(`${game.timeused}`, 8)}  ${padString(game.who, -25)}${what}`;
   } else {
     endpoint = `live`;
-    let datestring = new Date(game.createdAt).toLocaleString().split(",")[1];
-    score = ` ${padString(game.who, -24)}  ${padString(`${game.explored}`, -42)}  ${padString(`` + game.hardlev, 9)} ${padString(`${game.timeused}`, 7)} ${datestring}`;
+    // let datestring = new Date(game.createdAt).toLocaleString().split(",")[1];
+    let datestring = ``;
+    let lastSec = Math.ceil(((Date.now() - game.createdAt) / 1000));
+    let lastMin = Math.floor(lastSec / 60);
+    if (lastSec < 0) datestring = `${lastSec} (is your clock set correctly?)`;
+    else if (lastSec <= 60) datestring = `${lastSec} second` + (lastSec === 1 ? `` : `s`);
+    else datestring = `${lastMin} minute` + (lastMin === 1 ? `` : `s`);
+    score = ` ${padString(game.who, -24)}  ${padString(`${game.explored}`, -42)}  ${padString(`` + game.hardlev, 9)} ${padString(`${game.timeused}`, 7)}  ${datestring}`;
   }
 
   if (!completed || game.winner && winners || !game.winner && visitors) {

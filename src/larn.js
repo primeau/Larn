@@ -23,6 +23,7 @@ async function play() {
 
   console.log(`gameID ${gameID}`);
   console.log(`ismobile`, isMobile(), `isPhone`, isPhone());
+  console.log(`cloudflare`, CF_BROADCAST_HOST);
 
   // this role only has access to invoke the lambda score function 
   AWS.config.accessKeyId = "AWS_CONFIG_ACCESSKEYID";

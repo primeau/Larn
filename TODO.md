@@ -8,7 +8,37 @@ Ularn 12.5.1
 - eye of larn appraisal in bank
 
 todo:
+- courier new tv games are a little too wide
+* tv recordings: losing games set expiry date of ~1 year or less
+- keep track of all durablesessions created to be able to delete later
+- scoreboard visitors - use movesmade, not mobuls
+- amiga replay link is broken
+- move hosting from netlify to:
+  - github actions: no -> can't have AWS keys in public github
+  - cloudflare pages?
+- javascript build versioning?
+
+* durable objects are expensive! replace with queues?
+* 1 Requests include all incoming HTTP requests, WebSocket messages, and alarm invocations. There is no charge for outgoing WebSocket messages, nor for incoming WebSocket protocol pings
+2 Application level auto-response messages handled by state.setWebSocketAutoResponse() will not incur additional wall-clock time, and so they will not be charged.
+3 Duration is billed in wall-clock time as long as the Object is active, but is shared across all requests active on an Object at once. Once your Object finishes responding to all requests, it will stop incurring duration charges. Calling accept() on a WebSocket in an Object will incur duration charges for the entire time the WebSocket is connected. If you prefer, use state.acceptWebSocket() instead, which will stop incurring duration charges once all event handlers finish running.
+4 Duration billing charges for the 128 MB of memory your Durable Object is allocated, regardless of actual usage. If your account creates many instances of a single Durable Object class, Durable Objects may run in the same isolate on the same physical machine and share the 128 MB of memory. These Durable Objects are still billed as if they are allocated a full 128 MB of memory.
+* WebSocket Hibernation
+When using a Durable Object on the server side of a WebSocket connection, consider using the Hibernatable WebSockets API.
+The Hibernatable WebSockets API allows a Durable Object that is not currently running an event handler (such as handling a WebSocket message, HTTP request, or alarms) to be removed from memory while keeping its WebSockets connected (“hibernation”).
+A Durable Object that hibernates will not incur billable Duration (GB-sec) charges. For applications with many long-lived Durable Objects and periodic WebSocket messages or events, using the Hibernatable WebSockets API can measurably reduce billable duration.
+
+- create a new gamesplayed worker to see a graph of usage 
+- allow hitting escape or other keys while naps are happening (interrupt settimeout?)
+  - make buying / selling items etc faster 
+- blindness - don't show dots, don't identify items (there is a gem/scroll/potion/book here) ok if picked up though because that's too hard to deal with (or maybe set the item ID to be negative if blind?)
+* new favicon? dragon? random monster?
 * IDEA: use createElement for all rendering?
+- use fewer globals!
+  - get rid of scores.ONLINE
+  - put all globals into globals.json with info about which files use it
+  - put all player related functions/vars into player object
+  - most references to player.level should be replaced with functions
 * help wiki (items/scrolls/potions/features/monsters/etc)
 * new video to add: https://larn.org/beta/tv/?gameid=lysnwvbhx8 
   - diff 0 win with illiterate/thirsty conducts
@@ -24,14 +54,7 @@ todo:
 - click / farlook to identify object (hack and classic mode)
 - if error writing savegame due to space issues, delete all backup cookies
 - async/await for keyboard input?
-- amiga mode: unseen walls should be flat
-- check chrome audit tab
-- show time in side inventory
 - record elapsed game time, total time, number of saves
-- Save id to name and name to id map
-- most references to player.level should be replaced with functions
-- allow hitting escape while naps are happening (interrupt settimeout?)
-  - make buying / selling items etc faster 
 - eye of larn pickup/drop message with proper naps inbetween messages (harder than expected the first time around)
 - should smart monsters be able to walk around sleeping monsters?
 - cheater beater:
@@ -45,7 +68,6 @@ todo:
 extras:
 - wash at fountain clears itching
 - url for scoreboard
-- 'twitch' mode to broadcast / watch games
 - "dungeon of the week"
 - config page
   - colors on/off
