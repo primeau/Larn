@@ -169,7 +169,7 @@ function liveGamesLoaded(games) {
 
 
 function displayRecordings(completed, larn, winners, visitors) {
-  let headerText = `<b> Player                    Explored                                   Difficulty  Mobuls  Last Update </b><br><hr>`;
+  let headerText = `<b> Player                    Explored                                    Difficulty  Mobuls  Last Update </b><br><hr>`;
   if (completed) {
     headerText = `<b>      Date      Score  Diff  Mobuls  Player                   Fate</b><br><hr>`;
   }
@@ -227,7 +227,7 @@ function addListItem(game, completed, larn, winners, visitors) {
     if (lastSec < 0) datestring = `${lastSec} (is your clock set correctly?)`;
     else if (lastSec <= 60) datestring = `${lastSec} second` + (lastSec === 1 ? `` : `s`);
     else datestring = `${lastMin} minute` + (lastMin === 1 ? `` : `s`);
-    score = ` ${padString(game.who, -24)}  ${padString(`${game.explored}`, -42)}  ${padString(`` + game.hardlev, 9)} ${padString(`${game.timeused}`, 7)}  ${datestring}`;
+    score = ` ${padString(game.who, -24)}  ${padString(`${game.explored}`, -43)}  ${padString(`` + game.hardlev, 9)} ${padString(`${game.timeused}`, 7)}  ${datestring}`;
   }
 
   if (!completed || game.winner && winners || !game.winner && visitors) {

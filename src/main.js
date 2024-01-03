@@ -603,7 +603,7 @@ function run(dir) {
 function wizardmode(password) {
 
   if (password === 'checkpoint') {
-    doRollbar(ROLLBAR_WARN, `checkpoint who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
+    doRollbar(ROLLBAR_WARN, `checkpoint`, `who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     var checkpoint = localStorageGetObject('checkpointbackup');
     let error = localStorageSetObject('checkpoint', checkpoint);
@@ -617,7 +617,7 @@ function wizardmode(password) {
   }
 
   if (password === 'savegame') {
-    doRollbar(ROLLBAR_WARN, `savegame who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
+    doRollbar(ROLLBAR_WARN, `savegame`, `who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     var savegame = localStorageGetObject(logname + 'backup');
     let error = localStorageSetObject(logname, savegame);

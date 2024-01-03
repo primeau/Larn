@@ -113,7 +113,7 @@ function loadSavedGame(savedState, isCheckPoint) {
   if (isCheckPoint) {
     updateLog(`Did you quit accidentally? Your last game has been restored just in case`);
   } else {
-    updateLog(`Welcome back. (Your save file has now been been deleted)`);
+    updateLog(`Welcome back. (Your save file has now been deleted)`);
   }
 
   game_started = true;
