@@ -29,8 +29,8 @@ var retro_mode = false;
 var dnd_item = null;
 var genocide = [];
 var amiga_mode = false;
-// var gameID = CF_LOCAL ? `testgameid` : Math.random().toString(36).substr(2, 10);
-var gameID = Math.random().toString(36).substr(2, 10);
+var gameID = CF_LOCAL ? `testgameid` : Math.random().toString(36).substr(2, 10);
+// var gameID = Math.random().toString(36).substr(2, 10);
 var debug_used = 0;
 
 var logname = `Adventurer`;

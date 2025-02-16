@@ -51,6 +51,9 @@ function enableDevmode() {
     // gtime = 30001;
     player.GOLD = 250000;
 
+    // newcavelevel(level + 1);
+    // setItem(player.x, player.y, createObject(OTRAPDOOR));
+
     // createmonster(NYMPH);
     // for (let index = 1; index < monsterlist.length; index++) {
     //     createmonster(index, 1+index, 2);

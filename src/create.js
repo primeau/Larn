@@ -41,6 +41,9 @@ function newcavelevel(depth) {
   makeobject(depth);
   sethp(true);
   positionplayer(player.x, player.y, true);
+
+  showcell(player.x, player.y); /* to show around player */
+
   checkgen(); /* wipe out any genocided monsters */
 
   if (wizard || level == 0)
@@ -97,6 +100,7 @@ function cannedlevel(depth) {
   var pt = 0;
   for (var y = 0; y < MAXY; y++) {
     for (var x = 0; x < MAXX; x++) {
+      setItem(x, y, OEMPTY);
       switch (canned[pt++]) {
         case '#':
           setItem(x, y, OWALL);
@@ -122,10 +126,6 @@ function cannedlevel(depth) {
           ULARN ? create_guardian(LUCIFER, x, y) : create_guardian(DEMONPRINCE, x, y);
           break;
       } // switch
-      // if (!itemAt(x, y)) { // for debugging
-      if (!player.level.items[x][y]) {
-        setItem(x, y, OEMPTY);
-      }
     } // for
   } // for
 }

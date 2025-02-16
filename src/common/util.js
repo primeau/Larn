@@ -56,7 +56,6 @@ function initGrid(width, height) {
   var grid = new Array(width);
   for (var x = 0; x < width; x++) {
     grid[x] = new Array(height);
-    grid[x] = new Array(height);
   }
   return grid;
 }
@@ -69,9 +68,8 @@ const ROLLBAR_DEBUG = `DEBUG`;
 const ROLLBAR_WARN = `WARN`;
 function doRollbar(notificationLevel, eventTitle, eventDetail) {
   try {
+    eventTitle = `${BUILD} ${GAMENAME} ${eventTitle}`;
     if (Rollbar) {
-      eventTitle = `${BUILD} ${GAMENAME} ${eventTitle}`;
-      console.log(`ROLLBAR_${notificationLevel}: ${eventTitle}, ${eventDetail}`)
       if (notificationLevel === ROLLBAR_ERROR) {
         Rollbar.error(eventTitle, { detail: `${eventDetail}` });
       } else if (notificationLevel === ROLLBAR_INFO) {
@@ -84,6 +82,9 @@ function doRollbar(notificationLevel, eventTitle, eventDetail) {
     }
   } catch (error) {
     console.error(`doRollbar caught: ${error}`);
+  }
+  finally {
+    console.log(`ROLLBAR_${notificationLevel}: ${eventTitle}, ${eventDetail}`)
   }
 }
 

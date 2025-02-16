@@ -449,16 +449,16 @@ function itemAt(x, y) {
   }
 
   // debugging: there is an issue with a null player.level.item[][]
-  if (!player.level.items[x][y]) {
-    let errorMessage = `itemAt(): null item: x=${x} y=${y}`;
-    console.log(errorMessage);
-    try {
+  try {
+    if (!player.level.items[x][y]) {
+      let errorMessage = `itemAt(): null item: x=${x} y=${y}`;
+      console.log(errorMessage);
       let o = `level:${level}\n`;
       let m = `monsters:\n`;
       let k = `know:\n`;
       for (let y = 0; y < 17; y++) {
         for (let x = 0; x < 67; x++) {
-          o += player.level.items[x][y] ? itemlist[player.level.items[x][y].id].char : `#=#`;
+          o += player.level.items[x][y] ? itemlist[player.level.items[x][y].id].char : `X`;
           m += player.level.monsters[x][y] ? player.level.monsters[x][y].char : `.`;
           k += player.level.know[x][y] ? player.level.know[x][y] : `.`;
         }
@@ -467,12 +467,11 @@ function itemAt(x, y) {
         k += `\n`;
       }
       doRollbar(ROLLBAR_ERROR, `null itemAt()`, `${errorMessage}\n${o}\n${m}\n${k}`);
-    } catch (error) {
-      // do nothing
-    }
-    finally {
       return null;
     }
+  } catch (error) {
+    doRollbar(ROLLBAR_ERROR, `itemAt() fail`, `${error}`);
+    return null;
   }
 
   return player.level.items[x][y];

@@ -763,6 +763,7 @@ function noticeplayer() {
         if (!monster.awake && rnd(101) < 50) { // want at worst 50/50 odds
           updateLog(`The ${monster} sees you!`);
           monster.awake = true;
+          hitflag = 1;
         }
       }
     }

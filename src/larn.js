@@ -43,8 +43,6 @@ async function play() {
     apiVersion: '2015-03-31'
   });
 
-  initKeyBindings();
-
   document.addEventListener('click', onMouseClick);
   window.addEventListener('resize', onResize);
 
@@ -93,13 +91,7 @@ async function play() {
 
   await loadFonts();
 
-  if (PARAMS.score) {
-    // unfinished scoreboard loading feature
-    player = new Player();
-    loadScores(null, true, true);
-  } else {
-    welcome(); // show welcome screen, start the game
-  }
+  welcome(); // show welcome screen, start the game
 
   onResize();
 }

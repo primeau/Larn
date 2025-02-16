@@ -41,6 +41,9 @@ function welcome() {
   lprcat(nameString);
   blinken(nameString.length - 5, 24);
 
+  player = new Player(); // gender and character class are set later on
+  initKeyBindings(); // wait until last moment to set key bindings
+
   if (!no_intro) {
     setTextCallback(setname);
   } else {
@@ -109,8 +112,6 @@ function setname(name) {
 
   var diff = Number(localStorageGetObject('difficulty') || 0);
   setDifficulty(diff);
-
-  player = new Player(); /* gender and character class are set later on */
 
   if (no_intro) {
     //startgame(getDifficulty());
