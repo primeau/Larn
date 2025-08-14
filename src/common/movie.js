@@ -152,14 +152,14 @@ class Video {
 
 
 
-function uploadRoll(roll, num) {
+function uploadRoll(roll, num, unusedcallback, metadata) {
   let filename = `${num}.json`;
   let uncompressed = JSON.stringify(roll);
 
   // WORKER STEP 1 - rollCompressionWorker
   if (rollCompressionWorker) {
     // console.log(`uploadroll:`, filename, uncompressed.length);
-    rollCompressionWorker.postMessage([filename, uncompressed, `ENCODED_URI`, `roll`]);
+    rollCompressionWorker.postMessage([filename, uncompressed, `ENCODED_URI`, `roll`, metadata]);
   } else {
     // don't upload
   }
@@ -171,7 +171,8 @@ function uploadRoll(roll, num) {
 function rollCompressionCallback(event) {
   let filename = event.data[0];
   let file = event.data[1];
-  uploadFile(gameID, filename, file, false);
+  let metadata = event.data[2];
+  uploadFile(gameID, filename, file, false, metadata);
 }
 
 
@@ -186,37 +187,46 @@ function canRecord() {
 
 
 // sometimes we can get patches with duplicate IDs which messes up replays
-let LAST_FRAME_ID = -1;
+let LAST_RECORDED_FRAME_ID = -1;
 
-function processRecordedFrame(divs) {
+function processRecordedFrame(frame) {
   if (!ENABLE_RECORDING) return false;
   if (!navigator.onLine) return false;
 
   try {
     if (!video) video = new Video(gameID);
 
-    // build new frame out of divs
-    let newFrame = new Frame();
-    newFrame.id = video.currentFrameNum + 1;
-    newFrame.ts = Date.now();
-    for (const [key, value] of Object.entries(divs)) {
-      // console.log(`processRecordedFrame(): k: ${key}`);
-      // console.log(`processRecordedFrame(): v: ${value}`);
-      video.divs[key] = ``; // to keep track of the div names that are being recorded
-      newFrame.divs[key] = value;
-    }
-
-    if (LAST_FRAME_ID === newFrame.id) {
+    if (LAST_RECORDED_FRAME_ID === frame.id) {
       // console.error(`processRecordedFrame(): DUPE`);
       return;
     }
-    LAST_FRAME_ID = newFrame.id;
+    LAST_RECORDED_FRAME_ID = frame.id;
 
     let prevFrame = video.getFrame(video.currentFrameNum);
 
     // WORKER STEP 1 - buildPatchWorker
     if (buildPatchWorker) {
-      buildPatchWorker.postMessage([prevFrame, newFrame, `patch`]);
+      buildPatchWorker.postMessage([prevFrame, frame, `patch`]);
+
+
+// regex
+//       <div.*?img\/(.*?).png.*?>(.?)<\/div>
+//       <div.*(class..).*>(.*?)<\/div>
+//       img\/(.*?).png
+
+
+      // console.log(frame.divs.LARN);
+
+      // console.log(`1`);
+      // // const reg = /Larn/gmi;
+      // const reg = /img\/(.*?).png/gmi;
+      // console.log(`2`);
+      // const regextest = [...reg.exec(frame.divs.LARN)];
+      // console.log(`3`);
+      // console.log(`got: `, regextest.length);
+      // console.log(`got: `, regextest[0]);
+      // console.log(`got: `, regextest[1]);
+
       return;
     } else {
       // don't add a frame
@@ -267,8 +277,8 @@ function endRecording(endData, isUlarn) {
   try {
     if (!canRecord()) return;
 
+    let meta = {};
     let currentRoll = video.getCurrentRoll();
-    uploadRoll(currentRoll, video.rolls.length - 1, video.progressCallback);
 
     // save games don't have endData
     if (endData) {
@@ -276,13 +286,37 @@ function endRecording(endData, isUlarn) {
       if (endData.gameID.slice(-1) === `+`) {
         endData.gameID = endData.gameID.slice(0, -1);
       }
-      endData.frames = currentRoll.patches[currentRoll.patches.length - 1].id;
+
+      // console.log(`endRecording(): currentRoll.patches.length`, currentRoll.patches.length);
+
+      try {
+        endData.frames = currentRoll.patches[currentRoll.patches.length - 1].id;
+      } catch (error) {
+        console.error(`endRecording(): currentRoll problem`, error);
+        endData.frames = 0;        
+      }
       endData.ularn = isUlarn;
 
+      // special case for gameover with first roll:
+      // we update metadata later in this function
+      // but roll[0] sometimes wasn't uploaded yet
+      if (video.rolls.length - 1 === 0) {
+        meta = {
+          frames: `${endData.frames}`,
+          who: endData.who,
+          what: endData.what,
+          diff: `${endData.hardlev}`,
+          score: `${endData.score}`
+        };
+      }
+      
       console.log(`endRecording(): enddata: `, endData);
       console.log(`endRecording(): frames = ${endData.frames}`);
       uploadFile(gameID, `${gameID}.txt`, JSON.stringify(endData), true);
     }
+    
+    uploadRoll(currentRoll, video.rolls.length - 1, video.progressCallback /*unused?*/, meta);
+
   } catch (error) {
     console.error(`endRecording(): caught: `, error);
   }
@@ -317,8 +351,7 @@ function setRecordingInfo(info) {
 
   // console.log(`setRecordingInfo(): creating frame ${video.currentFrameNum}`)
 
-  // TODO probably need to initialize divs
-  video.frameBuffer[video.currentFrameNum] = new Frame();
+  video.frameBuffer[video.currentFrameNum] = video.createEmptyFrame();
 
   for (let index = 0; index < parseInt(info.rolls); index++) {
     // console.log(`setRecordingInfo(): addroll: ${index}`);

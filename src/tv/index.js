@@ -122,16 +122,22 @@ function onResize() {
 }
 
 
-let frameTimeCache = -1;
+let bltFrameCache = -1;
 function bltFrame(frame) {
   if (!frame) return;
   if (frame.divs.LARN === ``) frame.divs.LARN = EMPTY_LARN_FRAME;
 
-  if (frame.ts > frameTimeCache) {
+  // this doesn't really do much. if the cache is set to a value
+  // it prevents rewinding
+  if (frame.id > bltFrameCache) {
+  // if (frame.ts > bltFrameCache) {
     setDiv(`TV_LARN`, frame.divs.LARN);
     setDiv(`TV_STATS`, frame.divs.STATS);
+    // bltFrameCache = frame.id;
+    //bltFrameCache = frame.ts;
   } else {
-    console.log(`bltFrame(): out of order frame`, frame.ts, frameTimeCache);
+    console.log(`bltFrame(): out of order frame`, frame.id, bltFrameCache);
+    // console.log(`bltFrame(): out of order frame`, frame.ts, bltFrameCache);
     return;
   }
 

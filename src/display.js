@@ -23,9 +23,6 @@ function paint() {
 
 
 
-let LAST_LARN_DIV = ``;
-let LAST_STAT_DIV = ``;
-
 function blt() {
   if (amiga_mode) {
     // do nothing
@@ -42,19 +39,8 @@ function blt() {
 
   onResize();
 
-  if (BLINKEN) { // prevent blinking cursor from creating tons of duplicate frames on startup
-    let divs = {
-      LARN: document.getElementById(`LARN`).innerHTML,
-      STATS: document.getElementById(`STATS`).innerHTML
-    };
-
-    if (divs.LARN !== LAST_LARN_DIV || divs.STATS !== LAST_STAT_DIV) {
-      processRecordedFrame(divs);
-      processLiveFrame(divs);
-      LAST_LARN_DIV = divs.LARN;
-      LAST_STAT_DIV = divs.STATS;
-    }
-  }
+  // todo: is there a better place to do this?
+  recordFrame();
 }
 
 
@@ -80,6 +66,32 @@ function bltDocument() {
   setDiv(`LARN`, output);
 }
 
+
+
+let LAST_LARN_DIV = ``;
+let LAST_STAT_DIV = ``;
+function recordFrame() {
+  try {
+    if (BLINKEN) { // prevent blinking cursor from creating tons of duplicate frames on startup
+      let divs = {
+        LARN: document.getElementById(`LARN`).innerHTML,
+        STATS: document.getElementById(`STATS`).innerHTML
+      };
+      if (divs.LARN !== LAST_LARN_DIV || divs.STATS !== LAST_STAT_DIV) {
+        let newFrame = video.createEmptyFrame();
+        newFrame.id = video.currentFrameNum + 1;
+        newFrame.ts = Date.now();
+        newFrame.divs = divs;
+        processRecordedFrame(newFrame);
+        processLiveFrame(newFrame);
+        LAST_LARN_DIV = divs.LARN;
+        LAST_STAT_DIV = divs.STATS;
+      }
+    }
+  } catch (error) {
+    console.error(`recordFrame() error:`, error);
+  }
+}
 
 
 function setMazeMode(mode) {

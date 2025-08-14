@@ -49,7 +49,7 @@ function bltLiveFrame(data) {
       bltFrame(newFrame);
 
       liveFrameCache = data;
-      liveMetadata = newFrame.metadata;
+      liveMetadata = newFrame.metadata; // TODO: WHY IS THIS DONE *AFTER*?
       let exp = liveMetadata.explored.replaceAll(/\s/g, ``);
       document.title = `LarnTV: ${liveMetadata.who} ${exp}`;
 

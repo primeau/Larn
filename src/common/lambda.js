@@ -142,7 +142,7 @@ function downloadRoll(video, successCallback, failCallback) {
 
 
 
-function uploadFile(gameID, filename, filecontents, isLastFile) {
+function uploadFile(gameID, filename, filecontents, isLastFile, metadata) {
   if (!filecontents) {
     console.error(`uploadFile(): no file contents for ${gameID}/${JSON.stringify(filename)}`);
     return;
@@ -152,7 +152,8 @@ function uploadFile(gameID, filename, filecontents, isLastFile) {
     action: isLastFile ? `writelast` : `write`,
     gameID: gameID,
     filename: filename,
-    file: filecontents
+    file: filecontents,
+    Metadata: metadata
   };
   invokeLambda(requestPayload, null, null);
 }

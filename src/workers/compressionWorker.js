@@ -8,7 +8,7 @@ onmessage = function (event) {
     let uncompressed = event.data[1];
     let algo = event.data[2];
     let source = event.data[3] || `none`;
-
+    let metadata = event.data[4] || null;
     // console.log(`${source}:${id} worker.compress: start size`, uncompressed.length);
     let compressed = ``;
     if (algo === `UTF16`) {
@@ -21,5 +21,5 @@ onmessage = function (event) {
         console.error(`worker.compress: no compression algorithm selected`);
     }
     // console.log(`${source}:${id} worker.compress: end size`, compressed.length);
-    postMessage([id, compressed]);
+    postMessage([id, compressed, metadata]);
 };

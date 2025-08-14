@@ -4,8 +4,8 @@
 
 // send live frame and style metadata from larn to larntv
 let lastLiveFrame;
-let lastLiveDataTime = Date.now() / 1000;
-async function processLiveFrame(divs) {
+let lastLiveDataTime = 0;
+async function processLiveFrame(frame) {
   if (!ENABLE_RECORDING_REALTIME) return;
   if (!navigator.onLine) return;
   if (!game_started) return;
@@ -13,7 +13,7 @@ async function processLiveFrame(divs) {
   try {
 
     // don't send duplicate frames 
-    if (lastLiveFrame && lastLiveFrame.LARN === divs.LARN && lastLiveFrame.STATS === divs.STATS) {
+    if (lastLiveFrame && lastLiveFrame.divs.LARN === frame.divs.LARN && lastLiveFrame.divs.STATS === frame.divs.STATS) {
       // console.error(`processLiveFrame() dupe`);
       return;
     }
@@ -39,15 +39,9 @@ async function processLiveFrame(divs) {
 
     // write current frame to cloudflare
     if (numWatchers > 0) {
-      let newFrame = new Frame();
-      newFrame.id = gameID;
-      newFrame.ts = Date.now();
-      newFrame.metadata = metadata;
-      for (const [key, value] of Object.entries(divs)) {
-        newFrame.divs[key] = value;
-      }
-      lastLiveFrame = divs;
-      sendLiveFrame(newFrame, true);
+      frame.metadata = metadata;
+      lastLiveFrame = frame;
+      sendLiveFrame(frame, true);
     }
   } catch (error) {
     console.error(`processLiveFrame():`, error);

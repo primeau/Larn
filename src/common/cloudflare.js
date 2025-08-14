@@ -161,21 +161,25 @@ async function writeGameData(metadata, gameID) {
 
 
 async function sendLiveFrame(data, compress) {
-  if (currentWebSocket) {
-    if (!currentWebSocket.readyState) {
-      // this gets called for the first time right after initCloudflare, 
-      // and the websocket might not be open yet
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
+  try {
+    if (currentWebSocket) {
+      if (!currentWebSocket.readyState) {
+        // this gets called for the first time right after initCloudflare, 
+        // and the websocket might not be open yet
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
 
-    let uncompressed = JSON.stringify(data);
-    // WORKER STEP 1 - liveFrameCompressionWorker
-    if (compress && liveFrameCompressionWorker) {
-      liveFrameCompressionWorker.postMessage([`0`, uncompressed, `UTF16`, `live`]);
-    } else {
-      // send it anyways, game metadata doesn't need compression
-      liveFrameCompressionCallback([`0`, uncompressed]);
+      let uncompressed = JSON.stringify(data);
+      // WORKER STEP 1 - liveFrameCompressionWorker
+      if (compress && liveFrameCompressionWorker) {
+        liveFrameCompressionWorker.postMessage([`0`, uncompressed, `UTF16`, `live`]);
+      } else {
+        // send it anyways, game metadata doesn't need compression
+        liveFrameCompressionCallback([`0`, uncompressed]);
+      }
     }
+  } catch (error) {
+    console.error(`sendLiveFrame()`, error);
   }
 }
 
@@ -183,13 +187,17 @@ async function sendLiveFrame(data, compress) {
 
 // WORKER STEP 3 - liveFrameCompressionWorker
 function liveFrameCompressionCallback(event) {
-  let id = event.data[0];
-  let dataToSend = event.data[1];
-  let dataString = JSON.stringify({ message: dataToSend });
-  if (currentWebSocket.readyState) {
-    currentWebSocket.send(dataString);
-  }
-  else {
-    console.log(`websocket not ready`);
+  try {
+    let id = event.data[0];
+    let dataToSend = event.data[1];
+    let dataString = JSON.stringify({ message: dataToSend });
+    if (currentWebSocket.readyState) {
+      currentWebSocket.send(dataString);
+    }
+    else {
+      console.log(`websocket not ready`);
+    }
+  } catch (error) {
+    console.error(`liveFrameCompressionCallback()`, error);
   }
 }

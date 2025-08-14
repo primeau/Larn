@@ -1,5 +1,7 @@
+import { PutCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
+
 // TODO: this heavily duplicates larn's DBWrite and scorePUT
-module.exports.DBWrite = async (dynamo, table, game, completed) => {
+export async function DBWrite(dynamo, table, game, completed) {
   console.log(`DBWrite: start writing game: ${game.gameID}\n`);
 
   let items = {
@@ -31,7 +33,7 @@ module.exports.DBWrite = async (dynamo, table, game, completed) => {
   };
 
   try {
-    const DBresponse = await dynamo.put(params).promise();
+    const DBresponse = await dynamo.send(new PutCommand(params));
     if (DBresponse) {
       console.log(`DBWrite successful write to ${params.TableName} table: ${game.gameID}\n`);
       return {
@@ -57,7 +59,7 @@ module.exports.DBWrite = async (dynamo, table, game, completed) => {
 
 
 
-module.exports.DBDelete = async (dynamo, table, gameID) => {
+export async function DBDelete(dynamo, table, gameID) {
 
   let params = {
     TableName: table,
@@ -67,7 +69,7 @@ module.exports.DBDelete = async (dynamo, table, gameID) => {
   };
 
   try {
-    const DBresponse = await dynamo.delete(params).promise();
+    const DBresponse = await dynamo.send(new DeleteCommand(params));
     if (DBresponse) {
       console.log(`DBDelete successful delete from ${params.TableName} table: ${gameID}\n`);
       return {

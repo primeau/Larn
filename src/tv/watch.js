@@ -23,8 +23,10 @@ function watchRecorded(gameID) {
   video.divs.push(`STATS`);
 
   let recordedFrame = new Frame();
-  recordedFrame.divs.LARN = `Loading...`;
-  recordedFrame.divs.STATS = ``;
+  recordedFrame.divs = {
+    LARN: `Loading...`,
+    STATS: ``
+  };
   bltFrame(recordedFrame);
 
   // load useful css style settings
