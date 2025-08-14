@@ -743,7 +743,7 @@ async function died(reason, slain) {
     setCharCallback(dead);
     paint(); // last live frame will get sent here
 
-    processRecordedFrame({ 'LARN': ``, 'STATS': `` }); // record fade to blank screen so we can easily refresh on reload
+    processRecordedFrame(video.createEmptyFrame()); // record fade to blank screen so we can easily refresh on reload
 
     side_inventory = true;
     game_started = false;

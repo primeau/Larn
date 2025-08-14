@@ -93,6 +93,8 @@ class Video {
     this.divs.forEach(div => {
       newFrame.divs[div] = ``;
     });
+    newFrame.id = video.currentFrameNum + 1;
+    newFrame.ts = Date.now();
     return newFrame;
   }
 

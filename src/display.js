@@ -79,8 +79,6 @@ function recordFrame() {
       };
       if (divs.LARN !== LAST_LARN_DIV || divs.STATS !== LAST_STAT_DIV) {
         let newFrame = video.createEmptyFrame();
-        newFrame.id = video.currentFrameNum + 1;
-        newFrame.ts = Date.now();
         newFrame.divs = divs;
         processRecordedFrame(newFrame);
         processLiveFrame(newFrame);
