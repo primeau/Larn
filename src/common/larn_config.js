@@ -1,13 +1,13 @@
 'use strict';
 
 const VERSION = '12.5.2';
-const BUILD = '523';
+const BUILD = '524';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
 
 
 // recorded games
-const ENABLE_RECORDING = true;
+const ENABLE_RECORDING = true; // IDEA: RELEASE A VERSION WITH THIS SET TO FALSE
 const MIN_FRAMES_TO_LIST = 1000;
 const MAX_ROLL_LENGTH = 200;
 const AWS_SCORE_FUNCTION = 'score';
@@ -18,7 +18,7 @@ function initLambdaCredentials() {
 }
 
 // live games
-const ENABLE_RECORDING_REALTIME = true;
+const ENABLE_RECORDING_REALTIME = true; // IDEA: RELEASE A VERSION WITH THIS SET TO FALSE
 const CF_LOCAL = false;
 const CF_BROADCAST_HOST = CF_LOCAL ? `localhost:8787` : `broadcast.larn.workers.dev`;
 const CF_BROADCAST_PROTOCOL = CF_LOCAL ? `http://` : `https://`;
