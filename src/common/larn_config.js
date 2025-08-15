@@ -1,9 +1,9 @@
 'use strict';
 
 const VERSION = '12.5.2';
-const BUILD = '524';
+const BUILD = '525';
 
-const ENABLE_DEVMODE = false;  // this must be set to false for production releases
+const ENABLE_DEVMODE = true;  // this must be set to false for production releases
 
 
 // recorded games

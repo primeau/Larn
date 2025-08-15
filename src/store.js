@@ -425,7 +425,7 @@ function bankmessage(str, duration) {
 
   if (duration && duration != 0) {
     napping = true;
-    setTimeout(bankmessage, duration, ``, 0);
+    GLOBAL_TIMEOUT = setTimeout(bankmessage, duration, ``, 0);
   }
 }
 
@@ -737,7 +737,7 @@ function parse_sellitem(key) {
     //nap(500);
 
     napping = true;
-    setTimeout(storemessage, 700, ``);
+    GLOBAL_TIMEOUT = setTimeout(storemessage, 700, ``);
     itemToSell = null;
     return 1;
   }
@@ -747,7 +747,7 @@ function parse_sellitem(key) {
     lprcat(`yes${period}`);
 
     napping = true;
-    setTimeout(storemessage, 700, ``);
+    GLOBAL_TIMEOUT = setTimeout(storemessage, 700, ``);
     player.setGold(player.GOLD + itemToSell[SELL_PRICE]);
     var index = player.inventory.indexOf(itemToSell[SELL_ITEM]);
     cleartradiven(index);
@@ -922,8 +922,8 @@ function parse_class(key) {
   printclasses();
   blt();
 
-  setTimeout(oschool, naptime);
   napping = true;
+  GLOBAL_TIMEOUT = setTimeout(oschool, naptime);
   return 0;
 }
 
@@ -1122,7 +1122,7 @@ function olrs() {
 
   setCharCallback(parse_lrs);
 
-  // clear();
+  clear();
 
   cursor(1, 4);
   lprcat(`Welcome to the ${GAMENAME} Revenue Service district office  `);
@@ -1178,7 +1178,7 @@ function storemessage(str, duration) {
   blt();
   if (duration && duration != 0) {
     napping = true;
-    setTimeout(storemessage, duration, ``, 0);
+    GLOBAL_TIMEOUT = setTimeout(storemessage, duration, ``, 0);
   }
 }
 

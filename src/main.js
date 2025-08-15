@@ -477,6 +477,11 @@ function startgame(hard) {
 /*****************************************************************************/
 
 
+
+let GLOBAL_TIMEOUT; // used for setTimeouts that can be interrupted by the main loop
+
+
+
 /*
   JRP
   since we're running in a event-driven system we need to
@@ -486,7 +491,13 @@ function mainloop(e, key) {
 
   if (napping) {
     debug(`napping`);
-    return;
+    if (GLOBAL_TIMEOUT) {
+      clearTimeout(GLOBAL_TIMEOUT);
+      GLOBAL_TIMEOUT = null;
+      napping = false;
+    } else {
+      return;
+    }
   }
 
   nomove = 0;
