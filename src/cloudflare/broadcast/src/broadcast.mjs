@@ -47,61 +47,19 @@ async function handleApiRequest(path, request, env) {
     dbInitialized = true;
   }
 
+
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
+  }
+
   switch (path[0]) {
-
-    case "clean": {
-
-
-      // convert id to a string
-      let idstring = `03edfed93bfbce1c88ed69f516d1a18731734f9ea113d212f5af993eb0105e01`;
-      // convert that string back to an id
-      let idfromstring = env.games.idFromString(idstring);
-
-      // Get the Durable Object stub for this game
-      let gameObject = await env.games.get(idfromstring);
-      // console.log(await gameObject);
-      // console.log(gameObject.fetch("foooooo"));
-
-      console.log(env.watchlist);
-
-      console.log(`done`);
-      // let objectid = await env.games.idFromString(idstring);
-      // console.log(`objectid`, objectid);
-
-      // let gameObject = await env.games.get(objectid);
-      // console.log(gameObject);
-      // console.log(gameObject.sessions.length);
-
-      // // get namespaces
-      // let namespace = ``;
-      // const options = {
-      //   method: 'GET',
-
-      // TODO: DELETE TOKEN
-      //   headers: { 'Content-Type': 'application/json', Authorization: 'Bearer 9zGWlYMS-pT5bpfi9mxUPCN9r-uvGWjeCRblaiWF' },
-      //   limit: 1
-      // };
-      // await fetch(`https://api.cloudflare.com/client/v4/accounts/0f4bb06b0a6b85fa5c6f14d6173a250e/workers/durable_objects/namespaces`, options)
-      //   .then(response => response.json())
-      //   .then(response => namespace = response.result[0].id)
-      //   .catch(err => console.error(err));
-      // console.log(`namespace`, namespace);
-      // let idstring = ``;
-      // await fetch(`https://api.cloudflare.com/client/v4/accounts/0f4bb06b0a6b85fa5c6f14d6173a250e/workers/durable_objects/namespaces/${namespace}/objects`, options)
-      //   .then(response => response.json())
-      //   .then(response => idstring = response.result[0].id)
-      //   .catch(err => console.error(err));
-      // console.log(`idstring`, idstring);
-
-      // let objectid = env.games.idFromString(idstring);
-      // let gameObject = await env.games.get(objectid);
-      // console.log(gameObject);
-      // console.log(gameObject.sessions.length);
-
-      return new Response(`clean?`, { headers: { "Access-Control-Allow-Origin": "*" } });
-    }
-
-
 
     case "gamelist": {
 
@@ -189,6 +147,48 @@ async function handleApiRequest(path, request, env) {
       // object, regardless of the request's URL.
       return gameObject.fetch(newUrl, request);
     }
+
+    ////////////////////////////////
+    ////////////////////////////////
+    ////////////////////////////////
+    ////////////////////////////////
+    ////////////////////////////////
+    case `gotw`: {
+
+      let gameID = path[1];
+
+      console.log(`gotw api`, request.method, gameID);
+
+      if (request.method === 'PUT') {
+        
+        const score = await request.json();
+        console.log(`gotw: PUT score`, score);
+
+        await insertGOTW(env, score);
+
+
+
+      // print everything in the GOTW table
+      let { results } = await env.DB.prepare(`SELECT * FROM gotw`).all();
+      console.log(`GOTW table contents:`, results);
+
+
+      }
+      else {
+        console.log(`gotw: not-PUT`);
+      }
+      return new Response('OK', {
+          headers: { 'Access-Control-Allow-Origin': '*' }
+      });
+
+      return new Response('Method not allowed', { status: 405 });
+
+    }
+    ////////////////////////////////
+    ////////////////////////////////
+    ////////////////////////////////
+    ////////////////////////////////
+    ////////////////////////////////
 
     default:
       return new Response("/game: Not found", { status: 404 });
@@ -459,6 +459,37 @@ async function initDatabase(env) {
       font TEXT);"
   ).all();
 
+
+  /////////////////////
+  /////////////////////
+  /////////////////////
+  /////////////////////
+  /////////////////////
+  console.log(`initdb(): creating gotw table`);
+  await env.DB.prepare(
+    "CREATE TABLE IF NOT EXISTS gotw (\
+      gameID TEXT PRIMARY KEY, \
+      week TEXT, \
+      ularn INTEGER, \
+      winner INTEGER, \
+      score INTEGER, \
+      difficulty INTEGER, \
+      who TEXT, \
+      class TEXT, \
+      mobuls INTEGER, \
+      what TEXT, \
+      level TEXT, \
+      playerID TEXT, \
+      playerIP TEXT, \
+      createdAt INTEGER);"
+  ).all();
+  /////////////////////
+  /////////////////////
+  /////////////////////
+  /////////////////////
+  /////////////////////
+
+
   console.log(`initdb(): creating watchers table`);
   await env.DB.prepare(
     "CREATE TABLE IF NOT EXISTS watchers (\
@@ -538,7 +569,6 @@ function quitSession(gameSession, session) {
     gameSession.broadcast({ quit: session.name });
     deleteSession(gameSession, session);
     // let larn know the watch list has changed
-    // updateWatchList(gameSession.env, session.gameID, gameSession.sessions);
     updateWatchList(gameSession.env, session.gameID, gameSession.sessions);
   }
 }
@@ -556,9 +586,55 @@ async function deleteSession(gameSession, session) {
     console.log(`D1 delete game`, result.success);
   }
 
-  if (session.webSocket) session.webSocket.close();
-
+  // close connecting or open websockets
+  if (session.webSocket && (session.webSocket.readyState === 1 || session.webSocket.readyState === 0)) {
+    session.webSocket.close();
+  }
   session.webSocket = null;
   session = null;
   gameSession = null;
 }
+
+
+
+
+
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+async function insertGOTW(env, game) {
+  console.log(`D1 inserting GOTW`, game);
+  let { success } = await env.DB
+    .prepare(`INSERT OR REPLACE INTO gotw 
+    (gameID, week, ularn, winner, score, difficulty, who, class, mobuls, what, level, playerID, playerIP, createdAt) 
+    VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)`)
+    .bind(
+      game.gameID || ``,
+      game.week || ``,
+      game.ularn ? 1 : 0,
+      game.winner ? 1 : 0,
+      game.score || 0,
+      game.difficulty || 0,
+      game.who || ``,
+      game.class || ``,
+      game.mobuls || 0,
+      game.what || ``,
+      game.level || ``,
+      game.playerID || ``,
+      game.playerIP || ``,
+      Date.now(), // createdAt <-- in case the client clock is wrong
+    )
+    .run();
+  console.log(`D1 inserting gotw`, success);
+
+
+
+
+
+
+
+}
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
