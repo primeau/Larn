@@ -1,8 +1,8 @@
 const TESTING_CLOUDFLARE_WORKERS = false;
-const WATCHERS_TTL = TESTING_CLOUDFLARE_WORKERS ? 30 : 300;
+const WATCHERS_TTL = TESTING_CLOUDFLARE_WORKERS ? 60 : 300;
 const GAME_TTL = TESTING_CLOUDFLARE_WORKERS ? 60 : 600;
 const DEAD_TTL = TESTING_CLOUDFLARE_WORKERS ? 10 : 60;
-const USE_D1 = true; // use D1 or KV
+let dbInitialized = false;
 
 
 
@@ -21,18 +21,18 @@ export default {
   },
 
   async scheduled(event, env, ctx) {
-    if (USE_D1) {
-      // keep the recent games table tidy
-      let result = await env.DB.prepare(`DELETE FROM recent 
+    // keep the recent games table tidy
+    let result = await env.DB.prepare(`DELETE FROM recent 
       WHERE 
       (lastmove < unixepoch() * 1000 - ${GAME_TTL * 1000})
       OR
       (gameover = 1 AND lastmove < unixepoch() * 1000 - ${DEAD_TTL * 1000})`
-      ).run();
+    ).run();
 
-      // keep the watchers table tidy
-      result = await env.DB.prepare(`DELETE FROM watchers WHERE lastupdate < unixepoch() * 1000 - ${WATCHERS_TTL * 1000}`).run();
-    }
+    // keep the watchers table tidy
+    result = await env.DB.prepare(`DELETE FROM watchers 
+      WHERE lastupdate < unixepoch() * 1000 - ${WATCHERS_TTL * 1000}`
+    ).run();
   },
 }
 
@@ -42,11 +42,66 @@ async function handleApiRequest(path, request, env) {
   // We've received at API request. Route the request based on the path.
 
   // my local dev environment wipes out the DB every time i save
-  if (TESTING_CLOUDFLARE_WORKERS && USE_D1) {
+  if (TESTING_CLOUDFLARE_WORKERS && !dbInitialized) {
     await initDatabase(env);
+    dbInitialized = true;
   }
 
   switch (path[0]) {
+
+    case "clean": {
+
+
+      // convert id to a string
+      let idstring = `03edfed93bfbce1c88ed69f516d1a18731734f9ea113d212f5af993eb0105e01`;
+      // convert that string back to an id
+      let idfromstring = env.games.idFromString(idstring);
+
+      // Get the Durable Object stub for this game
+      let gameObject = await env.games.get(idfromstring);
+      // console.log(await gameObject);
+      // console.log(gameObject.fetch("foooooo"));
+
+      console.log(env.watchlist);
+
+      console.log(`done`);
+      // let objectid = await env.games.idFromString(idstring);
+      // console.log(`objectid`, objectid);
+
+      // let gameObject = await env.games.get(objectid);
+      // console.log(gameObject);
+      // console.log(gameObject.sessions.length);
+
+      // // get namespaces
+      // let namespace = ``;
+      // const options = {
+      //   method: 'GET',
+
+      // TODO: DELETE TOKEN
+      //   headers: { 'Content-Type': 'application/json', Authorization: 'Bearer 9zGWlYMS-pT5bpfi9mxUPCN9r-uvGWjeCRblaiWF' },
+      //   limit: 1
+      // };
+      // await fetch(`https://api.cloudflare.com/client/v4/accounts/0f4bb06b0a6b85fa5c6f14d6173a250e/workers/durable_objects/namespaces`, options)
+      //   .then(response => response.json())
+      //   .then(response => namespace = response.result[0].id)
+      //   .catch(err => console.error(err));
+      // console.log(`namespace`, namespace);
+      // let idstring = ``;
+      // await fetch(`https://api.cloudflare.com/client/v4/accounts/0f4bb06b0a6b85fa5c6f14d6173a250e/workers/durable_objects/namespaces/${namespace}/objects`, options)
+      //   .then(response => response.json())
+      //   .then(response => idstring = response.result[0].id)
+      //   .catch(err => console.error(err));
+      // console.log(`idstring`, idstring);
+
+      // let objectid = env.games.idFromString(idstring);
+      // let gameObject = await env.games.get(objectid);
+      // console.log(gameObject);
+      // console.log(gameObject.sessions.length);
+
+      return new Response(`clean?`, { headers: { "Access-Control-Allow-Origin": "*" } });
+    }
+
+
 
     case "gamelist": {
 
@@ -56,9 +111,7 @@ async function handleApiRequest(path, request, env) {
       // send a list of active games
       if (!gameID) {
         let liveGamesList = await getListOfActiveGames(env);
-        const json = JSON.stringify(liveGamesList);
-        // console.log(`list:`, json);
-        return new Response(json, {
+        return new Response(JSON.stringify(liveGamesList), {
           headers: {
             "content-type": "application/json;charset=UTF-8",
             "Access-Control-Allow-Origin": "*",
@@ -94,7 +147,7 @@ async function handleApiRequest(path, request, env) {
               headers: { "Access-Control-Allow-Origin": "*", },
             });
           } catch (error) {
-            console.error(`oops`, error);
+            console.error(`/gamelist: oops`, error);
           }
         }
 
@@ -105,13 +158,7 @@ async function handleApiRequest(path, request, env) {
       // Request for `/api/game/...`.
       if (!path[1]) {
         // The request is for just "/api/game", with no ID.
-        if (request.method == "POST") {
-          // POST to /api/game creates a game instance
-          let id = env.games.newUniqueId();
-          return new Response(id.toString(), { headers: { "Access-Control-Allow-Origin": "*" } });
-        } else {
-          return new Response("Method not allowed", { status: 405 });
-        }
+        return new Response("/game: Method not allowed", { status: 405 });
       }
 
       // OK, the request is for `/api/game/<gameID>/...`. It's time to route to the Durable Object
@@ -119,7 +166,7 @@ async function handleApiRequest(path, request, env) {
       let gameID = path[1];
 
       if (!env.games) {
-        return new Response("durable object error", { status: 503 });
+        return new Response("/game: durable object error", { status: 503 });
       }
 
       // Each Durable Object has a 256-bit unique ID. 
@@ -144,7 +191,7 @@ async function handleApiRequest(path, request, env) {
     }
 
     default:
-      return new Response("Not found", { status: 404 });
+      return new Response("/game: Not found", { status: 404 });
   }
 }
 
@@ -161,6 +208,7 @@ async function handleErrors(request, func) {
       // Annoyingly, if we return an HTTP error in response to a WebSocket request, Chrome devtools
       // won't show us the response body! So... let's send a WebSocket response with an error
       // frame instead.
+      console.log(`handleErrors`, err);
       let pair = new WebSocketPair();
       pair[1].accept();
       pair[1].send(JSON.stringify({ error: err.stack }));
@@ -178,18 +226,14 @@ async function handleErrors(request, func) {
 // Participants connect to the session using WebSockets, and it broadcasts messages from 
 // each participant to all others.
 export class GameSession {
-  constructor(controller, env) {
-    // `controller.storage` provides a simple KV get()/put() interface to our durable storage.
-    this.storage = controller.storage;
-
+  constructor(state, env) {
     // `env` is our environment bindings (discussed earlier).
     this.env = env;
 
     // We will put the WebSocket objects for each client, and some metadata, into `sessions`.
     this.sessions = [];
 
-    this.lastFrame; // rather than use storage, we can put the last frame in a variable
-    // this.ip = ``; // save to send back to larn
+    // this.state = state;
     this.env.watchlist = []; // list of larntv sessions watching
     this.env.lastExpiryTime = []; // for making sure watchlist doesn't expire from kv
   }
@@ -209,9 +253,6 @@ export class GameSession {
             return new Response("expected websocket", { status: 400 });
           }
 
-          // // Get the client's IP address
-          // this.ip = request.headers.get("CF-Connecting-IP");
-
           // To accept the WebSocket request, we create a WebSocketPair (which is like a socketpair,
           // i.e. two WebSockets that talk to each other), we return one end of the pair in the
           // response, and we operate on the other end. Note that this API is not part of the
@@ -220,8 +261,16 @@ export class GameSession {
           let pair = new WebSocketPair();
 
           // We're going to take pair[1] as our end, and return pair[0] to the client.
-          // await this.handleSession(pair[1], this.ip);
           await this.handleSession(pair[1]);
+
+          // // if we want to consider Hibernateable websockets
+          // let webSocket = pair[1];
+          // try {
+          //   console.log(`state`, this.state.id);
+          //   await this.state.acceptWebSocket(webSocket);
+          // } catch (error) {
+          //   console.error(`handle`, error);
+          // }
 
           // Now we return the other end of the pair to the client.
           return new Response(null, { status: 101, webSocket: pair[0] });
@@ -234,34 +283,14 @@ export class GameSession {
   }
 
   // handleSession() implements our WebSocket-based game broadcast protocol.
-  async handleSession(webSocket, ip) {
+  async handleSession(webSocket) {
     // Accept our end of the WebSocket. This tells the runtime that we'll be terminating the
     // WebSocket in JavaScript, not sending it elsewhere.
     webSocket.accept();
 
     // Create our session and add it to the sessions list.
-    // We don't send any messages to the client until it has sent us the initial user info
-    // message. Until then, we will queue messages in `session.blockedMessages`.
-    let session = { webSocket, blockedMessages: [] };
+    let session = { webSocket };
     this.sessions.push(session);
-
-    // session.ip = ip;
-
-    // let frameToPush;
-
-    // Queue "join" messages for all online users, to populate the client's roster.
-    this.sessions.forEach(otherSession => {
-      if (otherSession.name) { // this session doesn't have a name yet
-        // if (otherSession.lastFrame) frameToPush = otherSession.lastFrame; // only the game session will have a frame
-        session.blockedMessages.push(JSON.stringify({ joined: otherSession.name }));
-      }
-    });
-
-    // // send the last frame to the client if there is one
-    // if (frameToPush) {
-    //   session.blockedMessages.push(frameToPush);
-    //   console.log(`pushing last frame`);
-    // }
 
     // Set event handlers to receive messages.
     let receivedUserInfo = false;
@@ -287,17 +316,8 @@ export class GameSession {
 
           console.log(`join`, session.name, session.gameID);
 
-          // Deliver all the messages we queued up since the user connected.
-          session.blockedMessages.forEach(queued => {
-            webSocket.send(queued);
-          });
-          delete session.blockedMessages;
-
           // Broadcast to all other connections that this user has joined.
           this.broadcast({ joined: session.name });
-
-          // webSocket.send(JSON.stringify({ ready: true, ip: session.ip }));
-          webSocket.send(JSON.stringify({ ready: true }));
 
           // Note that we've now received the user info message.
           receivedUserInfo = true;
@@ -308,8 +328,10 @@ export class GameSession {
           return;
         }
 
-        // Construct sanitized message for storage and broadcast.
-        data = { name: session.name, message: "" + data.message };
+        if (!data.message) return;
+
+        // Construct sanitized message for broadcast.
+        data = { name: session.name, gameID: session.gameID, message: "" + data.message };
 
         // Block overly long messages
         if (data.message.length > 131072) {
@@ -320,21 +342,7 @@ export class GameSession {
         data.timestamp = Date.now();
 
         // Broadcast the message to all other WebSockets.
-        let dataStr = JSON.stringify(data);
-        this.broadcast(dataStr);
-
-        //
-        //
-        //
-        //
-        // 
-        // save last frame
-        session.lastFrame = dataStr;
-        //
-        //
-        //
-        //
-        //
+        this.broadcast(data);
 
         // let larn know the watch list has changed
         updateWatchList(this.env, session.gameID, this.sessions);
@@ -350,67 +358,49 @@ export class GameSession {
     // a quit message.
     let closeOrErrorHandler = evt => {
       console.log(`close`, session.name, session.gameID);
-      session.quit = true;
       this.sessions = this.sessions.filter(member => member !== session);
-      if (session.name) {
-        this.broadcast({ quit: session.name });
-        // delete session from kv, if it's not a larntv session
-        if (session.name === session.gameID) {
-          // this.env.realtime_larn.delete(session.gameID);
-          this.env.realtime_larn.put(session.gameID, session.gameID, { expirationTtl: 60 });
-        }
-        // let larn know the watch list has changed
-        updateWatchList(this.env, session.gameID, this.sessions);
-      }
+      quitSession(this, session);
     };
     webSocket.addEventListener("close", closeOrErrorHandler);
     webSocket.addEventListener("error", closeOrErrorHandler);
   }
 
+
+
+
   // broadcast() broadcasts a message to all clients.
   broadcast(message) {
+    let from = message.name; // keep track of who is sending the message
+
     // Apply JSON if we weren't given a string to start with.
     if (typeof message !== "string") {
       message = JSON.stringify(message);
     }
 
     // Iterate over all the sessions sending them messages.
-    let quitters = [];
     this.sessions = this.sessions.filter(session => {
-      if (session.name) {
-        try {
+      try {
+        // don't send messages back to the sender (generally, larn->larn)
+        if (session.name && from != session.name) {
           session.webSocket.send(message);
-          return true;
-        } catch (err) {
-          // connection is dead. Remove it from the list and arrange to notify everyone below.
-          session.quit = true;
-          quitters.push(session);
-          return false;
         }
-      } else {
-        // This session hasn't sent the initial user info message yet so queue the message to be sent later.
-        session.blockedMessages.push(message);
         return true;
+      } catch (err) {
+        // connection is dead. Remove it from the list and arrange to notify everyone below.
+        console.log(`quit during broadcast:`, session.name, session.gameID);
+        quitSession(this, session);
+        return false;
       }
     });
 
-    quitters.forEach(quitter => {
-      console.log(`quit`, quitter.name, quitter.gameID);
-      if (quitter.name) {
-        this.broadcast({ quit: quitter.name });
-        // delete session from kv, if it's not a larntv session
-        if (quitter.name == quitter.gameID) {
-          // this.env.realtime_larn.delete(quitter.gameID);
-          this.env.realtime_larn.put(quitter.gameID, quitter.gameID, { expirationTtl: 60 });
-        }
-      }
-    });
   }
 } // END GameSession
 
 
 
 async function updateWatchList(env, gameID, sessions) {
+  // console.log(`updatewatchlist`, env, gameID, sessions.length);
+
   try {
 
     // make a list of open sessions
@@ -481,92 +471,94 @@ async function initDatabase(env) {
 
 
 async function getListOfActiveGames(env) {
-  if (USE_D1) {
-    const { results, success } = await env.DB.prepare("SELECT * FROM recent").all();
-    // console.log(`getListOfActiveGames() D1: `, success, results);
-    return results;
-  } else {
-    let rawlist = await env.realtime_larn.list();
-    let results = [];
-    rawlist.keys.forEach(game => results.push(game.metadata));
-    // console.log(`getListOfActiveGames() KV: `, results);
-    return results;
-  }
+  const { results, success } = await env.DB.prepare("SELECT * FROM recent").all();
+  // console.log(`getListOfActiveGames() D1: `, success, results);
+  return results;
 }
 
 
 
 async function insertActiveGame(env, game) {
-  if (USE_D1) {
-    // console.log(`D1 inserting game`, game.gameID);
-    let { success } = await env.DB
-      .prepare(`INSERT OR REPLACE INTO recent 
+  // console.log(`D1 inserting game`, game.gameID);
+  let { success } = await env.DB
+    .prepare(`INSERT OR REPLACE INTO recent 
     (gameID, ularn, build, difficulty, mobuls, who, level, lastmove, explored, gameover, watchers, font) 
     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)`)
-      .bind(
-        game.gameID || ``,
-        game.ularn ? 1 : 0,
-        game.build || 0,
-        game.difficulty || 0,
-        game.mobuls || 0,
-        game.who || ``,
-        game.level || ``,
-        Date.now(), // game.lastmove || 0, <-- lastmove doesn't work when the client clock is wrong
-        game.explored || ``,
-        game.gameover ? 1 : 0,
-        game.watchers || 0,
-        game.fontFamily || ``,
-      )
-      .run();
-    // console.log(`D1 inserting game`, success);
-  } else {
-    // console.log(`KV inserting game`, game.gameID);
-    await env.realtime_larn.put(game.gameID, game.gameID,
-      {
-        expirationTtl: game.gameover ? DEAD_TTL : GAME_TTL /* seconds */,
-        metadata: game
-      }
-    );
-  }
+    .bind(
+      game.gameID || ``,
+      game.ularn ? 1 : 0,
+      game.build || 0,
+      game.difficulty || 0,
+      game.mobuls || 0,
+      game.who || ``,
+      game.level || ``,
+      Date.now(), // game.lastmove || 0, <-- lastmove doesn't work when the client clock is wrong
+      game.explored || ``,
+      game.gameover ? 1 : 0,
+      game.watchers || 0,
+      game.fontFamily || ``,
+    )
+    .run();
+  // console.log(`D1 inserting game`, success);
 }
 
 
 
 async function insertWatcher(env, gameID, watchlist) {
-  if (USE_D1) {
-    return await env.DB
-      .prepare(`INSERT OR REPLACE INTO watchers 
+  return await env.DB
+    .prepare(`INSERT OR REPLACE INTO watchers 
     (gameID, watchlist, lastupdate) 
     VALUES (?1, ?2, ?3)`)
-      .bind(
-        gameID || ``,
-        watchlist || ``,
-        Date.now(),
-      )
-      .run();
-  } else {
-    return await env.larn_tv_watchers.put(
-      gameID,
-      JSON.stringify(env.watchlist[gameID]),
-      { expirationTtl: WATCHERS_TTL }
-    );
-  }
+    .bind(
+      gameID || ``,
+      watchlist || ``,
+      Date.now(),
+    )
+    .run();
 }
 
 
 
 async function getNumWatchers(env, gameID) {
   let numWatchers = 0;
-  if (USE_D1) {
-    let stmt = env.DB.prepare(`SELECT watchlist FROM watchers WHERE gameID = ?1 LIMIT 1`).bind(gameID);
-    let row = await stmt.first();
-    let watchers = row ? JSON.parse(row.watchlist) : [];
-    numWatchers = watchers.length;
-  } else {
-    let watchers = await env.larn_tv_watchers.get(gameID) || JSON.stringify([]);
-    watchers = JSON.parse(watchers);
-    numWatchers = watchers.length;
-  }
+  let stmt = env.DB.prepare(`SELECT watchlist FROM watchers WHERE gameID = ?1 LIMIT 1`).bind(gameID);
+  let row = await stmt.first();
+  let watchers = row ? JSON.parse(row.watchlist) : [];
+  numWatchers = watchers.length;
   // console.log(`numwatchers:`, numWatchers);
   return numWatchers;
+}
+
+
+
+function quitSession(gameSession, session) {
+  console.log(`quitSession`, session.name, session.gameID);
+  if (session.name) {
+    session.quit = true;
+    gameSession.broadcast({ quit: session.name });
+    deleteSession(gameSession, session);
+    // let larn know the watch list has changed
+    // updateWatchList(gameSession.env, session.gameID, gameSession.sessions);
+    updateWatchList(gameSession.env, session.gameID, gameSession.sessions);
+  }
+}
+
+
+
+async function deleteSession(gameSession, session) {
+  if (!session) return;
+
+  console.log(`deleteSession:`, session.name, session.gameID, session.webSocket);
+
+  // if it's a larn session, delete entry from recent game list
+  if (session.name === session.gameID) {
+    let result = await gameSession.env.DB.prepare(`DELETE FROM recent WHERE gameID = ?1`).bind(session.gameID).run();
+    console.log(`D1 delete game`, result.success);
+  }
+
+  if (session.webSocket) session.webSocket.close();
+
+  session.webSocket = null;
+  session = null;
+  gameSession = null;
 }
