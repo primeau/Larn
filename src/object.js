@@ -754,7 +754,7 @@ function lookforobject(do_ident, do_pickup) {
   }
   //
   else if (item.matches(OCOOKIE)) {
-    if (do_ident) updateLog(`${youFound} ${item}${period}`, formatHint('t', 'to take', 'E', 'to eat'));
+    if (do_ident) updateLog(`${youFound} ${item}${period}`, formatHint('t', 'to take', 'e', 'to eat'));
   }
   //
   else if (item.matches(OSPEED)) {
