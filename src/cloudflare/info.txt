@@ -2,6 +2,7 @@ https://developers.cloudflare.com/workers/get-started/guide/
 
 to install:
 npm create cloudflare@latest
+sudo npm install -g wrangler@latest
 
 *** deploy must be from larn-local
 

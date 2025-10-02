@@ -12,8 +12,6 @@ account_id = "CLOUDFLARE_ACCOUNT_ID"
 main = "src/broadcast.mjs"
 
 kv_namespaces = [
-  ## list of games currently being played
-  { binding = "realtime_larn", id = "CLOUDFLARE_KV_ID1" }, 
   ## list of larntv watchers
   { binding = "larn_tv_watchers", id = "CLOUDFLARE_KV_ID2" },
 ]
@@ -27,6 +25,17 @@ database_id = "CLOUDFLARE_D1"
 bindings = [
   { name = "games", class_name = "GameSession" },
 ]
+
+[[r2_buckets]]
+binding = "BUCKET_GOTW"
+bucket_name = "gotw"
+
+[[r2_buckets]]
+binding = "BUCKET_MOVIES"
+bucket_name = "movies"
+
+[observability.logs]
+enabled = true
 
 [[migrations]]
 ## tag = "v1" ## used
