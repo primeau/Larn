@@ -42,8 +42,49 @@ function invokeLambda(requestPayload, successCallback, failCallback) {
 
 
 
-function downloadRecordings(recordingsLoadedCallback, limit) {
-  // console.log(`downloadRecordings()`);
+
+async function invokeLambdaAsync(payload) {
+  if (AWS.config.accessKeyId === `AWS_CONFIG_ACCESSKEYID`) {
+    console.log(`AWS credentials not set`);
+    return;
+  }
+
+  const params = {
+    FunctionName: AWS_RECORD_FUNCTION,
+    Payload: JSON.stringify(payload),
+    InvocationType: 'RequestResponse',
+    LogType: 'None'
+  };
+
+  try {
+    const response = await lambda.invoke(params).promise();
+
+    let payload = {};
+    if (response.StatusCode === 200 && response.Payload) {
+      try {
+        payload = JSON.parse(response.Payload);
+      } catch (parseError) {
+        payload = { rawPayload: response.Payload };
+      }
+      if (payload.statusCode === 200) {
+        return payload;
+      } else {
+        console.error(`invokeLambdaAsync(): payload error: ${payload.statusCode}`);
+        return null;
+      }
+    } else {
+      console.error(`invokeLambdaAsync(): response error: ${response.StatusCode}`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`invokeLambdaAsync():`, error);
+  }
+}
+
+
+
+function downloadRecordings_AWS_LEGACY(recordingsLoadedCallback, limit) {
+  console.log(`downloadRecordings_AWS_LEGACY()`);
   let requestPayload = {
     action: `listcompleted`,
     frameLimit: limit
@@ -80,63 +121,46 @@ function downloadFile(gameID, filename, successCallback, failCallback) {
   invokeLambda(requestPayload, successCallback, failCallback);
 }
 
-
-// function downloadFileMultiple(gameID, files, successCallback, failCallback) {
-//   console.log(`downloadFile(): ${gameID}/${filename}`);
-//   let requestPayload = {
-//     action: `readmultiple`,
-//     gameID: gameID,
-//     filename: files,
-//   };
-//   invokeLambda(requestPayload, successCallback, failCallback);
-// }
-
-
-
-// Zfunction downloadRolls( ) {
-//   let gamesList = await Promise.all([recordedGamesList, liveGamesList]).then((games) => {
-//     console.log(`completed games ${games[0].body.length}`);
-//     console.log(`games in progress ${games[1].body.length}`);
-//     return games;
-//   });
-// }
+async function downloadFileAsync(gameID, filename) {
+  console.log(`downloadFileAsync(): ${gameID}/${filename}`);
+  let requestPayload = {
+    action: `read`,
+    gameID: gameID,
+    filename: filename,
+  };
+  const response = await invokeLambdaAsync(requestPayload);
+  if (!response) {
+    console.error(`downloadFileAsync(): ${gameID}/${filename} empty file`);
+  }
+  return response;
+}
 
 
 
-function downloadRoll(video, successCallback, failCallback) {
-  let numRolls = video.rolls.length;
-  let filename = `${numRolls}.json`;
+async function downloadRoll(gameID, rollNum) {
+  let filename = `${rollNum}.json`;
   // console.log(`downloadRoll(): ${gameID}/${filename}`);
-  downloadFile(video.gameID, filename, rollSuccess, null);
+  let data = await downloadFileAsync(gameID, filename);
+  if (data && data.File) {
+    let roll = decompressRoll(data.File);
+    roll.metadata = data.Metadata;
+    return roll;
+  } else {
+    console.error(`downloadRoll(): ${gameID}/${filename} empty file`);
+    return null;
+  }
+}
 
-  function rollSuccess(body, file, metadata) {
-    if (!file) {
-      console.error(`downloadRoll(): ${video.gameID}/${filename} empty file`);
-      if (numRolls === 0) {
-        updateMessage(`\nSorry, this game couldn't be loaded`);
-      }
-      if (failCallback) failCallback(video, filename);
-      return;
-    }
 
-    let roll = decompressRoll(file);
-    // console.log(`downloadRoll(): ${JSON.stringify(roll)}`);
-    // console.log(`downloadRoll(): got roll with ${roll.patches.length} frames`);
-    if (numRolls === 0) {
-      console.log(`downloadRoll(): metadata`, metadata);
-      if (metadata.diff) metadata.diff = parseInt(metadata.diff);
-      if (metadata.score) metadata.score = parseInt(metadata.score);
-      if (metadata.frames) metadata.frames = parseInt(metadata.frames);
-      if (metadata.frames) {
-        video.metadata = metadata;
-        video.totalFrames = metadata.frames;
-      }
-      if (metadata.who) {
-        document.title = `LarnTV: ${metadata.who} - ${metadata.what} - diff ${metadata.diff} - score ${metadata.score}`;
-      }
-    }
-    video.addRollToBuffer(roll);
-    if (successCallback) successCallback();
+async function downloadStyleInfo(gameID) {
+  let filename = `${gameID}.css`;
+  let data = await downloadFileAsync(gameID, filename);
+  if (data && data.File) {
+    const styleInfo = JSON.parse(data.File);
+    return styleInfo;
+  } else {
+    console.error(`downloadStyleInfo(): ${gameID}/${filename} empty file`);
+    return null;
   }
 }
 

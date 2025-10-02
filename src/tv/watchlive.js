@@ -2,7 +2,7 @@
 
 let liveMetadata;
 let liveFrameCache;
-
+let GET_LIVE_INTERVAL = null;
 
 
 function watchLive() {
@@ -68,36 +68,26 @@ function downloadliveGamesList(downloadCompleteCallback) {
     return;
   }
   getLive(downloadCompleteCallback);
-  setInterval(getLive, LIVE_LIST_REFRESH * 1000, downloadCompleteCallback);
+  GET_LIVE_INTERVAL = setInterval(getLive, LIVE_LIST_REFRESH * 1000, downloadCompleteCallback);
 }
 
 
 
-function getLive(downloadCompleteCallback) {
+async function getLive(downloadCompleteCallback) {
   if (!navigator.onLine) {
     console.error(`getLive(): offline`);
     return;
   }
-  fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/gamelist/`)
-    .then(function (response) {
-      response.json().then(function (data) {
-        let tmpList = [];
-        if (typeof data.keys === `object`) data = data.keys; // temp backwards compatibility
-        data.forEach(game => {
-          if (game.metadata) game = game.metadata; // temp backwards compatibility
-          tmpList.push({
-            gameID: game.gameID,
-            ularn: game.ularn,
-            hardlev: game.difficulty,
-            timeused: game.mobuls,
-            who: game.who,
-            level: game.level,
-            explored: game.explored,
-            createdAt: game.lastmove, // use createdAt for sorting
-          });
-        });
-        downloadCompleteCallback(tmpList);
-      });
-    })
-    .catch(error => console.log(`getLive(): no data`));
+  try {
+    const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/${CF_ACTIVEGAME_ENDPOINT}`);
+    if (response.ok) {
+      const liveGames = await response.json();
+      downloadCompleteCallback(liveGames);
+    } else if (response.status == 403) { // for blocking scrapers
+      console.error(`getLive(): 403 forbidden, stopping requests`);
+      clearInterval(GET_LIVE_INTERVAL);
+    }
+  } catch (error) {
+    console.error(`getLive(): no data`);
+  }
 }

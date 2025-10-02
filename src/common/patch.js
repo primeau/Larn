@@ -9,7 +9,6 @@ class Patch {
   constructor() {
     this.id;
     this.ts;
-    // this.divs = new Map();
     this.divs = {};
   }
 }
@@ -25,6 +24,11 @@ function buildFrame(patch, frame) {
   
   // timestamp;
   newFrame.ts = patch.ts;
+
+  // shouldn't happen but just in case
+  if (frame.compressed) {
+    decompressFrame(frame);
+  }
   
   let divs = Object.entries(patch.divs);
   // console.error(`buildFrame(): divs: ${patch.id} ${divs}`);

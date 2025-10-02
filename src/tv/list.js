@@ -146,15 +146,25 @@ function sortName(a, b) {
   if (!a && !b) return 0;
   if (!a) return -1;
   if (!b) return 1;
-  if (b.who === a.who) return b.createdAt - a.createdAt;
-  return b.who.toUpperCase() < a.who.toUpperCase();
+  const whoA = a.who.toUpperCase();
+  const whoB = b.who.toUpperCase();
+  if (whoA < whoB) {
+    return -1;
+  }
+  if (whoA > whoB) {
+    return 1;
+  }
+  // names must be equal
+  return b.createdAt - a.createdAt;
 }
 
 
 
 function recordedGamesLoaded(games) {
-  if (games && games[0]) {
-    recordedGamesList = games[0];
+  if (CLOUDFLARE_READ) {
+    recordedGamesList = games; // if reading from CF
+  } else {
+    if (games && games[0]) recordedGamesList = games[0]; // if reading from AWS
   }
   radioChanged();
 }

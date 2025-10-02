@@ -645,3 +645,28 @@ function isPhone() {
 function isTablet() {
   return isMobile() && !isPhone();
 }
+
+// needed because gotw games start with LEVELS[i] being fullly explored but hidden
+function isLevelVisited(lev) {
+  if (EXPLORED_LEVELS[lev]) return true;
+  if (!LEVELS[lev] || !LEVELS[lev].know) return false;
+  for (let y = 0; y < MAXY; y++) {
+    for (let x = 0; x < MAXX; x++) {
+      if (LEVELS[lev].know[x][y] && LEVELS[lev].know[x][y] !== KNOWNOT) {
+        EXPLORED_LEVELS[lev] = true;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// duplicated from cf_tools.mjs
+function getISOWeek(date) {
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  return weekNo;
+}

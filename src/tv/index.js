@@ -10,7 +10,7 @@ const TV_CHANNEL_RECORDED = `recorded`;
 const TV_CHANNEL_LIVE = `live`;
 let TV_CHANNEL;
 
-
+let frameCompressionWorker;  /* web worker to compress live frames */
 
 go();
 
@@ -19,10 +19,17 @@ go();
 async function go() {
   initRollbar();
   initAWS();
+  console.log(`build`, BUILD);
   console.log(`cloudflare`, CF_BROADCAST_HOST);
 
   const urlParams = loadURLParameters();
   window.addEventListener('resize', onResize);
+  
+  // WORKER STEP 0 - initialization
+  if (window.Worker) {
+    frameCompressionWorker = new Worker('../workers/compressionWorker.js');
+    frameCompressionWorker.onmessage = frameCompressionCallback;
+  }
 
   await loadFonts();
 
@@ -31,12 +38,17 @@ async function go() {
     watchRecorded(urlParams.gameid);
   } else if (urlParams.live) {
     TV_CHANNEL = TV_CHANNEL_LIVE;
-    initCloudFlare(`larntv:${rund(1000000)}`, urlParams.live, bltLiveFrame);
+    const logname = localStorageGetObject('logname', '-');
+    initCloudFlare(`larntv:${logname}:${rund(1000000)}`, urlParams.live, bltLiveFrame);
     watchLive(urlParams.live);
   } else {
     TV_CHANNEL = TV_CHANNEL_LIST;
     initList();
-    downloadRecordings(recordedGamesLoaded, MIN_FRAMES_TO_LIST);
+    if (CLOUDFLARE_READ) {
+      downloadRecordings(recordedGamesLoaded, MIN_FRAMES_TO_LIST);
+    } else {
+      downloadRecordings_AWS_LEGACY(recordedGamesLoaded, MIN_FRAMES_TO_LIST);
+    }
     downloadliveGamesList(liveGamesLoaded);
   }
 
@@ -123,18 +135,25 @@ function onResize() {
 
 
 let bltFrameCache = -1;
-function bltFrame(frame) {
+async function bltFrame(frame) {
   if (!frame) return;
+
+  if (frame.compressed) {
+    decompressFrame(frame);
+    // console.log(`bltFrame(): decompressed`, frame.id);
+  }
+
   if (frame.divs.LARN === ``) frame.divs.LARN = EMPTY_LARN_FRAME;
 
-  // this doesn't really do much. if the cache is set to a value
-  // it prevents rewinding
+  // TODO: if bltFrameCache is set to a value it prevents rewinding
   if (frame.id > bltFrameCache) {
   // if (frame.ts > bltFrameCache) {
     setDiv(`TV_LARN`, frame.divs.LARN);
     setDiv(`TV_STATS`, frame.divs.STATS);
     // bltFrameCache = frame.id;
     //bltFrameCache = frame.ts;
+
+    // compressFrame(frame, true); // handled by frameCompressionJob
   } else {
     console.log(`bltFrame(): out of order frame`, frame.id, bltFrameCache);
     // console.log(`bltFrame(): out of order frame`, frame.ts, bltFrameCache);

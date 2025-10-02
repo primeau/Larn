@@ -10,30 +10,42 @@ let PLAY = false;
 
 let clock;
 let lastFrameTime = Date.now();
+let compressionInterval; // for periodic frame compression
 
 let recordedMetadata;
 
 
 
-function watchRecorded(gameID) {
-  initPlayer();
-
+async function watchRecorded(gameID) {
+  
   video = new Video(gameID);
   video.divs.push(`LARN`);
   video.divs.push(`STATS`);
 
-  let recordedFrame = new Frame();
-  recordedFrame.divs = {
-    LARN: `Loading...`,
-    STATS: ``
-  };
-  bltFrame(recordedFrame);
-
   // load useful css style settings
-  downloadFile(gameID, `${gameID}.css`, setRecordedStyleCallback, null);
+  recordedMetadata = await downloadStyleInfo(gameID);
+  setStyle(recordedMetadata);
+  
+  initPlayer();
+  bltFrame(video.createInfoFrame(`Loading...`));
 
-  // kick off the downloading of all video data
-  downloadRoll(video, updateProgressBarCallback);
+  let roll = null;
+  let rollNum = 0;
+  do {
+    roll = await downloadRoll(gameID, rollNum++);
+    video.addRollToFrameBuffer(roll);
+    if (rollNum === 1) {
+      if (roll) {
+        play();
+        // memory management - start periodic frame compression
+        startFrameCompressionJob(5000);
+      } else {
+        bltFrame(video.createInfoFrame(`Sorry, this game couldn't be loaded`));
+      }
+    }
+  }
+  while (roll != null);
+  
 }
 
 
@@ -110,13 +122,6 @@ function initPlayer() {
 
 
 
-// lambda callback
-function setRecordedStyleCallback(payloadBody, styleIn, payloadMetadata) {
-  if (styleIn) recordedMetadata = JSON.parse(styleIn);
-}
-
-
-
 function updateProgressBarCallback() {
   updateMessage(``);
 
@@ -168,6 +173,13 @@ function onClickProgressBar(event) {
   let percent = clickX / width;
   let newFrameNum = Math.floor(video.totalFrames * percent);
   if (newFrameNum >= 0 && newFrameNum < video.frameBuffer.length - 1) {
+
+    // ensure frames built up from patches if necessary
+    // otherwise getFrame() can blow call stack
+    while (video.currentFrameNum < newFrameNum) {
+      video.getNextFrame();
+    }
+
     video.currentFrameNum = newFrameNum;
     // this feels a bit hacky but it works
     clearTimeout(clock);
@@ -337,7 +349,6 @@ function bltRecordedFrame(frame) {
   if (!frame) return;
   updateProgressBar(frame.id, video.frameBuffer.length - 1, video.totalFrames);
   bltFrame(frame);
-  setStyle(recordedMetadata);
 }
 
 

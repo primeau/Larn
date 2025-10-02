@@ -133,29 +133,23 @@ function wsMessageEvent(event) {
 
 
 async function writeGameData(metadata, gameID) {
-
-  let returnWatchCount = fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/gamelist/${gameID}`, {
-    method: "POST",
-    body: JSON.stringify({ metadata }),
-    headers: { "content-type": "text/plain;charset=UTF-8" },
-  })
-    .then(async function (response) {
-      try {
-        let responseText = await response.text();
-        let j = JSON.parse(responseText);
-        setIP(j.ip); // todo this should probably be processed elsewhere
-        return j.watchers;
-      } catch (error) {
-        console.error(`writegamedataInner()`, error);
-        return 0;
-      }
-    })
-    .catch(error => {
-      console.error(`writeGameData():`, error);
-      return 0;
+  try {
+    const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/${CF_ACTIVEGAME_ENDPOINT}/${gameID}`, {
+      method: "POST",
+      body: JSON.stringify({ metadata }),
+      headers: { "content-type": "text/plain;charset=UTF-8" },
     });
-
-  return returnWatchCount;
+    if (response.ok) {
+      const j = await response.json();
+      setIP(j.ip); // todo this should probably be processed elsewhere
+      return j.watchers;
+    } else {
+      console.error(`writeGameData():`, response.statusText);
+    }
+  } catch (error) {
+    console.error(`writeGameData():`, error);
+  }
+  return 0;
 }
 
 
@@ -197,7 +191,107 @@ function liveFrameCompressionCallback(event) {
     else {
       console.log(`websocket not ready`);
     }
+
+    // memory management
+    event.data[0] = null;
+    event.data[1] = null;
+    event.data.length = 0;
+    
   } catch (error) {
     console.error(`liveFrameCompressionCallback()`, error);
+  }
+}
+
+
+
+async function cloudflareWriteHighScore(score) {
+  try {
+    console.log(`cloudflareWriteHighScore()`, score.gameID, gameID);
+    const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/${CF_SCORE_ENDPOINT}/${gameID}`, {
+      method: "PUT",
+      body: JSON.stringify(score),
+      headers: { "content-type": "text/plain;charset=UTF-8" },
+    });
+    console.log(`cloudflareWriteHighScore():`, response.status, score.who, score.score, score.hardlev);
+  } catch (error) {
+    console.error(`cloudflareWriteHighScore(): error`, error);
+  }
+}
+
+
+
+async function getHighscores() {
+  try {
+    const board = GOTW ? 'gotw' : 'highscores';
+    const game = ULARN ? 'ularn' : 'larn';
+    const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/${CF_HIGHSCORE_ENDPOINT}/${board}/${game}`);
+
+    const minMoves = GOTW ? 0 : 1000;
+
+    if (response.ok) {
+      const highscores = await response.json();
+      console.log(`getHighscores() numhighscores:`, highscores.length, highscores[0]);
+      const highscoregroup = {};
+      highscoregroup.winners = highscores.filter(score => score.ularn === ULARN && score.winner === true).sort(sortScore);
+      highscoregroup.visitors = highscores.filter(score => score.ularn === ULARN && score.winner === false && score.moves >= minMoves).sort(sortScore);
+      return highscoregroup;
+    }
+    
+    console.log(`getHighscores() failed to load high scores`);
+    return null;
+
+  } catch (error) {
+    console.error(`getHighscores(): error`, error);
+    // return { winners:[], visitors:[] };
+    return null;
+  }
+}
+
+
+
+async function cloudflareLoadGame(gameID) {
+  console.log(`cloudflareLoadGame(): loading game from cloudflare: ${gameID}`);
+  try {
+    const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/${CF_SCORE_ENDPOINT}/${gameID}`);
+
+    if (response.status === 200) {
+      const score = await response.json();
+      score.player = score.stats;
+      score.gamelog = JSON.parse(score.gamelog);
+      score.extra = [];
+      score.extra[EXTRA_GTIME] = score.gtime;
+      score.extra[EXTRA_BUILD] = score.build;
+      score.extra[EXTRA_VERSION] = score.version;
+      score.extra[EXTRA_RMST] = score.rmst;
+      return getStatString(score, true);
+    } else if (response.status === 404) {
+        return `Game ${gameID} not found`;
+    } else {
+      console.error("cloudflareLoadGame(): Failed to get score", gameID, response.status, response.statusText);
+      return `Couldn't load game ${gameID} ${response.status}`;
+    }
+
+  } catch (error) {
+    console.error("cloudflareLoadGame():", error);
+    return `Error loading game ${gameID}`;
+  }
+}
+
+
+
+async function downloadRecordings(downloadCompleteCallback, limit) {
+    if (!navigator.onLine) {
+    console.error(`downloadRecordings(): offline`);
+    return;
+  }
+  try {
+    const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/${CF_COMPLETEDGAME_ENDPOINT}`);
+    console.log(`downloadRecordings() response`, response.status, response.statusText);
+    if (response.ok) {
+      const completedGames = await response.json();
+      downloadCompleteCallback(completedGames);
+    }
+  } catch (error) {
+    console.error(`downloadRecordings() no data`);
   }
 }

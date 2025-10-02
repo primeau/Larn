@@ -24,6 +24,7 @@ function createRoll(roll) {
 
 
 function decompressRoll(compressed) {
+  if (!compressed) return null;
   // TODO: there's gotta be a way to use decompressFromUTF16
   let decompressed = LZString.decompressFromEncodedURIComponent(compressed);
   return createRoll(JSON.parse(decompressed));

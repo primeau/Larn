@@ -21,5 +21,14 @@ onmessage = function (event) {
         console.error(`worker.compress: no compression algorithm selected`);
     }
     // console.log(`${source}:${id} worker.compress: end size`, compressed.length);
+
+    // memory management
+    event.data[0] = null;
+    event.data[1] = null;
+    event.data[2] = null;
+    event.data[3] = null;
+    event.data[4] = null;
+    event.data.length = 0;
+
     postMessage([id, compressed, metadata]);
 };
