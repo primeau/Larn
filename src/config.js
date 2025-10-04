@@ -16,6 +16,8 @@ function setGameConfig() {
 
     // MAZES
     LEVELS = new Array(MAXLEVEL + MAXVLEVEL);
+    EXPLORED_LEVELS = new Array(MAXLEVEL + MAXVLEVEL).fill(false); // cache needed for GOTW games
+
     MAZES = COMMON_MAZES.concat(ULARN ? ULARN_MAZES : LARN_MAZES);
 
     // MONSTERS

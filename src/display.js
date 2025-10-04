@@ -72,6 +72,7 @@ let LAST_LARN_DIV = ``;
 let LAST_STAT_DIV = ``;
 function recordFrame() {
   try {
+    if (!canRecord()) return;
     if (BLINKEN) { // prevent blinking cursor from creating tons of duplicate frames on startup
       let divs = {
         LARN: document.getElementById(`LARN`).innerHTML,
@@ -307,6 +308,9 @@ function setMode(amiga, retro, original) {
   amiga_mode = amiga;
   retro_mode = retro;
   original_objects = original;
+
+  lt = amiga_mode ? `<` : `&lt`;
+  gt = amiga_mode ? `>` : `&gt`;
 
   // bold fonts are wider than regular fonts on Safari and Firefox
   // Courier New is OK, but many are not

@@ -6,6 +6,7 @@
 
 /* additions for JS Larn */
 var LEVELS;
+let EXPLORED_LEVELS;
 var LOG;
 var player;
 var playerID;
@@ -29,8 +30,8 @@ var retro_mode = false;
 var dnd_item = null;
 var genocide = [];
 var amiga_mode = false;
-var gameID = CF_LOCAL ? `testgameid` : Math.random().toString(36).substr(2, 10);
-// var gameID = Math.random().toString(36).substr(2, 10);
+var gameID = Math.random().toString(36).substr(2, 10);
+// var gameID = `testgameid`;
 var debug_used = 0;
 
 var logname = `Adventurer`;
@@ -78,8 +79,6 @@ var rmst = 120; /* random monster creation counter */
 var nomove = 0; /* if (nomove) then don't count next iteration as a move */
 var viewflag = 0; /* if viewflag then we have done a 99 stay here and don't showcell in the main loop */
 var lasttime = 0; /* last time in bank */
-var w1x;
-var w1y;
 var spheres = [];
 
 
@@ -136,7 +135,5 @@ function GameState(save) {
   this.nomove = nomove;
   this.viewflag = viewflag;
   this.lasttime = lasttime;
-  this.w1x = w1x;
-  this.w1y = w1y;
   this.spheres = spheres;
 }

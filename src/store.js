@@ -951,7 +951,11 @@ async function ohome() {
     if (hasPotion || !inTime) {
       let linkText = window.location.href.split(`?`)[0];
       linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
-      updateLog(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>`);
+      if (amiga_mode) {
+        updateLog(`Replay Link: ${linkText}`);
+      } else {
+        updateLog(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>`);
+      }
     }
   } catch (error) {
     // do nothing

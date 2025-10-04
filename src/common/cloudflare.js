@@ -206,13 +206,13 @@ function liveFrameCompressionCallback(event) {
 
 async function cloudflareWriteHighScore(score) {
   try {
-    console.log(`cloudflareWriteHighScore()`, score.gameID, gameID);
+    console.log(`cloudflareWriteHighScore()`, gameID);
     const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/${CF_SCORE_ENDPOINT}/${gameID}`, {
       method: "PUT",
       body: JSON.stringify(score),
       headers: { "content-type": "text/plain;charset=UTF-8" },
     });
-    console.log(`cloudflareWriteHighScore():`, response.status, score.who, score.score, score.hardlev);
+    console.log(`cloudflareWriteHighScore():`, response.status, score.gameID, score.who, score.score, score.hardlev);
   } catch (error) {
     console.error(`cloudflareWriteHighScore(): error`, error);
   }

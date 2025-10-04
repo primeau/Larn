@@ -7,7 +7,7 @@ import { ALLOW_ORIGIN_HEADERS, SUCCESS_RESPONSE } from './cf_tools.mjs';
 import { handleHighscorePUT } from './endpoint_highscores.mjs';
 import { insertCompletedGame } from './endpoint_completed.mjs';
 
-const MIN_MOVES_FOR_COMPLETED_GAMES_TABLE = 2500;
+const MIN_FRAMES_FOR_COMPLETED_GAMES_TABLE = 2500;
 
 //
 //
@@ -82,11 +82,13 @@ export async function handleScorePUT(env, larnScore) {
     }
 
     // also update the completed games table for larnTV
-    if (cfScore.winner || cfScore.moves > MIN_MOVES_FOR_COMPLETED_GAMES_TABLE) {
+    const frames = larnScore.frames || cfScore.moves;
+    const type = larnScore.frames ? `frames` : `moves`;
+    if (cfScore.winner || frames > MIN_FRAMES_FOR_COMPLETED_GAMES_TABLE) {
       console.log(`handleScorePUT(): adding ${cfScore.gameID} to completed games table`);
       await insertCompletedGame(env, cfScore);
     } else {
-      console.log(`handleScorePUT(): not adding ${cfScore.gameID} to completed games table: only ${cfScore.moves} moves`);
+      console.log(`handleScorePUT(): not adding ${cfScore.gameID} to completed games table: only ${frames} ${type}`);
     }
 
     if (highscoreResponse) {

@@ -11,11 +11,11 @@ function welcome() {
 
   createLevelNames();
 
-  initHelpPages();
-
   amiga_mode = PARAMS.mode && PARAMS.mode == `amiga` || false;
   retro_mode = localStorageGetObject('retro', true);
   setMode(amiga_mode, retro_mode, original_objects);
+  
+  initHelpPages();
 
   lprcat(helppages[0]);
   cursors();
@@ -70,6 +70,7 @@ function createLevelNames() {
 
 
 function setname(name) {
+  debug(`setname(): ${name}`);
 
   setDiv(`FOOTER`, ``);
 
@@ -88,7 +89,7 @@ function setname(name) {
   cursors();
   cltoeoln();
 
-  var saveddata = localStorageGetObject(logname);
+  var saveddata = GOTW ? null : localStorageGetObject(logname);
   var checkpoint;
 
   var winner = false;
@@ -103,7 +104,7 @@ function setname(name) {
   }
   /* check for a checkpoint file */
   else {
-    checkpoint = localStorageGetObject('checkpoint');
+    checkpoint = GOTW ? null : localStorageGetObject('checkpoint');
   }
 
   // console.log(`winner == ` + winner);
@@ -114,7 +115,6 @@ function setname(name) {
   setDifficulty(diff);
 
   if (no_intro) {
-    //startgame(getDifficulty());
     setclass(`Adventurer`);
     return 1;
   }
@@ -215,7 +215,7 @@ makeplayer()
 subroutine to create the player and the players attributes
 this is called at the beginning of a game and at no other time
 */
-function makeplayer() {
+function makeplayer(x, y) {
 
   /* much of this work has been moved elsewhere */
   // player = new Player();
@@ -223,8 +223,8 @@ function makeplayer() {
   /* always know cure dianthroritis */
   learnPotion(createObject(OPOTION, 21));
 
-  player.x = rnd(MAXX - 2);
-  player.y = rnd(MAXY - 2);
+  player.x = x || rnd(MAXX - 2);
+  player.y = y || rnd(MAXY - 2);
 
   recalc();
   changedWC = 0; // don't highlight AC & WC on game start
@@ -310,6 +310,7 @@ function setIP(ip) {
 
 
 function setdiff(hard) {
+  debug(`setdiff(): ${hard}`);
 
   // clear the blinking cursor after setting difficulty
   clearBlinkingCursor();
@@ -353,6 +354,7 @@ function setdiff(hard) {
 
 
 function setclass(classpick) {
+  debug(`setclass(): ${classpick}`);
 
   let characterClass;
 
@@ -410,6 +412,7 @@ function setclass(classpick) {
 
 
 function setgender(genderpick) {
+  debug(`setgender(): ${genderpick}`);
 
   let gender;
 
@@ -428,7 +431,7 @@ function setgender(genderpick) {
     if (ULARN) {
       localStorageSetObject('gender', gender);
     }
-    startgame(getDifficulty());
+    startgame();
     clearBlinkingCursor();
     return true;
   } else {
@@ -439,18 +442,36 @@ function setgender(genderpick) {
 
 
 
-function startgame(hard) {
+async function startgame() {
+  let startx, starty, extraMessage, killPlayer;
+  if (GOTW) {
+    let gotwData = await doGOTWStuff();
+    console.log(`startgame(): gotw downloaded:`, gotwData.data.LEVELS.length, gotwData.status);
+    if (gotwData.status === 200) {
+      loadLevels(gotwData.data.LEVELS);
+      startx = gotwData.data.player.x;
+      starty = gotwData.data.player.y;
+      extraMessage = `You have ${timeLeft()} to finish this game`;
+    } else if (gotwData.status === 451) {
+      extraMessage = `Count Endelford insists on only one attempt per week`;
+      killPlayer = true;
+    }
+  }
 
   initFS();
 
-  makeplayer(); /*  make the character that will play  */
+  makeplayer(startx, starty); /*  make the character that will play  */
 
   newcavelevel(0); /*  make the dungeon */
 
   lflush();
 
-  var introMessage = `Welcome to ${GAMENAME}, ${logname} -- Press <b>?</b> for help`;
-  updateLog(introMessage);
+  if (!killPlayer) {
+    var introMessage = `Welcome to ${GAMENAME}, ${logname} -- Press <b>?</b> for help`;
+    updateLog(introMessage);
+  }
+
+  if (extraMessage) updateLog(extraMessage);
 
   if (!navigator.cookieEnabled) {
     updateLog(`Are cookies disabled? You may not be able to save your game!`);
@@ -467,10 +488,31 @@ function startgame(hard) {
   }
 
   onResize();
+  paint();
+
+  if (killPlayer) {
+    updateLog(`Direct all wailing and gnashing of teeth to endelford@larn.org`);
+    updateLog(``);
+    died(DIED_RETRIED_GOTW, false);
+    paint();
+  }
 
   return 1;
 }
 
+function timeLeft() {
+  const now = new Date();
+  const nextSunday = new Date();
+  
+  // Set to next Sunday at midnight UTC
+  nextSunday.setUTCDate(now.getUTCDate() + (7 - now.getUTCDay()) % 7);
+  nextSunday.setUTCHours(23, 59, 59, 0);
+  const timeDiff = nextSunday.getTime() - now.getTime();
+  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+  return `${days} days, ${hours} hours, and ${minutes} minutes`;
+}
 
 /*****************************************************************************/
 /*****************************************************************************/
@@ -506,6 +548,11 @@ function mainloop(e, key) {
 
   if (nomove == 1) {
     paint();
+    return;
+  }
+
+  if (!game_started) {
+    debug(`mainloop: game not started`);
     return;
   }
 
@@ -613,6 +660,17 @@ function run(dir) {
 
 
 function wizardmode(password) {
+
+  if (password === ESC) {
+    appendLog(` cancelled${period}`);
+    return 1;
+  }
+
+  if (GOTW) {
+    updateLog(`Surprise! You're dead!`);
+    died(DIED_CHEATER, false);
+    return 1;
+  }
 
   if (password === 'checkpoint') {
     doRollbar(ROLLBAR_WARN, `checkpoint`, `who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);

@@ -7,8 +7,8 @@ export const CF_ULARN = `ularn`;
 export const CF_WINNERS = `winners`;
 export const CF_VISITORS = `visitors`;
 
-export const CF_BROADCAST_HOST = CF_LOCAL ? `localhost:8787` : `broadcast.larn.workers.dev`;
-export const CF_BROADCAST_PROTOCOL = CF_LOCAL ? `http://` : `https://`;
+// export const CF_BROADCAST_HOST = CF_LOCAL ? `localhost:8787` : `broadcast.larn.workers.dev`;
+// export const CF_BROADCAST_PROTOCOL = CF_LOCAL ? `http://` : `https://`;
 
 export const CF_COMPLETEDGAME_ENDPOINT = 'completed';
 export const CF_GOTW_ENDPOINT = 'gotw';

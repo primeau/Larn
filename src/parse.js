@@ -59,13 +59,7 @@ Mousetrap.prototype.handleKey = function (char, mod, evt) {
 
 
 function mousetrap(e, key) {
-
-  // if (BLOCKING) {
-  //   debug(`blocking mousetrap: ` + BLOCKING);
-  //   return;
-  // }
-
-  // console.log(`mousetrap: ${key} ${JSON.stringify(e)}`);
+  // debug(`mousetrap: ${key} ${JSON.stringify(e)}`);
   if (key == SPACE) key = ' ';
   if (key == TAB) return false;
   mainloop(e, key);
@@ -138,7 +132,7 @@ function parseDirectionKeys(key) {
 
 
 function parse(e, key) {
-  // console.log(`parse(): got: ${key}`);
+  // debug(`parse(): got: ${key}`);
 
   // if (keyboard_input_callback)
   // debug(`keyboard_input_callback: ` + keyboard_input_callback.name);
@@ -558,6 +552,12 @@ function parse(e, key) {
   //
   if (key == 'S') {
     nomove = 1;
+
+    if (GOTW) {
+      updateLog(`Nice try...`);
+      return;
+    }
+
     if (saveGame()) died(DIED_SAVED_GAME, false); /* saved game */
     return;
   }
@@ -629,6 +629,11 @@ function parse(e, key) {
       if (level != 0) {
         newcavelevel(level - 1);
         return;
+        // if (level == 1) newcavelevel(0);
+        // if (level == MAXLEVEL) moveNear(OVOLUP, true);
+        // if (level <= VBOTTOM) moveNear(OSTAIRSUP, true);
+        // up_stairs();
+        // return;
       }
     }
 
@@ -648,6 +653,10 @@ function parse(e, key) {
       if (!item.matches(OVOLDOWN) && level != DBOTTOM && level != VBOTTOM) {
         newcavelevel(level + 1);
         return;
+        // if (level == 0 && !itemAt(player.x, player.y).matches(OVOLDOWN)) moveNear(OENTRANCE, true);
+        // else if (level <= VBOTTOM) moveNear(OSTAIRSDOWN, true);
+        // down_stairs();
+        // return;
       }
     }
 

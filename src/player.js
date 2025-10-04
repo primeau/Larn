@@ -1143,6 +1143,8 @@ function debug_stats(p, score) {
 
   var s = game_stats(p, score != null);
 
+  if (DEBUG_STATS) s += `\nExplored: \n${getExploredLevels(true)}\n`;
+
   s += `\nKnown Scrolls:\n`;
   for (var scroll = 0; scroll < p.knownScrolls.length; scroll++) {
     let tmp = p.knownScrolls[scroll];

@@ -135,7 +135,7 @@ function onResize() {
 
 
 let bltFrameCache = -1;
-async function bltFrame(frame) {
+function bltFrame(frame) {
   if (!frame) return;
 
   if (frame.compressed) {
@@ -264,4 +264,14 @@ function computeSpriteWidth() {
   spriteWidth /= 10;
 
   return Math.max(4, spriteWidth);
+}
+
+
+
+function isAmigaMode() {
+  if (recordedMetadata && recordedMetadata.fontFamily) {
+    return recordedMetadata.fontFamily.includes(`amiga`);
+  } else {
+    return false;
+  }
 }

@@ -19,6 +19,8 @@ const TAXRATE = 1 / 20;   /* amount of taxes owed after winning */
 const MAXPLEVEL = 100;    /* maximum player level allowed  */
 var TIMELIMIT; // ULARN   /* maximum number of moves before the game is called */
 var MAX_BANK_BALANCE;
+let lt; // for accurate use of < or &lt in amiga mode / classic mode
+let gt; // for accurate use of > or &gt in amiga mode / classic mode
 
 
 
@@ -121,6 +123,8 @@ const DIED_BOTTOMLESS_ELEVATOR = 287;
 const DIED_SAVED_GAME = 299;
 const DIED_QUITTER = 300;
 const DIED_WINNER = 301;
+const DIED_CHEATER = 302;
+const DIED_RETRIED_GOTW = 451;
 
 
 let DEATH_REASONS = new Map([
@@ -148,6 +152,8 @@ let DEATH_REASONS = new Map([
   [DIED_SAVED_GAME, `died in a savegame mishap`],
   [DIED_QUITTER, `a quitter`],
   [DIED_WINNER, `a winner`],
+  [DIED_CHEATER, `invited Count Endelford's wrath`],
+  [DIED_RETRIED_GOTW, `tried to play again`],
 ]);
 
 

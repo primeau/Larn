@@ -103,7 +103,8 @@ function act_down_shaft() {
             and never play again. this seemed like the least restrictive
             way to prevent that from happening.
   */
-  if (LEVELS[1] == null && !wizard) {
+  // if (LEVELS[1] == null && !wizard) { // always true in GOTW games
+  if (!isLevelVisited(1) && !wizard) {
     updateLog(`  You feel a foreboding sense of doom, and back away`);
     return;
   }

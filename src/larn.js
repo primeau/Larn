@@ -1,6 +1,7 @@
 'use strict';
 
-var ULARN = false; // are we playing LARN or ULARN?
+let ULARN = false; // are we playing LARN or ULARN?
+let GOTW = false; // game of the week
 
 var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
@@ -86,6 +87,7 @@ async function play() {
 
   no_intro = PARAMS.nointro ? PARAMS.nointro == `true` : false;
   ULARN = PARAMS.ularn ? PARAMS.ularn == `true` : false;
+  GOTW = PARAMS.gotw ? PARAMS.gotw == `true` : false;
 
   setGameConfig();
 

@@ -166,7 +166,7 @@ function updateProgressBar(current, loaded, total) {
 
 
 
-function onClickProgressBar(event) {
+async function onClickProgressBar(event) {
   let box = event.target.getBoundingClientRect();
   let width = box.width;
   let clickX = event.clientX - box.left;
@@ -174,8 +174,17 @@ function onClickProgressBar(event) {
   let newFrameNum = Math.floor(video.totalFrames * percent);
   if (newFrameNum >= 0 && newFrameNum < video.frameBuffer.length - 1) {
 
+    // ffwd a long way in amiga mode can cause a memory error / crash
+    // this limits memory growth to about 700MB which is huge but workable
+    if (isAmigaMode() && newFrameNum > video.currentFrameNum) {
+      newFrameNum = Math.min(video.currentFrameNum + 1000, newFrameNum)
+    }
+
     // ensure frames built up from patches if necessary
     // otherwise getFrame() can blow call stack
+    bltFrame(video.createInfoFrame(`Seeking...`));
+    // Give the browser time to render the "Seeking..." message
+    await new Promise(resolve => setTimeout(resolve, 50));
     while (video.currentFrameNum < newFrameNum) {
       video.getNextFrame();
     }

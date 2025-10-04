@@ -42,7 +42,11 @@ function newcavelevel(depth) {
   sethp(true);
   positionplayer(player.x, player.y, true);
 
-  showcell(player.x, player.y); /* to show around player */
+  if (GOTW) {
+    player.level.know[player.x][player.y] = KNOWNOT;
+  } else {
+    showcell(player.x, player.y); /* to show around player */
+  }
 
   checkgen(); /* wipe out any genocided monsters */
 

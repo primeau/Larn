@@ -29,7 +29,7 @@ function letter1(gold) {
   clear();
 
   lprcat(`<b>From:</b> The LRS (${GAMENAME} Revenue Service)`);
-  if (ULARN) lprcat(` &ltlrs@ularn.com&gt`);
+  lprcat(` ${lt}lrs@larn.org${gt}`);
   lprcat(`\n`);
   lprcat(`\n<b>Subject:</b> Undeclared income\n`);
 
@@ -64,7 +64,7 @@ function letter2(key) {
   clear();
 
   lprcat(`<b>From:</b> His Majesty King Wilfred of Larndom`);
-  if (ULARN) lprcat(` &ltwilfred@ularn.com&gt`);
+  lprcat(` ${lt}wilfred@larn.org${gt}`);
   lprcat(`\n`);
   lprcat(`\n<b>Subject:</b> A noble deed\n`);
 
@@ -95,7 +95,7 @@ function letter3(key) {
   clear();
 
   lprcat(`<b>From:</b> Count Endelford`);
-  if (ULARN) lprcat(` &ltendelford@ularn.com&gt`);
+  lprcat(` ${lt}endelford@larn.org${gt}`);
   lprcat(`\n`);
   lprcat(`\n<b>Subject:</b> You ${letter3insult}!\n`);
 
@@ -120,7 +120,7 @@ function letter4(key) {
   clear();
 
   lprcat(`<b>From:</b> Mainair, Duke of Larnty`);
-  if (ULARN) lprcat(` &ltmainair@ularn.com&gt`);
+  lprcat(` ${lt}mainair@larn.org${gt}`);
   lprcat(`\n`);
   lprcat(`\n<b>Subject:</b> High Praise\n`);
 
@@ -151,7 +151,7 @@ function letter5(key) {
   clear();
 
   lprcat(`<b>From:</b> St. Mary's Children's Home`);
-  if (ULARN) lprcat(` &ltstmarys@ularn.com&gt`);
+  lprcat(` ${lt}stmarys@larn.org${gt}`);
   lprcat(`\n`);
   lprcat(`\n<b>Subject:</b> These poor children\n`);
 
@@ -182,7 +182,7 @@ function letter6(key) {
   clear();
 
   lprcat(`<b>From:</b> The National ${letter6disease} Society of ${GAMENAME}`);
-  if (ULARN) lprcat(` &ltnds@ularn.com&gt`);
+  lprcat(` ${lt}nds@larn.org${gt}`);
   lprcat(`\n`);
   lprcat(`\n<b>Subject:</b> Hope\n`);
 

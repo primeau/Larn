@@ -330,10 +330,9 @@ function endRecording(endData, isUlarn) {
         endData.gameID = endData.gameID.slice(0, -1);
       }
 
-      // console.log(`endRecording(): currentRoll.patches.length`, currentRoll.patches.length);
-
       try {
-        endData.frames = currentRoll.patches[currentRoll.patches.length - 1].id;
+        const lastPatch = currentRoll.patches[currentRoll.patches.length - 1];
+        endData.frames = lastPatch ? lastPatch.id : 0;
       } catch (error) {
         console.error(`endRecording(): currentRoll problem`, error);
         endData.frames = 0;        
@@ -354,7 +353,6 @@ function endRecording(endData, isUlarn) {
       }
       
       console.log(`endRecording(): enddata: `, endData);
-      console.log(`endRecording(): frames = ${endData.frames}`);
       uploadFile(gameID, `${gameID}.txt`, JSON.stringify(endData), true);
     }
     

@@ -11,6 +11,7 @@ const EXTRA_GTIME = 3;
 
 var LocalScore = function () {
   this.createdAt = Date.now();
+  this.ularn = ULARN;
   this.winner = lastmonst == DIED_WINNER;
   var winBonus = this.winner ? 100000 * getDifficulty() : 0;
   this.who = logname; /* the name of the character */
@@ -31,6 +32,14 @@ var LocalScore = function () {
   this.extra[EXTRA_BUILD] = BUILD;
   this.extra[EXTRA_RMST] = rmst;
   this.extra[EXTRA_GTIME] = gtime;
+  this.gotw = GOTW ? getGotwLabel(new Date()) : null;
+
+  this.frames = -1;
+  if (canRecord() && video) {
+    const currentRoll = video.getCurrentRoll();
+    const lastPatch = currentRoll.patches[currentRoll.patches.length - 1];
+    this.frames = lastPatch ? lastPatch.id : 0;
+  }
 
   this.explored = getExploredLevels();
 
@@ -61,7 +70,8 @@ function getExploredLevels(dots) {
     if (i === level) {
       explored += dots && amiga_mode ? `▓` : `@`;
       if (dots && isCarrying(createObject(OPOTION, 21))) explored += `!`;
-    } else if (LEVELS[i]) {
+    // } else if (LEVELS[i]) { // always true for GOTW games
+    } else if (isLevelVisited(i)) {
       if (dots)
         explored += (i === DBOTTOM && player.hasPickedUpEye) ? `~` : `+`;
       else
@@ -127,6 +137,7 @@ function getStatString(score, addDate) {
     stats += `Final Moments: \n${logString}\n\n`;
   }
 
+  level = score.level; // test if this is needed
   stats += `Bottom Line:\n${tempPlayer.getStatString(score.level)}\n\n`;
 
   stats += `Conducts observed:\n${tempPlayer.getConductString()}\n\n`;
@@ -138,24 +149,6 @@ function getStatString(score, addDate) {
   return stats;
 }
 
-
-
-function isEqual(a, b) {
-  var equal = true;
-  equal &= (a.gameID == b.gameID);
-  equal &= (a.who == b.who);
-  equal &= (a.hardlev == b.hardlev);
-  equal &= (a.winner == b.winner);
-  equal &= (a.score == b.score);
-  equal &= (a.timeused == b.timeused);
-  equal &= (a.what == b.what);
-  equal &= (a.level == b.level);
-  equal &= (a.explored == b.explored);
-  equal &= (a.debug == b.debug);
-  equal &= compareArrays(a.gamelog, b.gamelog);
-  equal &= (JSON.stringify(a.player) == JSON.stringify(b.player));
-  return equal;
-}
 
 
 function sortScore(a, b) {
@@ -179,8 +172,6 @@ function sortScore(a, b) {
   } else {
     if (a.score != b.score) {
       return b.score - a.score; // died with higher score
-    } else if (a.level != b.level) {
-      return b.level - a.level; // survived deeper
     } else {
       return b.timeused - a.timeused; // alive longer
     }
@@ -229,13 +220,34 @@ function loadScores(newScore, showWinners, showLosers) {
 
 
 
-function dbQueryHighScores(newScore, showWinners, showLosers) {
+async function dbQueryHighScores(newScore, showWinners, showLosers) {
 
   if (!navigator.onLine) {
     ONLINE = false;
-    let msg = `Offline: showing local scoreboard`;
+    const msg = `Offline: showing local scoreboard`;
     showLocalScoreBoard(newScore, showWinners, showLosers, 0, msg);
     return;
+  }
+
+  if (CLOUDFLARE_READ) {
+    try {
+      const cfhighscores = await getHighscores();
+      if (cfhighscores) {
+        ONLINE = true;
+        winners = cfhighscores.winners;
+        if (winners) console.log(`loaded winners: ${winners.length}`);
+        losers = cfhighscores.visitors;
+        if (losers) console.log(`loaded losers: ${losers.length}`);
+        showScores(newScore, false, showWinners, showLosers, 0);
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to get highscores from Cloudflare:', error);
+      ONLINE = false;
+      let msg = `Error loading global scoreboard, showing local scoreboard`;
+      showLocalScoreBoard(newScore, showWinners, showLosers, 0, msg);
+      return;
+    }
   }
 
   var params = {
@@ -440,39 +452,46 @@ function printScoreBoard(board, newScore, header, printout, offset) {
 
 
 
-function dbQueryLoadGame(gameId, local, winner) {
-
+async function dbQueryLoadGame(gameID, local, winner) {
+  let stats = ``;
+  
   if (local) {
     var board = winner ? localStorageGetObject('winners', []) : localStorageGetObject('losers', []);
-    var stats = getHighScore(board, gameId);
+    stats = getHighScore(board, gameID);
     setDiv(`STATS`, getStatString(stats));
     return;
   }
 
-  console.log(`loading game: ${gameId}`);
+  console.log(`loading game: ${gameID}`);
+
+  if (CLOUDFLARE_READ) {
+    stats = await cloudflareLoadGame(gameID);
+    setDiv(`STATS`, stats);
+    return;
+  }
 
   var params = {
     FunctionName: AWS_SCORE_FUNCTION,
-    Payload: `{ "gamename" : "${GAMENAME}", "gameID" : "${gameId}" }`,
+    Payload: `{ "gamename" : "${GAMENAME}", "gameID" : "${gameID}" }`,
     InvocationType: 'RequestResponse',
     LogType: 'None' // 'Tail'
   };
   lambda.invoke(params, function (error, data) {
     var payload = data ? JSON.parse(data.Payload) : null;
     var status = payload ? payload.statusCode : 666;
-    var stats = ``;
+    stats = ``;
     if (status == 200) {
       ONLINE = true;
       var newData = JSON.parse(payload.body);
       stats = getStatString(newData, true);
     } else if (status == 404) {
-      stats = `Couldn't load game ${gameId}`;
+      stats = `Couldn't load game ${gameID}`;
       console.log(`larn status=${status}`);
     } else {
       var statuscode = data ? data.StatusCode : 777;
       console.log(`lambda error: lambda status=${statuscode} larn status=${status}`);
       if (error) console.log(error, error.stack);
-      stats = `Couldn't load game ${gameId}`;
+      stats = `Couldn't load game ${gameID}`;
     }
     setDiv(`STATS`, stats);
   });
@@ -518,15 +537,9 @@ function localWriteHighScore(newScore) {
 }
 
 
-function dbWriteHighScore(newScore) {
+function awsWriteHighScore(newScore) {
 
-  console.log(`dbWriteHighScore: ${newScore.gameID}`);
-
-  if (!navigator.onLine) {
-    console.error(`dbWriteHighScore: offline`);
-    ONLINE = false;
-    return;
-  }
+  console.log(`awsWriteHighScore(): ${newScore.gameID}`);
 
   var params = {
     FunctionName: AWS_SCORE_FUNCTION,
@@ -541,24 +554,17 @@ function dbWriteHighScore(newScore) {
       var status = payload.statusCode;
       if (status == 200) {
         ONLINE = true;
-        console.log(`dbWriteHighScore: success: ` + newScore.who + ` ` + newScore.score + ` ` + newScore.hardlev);
+        console.log(`awsWriteHighScore(): success: ` + newScore.who + ` ` + newScore.score + ` ` + newScore.hardlev);
       } else if (status == 404) {
-        console.log(`Couldn't save game ${gameId}`);
+        console.error(`awsWriteHighScore(): Couldn't save game ${gameId}`);
       } else {
-        console.log(`lambda error: lambda status=${data.StatusCode} larn status=${status}`);
+        console.error(`awsWriteHighScore(): lambda status=${data.StatusCode} larn status=${status}`);
         if (error) console.log(error, error.stack);
       }
     } else {
-      console.log(`no data lambda error: ${error}`);
+      console.error(`awsWriteHighScore(): no data lambda error: ${error}`);
     }
   });
-
-  if (newScore.winner) {
-    doRollbar(ROLLBAR_INFO, `winner`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
-  } else if (rnd(100) < 11) {
-    doRollbar(ROLLBAR_INFO, `visitor`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
-  }
-
 }
 
 
@@ -637,9 +643,9 @@ function getWhyDead(reason) {
   var cause = ``;
   if (typeof reason === `number`) {
     cause += DEATH_REASONS.get(reason);
-  } //
-  else {
-    cause += `killed by a ${lastmonst}`;
+  } else {
+    let n = (/^[aeiouAEIOU]/.test(lastmonst)) ? `n` : ``;
+    cause += `killed by a${n} ${lastmonst}`;
   }
   return cause;
 }
@@ -663,6 +669,8 @@ function canProtect(reason) {
     case DIED_BOTTOMLESS_TRAPDOOR:
     case DIED_BOTTOMLESS_ELEVATOR:
     case DIED_GENIE:
+    case DIED_CHEATER:
+    case DIED_RETRIED_GOTW:
       protect = false;
   }
   return protect;
@@ -711,6 +719,8 @@ async function died(reason, slain) {
   /* delete the checkpoint file */
   localStorageRemoveItem('checkpoint');
 
+  let endGameScore = null; // will stay null if saved game
+
   // show scoreboard unless they saved the game
   if (reason != DIED_SAVED_GAME) {
     var printFunc = mazeMode ? updateLog : lprcat;
@@ -718,10 +728,14 @@ async function died(reason, slain) {
 
     let extraNL = (printFunc == lprcat) ? `\n` : ``;
     try {
-      if (navigator.onLine && ENABLE_RECORDING) {
+      if (navigator.onLine && ENABLE_RECORDING && reason != DIED_RETRIED_GOTW) {
         let linkText = window.location.href.split(`?`)[0];
         linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
-        printFunc(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>${extraNL}${extraNL}`);
+        if (amiga_mode) {
+          printFunc(`Replay Link: ${linkText}${extraNL}${extraNL}`);
+        } else {
+          printFunc(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>${extraNL}${extraNL}`);
+        }
       }
     } catch (error) {
       // do nothing
@@ -733,7 +747,8 @@ async function died(reason, slain) {
     if (cheat)
       printFunc(`(sorry, cheater scores are not recorded) `);
 
-    writeScoreToDatabase();
+    endGameScore = new LocalScore();
+    writeScoreToDatabase(endGameScore);
     setCharCallback(endgame);
 
     paint();
@@ -751,42 +766,59 @@ async function died(reason, slain) {
     mazeMode = false;
   }
 
-  // TODO: https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine
-  if (!endGameScore) {
-    endGameScore = new LocalScore();
-  }
-
   // wait for the final patch to be added to the final roll of the video
   // this is a terrible hack, but after using web workers to speed up the game 30x in some places
   // i've spent 2 days trying to get the final frame to show up on a recording and i give up
   await nap(100);
 
-  let endData = (reason == DIED_SAVED_GAME) ? null : endGameScore;
-  endRecording(endData, ULARN);
+  endRecording(endGameScore, ULARN);
 
 }
 
 
 
-/* this is a bit hacky, but makes life easier */
-var endGameScore;
+function writeScoreToDatabase(endGameScore) {
+  const survived = endGameScore.timeused > 5; // surviving > 5 mobuls with 0 score should be recorded
+  const scored = endGameScore.score > 0;
+  const retriedGOTW = GOTW && endGameScore.what === DEATH_REASONS[DIED_RETRIED_GOTW];
 
+  console.log(`score ==`,endGameScore.score);
+  console.log(`wizard ==`, wizard);
+  console.log(`cheater ==`, cheat);
+  console.log(`debug ==`, debug_used);
+  console.log(`survived ==`, survived);
+  console.log(`scored ==`, scored);
+  console.log(`retried ==`, retriedGOTW);
 
-
-function writeScoreToDatabase() {
-  if (!endGameScore) {
-    endGameScore = new LocalScore();
-  }
-
-  console.log(`wizard == ` + wizard);
-  console.log(`cheater == ` + cheat);
-  console.log(`debug == ` + debug_used);
-  console.log(`endGameScore.score == ` + endGameScore.score);
-
-  if ((endGameScore.score > 0 || endGameScore.winner) && !wizard && !cheat) {
+  if (!wizard && // no wizards
+      !cheat && // no cheaters
+      (endGameScore.winner || scored || survived) && // winners, scorers, lived > 5 mobuls
+      !retriedGOTW // on first GOTW attempt
+    ) {
     localWriteHighScore(endGameScore);
-    dbWriteHighScore(endGameScore);
+
+    if (!navigator.onLine) {
+      console.error(`writeScoreToDatabase(): offline`);
+      ONLINE = false;
+      return;
+    }
+
+    awsWriteHighScore(endGameScore);
+    if (CLOUDFLARE_WRITE) {
+      cloudflareWriteHighScore(endGameScore);
+    }
   }
+
+  try {
+    const newScore = endGameScore;
+    if (newScore.winner) {
+      doRollbar(ROLLBAR_INFO, `winner`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
+    } else if (rnd(100) < 11) {
+      doRollbar(ROLLBAR_INFO, `visitor`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
+    }
+  } catch (error) {
+  }
+
 }
 
 
@@ -806,9 +838,7 @@ function endgame(key) {
   napping = true;
   mazeMode = false;
 
-  if (!endGameScore) {
-    endGameScore = new LocalScore();
-  }
+  const endGameScore = new LocalScore();
   loadScores(endGameScore, true, true);
 }
 

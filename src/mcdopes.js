@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 /* inventory */
 var drug = [true, true, true, true, true];

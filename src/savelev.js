@@ -178,8 +178,6 @@ function loadState(state) {
   nomove = state.nomove;
   viewflag = state.viewflag;
   lasttime = state.lasttime;
-  w1x = state.w1x;
-  w1y = state.w1y;
   spheres = state.spheres;
 }
 
