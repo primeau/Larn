@@ -16,17 +16,24 @@
     "deployclean": "npm run clean ; npm run alphaclean ; npm run betaclean ; npm run prodclean ; npm run webclean ; npm run histclean ; npm run imgclean",
 
     "transpile": "babel src --out-dir larn-temp/ ; ./secrets.sh 'larn-temp' || true",
-    "minify": "uglifyjs --mangle --compress -o larn-temp/larn.min.js larn-temp/common/util.js larn-temp/common/larn_config.js larn-temp/common/frame.js larn-temp/common/patch.js larn-temp/common/roll.js larn-temp/common/lambda.js larn-temp/common/cloudflare.js larn-temp/common/movie.js larn-temp/common/live.js larn-temp/config.js larn-temp/larn.js larn-temp/main.js larn-temp/object.js larn-temp/global.js larn-temp/monster.js larn-temp/monsterdata.js larn-temp/player.js larn-temp/mazes.js larn-temp/level.js larn-temp/create.js larn-temp/data.js larn-temp/parse.js larn-temp/buttons.js larn-temp/scores.js larn-temp/inventory.js larn-temp/movem.js larn-temp/action.js larn-temp/io.js larn-temp/display.js larn-temp/storedata.js larn-temp/store.js larn-temp/mcdopes.js larn-temp/savelev.js larn-temp/spells.js larn-temp/spellsinfo.js larn-temp/regen.js larn-temp/spheres.js larn-temp/help.js larn-temp/state.js larn-temp/bill.js larn-temp/altar.js larn-temp/fountain.js larn-temp/potion.js larn-temp/scroll.js larn-temp/stairs.js larn-temp/throne.js larn-temp/devmode.js larn-temp/fullstory.js",
+    "minify": "uglifyjs --mangle --compress -o larn-temp/larn.min.js larn-temp/common/util.js larn-temp/common/larn_config.js larn-temp/common/frame.js larn-temp/common/patch.js larn-temp/common/roll.js larn-temp/common/lambda.js larn-temp/common/cloudflare.js larn-temp/common/movie.js larn-temp/common/live.js larn-temp/config.js larn-temp/larn.js larn-temp/main.js larn-temp/object.js larn-temp/global.js larn-temp/monster.js larn-temp/monsterdata.js larn-temp/player.js larn-temp/mazes.js larn-temp/level.js larn-temp/create.js larn-temp/data.js larn-temp/parse.js larn-temp/buttons.js larn-temp/scores.js larn-temp/inventory.js larn-temp/movem.js larn-temp/action.js larn-temp/io.js larn-temp/display.js larn-temp/storedata.js larn-temp/store.js larn-temp/mcdopes.js larn-temp/savelev.js larn-temp/spells.js larn-temp/spellsinfo.js larn-temp/regen.js larn-temp/spheres.js larn-temp/help.js larn-temp/state.js larn-temp/bill.js larn-temp/altar.js larn-temp/fountain.js larn-temp/potion.js larn-temp/scroll.js larn-temp/stairs.js larn-temp/throne.js larn-temp/devmode.js larn-temp/fullstory.js larn-temp/gotw.js",
+    "minifyscore": "uglifyjs --mangle --compress -o larn-temp/score/score.min.js larn-temp/common/util.js larn-temp/common/larn_config.js larn-temp/larn.js larn-temp/player.js larn-temp/data.js larn-temp/object.js larn-temp/state.js larn-temp/inventory.js larn-temp/potion.js larn-temp/scroll.js larn-temp/savelev.js larn-temp/score/score.js",
 
-    "_copy": "echo $envt ; mkdir -p dist/$envt/lib ; mkdir dist/$envt/img ; mkdir dist/$envt/workers ; cp src/lib/*.js dist/$envt/lib ; cp src/img/* dist/$envt/img ; cp src/larn.html dist/$envt ; cp src/larn.css dist/$envt ; cp larn-temp/larn.min.js dist/$envt ; cp larn-temp/workers/patchWorker.js dist/$envt/workers ; cp larn-temp/workers/compressionWorker.js dist/$envt/workers || true",
+    "_copy": "echo $envt ; mkdir -p dist/$envt/lib ; mkdir dist/$envt/img ; mkdir dist/$envt/workers ; cp src/lib/*.js dist/$envt/lib ; cp src/img/* dist/$envt/img ; cp src/larn.html dist/$envt ; cp src/larn.css dist/$envt ; cp larn-temp/larn.min.js dist/$envt ; cp larn-temp/workers/*.js dist/$envt/workers || true",
     "alphacopy": "export envt=alpha ; npm run _copy",
     "betacopy": "export envt=beta ; npm run _copy",
     "prodcopy": "export envt=larn ; npm run _copy",
     "webcopy": "cp -rv ../larn-www/* ../larn-deploy || true",
     "_tvcopy": "mkdir -p dist/$envt/tv/common ; cp larn-temp/tv/* dist/$envt/tv ; cp larn-temp/common/* dist/$envt/tv/common ; cp src/tv/index.html dist/$envt/tv ; cp src/tv/larntv.css dist/$envt/tv || true",
+    "_scorecopy": "mkdir -p dist/$envt/score ; cp larn-temp/score/* dist/$envt/score ; cp src/score/index.html dist/$envt/score ; cp src/score/score.css dist/$envt/score || true",
+
     "alphatv": "export envt=alpha ; npm run _tvcopy",
     "betatv": "export envt=beta ; npm run _tvcopy",
     "prodtv": "export envt=larn ; npm run _tvcopy",
+
+    "alphascore": "export envt=alpha ; npm run _scorecopy",
+    "betascore": "export envt=beta ; npm run _scorecopy",
+    "prodscore": "export envt=larn ; npm run _scorecopy",
 
     "_dist": "echo $envt ; rm -rf ../larn-deploy/$envt ; mv dist/$envt ../larn-deploy || true",
     "distalpha": "export envt=alpha ; npm run _dist",
@@ -35,12 +42,12 @@
     "distweb": "npm run webclean ; npm run webcopy || true",
     "dist": "npm run distalpha ; npm run distbeta ; npm run distprod ; npm run distweb || true",
 
-    "buildalpha": "npm run alphaclean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run alphatv ; npm run distalpha",
-    "buildbeta": "npm run betaclean ; npm run transpile ; npm run minify ; npm run betacopy ; npm run betatv ; npm run distbeta",
-    "buildprod": "npm run prodclean ; npm run transpile ; npm run minify ; npm run prodcopy ; npm run prodtv ; npm run distprod",
+    "buildalpha": "npm run alphaclean ; npm run transpile ; npm run minify ; npm run minifyscore ; npm run alphacopy ; npm run alphatv ; npm run alphascore ; npm run distalpha",
+    "buildbeta": "npm run betaclean ; npm run transpile ; npm run minify ; npm run minifyscore ; npm run betacopy ; npm run betatv ; npm run betascore ; npm run distbeta",
+    "buildprod": "npm run prodclean ; npm run transpile ; npm run minify ; npm run minifyscore ; npm run prodcopy ; npm run prodtv ; npm run prodscore ; npm run distprod",
 
-    "build": "echo '=== STARTING BUILD ==' ; npm run distclean ; npm run transpile ; npm run minify ; npm run prodcopy ; npm run tempclean",
-    "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run deployclean ; npm run transpile ; npm run minify ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run prodtv ; npm run dist ; npm run clean",
+    "build": "echo '=== STARTING BUILD ==' ; npm run distclean ; npm run transpile ; npm run minify ; npm run minifyscore ; npm run prodcopy ; npm run tempclean",
+    "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run deployclean ; npm run transpile ; npm run minify ; npm run minifyscore ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run prodtv ; npm run alphascore ; npm run betascore ; npm run prodscore ; npm run dist ; npm run clean",
 
     "watch": "npm run tempclean ; babel src --watch --out-dir larn-temp/",
     "localserver": "cd ../larn-local ; python3 -m http.server 8000",
@@ -53,7 +60,7 @@
     "deploy_larn_lambda_test": "cd src/aws ; zip function.zip *.js *.mjs ;  aws lambda update-function-code --function-name test --zip-file fileb://function.zip ; rm function.zip",
     "deploy_larn_lambda_score": "cd src/aws ; zip function.zip *.js *.mjs ;  aws lambda update-function-code --function-name score --zip-file fileb://function.zip ; rm function.zip",
 
-    "local_cloudflare": "cd ../larn-local/cloudflare/broadcast ; npx wrangler dev --test-scheduled",
+    "local_cloudflare": "cd ../larn/src/cloudflare/broadcast/src ; node --max-old-space-size=8192 \"$(which wrangler)\" dev --test-scheduled",
     "deploy_cloudflare": "cd ../larn-local/cloudflare/broadcast ; npx wrangler deploy ; npx wrangler tail"
   },
   "repository": {

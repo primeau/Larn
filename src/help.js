@@ -2,7 +2,7 @@
 
 const helppages = [];
 
-var currentpage = 0;
+let currentpage = 0;
 
 
 
@@ -34,7 +34,7 @@ function print_help() {
 
 function initHelpPages() {
 
-helppages[0] =
+helppages[0] = !GOTW ?
     `Welcome to the game of ${GAMENAME}. At this moment, you face a great problem.\n\
 Your daughter has contracted a strange disease, and none of your home remedies\n\
 seem to have any effect. You sense that she is in mortal danger, and you must\n\
@@ -54,6 +54,29 @@ journey into these caverns.\n\
 \n\
 \n\
     Good Luck!  You're going to need it!\n\
+`
+:
+// <b>Subject:</b> A Weekly Ordeal for One So Unworthy\n\
+`                      <b>Count Endelford's Weekly Dungeon</b>                      \n\
+\n\
+<b>From:</b> Count Endelford ${lt}endelford@larn.org${gt}\n\
+<b>Subject:</b> Thinking of you\n\
+\n\
+I have devised a trial for you, worm. Your reputation precedes you, though \n\
+I find it laughable.\n\
+\n\
+The rules for this challenge are as follows:\n\
+o The contest resets at Sunday's dawn and ends at Sunday's dusk.\n\
+o You may play only once. Should you attempt a second journey, expect no mercy.\n\
+o Saving progress is forbidden. Only the weak seek refuge in such cowardice.\n\
+o Wizard mode is strictly and severely forbidden. Invoke it, and my wrath will\n\
+  be swift and absolute.\n\
+\n\
+I present this challenge because I despise you, and the opportunity to watch\n\
+you fail weekly delights me. I eagerly await your inevitable demise.\n\
+\n\
+With deepest contempt,\n\
+Endelford\n\
 `;
 
 helppages[1] =

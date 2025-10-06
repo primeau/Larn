@@ -1,5 +1,3 @@
-import { CF_LOCAL } from './cf_config.mjs';
-
 import { ALLOW_ORIGIN_HEADERS, SUCCESS_RESPONSE } from './cf_tools.mjs';
 import { insertHighscore } from './endpoint_highscores.mjs';
 

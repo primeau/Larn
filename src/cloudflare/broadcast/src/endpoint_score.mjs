@@ -72,7 +72,7 @@ export async function handleScorePUT(env, larnScore) {
 
     const cfScore = getScoreTableObject(larnScore);
 
-    console.log(`handleScorePUT(): adding ${cfScore.gameID} to scores table`);
+    console.log(`handleScorePUT(): adding ${cfScore.gameID} ${cfScore.playerID}, ${cfScore.who}, ${cfScore.hardlev}, ${cfScore.score} U:${cfScore.ularn}: W:${cfScore.winner}`);
     const success = await insertScore(env, cfScore);
 
     let highscoreResponse;
@@ -85,7 +85,7 @@ export async function handleScorePUT(env, larnScore) {
     const frames = larnScore.frames || cfScore.moves;
     const type = larnScore.frames ? `frames` : `moves`;
     if (cfScore.winner || frames > MIN_FRAMES_FOR_COMPLETED_GAMES_TABLE) {
-      console.log(`handleScorePUT(): adding ${cfScore.gameID} to completed games table`);
+      console.log(`handleScorePUT(): adding ${cfScore.gameID} to completed games table with ${frames} ${type}`);
       await insertCompletedGame(env, cfScore);
     } else {
       console.log(`handleScorePUT(): not adding ${cfScore.gameID} to completed games table: only ${frames} ${type}`);
@@ -120,7 +120,7 @@ function getScoreTableObject(score) {
     what: score.what,
     level: score.level,
     moves: JSON.parse(score.player).MOVESMADE,
-    explored: score.explored,
+    explored: score.explored || ``,
     gamelog: score.gamelog ? JSON.stringify(score.gamelog) : `[]`,
     stats: score.player,
     gender: score.gender || `Male`,

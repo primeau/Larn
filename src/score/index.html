@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Larn Scores</title>
+    <link rel="stylesheet" type="text/css" href="../larn.css" />
+    <link rel="stylesheet" type="text/css" href="score.css" />
+  </head>
+  <body>
+    <h1>Larn High Scores</h1>
+    <div class="radio-group" style="margin-bottom: 0.5em; display: flex; gap: 2em; align-items: center">
+      <div>
+        <label><input type="radio" name="gameType" id="larnRadio" value="larn" checked /> Larn</label>
+        <label style="margin-left: 1em"><input type="radio" name="gameType" id="ularnRadio" value="ularn" /> Ularn</label>
+      </div>
+      <div>
+        <label><input type="radio" name="scoreType" id="winnersRadio" value="winners" checked /> Winners</label>
+        <label style="margin-left: 1em"><input type="radio" name="scoreType" id="visitorsRadio" value="visitors" /> Visitors</label>
+      </div>
+    </div>
+    <div style="margin-bottom: 1em; display: flex; gap: 2em; align-items: center">
+      <div>
+        <label for="yearSelect">Year:</label>
+        <select id="yearSelect" style="margin-left: 0.5em">
+          <option value="all">All-Time</option>
+        </select>
+      </div>
+      <div>
+        <label for="gotwSelect">Game of the Week:</label>
+        <select id="gotwSelect" style="margin-left: 0.5em">
+          <option value="">-select-</option>
+        </select>
+      </div>
+    </div>
+    <ul id="scoreList" class="score-list"></ul>
+    <div id="overlay" class="overlay" style="display: none">
+      <div class="overlay-content" id="overlayContent"></div>
+      <button class="overlay-close" id="overlayCloseX" title="">&#10005;</button>
+    </div>
+    <script src="score.min.js"></script>
+  </body>
+</html>

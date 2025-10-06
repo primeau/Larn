@@ -1,12 +1,12 @@
 'use strict';
 
 const VERSION = '12.5.2';
-const BUILD = '536';
+const BUILD = '537';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
 
 const CF_LOCAL = false;
-const CLOUDFLARE_READ = false;  // use cloudflare for scores
+const CLOUDFLARE_READ = true;  // use cloudflare for scores
 const CLOUDFLARE_WRITE = true;  // use cloudflare for scores
 
 const CF_SCORE_ENDPOINT = 'score';

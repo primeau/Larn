@@ -1,6 +1,6 @@
 'use strict';
 
-import { CF_LOCAL, CF_HIGHSCORES_TABLE, CF_GOTW_TABLE } from './cf_config.mjs';
+import { CF_HIGHSCORES_TABLE, CF_GOTW_TABLE } from './cf_config.mjs';
 
 import { ALLOW_ORIGIN_HEADERS, SUCCESS_RESPONSE, getGotwLabel } from './cf_tools.mjs';
 import { getPlayerIP, permissionCheck, initIpTrackerTable } from './cf_tools.mjs';
@@ -13,12 +13,11 @@ import { handleGotwRequest, initGotwStartedTable, pruneGotwStartedTable } from '
 import { handleGameSessionRequest, updateWatchList, quitSession, pruneWatchersTable, initWatchersTable } from './endpoint_session.mjs';
 import { handleAdminRequest } from './endpoint_admin.mjs';
 
-let dbInitialized = false;
+let dbInitialized = true;
 
 export default {
   async fetch(request, env) {
-    // my local dev environment wipes out the DB every time i save
-    if (CF_LOCAL && !dbInitialized) {
+    if (!dbInitialized) {
       console.log(`handleApiRequest(): initializing databases`);
       await initDatabase(env);
       dbInitialized = true;

@@ -230,10 +230,10 @@ async function getHighscores() {
 
     if (response.ok) {
       const highscores = await response.json();
-      console.log(`getHighscores() numhighscores:`, highscores.length, highscores[0]);
+      console.log(`getHighscores() numhighscores:`, highscores.length);
       const highscoregroup = {};
-      highscoregroup.winners = highscores.filter(score => score.ularn === ULARN && score.winner === true).sort(sortScore);
-      highscoregroup.visitors = highscores.filter(score => score.ularn === ULARN && score.winner === false && score.moves >= minMoves).sort(sortScore);
+      highscoregroup.winners = highscores.filter(score => score.ularn === ULARN && score.winner === true).sort(sortScore).slice(0, 72);
+      highscoregroup.visitors = highscores.filter(score => score.ularn === ULARN && score.winner === false && score.moves >= minMoves).sort(sortScore).slice(0, 72);
       return highscoregroup;
     }
     
