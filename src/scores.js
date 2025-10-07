@@ -780,9 +780,8 @@ async function died(reason, slain) {
 function writeScoreToDatabase(endGameScore) {
   const survived = endGameScore.timeused > 5; // surviving > 5 mobuls with 0 score should be recorded
   const scored = endGameScore.score > 0;
-  const retriedGOTW = GOTW && endGameScore.what === DEATH_REASONS[DIED_RETRIED_GOTW];
-
-  console.log(`score ==`,endGameScore.score);
+  const retriedGOTW = GOTW && endGameScore.what === DEATH_REASONS.get(DIED_RETRIED_GOTW);
+  console.log(`score ==`, endGameScore.score);
   console.log(`wizard ==`, wizard);
   console.log(`cheater ==`, cheat);
   console.log(`debug ==`, debug_used);
@@ -792,7 +791,7 @@ function writeScoreToDatabase(endGameScore) {
 
   if (!wizard && // no wizards
       !cheat && // no cheaters
-      (endGameScore.winner || scored || survived) && // winners, scorers, lived > 5 mobuls
+      (endGameScore.winner || scored || survived || GOTW) && // winners, scorers, lived > 5 mobuls
       !retriedGOTW // on first GOTW attempt
     ) {
     localWriteHighScore(endGameScore);

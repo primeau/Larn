@@ -57,7 +57,7 @@ updateYearDropdown();
 function updateGotwDropdown() {
   if (!gotwSelect) return;
   gotwSelect.innerHTML = '<option value="">-select-</option>';
-  for (let w = getISOWeek(new Date()); w >= 36; w--) {
+  for (let w = getISOWeek(new Date()); w >= 41; w--) {
     const val = `2025_${w}`;
     const opt = document.createElement('option');
     opt.value = val;

@@ -2,7 +2,13 @@
 
 async function doGOTWStuff() {
   console.log(`GOTW enabled`);
-  // await uploadGOTW();
+
+  // let date = new Date();
+  // for (let i = 0; i < 12; i++) {
+  //   await uploadGOTW(date);
+  //   date.setDate(date.getDate() + 7);
+  // }
+
   return await downloadGOTW();
 }
 
@@ -13,22 +19,23 @@ async function doGOTWStuff() {
 //
 //
 //
-async function uploadGOTW() {
+async function uploadGOTW(dateIn) {
   console.log(`uploadGOTW()`);
-
-  // let gotw = localStorageGetObject(`gotw`, false);
+  // generate levels
   for (let level = 0; level < LEVELS.length; level++) {
     newcavelevel(level);
   }
-
-  // TODO: filter out more stuff before sending?
-  var x = player.level;
-  player.level = null;
+  // clear out unneeded data
+  gameID = 'GOTW';
+  logname = 'GOTW';
+  player = {
+    x: rnd(MAXX - 2),
+    y: rnd(MAXY - 2),
+  };
+  
   let state = JSON.stringify(new GameState(true));
-  player.level = x;
-
-  const filename = getGotwFilename();
-
+  
+  const filename = getGotwFilename(dateIn);
   console.log(`uploadGOTW(): uploading ${filename} (${state.length})`);
   const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/admin/CLOUDFLARE_ADMIN_PASSWORD/gotw`, {
     method: 'PUT',
@@ -41,6 +48,8 @@ async function uploadGOTW() {
     },
   }).catch((err) => console.error('Error uploading GOTW:', err));
   console.log(`GOTW uploaded:`, response);
+
+  return null;
 }
 
 //
@@ -68,8 +77,8 @@ async function downloadGOTW() {
 }
 
 // totally duplicated in cf_tools.mjs
-function getGotwFilename() {
-  let date = new Date();
+function getGotwFilename(dateIn) {
+  let date = dateIn || new Date();
   const year = date.getUTCFullYear();
   return `${year}/${GAMENAME}_${getGotwLabel(date)}.json`.toLocaleLowerCase();
 }

@@ -77,6 +77,10 @@ export async function handleHighscoreGET(env, tablename, gameType, endgameType) 
 
   try {
     // console.log(`handleHighscoreGET(): SELECT * FROM ${tablename} ${gameWhere}${endgameWhere} ORDER BY ${order}`);
+    // if (tablename.startsWith(CF_GOTW_TABLE)) {
+    //   console.log(`handleHighscoreGET(): creating ${tablename}`);
+    //   await initHighscoresTable(env, tablename);
+    // }
     let tableLimit = 4 * CF_MAX_SCOREBOARD_SIZE; // 4 different types of scoreboards
     let { results } = await env.DB.prepare(`SELECT * FROM ${tablename} ${gameWhere}${endgameWhere} ORDER BY ${order} LIMIT ${tableLimit}`).all();
     // success case

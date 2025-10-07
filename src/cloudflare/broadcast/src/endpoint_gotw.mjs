@@ -4,6 +4,8 @@ import { CF_LARN, CF_ULARN, CF_GOTW_TABLE } from './cf_config.mjs';
 
 import { ALLOW_ORIGIN_HEADERS, SUCCESS_RESPONSE, getGotwLabel, getGotwFilename, getPlayerIP } from './cf_tools.mjs';
 
+import { initHighscoresTable } from './endpoint_highscores.mjs';
+
 //
 //
 // HANDLE_GOTW_REQUEST
@@ -31,7 +33,7 @@ async function handleGotwGET(env, request, path) {
   try {
     const vars = path[1].split(`,`);
     const gameType = vars[0];
-    const who = vars[1];
+    const who = decodeURIComponent(vars[1]);
     const playerID = vars[2];
     const filename = getGotwFilename(gameType);
     let playerIP = getPlayerIP(request);
@@ -45,12 +47,16 @@ async function handleGotwGET(env, request, path) {
 
     // get the GOTW-yyyy-ww.json file
     const file = await env.BUCKET_GOTW.get(filename);
-    if (!file) {
+    if (file) {
+      console.log(`handleGotwGET(): found file ${filename} (${file.size} bytes)`);
+    } else {
       return new Response('File not found', { status: 404, headers: ALLOW_ORIGIN_HEADERS });
     }
 
     // (1) look at the current gotw scoreboard to see if this player has already played
     const tablename = `${CF_GOTW_TABLE}_${getGotwLabel(new Date())}`;
+    // always try to create the table, which is harmless if it already exists
+    await initHighscoresTable(env, tablename);
     const gameWhere = gameType === CF_ULARN ? `ularn=1` : `ularn=0`;
     const dbquery = `WHERE ${gameWhere} AND who = "${who}" OR playerID = "${playerID}" OR playerIP = "${playerIP}"`;
     const rawResults = await env.DB.prepare(`SELECT count (*) FROM ${tablename} ${dbquery}`).raw();
