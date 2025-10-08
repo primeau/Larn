@@ -229,64 +229,22 @@ async function dbQueryHighScores(newScore, showWinners, showLosers) {
     return;
   }
 
-  if (CLOUDFLARE_READ) {
-    try {
-      const cfhighscores = await getHighscores();
-      if (cfhighscores) {
-        ONLINE = true;
-        winners = cfhighscores.winners;
-        if (winners) console.log(`loaded winners: ${winners.length}`);
-        losers = cfhighscores.visitors;
-        if (losers) console.log(`loaded losers: ${losers.length}`);
-        showScores(newScore, false, showWinners, showLosers, 0);
-        return;
-      }
-    } catch (error) {
-      console.error('Failed to get highscores from Cloudflare:', error);
-      ONLINE = false;
-      let msg = `Error loading global scoreboard, showing local scoreboard`;
-      showLocalScoreBoard(newScore, showWinners, showLosers, 0, msg);
-      return;
-    }
-  }
-
-  var params = {
-    FunctionName: AWS_SCORE_FUNCTION,
-    Payload: `{ "gamename" : "${GAMENAME}", "gameID" : "board" }`,
-    InvocationType: 'RequestResponse',
-    LogType: 'None' // 'Tail' // 'None' // 
-  };
-
-  lambda.invoke(params, function (error, data) {
-    var payload = data ? JSON.parse(data.Payload) : null;
-    var status = payload ? payload.statusCode : 444;
-    if (status == 200) {
-      var newData = JSON.parse(payload.body);
-
-      // only return top 72 so the end game scoreboard
-      // doesn't overflow above 80 
-      winners = newData[0].slice(0, MAX_SCORES_TO_READ);
-      console.log(`loaded winners: ${winners.length}`);
-
-      losers = newData[1].slice(0, MAX_SCORES_TO_READ);
-      console.log(`loaded visitors: ${losers.length}`);
-
+  try {
+    const cfhighscores = await getHighscores();
+    if (cfhighscores) {
       ONLINE = true;
+      winners = cfhighscores.winners;
+      if (winners) console.log(`loaded winners: ${winners.length}`);
+      losers = cfhighscores.visitors;
+      if (losers) console.log(`loaded losers: ${losers.length}`);
       showScores(newScore, false, showWinners, showLosers, 0);
-    } else if (status == 404) {
-      let stats = `Couldn't find global scoreboard, showing local scoreboard`;
-      ONLINE = false;
-      showLocalScoreBoard(newScore, showWinners, showLosers, 0, stats);
-    } else {
-      var statuscode = data ? data.StatusCode : 555;
-      console.log(`lambda error: lambda status=${statuscode} larn status=${status}`);
-      if (error) console.log(error, error.stack);
-      let stats = `Error loading global scoreboard, showing local scoreboard`;
-      ONLINE = false;
-      showLocalScoreBoard(newScore, showWinners, showLosers, 0, stats);
     }
-  });
-
+  } catch (error) {
+    console.error('Failed to get highscores from Cloudflare:', error);
+    ONLINE = false;
+    let msg = `Error loading global scoreboard, showing local scoreboard`;
+    showLocalScoreBoard(newScore, showWinners, showLosers, 0, msg);
+  }
 }
 
 
@@ -463,39 +421,8 @@ async function dbQueryLoadGame(gameID, local, winner) {
   }
 
   console.log(`loading game: ${gameID}`);
-
-  if (CLOUDFLARE_READ) {
-    stats = await cloudflareLoadGame(gameID);
-    setDiv(`STATS`, stats);
-    return;
-  }
-
-  var params = {
-    FunctionName: AWS_SCORE_FUNCTION,
-    Payload: `{ "gamename" : "${GAMENAME}", "gameID" : "${gameID}" }`,
-    InvocationType: 'RequestResponse',
-    LogType: 'None' // 'Tail'
-  };
-  lambda.invoke(params, function (error, data) {
-    var payload = data ? JSON.parse(data.Payload) : null;
-    var status = payload ? payload.statusCode : 666;
-    stats = ``;
-    if (status == 200) {
-      ONLINE = true;
-      var newData = JSON.parse(payload.body);
-      stats = getStatString(newData, true);
-    } else if (status == 404) {
-      stats = `Couldn't load game ${gameID}`;
-      console.log(`larn status=${status}`);
-    } else {
-      var statuscode = data ? data.StatusCode : 777;
-      console.log(`lambda error: lambda status=${statuscode} larn status=${status}`);
-      if (error) console.log(error, error.stack);
-      stats = `Couldn't load game ${gameID}`;
-    }
-    setDiv(`STATS`, stats);
-  });
-
+  stats = await cloudflareLoadGame(gameID);
+  setDiv(`STATS`, stats);
 }
 
 
@@ -534,37 +461,6 @@ function localWriteHighScore(newScore) {
       localStorageSetObject('losers', losers);
     }
   }
-}
-
-
-function awsWriteHighScore(newScore) {
-
-  console.log(`awsWriteHighScore(): ${newScore.gameID}`);
-
-  var params = {
-    FunctionName: AWS_SCORE_FUNCTION,
-    Payload: `{ "gamename" : "${GAMENAME}", "newScore" : ${JSON.stringify(newScore)} }`,
-    InvocationType: 'RequestResponse',
-    LogType: 'None' // 'Tail'
-  };
-
-  lambda.invoke(params, function (error, data) {
-    if (data) {
-      var payload = JSON.parse(data.Payload);
-      var status = payload.statusCode;
-      if (status == 200) {
-        ONLINE = true;
-        console.log(`awsWriteHighScore(): success: ` + newScore.who + ` ` + newScore.score + ` ` + newScore.hardlev);
-      } else if (status == 404) {
-        console.error(`awsWriteHighScore(): Couldn't save game ${gameId}`);
-      } else {
-        console.error(`awsWriteHighScore(): lambda status=${data.StatusCode} larn status=${status}`);
-        if (error) console.log(error, error.stack);
-      }
-    } else {
-      console.error(`awsWriteHighScore(): no data lambda error: ${error}`);
-    }
-  });
 }
 
 
@@ -802,18 +698,19 @@ function writeScoreToDatabase(endGameScore) {
       return;
     }
 
-    awsWriteHighScore(endGameScore);
-    if (CLOUDFLARE_WRITE) {
-      cloudflareWriteHighScore(endGameScore);
-    }
+    cloudflareWriteHighScore(endGameScore);
   }
 
   try {
     const newScore = endGameScore;
-    if (newScore.winner) {
-      doRollbar(ROLLBAR_INFO, `winner`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
-    } else if (rnd(100) < 11) {
-      doRollbar(ROLLBAR_INFO, `visitor`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
+    if (newScore.gotw) {
+      doRollbar(ROLLBAR_INFO, `gotw:${newScore.gotw}`, `U=${newScore.ularn}, ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
+    } else {
+      if (newScore.winner) {
+        doRollbar(ROLLBAR_INFO, `winner`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);
+      } else if (rnd(100) < 11) {
+        doRollbar(ROLLBAR_INFO, `visitor`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
+      }
     }
   } catch (error) {
   }

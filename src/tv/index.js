@@ -44,11 +44,7 @@ async function go() {
   } else {
     TV_CHANNEL = TV_CHANNEL_LIST;
     initList();
-    if (CLOUDFLARE_READ) {
-      downloadRecordings(recordedGamesLoaded, MIN_FRAMES_TO_LIST);
-    } else {
-      downloadRecordings_AWS_LEGACY(recordedGamesLoaded, MIN_FRAMES_TO_LIST);
-    }
+    downloadRecordings(recordedGamesLoaded, MIN_FRAMES_TO_LIST);
     downloadliveGamesList(liveGamesLoaded);
   }
 

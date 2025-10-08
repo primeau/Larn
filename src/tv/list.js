@@ -161,11 +161,7 @@ function sortName(a, b) {
 
 
 function recordedGamesLoaded(games) {
-  if (CLOUDFLARE_READ) {
-    recordedGamesList = games; // if reading from CF
-  } else {
-    if (games && games[0]) recordedGamesList = games[0]; // if reading from AWS
-  }
+  recordedGamesList = games;
   radioChanged();
 }
 

@@ -1,13 +1,9 @@
 'use strict';
 
 const VERSION = '12.5.2';
-const BUILD = '538';
+const BUILD = '539';
 
 const ENABLE_DEVMODE = false;  // this must be set to false for production releases
-
-const CF_LOCAL = false;
-const CLOUDFLARE_READ = true;  // use cloudflare for scores
-const CLOUDFLARE_WRITE = true;  // use cloudflare for scores
 
 const CF_SCORE_ENDPOINT = 'score';
 const CF_HIGHSCORE_ENDPOINT = 'highscore';
@@ -28,6 +24,7 @@ function initLambdaCredentials() {
 }
 
 // live games
+const CF_LOCAL = false;
 const ENABLE_RECORDING_REALTIME = true; // IDEA: RELEASE A VERSION WITH THIS SET TO FALSE
 const CF_BROADCAST_HOST = CF_LOCAL ? `localhost:8787` : `broadcast.larn.workers.dev`;
 const CF_BROADCAST_PROTOCOL = CF_LOCAL ? `http://` : `https://`;

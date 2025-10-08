@@ -47,7 +47,7 @@
     "buildprod": "npm run prodclean ; npm run transpile ; npm run minify ; npm run minifyscore ; npm run prodcopy ; npm run prodtv ; npm run prodscore ; npm run distprod",
 
     "build": "echo '=== STARTING BUILD ==' ; npm run distclean ; npm run transpile ; npm run minify ; npm run minifyscore ; npm run prodcopy ; npm run tempclean",
-    "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run deployclean ; npm run transpile ; npm run minify ; npm run minifyscore ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run webcopy ; npm run alphatv ;  npm run betatv ; npm run prodtv ; npm run alphascore ; npm run betascore ; npm run prodscore ; npm run dist ; npm run clean",
+    "buildall": "echo '=== STARTING FULL BUILD ==' ; npm run deployclean ; npm run transpile ; npm run minify ; npm run minifyscore ; npm run alphacopy ; npm run betacopy ; npm run prodcopy ; npm run alphatv ;  npm run betatv ; npm run prodtv ; npm run alphascore ; npm run betascore ; npm run prodscore ; npm run dist ; npm run clean",
 
     "watch": "npm run tempclean ; babel src --watch --out-dir larn-temp/",
     "localserver": "cd ../larn-local ; python3 -m http.server 8000",

@@ -83,17 +83,6 @@ async function invokeLambdaAsync(payload) {
 
 
 
-function downloadRecordings_AWS_LEGACY(recordingsLoadedCallback, limit) {
-  console.log(`downloadRecordings_AWS_LEGACY()`);
-  let requestPayload = {
-    action: `listcompleted`,
-    frameLimit: limit
-  };
-  invokeLambda(requestPayload, recordingsLoadedCallback, lambdaFail);
-}
-
-
-
 function lambdaFail(err) {
   console.log(`lambdaFail(): `, err);
 }

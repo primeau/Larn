@@ -13,9 +13,17 @@ function isWinner() {
   return winnersRadio && winnersRadio.checked;
 }
 
-// Populate year and gotw selectors
+function getISOWeek(date) {
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  return weekNo;
+}
+
+// Populate year selector
 const yearSelect = document.getElementById('yearSelect');
-const gotwSelect = document.getElementById('gotwSelect');
 const winnersRadio = document.getElementById('winnersRadio');
 const visitorsRadio = document.getElementById('visitorsRadio');
 const larnRadio = document.getElementById('larnRadio');
@@ -36,37 +44,49 @@ function updateYearDropdown() {
   const prevValue = yearSelect.value;
   // Remove all options except 'All-Time'
   yearSelect.innerHTML = '<option value="all">All-Time</option>';
+
+  // Add Game of the Week options
+  const gotwHeader = document.createElement('optgroup');
+  gotwHeader.label = 'Endelford\'s Weekly Dungeon';
+  
+  // Current Week
+  const currentDate = new Date();
+  const currentWeek = getISOWeek(currentDate);
+  const currentYearForWeek = currentDate.getFullYear();
+  const currentOpt = document.createElement('option');
+  currentOpt.value = `gotw_${currentYearForWeek}_${currentWeek}`;
+  currentOpt.textContent = 'Current Challenge';
+  gotwHeader.appendChild(currentOpt);
+  
+  // Previous Week
+  const previousDate = new Date();
+  previousDate.setDate(previousDate.getDate() - 7);
+  const previousWeek = getISOWeek(previousDate);
+  const previousYearForWeek = previousDate.getFullYear();
+  const previousOpt = document.createElement('option');
+  previousOpt.value = `gotw_${previousYearForWeek}_${previousWeek}`;
+  previousOpt.textContent = 'Previous Week';
+  gotwHeader.appendChild(previousOpt);
+  
+  yearSelect.appendChild(gotwHeader);
+
+  const yearHeader = document.createElement('optgroup');
+  yearHeader.label = 'Year';
   for (let y = currentYear; y >= startYear; y--) {
     const opt = document.createElement('option');
     opt.value = y;
     opt.textContent = y;
-    yearSelect.appendChild(opt);
+    yearHeader.appendChild(opt);
   }
+  yearSelect.appendChild(yearHeader);
+
   // Restore previous selection if possible
   if ([...yearSelect.options].some((o) => o.value === prevValue)) {
     yearSelect.value = prevValue;
   }
-  // If gotw is selected, set year selector value to '' but keep options
-  if (gotwSelect && gotwSelect.value) {
-    yearSelect.value = '-select-';
-  }
 }
 
 updateYearDropdown();
-
-function updateGotwDropdown() {
-  if (!gotwSelect) return;
-  gotwSelect.innerHTML = '<option value="">-select-</option>';
-  for (let w = getISOWeek(new Date()); w >= 41; w--) {
-    const val = `2025_${w}`;
-    const opt = document.createElement('option');
-    opt.value = val;
-    opt.textContent = `2025-${w}`;
-    gotwSelect.appendChild(opt);
-  }
-}
-
-updateGotwDropdown();
 
 document.querySelectorAll('input[type="radio"]').forEach((radio) => {
   radio.addEventListener('change', () => {
@@ -79,20 +99,6 @@ document.querySelectorAll('input[type="radio"]').forEach((radio) => {
 
 if (yearSelect) {
   yearSelect.addEventListener('change', function () {
-    // Reset gotw selector when year changes
-    if (gotwSelect) gotwSelect.value = '';
-    fetchScores();
-    setScoreStorage();
-  });
-}
-
-if (gotwSelect) {
-  gotwSelect.addEventListener('change', function () {
-    if (gotwSelect.value) {
-      yearSelect.value = '';
-    } else {
-      updateYearDropdown();
-    }
     fetchScores();
     setScoreStorage();
   });
@@ -102,8 +108,7 @@ function setScoreStorage() {
   const gameType = document.querySelector('input[name="gameType"]:checked')?.value || '';
   const scoreType = document.querySelector('input[name="scoreType"]:checked')?.value || '';
   const yearValue = yearSelect?.value || '';
-  const gotwValue = gotwSelect?.value || '';
-  const storageValue = JSON.stringify({ gameType, scoreType, year: yearValue, gotw: gotwValue });
+  const storageValue = JSON.stringify({ gameType, scoreType, year: yearValue });
   localStorage.setItem('scoreSelections', storageValue);
 }
 
@@ -137,14 +142,8 @@ function setSelectionsFromStorage() {
       yearSelect.value = storage.year;
     }
   }
-  // Set gotwSelect
-  if (storage.gotw && gotwSelect) {
-    updateGotwDropdown();
-    if ([...gotwSelect.options].some((o) => o.value === storage.gotw)) {
-      gotwSelect.value = storage.gotw;
-    }
-  }
 }
+
 
 // Add event listener for the X button to close overlay
 document.addEventListener('DOMContentLoaded', function () {
@@ -159,14 +158,13 @@ document.addEventListener('DOMContentLoaded', function () {
 const scoreboardCache = {};
 
 async function fetchScores() {
-  // Get selected game type, score type, year, and gotw
+  // Get selected game type, score type, and year
   const gameType = isUlarn() ? 'ularn' : 'larn';
   const scoreType = winnersRadio.checked ? 'winners' : 'visitors';
   const yearValue = document.getElementById('yearSelect').value;
-  const gotwValue = gotwSelect ? gotwSelect.value : '';
   let endpointLabel = CF_HIGHSCORES_TABLE;
-  if (gotwValue) {
-    endpointLabel = `gotw_${gotwValue}`;
+  if (yearValue.startsWith('gotw_')) {
+    endpointLabel = yearValue;
   } else if (yearValue !== 'all') {
     endpointLabel = `${CF_HIGHSCORES_TABLE}_${yearValue}`;
   }

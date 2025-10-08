@@ -1,3 +1,28 @@
+
+big, amiga, performance is still shit
+http://localhost:8000/tv/index_local.html?gameid=sqcfaiblsz
+http://localhost:8001/alpha/tv/?gameid=sqcfaiblsz
+
+first file doesn't exist
+http://localhost:8001/alpha/tv/?gameid=jorz4hhxes
+
+small, good, savegame at 444
+http://localhost:8001/alpha/tv/?gameid=jr0ldn7viw
+
+small, amiga, runs really slow at times
+https://larn.org/larn/tv/index.html?gameid=qjrydqx99l
+http://localhost:8001/alpha/tv/?gameid=qjrydqx99l
+
+big, non-amiga, causes RangeError when scrubbing
+https://larn.org/alpha/tv/?gameid=uu5wf8u9al
+http://localhost:8001/alpha/tv/?gameid=uu5wf8u9al
+
+amiga, win by me --> use to test "seeking..."
+http://localhost:8000/tv/index_local.html?gameid=q73yvndje4
+http://localhost:8001/alpha/tv/?gameid=q73yvndje4
+
+
+
 bugs:
 *** saving a game 3(?) from the end of a buffer causes a null patch, then error on reload
 - scrolling on safari is wonky. seems to be easier when paused

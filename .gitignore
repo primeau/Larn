@@ -8,3 +8,4 @@ src/env/larn_config.js
 aws-sdk.js
 secrets.sh
 .wrangler
+*.log
