@@ -15,7 +15,6 @@ export function getPlayerIP(request) {
 
 export function getGotwFilename(gamename) {
   let date = new Date();
-  const weekNumber = getISOWeek(date);
   const year = date.getUTCFullYear();
   return `${year}/${gamename}_${getGotwLabel(date)}.json`.toLocaleLowerCase();
 }
@@ -51,13 +50,11 @@ export async function permissionCheck(env, ip) {
 
     // ip isn't banned, so update or insert
     const result = await env.DB.prepare(`SELECT * FROM ${CF_IP_TRACKER_TABLE} WHERE ip = ?`).bind(ip).first();
-    const numRequests = result ? result.numRequests : 0;
     if (result) {
       await env.DB.prepare(`UPDATE ${CF_IP_TRACKER_TABLE} SET numRequests = numRequests + 1, lastSeen = ? WHERE ip = ?`).bind(Date.now(), ip).run();
     } else {
       await env.DB.prepare(`INSERT INTO ${CF_IP_TRACKER_TABLE} (ip, numRequests, lastSeen) VALUES (?, 1, ?)`).bind(ip, Date.now()).run();
     }
-    // console.log(`permissionCheck(): allowed ${ip} numRequests=${numRequests + 1}`);
   } catch (err) {
     console.error(`permissionCheck(): error for ${ip}:`, err);
   }

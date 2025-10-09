@@ -45,7 +45,7 @@ function welcome() {
   initKeyBindings(); // wait until last moment to set key bindings
 
   if (!no_intro) {
-    setTextCallback(setname);
+    setTextCallback(setname, 24);
   } else {
     setname(logname);
   }
@@ -139,7 +139,7 @@ function setname(name) {
     lprcat(difficultyString);
     blinken(difficultyString.length - 5, 24);
 
-    setNumberCallback(setdiff, false);
+    setNumberCallback(setdiff, false, 3);
   }
   return 0;
 }

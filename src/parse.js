@@ -75,14 +75,16 @@ function setCharCallback(func) {
 
 
 
-function setTextCallback(func) {
+function setTextCallback(func, maxTextLength) {
+  setMaxInputLength(maxTextLength || 24);
   blocking_callback = getTextInput;
   keyboard_input_callback = func;
 }
 
 
 
-function setNumberCallback(func, allowAsterisk) {
+function setNumberCallback(func, allowAsterisk, maxNumLength) {
+  setMaxInputLength(maxNumLength || 8);
   if (allowAsterisk)
     blocking_callback = getNumberOrAsterisk;
   else
@@ -822,7 +824,7 @@ function parse(e, key) {
   if (key == '_') {
     nomove = 1;
     updateLog(`Enter Password: `);
-    setTextCallback(wizardmode);
+    setTextCallback(wizardmode, 14);
     return;
   }
 

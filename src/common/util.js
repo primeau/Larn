@@ -100,6 +100,7 @@ function debug(text) {
 
 
 var KEYBOARD_INPUT = ``;
+let MAX_INPUT_LENGTH = 24;
 
 
 
@@ -183,6 +184,12 @@ function getNumberOrAsterisk(key) {
 
 
 
+function setMaxInputLength(len) {
+  MAX_INPUT_LENGTH = Math.max(1, len);
+}
+
+
+
 function getInput(key, match, extra) {
   if (key == ESC) {
     KEYBOARD_INPUT = key;
@@ -199,8 +206,10 @@ function getInput(key, match, extra) {
     return 0;
   }
   if (match(key)) {
-    KEYBOARD_INPUT += key;
-    echo(key);
+    if (KEYBOARD_INPUT.length < MAX_INPUT_LENGTH) {
+      KEYBOARD_INPUT += key;
+      echo(key);
+    }
     return 0;
   }
   if (extra) {

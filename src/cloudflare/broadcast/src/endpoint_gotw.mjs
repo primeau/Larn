@@ -53,28 +53,31 @@ async function handleGotwGET(env, request, path) {
       return new Response('File not found', { status: 404, headers: ALLOW_ORIGIN_HEADERS });
     }
 
-    // (1) look at the current gotw scoreboard to see if this player has already played
-    const tablename = `${CF_GOTW_TABLE}_${getGotwLabel(new Date())}`;
-    // always try to create the table, which is harmless if it already exists
-    await initHighscoresTable(env, tablename);
+    // (0) setup for dupe checking
+    let numScores = 0;
     const gameWhere = gameType === CF_ULARN ? `ularn=1` : `ularn=0`;
-    const dbquery = `WHERE ${gameWhere} AND who = "${who}" OR playerID = "${playerID}" OR playerIP = "${playerIP}"`;
-    const rawResults = await env.DB.prepare(`SELECT count (*) FROM ${tablename} ${dbquery}`).raw();
-    let numScores = rawResults[0][0];
-    console.log(`handleGotwGET(): ${tablename} found ${numScores} previous games for ${gameType}, ${who}, ${playerID}, ${playerIP}`);
+    const dbquery = `WHERE ${gameWhere} 
+                     AND (who = ?1 OR playerID = ?2 OR playerIP = ?3)`;
+
+    // (1) look at the current gotw scoreboard to see if this player has already played
+    const gotwScoreTable = `${CF_GOTW_TABLE}_${getGotwLabel(new Date())}`;
+    await initHighscoresTable(env, gotwScoreTable); // always try to create the table, which is harmless if it already exists
+    const rawResults = await env.DB.prepare(`SELECT count (*) FROM ${gotwScoreTable} ${dbquery}`).bind(who, playerID, playerIP).raw();
+    numScores = rawResults[0][0];
+    console.log(`handleGotwGET(): ${gotwScoreTable} found ${numScores} previous games for ${gameType}, ${who}, ${playerID}, ${playerIP}`);
 
     // (2) check if the player has started a game
     if (numScores === 0) {
-      const startedResults = await env.DB.prepare(`SELECT count (*) FROM ${CF_GOTW_TABLE}_started ${dbquery}`).raw();
-      let startedScores = startedResults[0][0];
-      numScores = startedScores;
-      console.log(`handleGotwGET(): ${CF_GOTW_TABLE}_started found ${numScores} started games for ${gameType}, ${who}, ${playerID}, ${playerIP}`);
+      const gotwStarted = `${CF_GOTW_TABLE}_started`;
+      const startedResults = await env.DB.prepare(`SELECT count (*) FROM ${gotwStarted} ${dbquery}`).bind(who, playerID, playerIP).raw();
+      numScores = startedResults[0][0];
+      console.log(`handleGotwGET(): ${gotwStarted} found ${numScores} started games for ${gameType}, ${who}, ${playerID}, ${playerIP}`);
     }
 
     // (3) push this attempt into the gotw_started table
     if (playerIP === ``) playerIP = `0`; // to prevent (2) from picking up localhost
     const success = await insertGotwStarted(env, gameType, who, playerID, playerIP);
-    console.log(`handleGotwGET(): started game: ${gameType}, who: ${who}, playerID: ${playerID}, playerIP: ${playerIP}, ${success}`);
+    console.log(`handleGotwGET(): insert into gotw_started:`, success);
 
     if (numScores === 0) {
       return new Response(file.body, SUCCESS_RESPONSE);
