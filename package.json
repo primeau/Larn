@@ -51,17 +51,7 @@
 
     "watch": "npm run tempclean ; babel src --watch --out-dir larn-temp/",
     "localserver": "cd ../larn-local ; python3 -m http.server 8000",
-    "deployserver": "cd ../larn-deploy ; python3 -m http.server 8001",
-
-    "deploy_tv_lambda_test": "cd src/tv/aws ; zip function.zip *.js *.mjs ;  aws lambda update-function-code --function-name movie_test --zip-file fileb://function.zip ; rm function.zip",
-    "deploy_tv_lambda": "cd src/tv/aws ; zip function.zip *.js *.mjs ;  aws lambda update-function-code --function-name movies --zip-file fileb://function.zip ; rm function.zip",
-    "deploy_tv_prunetvscores": "cd .. ; zip -j function.zip larn-tools/prunetv/* ;  aws lambda update-function-code --function-name prunetvscores --zip-file fileb://function.zip ; rm function.zip",
-
-    "deploy_larn_lambda_test": "cd src/aws ; zip function.zip *.js *.mjs ;  aws lambda update-function-code --function-name test --zip-file fileb://function.zip ; rm function.zip",
-    "deploy_larn_lambda_score": "cd src/aws ; zip function.zip *.js *.mjs ;  aws lambda update-function-code --function-name score --zip-file fileb://function.zip ; rm function.zip",
-
-    "local_cloudflare": "cd ../larn/src/cloudflare/broadcast/src ; node --max-old-space-size=8192 \"$(which wrangler)\" dev --test-scheduled",
-    "deploy_cloudflare": "cd ../larn-local/cloudflare/broadcast ; npx wrangler deploy ; npx wrangler tail"
+    "deployserver": "cd ../larn-deploy ; python3 -m http.server 8001"
   },
   "repository": {
     "type": "git",
