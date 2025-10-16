@@ -74,12 +74,17 @@ function recordFrame() {
   try {
     if (!canRecord()) return;
     if (BLINKEN) { // prevent blinking cursor from creating tons of duplicate frames on startup
+      let larnDiv = document.getElementById(`LARN`).innerHTML;
+      if (amiga_mode) {
+        larnDiv = deflate(larnDiv);
+      }
       let divs = {
-        LARN: document.getElementById(`LARN`).innerHTML,
+        LARN: larnDiv,
         STATS: document.getElementById(`STATS`).innerHTML
       };
       if (divs.LARN !== LAST_LARN_DIV || divs.STATS !== LAST_STAT_DIV) {
         let newFrame = video.createEmptyFrame();
+        newFrame.deflated = amiga_mode; // only deflate amiga frames
         newFrame.divs = divs;
         processRecordedFrame(newFrame);
         processLiveFrame(newFrame);
@@ -88,7 +93,7 @@ function recordFrame() {
       }
     }
   } catch (error) {
-    console.error(`recordFrame() error:`, error);
+    console.error(`recordFrame() caught:`, error);
   }
 }
 

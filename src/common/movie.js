@@ -242,26 +242,6 @@ function processRecordedFrame(frame) {
     // WORKER STEP 1 - buildPatchWorker
     if (buildPatchWorker) {
       buildPatchWorker.postMessage([prevFrame, frame, `patch`]);
-
-
-// regex
-//       <div.*?img\/(.*?).png.*?>(.?)<\/div>
-//       <div.*(class..).*>(.*?)<\/div>
-//       img\/(.*?).png
-
-
-      // console.log(frame.divs.LARN);
-
-      // console.log(`1`);
-      // // const reg = /Larn/gmi;
-      // const reg = /img\/(.*?).png/gmi;
-      // console.log(`2`);
-      // const regextest = [...reg.exec(frame.divs.LARN)];
-      // console.log(`3`);
-      // console.log(`got: `, regextest.length);
-      // console.log(`got: `, regextest[0]);
-      // console.log(`got: `, regextest[1]);
-
       return;
     } else {
       // don't add a frame
@@ -270,6 +250,87 @@ function processRecordedFrame(frame) {
     console.error(`processRecordedFrame():`, error);
   }
 
+}
+
+
+const DELIMITER = '|';
+
+function deflate(htmlString) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  const divs = doc.querySelectorAll('div.image');
+  
+  const results = [];
+  
+  divs.forEach(div => {
+    const style = div.getAttribute('style');
+    const match = style?.match(/img\/([^"]+)\.png/);
+    const textContent = div.textContent;
+    
+    let token;
+    if (match) {
+      const imageName = match[1]; // Extract filename without extension
+      // If image is o94 and there's text content, use the text
+      if (imageName === 'o94' && textContent) {
+        token = textContent;
+      } else {
+        // Otherwise use the image name
+        token = imageName;
+      }
+    } else if (textContent) {
+      // No image found, but there's text content
+      token = textContent;
+    }
+    
+    if (token) {
+      results.push(token);
+    } else {
+      console.log(`No valid token found in div:`, div);
+    }
+  });
+
+  return results.join(DELIMITER);
+}
+
+
+
+function inflate(tokenString, width = 80) {
+  const tokens = tokenString.split(DELIMITER);
+  
+  const divs = [];
+  let x = 0;
+  let y = 0;
+  
+  tokens.forEach(token => {
+    // Determine if token is an image name or text content
+    let imageName = 'o0'; // default
+    let textContent = ' '; // default empty space
+    
+    // Check if token looks like an image name
+    // Patterns: o + digits | m + digits + optional 'v' or 'u' | w + digits | 'player'
+    if (/^[ow]\d+$/.test(token) || /^m\d+[uv]?$/.test(token) || token === 'player') {
+      // It's an image name
+      imageName = token;
+    } else {
+      // It's text content, so use o94 as the image
+      imageName = 'o94';
+      textContent = token;
+    }
+    
+    // Create the div HTML
+    const div = `<div id="${x},${y}" class="image" style="width: 13px; height: 26px; font-weight: normal; background-image: url(&quot;img/${imageName}.png&quot;);">${textContent}</div>`;
+    divs.push(div);
+    
+    // Update position (move to next column, wrap to next row at width)
+    x++;
+    if (x >= width) {
+      x = 0;
+      y++;
+      divs.push('\n'); // add line break
+    }
+  });
+  
+  return divs.join('');
 }
 
 

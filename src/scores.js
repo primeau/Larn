@@ -284,6 +284,10 @@ function exitscores(newScore, local, key) {
 
 function showScores(newScore, local, showWinners, showLosers, offset) {
   mazeMode = false;
+
+  const gotwLabel = GOTW ? ` Weekly ` : ` `;
+  const movesLabel = GOTW ? ` ` : ` (Games > ${MIN_TIME_PLAYED} mobuls)`;
+
   if (!GAMEOVER) clear();
 
   if (local) {
@@ -292,11 +296,11 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
     losers = localStorageGetObject('losers', []);
   } else {
     if (showWinners && !showLosers)
-      lprcat(`                  <b>${GAMENAME} Winners Scoreboard</b>\n\n`);
+      lprcat(`                  <b>${GAMENAME}${gotwLabel}Winners Scoreboard</b>\n\n`);
     else if (showLosers && !showWinners)
-      lprcat(`                  <b>${GAMENAME} Visitors Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n\n`);
+      lprcat(`                  <b>${GAMENAME}${gotwLabel}Visitors Scoreboard</b>${movesLabel}\n\n`);
     else
-      lprcat(`                  <b>${GAMENAME} Scoreboard</b> (Games > ${MIN_TIME_PLAYED} mobuls)\n\n`);
+      lprcat(`                  <b>${GAMENAME}${gotwLabel}Scoreboard</b>${movesLabel}\n\n`);
   }
 
   if (GAMEOVER) {

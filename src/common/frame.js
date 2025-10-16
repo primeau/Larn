@@ -8,5 +8,6 @@ class Frame {
     this.ts = 0;
     this.divs = {};
     this.compressed = false;
+    this.deflated = false;
   }
 }

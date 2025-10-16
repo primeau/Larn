@@ -9,6 +9,7 @@ class Patch {
   constructor() {
     this.id;
     this.ts;
+    this.deflated = false;
     this.divs = {};
   }
 }
@@ -22,8 +23,11 @@ function buildFrame(patch, frame) {
   // frame number
   newFrame.id = patch.id;
   
-  // timestamp;
+  // timestamp
   newFrame.ts = patch.ts;
+
+  // amiga frames are deflated by removing css
+  newFrame.deflated = patch.deflated;
 
   // shouldn't happen but just in case
   if (frame.compressed) {
@@ -56,6 +60,7 @@ function buildPatch(prevFrame, currentFrame) {
 
   newPatch.id = currentFrame.id;
   newPatch.ts = currentFrame.ts;
+  newPatch.deflated = currentFrame.deflated;
 
   let divs = Object.keys(currentFrame.divs);
 

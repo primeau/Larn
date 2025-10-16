@@ -184,7 +184,7 @@ async function onClickProgressBar(event) {
     // otherwise getFrame() can blow call stack
     bltFrame(video.createInfoFrame(`Seeking...`));
     // Give the browser time to render the "Seeking..." message
-    await new Promise(resolve => setTimeout(resolve, 50));
+    await new Promise(resolve => setTimeout(resolve, 100));
     while (video.currentFrameNum < newFrameNum) {
       video.getNextFrame();
     }

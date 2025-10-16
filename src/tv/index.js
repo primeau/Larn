@@ -138,13 +138,19 @@ function bltFrame(frame) {
     decompressFrame(frame);
     // console.log(`bltFrame(): decompressed`, frame.id);
   }
+  
+  let larnDivs = frame.divs.LARN;
 
-  if (frame.divs.LARN === ``) frame.divs.LARN = EMPTY_LARN_FRAME;
+  if (frame.deflated) {
+    larnDivs = inflate(larnDivs);
+  }
+
+  if (larnDivs === ``) frame.divs.LARN = EMPTY_LARN_FRAME;
 
   // TODO: if bltFrameCache is set to a value it prevents rewinding
   if (frame.id > bltFrameCache) {
   // if (frame.ts > bltFrameCache) {
-    setDiv(`TV_LARN`, frame.divs.LARN);
+    setDiv(`TV_LARN`, larnDivs);
     setDiv(`TV_STATS`, frame.divs.STATS);
     // bltFrameCache = frame.id;
     //bltFrameCache = frame.ts;
