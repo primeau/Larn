@@ -413,7 +413,7 @@ function endRecording(endData, isUlarn) {
         };
       }
       
-      console.log(`endRecording(): enddata: `, endData);
+      //console.log(`endRecording(): enddata: `, endData);
       uploadFile(gameID, `${gameID}.txt`, JSON.stringify(endData), true);
     }
     

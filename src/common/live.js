@@ -44,7 +44,8 @@ async function processLiveFrame(frame) {
       sendLiveFrame(frame, true);
     }
   } catch (error) {
-    console.error(`processLiveFrame():`, error);
+    console.error(`processLiveFrame(): disabling realtime recording`, error);
+    ENABLE_RECORDING_REALTIME = false;
   }
 
 }

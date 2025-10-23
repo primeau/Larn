@@ -66,10 +66,11 @@ const ROLLBAR_ERROR = `ERROR`;
 const ROLLBAR_INFO = `INFO`;
 const ROLLBAR_DEBUG = `DEBUG`;
 const ROLLBAR_WARN = `WARN`;
+let ROLLBAR_COUNT = 0;
 function doRollbar(notificationLevel, eventTitle, eventDetail) {
   try {
     eventTitle = `${BUILD} ${GAMENAME} ${eventTitle}`;
-    if (Rollbar) {
+    if (ROLLBAR_COUNT++ < 50 && Rollbar) {
       if (notificationLevel === ROLLBAR_ERROR) {
         Rollbar.error(eventTitle, { detail: `${eventDetail}` });
       } else if (notificationLevel === ROLLBAR_INFO) {
@@ -78,6 +79,10 @@ function doRollbar(notificationLevel, eventTitle, eventDetail) {
         Rollbar.debug(eventTitle, { detail: `${eventDetail}` });
       } else if (notificationLevel === ROLLBAR_WARN) {
         Rollbar.warning(eventTitle, { detail: `${eventDetail}` });
+      }
+      if (ROLLBAR_COUNT === 50) {
+        console.error(`Rollbar event limit reached`);
+        Rollbar.debug(`Rollbar event limit reached`, { detail: `${eventDetail}` });
       }
     }
   } catch (error) {
@@ -671,10 +676,21 @@ function isLevelVisited(lev) {
 }
 
 // duplicated from cf_tools.mjs
-function getISOWeek(date) {
+function getISOWeekDate(date) {
   const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  return d;
+}
+
+// duplicated from cf_tools.mjs
+function getISOYear(date) {
+  return getISOWeekDate(date).getUTCFullYear();
+}
+
+// duplicated from cf_tools.mjs
+function getISOWeek(date) {
+  const d = getISOWeekDate(date);
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
   return weekNo;

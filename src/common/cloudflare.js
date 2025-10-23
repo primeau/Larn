@@ -147,7 +147,8 @@ async function writeGameData(metadata, gameID) {
       console.error(`writeGameData():`, response.statusText);
     }
   } catch (error) {
-    console.error(`writeGameData():`, error);
+    console.error(`writeGameData(): disabling realtime recording`, error);
+    ENABLE_RECORDING_REALTIME = false;
   }
   return 0;
 }
@@ -214,7 +215,7 @@ async function cloudflareWriteHighScore(score) {
     });
     console.log(`cloudflareWriteHighScore():`, response.status, score.gameID, score.who, score.score, score.hardlev);
   } catch (error) {
-    console.error(`cloudflareWriteHighScore(): error`, error);
+    console.error(`cloudflareWriteHighScore(): caught`, error);
   }
 }
 
@@ -241,8 +242,7 @@ async function getHighscores() {
     return null;
 
   } catch (error) {
-    console.error(`getHighscores(): error`, error);
-    // return { winners:[], visitors:[] };
+    console.error(`getHighscores(): caught`, error);
     return null;
   }
 }
@@ -250,7 +250,6 @@ async function getHighscores() {
 
 
 async function cloudflareLoadGame(gameID) {
-  console.log(`cloudflareLoadGame(): loading game from cloudflare: ${gameID}`);
   try {
     const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/${CF_SCORE_ENDPOINT}/${gameID}`);
 

@@ -238,6 +238,8 @@ async function dbQueryHighScores(newScore, showWinners, showLosers) {
       losers = cfhighscores.visitors;
       if (losers) console.log(`loaded losers: ${losers.length}`);
       showScores(newScore, false, showWinners, showLosers, 0);
+    } else {
+      throw new Error('Error loading highscores');
     }
   } catch (error) {
     console.error('Failed to get highscores from Cloudflare:', error);
@@ -292,8 +294,8 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
 
   if (local) {
     lprcat(`                    <b>${GAMENAME} Scoreboard</b> (Global scoreboard not available)\n\n`);
-    winners = localStorageGetObject('winners', []);
-    losers = localStorageGetObject('losers', []);
+    winners = localStorageGetObject('winners', []).sort(sortScore);
+    losers = localStorageGetObject('losers', []).sort(sortScore);
   } else {
     if (showWinners && !showLosers)
       lprcat(`                  <b>${GAMENAME}${gotwLabel}Winners Scoreboard</b>\n\n`);
@@ -677,7 +679,7 @@ async function died(reason, slain) {
 
 
 
-function writeScoreToDatabase(endGameScore) {
+async function writeScoreToDatabase(endGameScore) {
   const survived = endGameScore.timeused > 5; // surviving > 5 mobuls with 0 score should be recorded
   const scored = endGameScore.score > 0;
   const retriedGOTW = GOTW && endGameScore.what === DEATH_REASONS.get(DIED_RETRIED_GOTW);
@@ -702,7 +704,11 @@ function writeScoreToDatabase(endGameScore) {
       return;
     }
 
-    cloudflareWriteHighScore(endGameScore);
+    try {
+      await cloudflareWriteHighScore(endGameScore);
+    } catch (error) {
+      console.error(`cloudflareWriteHighScore():`, error);
+    }
   }
 
   try {

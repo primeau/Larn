@@ -340,7 +340,7 @@ function parseGameDetails(score) {
     gtime = score.gtime;
     rmst = score.rmst;
     player.level = score.level; // TODO: IS THIS RIGHT?
-    level = score.level;
+    level = score.level; // TODO: IS THIS RIGHT?
     stats += debug_stats(player, score);
 
     if (score.gamelog) {
