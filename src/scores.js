@@ -137,7 +137,6 @@ function getStatString(score, addDate) {
     stats += `Final Moments: \n${logString}\n\n`;
   }
 
-  level = score.level; // test if this is needed
   stats += `Bottom Line:\n${tempPlayer.getStatString(score.level)}\n\n`;
 
   stats += `Conducts observed:\n${tempPlayer.getConductString()}\n\n`;
@@ -417,17 +416,23 @@ function printScoreBoard(board, newScore, header, printout, offset) {
 
 
 async function dbQueryLoadGame(gameID, local, winner) {
+  const endGameScore = new LocalScore();
   let stats = ``;
-  
-  if (local) {
-    var board = winner ? localStorageGetObject('winners', []) : localStorageGetObject('losers', []);
-    stats = getHighScore(board, gameID);
-    setDiv(`STATS`, getStatString(stats));
-    return;
-  }
 
-  console.log(`loading game: ${gameID}`);
-  stats = await cloudflareLoadGame(gameID);
+  // clicked on current game
+  if (endGameScore.gameID === gameID) {
+    stats = getStatString(endGameScore, true);
+  } else {
+    if (local) {
+      // read from local scoreboard
+      var board = winner ? localStorageGetObject('winners', []) : localStorageGetObject('losers', []);
+      const scoreInfo = getHighScore(board, gameID);
+      stats = getStatString(scoreInfo, true);
+    } else {
+      // read from cloudflare
+      stats = await cloudflareLoadGame(gameID); // loadgame calls getStatString()
+    }
+  }
   setDiv(`STATS`, stats);
 }
 
@@ -442,50 +447,41 @@ async function dbQueryLoadGame(gameID, local, winner) {
 
 
 function localWriteHighScore(newScore) {
-  // console.log(`localWriteHighScore: ` + newScore);
+  try {
+    const boardname = newScore.winner ? 'winners' : 'losers';
+    let board = localStorageGetObject(boardname, []);
+    board.push(newScore);
+    board = consolidateScoreboard(board);
+    localStorageSetObject(boardname, board);
+  } catch (error) {
+    console.error('localWriteHighScore():', error);    
+  }
+}
 
-  // write high score to board
-  // TODO there is lots of duplication here...
-  if (newScore.winner) {
-    let winners = localStorageGetObject('winners', []);
-    if (isHighestScoreForPlayer(winners, newScore)) {
-      let scoreArrayIndex = getHighScoreIndex(winners, newScore.who);
-      console.log(`writing high score to local winners scoreboard`);
-      winners[scoreArrayIndex] = newScore;
-      localStorageSetObject('winners', winners);
-    }
 
-    // trigger to show mail next time
-    localStorageSetObject(newScore.who, newScore);
 
-  } else {
-    let losers = localStorageGetObject('losers', []);
-    if (isHighestScoreForPlayer(losers, newScore)) {
-      let scoreArrayIndex = getHighScoreIndex(losers, newScore.who);
-      console.log(`writing high score to local visitors scoreboard`);
-      losers[scoreArrayIndex] = newScore;
-      localStorageSetObject('losers', losers);
+// this is overkill, but there was a bug where there were multiple entries 
+// for the same player, so this will clean that up
+function consolidateScoreboard(scores) {
+  const bestScores = {};
+  for (const score of scores) {
+    const key = score.who;
+    if (!bestScores[key] || sortScore(score, bestScores[key]) < 0) {
+      bestScores[key] = score;
     }
   }
+  return Object.values(bestScores);
 }
 
 
 
 function getHighScore(scoreboard, gameID) {
-  //console.log(getHighScoreIndex(scoreboard, gameID));
-  return scoreboard[getHighScoreIndex(scoreboard, gameID)];
-}
-
-
-
-function getHighScoreIndex(scoreboard, gameID) {
-  var i = 0;
-  for (i = 0; i < scoreboard.length; i++) {
-    var tmp = scoreboard[i];
-    //console.log(`i: ` + i + tmp.who + `, ` + gameID);
-    if (tmp.gameID == gameID) return i;
+  for (let i = 0; i < scoreboard.length; i++) {
+    if (scoreboard[i].gameID === gameID) {
+      return scoreboard[i];
+    }
   }
-  return i; // no high score found, signal to append at end of array
+  return null;
 }
 
 
@@ -608,10 +604,8 @@ async function died(reason, slain) {
     DEATH_REASONS.set(DIED_FAILED, `killed ${failGender} family and committed suicide`);
   }
 
-  if (!winner) {
-    if (slain) {
-      updateLog(`You have been slain!`);
-    }
+  if (!winner && slain) {
+    updateLog(`You have been slain!`);
   }
 
   // paint(); // removed
@@ -644,12 +638,16 @@ async function died(reason, slain) {
     }
 
     printFunc(`Press <b>enter</b> to view the scoreboard ${extraNL}`);
-    if (wizard)
-      printFunc(`(sorry, wizard scores are not recorded) `);
-    if (cheat)
-      printFunc(`(sorry, cheater scores are not recorded) `);
+    if (wizard) printFunc(`(sorry, wizard scores are not recorded) `);
+    if (cheat) printFunc(`(sorry, cheater scores are not recorded) `);
 
     endGameScore = new LocalScore();
+
+    if (winner) {
+      // trigger to show mail next time
+      localStorageSetObject(logname, endGameScore);
+    }
+
     writeScoreToDatabase(endGameScore);
     setCharCallback(endgame);
 
