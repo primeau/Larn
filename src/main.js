@@ -443,18 +443,27 @@ function setgender(genderpick) {
 
 
 async function startgame() {
-  let startx, starty, extraMessage, killPlayer;
+  let startx, starty, extraMessage;
   if (GOTW) {
-    let gotwData = await doGOTWStuff();
-    console.log(`startgame(): gotw downloaded:`, gotwData.data.LEVELS.length, gotwData.status);
+    let gotwData = await downloadGOTW();
     if (gotwData.status === 200) {
-      loadLevels(gotwData.data.LEVELS);
-      startx = gotwData.data.player.x;
-      starty = gotwData.data.player.y;
+      console.log(`startgame(): gotw downloaded:`, gotwData.LEVELS.length);
+      loadLevels(gotwData.LEVELS);
+      startx = gotwData.player.x;
+      starty = gotwData.player.y;
       extraMessage = `You have ${timeLeft()} to finish this game`;
-    } else if (gotwData.status === 451) {
-      extraMessage = `Count Endelford insists on only one attempt per week`;
-      killPlayer = true;
+    } else {    
+      GOTW = false;
+      if (gotwData.status === 451) {
+        extraMessage = `Count Endelford insists on only one attempt per week: switching to a normal game`;
+      } else if (gotwData.status === 404) {
+        extraMessage = `Count Endelford is still preparing this week's game: switching to a normal game`;
+      } else {
+        extraMessage = `Error fetching this week's game: switching to a normal game`;
+      }
+      const url = new URL(window.location.href);
+      url.searchParams.delete('gotw');
+      window.history.replaceState({}, document.title, url.toString());
     }
   }
 
@@ -466,14 +475,12 @@ async function startgame() {
 
   lflush();
 
-  if (!killPlayer) {
-    var introMessage = `Welcome to ${GAMENAME}, ${logname} -- Press <b>?</b> for help`;
-    updateLog(introMessage);
-  }
+  var introMessage = `Welcome to ${GAMENAME}, ${logname} -- Press <b>?</b> for help`;
+  updateLog(introMessage);
 
   if (extraMessage) updateLog(extraMessage);
 
-  if (!navigator.cookieEnabled) {
+  if (!GOTW && !navigator.cookieEnabled) {
     updateLog(`Are cookies disabled? You may not be able to save your game!`);
   }
 
@@ -489,13 +496,6 @@ async function startgame() {
 
   onResize();
   paint();
-
-  if (killPlayer) {
-    updateLog(`Direct all wailing and gnashing of teeth to endelford@larn.org`);
-    updateLog(``);
-    died(DIED_RETRIED_GOTW, false);
-    paint();
-  }
 
   return 1;
 }
