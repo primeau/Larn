@@ -17,7 +17,12 @@ let recordedMetadata;
 
 
 async function watchRecorded(gameID) {
-  
+  // hehehe
+  if (gameID === 'dQw4w9WgXcQ') {
+    window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    return;
+  }
+
   video = new Video(gameID);
   video.divs.push(`LARN`);
   video.divs.push(`STATS`);

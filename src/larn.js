@@ -225,7 +225,7 @@ rmst:${rmst}
 viewflag:${viewflag}
 lasttime:${lasttime}
 
-bottomline:${player ? player.getStatString() : "NA"}
+bottomline:${player ? player.getBottomLine() : "NA"}
 useragent:${navigator.userAgent}
   `;
   // window.location.href = "mailto:mail@domain.tld"; // this opens in same window which would be bad

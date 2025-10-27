@@ -443,7 +443,7 @@ function printStats() {
 
 function bottomline() {
   cursor(1, 18);
-  lprcat(`${player.getStatString()}\n`);
+  lprcat(`${player.getBottomLine()}\n`);
 
   for (var logindex = LOG_SAVE_SIZE - LOG_SIZE; logindex < LOG.length; logindex++) {
     // less pretty code but more efficient for amiga mode, especially in firefox

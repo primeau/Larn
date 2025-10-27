@@ -606,7 +606,7 @@ var Player = function Player() {
 
   //  Spells:  1( 1)  AC: 2    WC: 3    Level 1  Exp: 0           novice explorer
   // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
-  this.getStatString = function(lev) {
+  this.getBottomLine = function(lev) {
     if (level < 0) return ``;
     var templevel = LEVELNAMES[level];
     if (lev) templevel = lev;

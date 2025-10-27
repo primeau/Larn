@@ -56,8 +56,7 @@ var LocalScore = function () {
 }
 
 LocalScore.prototype.toString = function () {
-  var stats = getStatString(this);
-  return stats;
+  return getStatString(this);
 }
 
 
@@ -91,6 +90,7 @@ function getStatString(score, addDate) {
   if (!score) return `no info`;
 
   var stats = ``;
+  let linkText = ``;
 
   if (addDate) {
     try {
@@ -98,10 +98,8 @@ function getStatString(score, addDate) {
       if (build) {
         build = build.substr(0, 3);
         if (Number(build) >= 481) {
-          let linkText = window.location.href.split(`?`)[0];
-          linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${score.gameID.split(`+`)[0]}`;
-          linkText = `<b><a href='${linkText}'>Watch this game</a></b>`;
-          stats += `${linkText}\n\n`;
+          linkText = `https://larn.org/larn/tv/?gameid=${score.gameID.split(`+`)[0]}`;
+          stats += `<b><a href='${linkText}'>Watch this game</a></b>\n\n`;
         }
       }
     } catch (error) {
@@ -137,7 +135,7 @@ function getStatString(score, addDate) {
     stats += `Final Moments: \n${logString}\n\n`;
   }
 
-  stats += `Bottom Line:\n${tempPlayer.getStatString(score.level)}\n\n`;
+  stats += `Bottom Line:\n${tempPlayer.getBottomLine(score.level)}\n\n`;
 
   stats += `Conducts observed:\n${tempPlayer.getConductString()}\n\n`;
 
@@ -145,6 +143,11 @@ function getStatString(score, addDate) {
     stats += `Debug mode used!\n\n`;
   }
 
+    // filter out tv urls for current gotw games
+  if (GOTW && linkText) {
+    stats = stats.replaceAll(linkText, 'https://larn.org/larn/tv/?gameid=dQw4w9WgXcQ');
+  }
+  
   return stats;
 }
 
@@ -258,9 +261,9 @@ function showLocalScoreBoard(newScore, showWinners, showLosers, offset, message)
 
 
 const WINNER_HEADER_LARN = `     <b>Score   Difficulty   Winner                    Time Needed</b>                      `;
-const WINNER_HEADER_ULARN = `     <b>Score  Diff  Winner                   Class        Time Needed</b>                         `;
+const WINNER_HEADER_ULARN = `     <b>Score  Diff  Winner                    Class        Time Needed</b>                         `;
 const VISITOR_HEADER_LARN = `     <b>Score   Difficulty   Visitor                   Fate</b>                             `;
-const VISITOR_HEADER_ULARN = `     <b>Score  Diff  Visitor                  Class       Fate</b>                                 `;
+const VISITOR_HEADER_ULARN = `     <b>Score  Diff  Visitor                   Class       Fate</b>                                 `;
 
 
 let bound_exitscores; // for button callback comparison

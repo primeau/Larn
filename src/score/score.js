@@ -2,6 +2,8 @@
 
 let IS_SCRAPER = false;
 const MAX_SCORES = 72;
+const THIS_WEEK = `This Week`;
+const LAST_WEEK = `Last Week`;
 
 window.addEventListener('resize', () => console.log('Screen width:', window.innerWidth, 'pixels'));
 
@@ -13,7 +15,12 @@ function isWinner() {
   return winnersRadio && winnersRadio.checked;
 }
 
-// Populate year selector
+function isCurrentGOTW() {
+  if (!yearSelect) return false;
+  const selectedOption = yearSelect.options[yearSelect.selectedIndex];
+  return selectedOption && selectedOption.text === THIS_WEEK;
+}
+
 const yearSelect = document.getElementById('yearSelect');
 const winnersRadio = document.getElementById('winnersRadio');
 const visitorsRadio = document.getElementById('visitorsRadio');
@@ -38,17 +45,17 @@ function updateYearDropdown() {
 
   // Add Game of the Week options
   const gotwHeader = document.createElement('optgroup');
-  gotwHeader.label = 'Endelford\'s Weekly Dungeon';
-  
+  gotwHeader.label = `Endelford's Weekly Dungeon`;
+
   // Current Week
   const currentDate = new Date();
   const currentWeek = getISOWeek(currentDate);
   const currentYearForWeek = currentDate.getFullYear();
   const currentOpt = document.createElement('option');
   currentOpt.value = `gotw_${currentYearForWeek}_${currentWeek}`;
-  currentOpt.textContent = 'Current Challenge';
+  currentOpt.textContent = THIS_WEEK;
   gotwHeader.appendChild(currentOpt);
-  
+
   // Previous Week
   const previousDate = new Date();
   previousDate.setDate(previousDate.getDate() - 7);
@@ -56,9 +63,9 @@ function updateYearDropdown() {
   const previousYearForWeek = previousDate.getFullYear();
   const previousOpt = document.createElement('option');
   previousOpt.value = `gotw_${previousYearForWeek}_${previousWeek}`;
-  previousOpt.textContent = 'Previous Week';
+  previousOpt.textContent = LAST_WEEK;
   gotwHeader.appendChild(previousOpt);
-  
+
   yearSelect.appendChild(gotwHeader);
 
   const yearHeader = document.createElement('optgroup');
@@ -135,7 +142,6 @@ function setSelectionsFromStorage() {
   }
 }
 
-
 // Add event listener for the X button to close overlay
 document.addEventListener('DOMContentLoaded', function () {
   const closeX = document.getElementById('overlayCloseX');
@@ -197,7 +203,7 @@ function renderScores(scores) {
     list.innerHTML = '<table><tbody><tr><td>No scores found.</td></tr></tbody></table>';
     return;
   }
-  
+
   // Limit the scores to MAX_SCORES
   const limitedScores = scores.slice(0, MAX_SCORES);
 
@@ -305,11 +311,12 @@ function parseGameDetails(score) {
   if (typeof score === 'number') return score; // return error code
 
   let stats = ``;
+  let linkText = ``;
   try {
     if (score.build) {
       score.build = score.build.substr(0, 3);
       if (Number(score.build) >= 481) {
-        let linkText = `https://larn.org/larn/tv/?gameid=${score.gameID.split(`+`)[0]}`;
+        linkText = `https://larn.org/larn/tv/?gameid=${score.gameID.split(`+`)[0]}`;
         stats += `<b><a href='${linkText}'>Watch this game</a></b>\n\n`;
       }
     }
@@ -348,11 +355,17 @@ function parseGameDetails(score) {
       let logString = score.gamelog.join('\n').trim();
       stats += `\nFinal Moments: \n${logString}\n\n`;
     }
-    stats += `Bottom Line:\n${player.getStatString(score.level)}\n\n`;
+    stats += `Bottom Line:\n${player.getBottomLine(score.level)}\n\n`;
     stats += `Conducts observed:\n${player.getConductString()}\n\n`;
     if (score.debug) {
       stats += `Debug mode used!\n\n`;
     }
+
+    // filter out tv urls for current gotw games
+    if (isCurrentGOTW() && linkText) {
+      stats = stats.replaceAll(linkText, 'https://larn.org/larn/tv/?gameid=dQw4w9WgXcQ');
+    }
+
     return stats;
   } catch (err) {
     console.log(`parseGameDetails():`, err);

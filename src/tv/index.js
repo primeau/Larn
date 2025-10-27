@@ -109,8 +109,10 @@ function onResize() {
     }
 
     case TV_CHANNEL_RECORDED: {
-      if (video.currentFrameNum >= 0) {
+      if (video && video.currentFrameNum && video.currentFrameNum >= 0) {
         bltRecordedFrame(video.getCurrentFrame());
+      } else {
+        return;
       }
       break;
     }
