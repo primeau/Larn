@@ -81,11 +81,11 @@ Endelford\n\
 
 helppages[1] =
 `                       <b>Help File for The Caverns of ${GAMENAME}</b>                 \n\
-                                                                         shift+\n\
- y|Y  move|run northwest  k|K  move|run up    u|U  move|run northeast     ↖↑↗\n\
- h|H  move|run left        .   stay here      l|L  move|run right        ←    →\n\
- b|B  move|run southwest  j|J  move|run down  n|N  move|run southeast     ↙↓↘\n\
-                                                                         to run\n\
+                                                                        shift+ \n\
+ y|Y  move|run northwest  k|K  move|run up    u|U  move|run northeast    ↖↑↗ \n\
+ h|H  move|run left        .   stay here      l|L  move|run right       ←   →  \n\
+ b|B  move|run southwest  j|J  move|run down  n|N  move|run southeast    ↙↓↘ \n\
+                                                                       to run \n\
                               A  desecrate an altar       <  go up stairs       \n\
   c  cast a spell             C  close a door             >  go down stairs     \n\
   d  drop an item             D  drink at a fountain                            \n\

@@ -55,7 +55,7 @@ async function go() {
 
 function initRollbar() {
   try {
-    let enableRollbar = location.hostname !== 'localhost' && location.hostname !== '';
+    let enableRollbar = !isLocal() && !isFile();
     if (Rollbar) Rollbar.configure({
       enabled: (enableRollbar),
       payload: {

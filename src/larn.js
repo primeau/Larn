@@ -23,7 +23,7 @@ let buildPatchWorker; /* web worker to build diff patches */
 async function play() {
 
   console.log(`gameID ${gameID}`);
-  console.log(`ismobile`, isMobile(), `isPhone`, isPhone());
+  console.log(`ismobile`, isMobile(), `isPhone`, isPhone(), `isLocal`, isLocal(), `isFile`, isFile());
   console.log(`cloudflare`, CF_BROADCAST_HOST);
 
   initRB();
@@ -44,7 +44,7 @@ async function play() {
   window.addEventListener('resize', onResize);
 
   // WORKER STEP 0 - initialization
-  if (window.Worker) {
+  if (!isFile() && window.Worker) {
     localStorageCompressionWorker = new Worker('workers/compressionWorker.js');
     localStorageCompressionWorker.onmessage = localStorageCompressionCallback;
     liveFrameCompressionWorker = new Worker('workers/compressionWorker.js');
@@ -56,7 +56,7 @@ async function play() {
   }
 
   /* warn the player that closing their window will kill the game */
-  if (location.hostname === 'localhost' || location.hostname === '') {
+  if (isLocal()) {
     enableDebug();
   } else {
     window.onbeforeunload = confirmExit;

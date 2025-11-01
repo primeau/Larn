@@ -263,7 +263,7 @@ function initFS() {
 function initRB() {
   try {
     if (Rollbar) Rollbar.configure({
-      enabled: (location.hostname !== 'localhost' && location.hostname !== ''),
+      enabled: !isLocal() && !isFile(),
       payload: {
         code_version: `${BUILD}`,
         client: {

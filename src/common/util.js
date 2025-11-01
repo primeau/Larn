@@ -660,6 +660,20 @@ function isTablet() {
   return isMobile() && !isPhone();
 }
 
+function isLocal() {
+  // it's ok to not consider the '' case as local because isFile() will
+  // handle it where we need it (mostly enabling rollbar), and isLocal() 
+  // is used to decide when to enable debug mode, which i don't want 
+  // people seeing when they use larn_local.html from a file
+
+  return location.hostname === 'localhost'; 
+  // return location.hostname === 'localhost' || location.hostname === ''; 
+}
+
+function isFile() {
+  return location.protocol === 'file:';
+}
+
 // needed because gotw games start with LEVELS[i] being fullly explored but hidden
 function isLevelVisited(lev) {
   if (EXPLORED_LEVELS[lev]) return true;

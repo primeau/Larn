@@ -64,7 +64,7 @@
         'use strict';
         var no_intro = false;
         var altrender = false;
-        try { Rollbar.configure({ enabled: location.hostname !== 'localhost' && location.hostname !== '' }); } catch (e) { }
+        try { Rollbar.configure({ enabled: !isLocal() && !isFile() }); } catch (e) { }
         play();
         document.getElementById(`LARN`).focus();
     </script>
