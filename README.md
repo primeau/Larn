@@ -1,4 +1,4 @@
-# JS LARN Version 12.5.2
+# JS LARN Version 12.5.3
 
 
 ## Play Online
@@ -6,19 +6,31 @@
 
 
 ## To Play Locally 
-- [download a zipfile of the repository](https://github.com/primeau/Larn/archive/refs/heads/master.zip "download a zipfile of the repository")
-- open the `src` folder then open `larn_local.html` in your browser and play
-- viewing the scoreboard and recording high scores won't work
+- [Download a zipfile of the repository](https://github.com/primeau/Larn/archive/refs/heads/master.zip "download a zipfile of the repository")
+- Open the `src` folder then open `larn_local.html` in your browser and play
+
+
+## To Play Locally on a Mobile Device
+1. Install the ***iSH Shell*** app
+2. Open iSH Shell and type the following commands:
+```
+# apk update
+# apk add python3
+# apk add git
+# git clone https://github.com/primeau/Larn.git
+# python3 -m http.server
+```
+3. Switch to your browser and view this link (and wait, it might take a while): http://127.0.0.1:8000/Larn/src/larn_local.html 
 
 
 ## Build Instructions For Development
 ```
-$ git clone https://github.com/primeau/Larn.git
-$ cd Larn
-$ npm install
-$ npm run build
-$ python3 -m http.server 8000
-$ http://localhost:8000/dist/larn/larn.html
+# git clone https://github.com/primeau/Larn.git
+# cd Larn
+# npm install
+# npm run build
+# python3 -m http.server 8000
+# http://localhost:8000/dist/larn/larn.html
 ```
 
 ## Introduction
@@ -54,11 +66,11 @@ and refactor by Julian Olds. Ularn is currently maintained by Josh Bressers.
 Other editions of Larn have been distributed by others, namely
 LARN13, dLarn, NLarn, ReLarn, and XLarn.
 
-JSLarn 12.5.2 is a JavaScript port of Larn and Ularn, by Jason Primeau. 
+JSLarn 12.5.3 is a JavaScript port of Larn and Ularn, by Jason Primeau. 
 It primarily references the Larn 12.4.4 and Ularn 1.5.4 codebases but takes 
 inspiration from other versions as well. It includes bug fixes, a global 
-scoreboard, watching live replays, mobile support and updates to balance the
-game at higher difficulties.
+scoreboard, watching live replays, a weekly challenge mode, mobile support 
+and updates to balance the game at higher difficulties.
 
 I hope you enjoy this version of LARN.
 

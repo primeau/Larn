@@ -1,6 +1,14 @@
+JS U/Larn 12.5.3
+----------------
+1. [new] Added a weekly challenge option.
+
+
 JS U/Larn 12.5.2
 ----------------
 1. [new] Added support for watching live or recorded games.
+
+1. [un-balance] The chest and book at the store no longer decline in quality 
+as difficulty goes up.
 
 
 JS U/Larn 12.5.1
@@ -32,8 +40,7 @@ prevent inflated scores by selling epic items.
 
 1. [balance] Demons can no longer be teleported.
 
-1. [un-balance] The chest and book at the store no longer decline in quality 
-as difficulty goes up.
+1. [balance] The chest and book at the store decline in quality as difficulty goes up.
 
 1. [fix]/[new] You can drop gold onto an existing pile of gold now, or into
 a pit.
