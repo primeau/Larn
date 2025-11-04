@@ -265,3 +265,17 @@ function act_prayer_heard() {
   }
   player.updateAltPro(protime); /* protection field */
 }
+
+
+
+function autoPray() {
+  if (player.GOLD < 50 || !itemAt(player.x, player.y).matches(OALTAR)) {
+    return;
+  }
+  let donation = `${Math.max(50, Math.ceil(player.GOLD / 10))}`
+  simulateKeypress('p');
+  for (let char of donation) {
+    simulateKeypress(char);
+  }
+  simulateKeypress(ENTER);
+}

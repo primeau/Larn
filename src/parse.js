@@ -58,6 +58,13 @@ Mousetrap.prototype.handleKey = function (char, mod, evt) {
 
 
 
+function simulateKeypress(key) {
+  // code/keyCode/which are incorrect, but not needed for our purposes
+  mousetrap(new KeyboardEvent('keydown', { key: key, code: '', keyCode: 0, which: 0, bubbles: true }), key);
+}
+
+
+
 function mousetrap(e, key) {
   // debug(`mousetrap: ${key} ${JSON.stringify(e)}`);
   if (key == SPACE) key = ' ';
@@ -511,15 +518,20 @@ function parse(e, key) {
   }
 
   //
-  // outstanding taxes
+  // outstanding taxes, or prayer shortcut
   //
   if (key == 'P') {
-    nomove = 1;
-    if (outstanding_taxes > 0)
-      updateLog(`You presently owe ${outstanding_taxes} gold pieces in taxes${period}`);
-    else
-      updateLog(`You do not owe any taxes${period}`);
-    return;
+    if (itemAt(player.x, player.y).matches(OALTAR)) {
+      autoPray();
+    } else {
+      nomove = 1;
+      if (outstanding_taxes > 0) {
+        updateLog(`You presently owe ${outstanding_taxes} gold pieces in taxes${period}`);
+      } else {
+        updateLog(`You do not owe any taxes${period}`);
+      }
+      return;
+    }
   }
 
   //
