@@ -747,6 +747,7 @@ function parse(e, key) {
   if (key == '!') {
     nomove = 1;
     keyboard_hints = !keyboard_hints;
+    localStorageSetObject(`keyboard_hints`, keyboard_hints);
     updateLog(`Keyboard hints: ${keyboard_hints ? `on` : `off`}`);
     if (keyboard_hints)
       lookforobject(true, false);
@@ -757,6 +758,7 @@ function parse(e, key) {
   if (key == '@') {
     nomove = 1;
     auto_pickup = !auto_pickup;
+    localStorageSetObject(`auto_pickup`, auto_pickup);
     updateLog(`Auto-pickup: ${auto_pickup ? `on` : `off`}`);
     return;
   }
@@ -765,6 +767,7 @@ function parse(e, key) {
   if (key == '#') {
     nomove = 1;
     side_inventory = !side_inventory;
+    localStorageSetObject('side_inventory', side_inventory);
     updateLog(`Inventory view: ${side_inventory ? `on` : `off`}`);
     onResize();
     return;
@@ -776,6 +779,7 @@ function parse(e, key) {
   if (key == '$') {
     nomove = 1;
     show_color = !show_color;
+    localStorageSetObject('show_color', show_color);
     updateLog(`Colors: ${show_color ? `on` : `off`}`);
     return;
   }
@@ -802,6 +806,7 @@ function parse(e, key) {
       original_objects = true;
       updateLog(`Switching to Classic mode`);
     }
+    localStorageSetObject('original_objects', original_objects);
     setMode(amiga_mode, retro_mode, original_objects);
     return;
   }
@@ -826,6 +831,7 @@ function parse(e, key) {
   if (key == '%') {
     nomove = 1;
     bold_objects = !bold_objects;
+    localStorageSetObject('bold_objects', bold_objects);
     updateLog(`Bold objects: ${bold_objects ? `on` : `off`}`);
     return;
   }

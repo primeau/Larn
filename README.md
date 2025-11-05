@@ -1,16 +1,21 @@
 # JS LARN Version 12.5.3
 
+## Introduction
+
+LARN is a dungeon type adventure game similar in concept to HACK, ROGUE
+or MORIA, but with a different feel and winning criteria.
+
 
 ## Play Online
 [You can play Larn online at larn.org](https://larn.org "You can play Larn online here")
 
 
-## To Play Locally 
+## Play Locally 
 - [Download a zipfile of the repository](https://github.com/primeau/Larn/archive/refs/heads/master.zip "download a zipfile of the repository")
 - Open the `src` folder then open `larn_local.html` in your browser and play
 
 
-## To Play Locally on a Mobile Device
+## Play Locally on a Mobile Device
 1. Install the ***iSH Shell*** app
 2. Open iSH Shell and type the following commands:
 ```
@@ -32,12 +37,6 @@
 # python3 -m http.server 8000
 # http://localhost:8000/dist/larn/larn.html
 ```
-
-## Introduction
-
-LARN is a dungeon type adventure game similar in concept to HACK, ROGUE
-or MORIA, but with a different feel and winning criteria.
-
 
 ## History and Other Information
 Noah Morgan originally created LARN 12.0 and released the UNIX

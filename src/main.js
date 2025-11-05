@@ -13,6 +13,13 @@ function welcome() {
 
   amiga_mode = PARAMS.mode && PARAMS.mode == `amiga` || false;
   retro_mode = localStorageGetObject('retro', true);
+  original_objects = localStorageGetObject('original_objects', true);
+  showConfigButtons = localStorageGetObject(`showConfigButtons`, true);
+  keyboard_hints = localStorageGetObject('keyboard_hints', false);
+  auto_pickup = localStorageGetObject('auto_pickup', false);
+  side_inventory = localStorageGetObject('side_inventory', true);
+  show_color = localStorageGetObject('show_color', true);
+  bold_objects = localStorageGetObject('bold_objects', true);
   setMode(amiga_mode, retro_mode, original_objects);
   
   initHelpPages();
@@ -25,13 +32,11 @@ function welcome() {
   var tmpID = Math.random().toString(36).substr(2, 5);
   playerID = localStorageGetObject('playerID', tmpID);
   localStorageSetObject('playerID', playerID);
-
+  
   // this is probably their first game, turn on keyboard_hints
   if (playerID === tmpID) {
     keyboard_hints = true;
   }
-
-  showConfigButtons = localStorageGetObject(`showConfigButtons`, true);
 
   var nameString = `Welcome to ${GAMENAME}. Please enter your name [<b>${logname}</b>]: `;
 
