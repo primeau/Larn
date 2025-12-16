@@ -517,12 +517,39 @@ function parse(e, key) {
     return;
   }
 
+
+  /*
+  // 
+  // wait until healed or monster
+  //
+  if (key == 'M') {
+    if (player.TIMESTOP == 0) {
+      viewflag = 1;
+      // if health != max, restingforhealth = true
+      // if spells != max, restingforspells = true
+      // while 
+      //   if (restingforhealth & health = max stop)
+      //   if (restingfor spells & spells = max stop)
+      //   if (neither of those, rest for 100 moves?)
+      //   if nearbymonst() and awake stop (allows risky rest near monsters during stealth, hld)
+      //   if hitflag stop (probably possible with haste monsters)
+      //   parse2() ? will this show stats updating?
+
+    }
+    return;
+  }
+  */
+
   //
   // outstanding taxes, or prayer shortcut
   //
   if (key == 'P') {
-    if (itemAt(player.x, player.y).matches(OALTAR)) {
-      autoPray();
+    if (item.matches(OALTAR)) {
+      if (player.TIMESTOP == 0) {
+        autoPray();
+        dropflag = 1;
+        prayed = 1;
+      }
     } else {
       nomove = 1;
       if (outstanding_taxes > 0) {
@@ -530,8 +557,8 @@ function parse(e, key) {
       } else {
         updateLog(`You do not owe any taxes${period}`);
       }
-      return;
     }
+    return;
   }
 
   //

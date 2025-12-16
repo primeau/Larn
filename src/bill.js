@@ -28,6 +28,8 @@ function readmail() {
 function letter1(gold) {
   clear();
 
+  const TAX_OWED = amiga_mode ? `0`:  `<strike>${Math.round(gold * TAXRATE).toLocaleString()}</strike>`;
+
   lprcat(`<b>From:</b> The LRS (${GAMENAME} Revenue Service)`);
   lprcat(` ${lt}lrs@larn.org${gt}`);
   lprcat(`\n`);
@@ -39,7 +41,7 @@ function letter1(gold) {
   lprcat(`\n\n   The Dungeon Master has informed us that you brought`);
   lprcat(`\n${Number(gold).toLocaleString()} gold pieces back with you from your journey. As the`);
   lprcat(`\ncounty of ${GAMENAME} is in dire need of funds, we have spared no time`);
-  lprcat(`\nin preparing your tax bill. You owe <strike>${Math.round(gold * TAXRATE).toLocaleString()}</strike> 0 gold pieces as`);
+  lprcat(`\nin preparing your tax bill. You owe ${TAX_OWED} gold pieces as`);
   lprcat(`\nof this notice, and is due within 5 days. Failure to pay will`);
   lprcat(`\nmean penalties. Once again, congratulations, We look forward`);
   lprcat(`\nto your future successful expeditions.\n`);

@@ -941,8 +941,8 @@ function helpButtons(location) {
     if (!mobileDevice) setButton(location, `BUTTON_HINTS`, VARIABLE, `!`, `Keyboard hints: ${hintsLabel}`);
     setButton(location, `BUTTON_PICKUP`, VARIABLE, `@`, `Auto-pickup: ${pickupLabel}`);
     if (!mobileDevice) setButton(location, `BUTTON_INVENTORY`, VARIABLE, `#`, `Inventory: ${inventoryLabel}`);
-    if (!mobileDevice) setButton(location, `BUTTON_COLOR`, VARIABLE, `$`, `Color: ${colorLabel}`);
-    if (!mobileDevice) setButton(location, `BUTTON_BOLD`, VARIABLE, `%`, `Bold: ${boldLabel}`);
+    if (!mobileDevice && !amiga_mode) setButton(location, `BUTTON_COLOR`, VARIABLE, `$`, `Color: ${colorLabel}`);
+    if (!mobileDevice && !amiga_mode) setButton(location, `BUTTON_BOLD`, VARIABLE, `%`, `Bold: ${boldLabel}`);
     if (!mobileDevice) setButton(location, `BUTTON_FONT`, VARIABLE, `{`, `Font: ${retroLabel}`);
     if (mobileDevice) setButton(location, `BUTTON_SAVE`, VARIABLE, `S`, `Save`);
     if (mobileDevice) setButton(location, `BUTTON_SCORES`, VARIABLE, `z`, `Scores`);

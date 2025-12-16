@@ -8,7 +8,8 @@ const LAST_WEEK = `Last Week`;
 window.addEventListener('resize', () => console.log('Screen width:', window.innerWidth, 'pixels'));
 
 function isUlarn() {
-  return ularnRadio && ularnRadio.checked;
+  ULARN = ularnRadio && ularnRadio.checked; // ULARN is used elsewhere, so update it here again just in case
+  return ULARN;
 }
 
 function isWinner() {
@@ -88,6 +89,7 @@ updateYearDropdown();
 
 document.querySelectorAll('input[type="radio"]').forEach((radio) => {
   radio.addEventListener('change', () => {
+    ULARN = ularnRadio && ularnRadio.checked;
     updateYearDropdown();
     updateTitle();
     fetchScores();
@@ -127,6 +129,7 @@ function setSelectionsFromStorage() {
   if (storage.gameType) {
     const gameTypeRadio = document.querySelector(`input[name="gameType"][value="${storage.gameType}"]`);
     if (gameTypeRadio) gameTypeRadio.checked = true;
+    ULARN = ularnRadio && ularnRadio.checked;
   }
   // Set scoreType radio
   if (storage.scoreType) {

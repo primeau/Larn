@@ -2,6 +2,8 @@ JS U/Larn 12.5.3
 ----------------
 1. [new] Added a weekly challenge option.
 
+1. [new] Added an 'autopray' key to speed up altar interactions.
+
 
 JS U/Larn 12.5.2
 ----------------
@@ -94,7 +96,7 @@ WC/AC gains. Now altars will randomly crumble to dust.
 1. [balance] The list of things our Hero can wield is considerably shorter.
 
 1. [balance] The chest and book at the store decline in quality as difficulty
-goes up.
+goes up. (This change was reversed in 12.5.2).
 
 1. [balance] The scroll of Stealth was much too powerful. Now there is a chance
 a monster will notice when our Hero passes too closely. Affects difficulty 2

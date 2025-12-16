@@ -508,6 +508,8 @@ function getMonster(direction) {
  *  Returns no value.
  */
 function createmonster(mon, x, y) {
+  if (DEBUG_NO_MONSTERS) return;
+
   if (mon < 1 || mon > monsterlist.length - 1) /* check for monster number out of bounds */ {
     debug(`createmonst invalid ${mon}`);
     return;
