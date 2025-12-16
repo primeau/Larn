@@ -199,7 +199,6 @@ var scoreIndex = 0;
 const MAX_SCORES_PER_PAGE = 18;
 const MAX_SCORES_TO_READ = 18 * 4;
 const MIN_TIME_PLAYED = 50;
-var ONLINE = true;
 
 
 let A, R, O; // saved state for exiting scoreboard
@@ -225,7 +224,6 @@ function loadScores(newScore, showWinners, showLosers) {
 async function dbQueryHighScores(newScore, showWinners, showLosers) {
 
   if (!navigator.onLine) {
-    ONLINE = false;
     const msg = `Offline: showing local scoreboard`;
     showLocalScoreBoard(newScore, showWinners, showLosers, 0, msg);
     return;
@@ -234,7 +232,6 @@ async function dbQueryHighScores(newScore, showWinners, showLosers) {
   try {
     const cfhighscores = await getHighscores();
     if (cfhighscores) {
-      ONLINE = true;
       winners = cfhighscores.winners;
       if (winners) console.log(`loaded winners: ${winners.length}`);
       losers = cfhighscores.visitors;
@@ -245,7 +242,6 @@ async function dbQueryHighScores(newScore, showWinners, showLosers) {
     }
   } catch (error) {
     console.error('Failed to get highscores from Cloudflare:', error);
-    ONLINE = false;
     let msg = `Error loading global scoreboard, showing local scoreboard`;
     showLocalScoreBoard(newScore, showWinners, showLosers, 0, msg);
   }
@@ -368,7 +364,7 @@ function printScore(p) {
   var isNewScore = gameID ? p.gameID == gameID : false;
   var addplus = isNewScore && dofs ? `+` : ``;
   // console.log(`score.js`, dofs, gameID, p.gameID, isNewScore, addplus, `${p.gameID}${addplus}`);
-  lprc(`<a href='javascript:dbQueryLoadGame("${p.gameID}${addplus}", ${!ONLINE}, ${p.winner})'>`);
+  lprc(`<a href='javascript:dbQueryLoadGame("${p.gameID}${addplus}", ${!navigator.onLine}, ${p.winner})'>`);
   printWithoutSpacesAtTheEnd(`${score}</a>${endcode}`);
   if (!GAMEOVER) lprc(`\n`);
 }
@@ -701,7 +697,6 @@ async function writeScoreToDatabase(endGameScore) {
 
     if (!navigator.onLine) {
       console.error(`writeScoreToDatabase(): offline`);
-      ONLINE = false;
       return;
     }
 
