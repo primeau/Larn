@@ -33,17 +33,20 @@ a:link {
 }
 
 a:visited {
-    color: #FF00FF;
+    color: #004fff;
     text-decoration: none;
 }
 
 a:hover {
-    color: #FF77FF;
+    color: #00cfff;
     text-decoration: none;
 }
 
+a:hover b {
+    color: #00cfff;
+}
+
 a:active {
-    color: #EE0000;
     text-decoration: none;
 }
 
