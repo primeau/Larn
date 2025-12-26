@@ -7,7 +7,7 @@
 /* additions for JS Larn */
 var LEVELS;
 let EXPLORED_LEVELS;
-var LOG;
+let LOG = Array(LOG_SAVE_SIZE).fill(' ');
 var player;
 var playerID;
 var playerIP = `0`;

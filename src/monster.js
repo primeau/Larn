@@ -619,39 +619,6 @@ function cgood(x, y, itm, monst) {
 
 
 
-/*
- *  createitem(it,arg)      Routine to place an item next to the player
- *      int item, arg;
- *
- *  Enter with the item number and its argument (iven[], ivenarg[])
- *  Returns no value, thus we don't know about createitem() failures.
- */
-function createitem(item, arg, nearPlayer) {
-  var x, y, k, i;
-  //if (it >= MAXOBJ) return; /* no such object */
-  var firstTry = true;
-  for (k = rnd(8), i = -8; i < 0; i++, k++) /* choose direction, then try all */ {
-    if (k > 8) k = 1; /* wraparound the diroff arrays */
-
-    if (nearPlayer) {
-      x = player.x + diroffx[k];
-      y = player.y + diroffy[k];
-    } else {
-      x = lasthx + (firstTry ? 0 : diroffx[k]);
-      y = lasthy + (firstTry ? 0 : diroffy[k]);
-    }
-
-    if (cgood(x, y, true, false)) /* if we can create here */ {
-      setItem(x, y, createObject(item, arg));
-      return;
-    }
-
-    firstTry = false;
-  }
-}
-
-
-
 function dropItemNearPlayer(item) {
   dropItem(player.x, player.y, item, true);
 }

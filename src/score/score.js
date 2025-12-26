@@ -315,11 +315,12 @@ function parseGameDetails(score) {
 
   let stats = ``;
   let linkText = ``;
+  const scoreGameID = score.gameID.split(`+`)[0];
   try {
     if (score.build) {
       score.build = score.build.substr(0, 3);
       if (Number(score.build) >= 481) {
-        linkText = `https://larn.org/larn/tv/?gameid=${score.gameID.split(`+`)[0]}`;
+        linkText = `https://larn.org/larn/tv/?gameid=${scoreGameID}`;
         stats += `<b><a href='${linkText}'>Watch this game</a></b>\n\n`;
       }
     }
@@ -365,8 +366,8 @@ function parseGameDetails(score) {
     }
 
     // filter out tv urls for current gotw games
-    if (isCurrentGOTW() && linkText) {
-      stats = stats.replaceAll(linkText, 'https://larn.org/larn/tv/?gameid=dQw4w9WgXcQ');
+    if (isCurrentGOTW()) {
+      stats = stats.replaceAll(scoreGameID, 'dQw4w9WgXcQ');
     }
 
     return stats;

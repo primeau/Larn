@@ -287,13 +287,13 @@ function createObject(item, arg) {
   if (!item) return null;
 
   // create item via an ID (used in dnd_store, wizard mode)
-  // otherwise the item passed in is already an item to be duplicated
-  //if (!isNaN(Number(item)) && item != ``) {
+  // otherwise the item passed in is already a DungeonItem 
+  // to be duplicated as a regular Item
   if (typeof item == 'number') {
     item = itemlist[item];
   }
 
-  var newItem = new Item(item.id, item.arg);
+  const newItem = new Item(item.id, item.arg);
 
   if (arg) {
     newItem.arg = arg;
@@ -303,7 +303,78 @@ function createObject(item, arg) {
     newItem.arg = 0;
   }
 
+  /*
+    12.5.3:
+    books used to be randomly generated at read time based 
+    on the level of the book
+    we want to precompute for GOTW, but only have 1 arg to 
+    work with so now:
+      arg = 100 * book level + spell index
+  */
+  if (newItem.matches(OBOOK)) {
+    // if arg < 100 then this is the level of the book
+    if (newItem.arg < 100) {
+      debug(`createObject(): creating random book for level ${newItem.arg}`);
+      const bookLevel = newItem.arg;
+      const spellNum = getSpellFromLevel(newItem.arg);
+      newItem.arg = 100 * bookLevel + spellNum;
+    }
+    debug(`createObject(): creating book: ${newItem.arg}, ${spelcode[newItem.arg % 100]}`);
+  }
+
   return newItem;
+}
+
+
+
+// convert from dungeon level to spell index
+function getSpellFromLevel(lev) {
+  lev = Math.min(lev, splev.length - 1); // lev can be too big
+
+  let spellIndex, spell;
+
+  // this code varies between 12.0, 12.4.4, and ularn 1.6.3
+  // i think this makes the most sense
+	if (lev <= 3) {
+		spell = splev[lev];		
+		spellIndex = rund(spell);
+	} else {
+		spell = splev[lev] - 9;		
+		spellIndex = rnd(spell) + 9;
+	}
+
+  // original larn doesn't have make wall spell, try again
+  if (!ULARN && spellIndex == MKW) {
+    debug(`got MKW in Larn, trying again...`)
+    spellIndex = getSpellFromLevel(lev);
+    debug(`... got`, spelcode[spellIndex]);
+  }
+
+  return spellIndex;
+}
+
+
+
+/*
+ * function to read a book
+ */
+function readbook(book) {
+
+  let spellIndex;
+  if (book.arg < 100) { // for ~pre-2026 games
+    spellIndex = getSpellFromLevel(book.arg);
+  } else {
+    spellIndex = book.arg % 100;
+  }
+
+  learnSpell(spelcode[spellIndex]);
+  updateLog(`Spell '<b>${spelcode[spellIndex]}</b>': ${spelname[spellIndex]}`);
+  updateLog(`  ${speldescript[spellIndex]}${period}`);
+  if (rnd(10) == 4) {
+    if (ULARN) updateLog(`You feel clever!`);
+    else updateLog(`  Your intelligence went up by one!`);
+    player.setIntelligence(player.INTELLIGENCE + 1);
+  }
 }
 
 
@@ -319,7 +390,7 @@ const OHOME = new DungeonObject(69, `H`, `1`, `H`, `cornflowerblue`, BOLD, `your
 const ODNDSTORE = new DungeonObject(12, `=`, `2`, `=`, `orchid`, BOLD, `the DND store`, NO_CARRY);
 const OTRADEPOST = new DungeonObject(77, `S`, `3`, `S`, `tan`, BOLD, `the local trading post`, NO_CARRY);
 const OLRS = new DungeonObject(80, `L`, `4`, `L`, `lightgray`, BOLD, `the Larn Revenue Service`, NO_CARRY);
-const OBANK = new DungeonObject(16, `$`, `5`, `$`, `gold`, BOLD, `the bank of Larn`, NO_CARRY);
+const OBANK = new DungeonObject(16, `$`, `5`, `$`, `gold`, BOLD, `the Bank of Larn`, NO_CARRY);
 const OBANK2 = new DungeonObject(15, `$`, `5`, `$`, `gold`, BOLD, `the Nth branch of the Bank of Larn`, NO_CARRY);
 const OSCHOOL = new DungeonObject(10, `+`, `6`, `+`, `darkorange`, BOLD, `the College of Larn`, NO_CARRY);
 const OENTRANCE = new DungeonObject(54, `E`, `8`, `E`, `yellowgreen`, BOLD, `the dungeon entrance`, NO_CARRY);
@@ -329,7 +400,6 @@ const OPAD = new DungeonObject(100, `@`, `@`, `@`, `lightgreen`, BOLD, `Dealer M
 
 // dungeon features
 const OWALL = new DungeonObject(21, `▒`, `▒`, `▒`, NO_COLOR, NO_BOLD, `a wall`, NO_CARRY);
-// const OALTAR = new DungeonObject(1, `A`, `:`, `A`, `orchid`, BOLD, `a holy altar`, NO_CARRY);
 const OALTAR = new DungeonObject(1, `A`, `:`, `A`, `lightslategray`, BOLD, `a holy altar`, NO_CARRY);
 const OTHRONE = new DungeonObject(2, `T`, `\\`, `T`, `gold`, BOLD, `a handsome jewel encrusted throne`, NO_CARRY);
 const ODEADTHRONE = new DungeonObject(79, `t`, `/`, `t`, `lightgray`, BOLD, `a massive throne`, NO_CARRY);
@@ -444,7 +514,17 @@ function getItemDir(direction) {
 
 
 function itemAt(x, y) {
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY || player.level.items == null) {
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+    return null;
+  }
+
+  if (!player.level) {
+    doRollbar(ROLLBAR_ERROR, `itemAt(): null player.level`, x, y, GAMEOVER, game_started, mazeMode, napping, level, gtime);
+    return null;
+  }
+
+  if (!player.level.items) {
+    doRollbar(ROLLBAR_ERROR, `itemAt(): null player.level.items`, x, y, GAMEOVER, game_started, mazeMode, napping, level, gtime);
     return null;
   }
 
@@ -483,7 +563,17 @@ function setItem(x, y, item) {
   if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
     return null;
   }
-  player.level.items[x][y] = createObject(item, item.arg);
+  if (item instanceof DungeonObject) {
+    player.level.items[x][y] = createObject(item, item.arg);
+    // debug(`setItem(): set DungeonObject at x=${x} y=${y}`);
+  } else if (item instanceof Item) {
+    player.level.items[x][y] = item; // don't bother creating a new copy
+    // debug(`setItem(): set Item at x=${x} y=${y}`);
+  } else {
+    player.level.items[x][y] = createObject(item, item.arg);
+    debug(`setItem(): invalid item at x=${x} y=${y}`, item);
+  }
+
   return item;
 }
 
@@ -974,38 +1064,6 @@ function oteleport(teleportSelf) {
     newcavelevel(newLevel);
   }
   positionplayer();
-}
-
-
-
-/*
- * function to read a book
- */
-function readbook(book) {
-  var lev = book.arg;
-  var spellIndex, spell;
-  if (lev <= 3) {
-    spell = splev[lev];
-    spellIndex = rund((spell) ? spell : 1);
-  } else {
-    spell = splev[lev] - 9;
-    spellIndex = rnd((spell) ? spell : 1) + 9;
-  }
-
-  // original larn doesn't have make wall spell
-  if (!ULARN && spellIndex == MKW) {
-    readbook(book);
-    return;
-  }
-
-  learnSpell(spelcode[spellIndex]);
-  updateLog(`Spell '<b>${spelcode[spellIndex]}</b>': ${spelname[spellIndex]}`);
-  updateLog(`  ${speldescript[spellIndex]}${period}`);
-  if (rnd(10) == 4) {
-    if (ULARN) updateLog(`You feel clever!`);
-    else updateLog(`  Your intelligence went up by one!`);
-    player.setIntelligence(player.INTELLIGENCE + 1);
-  }
 }
 
 

@@ -80,29 +80,36 @@ Endelford\n\
 `;
 
 helppages[1] =
-`                       <b>Help File for The Caverns of ${GAMENAME}</b>                 \n\
-                                                                        shift+ \n\
- y|Y  move|run northwest  k|K  move|run up    u|U  move|run northeast    ↖↑↗ \n\
- h|H  move|run left        .   stay here      l|L  move|run right       ←   →  \n\
- b|B  move|run southwest  j|J  move|run down  n|N  move|run southeast    ↙↓↘ \n\
-                                                                       to run \n\
-                              A  desecrate an altar       <  go up stairs       \n\
-  c  cast a spell             C  close a door             >  go down stairs     \n\
-  d  drop an item             D  drink at a fountain                            \n\
-  e  eat something            E  enter a store, dungeon   ^  identify a trap    \n\
-  f  tidy up at a fountain       or volcanic shaft                              \n\
-  g  get present pack weight                              !  toggle key hints   \n\
-  i  inventory your pockets   I  list all known items     @  toggle auto-pickup \n\
-  o  open a door or chest                                 #  toggle inventory   \n\
-  p  pray at an altar         P  give tax status                                \n\
-  q  quaff a potion           Q  quit the game            {  toggle retro fonts \n\
-  r  read a scroll or book    R  remove gems from throne  }  toggle between     \n\
-  s  sit on a throne          S  save the game               classic, hack,     \n\
-  t  take an item             T  take off armor              and amiga graphics \n\
-  v  print program version    V  view conducts                                  \n\
-  w  wield a weapon           W  wear armor                                     \n\
-  z  show scores              Z  teleport yourself        ?  this help screen   \n\
-  `;
+`                       <b>Help File for The Caverns of ${GAMENAME}</b>
+
+  move using             y k u                ↖ ↑ ↗     
+  arrow keys             h   l       or       ←   →            
+  shift+key to run       b j n                ↙ ↓ ↘       .  rest one turn
+
+                              A  desecrate an altar       <  go up stairs
+  c  cast a spell             C  close a door             >  go down stairs
+  d  drop an item             D  drink at a fountain
+  e  eat something            E  enter a store, dungeon   ^  identify a trap
+  f  tidy up at a fountain       or volcanic shaft
+  g  get present pack weight                              !  toggle key hints
+  i  inventory your pockets   I  list all known items     @  toggle auto-pickup
+  o  open a door or chest                                 #  toggle inventory
+  p  pray at an altar         P  tax status, autopray
+  q  quaff a potion           Q  quit the game            {  toggle fonts
+  r  read a scroll or book    R  remove gems from throne  }  toggle between
+  s  sit on a throne          S  save the game               classic, hack,
+  t  take an item             T  take off armor              and amiga graphics
+  v  print program version    V  view conducts
+  w  wield a weapon           W  wear armor
+  z  show scores              Z  teleport yourself        ?  this help screen`;
+
+//  :  look at object you
+//     are standing on
+//  m  move without picking
+//     up an object
+//  /  identify objects in
+//     the game 
+
 
 
 helppages[2] =

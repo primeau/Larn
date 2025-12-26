@@ -49,7 +49,11 @@ a:active {
 
 b,
 strong {
-    color: lightgray;
+    color: white;
+}
+
+dim {
+    color: grey;
 }
 
 body {

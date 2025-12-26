@@ -4,13 +4,8 @@
 
 /* create new game */
 function welcome() {
-
-  clear();
-
-  lflush();
-
-  createLevelNames();
-
+  
+  logname = localStorageGetObject('logname', logname);
   amiga_mode = PARAMS.mode && PARAMS.mode == `amiga` || false;
   retro_mode = localStorageGetObject('retro', true);
   original_objects = localStorageGetObject('original_objects', true);
@@ -22,13 +17,11 @@ function welcome() {
   bold_objects = localStorageGetObject('bold_objects', true);
   setMode(amiga_mode, retro_mode, original_objects);
   
+  createLevelNames();
   initHelpPages();
-
   lprcat(helppages[0]);
-  cursors();
 
-  logname = localStorageGetObject('logname', logname);
-
+  
   var tmpID = Math.random().toString(36).substr(2, 5);
   playerID = localStorageGetObject('playerID', tmpID);
   localStorageSetObject('playerID', playerID);
@@ -37,22 +30,23 @@ function welcome() {
   if (playerID === tmpID) {
     keyboard_hints = true;
   }
-
+  
   var nameString = `Welcome to ${GAMENAME}. Please enter your name [<b>${logname}</b>]: `;
-
+  
   let chastizing = `* Please use only one name to leave room on the scoreboard for others`;
   setDiv(`FOOTER`, chastizing);
-
+  
+  cursors();
   lprcat(nameString);
-  blinken(nameString.length - 5, 24);
+  blinken(nameString.length - 6, 24);
 
   player = new Player(); // gender and character class are set later on
   initKeyBindings(); // wait until last moment to set key bindings
 
-  if (!no_intro) {
-    setTextCallback(setname, 24);
-  } else {
+  if (no_intro) {
     setname(logname);
+  } else {
+    setTextCallback(setname, 24);
   }
 
   updateRB();
@@ -142,7 +136,7 @@ function setname(name) {
   } else {
     var difficultyString = `What difficulty would you like to play? [<b>${getDifficulty()}</b>]: `;
     lprcat(difficultyString);
-    blinken(difficultyString.length - 5, 24);
+    blinken(difficultyString.length - 6, 24);
 
     setNumberCallback(setdiff, false, 3);
   }
@@ -346,8 +340,7 @@ function setdiff(hard) {
     player.char_picked = localStorageGetObject('character_class') || 'Adventurer';
 
     lprcat(`So, what are ya? [<b>${player.char_picked}</b>]:`);
-    lflush();
-    blinken(player.char_picked.length + 23, 24);
+    blinken(player.char_picked.length + 22, 24);
     setCharCallback(setclass);
   } else {
     setclass(`Adventurer`); /* default to Adventurer for regular Larn */
@@ -402,8 +395,7 @@ function setclass(classpick) {
       player.gender = localStorageGetObject('gender') || 'Male';
 
       lprcat(`So, what are ya? [<b>${player.gender}</b>]:`);
-      lflush();
-      blinken(player.gender.length + 23, 24);
+      blinken(player.gender.length + 22, 24);
       setCharCallback(setgender);
     } else {
       setgender(`Male`);
@@ -450,12 +442,36 @@ function setgender(genderpick) {
 async function startgame() {
   let startx, starty, extraMessage;
   if (GOTW) {
+
+    // doGOTWStuff(); return;
+
     let gotwData = await downloadGOTW();
     if (gotwData.status === 200) {
-      console.log(`startgame(): gotw downloaded:`, gotwData.LEVELS.length);
+      console.log(`startgame(): initializing gotw:`, gotwData.LEVELS.length);
       loadLevels(gotwData.LEVELS);
       startx = gotwData.player.x;
       starty = gotwData.player.y;
+
+      player.LAMP = gotwData.player.LAMP;
+      player.WAND = gotwData.player.WAND;
+      player.SLAYING = gotwData.player.SLAYING;
+      player.NEGATESPIRIT = gotwData.player.NEGATESPIRIT;
+      player.CUBEofUNDEAD = gotwData.player.CUBEofUNDEAD;
+      player.NOTHEFT = gotwData.player.NOTHEFT;
+      player.TALISMAN = gotwData.player.TALISMAN;
+      player.HAND = gotwData.player.HAND;
+      player.ORB = gotwData.player.ORB;
+      player.ELVEN = gotwData.player.ELVEN;
+      player.SLASH = gotwData.player.SLASH;
+      player.BESSMANN = gotwData.player.BESSMANN;
+      player.SLAY = gotwData.player.SLAY;
+      player.VORPAL = gotwData.player.VORPAL;
+      player.STAFF = gotwData.player.STAFF;
+      player.PRESERVER = gotwData.player.PRESERVER;
+      player.PAD = gotwData.player.PAD;
+      player.ELEVUP = gotwData.player.ELEVUP;
+      player.ELEVDOWN = gotwData.player.ELEVDOWN;
+
       extraMessage = `You have ${timeLeft()} to finish this game`;
     } else {    
       GOTW = false;
@@ -477,8 +493,6 @@ async function startgame() {
   makeplayer(startx, starty); /*  make the character that will play  */
 
   newcavelevel(0); /*  make the dungeon */
-
-  lflush();
 
   var introMessage = `Welcome to ${GAMENAME}, ${logname} -- Press <b>?</b> for help`;
   updateLog(introMessage);

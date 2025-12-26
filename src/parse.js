@@ -520,7 +520,7 @@ function parse(e, key) {
 
   /*
   // 
-  // wait until healed or monster
+  // wait 'M'ultiple turns until healed or monster
   //
   if (key == 'M') {
     if (player.TIMESTOP == 0) {
@@ -900,11 +900,11 @@ function parse(e, key) {
 function parseQuit(key) {
   nomove = 1;
   if (key == ESC || key == 'n' || key == 'N') {
-    appendLog(` no${period}`);
+    appendLog(`no${period}`);
     return 1;
   }
   if (key == 'y' || key == 'Y') {
-    appendLog(` yes${period}`);
+    appendLog(`yes${period}`);
     died(DIED_QUITTER, false); /* a quitter */
     return 1;
   }

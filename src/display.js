@@ -27,14 +27,7 @@ function blt() {
   if (amiga_mode) {
     // do nothing
   } else {
-    // TODO: setup for not repainting in text mode
-    // TODO: need to update io.js:os_put_font(), display.js:blt(), larn.js:play()
-    // TODO: this will break scoreboard rendering
-    if (altrender) {
-      // do nothing
-    } else {
-      bltDocument();
-    }
+    bltDocument();
   }
 
   onResize();
@@ -115,7 +108,7 @@ function setChar(x, y, c, markup) {
 
 
 function createDiv(x, y, w, h) {
-  if (!w) w = 12; // change this for altrender?
+  if (!w) w = 12;
   if (!h) h = w * 2;
   // TODO: this can be more efficient!
   return `<div id='${x},${y}' class='image' style="width:${w}px; height:${h}px; "> </div>`;
@@ -126,31 +119,39 @@ function createDiv(x, y, w, h) {
 function setDiv(id, data, markup) {
   var div = document.getElementById(id);
   if (div) {
+    // not really needed, but keep things consistent if something is undefined
+    if (!markup) markup = null;
+    // div.markup is a custom property we add to track current markup states
+    if (!div.markup) div.markup = null;
+
     // optimization:
-    // most of the time, we're just repainting the same data into each div.
-    // therefore, only repaint when the data is different, or there
-    // is a BOLD being applied where there wasn't one before
-    //
-    // START_MARK is still a special snowflake for amiga mode though
-    if (data === div.innerHTML && markup != START_MARK) {
-      if (markup != START_BOLD && div.style.fontWeight == 'normal' ||
-        markup == START_BOLD && div.style.fontWeight == 'bold') {
-        return;
-      }
+    // most of the time we're just repainting the same data into each div
+    // therefore, only repaint when the data is different, or there is new
+    // markup being applied
+    if (data === div.innerHTML && markup == div.markup) {
+      return;
     }
-    // else {
-    //   console.log("DATA: " + data);
-    //   console.log("DOC:  " + doc.innerHTML);
-    // }
+
     div.innerHTML = data;
-    if (markup == START_BOLD) {
+    div.markup = markup;
+
+    if (markup === START_BOLD) {
       div.style.fontWeight = 'bold';
-    } else if (markup == START_MARK) {
-      // probably would be better to set a different bg and font color
-      // doc.style.color = markup == 'highlight' ? 'green' : 'lightgrey';
-      div.innerHTML = `<mark>${data}</mark>`;
+      div.style.color = 'white';
+    } else if (markup === START_MARK) {
+      div.style.fontWeight = 'bold';
+      div.style.color = 'black';
+      div.style.backgroundImage = 'none'; // ensure the highlight color is visible even if a background-image is set
+      div.style.backgroundColor = 'lightgrey';
+    } else if (markup === START_DIM) {
+      div.style.fontWeight = 'normal';
+      div.style.color = 'grey';
     } else {
       div.style.fontWeight = 'normal';
+      div.style.color = 'lightgrey';
+      // clear any highlight styling previously applied by start_mark
+      div.style.backgroundImage = '';
+      div.style.backgroundColor = '';
     }
   } else {
     console.log(`null document: ${id}`);
@@ -161,17 +162,17 @@ function setDiv(id, data, markup) {
 
 function setImage(x, y, img) {
   if (!amiga_mode) return;
-  var doc = document.getElementById(`${x},${y}`);
-  if (doc) {
+  const div = document.getElementById(`${x},${y}`);
+  if (div) {
     // OPTIMIZATION: don't set bg image if it's the same
     // this prevents things from being really slow in firefox
-    if (doc.style.backgroundImage === img) {
+    if (div.style.backgroundImage === img) {
       return;
     }
     if (img) {
-      doc.style.backgroundImage = img;
+      div.style.backgroundImage = img;
     }
-    doc.innerHTML = ` `; // needed to clear the background image
+    div.innerHTML = ` `; // needed to clear the background image
   } else {
     console.log(`setImage: null doc at ${x},${y}`);
   }
@@ -522,27 +523,27 @@ function drawmaze() {
     for (var i = 0; i < MAXX; i++) {
 
       if (know[i][j] == 0) {
-        lprc(OUNKNOWN.getChar(), i, j);
+        lprc(OUNKNOWN.getChar());
       } else if (know[i][j] & HAVESEEN) {
         if (i == player.x && j == player.y) {
-          lprc(player.getChar(), i, j);
+          lprc(player.getChar());
           continue;
         }
         var monster = monsterAt(i, j);
         var item = itemAt(i, j);
         if (monster && know[i][j] & KNOWHERE) {
           if (blind)
-            lprc(item.getChar(), i, j);
+            lprc(item.getChar());
           else
-            lprc(monster.getChar(), i, j);
+            lprc(monster.getChar());
         } else {
           // if (blind)
           //   item.matches(OWALL) ? lprc(OWALL.getChar()) : lprc(item.getChar())
           // else
-          lprc(item.getChar(), i, j);
+          lprc(item.getChar());
         }
       } else {
-        lprc(OUNKNOWN.getChar(), i, j);
+        lprc(OUNKNOWN.getChar());
       }
     }
   }

@@ -28,9 +28,8 @@ async function play() {
 
   initRB();
 
-  // real credentials are set here, and not committed
   try {
-    initLambdaCredentials();
+    initLambdaCredentials(); // real credentials are set here, and not committed to git
   } catch (error) {
     console.error(`not loading aws credentials: ${error}`);
   }
@@ -62,25 +61,7 @@ async function play() {
     window.onbeforeunload = confirmExit;
   }
 
-  // TODO: setup for not repainting in text mode
-  // TODO: need to update io.js:os_put_font(), display.js:blt(), larn.js:play()
-  // TODO: this will break scoreboard rendering
-  if (altrender) {
-    for (var y = 0; y < 24; y++) {
-      for (var x = 0; x < 80; x++) {
-        display[x][y] = createDiv(x, y);
-      }
-    }
-
-    if (!images) {
-      loadImages(`img/`);
-    }
-
-    bltDocument();
-  }
-
   PARAMS = loadURLParameters();
-
   no_intro = PARAMS.nointro ? PARAMS.nointro == `true` : false;
   ULARN = PARAMS.ularn ? PARAMS.ularn == `true` : false;
   GOTW = PARAMS.gotw ? PARAMS.gotw == `true` : false;

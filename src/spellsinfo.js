@@ -9,24 +9,24 @@
 /* The maximum spell num to be learnt from a book found on each dungeon level */
 var splev;
 const LARN_splev = [1, 4, 9, 14, 18, 22, 26, 29, 33, 36, 38, 38, 38, 38, 38];
-const ULARN_splev = [1, 4, 7, 11, 15, 20, 24, 28, 30, 32, 33, 34, 35, 36, 37, 38, 38, 38, 38, 38, 38];
+const ULARN_splev = [1, 4, 7, 11, 15, 20, 24, 28, 30, 32, 33, 34, 35, 36, 37, 38, 38, 38, 38, 38, 38, 38];
 
 
 
 const spelcode = [
-  `pro`, `mle`, `dex`,
-  `sle`, `chm`, `ssp`,
-  `web`, `str`, `enl`,
-  `hel`, `cbl`, `cre`,
-  `pha`, `inv`, `bal`,
-  `cld`, `ply`, `can`,
-  `has`, `ckl`, `vpr`,
-  `dry`, `lit`, `drl`,
-  `glo`, `flo`, `fgr`,
-  `sca`, `hld`, `stp`,
-  `tel`, `mfi`, `mkw`,
-  `sph`, `gen`, `sum`, 
-  `wtw`, `alt`, `per`
+  `pro`, `mle`, `dex`, // 0-2
+  `sle`, `chm`, `ssp`, // 3-5
+  `web`, `str`, `enl`, // 6-8
+  `hel`, `cbl`, `cre`, // 9-11
+  `pha`, `inv`, `bal`, // 12-14
+  `cld`, `ply`, `can`, // 15-17
+  `has`, `ckl`, `vpr`, // 18-20
+  `dry`, `lit`, `drl`, // 21-23
+  `glo`, `flo`, `fgr`, // 24-26
+  `sca`, `hld`, `stp`, // 27-29
+  `tel`, `mfi`, `mkw`, // 30-32
+  `sph`, `gen`, `sum`, // 33-35
+  `wtw`, `alt`, `per`  // 36-38
 ];
 
 

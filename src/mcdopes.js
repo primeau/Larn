@@ -1,7 +1,7 @@
 'use strict';
 
 /* inventory */
-var drug = [true, true, true, true, true];
+const drug = [true, true, true, true, true];
 
 
 
@@ -15,30 +15,32 @@ function pad_hd() {
     lprcat(`you'll find anywhere in Ularn -- check it out...\n\n\n`);
     lprcat(`                    The Stash                   The Cash\n\n`);
 
-    if (drug[0]) lprcat(`                a)  Killer Speed                100 bucks`);
-    lprc(`\n`);
-    if (drug[1]) lprcat(`                b)  Groovy Acid                 250 bucks`);
-    lprc(`\n`);
-    if (drug[2]) lprcat(`                c)  Monster Hash                500 bucks`);
-    lprc(`\n`);
-    if (drug[3]) lprcat(`                d)  Trippy Shrooms              1000 bucks`);
-    lprc(`\n`);
-    if (drug[4]) lprcat(`                e)  Cool Coke                   5000 bucks`);
-    lprc(`\n`);
+    mcdopesitem(0, `a`, `Killer Speed`, 100);
+    mcdopesitem(1, `b`, `Groovy Acid`, 250);
+    mcdopesitem(2, `c`, `Monster Hash`, 500);
+    mcdopesitem(3, `d`, `Trippy Shrooms`, 1000);
+    mcdopesitem(4, `e`, `Cool Coke`, 5000);
 
-    let plural = player.GOLD == 1 ? `` : `s`;
+    const plural = player.GOLD == 1 ? `` : `s`;
     cursor(30, 18);
-    lprcat(`Looks like you got about ${player.GOLD} buck${plural} on you.   `);
+    lprcat(`Looks like you got about ${Number(player.GOLD).toLocaleString()} buck${plural} on you.   `);
 
     lprcat(`\n\nSo, whaddya want [<b>escape</b> to split] ?`);
 }
 
 
 
+function mcdopesitem(drugindex, drugletter, drugname, drugprice) {
+    const markup_start = player.GOLD < drugprice ? START_DIM : ``;
+    const markup_end = player.GOLD < drugprice ? END_DIM : ``;
+    if (drug[drugindex]) lprcat(`                ${drugletter})  ${drugname.padEnd(28)}${markup_start}${drugprice} bucks${markup_end}`);
+    lprc(`\n`);
+}
+
+
+
 function opad() {
     setMazeMode(false);
-
-    // clear();
     pad_hd();
     setCharCallback(parse_mcdopes);
 }
@@ -52,7 +54,7 @@ function parse_mcdopes(key) {
 
     if (!isalpha(key)) return false;
 
-    cursor(39, 20);
+    cursor(38, 20);
     lprc(`${key}\n`);
 
     switch (key) {
@@ -75,6 +77,9 @@ function parse_mcdopes(key) {
         case `e`:
             /* coke */
             dodeal(OCOKE, 5000, 4);
+            break;
+        default:
+            dontgotit();
             break;
     } /* end switch */
 
@@ -107,11 +112,20 @@ function snag(itm) {
         cltoeoln();
         return false;
     }
-    let contraband = createObject(itm);
+    const contraband = createObject(itm);
     take(contraband);
     lprcat(`\nOk, here ya go.`);
     cltoeoln();
     return true;
+}
+
+
+
+function dontgotit() {
+    lprcat(`\nNever heard of it.`);
+    cltoeoln();
+    // nap(2200);
+
 }
 
 

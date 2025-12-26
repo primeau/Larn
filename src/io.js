@@ -1,25 +1,24 @@
 'use strict';
 
-var cursorx = 1;
-var cursory = 1;
+let cursorx = 1;
+let cursory = 1;
 
-var display = initGrid(80, 24);
+let display = initGrid(80, 24);
 
-
-
-function lprintf(str, width) {
-  if (width != null) {
-    lprcat(padString(str, width));
-  } else {
-    lprcat(str);
-  }
-}
-
-
-var START_MARK = `<mark>`;
-var END_MARK = `</mark>`;
-var START_BOLD = `<b>`;
-var END_BOLD = `</b>`;
+const START_MARK = `<mark>`;
+const END_MARK = `</mark>`;
+const START_BOLD = `<b>`;
+const END_BOLD = `</b>`;
+const START_DIM = `<dim>`;
+const END_DIM = `</dim>`;
+const START_STRIKE = `<strike>`;
+const END_STRIKE = `</strike>`;
+const START_ITALIC = `<i>`;
+const END_ITALIC = `</i>`;
+const START_UNDERLINE = `<u>`;
+const END_UNDERLINE = `</u>`;
+const START_HREF = `<a href=`;
+const END_HREF = `</a>`;
 
 
 
@@ -30,7 +29,7 @@ function lprint(str) {
 
 
 
-function lprcat(str, width) {
+function lprcat(str) {
   DEBUG_LPRCAT++;
 
   if (alternativeDisplay) {
@@ -38,78 +37,71 @@ function lprcat(str, width) {
     return;
   }
 
-  if (width) {
-    lprintf(str, width);
-    return;
-  }
+  let amigaMarkup = null;
+  
+  for (let i = 0; i < str.length; i++) {
+    let c = str[i];
 
-  // Some people, when confronted with a problem, think, “I know,
-  // I'll use regular expressions.” Now they have two problems.
+    let starttag = null;
+    let endtag = null;
 
-  var markup = null;
-  var len = str.length;
+    // check for opening/closing markup tags. tags must be handled because 
+    // they will use up characters in display[][] even though they aren't visible
+    if (str.indexOf(START_BOLD, i) === i) starttag = START_BOLD;
+    else if (str.indexOf(START_MARK, i) === i) starttag = START_MARK;
+    else if (str.indexOf(START_DIM, i) === i) starttag = START_DIM;
+    else if (str.indexOf(START_STRIKE, i) === i) starttag = START_STRIKE;
+    else if (str.indexOf(START_ITALIC, i) === i) starttag = START_ITALIC;
+    else if (str.indexOf(START_UNDERLINE, i) === i) starttag = START_UNDERLINE;
 
-  for (var i = 0; i < len; i++) {
-    var c = str[i];
-
-    if (c === '<') {
-      if (str.substr(i, 3).toLowerCase() === START_BOLD) {
-        markup = START_BOLD;
-        i += 2;
-        if (amiga_mode) {
-          continue;
-        } else {
-          c = START_BOLD;
-        }
-      } else if (str.substr(i, 4).toLowerCase() === END_BOLD) {
-        markup = null;
-        i += 3;
-        if (amiga_mode) {
-          continue;
-        } else {
-          let diff = 1;
-          if (cursorx > 80) diff = cursorx - 80;
-          cursorx -= diff;
-          c = str.substr(i - 3 - diff, diff) + END_BOLD;
-        }
-      } else if (str.substr(i, 6).toLowerCase() === START_MARK) {
-        markup = START_MARK;
-        i += 5;
-        if (amiga_mode) {
-          continue;
-        } else {
-          c = START_MARK;
-        }
-      } else if (str.substr(i, 7).toLowerCase() === END_MARK) {
-        markup = null;
-        i += 6;
-        if (amiga_mode) {
-          continue;
-        } else {
-          let diff = 1;
-          if (cursorx > 80) diff = cursorx - 80;
-          cursorx -= diff;
-          c = str.substr(i - 6 - diff, diff) + END_MARK;
-        }
+    // hrefs are special because they can easily be more than 80 chars
+    else if (str.indexOf(START_HREF, i) === i) {
+      if (amiga_mode) {
+        // amiga just prints one char at a time, so no special treatment
+      } else {
+        const hrefend = str.indexOf(END_HREF, i);
+        const href = str.slice(i, hrefend + END_HREF.length);
+        c = href; // stuff entire href into c to print at once
+        i += href.length - 1;
+        // debug(`lprcat: href:${href}`);
       }
     }
 
-    lprc(c, markup);
+    if (starttag) {
+      i += starttag.length;
+      if (amiga_mode) {
+        amigaMarkup = starttag; // apply markup until enddtag found
+        c = str[i];
+      } else {
+        c = starttag + str[i]; // print start tag with first char
+      }
+      // debug(`lprcat(): ${starttag}:${c}`)
+    }
+    
+    if (str.indexOf(END_BOLD, i+1) === i+1) endtag = END_BOLD;
+    else if (str.indexOf(END_MARK, i+1) === i+1) endtag = END_MARK;
+    else if (str.indexOf(END_DIM, i+1) === i+1) endtag = END_DIM;
+    else if (str.indexOf(END_STRIKE, i+1) === i+1) endtag = END_STRIKE;
+    else if (str.indexOf(END_ITALIC, i+1) === i+1) endtag = END_ITALIC;
+    else if (str.indexOf(END_UNDERLINE, i+1) === i+1) endtag = END_UNDERLINE;
+    
+    if (endtag) {
+      if (amiga_mode) {
+        i += endtag.length; // skip over end tag
+      } else {
+        if (cursorx > 80) {
+          debug(`lprcat(): line wrap at col 80 before endtag:${endtag}`);
+          cursorx = 80;
+        }
+        c += endtag; // print last char with end tag
+        i += endtag.length;
+      }
+      // debug(`lprcat(): ${endtag}:${c}`)
+    }
 
+    lprc(c, amigaMarkup);
+    if (endtag) amigaMarkup = null;
   }
-}
-
-
-
-function cursor(x, y) {
-  cursorx = x;
-  cursory = y;
-}
-
-
-
-function cursors() {
-  cursor(1, 24);
 }
 
 
@@ -129,59 +121,55 @@ function lprc(ch, markup) {
     cursorx = 1;
     cursory++;
   } else {
-    // var n = 1;
-    // if (ch == '\t') {
-    //   ch = ' ';
-    //   n = 4;
-    // }
-    // while (n--) {
     os_put_font(ch, cursorx - 1, cursory - 1, markup);
     cursorx++;
-    // }
   }
 }
 
 
-var HACK_URL_TEXT = `url`;
 
 function os_put_font(ch, x, y, markup) {
   if (x >= 0 && x < 80 && y >= 0 && y < 24) {
-    if (!amiga_mode) {
-
-      if (DEBUG_PROXIMITY) {
-        if (!screen[x] || !screen[x][y] || screen[x][y] == 127 || screen[x][y] == 0) {
-          // do nothing
-        } else {
-          if (!monsterAt(x, y)) {
-            ch = (screen[x][y] < 10) ? `` + screen[x][y] : `` + (screen[x][y] % 10);
-          }
-          else {
-            ch = `<b>${ch}</b>`;
-          }
-        }
-        if (x == player.x && y == player.y) ch = `<b>#</b>`;
-      }
-
-      display[x][y] = ch;
-
-      // TODO: setup for not repainting in text mode
-      // TODO: need to update io.js:os_put_font(), display.js:blt(), larn.js:play()
-      // TODO: this will break scoreboard rendering
-      if (altrender) {
-        setChar(x, y, ch, markup);
-      }
-
-    } else {
+    if (amiga_mode) {
       ch = `${ch}`; // workaround: amiga larn bank buttons are numbers, not strings
 
       // HACK HACk HAck Hack hack
+      const HACK_URL_TEXT = `url`;
       if (ch.substring(0, 3) === HACK_URL_TEXT) {
         setImage(x, y, ch);
       } else {
         setChar(x, y, ch, markup);
       }
+    } else {
+      // if (DEBUG_PROXIMITY) {
+      //   if (!screen[x] || !screen[x][y] || screen[x][y] == 127 || screen[x][y] == 0) {
+      //     // do nothing
+      //   } else {
+      //     if (!monsterAt(x, y)) {
+      //       ch = (screen[x][y] < 10) ? `` + screen[x][y] : `` + (screen[x][y] % 10);
+      //     }
+      //     else {
+      //       ch = `<b>${ch}</b>`;
+      //     }
+      //   }
+      //   if (x == player.x && y == player.y) ch = `<b>#</b>`;
+      // }
+      display[x][y] = ch;
     }
   }
+}
+
+
+
+function cursor(x, y) {
+  cursorx = x;
+  cursory = y;
+}
+
+
+
+function cursors() {
+  cursor(1, 24);
 }
 
 
@@ -193,10 +181,10 @@ function clear() {
 
 
 function cltoeoln() {
-  var x = cursorx;
-  var n = 80 + 1 - x;
+  const x = cursorx;
+  let n = 80 + 1 - x;
   while (n-- > 0) {
-    lprc(' ', null);
+    lprc(' ');
     setImage(80 - n - 1, cursory - 1, OUNKNOWN.getChar());
   }
   cursorx = x;
@@ -205,7 +193,7 @@ function cltoeoln() {
 
 
 function cl_up(x, y) {
-  for (var i = 1; i <= y; i++) {
+  for (let i = 1; i <= y; i++) {
     cursor(1, i);
     cltoeoln();
   }
@@ -215,15 +203,9 @@ function cl_up(x, y) {
 
 
 function cl_dn(x, y) {
-  for (var i = y; i <= 24; i++) {
+  for (let i = y; i <= 24; i++) {
     cursor(1, i);
     cltoeoln();
   }
   cursor(x, y);
-}
-
-
-
-function lflush() {
-  LOG = Array(LOG_SAVE_SIZE).join(' ').split('');
 }

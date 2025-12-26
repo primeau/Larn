@@ -50,7 +50,7 @@ const LARN_STORE_INVENTORY = [
   [50000,  OCUBEofUNDEAD.id,    0,  0],
   [60000,  ONOTHEFT.id,         0,  0],
   [5900,   OCHEST.id,           6,  1],
-  [2000,   OBOOK.id,            8,  1],
+  [2000,   OBOOK.id,            8 * 100 + rnd(24) + 9,  1], /* 12.5.3 - precompute level 8 book for gotw */
   [100,    OCOOKIE.id,          0,  3],
   [200,    OPOTION.id,          0,  6],
   [900,    OPOTION.id,          1,  5],
@@ -138,7 +138,7 @@ const ULARN_STORE_INVENTORY = [
   [5000,   OCUBEofUNDEAD.id,    0,  0],
   [6000,   ONOTHEFT.id,         0,  0],
   [5900,   OCHEST.id,           3,  1],
-  [2000,   OBOOK.id,            2,  1],
+  [2000,   OBOOK.id,            2 * 100 + rund(9),  1], /* 12.5.3 - precompute level 2 book for gotw */
   [100,    OCOOKIE.id,          0,  3],
   [6660,   OHANDofFEAR.id,      0,  0],
   [200,    OPOTION.id,          0,  6],

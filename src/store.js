@@ -224,7 +224,11 @@ function dnd_parse(key) {
       // }
 
       storemessage(`  You pick up: ${invindex}) ${boughtItem}${period}`, 1000);
-      if (dnd_item[i].qty == 0) dnditem(i);
+
+      for (let j = dndindex; j < 26 + dndindex; j++) {
+        dnditem(j);
+      }
+
       updategold();
       lprc(key); /* echo the byte */
       //nap(1001);
@@ -243,28 +247,26 @@ function dnd_parse(key) {
     to print the item list;  used in dndstore() enter with the index into itm
  */
 function dnditem(i) {
-  var j, k, price;
   if (i < 0 || i >= MAXITM) return;
 
-  cursor((j = (i & 1) * 40 + 1), (k = ((i % 26) >> 1) + 5));
+  cursor((i & 1) * 40 + 1, ((i % 26) >> 1) + 5);
 
   if (dnd_item[i].qty == 0) {
-    lprintf(``, 39);
+    lprcat(' '.repeat(40));
     return;
   }
 
-  var item = createObject(dnd_item[i].itemId, dnd_item[i].arg);
   lprcat(`${getCharFromIndex(i % 26)}) `);
-
-  if (item.matches(OPOTION)) lprintf(`${item.toString(true).substring(8)}`);
-  else if (item.matches(OSCROLL)) lprintf(`${item.toString(true).substring(8)}`);
-  else lprcat(`${item.toString(true)}`);
-
-  cursor(j + 31, k);
-
-  price = dnd_item[i].price;
-
-  lprintf(price.toString(), 6);
+  
+  const item = createObject(dnd_item[i].itemId, dnd_item[i].arg);
+  if (item.matches(OPOTION)) lprcat(item.toString(true).substring(8).padEnd(28));
+  else if (item.matches(OSCROLL)) lprcat(item.toString(true).substring(8).padEnd(28));
+  else lprcat(item.toString(true).padEnd(28));
+  
+  const price = dnd_item[i].price;
+  const markup_start = player.GOLD < price ? START_DIM : ``;
+  const markup_end = player.GOLD < price ? END_DIM : ``;
+  lprcat(`${markup_start}${price.toString().padStart(6)}${markup_end}`);
 }
 
 
@@ -321,7 +323,8 @@ function obanksub() {
     var item = player.inventory[i];
     if (item && (item.isGem() || item.matches(OLARNEYE))) {
       if (item.matches(OLARNEYE)) {
-        gemvalue[i] = Math.max(50000, 250000 - ((gtime * 7) / 100) * 100);
+        gemvalue[i] = Math.floor(250000 - ((gtime * 7) / 100) * 100);
+        gemvalue[i] = Math.max(50000, gemvalue[i]);
       } else {
         gemvalue[i] = item.arg * 100;
       }
@@ -329,7 +332,7 @@ function obanksub() {
       cursor((k % 2) * 40 + 1, (k >> 1) + 4);
       lprcat(`${getCharFromIndex(i)}) ${item}`);
       cursor((k % 2) * 40 + 32, (k >> 1) + 4);
-      lprintf(`${gemvalue[i]}`, 6);
+      lprcat(`${gemvalue[i]}`.padStart(6));
       k++;
     } else {
       /* make sure player can't sell non-existant gems */
@@ -408,14 +411,15 @@ function bank_parse(key) {
 function bankmessage(str, duration) {
   if (mazeMode) return;
 
-  if (duration == ``)
+  if (duration === 0) 
     cl_dn(1, 23);
-  else
+  else 
     cl_dn(1, 24);
+
   bank_print_gold();
-  cursor(1, 24);
+  cursors();
   lprcat(str);
-  cursor(73, 22);
+  cursor(69, 22);
   cltoeoln();
 
   setCharCallback(bank_parse);
@@ -444,9 +448,9 @@ function bank_deposit(amt) {
   amt = Number(amt);
 
   if (amt < 0) {
-    bankmessage(`Sorry, but we can't take negative gold!`, 700);
+    bankmessage(`  Sorry, but we can't take negative gold!`, 700);
   } else if (amt > player.GOLD) {
-    bankmessage(`You don't have that much${period}`, 700);
+    bankmessage(`  You don't have that much${period}`, 700);
   } else {
     player.setGold(player.GOLD - amt);
     player.BANKACCOUNT += amt;
@@ -470,9 +474,9 @@ function bank_withdraw(amt) {
   amt = Number(amt);
 
   if (amt < 0) {
-    bankmessage(`Sorry, but we don't have any negative gold!`, 700);
+    bankmessage(`  Sorry, but we don't have any negative gold!`, 700);
   } else if (amt > player.BANKACCOUNT) {
-    bankmessage(`You don't have that much in the bank!`, 700);
+    bankmessage(`  You don't have that much in the bank!`, 700);
   } else {
     player.setGold(player.GOLD + amt);
     player.BANKACCOUNT -= amt;
@@ -487,17 +491,19 @@ function bank_sell(key) {
   if (key == ESC) {
     bankmessage(`  cancelled${period}`, 700);
   } else if (key == '*') {
+    echo(key);
     var gems_sold = false;
     for (let i = 0; i < 26; i++) {
       gems_sold |= sellGem(i);
     }
     if (!gems_sold) {
-      bankmessage(`You have no gems to sell!`, 700);
+      bankmessage(`  You have no gems to sell!`, 700);
     }
   } else {
     let i = getIndexFromChar(key);
+    echo(key);
     if (!sellGem(i)) {
-      bankmessage(`Item ${getCharFromIndex(i)} is not a gemstone!`, 700);
+      bankmessage(`  Item ${getCharFromIndex(i)} is not a gemstone!`, 700);
     }
   }
   return 1;
@@ -513,7 +519,7 @@ function sellGem(i) {
     gemvalue[i] = 0;
     var k = gemorder[i];
     cursor((k % 2) * 40 + 1, (k >> 1) + 4);
-    lprintf(``, 39);
+    lprcat(' '.repeat(40));
     bankmessage(``, 700);
     return true;
   } else {
@@ -613,7 +619,7 @@ function otradepost() {
 function cleartradiven(i) {
   var j = tradorder[i];
   cursor((j % 2) * 40 + 1, (j >> 1) + 8);
-  lprintf(` `, 39);
+  lprcat(' '.repeat(40));
   tradorder[i] = 0;
 }
 
@@ -695,6 +701,17 @@ function parse_tradepost(key) {
         value = 0.2 * dnd_item[j + item.arg].price;
       } else {
         var izarg = item.arg;
+
+        /* 12.5.3 
+           books are precomputed for GOTW and have
+            arg = 100 * book level + spell index
+        */
+        if (item.matches(OBOOK)) {
+          if (item.arg >= 100) {
+            izarg = Math.floor(item.arg / 100);
+          }
+        }
+
         value = 0.1 * dnd_item[j].price;
 
         /* appreciate if a +n object */
@@ -1070,9 +1087,9 @@ async function win(key) {
   await nap(1000);
   lprint(`.`);
   await nap(1000);
-  lprint(` working!\n\n`);
-  lprintf(`The doctor thinks that your daughter will recover in a few days.\n`);
-  lprintf(`Congratulations!\n\n`);
+  lprcat(` working!\n\n`);
+  lprcat(`The doctor thinks that your daughter will recover in a few days.\n`);
+  lprint(`Congratulations!\n\n`);
   await nap(2000);
   napping = false;
   died(DIED_WINNER, false); /* a winner! */

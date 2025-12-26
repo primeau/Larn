@@ -667,7 +667,7 @@ function sethp(newLevel) {
     fillmonst(makemonst(level));
   }
 
-  if (ULARN && newLevel) {
+  if (ULARN && newLevel && !DEBUG_NO_MONSTERS) {
     /*
     ** level 11 gets 1 demon lord
     ** level 12 gets 2 demon lords

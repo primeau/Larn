@@ -2,18 +2,18 @@
 
 'use strict';
 
-var scoreBoard = [];
+let scoreBoard = [];
 const EXTRA_VERSION = 0;
 const EXTRA_BUILD = 1;
 const EXTRA_RMST = 2;
 const EXTRA_GTIME = 3;
 
 
-var LocalScore = function () {
+let LocalScore = function () {
   this.createdAt = Date.now();
   this.ularn = ULARN;
   this.winner = lastmonst == DIED_WINNER;
-  var winBonus = this.winner ? 100000 * getDifficulty() : 0;
+  let winBonus = this.winner ? 100000 * getDifficulty() : 0;
   this.who = logname; /* the name of the character */
   this.gender = player ? player.gender : `Male`; /* ularn gender */
   this.character = player ? player.char_picked : `Adventurer`; /* ularn character class */
@@ -45,7 +45,7 @@ var LocalScore = function () {
 
   // START HACK -- we don't want to save the level
   if (player) {
-    var x = player.level;
+    const x = player.level;
     player.level = null;
     this.player = JSON.stringify(player);
     player.level = x;
@@ -89,8 +89,9 @@ function getStatString(score, addDate) {
 
   if (!score) return `no info`;
 
-  var stats = ``;
+  let stats = ``;
   let linkText = ``;
+  let scoreGameID = score.gameID.split(`+`)[0];
 
   if (addDate) {
     try {
@@ -98,7 +99,7 @@ function getStatString(score, addDate) {
       if (build) {
         build = build.substr(0, 3);
         if (Number(build) >= 481) {
-          linkText = `https://larn.org/larn/tv/?gameid=${score.gameID.split(`+`)[0]}`;
+          linkText = `https://larn.org/larn/tv/?gameid=${scoreGameID}`;
           stats += `<b><a href='${linkText}'>Watch this game</a></b>\n\n`;
         }
       }
@@ -108,7 +109,7 @@ function getStatString(score, addDate) {
     stats += `Date: ${new Date(score.createdAt)}\n`;
   }
 
-  var tempPlayer;
+  let tempPlayer;
   if (score.player.inventory) {
     tempPlayer = loadPlayer(score.player);
   } else {
@@ -130,7 +131,7 @@ function getStatString(score, addDate) {
   }
 
   if (score.gamelog) {
-    var logString = score.gamelog.join('\n').trim();
+    let logString = score.gamelog.join('\n').trim();
     if (logString.includes(`Replay`) && !logString.endsWith(`>`)) logString += `>`; // bugfix for missing > in some games
     stats += `Final Moments: \n${logString}\n\n`;
   }
@@ -144,8 +145,8 @@ function getStatString(score, addDate) {
   }
 
     // filter out tv urls for current gotw games
-  if (GOTW && linkText) {
-    stats = stats.replaceAll(linkText, 'https://larn.org/larn/tv/?gameid=dQw4w9WgXcQ');
+  if (GOTW) {
+    stats = stats.replaceAll(scoreGameID, 'dQw4w9WgXcQ');
   }
   
   return stats;
@@ -191,9 +192,9 @@ function sortScore(a, b) {
 
 
 
-var winners = [];
-var losers = [];
-var scoreIndex = 0;
+let winners = [];
+let losers = [];
+let scoreIndex = 0;
 
 
 const MAX_SCORES_PER_PAGE = 18;
@@ -242,7 +243,7 @@ async function dbQueryHighScores(newScore, showWinners, showLosers) {
     }
   } catch (error) {
     console.error('Failed to get highscores from Cloudflare:', error);
-    let msg = `Error loading global scoreboard, showing local scoreboard`;
+    const msg = `Error loading global scoreboard, showing local scoreboard`;
     showLocalScoreBoard(newScore, showWinners, showLosers, 0, msg);
   }
 }
@@ -307,9 +308,9 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
     lprc(`<b>This game</b> (Click score for more info)`);
     lprc(`<hr>`);
     if (newScore.winner) {
-      printWithoutSpacesAtTheEnd(ULARN ? WINNER_HEADER_ULARN : WINNER_HEADER_LARN);
+      lprcat(ULARN ? WINNER_HEADER_ULARN : WINNER_HEADER_LARN);
     } else {
-      printWithoutSpacesAtTheEnd(ULARN ? VISITOR_HEADER_ULARN : VISITOR_HEADER_LARN);
+      lprcat(ULARN ? VISITOR_HEADER_ULARN : VISITOR_HEADER_LARN);
     }
     lprc(`\n`);
     printScore(newScore);
@@ -318,11 +319,11 @@ function showScores(newScore, local, showWinners, showLosers, offset) {
 
   if (winners.length != 0 || losers.length != 0) {
     if (showWinners) {
-      printScoreBoard(winners, newScore, ULARN ? WINNER_HEADER_ULARN : WINNER_HEADER_LARN, printScore, offset);
+      printScoreBoard(winners, ULARN ? WINNER_HEADER_ULARN : WINNER_HEADER_LARN, offset);
       lprc(`\n`);
     }
     if (showLosers) {
-      printScoreBoard(losers, newScore, ULARN ? VISITOR_HEADER_ULARN : VISITOR_HEADER_LARN, printScore, offset);
+      printScoreBoard(losers, ULARN ? VISITOR_HEADER_ULARN : VISITOR_HEADER_LARN, offset);
     }
   } else {
     lprcat(`\n  The scoreboard is empty`);
@@ -359,54 +360,37 @@ function printScore(p) {
       score = `${padString(Number(p.score).toLocaleString(), 10)}   ${padString(`` + p.hardlev, 10)}   ${padString(p.who, -25)} ${p.what} on ${p.level}`;
     }
   }
-  var endcode = GAMEOVER ? `<br>` : ``;
+  const endcode = GAMEOVER ? `<br>` : ``;
 
-  var isNewScore = gameID ? p.gameID == gameID : false;
-  var addplus = isNewScore && dofs ? `+` : ``;
+  const isNewScore = gameID ? p.gameID == gameID : false;
+  const addplus = isNewScore && dofs ? `+` : ``;
+
+  if (isNewScore) {
+    score = `<b>${score}</b>`;
+  }
+
   // console.log(`score.js`, dofs, gameID, p.gameID, isNewScore, addplus, `${p.gameID}${addplus}`);
-  lprc(`<a href='javascript:dbQueryLoadGame("${p.gameID}${addplus}", ${!navigator.onLine}, ${p.winner})'>`);
-  printWithoutSpacesAtTheEnd(`${score}</a>${endcode}`);
+  lprcat(`<a href='javascript:dbQueryLoadGame("${p.gameID}${addplus}", ${!navigator.onLine}, ${p.winner})'>${score}</a>${endcode}`);
   if (!GAMEOVER) lprc(`\n`);
 }
 
 
 
-function printWithoutSpacesAtTheEnd(inputString) {
-  for (let index = 0; index < Math.min(78, inputString.length); index++) {
-    const c = inputString[index];
-    lprc(c);
-  }
-  lprc(inputString.substr(78));
-}
+function printScoreBoard(board, header, offset) {
 
-
-
-function printScoreBoard(board, newScore, header, printout, offset) {
-
-  printWithoutSpacesAtTheEnd(header);
+  lprcat(header);
   lprc(`\n`);
 
-  var i = GAMEOVER ? 0 : scoreIndex - offset;
-  for (var count = 0; i < board.length; i++, scoreIndex++) {
+  let i = GAMEOVER ? 0 : scoreIndex - offset;
+  for (let count = 0; i < board.length; i++, scoreIndex++) {
 
     if (!GAMEOVER && ++count > MAX_SCORES_PER_PAGE) {
       break;
     }
 
-    var p = board[i];
+    const p = board[i];
     //console.log(i + ` ` + p.gameID + ` ` + p.who + `, ` + p.score);
-
-    var isNewScore = newScore ? p.gameID == newScore.gameID : false;
-
-    if (isNewScore) {
-      lprc(START_BOLD);
-    }
-
-    printout(p);
-
-    if (isNewScore) {
-      lprc(END_BOLD);
-    }
+    printScore(p);
 
   } // end for
 
@@ -424,7 +408,7 @@ async function dbQueryLoadGame(gameID, local, winner) {
   } else {
     if (local) {
       // read from local scoreboard
-      var board = winner ? localStorageGetObject('winners', []) : localStorageGetObject('losers', []);
+      const board = winner ? localStorageGetObject('winners', []) : localStorageGetObject('losers', []);
       const scoreInfo = getHighScore(board, gameID);
       stats = getStatString(scoreInfo, true);
     } else {
@@ -486,8 +470,8 @@ function getHighScore(scoreboard, gameID) {
 
 
 function isHighestScoreForPlayer(scoreboard, score) {
-  for (var i = 0; i < scoreboard.length; i++) {
-    var tmp = scoreboard[i];
+  for (let i = 0; i < scoreboard.length; i++) {
+    const tmp = scoreboard[i];
     if (tmp.who == score.who && tmp.winner == score.winner) {
       if (sortScore(tmp, score) < 0) return false;
     }
@@ -537,11 +521,11 @@ function paytaxes(x) {
 
 
 function getWhyDead(reason) {
-  var cause = ``;
+  let cause = ``;
   if (typeof reason === `number`) {
     cause += DEATH_REASONS.get(reason);
   } else {
-    let n = (/^[aeiouAEIOU]/.test(lastmonst)) ? `n` : ``;
+    const n = (/^[aeiouAEIOU]/.test(lastmonst)) ? `n` : ``;
     cause += `killed by a${n} ${lastmonst}`;
   }
   return cause;
@@ -550,7 +534,7 @@ function getWhyDead(reason) {
 
 
 function canProtect(reason) {
-  var protect = true;
+  let protect = true;
   if (typeof reason === `number`) {
     // do nothing
   } else {
@@ -591,7 +575,7 @@ async function died(reason, slain) {
     }
   }
 
-  var winner = reason === DIED_WINNER;
+  const winner = reason === DIED_WINNER;
   player.winner = winner;
   player.reason = reason;
   GAMEOVER = true;
@@ -618,18 +602,17 @@ async function died(reason, slain) {
 
   // show scoreboard unless they saved the game
   if (reason != DIED_SAVED_GAME) {
-    var printFunc = mazeMode ? updateLog : lprcat;
+    const printFunc = mazeMode ? updateLog : lprcat;
     lastmonst = reason; // for scoreboard
 
-    let extraNL = (printFunc == lprcat) ? `\n` : ``;
+    const extraNL = (printFunc == lprcat) ? `\n` : ``;
     try {
       if (navigator.onLine && ENABLE_RECORDING && reason != DIED_RETRIED_GOTW) {
-        let linkText = window.location.href.split(`?`)[0];
-        linkText = linkText.split('/larn.html')[0] + `/tv/?gameid=${gameID}`;
+        const linkText = `https://larn.org/larn/tv/?gameid=${gameID}`;
         if (amiga_mode) {
           printFunc(`Replay Link: ${linkText}${extraNL}${extraNL}`);
         } else {
-          printFunc(`Replay Link: <b><a href='${linkText}'>${linkText}</a></b>${extraNL}${extraNL}`);
+          printFunc(`Replay Link: <a href='${linkText}'><b>${linkText}</b></a>${extraNL}${extraNL}`);
         }
       }
     } catch (error) {
