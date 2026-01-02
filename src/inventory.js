@@ -9,12 +9,12 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
 
   if (!p) p = player;
 
-  var buttons = [];
+  let buttons = [];
 
   if (callback) nomove = 1; // HACK callback is null when called by game_stats()
 
   if (printScreen) setMazeMode(false);
-  var srcount = 0;
+  let srcount = 0;
 
   if (callback) setCharCallback(callback);
 
@@ -30,25 +30,25 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
     }
   }
 
-  var widest = 40;
-  var wrap = 23;
+  let widest = 40;
+  let wrap = 23;
   wrap -= show_time ? 1 : 0;
 
-  var inventory = p.inventory.slice();
+  let inventory = p.inventory.slice();
   inventory.sort(inv_sort);
 
-  for (var k = 0; k < inventory.length; k++) {
-    var item = inventory[k];
+  for (let k = 0; k < inventory.length; k++) {
+    let item = inventory[k];
     if (inv_filter(item)) {
       srcount++;
       if (srcount <= wrap) {
         if (printScreen) cltoeoln();
         widest = Math.max(widest, item.toString().length + 5);
       } else {
-        var extra = show_gold ? 1 : 0;
+        let extra = show_gold ? 1 : 0;
         if (printScreen) cursor(widest, srcount % wrap + extra);
       }
-      var foo = p.inventory.indexOf(item);
+      let foo = p.inventory.indexOf(item);
       if (printScreen) lprcat(`${getCharFromIndex(foo)}) ${item}\n`);
       buttons.push([getCharFromIndex(foo), item]);
     }
@@ -207,8 +207,8 @@ function take(item) {
   if (canTake(item) == false) {
     return false;
   }
-  var limit = maxcarry();
-  for (var i = 0; i < limit; i++) {
+  const limit = maxcarry();
+  for (let i = 0; i < limit; i++) {
     if (!player.inventory[i]) {
       if (mazeMode) {
         updateLog(`  You pick up:`);
@@ -217,7 +217,6 @@ function take(item) {
       if (item.matches(OPOTION) && item.arg == 21) player.hasPickedUpPotion = true;
       if (item.matches(OLARNEYE)) player.hasPickedUpEye = true;
       debug(`take(): ` + item);
-      limit = 0;
       player.adjustcvalues(item, true);
       player.inventory[i] = item;
       return true;
@@ -234,7 +233,6 @@ function take(item) {
  */
 function drop_object(index) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
-  var pitflag = itemAt(player.x, player.y).matches(OPIT);
   if (index == '*' || index == ' ' || index == 'I') {
     if (mazeMode) {
       showinventory(true, drop_object, showall, false, false, true);
@@ -253,10 +251,12 @@ function drop_object(index) {
     return 1;
   }
 
-  var useindex = getIndexFromChar(index);
-  var item = player.inventory[useindex];
+  const useindex = getIndexFromChar(index);
+  const inventoryItem = player.inventory[useindex];
+  const item = itemAt(player.x, player.y);
+  const pitflag = item.matches(OPIT);
 
-  if (!item) {
+  if (!inventoryItem) {
     if (useindex >= 0 && useindex < 26) {
       updateLog(`  You don't have item ${index}!`);
     }
@@ -268,7 +268,7 @@ function drop_object(index) {
     return 1;
   }
 
-  if (!pitflag && isItemAt(player.x, player.y)) {
+  if (!pitflag && !item.matches(OEMPTY)) {
     beep();
     updateLog(`  There's something here already${period}`);
     setMazeMode(true);
@@ -278,26 +278,26 @@ function drop_object(index) {
   // if (player.y == MAXY - 1 && player.x == 33) return (1); /* not in entrance */
 
   updateLog(`  You drop: `);
-  updateLog(`${getCharFromIndex(useindex)}) ${item}`);
+  updateLog(`${getCharFromIndex(useindex)}) ${inventoryItem}`);
   // show3(k); /* show what item you dropped*/
 
   player.inventory[useindex] = null;
   if (pitflag) {
     updateLog(`  It disappears down the pit${period}`);
   } else {
-    setItem(player.x, player.y, item);
+    setItem(player.x, player.y, inventoryItem);
   }
 
-  if (player.WIELD === item) {
+  if (player.WIELD === inventoryItem) {
     player.WIELD = null;
   }
-  if (player.WEAR === item) {
+  if (player.WEAR === inventoryItem) {
     player.WEAR = null;
   }
-  if (player.SHIELD === item) {
+  if (player.SHIELD === inventoryItem) {
     player.SHIELD = null;
   }
-  player.adjustcvalues(item, false);
+  player.adjustcvalues(inventoryItem, false);
 
   setMazeMode(true);
   return 1;
@@ -307,7 +307,6 @@ function drop_object(index) {
 
 function drop_object_gold(amount) {
   dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
-  var pitflag = itemAt(player.x, player.y).matches(OPIT);
 
   if (amount == ESC) {
     appendLog(` cancelled${period}`);
@@ -329,8 +328,10 @@ function drop_object_gold(amount) {
   /* 12.4.5
   Allow dropping gold on top of gold
   */
-  var goldExists = itemAt(player.x, player.y).matches(OGOLDPILE);
-  if (!pitflag && isItemAt(player.x, player.y) && !goldExists) {
+ const item = itemAt(player.x, player.y);
+ const pitflag = item.matches(OPIT);
+ const goldExists = item.matches(OGOLDPILE);
+  if (!pitflag && !item.matches(OEMPTY) && !goldExists) {
     beep();
     updateLog(`  There's something here already${period}`);
     return 1;
@@ -341,7 +342,7 @@ function drop_object_gold(amount) {
   if (pitflag) {
     updateLog(`  The gold disappears down the pit${period}`);
   } else {
-    var floorGoldAmount = 0;
+    let floorGoldAmount = 0;
     if (goldExists) {
       floorGoldAmount = itemAt(player.x, player.y).arg;
     }
@@ -367,8 +368,8 @@ function maxcarry(p) {
     returns 1 if pockets are full, else 0
 */
 function pocketfull() {
-  var limit = maxcarry();
-  for (var i = 0; i < limit; i++) {
+  const limit = maxcarry();
+  for (let i = 0; i < limit; i++) {
     if (!player.inventory[i]) {
       return (false);
     }
@@ -383,8 +384,8 @@ function pocketfull() {
     returns true if pockets are empty, else false
 */
 function pocketempty() {
-  var limit = maxcarry();
-  for (var i = 0; i < limit; i++) {
+  const limit = maxcarry();
+  for (let i = 0; i < limit; i++) {
     if (player.inventory[i]) {
       return (false);
     }

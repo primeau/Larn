@@ -37,7 +37,8 @@ function newsphere(x, y, dir, life, lev) {
   var monster = monsterAt(x, y);
 
   if (!isCarrying(OSPHTALISMAN)) { // talisman of the sphere negates many things
-    if (monster && monster.isDemon()) /* demons dispel spheres */ {
+    const spherelevel = ULARN ? 0 : 4;
+    if (monster && monster.arg >= DEMONLORD + spherelevel) /* demons dispel spheres */ {
       show1cell(x, y); /* show the demon (ha ha) */
       cursors();
       updateLog(`The ${monster} dispels the sphere!`);
@@ -88,7 +89,7 @@ function newsphere(x, y, dir, life, lev) {
     killMonster(x,y);
   }
 
-  player.level.know[x][y] = 1;
+  setKnow(x, y, HAVESEEN);
   show1cell(x, y); /* show the new sphere */
 
   /* one more sphere in the world */
@@ -115,8 +116,7 @@ function rmsphere(x, y) {
       /* is sphere on this level? */
       if (x == sp.x && y == sp.y) /* locate sphere at this location */ {
         setItem(x, y, OEMPTY);
-        // player.level.monsters[x][y] = null;
-        player.level.know[x][y] = 1;
+        setKnow(x, y, HAVESEEN);
         show1cell(x, y); /* show the now missing sphere */
         spheres.splice(i, 1); // remove the sphere from the list
         //break;

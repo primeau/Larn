@@ -1,11 +1,5 @@
 'use strict';
 
-
-
-
-
-
-
 var Monster = function Monster(char, desc, level, armorclass, damage, attack, intelligence, gold, hitpoints, experience, arg, awake, moved) {
   this.arg = arg;
 
@@ -61,6 +55,61 @@ function createMonster(monst) {
   }
 
   return monster;
+}
+
+
+
+
+function monsterAt(x, y) {
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+    debug(`monsterAt(): bad args`, x, y);
+    return null;
+  }
+  return LEVELS[level].monsters[x][y];
+}
+
+
+
+function setMonster(x, y, monster, placement) {
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+    debug(`setMonster(): bad args`, x, y, monster);
+    return null;
+  }
+
+  if (!placement) {
+    placement = OVERWRITE;
+  }
+  
+  if (placement === SCATTER || placement === EXACT_OR_SCATTER) {
+    let dx, dy;
+    let ok = (placement === EXACT_OR_SCATTER) ? cgood(x, y, false, true) : false;
+    for (let k = rnd(8), i = -8; i < 0 && !ok; i++, k++) /* choose direction, then try all */ {
+      if (k > 8) k = 1; /* wraparound the diroff arrays */
+      dx = x + diroffx[k];
+      dy = y + diroffy[k];
+      if (cgood(dx, dy, false, true)) {
+        x = dx; /* if we can create here */
+        y = dy;
+        ok = true;
+      }
+    }
+    if (!ok) {
+      debug(`setMonster(): placement`, placement, ok, x, y, monster);
+      return null;
+    }
+  }
+
+  if (monster instanceof Monster) {
+    LEVELS[level].monsters[x][y] = monster;
+    // debug(`setMonster(): set Monster at x=${x} y=${y}`);
+  } else if (monster) {
+    LEVELS[level].monsters[x][y] = createMonster(monster);
+    // debug(`setMonster(): set monster at x=${x} y=${y}`);
+  } else {
+    LEVELS[level].monsters[x][y] = null;
+    // debug(`setMonster(): removed monster at x=${x} y=${y}`);
+  }
+  return LEVELS[level].monsters[x][y];
 }
 
 
@@ -186,7 +235,7 @@ Monster.prototype = {
   dropInventory: function(x, y) {
     if (!this.inventory) this.initInventory(); // TODO for old savegame -- delete june 2021
     while (this.inventory.length > 0) {
-      dropItem(x, y, this.inventory.pop());
+      setItem(x, y, this.inventory.pop(), EXACT_OR_SCATTER);
     }
   },
 
@@ -476,30 +525,6 @@ function newsword() {
 
 
 
-function monsterAt(x, y) {
-  if (x == null || y == null) {
-    return null;
-  }
-  if (x < 0 || x >= MAXX) {
-    return null;
-  }
-  if (y < 0 || y >= MAXY) {
-    return null;
-  }
-  var monster = player.level.monsters[x][y];
-  return monster;
-}
-
-
-
-function getMonster(direction) {
-  var x = player.x + diroffx[direction];
-  var y = player.y + diroffy[direction];
-  return monsterAt(x, y);
-}
-
-
-
 /*
  *  createmonster(monstno)      Function to create a monster next to the player
  *      int monstno;
@@ -507,7 +532,7 @@ function getMonster(direction) {
  *  Enter with the monster number (1 to MAXMONST+8)
  *  Returns no value.
  */
-function createmonster(mon, x, y) {
+function createmonster(mon) {
   if (DEBUG_NO_MONSTERS) return;
 
   if (mon < 1 || mon > monsterlist.length - 1) /* check for monster number out of bounds */ {
@@ -516,32 +541,10 @@ function createmonster(mon, x, y) {
   }
   while (isGenocided(mon) && mon < monsterlist.length - 1) mon++; /* genocided? */
 
-  if (!x) x = player.x;
-  if (!y) y = player.y;
+  let monster = setMonster(player.x, player.y, mon, SCATTER);
 
-  let dx = x;
-  let dy = y;
-
-  let onPlayer = x == player.x && y == player.y;
-  var oktocreate = (x != null && y != null && !onPlayer && cgood(x, y, false, true));
-  var i = oktocreate ? 0 : -8;
-
-  /* choose direction, then try all */
-  for (var k = rnd(8); i < 0; i++, k++) {
-    if (k > 8) k = 1; /* wraparound the diroff arrays */
-    dx = x + diroffx[k];
-    dy = y + diroffy[k];
-    if (cgood(dx, dy, false, true)) /* if we can create here */ {
-      oktocreate = true;
-      i = 0;
-    }
-  }
-
-  if (oktocreate) {
-    var monster = createMonster(mon);
-    if (!monster) return;
-    player.level.monsters[dx][dy] = monster;
-    player.level.know[dx][dy] &= ~KNOWHERE;
+  if (monster) {
+    // setKnow(dx, dy, getKnow(dx, dy) & ~KNOWHERE);
     monster.awake = false;
     switch (mon) {
       case ROTHE:
@@ -550,7 +553,8 @@ function createmonster(mon, x, y) {
         monster.awake = true;
     }
   } else {
-    debug(`failed to createmonst ${mon}, ${dx},${dy}`)
+    // debug(`failed to createmonst ${mon}, ${dx},${dy}`)
+    debug(`failed to createmonst ${mon}`)
   }
 }
 
@@ -575,15 +579,17 @@ function cgood(x, y, itm, monst) {
      - closed door
      - dungeon entrance
   */
-  var item = itemAt(x, y);
 
-  if (((y < 0) || (y > MAXY - 1) || (x < 0) || (x > MAXX - 1)) ||
-    (!item) ||
-    (item.matches(OWALL)) ||
-    (item.matches(OCLOSEDDOOR)) ||
-    (item.matches(OHOMEENTRANCE))) {
-      return false;
-    }
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) return;
+
+  const item = itemAt(x, y);
+
+  if ((!item) ||
+      (item.matches(OWALL)) ||
+      (item.matches(OCLOSEDDOOR)) ||
+      (item.matches(OHOMEENTRANCE))) {
+    return false;
+  }
 
   /* if checking for an item, return False if one there already */
   if (itm && !item.matches(OEMPTY)) {
@@ -619,28 +625,9 @@ function cgood(x, y, itm, monst) {
 
 
 
-function dropItemNearPlayer(item) {
-  dropItem(player.x, player.y, item, true);
-}
-
-
-
-function dropItem(x, y, item, scatter) {
-  if (!scatter && cgood(x, y, true, false)) {
-    setItem(x, y, item);
-    return;
-  } else {
-    let dx, dy;
-    for (let k = rnd(8), i = -8; i < 0; i++, k++) /* choose direction, then try all */ {
-      if (k > 8) k = 1; /* wraparound the diroff arrays */
-      dx = x + diroffx[k];
-      dy = y + diroffy[k];
-      if (cgood(dx, dy, true, false)) /* if we can create here */ {
-        setItem(dx, dy, item);
-        return;
-      }
-    }
-  }
+function dropItemNearPlayer(item, placement) {
+  if (!placement) placement = EXACT_OR_SCATTER;
+  setItem(player.x, player.y, item, placement);
 }
 
 
@@ -654,7 +641,7 @@ function dropItem(x, y, item, scatter) {
  */
 function hitplayer(x, y) {
 
-  var monster = player.level.monsters[x][y];
+  let monster = monsterAt(x, y);
   if (!monster) {
     return;
   }
@@ -687,7 +674,7 @@ function hitplayer(x, y) {
     }
   }
 
-  if ((player.level.know[x][y] & KNOWHERE) == 0)
+  if ((getKnow(x, y) & KNOWHERE) == 0)
     show1cell(x, y);
 
   var bias = getDifficulty() + 1;
@@ -776,7 +763,7 @@ function hitmonster(x, y) {
 
   //vxy( & x, & y); /* verify coordinates are within range */
 
-  var monster = player.level.monsters[x][y];
+  var monster = monsterAt(x, y);
   var weapon = player.WIELD;
 
   if (!monster) {
@@ -855,15 +842,15 @@ function hitmonster(x, y) {
 
   if (!ULARN && monster.matches(VAMPIRE)) {
     if (monster.hitpoints > 0 && monster.hitpoints < 25) {
-      player.level.monsters[x][y] = createMonster(BAT);
-      player.level.know[x][y] = 0;
+      setMonster(x, y, BAT);
+      setKnow(x, y, KNOWNOT);
     }
   }
 
   if (ULARN && monster.matches(METAMORPH)) {
     if (monster.hitpoints > 0 && monster.hitpoints < 25) {
-      player.level.monsters[x][y] = createMonster(BRONZEDRAGON + rund(9));
-      player.level.know[x][y] = 0;
+      setMonster(x, y, BRONZEDRAGON + rund(9));
+      setKnow(x, y, KNOWNOT);
     }
   }
 
@@ -883,8 +870,7 @@ function hitmonster(x, y) {
  *  Called by hitmonster(x,y)
  */
 function hitm(x, y, damage) {
-  var monster = player.level.monsters[x][y];
-  var fulldamage = damage; /* save initial damage so we can return it */
+  let fulldamage = damage; /* save initial damage so we can return it */
   if (player.HALFDAM > 0) damage >>= 1; /* if half damage curse adjust damage points */
   if (damage <= 0) {
     damage = 1;
@@ -892,6 +878,7 @@ function hitm(x, y, damage) {
   }
   lasthx = x;
   lasthy = y;
+  const monster = monsterAt(x, y);
   monster.awake = true; /* make sure hitting monst breaks stealth condition */
   player.updateHoldMonst(-player.HOLDMONST); /* hit a monster breaks hold monster spell  */
 
@@ -1107,7 +1094,7 @@ function spattack(monster, attack, xx, yy) {
         player.loselevel();
         player.losemspells(2);
       }
-      // beep();
+      beep();
       return 0;
 
     case 7:
@@ -1223,10 +1210,10 @@ function teleportMonster(x, y) {
 
 
 function killMonster(x, y) {
-  player.level.monsters[x][y] = null;
+  setMonster(x, y, null);
   if (lasthx == x && lasthy == y) {
     lasthx = 0;
     lasthy = 0;
   }
-  player.level.know[x][y] &= ~KNOWHERE;
+  setKnow(x, y, getKnow(x, y) & ~KNOWHERE);
 }

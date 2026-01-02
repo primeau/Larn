@@ -57,7 +57,7 @@ function act_drink_fountain() {
   if (rnd(12) < 3) {
     updateLog(`  The fountains bubbling slowly quiets${period}`);
     setItem(player.x, player.y, ODEADFOUNTAIN); /* dead fountain */
-    player.level.know[player.x][player.y] = 0;
+    setKnow(player.x, player.y, KNOWNOT);
   }
 }
 
@@ -95,8 +95,8 @@ function act_wash_fountain() {
     }
 
   } else if (rnd(100) < 31) {
-    if (ULARN) updateLog(`  This water seems to be hard water! The dirt didn't come off!`);
-    else updateLog(`  This water needs soap -- the dirt didn't come off${period}`);
+    if (ULARN) updateLog(`  This water needs soap -- the dirt didn't come off${period}`);
+    else updateLog(`  This water seems to be hard water! The dirt didn't come off!`);
   } else if (rnd(100) < 34 && !isGenocided(WATERLORD)) {
     createmonster(WATERLORD); /*    make water lord     */
   } else {
@@ -109,7 +109,7 @@ function act_wash_fountain() {
   if (rnd(12) < 3) {
     updateLog(`  The fountains bubbling slowly quiets${period}`);
     setItem(player.x, player.y, ODEADFOUNTAIN); /* dead fountain */
-    player.level.know[player.x][player.y] = 0;
+    setKnow(player.x, player.y, KNOWNOT);
   }
 }
 

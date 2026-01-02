@@ -4,6 +4,13 @@ JS U/Larn 12.5.3
 
 1. [new] Added an 'autopray' key to speed up altar interactions.
 
+1. [new] Clicking on a tile will tell you what's there.
+
+1. [new] Items our Hero can't afford to buy are dimmed out.
+
+1. [fix] Smart and scared monsters are now able to attack if our Hero is on the
+outer edge of the maze.
+
 
 JS U/Larn 12.5.2
 ----------------
@@ -56,8 +63,7 @@ of the dungeon.
 1. [fix] Jonathon Kocz fixed the potion of fire resistance, which has
 apparently never worked.
 
-1. [fix] Some missile spells could insta-kill demons when our Hero was wielding 
-Slayer.
+1. [fix] Some missile spells could insta-kill demons when our Hero was wielding Slayer.
 
 1. [fix] Some spells could behead monsters when our Hero was wielding the 
 Vorpal Blade.

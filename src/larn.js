@@ -39,7 +39,8 @@ async function play() {
     apiVersion: '2015-03-31'
   });
 
-  document.addEventListener('click', onMouseClick);
+  // document.addEventListener('click', onMouseClick);
+  document.getElementById('LARN').addEventListener('click', onMouseClick);
   window.addEventListener('resize', onResize);
 
   // WORKER STEP 0 - initialization

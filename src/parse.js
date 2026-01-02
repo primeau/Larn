@@ -116,7 +116,7 @@ function parseDirectionKeys(key) {
     dir = 6;
   } else if (key == 9 || key == 'u' || key == 'U' || key.indexOf('pageup') >= 0) { // UP,RIGHT
     dir = 5;
-  } else if (key == 8 || key == 'k' || key == 'K' || key.indexOf('up') >= 0) { // NORTH
+  } else if (key == 8 || key == 'k' || key == 'K' || key.indexOf('up') >= 0) { // UP
     dir = 3;
   } else if (key == 4 || key == 'h' || key == 'H' || key.indexOf('left') >= 0) { // LEFT
     dir = 4;
@@ -124,7 +124,7 @@ function parseDirectionKeys(key) {
     dir = 2;
   } else if (key == 1 || key == 'b' || key == 'B' || key.indexOf('end') >= 0) { // DOWN,LEFT
     dir = 8;
-  } else if (key == 3 || key == 'n' || key == 'N' || key.indexOf('pagedown') >= 0) { // DOWN, RIGHT
+  } else if (key == 3 || key == 'n' || key == 'N' || key.indexOf('pagedown') >= 0) { // DOWN,RIGHT
     dir = 7;
   } else if (key == 2 || key == 'j' || key == 'J' || key.indexOf('down') >= 0) { // DOWN
     dir = 1;
@@ -188,6 +188,11 @@ function parse(e, key) {
 
   var item = itemAt(player.x, player.y);
 
+  if (!item) {
+    doRollbar(ROLLBAR_ERROR, `parse(): null item at player position`, `key=${key} (${player.x},${player.y}), ${GAMEOVER}, ${game_started}, ${mazeMode}, ${napping}, ${level}, ${gtime}`);
+    nomove = 1;
+    return;
+  }
 
 
   //
@@ -364,8 +369,8 @@ function parse(e, key) {
         readbook(item);
         forget();
       } else if (item.matches(OSCROLL)) {
-        forget();
         read_scroll(item);
+        forget();
       } else {
         updateLog(`What do you want to read [<b>space</b> to view] ? `);
         setCharCallback(act_read_something);

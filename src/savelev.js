@@ -1,12 +1,6 @@
 'use strict';
 
 function saveGame(isCheckPoint) {
-  /*
-     START HACK to not store player.level
-  */
-  var x = player.level;
-  player.level = null;
-
   let error;
   let state = new GameState(true);
 
@@ -32,11 +26,6 @@ function saveGame(isCheckPoint) {
   }
 
   let bytes = JSON.stringify(state);
-
-  /*
-     END HACK to not store player.level
-  */
-  player.level = x;
 
   if (!isCheckPoint) {
     if (!error) {
@@ -67,11 +56,6 @@ function loadSavedGame(savedState, isCheckPoint) {
     2) stringify current state that was loaded from saved state
     3) compare
   */
-
-  // we don't save player.level in savegames, so remove it until later
-  let x = player.level;
-  player.level = null;
-
   let savedStateString = JSON.stringify(savedState);
   let currentState = new GameState(false);
   let currentStateString = JSON.stringify(currentState);
@@ -79,9 +63,6 @@ function loadSavedGame(savedState, isCheckPoint) {
   let difftool = new diff_match_patch();
   let diff = difftool.diff_main(savedStateString, currentStateString);
   difftool.diff_cleanupSemantic(diff);
-
-  // reload player.level
-  player.level = x;
 
   // failed integrity check
   if (diff.length != 1) {
@@ -98,7 +79,6 @@ function loadSavedGame(savedState, isCheckPoint) {
         }
         errorDetail += `${index}: ${fragment}\n`;
       }
-      console.log(errorMessage, errorDetail);
       doRollbar(ROLLBAR_ERROR, errorMessage, errorDetail);
     } catch (error) {
       console.log(`failed integrity check: caught: ${error}`);
@@ -125,16 +105,11 @@ function loadSavedGame(savedState, isCheckPoint) {
 
 
 function loadState(state) {
-  var savedLevels = state.LEVELS;
-  loadLevels(savedLevels);
+  loadLevels(state.LEVELS);
 
-  var savedLog = state.LOG;
-  LOG = savedLog;
+  LOG = state.LOG;
 
-  var savedPlayer = state.player;
-  player = loadPlayer(savedPlayer);
-
-  player.level = LEVELS[state.level];
+  player = loadPlayer(state.player);
 
   setRecordingInfo(state.recording);
 
@@ -184,17 +159,17 @@ function loadState(state) {
 
 
 function loadLevels(savedLevels) {
-  for (var lev = 0; lev < MAXLEVEL + MAXVLEVEL; lev++) {
+  for (let lev = 0; lev < MAXLEVEL + MAXVLEVEL; lev++) {
     if (!savedLevels[lev]) {
       LEVELS[lev] = null;
       continue;
     }
     debug(`loading: ${lev}`);
-    var tempLev = savedLevels[lev];
-    var items = initGrid(MAXX, MAXY);
-    var monsters = initGrid(MAXX, MAXY);
-    for (var x = 0; x < MAXX; x++) {
-      for (var y = 0; y < MAXY; y++) {
+    let tempLev = savedLevels[lev];
+    let items = initGrid(MAXX, MAXY);
+    let monsters = initGrid(MAXX, MAXY);
+    for (let x = 0; x < MAXX; x++) {
+      for (let y = 0; y < MAXY; y++) {
         items[x][y] = createObject(tempLev.items[x][y]);
         monsters[x][y] = createMonster(tempLev.monsters[x][y]);
       }
@@ -209,14 +184,14 @@ function loadLevels(savedLevels) {
 
 
 function loadPlayer(saved) {
-  var newPlayer = new Player();
+  let newPlayer = new Player();
 
   newPlayer.WEAR = null;
   newPlayer.WIELD = null;
   newPlayer.SHIELD = null;
 
-  for (var i = 0; i < 26; i++) {
-    var item = saved.inventory[i];
+  for (let i = 0; i < 26; i++) {
+    let item = saved.inventory[i];
     newPlayer.inventory[i] = item ? createObject(item) : null;
     if (!item) continue;
     if (saved.SHIELD && saved.SHIELD.id == item.id && saved.SHIELD.arg == item.arg) newPlayer.SHIELD = newPlayer.inventory[i];

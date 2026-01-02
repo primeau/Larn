@@ -314,12 +314,12 @@ function createObject(item, arg) {
   if (newItem.matches(OBOOK)) {
     // if arg < 100 then this is the level of the book
     if (newItem.arg < 100) {
-      debug(`createObject(): creating random book for level ${newItem.arg}`);
+      // debug(`createObject(): creating random book for level ${newItem.arg}`);
       const bookLevel = newItem.arg;
       const spellNum = getSpellFromLevel(newItem.arg);
       newItem.arg = 100 * bookLevel + spellNum;
     }
-    debug(`createObject(): creating book: ${newItem.arg}, ${spelcode[newItem.arg % 100]}`);
+    // debug(`createObject(): creating book: ${newItem.arg}, ${spelcode[newItem.arg % 100]}`);
   }
 
   return newItem;
@@ -505,47 +505,41 @@ const OCOKE = new DungeonObject(99, `:`, `:`, `:`, `snow`, BOLD, `some cocaine`,
 
 
 
-function getItemDir(direction) {
-  var x = player.x + diroffx[direction];
-  var y = player.y + diroffy[direction];
-  return itemAt(x, y);
-}
-
-
-
 function itemAt(x, y) {
   if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
     return null;
   }
 
-  if (!player.level) {
-    doRollbar(ROLLBAR_ERROR, `itemAt(): null player.level`, x, y, GAMEOVER, game_started, mazeMode, napping, level, gtime);
+  if (!LEVELS[level]) {
+    doRollbar(ROLLBAR_ERROR, `itemAt(): null LEVELS[level]`, `${x}, ${y}, (${player.x},${player.y}), ${GAMEOVER}, ${game_started}, ${mazeMode}, ${napping}, ${level}, ${gtime}`);
     return null;
   }
 
-  if (!player.level.items) {
-    doRollbar(ROLLBAR_ERROR, `itemAt(): null player.level.items`, x, y, GAMEOVER, game_started, mazeMode, napping, level, gtime);
+  if (!LEVELS[level].items) {
+    doRollbar(ROLLBAR_ERROR, `itemAt(): null LEVELS[level].items`, `${x}, ${y}, (${player.x},${player.y}), ${GAMEOVER}, ${game_started}, ${mazeMode}, ${napping}, ${level}, ${gtime}`);
     return null;
   }
 
   // debugging: there is an issue with a null player.level.item[][]
   try {
-    if (!player.level.items[x][y]) {
+    if (!LEVELS[level].items[x][y]) {
       let errorMessage = `itemAt(): null item: x=${x} y=${y}`;
       console.log(errorMessage);
       let o = `level:${level}\n`;
       let m = `monsters:\n`;
       let k = `know:\n`;
-      for (let y = 0; y < 17; y++) {
-        for (let x = 0; x < 67; x++) {
-          o += player.level.items[x][y] ? itemlist[player.level.items[x][y].id].char : `X`;
-          m += player.level.monsters[x][y] ? player.level.monsters[x][y].char : `.`;
-          k += player.level.know[x][y] ? player.level.know[x][y] : `.`;
+      for (let y = 0; y < MAXY; y++) {
+        for (let x = 0; x < MAXX; x++) {
+          const tmpItem = LEVELS[level].items[x][y];
+          o += tmpItem ? tmpItem.getChar() : `X`;
+          m += monsterAt(x, y) ? monsterAt(x, y).char : `.`;
+          k += getKnow(x, y) ? getKnow(x, y) : `.`;
         }
         o += `\n`;
         m += `\n`;
         k += `\n`;
       }
+      console.trace();
       doRollbar(ROLLBAR_ERROR, `null itemAt()`, `${errorMessage}\n${o}\n${m}\n${k}`);
       return null;
     }
@@ -554,34 +548,51 @@ function itemAt(x, y) {
     return null;
   }
 
-  return player.level.items[x][y];
+  return LEVELS[level].items[x][y];
 }
 
 
 
-function setItem(x, y, item) {
+function setItem(x, y, item, placement) {
   if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+    debug(`setItem(): bad args`, x, y, item);
     return null;
   }
-  if (item instanceof DungeonObject) {
-    player.level.items[x][y] = createObject(item, item.arg);
-    // debug(`setItem(): set DungeonObject at x=${x} y=${y}`);
-  } else if (item instanceof Item) {
-    player.level.items[x][y] = item; // don't bother creating a new copy
-    // debug(`setItem(): set Item at x=${x} y=${y}`);
-  } else {
-    player.level.items[x][y] = createObject(item, item.arg);
-    debug(`setItem(): invalid item at x=${x} y=${y}`, item);
+
+  if (!placement) {
+    placement = OVERWRITE;
+  }
+  
+  if (placement === SCATTER || placement === EXACT_OR_SCATTER) {
+    let dx, dy;
+    let ok = (placement === EXACT_OR_SCATTER) ? cgood(x, y, true, false) : false;
+    for (let k = rnd(8), i = -8; i < 0 && !ok; i++, k++) /* choose direction, then try all */ {
+      if (k > 8) k = 1; /* wraparound the diroff arrays */
+      dx = x + diroffx[k];
+      dy = y + diroffy[k];
+      if (cgood(dx, dy, true, false)) {
+        x = dx; /* if we can create here */
+        y = dy;
+        ok = true;
+      }
+    }
+    if (!ok) {
+      debug(`setItem(): placement`, placement, ok, x, y, item);
+      return null;
+    }
   }
 
-  return item;
-}
-
-
-
-function isItemAt(x, y) {
-  var item = itemAt(x, y);
-  return (item && !item.matches(OEMPTY));
+  if (item instanceof DungeonObject) {
+    LEVELS[level].items[x][y] = createObject(item, item.arg);
+    // debug(`setItem(): set DungeonObject at x=${x} y=${y}`);
+  } else if (item instanceof Item) {
+    LEVELS[level].items[x][y] = item; // don't bother creating a new copy
+    // debug(`setItem(): set Item at x=${x} y=${y}`);
+  } else {
+    LEVELS[level].items[x][y] = createObject(item, item.arg);
+    debug(`setItem(): x=${x} y=${y}`, item);
+  }
+  return LEVELS[level].items[x][y];
 }
 
 
@@ -706,7 +717,7 @@ function lookforobject(do_ident, do_pickup) {
     if (rnd(11) < 6)
       return;
     setItem(player.x, player.y, OTELEPORTER);
-    player.level.know[player.x][player.y] = KNOWALL;
+    setKnow(player.x, player.y, KNOWALL);
     lookforobject(do_ident, do_pickup);
     /* fall through to OTELEPORTER case below!!! */
   }
@@ -722,7 +733,7 @@ function lookforobject(do_ident, do_pickup) {
     if (rnd(17) < 13)
       return;
     setItem(player.x, player.y, OTRAPARROW);
-    player.level.know[player.x][player.y] = KNOWALL;
+    setKnow(player.x, player.y, KNOWALL);
     /* fall through to OTRAPARROW case below!!! */
     lookforobject(do_ident, do_pickup);
     return;
@@ -740,7 +751,7 @@ function lookforobject(do_ident, do_pickup) {
     if (rnd(17) < 13)
       return;
     setItem(player.x, player.y, ODARTRAP);
-    player.level.know[player.x][player.y] = KNOWALL;
+    setKnow(player.x, player.y, KNOWALL);
     /* fall through to ODARTRAP case below!!! */
     lookforobject(do_ident, do_pickup);
     return;
@@ -759,7 +770,7 @@ function lookforobject(do_ident, do_pickup) {
     if (rnd(17) < 13)
       return;
     setItem(player.x, player.y, OTRAPDOOR);
-    player.level.know[player.x][player.y] = KNOWALL;
+    setKnow(player.x, player.y, KNOWALL);
     /* fall through to OTRAPDOOR case below!!! */
     lookforobject(do_ident, do_pickup);
     return;

@@ -502,11 +502,9 @@ function drawmaze() {
   if (!amiga_mode)
     clear();
 
-  var know = player.level.know;
-
   /* When we show a spot of the dungeon, we have 4 cases:
   squares we know nothing about
-  - know == 0
+  - know == KNOWNOT
   squares we've been at and still know whats there
   - know == KNOWALL (== KNOWHERE | HAVESEEN)
   squares we've been at, but don't still recall because
@@ -515,23 +513,23 @@ function drawmaze() {
   squares we recall, but haven't been at (an error condition)
   - know == KNOWHERE */
 
-  var blind = player.BLINDCOUNT > 0;
 
-  for (var j = 0; j < MAXY; j++) {
+  for (let j = 0; j < MAXY; j++) {
     cursor(1, 1 + j);
 
-    for (var i = 0; i < MAXX; i++) {
+    for (let i = 0; i < MAXX; i++) {
 
-      if (know[i][j] == 0) {
+      if (getKnow(i, j) == KNOWNOT) {
         lprc(OUNKNOWN.getChar());
-      } else if (know[i][j] & HAVESEEN) {
+      } else if (getKnow(i, j) & HAVESEEN) {
         if (i == player.x && j == player.y) {
           lprc(player.getChar());
           continue;
         }
-        var monster = monsterAt(i, j);
-        var item = itemAt(i, j);
-        if (monster && know[i][j] & KNOWHERE) {
+        const monster = monsterAt(i, j);
+        const item = itemAt(i, j);
+        const blind = player.BLINDCOUNT > 0;
+        if (monster && getKnow(i, j) & KNOWHERE) {
           if (blind)
             lprc(item.getChar());
           else
@@ -551,15 +549,34 @@ function drawmaze() {
 
 
 
+function getKnow(x, y) {
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+    debug(`getKnow(): bad args`, x, y);
+    return null;
+  }
+  return LEVELS[level].know[x][y];
+}
+
+
+
+function setKnow(x, y, val) {
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+    debug(`setKnow(): bad args`, x, y, val);
+    return;
+  }
+  LEVELS[level].know[x][y] = val;
+}
+
+
+
 /* subroutine to display a cell location on the screen */
 /* JRP this is quite different from the original, see drawmaze */
 function showcell(x, y) {
   if (!mazeMode) return;
 
-  var blind = player.BLINDCOUNT > 0;
-
   var minx, maxx, miny, maxy, i, j, m;
 
+  const blind = player.BLINDCOUNT > 0;
   if (blind) {
     minx = x;
     maxx = x;
@@ -582,16 +599,14 @@ function showcell(x, y) {
   miny = vy(miny);
   maxy = vy(maxy);
 
-  var know = player.level.know;
-
   for (j = miny; j <= maxy; j++) {
     for (m = minx; m <= maxx; m++) {
-      if ((know[m][j] & KNOWHERE) == 0) {
+      if ((getKnow(m, j) & KNOWHERE) == 0) {
         x = maxx;
-        while (know[x][j] & KNOWHERE)
+        while (getKnow(x, j) & KNOWHERE)
           --x;
         for (i = m; i <= x; i++) {
-          know[i][j] = KNOWALL;
+          setKnow(i, j, KNOWALL);
         }
         m = maxx;
       }
@@ -609,7 +624,7 @@ function showcell(x, y) {
  */
 /* JRP this is quite different from the original, see drawmaze */
 function show1cell(x, y) {
-  player.level.know[x][y] = KNOWALL;
+  setKnow(x, y, KNOWALL);
 }
 
 
@@ -639,26 +654,23 @@ function moveplayer(dir) {
     }
   }
 
-  var k = player.x + diroffx[dir];
-  var m = player.y + diroffy[dir];
+  const k = player.x + diroffx[dir];
+  const m = player.y + diroffy[dir];
 
   if (k < 0 || k >= MAXX || m < 0 || m >= MAXY) {
     nomove = 1;
-    return (0);
+    return 0;
   }
 
-  var item = itemAt(k, m);
-
-  // ?? rollbar implies that item is null sometimes and fails on matches()
-
-  var monster = monsterAt(k, m);
+  const item = itemAt(k, m);
+  const monster = monsterAt(k, m);
 
   /* prevent the player from moving onto a wall, or a closed door when
      in command mode, unless the character has Walk-Through-Walls.
    */
   if ((item.matches(OCLOSEDDOOR) || item.matches(OWALL)) && player.WTW == 0) {
     nomove = 1;
-    return (0);
+    return 0;
   }
 
   if (item.matches(OHOMEENTRANCE)) {
@@ -670,13 +682,13 @@ function moveplayer(dir) {
   /* hit a monster */
   if (monster) {
     hitmonster(k, m);
-    return (0);
+    return 0;
   }
 
   /* check for the player ignoring an altar when in command mode. */
   if (player.TIMESTOP == 0 && itemAt(player.x, player.y).matches(OALTAR) && !prayed) {
     updateLog(`  You have ignored the altar!`);
-    act_ignore_altar(player.x, player.y);
+    act_ignore_altar();
   }
   prayed = 0;
 
@@ -688,9 +700,9 @@ function moveplayer(dir) {
   if (!item.matches(OEMPTY) &&
     !item.matches(OTRAPARROWIV) && !item.matches(OIVTELETRAP) &&
     !item.matches(OIVDARTRAP) && !item.matches(OIVTRAPDOOR)) {
-    return (0);
+    return 0;
   } else {
-    return (1);
+    return 1;
   }
 }
 
@@ -940,7 +952,7 @@ function onMouseClick(event) {
 
     if (sayEmpty) monster = null; // what monster?
 
-    if (!player.level.know[x][y]) {
+    if (getKnow(x, y) === KNOWNOT) {
       description = `a mystery`;
     } else if (x == player.x && y == player.y) {
       description = `our Hero`;

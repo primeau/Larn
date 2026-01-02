@@ -43,14 +43,9 @@ let LocalScore = function () {
 
   this.explored = getExploredLevels();
 
-  // START HACK -- we don't want to save the level
   if (player) {
-    const x = player.level;
-    player.level = null;
     this.player = JSON.stringify(player);
-    player.level = x;
   }
-  // END HACK -- we don't want to save the level
 
   this.browser = `${navigator.vendor} (${navigator.userAgent})`;
 }
@@ -132,7 +127,6 @@ function getStatString(score, addDate) {
 
   if (score.gamelog) {
     let logString = score.gamelog.join('\n').trim();
-    if (logString.includes(`Replay`) && !logString.endsWith(`>`)) logString += `>`; // bugfix for missing > in some games
     stats += `Final Moments: \n${logString}\n\n`;
   }
 
@@ -362,7 +356,7 @@ function printScore(p) {
   }
   const endcode = GAMEOVER ? `<br>` : ``;
 
-  const isNewScore = gameID ? p.gameID == gameID : false;
+  const isNewScore = gameID ? p.gameID.split(`+`)[0] == gameID.split(`+`)[0] : false;
   const addplus = isNewScore && dofs ? `+` : ``;
 
   if (isNewScore) {

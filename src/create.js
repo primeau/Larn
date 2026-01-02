@@ -11,7 +11,13 @@
     levels will get a few more monsters.
     Note that it is here we remove genocided monsters from the present level.
  */
+
+let STARTED_LEVEL_CREATION = false;
+
 function newcavelevel(depth) {
+
+  STARTED_LEVEL_CREATION = true;
+
   if (level != depth) changedDepth = millis();
 
   /* 12.4.5
@@ -25,11 +31,13 @@ function newcavelevel(depth) {
   screen = initGrid(MAXX, MAXY); // in case this was causing weird monster movement
 
   if (LEVELS[depth]) { // if we have visited this level before
-    player.level = LEVELS[depth];
     level = depth;
     sethp(false);
     positionplayer(player.x, player.y, true);
     checkgen();
+
+    STARTED_LEVEL_CREATION = false;
+
     return;
   }
 
@@ -43,7 +51,7 @@ function newcavelevel(depth) {
   positionplayer(player.x, player.y, true);
 
   if (GOTW) {
-    player.level.know[player.x][player.y] = KNOWNOT;
+    setKnow(player.x, player.y, KNOWNOT);
   } else {
     showcell(player.x, player.y); /* to show around player */
   }
@@ -53,8 +61,7 @@ function newcavelevel(depth) {
   if (wizard || level == 0)
     for (var j = 0; j < MAXY; j++)
       for (var i = 0; i < MAXX; i++)
-        player.level.know[i][j] = KNOWALL;
-
+        setKnow(i, j, KNOWALL);
 
   /*
   save a checkpoint file to prevent a different random level from being created
@@ -64,19 +71,20 @@ function newcavelevel(depth) {
    }
    */
 
+    STARTED_LEVEL_CREATION = false;
+
 }
 
 
 
 function initNewLevel(depth) {
-  var newLevel = Object.create(Level);
+  const newLevel = Object.create(Level);
 
-  newLevel.items = initGrid(MAXX, MAXY);
-  newLevel.monsters = initGrid(MAXX, MAXY);
-  newLevel.know = initGrid(MAXX, MAXY);
+  newLevel.items = initGrid(MAXX, MAXY, OEMPTY);
+  newLevel.monsters = initGrid(MAXX, MAXY, null);
+  newLevel.know = initGrid(MAXX, MAXY, 0);
 
   LEVELS[depth] = newLevel;
-  player.level = newLevel;
   level = depth;
 }
 
@@ -99,8 +107,6 @@ function cannedlevel(depth) {
 
   var canned = loadcanned();
 
-  var monsters = player.level.monsters;
-
   var pt = 0;
   for (var y = 0; y < MAXY; y++) {
     for (var x = 0; x < MAXX; x++) {
@@ -117,17 +123,17 @@ function cannedlevel(depth) {
           break;
         case '.':
           if (depth < (ULARN ? MAXLEVEL - 6: MAXLEVEL)) break;
-          monsters[x][y] = createMonster(makemonst(depth + 1));
+          setMonster(x, y, makemonst(depth + 1));
           break;
         case '~':
           if (depth != DBOTTOM) break;
           setItem(x, y, OLARNEYE);
-          ULARN ? create_guardian(DEMONPRINCE, x, y) : create_guardian(rund(8) + DEMONLORD, x, y);
+          ULARN ? setMonster(x, y, DEMONPRINCE) : setMonster(x, y, rund(8) + DEMONLORD);
           break;
         case '!':
           if (depth != VBOTTOM) break;
           setItem(x, y, createObject(OPOTION, 21));
-          ULARN ? create_guardian(LUCIFER, x, y) : create_guardian(DEMONPRINCE, x, y);
+          ULARN ? setMonster(x, y, LUCIFER) : setMonster(x, y, DEMONPRINCE);
           break;
       } // switch
     } // for
@@ -138,7 +144,7 @@ function cannedlevel(depth) {
 
 /* subroutine to make the caverns for a given level. only walls are made */
 function makemaze(k) {
-  var useCanned = false;
+  let useCanned = false;
   if (k == DBOTTOM || k == VBOTTOM) {
     useCanned = true;
   }
@@ -157,8 +163,6 @@ function makemaze(k) {
     return;
   }
 
-  var mitem = player.level.monsters;
-
   for (let i = 0; i < MAXY; i++) {
     for (let j = 0; j < MAXX; j++) {
       if (k == 0)
@@ -175,9 +179,9 @@ function makemaze(k) {
   if (k == 1) setItem(33, MAXY - 1, OHOMEENTRANCE);
 
   /*  now for open spaces */
-  var tmp2 = rnd(3) + 3;
-  var mx, mxl, mxh, my, myl, myh;
-  var mon;
+  let tmp2 = rnd(3) + 3;
+  let mx, mxl, mxh, my, myl, myh;
+  let mon = null;
   for (let tmp = 0; tmp < tmp2; tmp++) {
     my = rnd(11) + 2;
     myl = my - rnd(2);
@@ -195,10 +199,10 @@ function makemaze(k) {
       mon = makemonst(k);
     }
 
-    for (var i = mxl; i < mxh; i++)
-      for (var j = myl; j < myh; j++) {
+    for (let i = mxl; i < mxh; i++)
+      for (let j = myl; j < myh; j++) {
         setItem(i, j, OEMPTY);
-        mitem[i][j] = mon ? createMonster(mon) : null;
+        setMonster(i, j, mon);
       }
   }
   /*  now for open spaces */
@@ -288,13 +292,14 @@ function eat(xx, yy) {
  *  function to make a treasure room on a level
  */
 function treasureroom(lv) {
-  for (var tx = 1 + rnd(10); tx < MAXX - 10; tx += 10)
+  for (let tx = 1 + rnd(10); tx < MAXX - 10; tx += 10) {
     if (rnd((ULARN ? 13 : 10)) == 2) {
-      var xsize = rnd(6) + 3;
-      var ysize = rnd(3) + 3;
-      var ty = rnd(MAXY - 9) + 1; /* upper left corner of room */
+      let xsize = rnd(6) + 3;
+      let ysize = rnd(3) + 3;
+      let ty = rnd(MAXY - 9) + 1; /* upper left corner of room */
       troom(lv, xsize, ysize, tx, ty, rnd(9));
     }
+  }
 }
 
 
@@ -307,7 +312,7 @@ function treasureroom(lv) {
 function troom(lv, xsize, ysize, tx, ty, glyph) {
   var i, j;
 
-  var mitem = player.level.monsters;
+  // debug(`treasureroom: level ${lv} at ${tx},${ty} size ${xsize}x${ysize}`);
 
   for (j = ty - 1; j <= ty + ysize; j++)
     for (i = tx - 1; i <= tx + xsize; i++)
@@ -317,7 +322,7 @@ function troom(lv, xsize, ysize, tx, ty, glyph) {
   for (j = ty; j < ty + ysize; j++)
     for (i = tx; i < tx + xsize; i++) {
       setItem(i, j, OWALL);
-      mitem[i][j] = null;
+      setMonster(i, j, null);
     }
 
   for (j = ty + 1; j < ty + ysize - 1; j++)
@@ -340,23 +345,16 @@ function troom(lv, xsize, ysize, tx, ty, glyph) {
       break;
   }
 
+  const rndcount = getDifficulty() < 2 ? 6 : 4;
+  let monstbump = getDifficulty() < 2 ? 1 : 3;
+  if (ULARN) monstbump++;
   let tmpy = ty + (ysize >> 1);
-
-  if (getDifficulty() < 2) {
-    for (let tmpx = tx + 1; tmpx <= tx + xsize - 2; tmpx += 2) {
-      for (i = 0, j = rnd(6); i <= j; i++) {
-        dropItem(tmpx, tmpy, createRandomItem(lv + 2));
-        if (rnd(101) < 8) i--; // chance of another item
-        createmonster(makemonst(lv + (ULARN ? 2 : 1)), tmpx, tmpy);
-      }
-    }
-  } else {
-    for (let tmpx = tx + 1; tmpx <= tx + xsize - 2; tmpx += 2) {
-      for (i = 0, j = rnd(4); i <= j; i++) {
-        dropItem(tmpx, tmpy, createRandomItem(lv + 2));
-        if (rnd(101) < 8) i--; // chance of another item
-        createmonster(makemonst(lv + (ULARN ? 4 : 3)), tmpx, tmpy);
-      }
+  for (let tmpx = tx + 1; tmpx <= tx + xsize - 2; tmpx += 2) {
+    for (i = 0, j = rnd(rndcount); i <= j; i++) {
+      setItem(tmpx, tmpy, createRandomItem(lv + 2), SCATTER);
+      if (rnd(101) < 8) // chance of another item
+        setItem(tmpx, tmpy, createRandomItem(lv + 2), SCATTER); 
+      setMonster(tmpx, tmpy, makemonst(lv + monstbump), SCATTER);
     }
   }
 
@@ -381,7 +379,7 @@ function makeobject(depth) {
   }
 
   if (depth == 1) {
-    LEVELS[depth].items[Math.floor(MAXX / 2)][MAXY - 1] = createObject(OHOMEENTRANCE);
+    setItem(Math.floor(MAXX / 2), MAXY - 1, OHOMEENTRANCE);
   }
 
   if (depth == MAXLEVEL) fillroom(OVOLUP, 0); /* volcano shaft up from the temple */
@@ -616,17 +614,17 @@ function fillroom(what, arg) {
     monsters
  */
 function fillmonst(what, awake) {
-  var monster = createMonster(what);
-  for (var trys = 10; trys > 0; --trys) /* max # of creation attempts */ {
-    var x = rnd(MAXX - 2);
-    var y = rnd(MAXY - 2);
+  for (let trys = 10; trys > 0; --trys) /* max # of creation attempts */ {
+    let x = rnd(MAXX - 2);
+    let y = rnd(MAXY - 2);
     //debug(`fillmonst: ${x},${y} ${itemAt(x, y)}`);
-    if ((itemAt(x, y).matches(OEMPTY)) && //
-      (!player.level.monsters[x][y]) && //
-      ((player.x != x) || (player.y != y))) {
-      player.level.monsters[x][y] = monster;
+    if ((itemAt(x, y).matches(OEMPTY)) &&       // empty space
+        (!monsterAt(x, y)) &&                   // no monster there
+        ((player.x != x) || (player.y != y))) { // not on player
+      let monster = createMonster(what);
+      setMonster(x, y, monster);
       if (awake) monster.awake = awake;
-      player.level.know[x][y] &= ~KNOWHERE;
+      setKnow(x, y, getKnow(x, y) & ~KNOWHERE);
       return monster;
     }
   }
@@ -643,7 +641,7 @@ function sethp(newLevel) {
   // if (flg) {
   //   for (var i = 0; i < MAXY; i++) {
   //     for (var j = 0; j < MAXX; j++) {
-  //       var monster = player.level.monsters[j][i];
+  //       const monster = monsterAt(j, i);
   //       if (monster)
   //         monster.awake = false;
   //     }
@@ -709,9 +707,9 @@ function sethp(newLevel) {
 function checkgen() {
   for (var y = 0; y < MAXY; y++) {
     for (var x = 0; x < MAXX; x++) {
-      var monster = player.level.monsters[x][y];
+      const monster = monsterAt(x, y);
       if (monster && isGenocided(monster.arg)) {
-        player.level.monsters[x][y] = null;
+        setMonster(x, y, null);
       }
     }
   }

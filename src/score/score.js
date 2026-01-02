@@ -5,8 +5,6 @@ const MAX_SCORES = 72;
 const THIS_WEEK = `This Week`;
 const LAST_WEEK = `Last Week`;
 
-window.addEventListener('resize', () => console.log('Screen width:', window.innerWidth, 'pixels'));
-
 function isUlarn() {
   ULARN = ularnRadio && ularnRadio.checked; // ULARN is used elsewhere, so update it here again just in case
   return ULARN;
@@ -51,7 +49,7 @@ function updateYearDropdown() {
   // Current Week
   const currentDate = new Date();
   const currentWeek = getISOWeek(currentDate);
-  const currentYearForWeek = currentDate.getFullYear();
+  const currentYearForWeek = getISOYear(currentDate);
   const currentOpt = document.createElement('option');
   currentOpt.value = `gotw_${currentYearForWeek}_${currentWeek}`;
   currentOpt.textContent = THIS_WEEK;
@@ -350,8 +348,7 @@ function parseGameDetails(score) {
     // some hacks to get data in the right places
     gtime = score.gtime;
     rmst = score.rmst;
-    player.level = score.level; // TODO: IS THIS RIGHT?
-    level = score.level; // TODO: IS THIS RIGHT?
+    level = score.level;
     stats += debug_stats(player, score);
 
     if (score.gamelog) {

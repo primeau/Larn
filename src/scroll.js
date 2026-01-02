@@ -93,7 +93,7 @@ function read_scroll(scroll) {
       var xl = Math.max(player.x - 25, 0);
       for (let i = xl; i < xh; i++)
         for (let j = yl; j < yh; j++)
-          player.level.know[i][j] = KNOWALL;
+          setKnow(i, j, KNOWALL);
       //draws(xl, xh, yl, yh);
       break;
 
@@ -109,8 +109,8 @@ function read_scroll(scroll) {
 
     case 5:
       /* create artifact */
-      dropItemNearPlayer(createRandomItem(level));
-      if (rnd(101) < 8) dropItemNearPlayer(createRandomItem(level)); // chance for 2 items
+      dropItemNearPlayer(createRandomItem(level), SCATTER);
+      if (rnd(101) < 8) dropItemNearPlayer(createRandomItem(level), SCATTER); // chance for 2 items
       break;
 
     case 6:
@@ -157,10 +157,14 @@ function read_scroll(scroll) {
       /* monster healing */
       if (ULARN) updateLog(`  You feel uneasy${period}`);
       else updateLog(`  Something isn't right...`);
-      for (let j = 0; j < MAXY; j++)
-        for (let i = 0; i < MAXX; i++)
-          if (player.level.monsters[i][j])
-            player.level.monsters[i][j].hitpoints = monsterlist[player.level.monsters[i][j].arg].hitpoints;
+      for (let j = 0; j < MAXY; j++) {
+        for (let i = 0; i < MAXX; i++) {
+          let monster = monsterAt(i, j);
+          if (monster) {
+            monster.hitpoints = monsterlist[monster.arg].hitpoints;
+          }
+        }
+      }
       break;
 
     case 12:

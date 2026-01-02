@@ -30,15 +30,15 @@ function act_remove_gems(arg) {
   var k = rnd(101);
   if (k < 25) {
     for (var i = 0; i < rnd(4); i++) {
-      dropItemNearPlayer(createGem()); /* gems pop off the throne */
+      dropItemNearPlayer(createGem(), SCATTER); /* gems pop off the throne */
     }
     var throneArg = itemAt(player.x, player.y).arg;
     setItem(player.x, player.y, createObject(ODEADTHRONE, throneArg));
-    player.level.know[player.x][player.y] = 0;
+    setKnow(player.x, player.y, KNOWNOT);
   } else if (k < 40 && arg == 0 && !isGenocided(GNOMEKING)) {
     createmonster(GNOMEKING);
     itemAt(player.x, player.y).arg = 1;
-    player.level.know[player.x][player.y] = 0;
+    setKnow(player.x, player.y, KNOWNOT);
   } else {
     updateLog(`  Nothing happens${period}`);
   }
@@ -78,7 +78,7 @@ function act_sit_throne(arg) {
   if (k < 30 && arg == 0 && !isGenocided(GNOMEKING)) {
     createmonster(GNOMEKING);
     itemAt(player.x, player.y).arg = 1;
-    player.level.know[player.x][player.y] = 0;
+    setKnow(player.x, player.y, KNOWNOT);
   } else if (k < 35) {
     updateLog(`  Zaaaappp!  You've been teleported!`);
     beep();

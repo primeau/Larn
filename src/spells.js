@@ -180,7 +180,7 @@ function speldamage(x) {
       let xh = Math.min(MAXX, player.x + 16);
       for (let i = xl; i < xh; i++)
         for (let j = yl; j < yh; j++)
-          player.level.know[i][j] = KNOWALL;
+          setKnow(i, j, KNOWALL);
       return;
     }
 
@@ -287,7 +287,7 @@ function speldamage(x) {
             ifblind(i, j);
             hitm(i, j, 200);
           }
-          player.level.know[i][j] = KNOWALL; // HACK fix for black tile
+          setKnow(i, j, KNOWALL);
         }
       }
 
@@ -377,7 +377,7 @@ function speldamage(x) {
     case 33:
       /* sphere of annihilation */
       if (!isCarrying(OSPHTALISMAN) && (rnd(23) == 5)) {
-        //beep();
+        beep();
         updateLog(`You have been enveloped by the zone of nothingness!`);
         //nap(4000);
         died(DIED_ANNIHILATED_SELF, false); /* self - annihilated */
@@ -438,11 +438,11 @@ function speldamage(x) {
           } else {
             setItem(i, j, OEMPTY);
           }
-          player.level.monsters[i][j] = null;
+          setMonster(i, j, null);
           if (wizard)
-            player.level.know[i][j] = KNOWALL;
+            setKnow(i, j, KNOWALL);
           else
-            player.level.know[i][j] = 0;
+            setKnow(i, j, KNOWNOT);
         }
       }
       if (level != 0) eat(1, 1);
@@ -590,10 +590,10 @@ function spell_polymorph(direction) {
   if (isconfuse())
     return; /* if he is confused, he can't aim his magic */
 
-  var x = player.x + diroffx[direction];
-  var y = player.y + diroffy[direction];
+  const x = player.x + diroffx[direction];
+  const y = player.y + diroffy[direction];
 
-  var monster = getMonster(direction);
+  const monster = monsterAt(x, y);
   if (!monster) {
     updateLog(`  There wasn't anything there!`);
     return;
@@ -602,8 +602,8 @@ function spell_polymorph(direction) {
   ifblind(x, y);
 
   if (nospell(PLY, monster) == 0) {
-    player.level.monsters[x][y] = null;
-    createmonster(rnd(monsterlist.length - 1), x, y);
+    setMonster(x, y, null);
+    setMonster(x, y, rnd(monsterlist.length - 1));
     show1cell(x, y); /* show the new monster */
   } else {
     lasthx = x;
@@ -625,9 +625,10 @@ function spell_teleport(direction) {
   //if (spnum < 0 || spnum >= SPNUM) return; /* bad args */
   if (isconfuse()) return;
 
-  var x = player.x + diroffx[direction];
-  var y = player.y + diroffy[direction];
-  var monster = getMonster(direction);
+  const x = player.x + diroffx[direction];
+  const y = player.y + diroffy[direction];
+
+  const monster = monsterAt(x, y);
   if (!monster) {
     updateLog(`  There wasn't anything there!`);
     return;
@@ -635,8 +636,8 @@ function spell_teleport(direction) {
   ifblind(x, y);
   if (nospell(TEL, monster) == 0) {
     fillmonst(monster.arg);
-    player.level.monsters[x][y] = null;
-    player.level.know[x][y] &= ~KNOWHERE;
+    setMonster(x, y, null);
+    setKnow(x, y, getKnow(x, y) & ~KNOWHERE);
 
     /* 12.4.5
     fix for last hit monster chasing the player from across the maze
@@ -660,20 +661,15 @@ function spell_teleport(direction) {
     using a VPR spell or pulverization scroll on it.
 */
 function create_guardian(monst, x, y) {
+  let placement = EXACT_OR_SCATTER;
   /* prevent the guardian from being created on top of the player */
-  if ((x == player.x) && (y == player.y)) {
-    var k = rnd(8);
-    x += diroffx[k];
-    y += diroffy[k];
+  if (x == player.x && y == player.y) {
+    placement = SCATTER;
   }
-  player.level.know[x][y] = 0;
-  if (!isGenocided(monst))
-    createmonster(monst, x, y);
-
-  // 12.4.5: not in original, but maybe a good idea?
-  // if (monsterAt(x,y)) {
-  //   monsterAt(x,y).awake = true;
-  // }
+  setKnow(x, y, KNOWNOT);
+  if (!isGenocided(monst)) {
+    setMonster(x, y, monst, placement);
+  }
 }
 
 
@@ -715,7 +711,6 @@ function isconfuse() {
  */
 function nospell(x, monst) {
   var tmp = spelweird[monst.arg - 1][x];
-  //if (x >= SPNUM || monst >= MAXMONST + 8 || monst < 0 || x < 0) return (0); /* bad spell or monst */
   if (tmp == 0) {
     return (0);
   }
@@ -757,11 +752,11 @@ function direct(spnum, direction, dam, arg) {
   if (isconfuse()) {
     return;
   }
-  var x = player.x + diroffx[direction];
-  var y = player.y + diroffy[direction];
+  const x = player.x + diroffx[direction];
+  const y = player.y + diroffy[direction];
 
-  var monster = getMonster(direction);
-  var item = getItemDir(direction);
+  const monster = monsterAt(x, y);
+  const item = itemAt(x, y);
 
   if (!monster && !item.matches(OMIRROR)) {
     updateLog(`  There wasn't anything there!`);
@@ -814,12 +809,6 @@ function setup_godirect(delay, spnum, direction, damage, cshow, stroverride) {
   napping = true;
   nomove = 1;
   setTimeout(godirect, delay, spnum, player.x, player.y, diroffx[direction], diroffy[direction], damage, delay, cshow, stroverride);
-  // // might need this for IE compatibility? so far so good though
-  // setTimeout(
-  //   function() {
-  //     godirect(spnum, player.x, player.y, diroffx[direction], diroffy[direction], damage, delay, cshow, stroverride);
-  //   }
-  // );
 }
 
 
@@ -846,16 +835,12 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   // clear the previous square
   if (x != player.x || y != player.y) {
     cursor(x + 1, y + 1);
-    if (amiga_mode) {
-      lprc(` `);
-    } else {
-      lprc(itemAt(x, y).getChar());
-    }
+    lprc(itemAt(x, y).getChar());
   }
 
   x += dx;
   y += dy;
-  if ((x > MAXX - 1) || (y > MAXY - 1) || (x < 0) || (y < 0)) {
+  if (x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
     dam = 0;
     exitspell();
     return;
@@ -892,6 +877,16 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     if (ULARN && (monster.matches(LUCIFER) || (monster.isDemon() && rnd(100) < 10))) {
       dx *= -1;
       dy *= -1;
+      
+      // /* 12.5.3 - idea: wake the demon: not in the original but seems apropriate since
+      //             monsters will respond when hit by a spell that they resist and this is similar
+      //           - i'm not enabling this though, because it means you can wake lucifer from 
+      //             a distance without risk. you can still use dry/web/etc like normal but at
+      //             least you have to be able to survive a hit
+      // */
+      // lasthx = x;
+      // lasthy = y;
+
       cursors();
       updateLog(`  the ${monster} returns your puny missile!`);
     } else {
@@ -1001,13 +996,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     blt(); // don't use paint() because it doesn't show missile trail
     setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, delay, cshow, stroverride);
   } else {
-
-    // clear the previous square
-    cursor(x + 1, y + 1);
-    if (amiga_mode) {
-      lprc(` `);
-    }
-
     exitspell();
     return;
   }
@@ -1047,7 +1035,7 @@ function omnidirect(spnum, dam, str) {
           cursors();
           updateLog(`  The ${monster} ${str}`);
           hitm(x, y, dam);
-          //player.level.know[x][y] = KNOWALL; // HACK FIX FOR BLACK TILE IF KNOW = 0 in HITM()
+          //setKnow(x, y, KNOWALL); // HACK FIX FOR BLACK TILE IF KNOW = 0 in HITM()
           //nap(800);
         } else {
           lasthx = x;

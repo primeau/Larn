@@ -92,9 +92,8 @@ function dungeon() {
   // move monster away from the entrance
   shuffleMonster(player.x, player.y);
 
-  player.level.know[33][MAXY - 1] = KNOWALL;
-  player.level.monsters[33][MAXY - 1] = null;
-  //draws( 0, MAXX, 0, MAXY );
+  setKnow(33, MAXY - 1, KNOWALL);
+  setMonster(33, MAXY - 1, null);
   showcell(player.x, player.y); /* to show around player */
 }
 
@@ -102,19 +101,11 @@ function dungeon() {
 
 
 function shuffleMonster(oldx, oldy) {
-  let monster = player.level.monsters[oldx][oldy];
+  const monster = monsterAt(oldx, oldy);
   if (monster) {
-    /* choose direction, then try all */
-    for (let i = -8, k = rnd(8); i < 0; i++, k++) {
-      if (k > 8) k = 1; /* wraparound the diroff arrays */
-      let newx = oldx + diroffx[k];
-      let newy = oldy + diroffy[k];
-      if (cgood(newx, newy, false, true)) /* if we can create here */ {
-        player.level.monsters[oldx][oldy] = null;
-        player.level.monsters[newx][newy] = monster;
-        i = 0;
-      }
-    }
+    debug(`shuffleMonster(): moving ${monster} at x=${oldx} y=${oldy}`);
+    setMonster(oldx, oldy, null);    // get rid of monster at old location
+    setMonster(oldx, oldy, monster, SCATTER); // put it anywhere else
   }
 }
 

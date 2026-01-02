@@ -16,7 +16,7 @@ var Player = function Player() {
 
   this.x = 0;
   this.y = 0;
-  this.level = null;
+  this.level = null; // now unused
   this.char = `▓`;
 
   this.WEAR = null;
@@ -337,7 +337,7 @@ var Player = function Player() {
       function to change character levels as needed when taking/dropping an object
       that affects these characteristics
    */
-  this.adjustcvalues = function (item, pickup) {
+  this.adjustcvalues = /* async */ function (item, pickup) {
     var oldDex = player.DEXTERITY;
     var oldStr = player.STREXTRA;
     var oldInt = player.INTELLIGENCE;
@@ -382,12 +382,13 @@ var Player = function Player() {
 
     if (ULARN && item.matches(OLARNEYE) && player.BLINDCOUNT == 0) {
       updateLog(`Your sight fades for a moment...`);
-      //await nap(1000); // ULARN TODO, eventually
+      // await nap(1000);
       if (pickup) {
         updateLog(`Your sight returns, and everything looks crystal-clear!`);
       } else {
         updateLog(`Your sight returns but everything looks dull and faded${period}`);
       }
+      // paint();
     }
 
   };
@@ -881,8 +882,9 @@ function ifblind(x, y) {
     lastmonst = `monster`;
     return true;
   } else {
-    lastnum = player.level.monsters[x][y];
-    lastmonst = player.level.monsters[x][y].toString();
+    const monster = monsterAt(x, y);
+    lastnum = monster;
+    lastmonst = monster.toString();
     return false;
   }
 }

@@ -550,6 +550,11 @@ let GLOBAL_TIMEOUT; // used for setTimeouts that can be interrupted by the main 
 */
 function mainloop(e, key) {
 
+  if (STARTED_LEVEL_CREATION) {
+    doRollbar(ROLLBAR_DEBUG, `mainloop: started level creation`, `e=${e} key=${key} (${player.x},${player.y}), ${GAMEOVER}, ${game_started}, ${mazeMode}, ${napping}, ${level}, ${gtime}`);
+    // we should return here, but just gather info for now
+  };
+
   if (napping) {
     debug(`napping`);
     if (GLOBAL_TIMEOUT) {
@@ -768,53 +773,51 @@ function wizardmode(password) {
 
     player.setGold(250000);
 
-    if (player.level) {
-      for (let i = 0; i < MAXY; i++)
-        for (let j = 0; j < MAXX; j++)
-          player.level.know[j][i] = KNOWALL;
+    for (let i = 0; i < MAXY; i++)
+      for (let j = 0; j < MAXX; j++)
+        setKnow(j, i, KNOWALL);
 
-      for (var scrolli = 0; scrolli < SCROLL_NAMES.length; scrolli++) {
-        var scroll = createObject(OSCROLL, scrolli);
-        learnScroll(scroll);
-        setItem(scrolli, 0, scroll);
-      }
-
-      for (var potioni = MAXX - 1; potioni > MAXX - 1 - POTION_NAMES.length; potioni--) {
-        var potion = createObject(OPOTION, MAXX - 1 - potioni);
-        learnPotion(potion);
-        setItem(potioni, 0, potion);
-      }
-
-      var ix = 0;
-      var iy = 1;
-      var wizi = 0;
-      while (iy < MAXY) {
-        if (itemlist[++wizi]) {
-          setItem(ix, iy++, itemlist[wizi]);
-          if (!ULARN) {
-            if (wizi == OORB.id) --iy;
-            if (wizi == OELEVATORUP.id) --iy;
-            if (wizi == OELEVATORDOWN.id) --iy;
-          }
-        }
-      }
-      while (++ix < MAXX - 1) {
-        if (itemlist[++wizi]) {
-          setItem(ix, iy - 1, itemlist[wizi]);
-          if (!ULARN && wizi >= OCOOKIE.id) break;
-        } else --ix;
-      }
-
-      if (ULARN) {
-        // 101 items now
-        while (wizi < OLIFEPRESERVER.id) {
-          var wizitem = itemlist[++wizi];
-          if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
-            setItem(ix, --iy, wizitem);
-        }
-      }
-
+    for (var scrolli = 0; scrolli < SCROLL_NAMES.length; scrolli++) {
+      var scroll = createObject(OSCROLL, scrolli);
+      learnScroll(scroll);
+      setItem(scrolli, 0, scroll);
     }
+
+    for (var potioni = MAXX - 1; potioni > MAXX - 1 - POTION_NAMES.length; potioni--) {
+      var potion = createObject(OPOTION, MAXX - 1 - potioni);
+      learnPotion(potion);
+      setItem(potioni, 0, potion);
+    }
+
+    var ix = 0;
+    var iy = 1;
+    var wizi = 0;
+    while (iy < MAXY) {
+      if (itemlist[++wizi]) {
+        setItem(ix, iy++, itemlist[wizi]);
+        if (!ULARN) {
+          if (wizi == OORB.id) --iy;
+          if (wizi == OELEVATORUP.id) --iy;
+          if (wizi == OELEVATORDOWN.id) --iy;
+        }
+      }
+    }
+    while (++ix < MAXX - 1) {
+      if (itemlist[++wizi]) {
+        setItem(ix, iy - 1, itemlist[wizi]);
+        if (!ULARN && wizi >= OCOOKIE.id) break;
+      } else --ix;
+    }
+
+    if (ULARN) {
+      // 101 items now
+      while (wizi < OLIFEPRESERVER.id) {
+        var wizitem = itemlist[++wizi];
+        if (wizitem && wizitem != OHOMEENTRANCE && wizitem != OUNKNOWN)
+          setItem(ix, --iy, wizitem);
+      }
+    }
+    
   } else {
     updateLog(`Sorry${period}`);
     return 1;

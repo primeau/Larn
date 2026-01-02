@@ -42,19 +42,10 @@ function movemonst() {
     distance = 17; /* depth of intelligent monster movement */
   }
 
-  if (level == 0) {
-    /* if on outside level monsters can move in perimeter */
-    if (move_yl < 0) move_yl = 0;
-    if (move_yh > MAXY) move_yh = MAXY;
-    if (move_xl < 0) move_xl = 0;
-    if (move_xh > MAXX) move_xh = MAXX;
-  } else {
-    /* if in a dungeon monsters can't be on the perimeter (wall there) */
-    if (move_yl < 1) move_yl = 1;
-    if (move_yh > MAXY - 1) move_yh = MAXY - 1;
-    if (move_xl < 1) move_xl = 1;
-    if (move_xh > MAXX - 1) move_xh = MAXX - 1;
-  }
+  if (move_yl < 0) move_yl = 0;
+  if (move_yh > MAXY) move_yh = MAXY;
+  if (move_xl < 0) move_xl = 0;
+  if (move_xh > MAXX) move_xh = MAXX;
 
   /* now reset monster moved flags */
   for (let j = move_yl; j < move_yh; j++) {
@@ -286,9 +277,9 @@ function scared_move(x, y) {
   let ny = y + rnd(3) - 2;
 
   if (nx < 0) nx = 0;
-  if (nx >= MAXX) nx = MAXX - 1;
+  if (nx > MAXX) nx = MAXX;
   if (ny < 0) ny = 0;
-  if (ny >= MAXY) ny = MAXY - 1;
+  if (ny > MAXY) ny = MAXY;
 
   if (valid_monst_move(nx, ny, monster) && !monsterAt(nx, ny)) {
     /* This is a valid place to move, so move there */
@@ -431,24 +422,11 @@ function smart_move(x, y) {
      */
     path_dist = screen[x][y] - 1;
 
-    let on_map;
     for (let z = 1; z < 9; z++) {
       xl = x + diroffx[z];
       yl = y + diroffy[z];
 
-      if (level == 0) {
-        /* 
-         * On the home level monsters can move right to the edge 
-         * of the map 
-         */
-        on_map = ((xl >= 0) && (xl < MAXX) && (yl >= 0) && (yl < MAXY));
-      } else {
-        /* 
-         * In the dungeon and volcano monsters can not move onto the
-         * outer border of walls. 
-         */
-        on_map = ((xl >= 1) && (xl < (MAXX - 1)) && (yl >= 1) && (yl < (MAXY - 1)));
-      }
+      let on_map = ((xl >= 0) && (xl < MAXX) && (yl >= 0) && (yl < MAXY));
 
       if (on_map) {
         if (screen[xl][yl] == path_dist) {
@@ -516,8 +494,8 @@ function mmove(sx, sy, dx, dy) {
   }
 
   /* move monster to the new location */
-  player.level.monsters[sx][sy] = null;
-  player.level.monsters[dx][dy] = monster;
+  setMonster(sx, sy, null);
+  setMonster(dx, dy, monster);
 
   monster.awake = true;
 
@@ -531,7 +509,7 @@ function mmove(sx, sy, dx, dy) {
   if (ULARN && monster.matches(LEMMING)) {
     /* 2% chance moving a lemming creates a new lemming in the old spot */
     if (rnd(100) <= 2) {
-      player.level.monsters[sx][sy] = createMonster(LEMMING);
+      setMonster(sx, sy, LEMMING);
     }
   }
 
@@ -559,7 +537,8 @@ function mmove(sx, sy, dx, dy) {
 
   if (item.matches(OANNIHILATION)) {
     /* demons dispel spheres */
-    if (monster.isDemon()) {
+    const spherelevel = ULARN ? 0 : 3;
+    if (monster.arg >= DEMONLORD + spherelevel) { 
       let have_talisman = isCarrying(OSPHTALISMAN);
       if ((!have_talisman) ||
         // lucifer can't dispels 30% of the time if talisman
@@ -646,20 +625,7 @@ function mmove(sx, sy, dx, dy) {
   /* if blind don't show where monsters are */
   if (player.BLINDCOUNT) return;
 
-  /*
-  TypeError: undefined is not an object (evaluating 'player.level.know[l][s]')
-  File "https://larn.org/larn/larn.min.js", line 1, in mmove
-  File "https://larn.org/larn/larn.min.js", line 1, in dumb_move
-  File "https://larn.org/larn/larn.min.js", line 1, in movemt
-  File "https://larn.org/larn/larn.min.js", line 1, in movemonst
-  File "https://larn.org/larn/larn.min.js", line 1, in mainloop
-  File "https://larn.org/larn/larn.min.js", line 1, in mousetrap
-  File "https://larn.org/larn/lib/mousetrap.min.js", line 5, in c
-  File "https://larn.org/larn/lib/mousetrap.min.js", line 7, in [anonymous]
-  File "https://larn.org/larn/lib/mousetrap.min.js", line 5, in e
-*/
-
-  if (player.level.know[dx][dy] != null) {
+  if (getKnow(dx, dy) != KNOWNOT) {
     if (trap_msg) {
       updateLog(trap_msg);
       beep();
@@ -675,14 +641,14 @@ function mmove(sx, sy, dx, dy) {
   }
 
   /* Update the screen */
-  if (player.level.know[sx][sy] & HAVESEEN) show1cell(sx, sy);
-  if (player.level.know[dx][dy] & HAVESEEN) show1cell(dx, dy);
+  if (getKnow(sx, sy) & HAVESEEN) show1cell(sx, sy);
+  if (getKnow(dx, dy) & HAVESEEN) show1cell(dx, dy);
 
   // ULARN TODO? this actually does something kinda cool by revealing 
   // monsters outside the players normal view. could take advantage 
   // of this to make a "widget of spine tingling" or something
-  // if (player.level.know[sx][sy] != OUNKNOWN) show1cell(sx, sy);
-  // if (player.level.know[dx][dy] != OUNKNOWN) show1cell(dx, dy);
+  // if (getKnow(sx, sy) != OUNKNOWN) show1cell(sx, sy);
+  // if (getKnow(dx, dy) != OUNKNOWN) show1cell(dx, dy);
 
 }
 

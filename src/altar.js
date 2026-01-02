@@ -240,10 +240,10 @@ function crumble_altar() {
 
     Assumptions:  cursors() has been called.
 */
-function act_ignore_altar(x, y) {
+function act_ignore_altar() {
   if (rnd(100) < 30) {
     var monstBoost = (ULARN ? 2 : 1);
-    createmonster(makemonst(level + monstBoost), x, y);
+    createmonster(makemonst(level + monstBoost));
     player.AGGRAVATE += rnd(450);
   } else
     updateLog(`  Nothing happens${period}`);

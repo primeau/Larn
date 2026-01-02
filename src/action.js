@@ -82,15 +82,15 @@ function act_open_chest(x, y) {
         else updateLog(`  A sickness engulfs you!`);
         break;
     }
-    setItem(x, y, OEMPTY); /* destroy the chest */
     if (rnd(100) < 69) {
-      dropItemNearPlayer(createGem()); /* gems from the chest */
+      dropItemNearPlayer(createGem(), SCATTER); /* gems from the chest */
     }
-    dropItemNearPlayer(createGold(rnd(110 * chest.arg + 200)));
+    dropItemNearPlayer(createGold(rnd(110 * chest.arg + 200)), SCATTER);
     for (var i = 0; i < rnd(4); i++) {
-      dropItemNearPlayer(createRandomItem(chest.arg + 2));
+      dropItemNearPlayer(createRandomItem(chest.arg + 2), SCATTER);
       if (rnd(101) < 8) i--; // chance of another item
     }
+    setItem(x, y, OEMPTY); /* destroy the chest */
   } else
     updateLog(`  Nothing happens${period}`);
   return;
@@ -252,8 +252,8 @@ function act_rub_lamp() {
     updateLog(`  The magic genie was very upset at being disturbed!`);
     lastnum = DIED_GENIE;
     player.losehp(player.HP / 2 + 1);
+    beep();
     return;
-    //beep();
   }
 
   /* higher level, better chance of spell */

@@ -52,10 +52,13 @@ function beep() {
 
 
 
-function initGrid(width, height) {
-  var grid = new Array(width);
-  for (var x = 0; x < width; x++) {
+function initGrid(width, height, defaultValue) {
+  let grid = new Array(width);
+  for (let x = 0; x < width; x++) {
     grid[x] = new Array(height);
+    for (let y = 0; y < height; y++) {
+      grid[x][y] = defaultValue;
+    }
   }
   return grid;
 }
@@ -95,9 +98,9 @@ function doRollbar(notificationLevel, eventTitle, eventDetail) {
 
 
 
-function debug(text) {
+function debug(...args) {
   if (DEBUG_OUTPUT) {
-    console.log(`DEBUG: ${text}`);
+    console.log(`DEBUG:`, ...args);
     //updateLog(`DEBUG: ${text}`);
   }
 }
@@ -674,7 +677,7 @@ function isFile() {
   return location.protocol === 'file:';
 }
 
-// needed because gotw games start with LEVELS[i] being fullly explored but hidden
+// needed because gotw games start with LEVELS[i] being fully explored but hidden
 function isLevelVisited(lev) {
   if (EXPLORED_LEVELS[lev]) return true;
   if (!LEVELS[lev] || !LEVELS[lev].know) return false;

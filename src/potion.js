@@ -203,7 +203,7 @@ function quaffpotion(potion, set_known) {
             !item.isGem() &&
             !item.matches(OLARNEYE) &&
             !item.matches(OGOLDPILE)) {
-            player.level.know[i][j] = HAVESEEN;
+            setKnow(i, j, HAVESEEN);
             show1cell(i, j);
           }
         }
@@ -219,7 +219,7 @@ function quaffpotion(potion, set_known) {
         for (let j = 0; j < MAXY; j++) {
           var monster = monsterAt(i, j);
           if (monster && monster.isVisible()) {
-            player.level.know[i][j] = HAVESEEN;
+            setKnow(i, j, HAVESEEN);
             show1cell(i, j);
           }
         }
@@ -230,7 +230,7 @@ function quaffpotion(potion, set_known) {
       updateLog(`  You stagger for a moment...`);
       for (let i = 0; i < MAXX; i++)
         for (let j = 0; j < MAXY; j++) {
-          player.level.know[i][j] = 0;
+          setKnow(i, j, KNOWNOT);
           //nap(1000);
         }
       break;
@@ -298,7 +298,7 @@ function quaffpotion(potion, set_known) {
         for (let j = 0; j < MAXY; j++) {
           let item = itemAt(i, j);
           if (item.isGem() || item.matches(OLARNEYE) || item.matches(OGOLDPILE)) {
-            player.level.know[i][j] = HAVESEEN;
+            setKnow(i, j, HAVESEEN);
             show1cell(i, j);
           }
         }

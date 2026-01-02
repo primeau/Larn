@@ -181,10 +181,14 @@ function dropAcid() {
     player.AWARENESS += 1500;
     player.AGGRAVATE += 1500;
     // heal monsters
-    for (let j = 0; j < MAXY; j++)
-        for (let i = 0; i < MAXX; i++)
-            if (player.level.monsters[i][j])
-                player.level.monsters[i][j].hitpoints = monsterlist[player.level.monsters[i][j].arg].hitpoints;
+    for (let j = 0; j < MAXY; j++) {
+        for (let i = 0; i < MAXX; i++) {
+            const monster = monsterAt(i, j);
+            if (monster) {
+                monster.hitpoints = monsterlist[monster.arg].hitpoints;
+            }
+        }
+    }
 }
 
 

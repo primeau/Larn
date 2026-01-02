@@ -16,7 +16,7 @@ function positionplayer(x, y, exact) {
     player.x = x;
     player.y = y;
     //debug(`positionplayer: (` + distance + `) got ` + xy(x, y));
-    player.level.know[player.x][player.y] = KNOWALL;
+    setKnow(player.x, player.y, KNOWALL);
     return true;
   }
 
@@ -33,7 +33,7 @@ function positionplayer(x, y, exact) {
         if (canMove(newx, newy)) {
           player.x = newx;
           player.y = newy;
-          player.level.know[player.x][player.y] = KNOWALL;
+          setKnow(player.x, player.y, KNOWALL);
           //debug(`positionplayer: (` + distance + `) got ` + newx + `,` + newy);
           return true;
         }
@@ -50,11 +50,10 @@ function positionplayer(x, y, exact) {
 
 
 function canMove(x, y) {
-  if (x < 0) return false;
-  if (x >= MAXX) return false;
-  if (y < 0) return false;
-  if (y >= MAXY) return false;
-  var item = itemAt(x, y);
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+    return false;
+  }  
+  const item = itemAt(x, y);
   return (!item.matches(OWALL) && !item.matches(OCLOSEDDOOR) && !monsterAt(x, y));
 }
 
@@ -336,10 +335,10 @@ function nearbymonst() {
 
 
 function nearbymonsters() {
-  var near = [];
-  for (var tmpx = vx(player.x - 1); tmpx <= vx(player.x + 1); tmpx++) {
-    for (var tmpy = vy(player.y - 1); tmpy <= vy(player.y + 1); tmpy++) {
-      var monster = monsterAt(tmpx, tmpy);
+  const near = [];
+  for (let tmpx = vx(player.x - 1); tmpx <= vx(player.x + 1); tmpx++) {
+    for (let tmpy = vy(player.y - 1); tmpy <= vy(player.y + 1); tmpy++) {
+      const monster = monsterAt(tmpx, tmpy);
       if (monster) {
         near.push(monster);
       }
@@ -508,7 +507,7 @@ function packweight() {
 function revealLevel() {
   for (let i = 0; i < MAXX; i++) // magic map
     for (let j = 0; j < MAXY; j++)
-      player.level.know[i][j] = KNOWALL;
+      setKnow(i, j, KNOWALL);
 }
 
 

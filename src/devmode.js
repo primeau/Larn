@@ -10,6 +10,10 @@ function enableDevmode() {
 
     console.error("DEVMODE IN USE");
 
+    ENABLE_RECORDING = false;
+    ENABLE_RECORDING_REALTIME = false;
+    recording = false;
+
     enableDebug();
     eventToggleDebugWTW();
     eventToggleDebugStairs();
@@ -19,8 +23,9 @@ function enableDevmode() {
     eventToggleDebugImmortal();
     eventToggleDebugAwareness();
     // eventToggleDebugNoMonsters();
-    // player.updateStealth(100000);
+    player.updateStealth(100000);
     // player.updateCancellation(100000);
+    player.SEEINVISIBLE = 100000
 
     wizardmode(`pvnert(x)`);
 
@@ -45,7 +50,7 @@ function enableDevmode() {
 
     // take(createObject(OSPHTALISMAN));
     // take(createObject(OHANDofFEAR));
-    // take(createObject(OLARNEYE));
+    if (ULARN) take(createObject(OLARNEYE));
     // take(createObject(ONOTHEFT));
     // take(createObject(OBRASSLAMP));
     // gtime = 30001;

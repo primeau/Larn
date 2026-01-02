@@ -528,7 +528,7 @@ function frameCompressionJob() {
   }
   
   if (compressedCount > 0) {
-    console.log(`Compressed ${compressedCount}`);
+    debug(`Compressed ${compressedCount}`);
   }
 }
 
