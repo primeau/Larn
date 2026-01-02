@@ -883,54 +883,30 @@ function deleteLog() {
 function onMouseClick(event) {
   try {
 
-    let xy, x, y;
+    let x, y;
 
     if (!player) return;
 
     if (amiga_mode) {
       if (!event.target.attributes.id) return; // clicking outside the 80,24 window
-      xy = event.target.attributes.id.value.split(`,`);
+      const xy = event.target.attributes.id.value.split(`,`);
       x = xy[0];
       y = xy[1];
     } else {
+      const larnDiv = document.getElementById(`LARN`);
+      const width = getElementWidth(`LARN`) / 80;
+      const height = parseFloat(window.getComputedStyle(larnDiv).lineHeight);
 
-      return;
+      // Find the coordinates relative to the LARN element, even if clicking on a child
+      const larnRect = larnDiv.getBoundingClientRect();
+      const offsetX = event.clientX - larnRect.left;
+      const offsetY = event.clientY - larnRect.top;
 
-      /*
- 
-      new idea: don't forget about linespacing stuff in setMode
- 
-      // this is too unreliable to ship
-      let el = document.getElementById('LARN');
-      let style = window.getComputedStyle(el, null).getPropertyValue('font-size');
-      let fontSize = parseFloat(style);
-      let fontWidth = getTextWidth("0", fontSize + 'pt dos');
-      // console.log(`fontwidth: ${fontWidth} fontSize: ${fontSize}`);
- 
-      // console.log(event.layerX, event.layerY);
-      // console.log(event.clientX, event.clientY);
- 
-      let offx = 25; // event.target.offsetLeft;
-      let offy = 25; // event.target.offsetTop);
-      // let offx = event.target.offsetLeft;
-      // let offy = event.target.offsetTop;
-      console.log(offx, offy);
-      
-      let clickX = event.clientX - offx;
-      let clickY = event.clientY - offy;
-      // console.log(`clickX`, clickX, `clickY`, clickY);
- 
-      x = clickX / fontWidth;
-      y = clickY / fontSize;
-      console.log(x, y);
- 
-      let weirdHackX = (66/59.52);
-      let weirdHackY = (16/18.45);
-      x = Math.floor((clickX / fontWidth) * weirdHackX);
-      y = Math.floor((clickY / fontSize) * weirdHackY);
-      */
-
+      x = Math.floor(offsetX / width);
+      y = Math.floor(offsetY / height);
     }
+
+    if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) return;
 
     let monster = monsterAt(x, y);
     let item = itemAt(x, y);
