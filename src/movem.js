@@ -676,6 +676,11 @@ function mmove(sx, sy, dx, dy) {
  *   1 if the monster can occupy to this postion
  */
 function valid_monst_move(x, y, monster) {
+
+  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+    return false;
+  }
+
   let item = itemAt(x, y);
   let at_entrance; /* flag indicating that this is the dungeon entrance */
   let at_player; /* flag that this is the player's location */

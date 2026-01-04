@@ -2,6 +2,7 @@
 
 let ULARN = false; // are we playing LARN or ULARN?
 let GOTW = false; // game of the week
+let NONAP = false; 
 
 var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
@@ -19,6 +20,8 @@ let localStorageCompressionWorker; /* web worker to compress save games outside 
 let liveFrameCompressionWorker; /* web worker to compress live frames */
 let rollCompressionWorker; /* web worker to compress recorded frames */
 let buildPatchWorker; /* web worker to build diff patches */
+
+
 
 async function play() {
 
@@ -39,8 +42,9 @@ async function play() {
     apiVersion: '2015-03-31'
   });
 
-  // document.addEventListener('click', onMouseClick);
   document.getElementById('LARN').addEventListener('click', onMouseClick);
+  window.addEventListener('online', handleOnline);
+  window.addEventListener('offline', handleOffline);
   window.addEventListener('resize', onResize);
 
   // WORKER STEP 0 - initialization
@@ -66,6 +70,7 @@ async function play() {
   no_intro = PARAMS.nointro ? PARAMS.nointro == `true` : false;
   ULARN = PARAMS.ularn ? PARAMS.ularn == `true` : false;
   GOTW = PARAMS.gotw ? PARAMS.gotw == `true` : false;
+  NONAP = PARAMS.nonap ? PARAMS.nonap == `true` : false;
 
   setGameConfig();
 
@@ -74,6 +79,20 @@ async function play() {
   welcome(); // show welcome screen, start the game
 
   onResize();
+}
+
+
+
+function handleOnline() {
+  console.log('Browser is online');
+  updateLog(`(Network connection restored)`.padStart(78));
+  paint();
+}
+
+function handleOffline() {
+  console.log('Browser is offline');
+  updateLog(`(Network connection lost)`.padStart(78));
+  paint();
 }
 
 

@@ -604,7 +604,7 @@ async function died(reason, slain) {
       if (navigator.onLine && ENABLE_RECORDING && reason != DIED_RETRIED_GOTW) {
         const linkText = `https://larn.org/larn/tv/?gameid=${gameID}`;
         if (amiga_mode) {
-          printFunc(`Replay Link: ${linkText}${extraNL}${extraNL}`);
+          printFunc(`Replay Link: <a href='${linkText}'>${linkText}</a>${extraNL}${extraNL}`);
         } else {
           printFunc(`Replay Link: <a href='${linkText}'><b>${linkText}</b></a>${extraNL}${extraNL}`);
         }

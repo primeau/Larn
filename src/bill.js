@@ -28,7 +28,7 @@ function readmail() {
 function letter1(gold) {
   clear();
 
-  const TAX_OWED = amiga_mode ? `0`:  `<strike>${Math.round(gold * TAXRATE).toLocaleString()}</strike>`;
+  const TAX_OWED = `<strike>${Math.round(gold * TAXRATE).toLocaleString()}</strike>`;
 
   lprcat(`<b>From:</b> The LRS (${GAMENAME} Revenue Service)`);
   lprcat(` ${lt}lrs@larn.org${gt}`);

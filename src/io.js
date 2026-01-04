@@ -19,6 +19,8 @@ const START_UNDERLINE = `<u>`;
 const END_UNDERLINE = `</u>`;
 const START_HREF = `<a href=`;
 const END_HREF = `</a>`;
+const START_FONT = `<font color=`;
+const END_FONT = `</font>`;
 
 
 
@@ -28,7 +30,7 @@ function lprint(str) {
 }
 
 
-
+// changes in this function may affect display.js:setDiv()
 function lprcat(str) {
   DEBUG_LPRCAT++;
 
@@ -53,18 +55,13 @@ function lprcat(str) {
     else if (str.indexOf(START_STRIKE, i) === i) starttag = START_STRIKE;
     else if (str.indexOf(START_ITALIC, i) === i) starttag = START_ITALIC;
     else if (str.indexOf(START_UNDERLINE, i) === i) starttag = START_UNDERLINE;
-
-    // hrefs are special because they can easily be more than 80 chars
     else if (str.indexOf(START_HREF, i) === i) {
-      if (amiga_mode) {
-        // amiga just prints one char at a time, so no special treatment
-      } else {
-        const hrefend = str.indexOf(END_HREF, i);
-        const href = str.slice(i, hrefend + END_HREF.length);
-        c = href; // stuff entire href into c to print at once
-        i += href.length - 1;
-        // debug(`lprcat: href:${href}`);
-      }
+      // <a href='link'>text</a> (must use ' not ")
+      starttag = str.slice(i, str.indexOf('>', i) + 1);
+    }
+    else if (str.indexOf(START_FONT, i) === i) {
+      // <font color='red'>
+      starttag = str.slice(i, str.indexOf('>', i) + 1);
     }
 
     if (starttag) {
@@ -84,6 +81,8 @@ function lprcat(str) {
     else if (str.indexOf(END_STRIKE, i+1) === i+1) endtag = END_STRIKE;
     else if (str.indexOf(END_ITALIC, i+1) === i+1) endtag = END_ITALIC;
     else if (str.indexOf(END_UNDERLINE, i+1) === i+1) endtag = END_UNDERLINE;
+    else if (str.indexOf(END_FONT, i+1) === i+1) endtag = END_FONT;
+    else if (str.indexOf(END_HREF, i+1) === i+1) endtag = END_HREF;
     
     if (endtag) {
       if (amiga_mode) {

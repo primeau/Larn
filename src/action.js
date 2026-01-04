@@ -50,7 +50,8 @@ function open_something(direction) {
 */
 function act_open_chest(x, y) {
   var chest = itemAt(x, y);
-  if (!chest.matches(OCHEST)) {
+
+  if (!chest?.matches(OCHEST)) {
     return;
   }
   if (rnd(101) < 40) {
@@ -83,11 +84,11 @@ function act_open_chest(x, y) {
         break;
     }
     if (rnd(100) < 69) {
-      dropItemNearPlayer(createGem(), SCATTER); /* gems from the chest */
+      setItem(x, y, createGem(), SCATTER); /* gems from the chest */
     }
-    dropItemNearPlayer(createGold(rnd(110 * chest.arg + 200)), SCATTER);
+    setItem(x, y, createGold(rnd(110 * chest.arg + 200)), SCATTER);
     for (var i = 0; i < rnd(4); i++) {
-      dropItemNearPlayer(createRandomItem(chest.arg + 2), SCATTER);
+      setItem(x, y, createRandomItem(chest.arg + 2), SCATTER);
       if (rnd(101) < 8) i--; // chance of another item
     }
     setItem(x, y, OEMPTY); /* destroy the chest */
@@ -107,7 +108,7 @@ function act_open_chest(x, y) {
 */
 function act_open_door(x, y) {
   var door = itemAt(x, y);
-  if (!door.matches(OCLOSEDDOOR)) {
+  if (!door?.matches(OCLOSEDDOOR)) {
     return;
   }
   if (rnd(11) < 7) {

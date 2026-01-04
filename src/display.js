@@ -30,10 +30,18 @@ function blt() {
     bltDocument();
   }
 
-  onResize();
+  try {
+    onResize();
+  } catch (error) {
+    console.error(`onResize() caught:`, error);
+  }
 
   // todo: is there a better place to do this?
-  recordFrame();
+  try {
+    recordFrame();
+  } catch (error) {
+    console.error(`recordFrame() caught:`, error);    
+  }
 }
 
 
@@ -116,45 +124,71 @@ function createDiv(x, y, w, h) {
 
 
 
+// changes in this function may be affected by io.js:lprcat()
 function setDiv(id, data, markup) {
   var div = document.getElementById(id);
+
+  if (!div) {
+    console.log(`setDiv(): null document: ${id}`);
+    return;
+  }
+
+  // not really needed, but keep things consistent if something is undefined
+  if (!markup) markup = null;
+  // div.markup is a custom property we add to track current markup states
+  if (!div.markup) div.markup = null;
+
+  // optimization:
+  // most of the time we're just repainting the same data into each div
+  // therefore, only repaint when the data is different, or there is new
+  // markup being applied
+  if (data === div.innerHTML && markup == div.markup) {
+    return;
+  }
+
+  div.innerHTML = data;
+  div.markup = markup;
+
+  clearDivStyle(div);
+
+  if (markup === START_BOLD) {
+    div.style.fontWeight = 'bold';
+    div.style.color = 'white';
+  } else if (markup === START_MARK) {
+    div.style.color = 'black';
+    div.style.backgroundImage = 'none';
+    div.style.backgroundColor = 'lightgrey';
+  } else if (markup === START_DIM) {
+    div.style.color = 'grey';
+  } else if (markup === START_STRIKE) {
+    div.style.textDecoration = 'line-through';
+  } else if (markup === START_UNDERLINE) {
+    div.style.textDecoration = 'underline';
+  } else if (markup === START_ITALIC) {
+    div.style.fontStyle = 'italic';
+  } else if (markup && markup.indexOf(START_FONT) != -1) {
+    // <font color='red'>
+    div.style.color = markup.split(`'`)[1];
+  } else if (markup && markup.indexOf(START_HREF) != -1) {
+    // <a href='link'>text</a> (must use ' not ")
+    div.style.color = 'white';
+    div.style.cursor = 'pointer';
+    div.onclick = function() { window.open(markup.split(`'`)[1], '_blank'); };
+  }
+}
+
+
+
+function clearDivStyle(div) {
   if (div) {
-    // not really needed, but keep things consistent if something is undefined
-    if (!markup) markup = null;
-    // div.markup is a custom property we add to track current markup states
-    if (!div.markup) div.markup = null;
-
-    // optimization:
-    // most of the time we're just repainting the same data into each div
-    // therefore, only repaint when the data is different, or there is new
-    // markup being applied
-    if (data === div.innerHTML && markup == div.markup) {
-      return;
-    }
-
-    div.innerHTML = data;
-    div.markup = markup;
-
-    if (markup === START_BOLD) {
-      div.style.fontWeight = 'bold';
-      div.style.color = 'white';
-    } else if (markup === START_MARK) {
-      div.style.fontWeight = 'bold';
-      div.style.color = 'black';
-      div.style.backgroundImage = 'none'; // ensure the highlight color is visible even if a background-image is set
-      div.style.backgroundColor = 'lightgrey';
-    } else if (markup === START_DIM) {
-      div.style.fontWeight = 'normal';
-      div.style.color = 'grey';
-    } else {
-      div.style.fontWeight = 'normal';
-      div.style.color = 'lightgrey';
-      // clear any highlight styling previously applied by start_mark
-      div.style.backgroundImage = '';
-      div.style.backgroundColor = '';
-    }
-  } else {
-    console.log(`null document: ${id}`);
+    div.style.fontWeight = 'normal';
+    div.style.color = 'lightgrey';
+    div.style.backgroundImage = '';
+    div.style.backgroundColor = '';
+    div.style.textDecoration = 'none';
+    div.style.fontStyle = 'normal';
+    div.style.cursor = 'default';
+    div.onclick = null;
   }
 }
 
@@ -886,6 +920,7 @@ function onMouseClick(event) {
     let x, y;
 
     if (!player) return;
+    if (!mazeMode) return;
 
     if (amiga_mode) {
       if (!event.target.attributes.id) return; // clicking outside the 80,24 window

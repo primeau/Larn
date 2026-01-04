@@ -1,8 +1,13 @@
 'use strict';
 
-function invokeLambda(requestPayload, successCallback, failCallback) {
+function invokeLambda(requestPayload) {
   if (AWS.config.accessKeyId === `AWS_CONFIG_ACCESSKEYID`) {
     console.log(`AWS credentials not set`);
+    return;
+  }
+
+  if (!navigator.onLine) {
+    console.log(`invokeLambda(): offline, cannot invoke lambda`);
     return;
   }
 
@@ -18,20 +23,15 @@ function invokeLambda(requestPayload, successCallback, failCallback) {
       if (!error) {
         if (data) {
           if (data.StatusCode == 200) {
-            if (successCallback) {
-              let responsePayload = JSON.parse(data.Payload);
-              successCallback(responsePayload.body, responsePayload.File, responsePayload.Metadata);
-            }
+            // do nothing now
           } else {
             console.error(`invokeLambda(): error ${data.StatusCode}`);
             updateMessage(`couldn't load: ${data.StatusCode}`);
-            if (failCallback) failCallback(data.StatusCode);
           }
         }
       } else {
         console.error(`invokeLambda(): error: ${error}`);
         updateMessage(`${error}`);
-        if (failCallback) failCallback(error);
       }
     });
   } catch (error) {
@@ -46,7 +46,12 @@ function invokeLambda(requestPayload, successCallback, failCallback) {
 async function invokeLambdaAsync(payload) {
   if (AWS.config.accessKeyId === `AWS_CONFIG_ACCESSKEYID`) {
     console.log(`AWS credentials not set`);
-    return;
+    return null;
+  }
+
+  if (!navigator.onLine) {
+    console.log(`invokeLambdaAsync(): offline, cannot invoke lambda`);
+    return null;
   }
 
   const params = {
@@ -82,33 +87,6 @@ async function invokeLambdaAsync(payload) {
 }
 
 
-
-function lambdaFail(err) {
-  console.log(`lambdaFail(): `, err);
-}
-
-
-
-function loadStyles(gameID, successCallback) {
-  console.log(`loadStyles()`);
-  let requestPayload = {
-    action: `loadstyle`,
-    gameID: gameID
-  };
-  invokeLambda(requestPayload, successCallback, null);
-}
-
-
-
-function downloadFile(gameID, filename, successCallback, failCallback) {
-  console.log(`downloadFile(): ${gameID}/${filename}`);
-  let requestPayload = {
-    action: `read`,
-    gameID: gameID,
-    filename: filename,
-  };
-  invokeLambda(requestPayload, successCallback, failCallback);
-}
 
 async function downloadFileAsync(gameID, filename) {
   console.log(`downloadFileAsync(): ${gameID}/${filename}`);
@@ -168,5 +146,5 @@ function uploadFile(gameID, filename, filecontents, isLastFile, metadata) {
     file: filecontents,
     Metadata: metadata
   };
-  invokeLambda(requestPayload, null, null);
+  invokeLambda(requestPayload);
 }

@@ -577,7 +577,7 @@ function setItem(x, y, item, placement) {
       }
     }
     if (!ok) {
-      debug(`setItem(): placement`, placement, ok, x, y, item);
+      debug(`setItem(): fail`, placement, ok, x, y, item);
       return null;
     }
   }

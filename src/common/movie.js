@@ -432,8 +432,8 @@ function getRecordingInfo() {
   if (!canRecord()) return;
 
   let recordingInfo = {
-    'frames': video.currentFrameNum || 0,
-    'rolls': video.currentRollNum + 1 || 0,
+    'frames': video?.currentFrameNum || 0,
+    'rolls': video?.currentRollNum + 1 || 0,
   };
   // console.log(`getRecordingInfo(): ${JSON.stringify((recordingInfo))}`);
   return recordingInfo;
@@ -508,8 +508,8 @@ function stopFrameCompressionJob() {
 }
 
 function frameCompressionJob() {
-  const currentFrame = video.currentFrameNum || 0;
-  const bufferSize = video.frameBuffer.length;
+  const currentFrame = video?.currentFrameNum || 0;
+  const bufferSize = video?.frameBuffer.length || 0;
   let compressedCount = 0;
   
   for (let frameIndex = 0; frameIndex < bufferSize; frameIndex++) {
@@ -525,10 +525,6 @@ function frameCompressionJob() {
       compressFrame(frame, true /* async */);
       compressedCount++;
     }
-  }
-  
-  if (compressedCount > 0) {
-    debug(`Compressed ${compressedCount}`);
   }
 }
 

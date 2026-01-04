@@ -758,7 +758,7 @@ function direct(spnum, direction, dam, arg) {
   const monster = monsterAt(x, y);
   const item = itemAt(x, y);
 
-  if (!monster && !item.matches(OMIRROR)) {
+  if (!monster && !item?.matches(OMIRROR)) {
     updateLog(`  There wasn't anything there!`);
     return;
   }

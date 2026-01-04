@@ -513,7 +513,6 @@ function revealLevel() {
 
 
 async function nap(time) {
-  let NONAP = PARAMS.nonap ? PARAMS.nonap == `true` : false;
   if (NONAP) time = 10;
   return new Promise(resolve => {
     setTimeout(() => { resolve('resolved'); }, time);

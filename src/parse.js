@@ -139,6 +139,15 @@ function parseDirectionKeys(key) {
 /*****************************************************************************/
 
 
+// letters remaining:
+// a
+// F
+// G
+// m - move item
+// M - wait multiple turns
+// O - options
+// x
+// X - view log history
 
 function parse(e, key) {
   // debug(`parse(): got: ${key}`);
@@ -149,6 +158,9 @@ function parse(e, key) {
   //
   // upper/lower case keyboard input for mobile
   //
+
+  // console.log(`parse: moves=`, player.MOVESMADE);
+
   if (key == CAPS) {
     nomove = 1;
     UPPERCASE = !UPPERCASE;
@@ -182,7 +194,13 @@ function parse(e, key) {
     return;
   }
 
+  if (!game_started) {
+    debug(`parse(): game not started`);
+    return;
+  }
+  
   if (!player) {
+    debug(`parse(): null player`);
     return;
   }
 
@@ -544,6 +562,16 @@ function parse(e, key) {
     return;
   }
   */
+
+  // 
+  // OPTIONS
+  //
+  // if (key == 'O') { 
+  //   nomove = 1;
+  //   // setCharCallback(parse_options);
+  //   print_options();
+  //   return;
+  // }
 
   //
   // outstanding taxes, or prayer shortcut

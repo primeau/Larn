@@ -23,6 +23,7 @@ let VARIABLE = `variablebutton`;
 let NARROW = `narrowbutton`;
 
 // common buttons
+let BUTTON_OFFLINE = setButton(null, `BUTTON_OFFLINE`, VARIABLE, DEL, `offline`);
 let BUTTON_DEL = setButton(null, `BUTTON_DEL`, VARIABLE, DEL, `DEL`);
 let BUTTON_EXIT = setButton(null, `BUTTON_EXIT`, VARIABLE, ESC, `leave`);
 let BUTTON_CANCEL = setButton(null, `BUTTON_CANCEL`, VARIABLE, ESC, `cancel`);
@@ -949,5 +950,10 @@ function helpButtons(location) {
     if (mobileDevice) setButton(location, `BUTTON_QUIT`, VARIABLE, `Q`, `Quit`);
     setButton(location, `BUTTON_BUGS`, VARIABLE, `🐞`, `Report 🐞`);
     // if (mobileDevice) setButton(location, `BUTTON_DISABLE_BUTTONS`, VARIABLE, `cmd+alt+#`, `Hide Buttons`);
+  }
+  if (!navigator.onLine) {
+    const b = setButton(location, `BUTTON_OFFLINE`, VARIABLE, `:)`, `OFFLINE`);
+    b.style.color = 'white'; // font color
+    b.style.backgroundColor = 'crimson'; // background color
   }
 }
