@@ -278,4 +278,5 @@ function autoPray() {
     simulateKeypress(char);
   }
   simulateKeypress(ENTER);
+  prayed = 1;
 }

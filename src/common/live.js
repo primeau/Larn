@@ -9,6 +9,7 @@ async function processLiveFrame(frame) {
   if (!ENABLE_RECORDING_REALTIME) return;
   if (!navigator.onLine) return;
   if (!game_started) return;
+  if (!frame) return;
 
   try {
 

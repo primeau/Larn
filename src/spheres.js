@@ -28,10 +28,8 @@ function newsphere(x, y, dir, life, lev) {
     x = vx(x);
     y = vy(y);
   } else {
-    if (x < 1) x = 1;
-    if (x >= MAXX - 1) x = MAXX - 2;
-    if (y < 1) y = 1;
-    if (y >= MAXY - 1) y = MAXY - 2;
+    x = clamp(x, 1, MAXX - 2);
+    y = clamp(y, 1, MAXY - 2);
   }
 
   var monster = monsterAt(x, y);

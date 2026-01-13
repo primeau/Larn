@@ -167,18 +167,16 @@ const ULARN_monsterlist = [
   new Monster(`u`, `green urchin`,                 10,   -5,  12,  0,   3,    0,    95,    5000, 55),
   new Monster(`D`, `red dragon`,                   10,   -4,  13,  3,  19,  800,   120,   14000, 56),
   //   
-  new Monster(OEMPTY.char, `type I demon lord`,    12,  -40,  20,  3,  20,    0,   150,   50000, 57),
-  new Monster(OEMPTY.char, `type II demon lord`,   13,  -45,  25,  5,  22,    0,   200,   75000, 58),
-  new Monster(OEMPTY.char, `type III demon lord`,  14,  -50,  30,  9,  24,    0,   250,  100000, 59),
-  new Monster(OEMPTY.char, `type IV demon lord`,   15,  -55,  35, 11,  26,    0,   300,  125000, 60),
-  new Monster(OEMPTY.char, `type V demon lord`,    16,  -60,  40, 13,  28,    0,   350,  150000, 61),
-  new Monster(OEMPTY.char, `type VI demon lord`,   17,  -65,  45, 13,  30,    0,   400,  175000, 62),
-  new Monster(OEMPTY.char, `type VII demon lord`,  18,  -70,  50,  6,  32,    0,   450,  200000, 63),
-  new Monster(OEMPTY.char, `demon prince`,         19, -100,  80,  6,  40,    0,  1000,  500000, 64),
-  new Monster(OEMPTY.char, `God of Hellfire`,      20, -127, 127,  6, 100,    0, 32767, 1000000, 65)
+  new Monster(`1`, `type I demon lord`,            12,  -40,  20,  3,  20,    0,   150,   50000, 57),
+  new Monster(`2`, `type II demon lord`,           13,  -45,  25,  5,  22,    0,   200,   75000, 58),
+  new Monster(`3`, `type III demon lord`,          14,  -50,  30,  9,  24,    0,   250,  100000, 59),
+  new Monster(`4`, `type IV demon lord`,           15,  -55,  35, 11,  26,    0,   300,  125000, 60),
+  new Monster(`5`, `type V demon lord`,            16,  -60,  40, 13,  28,    0,   350,  150000, 61),
+  new Monster(`6`, `type VI demon lord`,           17,  -65,  45, 13,  30,    0,   400,  175000, 62),
+  new Monster(`7`, `type VII demon lord`,          18,  -70,  50,  6,  32,    0,   450,  200000, 63),
+  new Monster(`9`, `demon prince`,                 19, -100,  80,  6,  40,    0,  1000,  500000, 64),
+  new Monster(`0`, `God of Hellfire`,              20, -127, 127,  6, 100,    0, 32767, 1000000, 65)
 ];
-
-const demonchar = [`1`,`2`,`3`,`4`,`5`,`6`,`7`,`9`,`0`];
 
 /* defines for the monsters as objects */
 const BAT = 1;

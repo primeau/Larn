@@ -63,7 +63,7 @@ function movemonst() {
    * last_monst_hx and last_monst_hy will be out of the map range
    * (actually set to -1).
    */
-  if ((lasthx >= 0) && (lasthx < MAXX) && (lasthy >= 0) && (lasthy < MAXY)) {
+  if (inBounds(lasthx, lasthy)) {
     let last_monst = monsterAt(lasthx, lasthy);
     if (last_monst) {
       last_monst.moved = false;
@@ -391,7 +391,7 @@ function smart_move(x, y) {
             let xtmp = sx + diroffx[z];
             let ytmp = sy + diroffy[z];
 
-            if ((xtmp >= 0) && (xtmp < MAXX) && (ytmp >= 0) && (ytmp < MAXY)) {
+            if (inBounds(xtmp, ytmp)) {
               /* This square is within the map */
               if (screen[xtmp][ytmp] == 0) {
                 /*
@@ -426,9 +426,7 @@ function smart_move(x, y) {
       xl = x + diroffx[z];
       yl = y + diroffy[z];
 
-      let on_map = ((xl >= 0) && (xl < MAXX) && (yl >= 0) && (yl < MAXY));
-
-      if (on_map) {
+      if (inBounds(xl, yl)) {
         if (screen[xl][yl] == path_dist) {
           if (!monsterAt(xl, yl)) {
             mmove(x, y, xl, yl);
@@ -677,7 +675,7 @@ function mmove(sx, sy, dx, dy) {
  */
 function valid_monst_move(x, y, monster) {
 
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+  if (!inBounds(x, y)) {
     return false;
   }
 

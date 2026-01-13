@@ -110,6 +110,7 @@ function loadState(state) {
   LOG = state.LOG;
 
   player = loadPlayer(state.player);
+  gameID = state.gameID;
 
   setRecordingInfo(state.recording);
 
@@ -117,27 +118,34 @@ function loadState(state) {
   GAMEOVER = state.GAMEOVER;
   mazeMode = state.mazeMode;
   napping = state.napping;
+
+  showConfigButtons = state.showConfigButtons;
   original_objects = state.original_objects;
   keyboard_hints = state.keyboard_hints;
   auto_pickup = state.auto_pickup;
   side_inventory = state.side_inventory;
   show_color = state.show_color;
+  log_color = state.log_color;
   bold_objects = state.bold_objects;
-  dnd_item = state.dnd_item;
-  genocide = state.genocide;
   amiga_mode = state.amiga_mode;
-  gameID = state.gameID;
-
+  retro_mode = state.retro_mode;
+  wall_char = state.wall_char;
+  floor_char = state.floor_char;
+  custom_monsters = state.custom_monsters;
+  setFloorChar(floor_char);
   setMode(amiga_mode, retro_mode, original_objects);
 
-  debug_used = state.debug_used;
+  dnd_item = state.dnd_item;
+  genocide = state.genocide; 
 
   logname = state.logname;
+  debug_used = state.debug_used;
   cheat = state.cheat;
   level = state.level;
   wizard = state.wizard;
   gtime = state.gtime;
   setDifficulty(state.HARDGAME);
+
   lastmonst = state.lastmonst;
   lastnum = state.lastnum;
   hitflag = state.hitflag;

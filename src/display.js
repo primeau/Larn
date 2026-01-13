@@ -15,6 +15,12 @@ function paint() {
     bottomline();
   }
 
+  // // useful for testing centering
+  // cursor(1, 3);
+  // lprcat(`1   .    1    .    2    .    3    .    4    .    5    .    6    .    7    .    8`);
+  // cursor(1, 22);
+  // lprcat(`1   .    1    .    2    .    3    .    4    .    5    .    6    .    7    .    8`);
+
   printStats(); // todo this should probably move
   blt();
 
@@ -337,6 +343,7 @@ function onResize(event) {
 
 
 const testtext = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
+let styleUploaded = false;
 function setMode(amiga, retro, original) {
 
   // console.log(amiga, retro, original);
@@ -423,14 +430,12 @@ function setMode(amiga, retro, original) {
   setButtonFontSize(fontSize);
 
   // upload style information for larntv
-  if (!styleUploaded) {
+  if (game_started && !styleUploaded) {
     let style = getStyleData();
     styleUploaded = uploadStyle(style);
   }
 
 }
-
-let styleUploaded = false;
 
 
 
@@ -584,7 +589,7 @@ function drawmaze() {
 
 
 function getKnow(x, y) {
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+  if (!inBounds(x, y)) {
     debug(`getKnow(): bad args`, x, y);
     return null;
   }
@@ -594,7 +599,7 @@ function getKnow(x, y) {
 
 
 function setKnow(x, y, val) {
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+  if (!inBounds(x, y)) {
     debug(`setKnow(): bad args`, x, y, val);
     return;
   }
@@ -608,31 +613,20 @@ function setKnow(x, y, val) {
 function showcell(x, y) {
   if (!mazeMode) return;
 
-  var minx, maxx, miny, maxy, i, j, m;
-
+  let range = 1;
   const blind = player.BLINDCOUNT > 0;
   if (blind) {
-    minx = x;
-    maxx = x;
-    miny = y;
-    maxy = y;
+    range = 0;
   } else if (player.AWARENESS > 0) {
-    minx = x - 3;
-    maxx = x + 3;
-    miny = y - 3;
-    maxy = y + 3;
-  } else {
-    minx = x - 1;
-    maxx = x + 1;
-    miny = y - 1;
-    maxy = y + 1;
+    range = 3;
   }
-
-  minx = vx(minx);
-  maxx = vx(maxx);
-  miny = vy(miny);
-  maxy = vy(maxy);
-
+  
+  const minx = vx(x - range);
+  const maxx = vx(x + range);
+  const miny = vy(y - range);
+  const maxy = vy(y + range);
+  
+  let i, j, m;
   for (j = miny; j <= maxy; j++) {
     for (m = minx; m <= maxx; m++) {
       if ((getKnow(m, j) & KNOWHERE) == 0) {
@@ -647,6 +641,7 @@ function showcell(x, y) {
     }
   }
 
+  // updateWalls(x, y, range); // looks a bit weird
 }
 
 
@@ -691,7 +686,7 @@ function moveplayer(dir) {
   const k = player.x + diroffx[dir];
   const m = player.y + diroffy[dir];
 
-  if (k < 0 || k >= MAXX || m < 0 || m >= MAXY) {
+  if (!inBounds(k, m)) {
     nomove = 1;
     return 0;
   }
@@ -941,7 +936,7 @@ function onMouseClick(event) {
       y = Math.floor(offsetY / height);
     }
 
-    if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) return;
+    if (!inBounds(x, y)) return;
 
     let monster = monsterAt(x, y);
     let item = itemAt(x, y);

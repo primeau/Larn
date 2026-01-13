@@ -88,11 +88,11 @@ function setGameConfig() {
     monsterlist[WRAITH].color = `dimgray`;
     monsterlist[FORVALAKA].color = `thistle`;
     if (ULARN) monsterlist[LAMANOBE].color = `powderblue`; else monsterlist[LAWLESS].color = `powderblue`;
-    monsterlist[OSEQUIP].color = null;
+    monsterlist[OSEQUIP].color = `lightgray`;
     monsterlist[ROTHE].color = `sienna`;
     monsterlist[XORN].color = `brown`;
     monsterlist[VAMPIRE].color = `slategray`;
-    monsterlist[INVISIBLESTALKER].color = null;
+    monsterlist[INVISIBLESTALKER].color = `lightgray`;
     monsterlist[POLTERGEIST].color = `lavender`;
     monsterlist[DISENCHANTRESS].color = `antiquewhite`;
     monsterlist[SHAMBLINGMOUND].color = `olivedrab`;
@@ -110,5 +110,16 @@ function setGameConfig() {
     monsterlist[PLATINUMDRAGON].color = `lightsteelblue`;
     monsterlist[GREENURCHIN].color = `lime`;
     monsterlist[REDDRAGON].color = `indianred`;
+    monsterlist[DEMONLORD].color = `crimson`;
+    monsterlist[DEMONLORD+1].color = `crimson`;
+    monsterlist[DEMONLORD+2].color = `crimson`;
+    monsterlist[DEMONLORD+3].color = `crimson`;
+    monsterlist[DEMONLORD+4].color = `crimson`;
+    monsterlist[DEMONLORD+5].color = `crimson`;
+    monsterlist[DEMONLORD+6].color = `crimson`;
+    monsterlist[DEMONPRINCE].color = `crimson`;
+    if (ULARN) monsterlist[LUCIFER].color = `crimson`;
+    
+
 
 }

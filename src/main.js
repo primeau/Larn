@@ -5,53 +5,30 @@
 /* create new game */
 function welcome() {
   
-  logname = localStorageGetObject('logname', logname);
-  amiga_mode = PARAMS.mode && PARAMS.mode == `amiga` || false;
-  retro_mode = localStorageGetObject('retro', true);
-  original_objects = localStorageGetObject('original_objects', true);
-  showConfigButtons = localStorageGetObject(`showConfigButtons`, true);
-  keyboard_hints = localStorageGetObject('keyboard_hints', false);
-  auto_pickup = localStorageGetObject('auto_pickup', false);
-  side_inventory = localStorageGetObject('side_inventory', true);
-  show_color = localStorageGetObject('show_color', true);
-  bold_objects = localStorageGetObject('bold_objects', true);
-  setMode(amiga_mode, retro_mode, original_objects);
-  
-  createLevelNames();
-  initHelpPages();
   lprcat(helppages[0]);
 
-  
-  var tmpID = Math.random().toString(36).substr(2, 5);
-  playerID = localStorageGetObject('playerID', tmpID);
-  localStorageSetObject('playerID', playerID);
-  
-  // this is probably their first game, turn on keyboard_hints
-  if (playerID === tmpID) {
-    keyboard_hints = true;
-  }
-  
-  var nameString = `Welcome to ${GAMENAME}. Please enter your name [<b>${logname}</b>]: `;
-  
-  let chastizing = `* Please use only one name to leave room on the scoreboard for others`;
-  setDiv(`FOOTER`, chastizing);
+  const nameString = `Welcome to ${GAMENAME}. Please enter your name [<b>${logname}</b>]: `;
+  const chastize = `* Please use only one name to leave room on the scoreboard for others`;
+  setDiv(`FOOTER`, chastize);
   
   cursors();
   lprcat(nameString);
   blinken(nameString.length - 6, 24);
 
   player = new Player(); // gender and character class are set later on
+
   initKeyBindings(); // wait until last moment to set key bindings
 
   if (no_intro) {
+    debug(`no_intro`);
     setname(logname);
   } else {
     setTextCallback(setname, 24);
   }
 
-  updateRB();
 
   paint();
+  // onResize();
 }
 
 
@@ -113,8 +90,8 @@ function setname(name) {
   var diff = Number(localStorageGetObject('difficulty') || 0);
   setDifficulty(diff);
 
-  if (no_intro) {
-    setclass(`Adventurer`);
+  if (no_intro && !saveddata) {
+    setclass(localStorageGetObject('character_class', `Adventurer`));
     return 1;
   }
 
@@ -398,7 +375,7 @@ function setclass(classpick) {
       blinken(player.gender.length + 22, 24);
       setCharCallback(setgender);
     } else {
-      setgender(`Male`);
+      setgender(localStorageGetObject('gender', `Male`));
       return true;
     }
   } else {
@@ -494,7 +471,7 @@ async function startgame() {
 
   newcavelevel(0); /*  make the dungeon */
 
-  var introMessage = `Welcome to ${GAMENAME}, ${logname} -- Press <b>?</b> for help`;
+  var introMessage = `Welcome to ${GAMENAME}, ${logname} -- Press <b>O</b> for options <b>?</b> for help`;
   updateLog(introMessage);
 
   if (extraMessage) updateLog(extraMessage);

@@ -634,7 +634,7 @@ async function died(reason, slain) {
     setCharCallback(dead);
     paint(); // last live frame will get sent here
 
-    processRecordedFrame(video.createEmptyFrame()); // record fade to blank screen so we can easily refresh on reload
+    processRecordedFrame(video?.createEmptyFrame()); // record fade to blank screen so we can easily refresh on reload
 
     side_inventory = true;
     game_started = false;
@@ -687,7 +687,7 @@ async function writeScoreToDatabase(endGameScore) {
   try {
     const newScore = endGameScore;
     if (newScore.gotw) {
-      doRollbar(ROLLBAR_INFO, `gotw:${newScore.gotw}`, `U=${newScore.ularn}, ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
+      doRollbar(ROLLBAR_INFO, `GOTW`, `gotw:${newScore.gotw}`, `U=${newScore.ularn}, ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
     } else {
       if (newScore.winner) {
         doRollbar(ROLLBAR_INFO, `winner`, `${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.playerID}, ${newScore.gameID}`);

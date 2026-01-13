@@ -65,6 +65,8 @@ class Video {
     });
     newFrame.id = frameNum || video.currentFrameNum + 1;
     newFrame.ts = Date.now();
+
+    // console.log(`video.createEmptyFrame(): ${newFrame.id}`);
     return newFrame;
   }
 
@@ -227,10 +229,12 @@ let LAST_RECORDED_FRAME_ID = -1;
 function processRecordedFrame(frame) {
   if (!ENABLE_RECORDING) return false;
   if (!navigator.onLine) return false;
+  if (!frame) return false;
 
   try {
     if (!video) video = new Video(gameID);
 
+    // console.log(`processRecordedFrame(): frame id: ${frame.id}`);
     if (LAST_RECORDED_FRAME_ID === frame.id) {
       // console.error(`processRecordedFrame(): DUPE`);
       return;
@@ -429,11 +433,11 @@ function endRecording(endData, isUlarn) {
 // this is called by larn
 function getRecordingInfo() {
 
-  if (!canRecord()) return;
+  if (!canRecord()) return null;
 
   let recordingInfo = {
     'frames': video?.currentFrameNum || 0,
-    'rolls': video?.currentRollNum + 1 || 0,
+    'rolls': video?.currentRollNum + 1 || 1,
   };
   // console.log(`getRecordingInfo(): ${JSON.stringify((recordingInfo))}`);
   return recordingInfo;
@@ -448,14 +452,11 @@ function setRecordingInfo(info) {
   if (!info) return;
 
   video = new Video(video.gameID);
-  console.log(`setRecordingInfo(): info: ${JSON.stringify(info)}`);
+
+  debug(`setRecordingInfo(): info: ${JSON.stringify(info)}`);
   video.currentFrameNum = parseInt(info.frames);
-
-  // console.log(`setRecordingInfo(): creating frame ${video.currentFrameNum}`)
-
-  video.frameBuffer[video.currentFrameNum] = video.createEmptyFrame();
-
   video.currentRollNum = parseInt(info.rolls);
+  video.frameBuffer[video.currentFrameNum] = video.createEmptyFrame();
 }
 
 
@@ -475,15 +476,15 @@ function getStyleData() {
 
 // send style metadata to larntv for recorded games
 function uploadStyle(style) {
-  if (!canRecord()) return false;
-  try {
-    // console.log(`uploadStyle(): style: `, style);
-    uploadFile(gameID, `${gameID}.css`, JSON.stringify(style));
-    return true;
-  } catch (error) {
-    console.error(`failed to upload style`, error)
-    return false;
+  if (canRecord()) {
+    try {
+      // console.log(`uploadStyle(): style: `, style);
+      uploadFile(gameID, `${gameID}.css`, JSON.stringify(style));
+    } catch (error) {
+      console.error(`failed to upload style`, error)
+    }
   }
+  return true; // only try to upload once
 }
 
 

@@ -12,6 +12,8 @@ var UPPERCASE = false;
 
 var blocking_callback;
 var keyboard_input_callback;
+let text_input_event;
+
 
 
 
@@ -69,8 +71,27 @@ function mousetrap(e, key) {
   // debug(`mousetrap: ${key} ${JSON.stringify(e)}`);
   if (key == SPACE) key = ' ';
   if (key == TAB) return false;
+
   mainloop(e, key);
+
+  if (text_input_event) {
+    // debug(`text_input_event: ${key}`);
+    text_input_event(key);
+  }
+
   return false; // disable default browser behaviour
+}
+
+
+
+function setKeyPressEventListener(func) {
+  text_input_event = func;
+}
+
+
+
+function clearKeyPressEventListener() {
+  text_input_event = null;
 }
 
 
@@ -139,17 +160,8 @@ function parseDirectionKeys(key) {
 /*****************************************************************************/
 
 
-// letters remaining:
-// a
-// F
-// G
-// m - move item
-// M - wait multiple turns
-// O - options
-// x
-// X - view log history
 
-function parse(e, key) {
+async function parse(e, key) {
   // debug(`parse(): got: ${key}`);
 
   // if (keyboard_input_callback)
@@ -316,7 +328,7 @@ function parse(e, key) {
   //
   // OPEN (in a direction)
   //
-  if (key == 'o' || key == 'O') {
+  if (key == 'o') {
     if (player.TIMESTOP == 0) {
       /* check for confusion. */
       if (player.CONFUSE > 0) {
@@ -441,8 +453,7 @@ function parse(e, key) {
     var larnString = ULARN ? `The Addiction of JS Ularn` : `JS Larn`;
     updateLog(`${larnString}, Version ${VERSION} Build ${BUILD}`);
     updateLog(`  ${logname}`);
-    if (ULARN) appendLog(`, ${player.char_picked}`);
-    if (ULARN) appendLog(`, ${player.gender}`);
+    if (ULARN) appendLog(`, ${player.char_picked}, ${player.gender}`);
     appendLog(`, Difficulty ${getDifficulty()}`);
     if (debug_used) updateLog(`  Debug`);
     if (wizard) updateLog(`  Wizard`);
@@ -563,15 +574,14 @@ function parse(e, key) {
   }
   */
 
-  // 
+  //
   // OPTIONS
   //
-  // if (key == 'O') { 
-  //   nomove = 1;
-  //   // setCharCallback(parse_options);
-  //   print_options();
-  //   return;
-  // }
+  if (key == 'O') { 
+    nomove = 1;
+    print_options();
+    return;
+  }
 
   //
   // outstanding taxes, or prayer shortcut
@@ -745,24 +755,17 @@ function parse(e, key) {
   // identify traps
   //
   if (key == '^') {
-    var flag = 0;
-    for (var j = vy(player.y - 1); j <= vy(player.y + 1); j++) {
-      for (var i = vx(player.x - 1); i <= vx(player.x + 1); i++) {
-        var trap = itemAt(i, j);
-        switch (trap.id) {
-          case OTRAPDOOR.id:
-          case ODARTRAP.id:
-          case OTRAPARROW.id:
-          case OTELEPORTER.id:
-          case OPIT.id:
-          case OELEVATORUP.id:
-          case OELEVATORDOWN.id:
-            updateLog(`It's ${trap}${period}`);
-            flag++;
-        }
+    let trapFound = false;
+    for (let j = vy(player.y - 1); j <= vy(player.y + 1); j++) {
+      for (let i = vx(player.x - 1); i <= vx(player.x + 1); i++) {
+        const item = itemAt(i, j);
+        if (item?.isTrap()) {
+          updateLog(`It's ${item}${period}`);
+          trapFound = true;
+      }
       }
     }
-    if (flag == 0)
+    if (!trapFound)
       updateLog(`No traps are visible${period}`);
     return;
   }
@@ -823,79 +826,6 @@ function parse(e, key) {
     return;
   }
 
-  // toggle inventory on right side
-  if (key == '#') {
-    nomove = 1;
-    side_inventory = !side_inventory;
-    localStorageSetObject('side_inventory', side_inventory);
-    updateLog(`Inventory view: ${side_inventory ? `on` : `off`}`);
-    onResize();
-    return;
-  }
-
-  //
-  // toggle color
-  //
-  if (key == '$') {
-    nomove = 1;
-    show_color = !show_color;
-    localStorageSetObject('show_color', show_color);
-    updateLog(`Colors: ${show_color ? `on` : `off`}`);
-    return;
-  }
-
-  //
-  // toggle between classic, hack and amiga mode
-  //
-  if (key == '}') {
-    nomove = 1;
-    // classic => hack
-    if (original_objects && !amiga_mode) {
-      original_objects = false;
-      updateLog(`Switching to Hack mode`);
-    }
-    // hack mode => amiga
-    else if (!original_objects && !amiga_mode) {
-      amiga_mode = true;
-      original_objects = true;
-      updateLog(`Switching to Amiga mode`);
-    }
-    // amiga mode => classic
-    else {
-      amiga_mode = false;
-      original_objects = true;
-      updateLog(`Switching to Classic mode`);
-    }
-    localStorageSetObject('original_objects', original_objects);
-    setMode(amiga_mode, retro_mode, original_objects);
-    return;
-  }
-
-  //
-  // toggle retro fonts
-  //
-  if (key == '{') {
-    nomove = 1;
-    retro_mode = !retro_mode;
-    localStorageSetObject('retro', retro_mode);
-    let fontStatus = retro_mode ? `DOS` : `Modern`;
-    if (amiga_mode) fontStatus = retro_mode ? `Amiga 500` : `Amiga 1200`;
-    updateLog(`Font: ${fontStatus}`);
-    setMode(amiga_mode, retro_mode, original_objects);
-    return;
-  }
-
-  //
-  // toggle bold
-  //
-  if (key == '%') {
-    nomove = 1;
-    bold_objects = !bold_objects;
-    localStorageSetObject('bold_objects', bold_objects);
-    updateLog(`Bold objects: ${bold_objects ? `on` : `off`}`);
-    return;
-  }
-
   //
   // wizard mode
   //
@@ -903,6 +833,16 @@ function parse(e, key) {
     nomove = 1;
     updateLog(`Enter Password: `);
     setTextCallback(wizardmode, 14);
+    return;
+  }
+
+  // 
+  //  MAZE EXPLORER
+  //
+  if (debug_used && key === '±') {
+    const explorer = Object.create(MazeExplorer);
+    const result = await explorer.explore();
+    console.log(`Explored in ${result.steps} steps`);
     return;
   }
 

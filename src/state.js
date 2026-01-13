@@ -11,30 +11,37 @@ let LOG = Array(LOG_SAVE_SIZE).fill(' ');
 var player;
 var playerID;
 var playerIP = `0`;
+var gameID = Math.random().toString(36).substring(2, 12);
+// var gameID = `testgameid`;
 var PARAMS = {};
 var recording = {};
-var showConfigButtons = true;
 
 var newsphereflag = false; /* JRP hack to not move sphere twice after cast */
 var GAMEOVER = true;
 var game_started = false;
 var mazeMode = false;
 var napping = false; /* prevent keyboard input while a nap event is happening */
+
+var showConfigButtons = true;
 var original_objects = true;
-var keyboard_hints = false;
+var keyboard_hints = true;
 var auto_pickup = false;
 var side_inventory = true;
 var show_color = true;
+var log_color = true;
 var bold_objects = true;
+var amiga_mode = false;
 var retro_mode = false;
+var wall_char = 0; // index into WALLS
+var floor_char = OEMPTY_DEFAULT_CHAR;
+var custom_monsters = [];
+var no_intro = false;
+
 var dnd_item = null;
 var genocide = [];
-var amiga_mode = false;
-var gameID = Math.random().toString(36).substr(2, 10);
-// var gameID = `testgameid`;
-var debug_used = 0;
 
 var logname = `Adventurer`;
+var debug_used = 0;
 var cheat = 0; /* 1 if the player has fudged save file */
 var level = -1; /* cavelevel player is on = cdesc[CAVELEVEL] */
 var wizard = 0; /* the wizard mode flag */
@@ -87,9 +94,10 @@ function GameState(save) {
   this.LEVELS = LEVELS;
   this.LOG = LOG;
   this.player = player;
+  this.gameID = gameID;
 
-  if (ENABLE_RECORDING) {
-    this.recording = getRecordingInfo();
+  this.recording = getRecordingInfo();
+  if (this.recording) {
     if (save) {
       this.recording.frames += 3; // hack because three more frames get added before a game is done saving
     } else {
@@ -102,24 +110,32 @@ function GameState(save) {
   this.GAMEOVER = GAMEOVER;
   this.mazeMode = mazeMode;
   this.napping = napping;
+
+  this.showConfigButtons = showConfigButtons;
   this.original_objects = original_objects;
   this.keyboard_hints = keyboard_hints;
   this.auto_pickup = auto_pickup;
   this.side_inventory = side_inventory;
   this.show_color = show_color;
+  this.log_color = log_color;
   this.bold_objects = bold_objects;
+  this.amiga_mode = amiga_mode;
+  this.retro_mode = retro_mode;
+  this.wall_char = wall_char;
+  this.floor_char = floor_char;
+  this.custom_monsters = custom_monsters;
+  
   this.dnd_item = dnd_item;
   this.genocide = genocide;
-  this.amiga_mode = amiga_mode;
-  this.gameID = gameID;
-  this.debug_used = debug_used;
 
   this.logname = logname;
+  this.debug_used = debug_used;
   this.cheat = cheat;
   this.level = level;
   this.wizard = wizard;
   this.gtime = gtime;
   this.HARDGAME = getDifficulty();
+
   this.lastmonst = lastmonst;
   this.lastnum = lastnum;
   this.hitflag = hitflag;

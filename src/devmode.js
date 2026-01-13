@@ -10,11 +10,9 @@ function enableDevmode() {
 
     console.error("DEVMODE IN USE");
 
-    // ENABLE_RECORDING = false;
-    // ENABLE_RECORDING_REALTIME = false;
-    // recording = false;
-
-    NONAP = true;    
+    ENABLE_RECORDING = false;
+    ENABLE_RECORDING_REALTIME = false;
+    recording = null;
 
     enableDebug();
     eventToggleDebugWTW();
@@ -58,7 +56,7 @@ function enableDevmode() {
     // gtime = 30001;
     player.GOLD = 250000;
 
-    updateLog(`normal <i>italic</i> <strike>strike</strike> <b>bold</b> <dim>dim</dim> <mark>mark</mark> <u>underline</u> <a href='https://larn.org'>Link</a>`);
+    updateLog(`normal <i>italic</i> <s>strike</s> <b>bold</b> <dim>dim</dim> <mark>mark</mark> <u>underline</u> <a href='https://larn.org'>Link</a> <font color='red'>red</font> <font color='green'>green</font> <font color='blue'>blue</font>`);
 
     // newcavelevel(level + 1);
     // setItem(player.x, player.y, createObject(OTRAPDOOR));

@@ -197,6 +197,30 @@ class Item {
 
 
 
+  isDoorOrWall() {
+    let doorOrWall = false;
+    doorOrWall |= this.matches(OWALL);
+    doorOrWall |= this.matches(OOPENDOOR);
+    doorOrWall |= this.matches(OCLOSEDDOOR);
+    return doorOrWall;
+  }
+
+
+
+  isTrap() {
+    let trap = false;
+    trap |= this.matches(OTRAPDOOR);
+    trap |= this.matches(ODARTRAP);
+    trap |= this.matches(OTRAPARROW);
+    trap |= this.matches(OTELEPORTER);
+    trap |= this.matches(OPIT);
+    trap |= this.matches(OELEVATORUP);
+    trap |= this.matches(OELEVATORDOWN);
+    return trap;
+  }
+
+
+
   getSortCode() {
     var sortcode = (sortorder.indexOf(this.id) + 1) * 10000;
     // sort unknown scrolls and potions above known
@@ -220,6 +244,19 @@ const NO_BOLD = false;
 const NO_COLOR = null;
 const CARRY = true;
 const NO_CARRY = false;
+
+// // const uSolo = '▫'; //0 // too small?
+// // const uSolo = '◻'; //0 // 
+// // const uSolo = '□'; //0 // too big!
+
+const wallOptions = [`▒`, `#`, `Single Line ASCII`, `Single Line ASCII (modern)`, `Double Line ASCII`];
+//                         0    1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31   32 
+const blockWalls =        ['▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒'];
+const octalthorpeWalls =  ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'];
+const singleAsciiModern = ['○', '.', '╵', '.', '╶', '.', '╰', '.', '╷', '.', '│', '.', '╭', '.', '├', '.', '╴', '.', '╯', '.', '─', '.', '┴', '.', '╮', '.', '┤', '.', '┬', '.', '┼', '.', '.'];  
+const singleAsciiWalls =  ['│', '.', '│', '.', '─', '.', '└', '.', '│', '.', '│', '.', '┌', '.', '├', '.', '─', '.', '┘', '.', '─', '.', '┴', '.', '┐', '.', '┤', '.', '┬', '.', '┼', '.', '.'];  
+const doubleAsciiWalls =  ['║', '.', '║', '.', '═', '.', '╚', '.', '║', '.', '║', '.', '╔', '.', '╠', '.', '═', '.', '╝', '.', '═', '.', '╩', '.', '╗', '.', '╣', '.', '╦', '.', '╬', '.', '.'];  
+const WALLS = [blockWalls, octalthorpeWalls, singleAsciiWalls, singleAsciiModern, doubleAsciiWalls];
 
 
 
@@ -258,6 +295,10 @@ class DungeonObject extends Item {
       } else {
         return `${DIV_START}o${this.id}${DIV_END}`;
       }
+    }
+    if (this.id == OWALL.id) {
+      if (wall_char < 0 || wall_char >= WALLS.length) wall_char = 0;
+      return WALLS[wall_char][arg];
     }
     let char = null;
     if (original_objects) {
@@ -377,7 +418,7 @@ function readbook(book) {
   }
 }
 
-
+const OEMPTY_DEFAULT_CHAR = `·`;
 
 /* id, char, hackchar, ularnchar, color, bold, desc, carry, arg */
 const OEMPTY = new DungeonObject(0, `·`, `·`, `·`, NO_COLOR, NO_BOLD, `the dungeon floor`, NO_CARRY); // http://www.fileformat.info/info/unicode/char/00b7/index.htm
@@ -506,7 +547,7 @@ const OCOKE = new DungeonObject(99, `:`, `:`, `:`, `snow`, BOLD, `some cocaine`,
 
 
 function itemAt(x, y) {
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+  if (!inBounds(x, y)) {
     return null;
   }
 
@@ -554,7 +595,7 @@ function itemAt(x, y) {
 
 
 function setItem(x, y, item, placement) {
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+  if (!inBounds(x, y)) {
     debug(`setItem(): bad args`, x, y, item);
     return null;
   }
@@ -603,13 +644,13 @@ function setWallArg(x, y) {
   wall.arg = 0;
   var item;
   item = itemAt(x, y - 1);
-  if (item && item.matches(OWALL)) wall.arg += 2; // up
-  item = itemAt(x + 1, y);
-  if (item && item.matches(OWALL)) wall.arg += 4; // right
+  if (item && item.isDoorOrWall() /* && getKnow(x, y - 1) */) wall.arg += 2; // up
+  item = itemAt(x + 1, y); 
+  if (item && item.isDoorOrWall() /* && getKnow(x + 1, y) */) wall.arg += 4; // right
   item = itemAt(x, y + 1);
-  if (item && item.matches(OWALL)) wall.arg += 8; // down
-  item = itemAt(x - 1, y);
-  if (item && item.matches(OWALL)) wall.arg += 16; // left
+  if (item && item.isDoorOrWall() /* && getKnow(x, y + 1) */) wall.arg += 8; // down
+  item = itemAt(x - 1, y); 
+  if (item && item.isDoorOrWall() /* && getKnow(x - 1, y) */) wall.arg += 16; // left
 }
 
 

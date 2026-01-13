@@ -23,7 +23,7 @@ let VARIABLE = `variablebutton`;
 let NARROW = `narrowbutton`;
 
 // common buttons
-let BUTTON_OFFLINE = setButton(null, `BUTTON_OFFLINE`, VARIABLE, DEL, `offline`);
+let BUTTON_OFFLINE = setButton(null, `BUTTON_OFFLINE`, VARIABLE, null, `offline`);
 let BUTTON_DEL = setButton(null, `BUTTON_DEL`, VARIABLE, DEL, `DEL`);
 let BUTTON_EXIT = setButton(null, `BUTTON_EXIT`, VARIABLE, ESC, `leave`);
 let BUTTON_CANCEL = setButton(null, `BUTTON_CANCEL`, VARIABLE, ESC, `cancel`);
@@ -932,27 +932,16 @@ function helpButtons(location) {
   setButton(location, `BUTTON_SHOW_CONFIG`, VARIABLE, `⚙️`, `⚙️`);
   if (showConfigButtons) {
     if (!mobileDevice) setButton(location, `BUTTON_HELP`, VARIABLE, `?`, `Help`);
-    let hintsLabel = keyboard_hints ? `on` : `off`;
+    if (!mobileDevice) setButton(location, `BUTTON_OPTIONS`, VARIABLE, `O`, `Options`);
     let pickupLabel = auto_pickup ? `on` : `off`;
-    let inventoryLabel = side_inventory ? `on` : `off`;
-    let boldLabel = bold_objects ? `on` : `off`;
-    let colorLabel = show_color ? `on` : `off`;
-    let retroLabel = retro_mode ? `DOS` : `modern`;
-    if (amiga_mode) retroLabel = retro_mode ? `Amiga 500` : `Amiga 1200`;
-    if (!mobileDevice) setButton(location, `BUTTON_HINTS`, VARIABLE, `!`, `Keyboard hints: ${hintsLabel}`);
     setButton(location, `BUTTON_PICKUP`, VARIABLE, `@`, `Auto-pickup: ${pickupLabel}`);
-    if (!mobileDevice) setButton(location, `BUTTON_INVENTORY`, VARIABLE, `#`, `Inventory: ${inventoryLabel}`);
-    if (!mobileDevice && !amiga_mode) setButton(location, `BUTTON_COLOR`, VARIABLE, `$`, `Color: ${colorLabel}`);
-    if (!mobileDevice && !amiga_mode) setButton(location, `BUTTON_BOLD`, VARIABLE, `%`, `Bold: ${boldLabel}`);
-    if (!mobileDevice) setButton(location, `BUTTON_FONT`, VARIABLE, `{`, `Font: ${retroLabel}`);
     if (mobileDevice) setButton(location, `BUTTON_SAVE`, VARIABLE, `S`, `Save`);
     if (mobileDevice) setButton(location, `BUTTON_SCORES`, VARIABLE, `z`, `Scores`);
     if (mobileDevice) setButton(location, `BUTTON_QUIT`, VARIABLE, `Q`, `Quit`);
     setButton(location, `BUTTON_BUGS`, VARIABLE, `🐞`, `Report 🐞`);
-    // if (mobileDevice) setButton(location, `BUTTON_DISABLE_BUTTONS`, VARIABLE, `cmd+alt+#`, `Hide Buttons`);
   }
   if (!navigator.onLine) {
-    const b = setButton(location, `BUTTON_OFFLINE`, VARIABLE, `:)`, `OFFLINE`);
+    const b = setButton(location, `BUTTON_OFFLINE`, VARIABLE, `ᯤ`, `OFFLINE`);
     b.style.color = 'white'; // font color
     b.style.backgroundColor = 'crimson'; // background color
   }

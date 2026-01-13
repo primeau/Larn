@@ -25,11 +25,11 @@ let buildPatchWorker; /* web worker to build diff patches */
 
 async function play() {
 
+  initRB();
+
   console.log(`gameID ${gameID}`);
   console.log(`ismobile`, isMobile(), `isPhone`, isPhone(), `isLocal`, isLocal(), `isFile`, isFile());
   console.log(`cloudflare`, CF_BROADCAST_HOST);
-
-  initRB();
 
   try {
     initLambdaCredentials(); // real credentials are set here, and not committed to git
@@ -67,18 +67,51 @@ async function play() {
   }
 
   PARAMS = loadURLParameters();
-  no_intro = PARAMS.nointro ? PARAMS.nointro == `true` : false;
-  ULARN = PARAMS.ularn ? PARAMS.ularn == `true` : false;
-  GOTW = PARAMS.gotw ? PARAMS.gotw == `true` : false;
-  NONAP = PARAMS.nonap ? PARAMS.nonap == `true` : false;
+  ULARN = PARAMS.ularn == `true`;
+  GOTW = PARAMS.gotw == `true`;
+  amiga_mode = PARAMS.mode == `amiga`;
 
+  const tmpID = Math.random().toString(36).substring(2, 7)
+  playerID = localStorageGetObject('playerID', tmpID);
+  localStorageSetObject('playerID', playerID);
+  
+  logname = localStorageGetObject('logname', logname);
+
+  showConfigButtons = localStorageGetObject(`showConfigButtons`, true);
+  original_objects = localStorageGetObject('original_objects', true);
+  keyboard_hints = localStorageGetObject('keyboard_hints', true);
+  auto_pickup = localStorageGetObject('auto_pickup', false);
+  side_inventory = localStorageGetObject('side_inventory', true);
+  show_color = localStorageGetObject('show_color', true);
+  log_color = localStorageGetObject('log_color', true);
+  bold_objects = localStorageGetObject('bold_objects', true);
+  retro_mode = localStorageGetObject('retro' /* NOT retro_mode */, true);
+  wall_char = localStorageGetObject('wall_char', 0);
+  floor_char = localStorageGetObject('floor_char', OEMPTY_DEFAULT_CHAR);
+  custom_monsters = localStorageGetObject('custom_monsters', []);
+  
+  no_intro = !GOTW && localStorageGetObject('no_intro', false);
+  
   setGameConfig();
+  setWallChar(wall_char);
+  setFloorChar(floor_char);
+  updateCustomMonsters(custom_monsters);
+  createLevelNames();
+  initHelpPages();
+  setMode(amiga_mode, retro_mode, original_objects);
 
   await loadFonts();
 
   welcome(); // show welcome screen, start the game
 
-  onResize();
+  setPlayerChar(localStorageGetObject('player_char', null)); // wait for player to be loaded first
+
+  updateRB();
+
+  // do_fail_now();
+  
+  document.getElementById('FAIL').classList.remove('failed');
+  document.getElementById('LARN').classList.add('loaded');
 }
 
 
@@ -112,13 +145,14 @@ function initKeyBindings() {
   Mousetrap.bind('^', mousetrap); // identify traps
   Mousetrap.bind('!', mousetrap); // keyboard hints
   Mousetrap.bind('@', mousetrap); // auto-pickup
-  Mousetrap.bind('#', mousetrap); // inventory 
-  Mousetrap.bind('{', mousetrap); // retro fonts
-  Mousetrap.bind('}', mousetrap); // classic/hack/amiga 
+  // Mousetrap.bind('#', mousetrap); // inventory 
+  // Mousetrap.bind('{', mousetrap); // retro fonts
+  // Mousetrap.bind('}', mousetrap); // classic/hack/amiga 
   Mousetrap.bind('?', mousetrap); // help
   Mousetrap.bind('_', mousetrap); // password
   Mousetrap.bind('-', mousetrap); // disarm 
   Mousetrap.bind('+', mousetrap); // load games via password
+  Mousetrap.bind('±', mousetrap);
 
   Mousetrap.bind(['(', ')'], mousetrap); // allow () for pvnert(x)
 
@@ -147,6 +181,8 @@ function initKeyBindings() {
 
   Mousetrap.bind('*', mousetrap);
   Mousetrap.bind(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], mousetrap);
+
+  Mousetrap.bind([':'], mousetrap);
 }
 
 
@@ -183,9 +219,6 @@ build:${BUILD}
 name:${logname}
 playerID:${playerID}
 gameID:${gameID}
-amiga_mode:${amiga_mode}
-retro_mode:${retro_mode}
-original_objects:${original_objects}
 cookies:${navigator.cookieEnabled}
 host:${location.hostname}
 params:${JSON.stringify(loadURLParameters())}
@@ -199,18 +232,32 @@ GAMEOVER:${GAMEOVER}
 game_started:${game_started}
 mazeMode:${mazeMode}
 napping:${napping}
+
+showConfigButtons:${showConfigButtons}
+original_objects:${original_objects}
 keyboard_hints:${keyboard_hints}
 auto_pickup:${auto_pickup}
 side_inventory:${side_inventory}
 show_color:${show_color}
+log_color:${log_color}
 bold_objects:${bold_objects}
+amiga_mode:${amiga_mode}
+retro_mode:${retro_mode}
+wall_char:${wall_char}
+floor_char:${floor_char}
+custom_monsters:${custom_monsters}
+no_intro:${no_intro}
+
+dnd_item:${dnd_item}
 genocide:${genocide}
+
 debug_used:${debug_used}
 cheat:${cheat}
 level:${level}
 wizard:${wizard}
 gtime:${gtime}
 HARDGAME:${HARDGAME}
+
 lastmonst:${lastmonst}
 lastnum:${lastnum}
 hitflag:${hitflag}

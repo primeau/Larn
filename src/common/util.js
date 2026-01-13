@@ -19,6 +19,15 @@ function rund(value) {
 
 
 /*
+ * clamp(value, min, max) - constrain a value between min and max
+ */
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+
+
+/*
  *  vxy(x,y)       Routine to verify/fix coordinates for being within bounds
  *      int *x,*y;
  *
@@ -33,15 +42,17 @@ function vxy(x, y) {
 }
 
 function vx(x) {
-  x = Math.max(0, x);
-  x = Math.min(MAXX - 1, x);
+  x = clamp(x, 0, MAXX - 1);
   return x;
 }
 
 function vy(y) {
-  y = Math.max(0, y);
-  y = Math.min(MAXY - 1, y);
+  y = clamp(y, 0, MAXY - 1);
   return y;
+}
+
+function inBounds(x, y) {
+  return x != null && y != null && x >= 0 && x < MAXX && y >= 0 && y < MAXY;
 }
 
 
@@ -99,7 +110,8 @@ function doRollbar(notificationLevel, eventTitle, eventDetail) {
 
 
 function debug(...args) {
-  if (DEBUG_OUTPUT) {
+  // if (DEBUG_OUTPUT) {
+  if (debug_used) {
     console.log(`DEBUG:`, ...args);
     //updateLog(`DEBUG: ${text}`);
   }
@@ -245,7 +257,7 @@ var BLINKENCURSOR;
 var BLINKEN = true;
 const BLINKENCHAR = `_`;
 
-function blinken(x, y) {
+function blinken(x, y, clearWidth) {
 
   if (isMobile()) return;
 
@@ -255,7 +267,12 @@ function blinken(x, y) {
       var xpos = x + KEYBOARD_INPUT.length;
       cursor(xpos, y);
       lprc(BLINKEN ? ` ` : BLINKENCHAR);
-      cltoeoln();
+      if (!clearWidth) {
+        cltoeoln();
+      } else {
+        let width = Math.max(0, clearWidth - KEYBOARD_INPUT.length);
+        lprcat(` `.repeat(width));
+      }
       cursor(xpos, y);
       BLINKEN = !BLINKEN;
       paint();

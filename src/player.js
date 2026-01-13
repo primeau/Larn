@@ -17,7 +17,7 @@ var Player = function Player() {
   this.x = 0;
   this.y = 0;
   this.level = null; // now unused
-  this.char = `▓`;
+  this.char = null;
 
   this.WEAR = null;
   this.WIELD = null;
@@ -131,6 +131,7 @@ var Player = function Player() {
   this.hasPickedUpEye = false;
 
   this.getChar = function () {
+    if (this.char) return this.char;
     if (amiga_mode)
       return `${DIV_START}player${DIV_END}`;
     else if (retro_mode) {

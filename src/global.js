@@ -50,7 +50,7 @@ function positionplayer(x, y, exact) {
 
 
 function canMove(x, y) {
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+  if (!inBounds(x, y)) {
     return false;
   }  
   const item = itemAt(x, y);

@@ -27,6 +27,25 @@
     src: url('img/TopazPlus_a1200_v1.0.ttf');
 }
 
+#LARN {
+    opacity: 0;
+    /* transition: opacity 0.3s ease-in; */
+    /* display: none; */
+}
+
+#LARN.loaded {
+    opacity: 1;
+    /* display: block; */
+}
+
+#FAIL {
+    display: none;
+}
+
+#FAIL.failed {
+    display: block;
+}
+
 a:link {
     color: #bbbbbb;
     text-decoration: none;
@@ -64,6 +83,7 @@ body {
     font-family: 'dos', 'Courier New', Courier, monospace;
     margin: 0px;
     background-color: #000000;
+    color: lightgray;
 }
 
 div {

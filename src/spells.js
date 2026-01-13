@@ -840,7 +840,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
   x += dx;
   y += dy;
-  if (x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+  if (!inBounds(x, y)) {
     dam = 0;
     exitspell();
     return;
@@ -1063,7 +1063,7 @@ function makewall(direction) {
     return;
   }
 
-  if ((y >= 0) && (y <= MAXY - 1) && (x >= 0) && (x <= MAXX - 1)) { // within bounds
+  if (inBounds(x, y)) { // within bounds
     if (!item.matches(OWALL)) { // not a wall
       if (item.matches(OEMPTY)) { // no other items there
         if (!monster) { // no monsters

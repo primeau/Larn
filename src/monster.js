@@ -61,7 +61,7 @@ function createMonster(monst) {
 
 
 function monsterAt(x, y) {
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+  if (!inBounds(x, y)) {
     debug(`monsterAt(): bad args`, x, y);
     return null;
   }
@@ -71,7 +71,7 @@ function monsterAt(x, y) {
 
 
 function setMonster(x, y, monster, placement) {
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) {
+  if (!inBounds(x, y)) {
     debug(`setMonster(): bad args`, x, y, monster);
     return null;
   }
@@ -144,10 +144,14 @@ Monster.prototype = {
   },
 
   toString: function() {
-    if (player.BLINDCOUNT == 0)
-      return this.desc;
-    else
+    const monster = monsterlist[this.arg];
+    if (player.BLINDCOUNT == 0) {
+      if (log_color && monster.color) return `<font color='${monster.color}'>${monster.desc}</font>`;
+      else return monster.desc;
+    }
+    else {
       return `monster`;
+    }
   },
 
   getChar: function() {
@@ -169,10 +173,10 @@ Monster.prototype = {
       }
       return `${DIV_START}${prefix}${monster}${suffix}${DIV_END}`;
     } else {
-      if (monster == INVISIBLESTALKER) {
-        return player.SEEINVISIBLE > 0 ? monsterlist[INVISIBLESTALKER].char : OEMPTY.char;
-      } else if (ULARN && this.isDemon() && isCarrying(OLARNEYE)) {
-        return `<font color='crimson'>${demonchar[this.arg - DEMONLORD]}</font>`;
+      if (monster == INVISIBLESTALKER && player.SEEINVISIBLE == 0) {
+        return OEMPTY.char;
+      } else if (this.isDemon() && (!ULARN || !isCarrying(OLARNEYE))) {
+        return OEMPTY.char;
       } else {
         if (show_color && monsterlist[monster].color) {
           return `<font color='${monsterlist[monster].color}'>${monsterlist[monster].char}</font>`;
@@ -580,7 +584,7 @@ function cgood(x, y, itm, monst) {
      - dungeon entrance
   */
 
-  if (x == null || y == null || x < 0 || x >= MAXX || y < 0 || y >= MAXY) return;
+  if (!inBounds(x, y)) return;
 
   const item = itemAt(x, y);
 
@@ -764,7 +768,6 @@ function hitmonster(x, y) {
   //vxy( & x, & y); /* verify coordinates are within range */
 
   var monster = monsterAt(x, y);
-  var weapon = player.WIELD;
 
   if (!monster) {
     //debug(`monster.hitmonster(): no monster at: ` + xy(x, y));
@@ -796,6 +799,8 @@ function hitmonster(x, y) {
     updateLog(`You missed the ${blind ? `monster` : monster}${period}`);
     hitMonster = false;
   }
+
+  var weapon = player.WIELD;
   if (hitMonster) {
     /* if the monster was hit */
     if (monster.matches(RUSTMONSTER) || monster.matches(DISENCHANTRESS) || monster.matches(CUBE)) {
@@ -878,7 +883,12 @@ function hitm(x, y, damage) {
   }
   lasthx = x;
   lasthy = y;
+
   const monster = monsterAt(x, y);
+  if (!monster) {
+    return 0;
+  }
+
   monster.awake = true; /* make sure hitting monst breaks stealth condition */
   player.updateHoldMonst(-player.HOLDMONST); /* hit a monster breaks hold monster spell  */
 
@@ -1197,6 +1207,7 @@ function spattack(monster, attack, xx, yy) {
 
 function teleportMonster(x, y) {
   let oldMonster = monsterAt(x, y);
+  if (!oldMonster) return;
   killMonster(x, y);
 
   let newMonster = fillmonst(oldMonster.arg);
