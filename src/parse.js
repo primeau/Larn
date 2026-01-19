@@ -277,16 +277,16 @@ async function parse(e, key) {
         return;
       }
       if (item.matches(OCOOKIE)) {
-        outfortune();
         forget();
+        outfortune();
       }
       else if (item.matches(OSHROOMS)) {
-        eatShrooms();
         forget();
+        eatShrooms();
       }
       else if (item.matches(OACID)) {
-        dropAcid();
         forget();
+        dropAcid();
       }
       else {
         updateLog(`What do you want to eat [<b>space</b> to view] ? `);
@@ -396,11 +396,11 @@ async function parse(e, key) {
     //
     else if (player.TIMESTOP == 0) {
       if (item.matches(OBOOK)) {
+        forget();
         readbook(item);
-        forget();
       } else if (item.matches(OSCROLL)) {
-        read_scroll(item);
         forget();
+        read_scroll(item);
       } else {
         updateLog(`What do you want to read [<b>space</b> to view] ? `);
         setCharCallback(act_read_something);
@@ -415,16 +415,16 @@ async function parse(e, key) {
   if (key == 's') {
     if (player.TIMESTOP == 0) {
       if (item.matches(OSPEED)) {
-        doSpeed();
         forget();
+        doSpeed();
       }
       else if (item.matches(OHASH)) {
-        smokeHash();
         forget();
+        smokeHash();
       }
       else if (item.matches(OCOKE)) {
-        doCoke();
         forget();
+        doCoke();
       }
       else {
         sit_on_throne();
