@@ -1,21 +1,25 @@
 @font-face {
     font-family: modern;
     src: url('../img/NotoSansMono-Regular.ttf');
+    font-display: swap;
 }
 
 @font-face {
     font-family: dos437;
     src: url('../img/dos437.ttf');
+    font-display: swap;
 }
 
 @font-face {
     font-family: amiga500;
     src: url('../img/TopazPlus_a500_v1.0.ttf');
+    font-display: swap;
 }
 
 @font-face {
     font-family: amiga1200;
     src: url('../img/TopazPlus_a1200_v1.0.ttf');
+    font-display: swap;
 }
 
 a:link {

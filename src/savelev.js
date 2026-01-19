@@ -79,7 +79,7 @@ function loadSavedGame(savedState, isCheckPoint) {
         }
         errorDetail += `${index}: ${fragment}\n`;
       }
-      doRollbar(ROLLBAR_ERROR, errorMessage, errorDetail);
+      doRollbar(ROLLBAR_WARN, errorMessage, errorDetail);
     } catch (error) {
       console.log(`failed integrity check: caught: ${error}`);
     }
@@ -132,7 +132,9 @@ function loadState(state) {
   wall_char = state.wall_char;
   floor_char = state.floor_char;
   custom_monsters = state.custom_monsters;
+  setWallChar(wall_char);
   setFloorChar(floor_char);
+  updateCustomMonsters(custom_monsters);
   setMode(amiga_mode, retro_mode, original_objects);
 
   dnd_item = state.dnd_item;
@@ -172,7 +174,7 @@ function loadLevels(savedLevels) {
       LEVELS[lev] = null;
       continue;
     }
-    debug(`loading: ${lev}`);
+    // debug(`loading: ${lev}`);
     let tempLev = savedLevels[lev];
     let items = initGrid(MAXX, MAXY);
     let monsters = initGrid(MAXX, MAXY);

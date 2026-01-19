@@ -241,9 +241,8 @@ function addListItem(game, completed, larn, winners, visitors) {
 
     const url = location.origin + location.pathname;
 
-    let linkText = document.createTextNode(score);
     let link = document.createElement('a');
-    link.appendChild(linkText);
+    link.innerHTML = score;
     link.title = "click to watch this game";
     link.href = `${url}?${endpoint}=${game.gameID}`;
 

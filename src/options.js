@@ -1,7 +1,5 @@
 'use strict';
 
-// let newMonsterNames = [`BAAAT`, `Hobbled Goblin`, `GNOOOOOOOME`, `KOBOOOOOLD`, `SNAAAAAKE`, `Orc of the Mists`, `Troll of the Hills`, `Cyclops of the Mountains`, `Prince of Gems`, `demigordon`];
-
 let LAST_KEY_PRESSED = ``;
 const MAX_TEXT_LENGTH = 699;
 
@@ -9,7 +7,6 @@ function print_options() {
   mazeMode = false;
   setCharCallback(parse_options);
 
-  // from buttons.js:helpbuttons()
   let hintsLabel = keyboard_hints ? `on` : `off`;
   let pickupLabel = auto_pickup ? `on` : `off`;
   let inventoryLabel = side_inventory ? `on` : `off`;
@@ -17,8 +14,8 @@ function print_options() {
   let objectColorLabel = show_color ? `on` : `off`;
   let logColorLabel = log_color ? `on` : `off`;
   let retroLabel = retro_mode ? `DOS` : `Modern`;
-  let dungeonLabel = original_objects ? `Larn` : `Hack`;
   if (amiga_mode) retroLabel = retro_mode ? `Amiga 500` : `Amiga 1200`;
+  let dungeonLabel = original_objects ? `Larn` : `Hack`;
   let skipLabel = no_intro ? `on` : `off`;
 
   clear();
@@ -39,15 +36,14 @@ function print_options() {
   lprcat(`(<b>S</b>)kip Intro:       ${skipLabel}\n\n`);
   lprcat(`(<b>M</b>)onster Names:`);
 
-  let monsterString = ``;
+  let monsterString = `no custom monsters`;
+  if (!custom_monsters) custom_monsters = [];
   if (custom_monsters.length > 0) {
     monsterString = custom_monsters
       .map((name) => {
         return name[1];
       })
       .join(`, `);
-  } else {
-    monsterString = `no custom monsters`;
   }
 
   let textindex = 0;
@@ -74,23 +70,23 @@ function parse_options(key) {
     nomove = 1;
     return exitbuilding();
   }
-  if (key.toLowerCase() == `p`) {
+  if (key.toLowerCase() == `p` && !amiga_mode) {
     document.addEventListener(`paste`, onOptionsPasteEvent);
     drawEditPlayerWindow(player.getChar());
     return 1;
   }
-  if (key.toLowerCase() == `f`) {
+  if (key.toLowerCase() == `f` && !amiga_mode) {
     document.addEventListener(`paste`, onOptionsPasteEvent);
     drawEditFloorWindow(OEMPTY.char);
     return 1;
   }
   if (key.toLowerCase() == `m`) {
     document.addEventListener(`paste`, onMonsterPasteEvent);
-    const monsterString = custom_monsters.map((pair) => `${pair[0]}:${pair[1]}`).join(`, `);
+    const monsterString = custom_monsters?.map((pair) => `${pair[0]}:${pair[1]}`).join(`, `);
     drawEditMonstersWindow(monsterString);
     return 1;
   }
-  if (key.toLowerCase() == `w`) {
+  if (key.toLowerCase() == `w` && !amiga_mode) {
     wall_char += 1;
     if (wall_char >= WALLS.length) wall_char = 0;
     setWallChar(wall_char);
@@ -115,7 +111,7 @@ function parse_options(key) {
     print_options();
     return 0;
   }
-  if (key.toLowerCase() == `o`) {
+  if (key.toLowerCase() == `o` && !amiga_mode) {
     show_color = !show_color;
     localStorageSetObject(`show_color`, show_color);
     print_options();
@@ -127,13 +123,13 @@ function parse_options(key) {
     print_options();
     return 0;
   }
-  if (key.toLowerCase() == `b`) {
+  if (key.toLowerCase() == `b` && !amiga_mode) {
     bold_objects = !bold_objects;
     localStorageSetObject(`bold_objects`, bold_objects);
     print_options();
     return 0;
   }
-  if (key.toLowerCase() == `d`) {
+  if (key.toLowerCase() == `d` && !amiga_mode) {
     original_objects = !original_objects;
     localStorageSetObject(`original_objects`, original_objects);
     print_options();
@@ -249,8 +245,7 @@ function parse_player_char(key) {
 }
 
 function setPlayerChar(newChar) {
-  // if (player && newChar?.length === 1) {
-  if (player) {
+  if (player && (newChar === null || newChar.length === 1)) {
     player.char = newChar;
     localStorageSetObject(`player_char`, player.char);
   }
@@ -263,6 +258,9 @@ function setPlayerChar(newChar) {
 ////////////////////////////////////////////////////////////////////
 
 function setWallChar(newChar) {
+  if (!newChar || newChar.length === 0) {
+    newChar = 0;
+  }
   wall_char = newChar;
   localStorageSetObject(`wall_char`, wall_char);
 }
@@ -297,9 +295,7 @@ function parse_floor_char(key) {
 }
 
 function setFloorChar(newChar) {
-  // console.log(`setFloorChar called with value:`, newChar);
   if (!newChar || newChar.length === 0) {
-    // console.log(`setFloorChar: resetting to default char`, newChar);
     newChar = OEMPTY_DEFAULT_CHAR;
   }
   floor_char = newChar;
@@ -322,6 +318,9 @@ function redrawMonsterWindow(key) {
 }
 
 function drawEditMonstersWindow(monsterString) {
+  if (!monsterString) {
+    monsterString = ``;
+  }
   setKeyPressEventListener(redrawMonsterWindow);
   setTextCallback(parse_monster_list, MAX_TEXT_LENGTH);
   KEYBOARD_INPUT = monsterString;
@@ -407,6 +406,12 @@ function setMonsterNames(monsterString) {
 function updateCustomMonsters(customList) {
   // clear any old custom settings
   monsterlist = ULARN ? structuredClone(ULARN_monsterlist) : structuredClone(LARN_monsterlist);
+
+  // Check if customList is iterable before attempting to iterate
+  if (!Array.isArray(customList)) {
+    return;
+  }
+
   for (let customPair of customList) {
     if (!Array.isArray(customPair) || customPair.length < 2) continue;
     for (let monster of monsterlist) {

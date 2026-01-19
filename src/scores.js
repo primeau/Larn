@@ -24,7 +24,7 @@ let LocalScore = function () {
   this.level = LEVELNAMES[level]; /* the level player was on when he died */
   this.playerID = playerID; /* nothing nefarious, just a simple way to differentiate players in the game database */
   this.playerIP = playerIP; /* nothing nefarious, just a simple way to differentiate players in the game database */
-  this.gameID = gameID + (dofs ? '+' : ''); /* unique game ID */
+  this.gameID = gameID; /* unique game ID */
   this.debug = debug_used; /* did the player use debug mode? */
   this.gamelog = LOG; /* the last few lines of what happened */
   this.extra = [];
@@ -517,10 +517,17 @@ function paytaxes(x) {
 function getWhyDead(reason) {
   let cause = ``;
   if (typeof reason === `number`) {
-    cause += DEATH_REASONS.get(reason);
-  } else {
-    const n = (/^[aeiouAEIOU]/.test(lastmonst)) ? `n` : ``;
-    cause += `killed by a${n} ${lastmonst}`;
+    cause = DEATH_REASONS.get(reason);
+  } else { /* killed by a monster */
+    let monsterdesc = reason;
+    let monstername = reason;
+    if (reason instanceof Monster) {
+      monsterdesc = reason.desc;
+      monstername = reason.toString();
+    }
+    const firstChar = monsterdesc.charAt(0);
+    const n = `aeiouAEIOU`.indexOf(firstChar) >= 0 ? `n` : ``;
+    cause += `killed by a${n} ${monstername}`;
   }
   return cause;
 }

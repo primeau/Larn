@@ -173,10 +173,10 @@ function setDiv(id, data, markup) {
   } else if (markup === START_ITALIC) {
     div.style.fontStyle = 'italic';
   } else if (markup && markup.indexOf(START_FONT) != -1) {
-    // <font color='red'>
+    // i.e. <font color='red'>
     div.style.color = markup.split(`'`)[1];
   } else if (markup && markup.indexOf(START_HREF) != -1) {
-    // <a href='link'>text</a> (must use ' not ")
+    // i.e. <a href='link'>text</a> (must use ' not ")
     div.style.color = 'white';
     div.style.cursor = 'pointer';
     div.onclick = function() { window.open(markup.split(`'`)[1], '_blank'); };
@@ -603,7 +603,7 @@ function setKnow(x, y, val) {
     debug(`setKnow(): bad args`, x, y, val);
     return;
   }
-  LEVELS[level].know[x][y] = val;
+  LEVELS[level].know[x][y] = val || 0;
 }
 
 
@@ -941,7 +941,7 @@ function onMouseClick(event) {
     let monster = monsterAt(x, y);
     let item = itemAt(x, y);
 
-    if (!item) return; // clicking outside the 67,17 maze
+    if (!item) return;
 
     let description = ``;
     let prefix = `It's `;
@@ -963,11 +963,11 @@ function onMouseClick(event) {
     } else if (x == player.x && y == player.y) {
       description = `our Hero`;
     } else if (monster) {
+      const firstChar = monster.desc.charAt(0);
+      const n = `aeiouAEIOU`.indexOf(firstChar) >= 0 ? `n` : ``;
+      prefix += `a${n} `;
       description = monster.toString();
       if (ULARN && monster.matches(MIMIC)) description = monsterlist[monster.mimicarg].toString();
-      let firstChar = description.substring(0, 1).toLocaleLowerCase();
-      prefix = `It's a `;
-      if (`aeiou`.indexOf(firstChar) >= 0) prefix = `It's an `;
     } else if (sayEmpty || item.matches(OIVDARTRAP) || item.matches(OIVTELETRAP) || item.matches(OIVTRAPDOOR) || item.matches(OTRAPARROWIV)) {
       description = OEMPTY.desc;
     } else {

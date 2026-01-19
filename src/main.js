@@ -471,7 +471,8 @@ async function startgame() {
 
   newcavelevel(0); /*  make the dungeon */
 
-  var introMessage = `Welcome to ${GAMENAME}, ${logname} -- Press <b>O</b> for options <b>?</b> for help`;
+  var introMessage = `Welcome to ${GAMENAME}, ${logname}`;
+  if (!isMobile()) introMessage += ` -- Press <b>O</b> for options <b>?</b> for help`;
   updateLog(introMessage);
 
   if (extraMessage) updateLog(extraMessage);
@@ -674,7 +675,7 @@ function wizardmode(password) {
   }
 
   if (password === 'checkpoint') {
-    doRollbar(ROLLBAR_WARN, `checkpoint`, `who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
+    doRollbar(ROLLBAR_INFO, `checkpoint`, `who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     var checkpoint = localStorageGetObject('checkpointbackup');
     let error = localStorageSetObject('checkpoint', checkpoint);
@@ -688,7 +689,7 @@ function wizardmode(password) {
   }
 
   if (password === 'savegame') {
-    doRollbar(ROLLBAR_WARN, `savegame`, `who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
+    doRollbar(ROLLBAR_INFO, `savegame`, `who=${logname} playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     var savegame = localStorageGetObject(logname + 'backup');
     let error = localStorageSetObject(logname, savegame);
@@ -702,7 +703,7 @@ function wizardmode(password) {
   }
 
   if (password === 'debug') {
-    doRollbar(ROLLBAR_WARN, `debug who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
+    doRollbar(ROLLBAR_INFO, `debug who=${logname}`, `playerID=${playerID} diff=${getDifficulty()} gameID=${gameID}`);
 
     updateLog(`debugging shortcuts enabled`);
     enableDebug();

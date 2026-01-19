@@ -297,7 +297,7 @@ class DungeonObject extends Item {
       }
     }
     if (this.id == OWALL.id) {
-      if (wall_char < 0 || wall_char >= WALLS.length) wall_char = 0;
+      if (!wall_char || wall_char < 0 || wall_char >= WALLS.length) wall_char = 0;
       return WALLS[wall_char][arg];
     }
     let char = null;

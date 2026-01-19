@@ -933,8 +933,6 @@ function helpButtons(location) {
   if (showConfigButtons) {
     if (!mobileDevice) setButton(location, `BUTTON_HELP`, VARIABLE, `?`, `Help`);
     if (!mobileDevice) setButton(location, `BUTTON_OPTIONS`, VARIABLE, `O`, `Options`);
-    let pickupLabel = auto_pickup ? `on` : `off`;
-    setButton(location, `BUTTON_PICKUP`, VARIABLE, `@`, `Auto-pickup: ${pickupLabel}`);
     if (mobileDevice) setButton(location, `BUTTON_SAVE`, VARIABLE, `S`, `Save`);
     if (mobileDevice) setButton(location, `BUTTON_SCORES`, VARIABLE, `z`, `Scores`);
     if (mobileDevice) setButton(location, `BUTTON_QUIT`, VARIABLE, `Q`, `Quit`);

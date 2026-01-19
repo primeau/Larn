@@ -131,14 +131,10 @@ var Player = function Player() {
   this.hasPickedUpEye = false;
 
   this.getChar = function () {
+    if (amiga_mode) return `${DIV_START}player${DIV_END}`;
     if (this.char) return this.char;
-    if (amiga_mode)
-      return `${DIV_START}player${DIV_END}`;
-    else if (retro_mode) {
-      return `<b><font color='white'>@</font></b>`;
-    } else {
-      return `▓`;
-    }
+    if (retro_mode) return `<b><font color='white'>@</font></b>`; 
+    return `▓`;
   };
 
   /*
@@ -884,8 +880,10 @@ function ifblind(x, y) {
     return true;
   } else {
     const monster = monsterAt(x, y);
-    lastnum = monster;
-    lastmonst = monster.toString();
+    lastnum = monster; //  /* killed by a ${monstername} */
+    lastmonst = monster.toString(); /* monster name with color formatting */
+    // lastnum = monster.desc;
+    // lastmonst = monster.desc;
     return false;
   }
 }

@@ -472,7 +472,13 @@ function localStorageGetObject(key, failValue) {
     // console.log(`getObject: ${key}`);
     var retrievedObject = localStorage.getObject(key);
     if (retrievedObject === false) return false;
-    return retrievedObject || failValue;
+    if (retrievedObject === 0) return 0;
+    if (retrievedObject === ``) return ``;
+    if (retrievedObject === true) return true;
+    if (retrievedObject === null) return failValue;
+    if (retrievedObject === undefined) return failValue;
+    if (!retrievedObject) return failValue;
+    return retrievedObject;
   } catch (err) {
     console.log(`getObject: "${key}" ${err}`);
     return failValue;

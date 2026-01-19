@@ -650,8 +650,6 @@ function hitplayer(x, y) {
     return;
   }
 
-  lastnum = monster; /* killed by a ${monstername} */
-
   var damageModifier = 1; // will alway be 1 for classic Larn
 
   if (monster.matches(POLTERGEIST) || monster.matches(SPIRITNAGA)) {

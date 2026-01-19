@@ -110,7 +110,8 @@ async function play() {
 
   // do_fail_now();
   
-  document.getElementById('FAIL').classList.remove('failed');
+  if (document.getElementById('FAIL')) 
+    document.getElementById('FAIL').classList.remove('failed');
   document.getElementById('LARN').classList.add('loaded');
 }
 

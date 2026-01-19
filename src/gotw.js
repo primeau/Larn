@@ -5,8 +5,8 @@ async function doGOTWStuff() {
   blt();
 
   const startYear = 2026;
-  const startWeek = 7;
-  const numWeeks = 21;
+  const startWeek = 1;
+  const numWeeks = 52;
   let date = new Date(startYear, 0, 1 + (startWeek - 1) * 7);
   for (let i = 0; i < numWeeks; i++) {
     lprint(`Uploading GOTW for week ${getGotwLabel(date)}...\n`);
