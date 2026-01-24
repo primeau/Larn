@@ -1,8 +1,15 @@
 'use strict';
 
 importScripts('../lib/diff_match_patch.js');
-try { importScripts('../tv/common/patch.js'); } catch (error) { } // prod location
-try { importScripts('../common/patch.js'); } catch (error) { } // local testing
+
+try {
+  importScripts('../tv/common/patch.js'); // prod location
+} catch (error) {
+  try {
+    debug(`patchWorker importScripts local`);
+    importScripts('../common/patch.js'); // local testing
+  } catch (err) { }
+} 
 
 // WORKER STEP 2 - build patch
 onmessage = function (event) {

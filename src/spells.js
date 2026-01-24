@@ -1098,8 +1098,8 @@ function annihilate() {
         /* if a monster there */
         if (!monster.isDemon()) {
           // JRP: Everyone gets an easter egg. This one is mine.
-          if (!ULARN && monster.arg == LAWLESS) {
-            updateLog(`Lawless resists!`);
+          if (monster.desc === `lawless`) {
+            updateLog(`  Lawless resists!`);
           } else {
             k += monster.experience;
             killMonster(i, j);
@@ -1126,12 +1126,6 @@ function isGenocided(monsterId) {
 
 
 
-function setGenocide(monsterId) {
-  genocide.push(monsterId);
-}
-
-
-
 /* Function to ask for monster and genocide from game */
 function genmonst(key) {
 
@@ -1146,7 +1140,6 @@ function genmonst(key) {
   for (var j = 0; j < monsterlist.length; j++) {
     if (monsterlist[j].char == key && !isGenocided(j)) {
       var monstname;
-      if (!(!ULARN && j == LAWLESS)) setGenocide(j); // JRP see below
       switch (j) {
         case JACULI:
           monstname = `jaculi`;
@@ -1168,18 +1161,19 @@ function genmonst(key) {
           break;
         case LAWLESS:
           // JRP: Everyone gets an easter egg. This one is mine.
-          if (!ULARN) {
+          if (monsterlist[j].desc === `lawless`) {
             updateLog(`  Lawless resists!`);
             return 1;
           }
-          // lama nobe falls through
-          // eslint-disable-next-line no-fallthrough
-          default:
-            monstname = monsterlist[j] + `s`;
-            break;
+        // lama nobe falls through
+        // eslint-disable-next-line no-fallthrough
+        default:
+          monstname = `${monsterlist[j].desc}s`;
+          break;
       }
 
       updateLog(`  There will be no more ${monstname}${period}`);
+      genocide.push(j);
 
       newcavelevel(level); /* now wipe out monsters on this level */
       paint();

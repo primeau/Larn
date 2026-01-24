@@ -106,7 +106,7 @@ function wsMessageEvent(event) {
   if (data.joined) {
     if (data.joined !== roomname) {
       console.log(`cloudflare ${data.joined} joined`);
-      doRollbar(ROLLBAR_DEBUG, `realtime watcher`, data.joined);
+      doRollbar(ROLLBAR_INFO, `realtime watcher`, data.joined);
     }
   }
   if (data.message) {

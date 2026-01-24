@@ -676,8 +676,10 @@ function hitplayer(x, y) {
     }
   }
 
-  if ((getKnow(x, y) & KNOWHERE) == 0)
-    show1cell(x, y);
+  if (player.BLINDCOUNT === 0) {
+    if ((getKnow(x, y) & KNOWHERE) == 0)
+      show1cell(x, y);
+  }
 
   var bias = getDifficulty() + 1;
   hitflag = 1;

@@ -120,6 +120,7 @@ function setGameConfig() {
     monsterlist[DEMONPRINCE].color = `crimson`;
     if (ULARN) monsterlist[LUCIFER].color = `crimson`;
     
-
+    lt = amiga_mode ? `<` : `&lt`;
+    gt = amiga_mode ? `>` : `&gt`;
 
 }

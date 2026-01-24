@@ -49,6 +49,7 @@ async function play() {
 
   // WORKER STEP 0 - initialization
   if (!isFile() && window.Worker) {
+    console.log(`initializing workers`);
     localStorageCompressionWorker = new Worker('workers/compressionWorker.js');
     localStorageCompressionWorker.onmessage = localStorageCompressionCallback;
     liveFrameCompressionWorker = new Worker('workers/compressionWorker.js');
