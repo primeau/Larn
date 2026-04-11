@@ -1,5 +1,15 @@
 'use strict';
 
+// Is auto-explore in progress?
+let exploring = false;
+// Flag for if the player has been hit while exploring
+let exploreHitflag = 0;
+// Number of manual player inputs since the start of the last auto-explore
+let playerInputCount = 0;
+// Async function to be run after autoexplore blocking callback
+let explorerCallback = null;
+
+
 /**
  * Maze Explorer - Frontier-based algorithm for discovering a maze with fog of war
  */
@@ -7,6 +17,14 @@
 const MazeExplorer = {
   width: 67,
   height: 17,
+
+  allowFight: false,
+  allowPickup: false,
+  allowPray: false,
+  monstersBlockDestination: true,
+  stopOnTeleport: true,
+  stopOnHit: true,
+  stopOnLowHP: false,
 
   totalSteps: 0,
   path: [], // Array of {x, y} positions
@@ -25,14 +43,6 @@ const MazeExplorer = {
       { dx: -1, dy: 0 }, // left
       { dx: -1, dy: -1 }, // up-left
     ];
-  },
-
-  /**
-   * Check if a square is blocked (wall, closed door, home entrance, or trap)
-   */
-  isBlocked: function (x, y) {
-    if (!inBounds(x, y)) return true;
-    return itemAt(x, y).matches(OWALL) || itemAt(x, y).matches(OCLOSEDDOOR) || itemAt(x, y).matches(OHOMEENTRANCE) || itemAt(x, y).isTrap();
   },
 
   /**
@@ -79,14 +89,17 @@ const MazeExplorer = {
   },
 
   /**
-   * Find nearest frontier square using BFS through known safe terrain
-   * Returns {target: {x, y}, path: [{x, y}, ...]} or null if no frontier
+   * Find the shortest path to a square matching the given destination criteria
+   * using BFS through known safe terrain
+   * Returns {target: {x, y}, path: [{x, y}, ...]} or null if path not found
    */
-  findNearestFrontier: function () {
-    const frontier = this.getFrontier();
-    if (frontier.length === 0) return null;
+  findPath: function () {
+    // If we're already at a destination, return an empty path
+    if (this.isDestination(player.x, player.y)) {
+      return [];
+    }
 
-    // BFS to find nearest frontier square
+    // Breadth-first search
     const queue = [{ x: player.x, y: player.y, path: [] }];
     const visited = new Set([`${player.x},${player.y}`]);
 
@@ -106,16 +119,13 @@ const MazeExplorer = {
         visited.add(k);
         const newPath = [...current.path, { x: nx, y: ny }];
 
-        // Check if moving here will discover a frontier square
-        const willDiscover = this.getDirections().some((dir) => {
-          return this.isFrontier(nx + dir.dx, ny + dir.dy);
-        });
-
-        if (willDiscover) {
-          return {
-            target: { x: nx, y: ny },
-            path: newPath,
-          };
+        // If this is a valid destination, return the path we found
+        if (this.isDestination(nx, ny)) {
+          // Skip if monsters are configured to block the destination
+          // Note: invisible monsters obscure the destination tile under them,
+          // so they DO block it (we don't want to give away what tile it is)
+          if (this.monstersBlockDestination && monsterAt(nx, ny)) continue;
+          return newPath;
         }
 
         queue.push({ x: nx, y: ny, path: newPath });
@@ -126,23 +136,37 @@ const MazeExplorer = {
   },
 
   /**
+   * Check if moving here will discover a frontier square
+   */
+  willDiscover: function (x, y) {
+    return this.getDirections().some((dir) => {
+      return this.isFrontier(x + dir.dx, y + dir.dy);
+    });
+  },
+
+  /**
    * Execute one step of exploration
    * Returns true if moved, false if exploration complete
    */
   step: async function () {
-    const nearest = this.findNearestFrontier();
+    const path = this.findPath();
 
-    if (!nearest) {
-      return false; // No more frontier - exploration complete
+    if (!path) {
+      return false; // Path not found; quit
     }
 
-    // Move to first step in path toward position that will discover frontier
-    if (nearest.path.length > 0) {
-      const nextPos = nearest.path[0];
+    // Move to first step in path toward destination
+    if (path.length > 0) {
+      const nextPos = path[0];
 
-      const monsters = nearbymonsters();
-      if (!this.shouldStopForMonster(monsters)) {
-        return false;
+      // Stop if a seen monster is next to the player or the next step along the path
+      const monsters = this.monstersAdjacentTo(player.x, player.y);
+      const monstersAhead = this.monstersAdjacentTo(nextPos.x, nextPos.y);
+      for (const monster of monsters + monstersAhead) {
+        if (this.shouldStopForMonster(monster)) {
+          console.log(`baddy nearby, stopping exploration.`);
+          return false;
+        }
       }
 
       // attack nearest monster, or go for nearby item
@@ -153,7 +177,7 @@ const MazeExplorer = {
         nextPos.x = monster.x;
         nextPos.y = monster.y;
         fight = true;
-      } else {
+      } else if (this.allowPickup) {
         const item = this.targetNearestItem();
         if (item) {
           await nap(300);
@@ -171,31 +195,40 @@ const MazeExplorer = {
 
       // hit the key and make the move
       simulateKeypress(key);
+      this.totalSteps++;
 
-      // trap or teleport
+      // trapdoor, teleport, or home entrance
       if (level !== currentlevel) {
         console.log(`Level changed, stopping exploration.`);
         return false;
       }
-      // teleport on same level
+      // teleport on same level, or unintentionally hit an unseen monster
       if ((player.x !== nextPos.x || player.y !== nextPos.y) && !fight) {
-        console.log(`did we teleport?`);
-        // console.log(`did we teleport? stopping exploration.`);
-        // return false;
-        await nap(1000);
+        if (this.stopOnTeleport) {
+          console.log(`Position changed unexpectedly, stopping exploration.`);
+          return false;
+        } else {
+          console.log(`Position changed unexpectedly.`);
+          await nap(1000);
+        }
       }
+      if (this.stopOnHit && exploreHitflag == 1) {
+        console.log(`Player hit, stopping exploration.`);
+        return false;
+      }
+      exploreHitflag = false;
       // too low on HP
-      if (player.HP < player.HPMAX / 2) {
+      if (this.stopOnLowHP && player.HP < player.HPMAX / 2) {
         console.log(`Player HP low, stopping exploration.`);
         return false;
       }
       // pick up item if present
       const item = itemAt(player.x, player.y);
-      if (canTake(item) && !pocketfull() && !item.matches(OCOOKIE)) {
+      if (this.allowPickup && canTake(item) && !pocketfull() && !item.matches(OCOOKIE)) {
         simulateKeypress('t');
       }
       // auto-pray at altar if we have enough gold
-      if (itemAt(player.x, player.y).matches(OALTAR)) {
+      if (this.allowPray && itemAt(player.x, player.y).matches(OALTAR)) {
         if (player.GOLD >= 50) {
           autoPray();
         } else {
@@ -208,7 +241,6 @@ const MazeExplorer = {
       // stop to admire the view
       await nap(10);
 
-      this.totalSteps++;
       this.path.push(nextPos);
       return true;
     }
@@ -216,15 +248,23 @@ const MazeExplorer = {
     return false;
   },
 
-  shouldStopForMonster: function (monsters) {
-    for (let i = 0; i < monsters.length; i++) {
-      const monster = monsters[i];
-      if (monster.attack > 0) {
-        console.log(`baddy nearby, stopping exploration.`);
-        return false;
+
+  // Return seen monsters adjacent to the given coordinates
+  monstersAdjacentTo: function (x, y) {
+    const monsters = [];
+    for (let tmpx = vx(x - 1); tmpx <= vx(x + 1); tmpx++) {
+      for (let tmpy = vy(y - 1); tmpy <= vy(y + 1); tmpy++) {
+        const monster = monsterAt(tmpx, tmpy);
+        if (monster && canSeeMonster(monster) && getKnow(x, y) & KNOWHERE) {
+          monsters.push(monster);
+        }
       }
     }
-    return true;
+    return monsters;
+  },
+
+  shouldStopForMonster: function (monster) {
+    return !this.allowFight || monster.attack > 0;
   },
 
   targetNearestMonster: function (monsters) {
@@ -236,7 +276,7 @@ const MazeExplorer = {
       y = player.y + diroffy[k];
       if (!inBounds(x, y)) continue;
       const monster = monsterAt(x, y);
-      if (monster) {
+      if (monster && canSeeMonster(monster)) {
         if (monster.matches(BAT) && i == 0 && monsters.length > 1) {
           console.log(`skipping bat`);
           continue; // leave the first bat for later
@@ -276,19 +316,71 @@ const MazeExplorer = {
   },
 
   /**
-   * Run full exploration and return results
-   * Returns {steps: number, path: [{x, y}, ...], discoveredCount: number}
+   * Explore until complete or interrupted.
+   * Returns {success: bool, interrupted: bool, steps: number, path: [{x, y}, ...], discoveredCount: number}
    */
   explore: async function () {
-    while (await this.step()) {
-      // Keep stepping until exploration is complete
+    exploring = true;
+    exploreHitflag = false;
+    playerInputCount = 0;
+    const auto_pickup_state = auto_pickup;
+    auto_pickup = false;
+
+    while (playerInputCount == 0 && await this.step()) {
+      // Keep stepping until exploration is complete or interrupted
     }
 
+    auto_pickup = auto_pickup_state;
+    exploring = false;
+
     return {
+      success: this.isDestination(player.x, player.y),
+      interrupted: playerInputCount != 0,
       steps: this.totalSteps,
       path: this.path,
       discoveredCount: this.getDiscoveredCount(),
     };
+  },
+
+  /**
+   * Does the given item match of the items in the given array?
+   */
+  matchesAny: function (item, items) {
+    return items.some((exact) => item.matches(exact))
+  },
+
+  /**
+   * Set up MazeExplorer to automatically explore the current level
+   */
+  setupExplore: function () {
+    this.allowFight = true;
+    this.allowPickup = true;
+    this.allowPray = true;
+    this.stopOnTeleport = false;
+    this.stopOnHit = false;
+    this.stopOnLowHP = true;
+    this.monstersBlockDestination = false;
+    this.isDestination = (x, y) => this.willDiscover(x, y);
+    this.isBlocked = (x, y) => (
+      !inBounds(x, y) ||
+      this.matchesAny(itemAt(x, y), [OWALL, OCLOSEDDOOR, OHOMEENTRANCE]) ||
+      itemAt(x, y).isTrap()
+    );
+  },
+
+  /**
+   * Set up MazeExplorer to travel to the nearest instance of any of the given items
+   */
+  setupTravelToItem: function (items) {
+    this.isDestination = (x, y) => this.matchesAny(itemAt(x, y), items);
+    this.isBlocked = (x, y) => (
+      !inBounds(x, y) || (
+        !this.isDestination(x, y) && (
+          this.matchesAny(itemAt(x, y), [OWALL, OCLOSEDDOOR, OHOMEENTRANCE, OALTAR]) ||
+          itemAt(x, y).isTrap()
+        )
+      )
+    );
   },
 
   /**
@@ -337,6 +429,169 @@ const MazeExplorer = {
     };
   },
 };
+
+
+
+/**
+ * Returns each item whose symbol matches the given key press.
+ */
+function parseItemsBySymbol(key) {
+  const candidateObjects = [
+    OHOMEENTRANCE,
+
+    // buildings / home level
+    OHOME,
+    ODNDSTORE,
+    OTRADEPOST,
+    OLRS,
+    OBANK,
+    OBANK2,
+    OSCHOOL,
+    OENTRANCE,
+    OVOLDOWN,
+    // ULARN
+    OPAD,
+
+    // dungeon features
+    OALTAR,
+    OTHRONE,
+    ODEADTHRONE,
+    OPIT,
+    OVOLUP,
+    OSTAIRSUP,
+    OSTAIRSDOWN,
+    OFOUNTAIN,
+    ODEADFOUNTAIN,
+    OSTATUE,
+    OMIRROR,
+    OOPENDOOR,
+    OCLOSEDDOOR,
+    // ULARN
+    OELEVATORUP,
+    OELEVATORDOWN,
+
+    // traps
+    OTELEPORTER,
+    OTRAPARROW,
+    ODARTRAP,
+    OTRAPDOOR,
+
+    // dungeon items
+    OGOLDPILE,
+    OSCROLL,
+    OPOTION,
+    OBOOK,
+    OCHEST,
+    ODIAMOND,
+    ORUBY,
+    OEMERALD,
+    OSAPPHIRE,
+
+    // weapons
+    OSWORD,
+    O2SWORD,
+    OSPEAR,
+    ODAGGER,
+    OBELT,
+    OBATTLEAXE,
+    OLONGSWORD,
+    OFLAIL,
+    OLANCE,
+
+    // special weapons
+    OSWORDofSLASHING,
+    OHAMMER,
+    // ULARN
+    OVORPAL,
+    OSLAYER,
+
+    // armour
+    OLEATHER,
+    OSTUDLEATHER,
+    ORING,
+    OCHAIN,
+    OSPLINT,
+    OPLATE,
+    OPLATEARMOR,
+    OSSPLATE,
+    OSHIELD,
+    // ULARN
+    OELVENCHAIN,
+
+    // rings
+    ORINGOFEXTRA,
+    OREGENRING,
+    OPROTRING,
+    OENERGYRING,
+    ODEXRING,
+    OSTRRING,
+    OCLEVERRING,
+    ODAMRING,
+
+    // special objects
+    OLARNEYE,
+    OAMULET,
+    OORBOFDRAGON,
+    OSPIRITSCARAB,
+    OCUBEofUNDEAD,
+    ONOTHEFT,
+    OORB,
+    // ULARN
+    OBRASSLAMP,
+    OHANDofFEAR,
+    OSPHTALISMAN,
+    OWWAND,
+    OPSTAFF,
+    OLIFEPRESERVER,
+
+    // ULARN drugs
+    OSPEED,
+    OACID,
+    OHASH,
+    OSHROOMS,
+    OCOKE
+  ];
+
+  return candidateObjects.filter(
+    (candidate) => (
+      original_objects ? (ULARN ? candidate.ularnchar : candidate.char) : candidate.hackchar
+    ) == key
+  );
+}
+
+
+
+function parseTravelToItem(key) {
+  if (key == ESC) {
+    appendLog(` cancelled${period}`);
+  } else {
+    const items = parseItemsBySymbol(key);
+    if (items.length > 0) {
+      const explorer = Object.create(MazeExplorer);
+      explorer.setupTravelToItem(items);
+      explorerCallback = travelToItemCallback.bind(null, explorer);
+    } else {
+      updateLog(`I can't travel to that symbol!`);
+    }
+  }
+  return exitbuilding();
+}
+
+
+async function travelToItemCallback(explorer) {
+  const result = await explorer.explore();
+  if (result.steps == 0 && !result.interrupted) {
+    if (result.success) {
+      // If the player is already at the destination, look at the tile to make this clearer
+      lookforobject(true, false);
+    } else {
+      updateLog(`  I see no safe path to that symbol!`);
+    }
+    paint();
+  }
+}
+
+
 
 // Export for use in Node.js or browser
 if (typeof module !== 'undefined' && module.exports) {

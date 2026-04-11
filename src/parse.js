@@ -63,12 +63,14 @@ Mousetrap.prototype.handleKey = function (char, mod, evt) {
 function simulateKeypress(key) {
   // code/keyCode/which are incorrect, but not needed for our purposes
   mousetrap(new KeyboardEvent('keydown', { key: key, code: '', keyCode: 0, which: 0, bubbles: true }), key);
+  playerInputCount--;
 }
 
 
 
 function mousetrap(e, key) {
   // debug(`mousetrap: ${key} ${JSON.stringify(e)}`);
+  playerInputCount++;
   if (key == SPACE) key = ' ';
   if (key == TAB) return false;
 
@@ -199,6 +201,16 @@ async function parse(e, key) {
     // i think i have created my own special callback hell
     if (before == after && done) {
       blocking_callback = null;
+
+      // Handle autotravel here
+      // This is a bit ugly, but it needs to be awaited, which can't be done from the blocking callback
+      if (explorerCallback) {
+        nomove = 1;
+        const tmpCallback = explorerCallback;
+        explorerCallback = null;
+        await tmpCallback();
+        return;
+      }
     }
     if (!done) {
       nomove = 1;
@@ -865,6 +877,16 @@ async function parse(e, key) {
   }
 
   //
+  // 'G'o to the specified symbol
+  //
+  if (key == 'G') {
+    nomove = 1;
+    updateLog(`What symbol do you want to travel to? `);
+    setCharCallback(parseTravelToItem);
+    return;
+  }
+
+  //
   // wizard mode
   //
   if (key == '_') {
@@ -878,10 +900,14 @@ async function parse(e, key) {
   //  MAZE EXPLORER
   //
   if (debug_used && key === '±') {
-    const explorer = Object.create(MazeExplorer);
-    const result = await explorer.explore();
-    console.log(`Explored in ${result.steps} steps`);
-    return;
+    nomove = 1;
+    if (!exploring) {
+      const explorer = Object.create(MazeExplorer);
+      explorer.setupExplore();
+      const result = await explorer.explore();
+      console.log(`Explored in ${result.steps} steps`);
+      return;
+    }
   }
 
   //

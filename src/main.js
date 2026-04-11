@@ -604,6 +604,7 @@ function mainloop(e, key) {
     showcell(player.x, player.y);
 
   viewflag = 0;
+  exploreHitflag |= hitflag; // JS Larn: copy hitflag for use in explore code
   hitflag = 0;
 
   if (gtime >= 400 && gtime % 400 == 0) {
@@ -653,6 +654,12 @@ function run(dir) {
       showcell(player.x, player.y);
     }
   }
+}
+
+
+
+function canSeeMonster(monster) {
+  return monster.isVisible() && player.BLINDCOUNT == 0;
 }
 
 

@@ -175,6 +175,9 @@ function initKeyBindings() {
   Mousetrap.bind(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], mousetrap);
 
   Mousetrap.bind([':'], mousetrap);
+
+  // Item symbols for autotravel
+  Mousetrap.bind(['=', '$', '\\', '%', '{', '|', '\'', '&', '[', ']', '~', '}', ';', '"'], mousetrap);
 }
 
 
