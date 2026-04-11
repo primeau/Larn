@@ -656,6 +656,76 @@ function run(dir) {
 }
 
 
+function canSeeMonster(monster) {
+  return monster.isVisible() && player.BLINDCOUNT == 0;
+}
+
+
+
+function waitUntilRecovered() {
+  let turns_waited = 0;
+  let recovering_hp = player.HP < player.HPMAX;
+  let recovering_spells = player.SPELLS < player.SPELLMAX;
+  let recovered_hp = !recovering_hp;
+  let recovered_spells = !recovering_spells;
+
+  // Don't wait if already fully recovered
+  while (recovering_hp || recovering_spells) {
+    // Stop waiting if there is a nearby awake monster the player can see
+    // (allows risky rest near monsters during stealth, hld)
+    let stop_for_monster = false;
+    for (const monster of nearbymonsters()) {
+      if (monster.awake && canSeeMonster(monster)) {
+        stop_for_monster = true;
+        break;
+      }
+    }
+    if (stop_for_monster) break;
+
+    // Wait one turn
+    turns_waited++;
+    parse2();
+
+    // Pass time
+    //
+    // (Normally, this code would run in mainloop, but here we pass multiple
+    // turns with parse2, so we need to do it here. Theoretically we should
+    // patch parse2 to update gtime, but it is a known and used exploit from the
+    // original Larn.)
+    if (player.TIMESTOP <= 0) {
+      if (player.HASTESELF == 0 || (player.HASTESELF & 1) == 0) {
+        gtime++;
+      }
+    }
+
+    // Stop waiting when health or spells are fully recovered
+    recovered_hp = player.HP == player.HPMAX;
+    recovered_spells = player.SPELLS == player.SPELLMAX;
+    if (recovering_hp && recovered_hp) break;
+    if (recovering_spells && recovered_spells) break;
+
+    // Stop waiting when hit (probably possible with haste monsters)
+    if (hitflag == 1) break;
+
+    // Stop waiting on game over and show no message (sanity check)
+    if (GAMEOVER) return;
+  }
+
+  let stop_reason;
+  if (recovered_hp && recovered_spells) {
+    stop_reason = 'fully recovered';
+  } else if (recovering_hp && recovered_hp) {
+    stop_reason = 'HP recovered';
+  } else if (recovering_spells && recovered_spells) {
+    stop_reason = 'spells recovered';
+  } else {
+    stop_reason = 'interrupted!';
+  }
+  const s = turns_waited == 1 ? '' : 's';
+  updateLog(`Waited for ${turns_waited} turn${s} - ${stop_reason}`);
+}
+
+
 
 function wizardmode(password) {
 
