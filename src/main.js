@@ -211,14 +211,10 @@ function makeplayer(x, y) {
 
 function initFS() {
   try {
-    var gameNum = localStorageGetObject('gameNum', 0) + 1;
+    const gameNum = localStorageGetObject('gameNum', 0) + 1;
     localStorageSetObject('gameNum', gameNum);
-    if (gameNum <= 5 || getDifficulty() > 15 || rnd(100) < 3 || isMobile()) {
+    if (gameNum <= 5 || GOTW || isMobile() || rnd(100) < 3) {
       dofs = true;
-      console.log('dofs: ' + gameNum + ' ' + dofs + ' ' + getDifficulty());
-    }
-
-    if (dofs) {
       fsfunc();
       var userVars = {
         'displayName': logname,

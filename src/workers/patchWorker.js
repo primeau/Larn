@@ -4,12 +4,15 @@ importScripts('../lib/diff_match_patch.js');
 
 try {
   importScripts('../tv/common/patch.js'); // prod location
+  console.log(`patchWorker.js: prod load`);
 } catch (error) {
   try {
-    debug(`patchWorker importScripts local`);
     importScripts('../common/patch.js'); // local testing
-  } catch (err) { }
-} 
+    console.log(`patchWorker.js: dev load`);
+  } catch (e) {
+    console.error(`patchWorker.js: failed to load`);
+  }
+}
 
 // WORKER STEP 2 - build patch
 onmessage = function (event) {
@@ -19,11 +22,11 @@ onmessage = function (event) {
   let newPatch = buildPatch(prevFrame, newFrame);
   // console.log(`${source}:${newFrame.id} worker.buildpatch`);
 
-    // memory management
-    event.data[0] = null;
-    event.data[1] = null;
-    event.data[2] = null;
-    event.data.length = 0;
+  // memory management
+  event.data[0] = null;
+  event.data[1] = null;
+  event.data[2] = null;
+  event.data.length = 0;
 
   postMessage([newPatch, newFrame]);
 };

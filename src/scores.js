@@ -357,14 +357,13 @@ function printScore(p) {
   const endcode = GAMEOVER ? `<br>` : ``;
 
   const isNewScore = gameID ? p.gameID.split(`+`)[0] == gameID.split(`+`)[0] : false;
-  const addplus = isNewScore && dofs ? `+` : ``;
 
   if (isNewScore) {
     score = `<b>${score}</b>`;
   }
 
-  // console.log(`score.js`, dofs, gameID, p.gameID, isNewScore, addplus, `${p.gameID}${addplus}`);
-  lprcat(`<a href='javascript:dbQueryLoadGame("${p.gameID}${addplus}", ${!navigator.onLine}, ${p.winner})'>${score}</a>${endcode}`);
+  // console.log(`score.js`, dofs, gameID, p.gameID, isNewScore, `${p.gameID}${addplus}`);
+  lprcat(`<a href='javascript:dbQueryLoadGame("${p.gameID}", ${!navigator.onLine}, ${p.winner})'>${score}</a>${endcode}`);
   if (!GAMEOVER) lprc(`\n`);
 }
 

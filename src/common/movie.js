@@ -12,7 +12,6 @@ class Video {
     this.recording = ENABLE_RECORDING;
     this.gameID = gameID;
     this.currentFrameNum = -1;
-    this.metadata; // set when game is completed
     this.totalFrames; // total number of frames when replaying
     
     this.currentRoll = new Roll([]);
@@ -104,26 +103,10 @@ class Video {
       return;
     }
 
-    const metadata = roll.metadata;
-
-    if (metadata && metadata.diff) {
-      console.log(`addRollToFrameBuffer(): metadata`, metadata);
-      if (metadata.diff) metadata.diff = parseInt(metadata.diff);
-      if (metadata.score) metadata.score = parseInt(metadata.score);
-      if (metadata.frames) metadata.frames = parseInt(metadata.frames);
-      if (metadata.frames) {
-        this.metadata = metadata;
-        this.totalFrames = metadata.frames;
-      }
-      if (metadata.who) {
-        document.title = `LarnTV: ${metadata.who} - ${metadata.what} - diff ${metadata.diff} - score ${metadata.score}`;
-      }
-    }
-    
     for (const patch of roll.patches) {
       patch.isPatch = true;
       this.frameBuffer[patch.id] = patch;
-      if (!this.metadata) this.totalFrames = patch.id;
+      if (this.totalFrames < patch.id) this.totalFrames = patch.id;
       // roll.patches[patch.id] = null; // memory management - too soon
     }
 
@@ -182,7 +165,7 @@ class Video {
 
 
 
-function uploadRoll(roll, num, unusedcallback, metadata) {
+function uploadRoll(roll, num, metadata) {
   let filename = `${num}.json`;
   let uncompressed = JSON.stringify(roll);
 
@@ -203,7 +186,7 @@ function rollCompressionCallback(event) {
   let filename = event.data[0];
   let file = event.data[1];
   let metadata = event.data[2];
-  uploadFile(gameID, filename, file, false, metadata);
+  uploadFile(gameID, filename, file, metadata);
   
   // memory management
   event.data[0] = null;
@@ -385,7 +368,6 @@ function endRecording(endData, isUlarn) {
   try {
     if (!canRecord()) return;
 
-    let meta = {};
     let currentRoll = video.getCurrentRoll();
 
     // save games don't have endData
@@ -402,26 +384,15 @@ function endRecording(endData, isUlarn) {
         console.error(`endRecording(): currentRoll problem`, error);
         endData.frames = 0;        
       }
+      // can't use ULARN here because larnTV doesn't have the ULARN var. This function probably should be moved...
       endData.ularn = isUlarn;
+      endData.numRolls = video.currentRollNum  + 1;
 
-      // special case for gameover with first roll:
-      // we update metadata later in this function
-      // but roll[0] sometimes wasn't uploaded yet
-      if (video.currentRollNum === 0) {
-        meta = {
-          frames: `${endData.frames}`,
-          who: endData.who,
-          what: endData.what,
-          diff: `${endData.hardlev}`,
-          score: `${endData.score}`
-        };
-      }
-      
       //console.log(`endRecording(): enddata: `, endData);
-      uploadFile(gameID, `${gameID}.txt`, JSON.stringify(endData), true);
+      uploadFile(gameID, `${gameID}.txt`, JSON.stringify(endData));
     }
     
-    uploadRoll(currentRoll, video.currentRollNum, null, meta);
+    uploadRoll(currentRoll, video.currentRollNum, {});
 
   } catch (error) {
     console.error(`endRecording(): caught: `, error);

@@ -15,11 +15,6 @@ var DEBUG_LPRC = 0;
 var DEBUG_PROXIMITY = false;
 
 var dofs = false; /* use fullstory */
-var lambda; /* AWS lambda database handle */
-let localStorageCompressionWorker; /* web worker to compress save games outside of main thread */
-let liveFrameCompressionWorker; /* web worker to compress live frames */
-let rollCompressionWorker; /* web worker to compress recorded frames */
-let buildPatchWorker; /* web worker to build diff patches */
 
 
 
@@ -31,34 +26,12 @@ async function play() {
   console.log(`ismobile`, isMobile(), `isPhone`, isPhone(), `isLocal`, isLocal(), `isFile`, isFile());
   console.log(`cloudflare`, CF_BROADCAST_HOST);
 
-  try {
-    initLambdaCredentials(); // real credentials are set here, and not committed to git
-  } catch (error) {
-    console.error(`not loading aws credentials: ${error}`);
-  }
-
-  lambda = new AWS.Lambda({
-    region: 'us-east-1',
-    apiVersion: '2015-03-31'
-  });
-
   document.getElementById('LARN').addEventListener('click', onMouseClick);
   window.addEventListener('online', handleOnline);
   window.addEventListener('offline', handleOffline);
   window.addEventListener('resize', onResize);
 
-  // WORKER STEP 0 - initialization
-  if (!isFile() && window.Worker) {
-    console.log(`initializing workers`);
-    localStorageCompressionWorker = new Worker('workers/compressionWorker.js');
-    localStorageCompressionWorker.onmessage = localStorageCompressionCallback;
-    liveFrameCompressionWorker = new Worker('workers/compressionWorker.js');
-    liveFrameCompressionWorker.onmessage = liveFrameCompressionCallback;
-    rollCompressionWorker = new Worker('workers/compressionWorker.js');
-    rollCompressionWorker.onmessage = rollCompressionCallback;
-    buildPatchWorker = new Worker('workers/patchWorker.js');
-    buildPatchWorker.onmessage = buildPatchCallback;
-  }
+  initWorkers();
 
   /* warn the player that closing their window will kill the game */
   if (isLocal()) {
@@ -94,6 +67,9 @@ async function play() {
   no_intro = !GOTW && localStorageGetObject('no_intro', false);
   
   setGameConfig();
+
+  document.title = GAMENAME;
+
   setWallChar(wall_char);
   setFloorChar(floor_char);
   updateCustomMonsters(custom_monsters);
@@ -139,9 +115,22 @@ function confirmExit() {
 
 
 
+// function toggleFullscreen() {
+//   if (!document.fullscreenElement) {
+//     document.documentElement.requestFullscreen().catch((err) => {});
+//   } else {
+//     if (document.exitFullscreen) {
+//       document.exitFullscreen();
+//     }
+//   }
+// }
+
+
+
 function initKeyBindings() {
   Mousetrap.bind('.', mousetrap); // stay here
   Mousetrap.bind(',', mousetrap); // take
+  // Mousetrap.bind('`', mousetrap); // use
   Mousetrap.bind('<', mousetrap); // go up
   Mousetrap.bind('>', mousetrap); // go down
   Mousetrap.bind('^', mousetrap); // identify traps
@@ -155,6 +144,7 @@ function initKeyBindings() {
   Mousetrap.bind('-', mousetrap); // disarm 
   Mousetrap.bind('+', mousetrap); // load games via password
   Mousetrap.bind('±', mousetrap);
+  // Mousetrap.bind('alt+enter', toggleFullscreen); // fullscreen toggle
 
   Mousetrap.bind(['(', ')'], mousetrap); // allow () for pvnert(x)
 

@@ -12,7 +12,8 @@ let clock;
 let lastFrameTime = Date.now();
 let compressionInterval; // for periodic frame compression
 
-let recordedMetadata;
+let styleInfo;
+let gameInfo;
 
 
 
@@ -28,8 +29,11 @@ async function watchRecorded(gameID) {
   video.divs.push(`STATS`);
 
   // load useful css style settings
-  recordedMetadata = await downloadStyleInfo(gameID);
-  setStyle(recordedMetadata);
+  styleInfo = await downloadStyleInfo(gameID);
+  setStyle(styleInfo);
+
+  gameInfo = await downloadGameInfo(gameID);
+  applyGameInfo(gameInfo);
   
   initPlayer();
   bltFrame(video.createInfoFrame(`Loading...`));
@@ -51,6 +55,43 @@ async function watchRecorded(gameID) {
   }
   while (roll != null);
   
+}
+
+
+
+async function downloadStyleInfo(gameID) {
+  const file = await downloadFile(gameID, `${gameID}.css`);
+  if (file?.status === 200) {
+    const styleInfo = JSON.parse(file.data);
+    return styleInfo;
+  } else {
+    return null;
+  }
+}
+
+
+
+async function downloadGameInfo(gameID) {
+  const file = await downloadFile(gameID, `${gameID}.txt`);
+  if (file?.status === 200) {
+    const gameInfo = JSON.parse(file.data);
+    return gameInfo;
+  } else {
+    return null;
+  }
+}
+
+
+
+async function downloadRoll(gameID, rollNum) {
+  const file = await downloadFile(gameID, `${rollNum}.json`);
+  if (file?.status === 200) {
+    const roll = decompressRoll(file.data);
+    roll.metadata = file.metadata;
+    return roll;
+  } else {
+    return null;
+  }
 }
 
 
@@ -129,11 +170,6 @@ function initPlayer() {
 
 function updateProgressBarCallback() {
   updateMessage(``);
-
-  clearTimeout(waiter);
-  countdown = newcountdown;
-  numtries = 1;
-
   updateProgressBar(video.currentFrameNum, video.frameBuffer.length - 1, video.totalFrames);
 }
 
@@ -200,36 +236,6 @@ async function onClickProgressBar(event) {
     bltRecordedFrame(video.getFrame(newFrameNum));
     lastFrameTime = Date.now();
     next();
-  }
-}
-
-
-
-// also contains some experimental code for realtime viewing
-let waiter;
-let newcountdown = 0;
-let numtries = 1;
-let maxtries = 10;
-let countdown = 0;
-function waitForNextFile(video, filename) {
-  if (countdown != 0) {
-    // console.log(countdown, video.gameID, filename, video.currentFrameNum, video.totalFrames, numtries, maxtries);
-    if (numtries <= maxtries) {
-      waiter = setTimeout(waitForNextFile, 250, video, filename);
-      if (video.currentFrameNum == video.totalFrames) {
-        updateMessage(`\nwaiting for more moves ${'.'.repeat(countdown)}`);
-      }
-    } else {
-      updateMessage(`\nno moves detected for a long time. giving up.`);
-    }
-    countdown--;
-  } else {
-    // wait for max 16 repetitons before trying again
-    // countdown = Math.min(16, Math.pow(2, numtries));
-    countdown = Math.min(10, numtries);
-    numtries++;
-    lastFrameTime = Date.now();
-    downloadRoll(video, updateProgressBarCallback, waitForNextFile);
   }
 }
 
@@ -336,6 +342,7 @@ function next(event) {
 }
 
 
+
 function prev(event) {
   // console.log(`prev()`);
   if (event) event.preventDefault();
@@ -420,9 +427,9 @@ function setDiv(id, data) {
 
 
 
-// function toggleFullScreen() {
+// function toggleFullscreen() {
 //   if (!document.fullscreenElement) {
-//     document.documentElement.requestFullscreen();
+//     document.documentElement.requestFullscreen().catch((err) => {});
 //   } else {
 //     if (document.exitFullscreen) {
 //       document.exitFullscreen();

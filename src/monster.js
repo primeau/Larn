@@ -804,7 +804,7 @@ function hitmonster(x, y) {
   if (hitMonster) {
     /* if the monster was hit */
     if (monster.matches(RUSTMONSTER) || monster.matches(DISENCHANTRESS) || monster.matches(CUBE)) {
-      if (weapon && weapon.isWeapon()) {
+      if (weapon && weapon.canWield()) {
         if (weapon.arg > -10) {
           if (!weapon.matches(OSWORDofSLASHING)) /* 12.5.0 -- impervious to rust */ {
             updateLog(`  Your weapon is dulled by the ${monster}`);

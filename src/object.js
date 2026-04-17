@@ -221,6 +221,12 @@ class Item {
 
 
 
+  canCarry() {
+    return itemlist[this.id].carry;
+  }
+
+
+
   getSortCode() {
     var sortcode = (sortorder.indexOf(this.id) + 1) * 10000;
     // sort unknown scrolls and potions above known

@@ -37,20 +37,14 @@ bugs:
   --> bug mitigated, but cause is a missing frame on save (or frame # is one too high on reload)
 
 todo:
-* amiga games are much bigger. don't record them for now. it also totally doesn't work...
 - download multiple .json in parallel
 - Link from watch screen back to list
 - Save playback speed via cookie
-- move game replays to cloudflare 
 - add play options to larntv list
-- restrict aws uploads to .json/etc
-- compress completed games into a single large file, or a few larger files
-  - https://dev.to/lineup-ninja/zip-files-on-s3-with-aws-lambda-and-node-1nm1
-  - https://stackoverflow.com/questions/38633577/create-a-zip-file-on-s3-from-files-on-s3-using-lambda-node/50397276#50397276
-- put a size limit on uploads in the lambda
-- VIDEO.WRITETOS3() <- TODO this could be basis of cloud savegames too
+- restrict uploads to .json/etc
+- put a size limit on uploads
+- cloud savegames?
 - hold inventory views (and others?) for a little longer somehow?
-- clean up s3/dynamo boilerplate
 
 live mode:
 - support classic fonts

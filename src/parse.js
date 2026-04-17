@@ -248,6 +248,44 @@ async function parse(e, key) {
     return;
   }
 
+
+/*
+  // 
+  // USE ITEM
+  //
+  if (key == '`') {
+    if (item.matches(OPOTION)) {
+      key = 'q'; // quaff potion
+    } else if (item.matches(OBOOK) || item.matches(OSCROLL)) {
+      key = 'r'; // read book
+    } else if (item.matches(OCOOKIE)) {
+      key = 'e'; // eat cookie
+    } else if (item.isArmor()) {
+      key = 'W'; // wear
+    } else if (item.isWeapon()) {
+      key = 'w'; // wield
+    } else if (item.matches(OCHEST)) {
+      key = 'o'; // open
+    } else if (item.matches(OSPEED) || item.matches(OHASH) || item.matches(OCOKE) ) {
+      key = 's'; // snort/smoke
+    } else if (item.matches(OSHROOMS) || item.matches(OACID)) {
+      key = 'e'; // eat
+    // } else if (item.matches(OSTAIRSUP)) {
+    //   key = '<'; // go up stairs
+    // } else if (item.matches(OSTAIRSDOWN)) {
+    //   key = '>'; // go down stairs
+    // } else if (item.isStore()) {
+    //   key = 'e'; // enter
+    // } else if (item.canCarry()) {
+    //   key = 't'; // take
+    }
+    else {
+      nomove = 1;
+      return;
+    }
+  } 
+*/
+
   //
   // CAST A SPELL
   //

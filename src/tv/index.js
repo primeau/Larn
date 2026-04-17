@@ -1,7 +1,5 @@
 'use strict';
 
-let lambda;
-
 let GAMENAME = `TV`;
 let ULARN = false; // this is a hack to get around localstoragegetobject issues
 
@@ -18,7 +16,7 @@ go();
 
 async function go() {
   initRollbar();
-  initAWS();
+
   console.log(`build`, BUILD);
   console.log(`cloudflare`, CF_BROADCAST_HOST);
 
@@ -69,20 +67,6 @@ function initRollbar() {
     });
   } catch (error) {
     console.log(`caught`, error);
-  }
-}
-
-
-
-function initAWS() {
-  try {
-    initLambdaCredentials();
-    lambda = new AWS.Lambda({
-      region: 'us-east-1',
-      apiVersion: '2015-03-31'
-    });
-  } catch (error) {
-    console.error(`go(): not loading aws credentials: ${error}`);
   }
 }
 
@@ -249,6 +233,19 @@ function setStyle(styleIn) {
 
 
 
+function applyGameInfo(gameInfo) {
+  if (gameInfo) {
+    video.setTotalFrames(gameInfo.frames);
+    document.title = `LarnTV: ${gameInfo.who} - ${gameInfo.what} - diff ${gameInfo.hardlev} - score ${gameInfo.score}`;
+  } else {
+    video.setTotalFrames(0);
+    console.error(`setGameInfo(): no game info available`);
+    // document.title = `LarnTV`;
+  }
+}
+
+
+
 // copied & adapted from display.js
 function computeSpriteWidth() {
   let browserWidth = window.innerWidth;
@@ -273,8 +270,8 @@ function computeSpriteWidth() {
 
 
 function isAmigaMode() {
-  if (recordedMetadata && recordedMetadata.fontFamily) {
-    return recordedMetadata.fontFamily.includes(`amiga`);
+  if (styleInfo && styleInfo.fontFamily) {
+    return styleInfo.fontFamily.includes(`amiga`);
   } else {
     return false;
   }

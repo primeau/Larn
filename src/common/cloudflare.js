@@ -279,7 +279,7 @@ async function cloudflareLoadGame(gameID) {
 
 
 async function downloadRecordings(downloadCompleteCallback, limit) {
-    if (!navigator.onLine) {
+  if (!navigator.onLine) {
     console.error(`downloadRecordings(): offline`);
     return;
   }
@@ -294,3 +294,76 @@ async function downloadRecordings(downloadCompleteCallback, limit) {
     console.error(`downloadRecordings() no data`);
   }
 }
+
+
+
+async function downloadFile(gameID, filename) {
+  if (!navigator.onLine) {
+    console.log(`downloadFile(): offline, cannot download`);
+    return null;
+  }
+
+  try {
+    const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/${CF_ROLLS_ENDPOINT}/${gameID}/${filename}`);
+
+    if (response.ok) {  
+      const responseBody = await response.json();
+
+      const file = {
+        data: responseBody.file,
+        metadata: Object.keys(responseBody.metadata).length ? responseBody.metadata : null,
+        status: response.status,
+      };
+
+      console.log(`downloadFile(): ${gameID}/${filename} (${file.data.length} bytes)`);
+      if (file.metadata) console.log(`downloadFile(): additional data:`, file.metadata); 
+
+      return file;
+    } else {
+      console.error(`downloadFile(): Failed to download ${gameID}/${filename}. Status: ${response.status}`);
+      return { error: `Failed to download file`, status: response.status };
+    }
+  } catch (error) {
+    console.error(`downloadFile(): Error downloading file:`, error);
+    return { error: `Error downloading file`, status: 500 };
+  }
+}
+
+
+
+async function uploadFile(gameID, filename, filecontents, metadata) {
+  if (!navigator.onLine) {
+    console.log(`uploadFile(): offline, cannot upload`);
+    return null;
+  }
+  if (!filecontents) {
+    console.error(`uploadFile(): no file contents for ${filename}`);
+    return;
+  }
+
+  console.log(`uploadFile(): ${gameID}/${filename} (${filecontents.length})`);
+  if (metadata) console.log(`uploadFile(): metadata: ${JSON.stringify(metadata)}`);
+
+  try {
+    const response = await fetch(`${CF_BROADCAST_PROTOCOL}${CF_BROADCAST_HOST}/api/${CF_ROLLS_ENDPOINT}/${gameID}/${filename}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'X-Metadata': JSON.stringify(metadata),
+      },
+      body: JSON.stringify({
+        file: filecontents,
+        metadata: metadata,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(`uploadFile(): Failed to upload ${filename}. Status: ${response.status}`);
+    } else {
+      // console.log(`uploadFile(): Successfully uploaded ${filename}`);
+    }
+  } catch (error) {
+    console.error(`uploadFile(): Error uploading ${filename}`, error);
+  }
+}
+

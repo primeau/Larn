@@ -287,6 +287,58 @@ function clearBlinkingCursor() {
 }
 
 
+
+
+
+/*
+
+NEW EXPERIMENTAL TEXT INPUT METHODS 
+BEGIN
+
+*/
+
+
+async function getTextInputNEW(maxLength = MAX_INPUT_LENGTH) {
+  return new Promise((resolve) => {
+    let input = '';
+
+    function onKeyDown(e) {
+      const key = e.key;
+
+      if (key === `Enter`) {
+        document.removeEventListener('keydown', onKeyDown);
+        resolve(input);
+        KEYBOARD_INPUT = ``;
+        return;
+      } else if (key === `Escape`) {
+        document.removeEventListener('keydown', onKeyDown);
+        resolve(ESC);
+        KEYBOARD_INPUT = ``;
+        return;
+      } else if (key === `Backspace`) {
+        input = input.slice(0, -1);
+      } else if (key.length === 1 && input.length < maxLength) {
+        input += key;
+      }
+      echo(key);
+      KEYBOARD_INPUT = input;
+    }
+
+    document.addEventListener('keydown', onKeyDown);
+  });
+}
+
+
+
+/*
+
+NEW EXPERIMENTAL TEXT INPUT METHODS 
+END
+
+*/
+
+
+
 String.prototype.nextChar = function (i) {
   var n = (i == null) ? 1 : i;
   return String.fromCharCode(this.charCodeAt(0) + n);
@@ -404,6 +456,35 @@ function compareArrays(a1, a2) {
 
 
 const COMPRESSED_DATA = `_COMPRESSED`;
+
+
+let localStorageCompressionWorker; /* web worker to compress save games outside of main thread */
+let liveFrameCompressionWorker; /* web worker to compress live frames */
+let rollCompressionWorker; /* web worker to compress recorded frames */
+let buildPatchWorker; /* web worker to build diff patches */
+
+
+
+let initializedWorkers = false;
+function initWorkers() {
+  // WORKER STEP 0 - initialization
+  try {
+    if (!initializedWorkers && !isFile() && window.Worker) {
+      console.log(`initializing workers`);
+      localStorageCompressionWorker = new Worker('workers/compressionWorker.js');
+      localStorageCompressionWorker.onmessage = localStorageCompressionCallback;
+      liveFrameCompressionWorker = new Worker('workers/compressionWorker.js');
+      liveFrameCompressionWorker.onmessage = liveFrameCompressionCallback;
+      rollCompressionWorker = new Worker('workers/compressionWorker.js');
+      rollCompressionWorker.onmessage = rollCompressionCallback;
+      buildPatchWorker = new Worker('workers/patchWorker.js');
+      buildPatchWorker.onmessage = buildPatchCallback;
+    }    
+  } catch (error) {
+  } finally {
+    initializedWorkers = true;
+  }
+}
 
 
 

@@ -427,6 +427,7 @@ function setMode(amiga, retro, original) {
   document.body.style.letterSpacing = letterSpacing;
   document.body.style.lineHeight = `${spriteWidth * heightMultiple}px`;;
 
+  // this is called every move, and messes up changing button font sized for inventory actions
   setButtonFontSize(fontSize);
 
   // upload style information for larntv
