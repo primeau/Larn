@@ -286,7 +286,14 @@ function buttonClicked(event) {
   if (keyPress === null) { console.log(`null keypress`); return; }
 
   if (event.srcElement.repeat) {
-    if (BUTTON_RUN.isRunning) keyPress = keyPress.toUpperCase();
+    if (BUTTON_RUN.isRunning) {
+      // Interpret "run + wait" as "rest until recovered"
+      if (keyPress == `.`) {
+        keyPress = `M`;
+      } else {
+        keyPress = keyPress.toUpperCase();
+      }
+    }
     larnmousedown(keyPress);
   } else {
     if (event.srcElement.keyboardOverride) {
