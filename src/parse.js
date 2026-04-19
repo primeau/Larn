@@ -590,27 +590,15 @@ async function parse(e, key) {
   }
 
 
-  /*
   // 
-  // wait 'M'ultiple turns until healed or monster
+  // v12.5.4: wait 'M'ultiple turns until recovered or interrupted
   //
   if (key == 'M') {
-    if (player.TIMESTOP == 0) {
-      viewflag = 1;
-      // if health != max, restingforhealth = true
-      // if spells != max, restingforspells = true
-      // while 
-      //   if (restingforhealth & health = max stop)
-      //   if (restingfor spells & spells = max stop)
-      //   if (neither of those, rest for 100 moves?)
-      //   if nearbymonst() and awake stop (allows risky rest near monsters during stealth, hld)
-      //   if hitflag stop (probably possible with haste monsters)
-      //   parse2() ? will this show stats updating?
-
-    }
+    nomove = 1;
+    viewflag = 1;
+    waitUntilRecovered();
     return;
   }
-  */
 
   //
   // OPTIONS

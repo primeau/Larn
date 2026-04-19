@@ -87,7 +87,7 @@ function quaffpotion(potion, set_known) {
       updateLog(`  You fall asleep. . .`);
       var sleeplen = rnd(11) - (player.CONSTITUTION >> 2) + 2;
       while (--sleeplen > 0) {
-        parse2();
+        moveworld();
         //nap(1000);
       }
       updateLog(`  You woke up!`);
