@@ -514,6 +514,7 @@ function timeLeft() {
 
 
 let GLOBAL_TIMEOUT; // used for setTimeouts that can be interrupted by the main loop
+let MOVED_WORLD = false;
 
 
 
@@ -543,6 +544,7 @@ function mainloop(e, key) {
   nomove = 0;
 
   parse(e, key);
+  console.log(`mainloop: gtime=${gtime} moves=${player.MOVESMADE} MOVED_WORLD=${MOVED_WORLD}`);
 
   if (nomove == 1) {
     paint();
@@ -559,15 +561,6 @@ function mainloop(e, key) {
     return;
   }
 
-  regen(); /* regenerate hp and spells */
-  randmonst();
-
-
-  /*
-   * JRP: this is where the old main loop starts and end
-   */
-
-
   /* see if there is an object here. */
   if (dropflag == 0) {
     lookforobject(true, auto_pickup);
@@ -575,29 +568,8 @@ function mainloop(e, key) {
     dropflag = 0; /* don't show it just dropped an item */
   }
 
-  /* handle global activity
-     update game time, move spheres, move walls, move monsters
-     all the stuff affected by TIMESTOP and HASTESELF
-  */
-  if (player.TIMESTOP <= 0) {
-    if (player.HASTESELF == 0 || (player.HASTESELF & 1) == 0) {
-      gtime++;
-      /* JRP: larn12.4 start spheres 1 extra space away,
-      uncomment the code below to prevent that */
-      // if (!newsphereflag) {
-      movsphere();
-      // } else {
-      //   newsphereflag = false;
-      // }
-
-      if (hitflag == 0) {
-        if (player.HASTEMONST) {
-          movemonst();
-        }
-        movemonst();
-      }
-    }
-  }
+  if (!MOVED_WORLD) moveworld();
+  MOVED_WORLD = false;
 
   /* show stuff around the player */
   if (viewflag == 0)
@@ -623,18 +595,91 @@ function mainloop(e, key) {
 
 
 
-function parse2() {
-  /*
-   v12.4.5 - fix for monsters chasing the player even when time is stopped
-   */
-  if (player.TIMESTOP <= 0) {
-    if (player.HASTEMONST) {
+/*
+  moveworld() - handle global activity
+                update game time, move spheres, move walls, move monsters
+                all the stuff affected by TIMESTOP and HASTESELF
+*/
+/*
+  12.5.3 - many interaction between HASTESELF, HASTEMONST, and half-speed monsters
+           were buggy and inconsistent. we are now using an 8-state monster movement model 
+           using toggle flags instead of modulo.
+
+           Monster speed is determined by two independent axes:
+             - Player speed:   regular (HASTESELF==0) or fast (HASTESELF!=0)
+             - Monster speed:  slow (isSlow(), checked via isHalfTime()), normal, or hasted (HASTEMONST!=0)
+
+           "hasted monster" means HASTEMONST is active — all monsters get an extra movemonst call.
+           "slow monster"   means the individual monster's isSlow() flag — handled inside movemt() via isHalfTime().
+          
+           State table (T1–T4 = player turns 1–4; each entry is net moves for a given monster):
+             Player regular + monsters normal:        MOVE, MOVE, MOVE, MOVE   (1/turn)
+             Player regular + monsters slow:          MOVE, SKIP, MOVE, SKIP   (1/2 turns)
+             Player regular + monsters hasted:        2×MOVE every turn        (2/turn)
+             Player regular + monsters hasted+slow:   MOVE, MOVE, MOVE, MOVE   (1/turn)
+             Player fast    + monsters normal:        MOVE, SKIP, MOVE, SKIP   (1/2 turns)
+             Player fast    + monsters slow:          MOVE, SKIP, SKIP, SKIP   (1/4 turns)
+             Player fast    + monsters hasted:        MOVE, MOVE, MOVE, MOVE   (1/turn, haste cancels)
+             Player fast    + monsters hasted+slow:   MOVE, SKIP, MOVE, SKIP   (1/2 turns, matches regular+slow)
+
+           Toggles
+             player.monsterTurnToggle — flipped each moveworld call when player is fast;
+                                        baseMove fires only when this is true (every other turn).
+             player.slowMonsterToggle — flipped each time any movemonst call is dispatched
+                                        (base or extra); isHalfTime() returns !slowMonsterToggle,
+                                        so slow monsters strictly alternate move/skip across
+                                        successive movemonst calls regardless of which path fired.
+ */
+function moveworld(passtime = true) {
+
+  /* 
+    we are in an event-driven system, and every key press triggers mainloop() which
+    calls moveworld(). this is usually ok, but not after run(), player sleep, and
+    a couple of hitbymagic cases
+  */
+  MOVED_WORLD = true;
+
+  if (player.TIMESTOP === 0) {
+
+    regen(); /* regenerate hp and spells every move unless time is stopped */
+
+    const playerFast = player.HASTESELF !== 0;
+    const monstFast  = player.HASTEMONST !== 0;
+
+    let baseMove = true; /* true on every turn for a regular player, alternates true/false for a fast player */
+    if (playerFast) {
+      player.monsterTurnToggle = !player.monsterTurnToggle;
+      baseMove = player.monsterTurnToggle;
+    }
+
+    if (baseMove) {
+      /* Flip the slow-monster toggle BEFORE calling movemonst so that
+         isHalfTime() sees the updated value for this round. */
+      player.slowMonsterToggle = !player.slowMonsterToggle;
+      if (passtime) gtime++;
+      /* JRP: larn12.4 start spheres 1 extra space away,
+              uncomment the code below to prevent that */
+      // if (!newsphereflag) {
+      movsphere();
+      // } else {
+      //   newsphereflag = false;
+      // }
       movemonst();
     }
-    movemonst(); /* move the monsters */
+
+    /* Extra movemonst for hasted monsters (HASTEMONST):
+         Regular player: base already fired this turn, extra fires too       → 2 calls/turn
+         Fast player:    base fires on odd turns, extra fires on even turns  → 1 call/turn (cancels haste)
+       slowMonsterToggle is flipped before every movemonst call (base and extra) so that
+       isHalfTime() strictly alternates, giving the correct slow-monster rate in all 8 states. */
+    if (monstFast && (!playerFast || !baseMove)) {
+      player.slowMonsterToggle = !player.slowMonsterToggle;
+      movemonst();
+    }
+
     randmonst();
+
   }
-  regen();
 }
 
 
@@ -644,7 +689,7 @@ function run(dir) {
   while (i == 1) {
     i = moveplayer(dir);
     if (i > 0) {
-      parse2();
+      moveworld(false); // don't advance time when running
     }
     if (hitflag == 1) {
       i = 0;
@@ -654,6 +699,7 @@ function run(dir) {
     }
   }
 }
+
 
 
 function canSeeMonster(monster) {
@@ -684,19 +730,7 @@ function waitUntilRecovered() {
 
     // Wait one turn
     turns_waited++;
-    parse2();
-
-    // Pass time
-    //
-    // (Normally, this code would run in mainloop, but here we pass multiple
-    // turns with parse2, so we need to do it here. Theoretically we should
-    // patch parse2 to update gtime, but it is a known and used exploit from the
-    // original Larn.)
-    if (player.TIMESTOP <= 0) {
-      if (player.HASTESELF == 0 || (player.HASTESELF & 1) == 0) {
-        gtime++;
-      }
-    }
+    moveworld();
 
     // Stop waiting when health or spells are fully recovered
     recovered_hp = player.HP == player.HPMAX;
@@ -713,16 +747,18 @@ function waitUntilRecovered() {
 
   let stop_reason;
   if (recovered_hp && recovered_spells) {
-    stop_reason = 'fully recovered';
+    stop_reason = `You are fully recovered${period}`;
   } else if (recovering_hp && recovered_hp) {
-    stop_reason = 'HP recovered';
+    stop_reason = `Your health is recovered${period}`;
   } else if (recovering_spells && recovered_spells) {
-    stop_reason = 'spells recovered';
+    stop_reason = `Your spells are recovered${period}`;
   } else {
-    stop_reason = 'interrupted!';
+    stop_reason = `Your rest was interrupted!`;
+    console.log(`waitUntilRecovered: ${hitflag} ${recovered_hp} ${recovered_spells}`);
   }
   const s = turns_waited == 1 ? '' : 's';
-  updateLog(`Waited for ${turns_waited} turn${s} - ${stop_reason}`);
+  updateLog(`Rested for ${turns_waited} turn${s}${period}`);
+  updateLog(`  ${stop_reason}`);
 }
 
 

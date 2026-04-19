@@ -771,7 +771,7 @@ function direct(spnum, direction, dam, arg) {
       beep();
       arg += 2;
       while (arg-- > 0) {
-        parse2();
+        moveworld();
         //nap(1000);
       }
       return;
@@ -780,7 +780,7 @@ function direct(spnum, direction, dam, arg) {
       beep();
       arg += 2;
       while (arg-- > 0) {
-        parse2();
+        moveworld();
         //nap(1000);
       }
       return;
@@ -1007,8 +1007,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 function exitspell() {
   napping = false;
   nomove = 0;
-  gtime++; // this is pretty hacky
-  parse2(); // monsters need a chance to attack
+  moveworld(); // monsters need a chance to attack
   paint();
 }
 

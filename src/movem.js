@@ -742,10 +742,8 @@ function noticeplayer() {
 
 
 /*
- v12.4.5 - fix for half speed monsters following at 1:1 or not at all when running
+ v12.5.3 - fix for half speed monsters not moving properly with HASTSELF/HASTMONST
  */
 function isHalfTime() {
-  // TODO: IS THIS THE PLACE TO FIX 1/2 SPEED MONSTERS NOT WORKING WITH HASTE?
-  return (player.MOVESMADE & 1) == 1;
-  // if ((gtime & 1) == 1) // old code
+  return !player.slowMonsterToggle;
 }

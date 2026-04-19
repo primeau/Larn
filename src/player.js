@@ -119,6 +119,8 @@ var Player = function Player() {
 
   // stats
   this.MOVESMADE = 0;
+  this.monsterTurnToggle = false; /* moveworld: flips each moveworld call when player is fast; gates base movemonst */
+  this.slowMonsterToggle = false; /* moveworld: flips each time base movemonst fires; read by isHalfTime() */
   this.MONSTKILLED = 0;
   this.SPELLSCAST = 0;
 

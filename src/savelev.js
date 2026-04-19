@@ -304,6 +304,8 @@ function loadPlayer(saved) {
   newPlayer.ELEVUP = saved.ELEVUP;
 
   newPlayer.MOVESMADE = saved.MOVESMADE;
+  newPlayer.monsterTurnToggle = saved.monsterTurnToggle ?? false;
+  newPlayer.slowMonsterToggle = saved.slowMonsterToggle ?? false;
   newPlayer.SPELLSCAST = saved.SPELLSCAST;
   newPlayer.MONSTKILLED = saved.MONSTKILLED;
 
