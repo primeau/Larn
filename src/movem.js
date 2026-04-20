@@ -129,7 +129,7 @@ function movemt(x, y) {
   }
 
   /* half speed monsters only move every other turn */
-  if (monster.isSlow() && isHalfTime()) {
+  if (monster.isSlow()) {
     return;
   }
 

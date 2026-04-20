@@ -31,6 +31,7 @@ let BUTTON_CONTINUE = setButton(ACTIONS, `BUTTON_CONTINUE`, VARIABLE, SPACE, `co
 let BUTTON_YES = setButton(null, `BUTTON_YES`, FIXED, `y`, `yes`);
 let BUTTON_NO = setButton(null, `BUTTON_NO`, FIXED, `n`, `no`);
 let BUTTON_RUN = setButton(null, `BUTTON_RUN`, `verticalbutton`, null, `run`);
+let BUTTON_REST = setButton(null, `BUTTON_REST`, `verticalbutton`, null, `rest`);
 let BUTTON_RUN_INITIALIZED = false;
 
 // let currentsize = 0; // for debugging button cache
@@ -768,11 +769,13 @@ function canMoveButton(x, y) {
 function startRun() {
   BUTTON_RUN.isRunning = true;
   BUTTON_RUN.value = `Choose Direction`;
+  BUTTON_REST.value = `Rest`;
 };
 
 function endRun() {
   BUTTON_RUN.isRunning = false;
   BUTTON_RUN.value = `Hold to Run`;
+  BUTTON_REST.value = `.`;
 };
 
 function toggleRun() {

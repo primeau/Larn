@@ -91,7 +91,7 @@ helppages[1] =
   d  drop an item             D  drink at a fountain
   e  eat something            E  enter a store, dungeon  :  look at object you
   f  tidy up at a fountain       or volcanic shaft          are standing on
-  g  get present pack weight                                
+  g  get present pack weight  G  go to item                              
   i  inventory your pockets   I  list all known items    ^  identify a trap   
   o  open a door or chest     O  options                  
   p  pray at an altar         P  tax status, autopray       click on an object
@@ -106,13 +106,14 @@ helppages[1] =
   // letters remaining:
   // a
   // F
-  // G
   // m  move without picking 
   //    up an object
   // x
   // X  view log history
   // /  identify objects in
   //    the game 
+  // {  travel to up stairs
+  // }  travel to down stairs
 
 
 helppages[2] =

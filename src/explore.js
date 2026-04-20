@@ -34,14 +34,14 @@ const MazeExplorer = {
    */
   getDirections: function () {
     return [
-      { dx: 0, dy: -1 }, // up
-      { dx: 1, dy: -1 }, // up-right
-      { dx: 1, dy: 0 }, // right
-      { dx: 1, dy: 1 }, // down-right
-      { dx: 0, dy: 1 }, // down
-      { dx: -1, dy: 1 }, // down-left
       { dx: -1, dy: 0 }, // left
+      { dx: 1, dy: 0 }, // right
+      { dx: 0, dy: -1 }, // up
+      { dx: 0, dy: 1 }, // down
       { dx: -1, dy: -1 }, // up-left
+      { dx: 1, dy: -1 }, // up-right
+      { dx: -1, dy: 1 }, // down-left
+      { dx: 1, dy: 1 }, // down-right
     ];
   },
 
@@ -165,6 +165,8 @@ const MazeExplorer = {
       for (const monster of monsters + monstersAhead) {
         if (this.shouldStopForMonster(monster)) {
           console.log(`baddy nearby, stopping exploration.`);
+          updateLog(`  Travel interrupted!`);
+          paint();
           return false;
         }
       }
@@ -180,7 +182,7 @@ const MazeExplorer = {
       } else if (this.allowPickup) {
         const item = this.targetNearestItem();
         if (item) {
-          await nap(300);
+          await nap(150);
           nextPos.x = item.x;
           nextPos.y = item.y;
         }
@@ -264,6 +266,7 @@ const MazeExplorer = {
   },
 
   shouldStopForMonster: function (monster) {
+    // return (!this.allowFight || monster.attack > 0) && (player.AGGRAVATE || !player.STEALTH || monster.awake); // too aggro - fights when stealthy but !allowfight
     return !this.allowFight || monster.attack > 0;
   },
 
@@ -323,14 +326,11 @@ const MazeExplorer = {
     exploring = true;
     exploreHitflag = false;
     playerInputCount = 0;
-    const auto_pickup_state = auto_pickup;
-    auto_pickup = false;
 
     while (playerInputCount == 0 && await this.step()) {
       // Keep stepping until exploration is complete or interrupted
     }
 
-    auto_pickup = auto_pickup_state;
     exploring = false;
 
     return {
@@ -363,7 +363,8 @@ const MazeExplorer = {
     this.isDestination = (x, y) => this.willDiscover(x, y);
     this.isBlocked = (x, y) => (
       !inBounds(x, y) ||
-      this.matchesAny(itemAt(x, y), [OWALL, OCLOSEDDOOR, OHOMEENTRANCE]) ||
+      (!player.WTW && this.matchesAny(itemAt(x, y), [OWALL, OCLOSEDDOOR])) ||
+      this.matchesAny(itemAt(x, y), [OHOMEENTRANCE]) ||
       itemAt(x, y).isTrap()
     );
   },
@@ -376,7 +377,8 @@ const MazeExplorer = {
     this.isBlocked = (x, y) => (
       !inBounds(x, y) || (
         !this.isDestination(x, y) && (
-          this.matchesAny(itemAt(x, y), [OWALL, OCLOSEDDOOR, OHOMEENTRANCE, OALTAR]) ||
+          (!player.WTW && this.matchesAny(itemAt(x, y), [OWALL, OCLOSEDDOOR])) ||
+          this.matchesAny(itemAt(x, y), [OHOMEENTRANCE, OALTAR]) ||
           itemAt(x, y).isTrap()
         )
       )
@@ -436,123 +438,7 @@ const MazeExplorer = {
  * Returns each item whose symbol matches the given key press.
  */
 function parseItemsBySymbol(key) {
-  const candidateObjects = [
-    OHOMEENTRANCE,
-
-    // buildings / home level
-    OHOME,
-    ODNDSTORE,
-    OTRADEPOST,
-    OLRS,
-    OBANK,
-    OBANK2,
-    OSCHOOL,
-    OENTRANCE,
-    OVOLDOWN,
-    // ULARN
-    OPAD,
-
-    // dungeon features
-    OALTAR,
-    OTHRONE,
-    ODEADTHRONE,
-    OPIT,
-    OVOLUP,
-    OSTAIRSUP,
-    OSTAIRSDOWN,
-    OFOUNTAIN,
-    ODEADFOUNTAIN,
-    OSTATUE,
-    OMIRROR,
-    OOPENDOOR,
-    OCLOSEDDOOR,
-    // ULARN
-    OELEVATORUP,
-    OELEVATORDOWN,
-
-    // traps
-    OTELEPORTER,
-    OTRAPARROW,
-    ODARTRAP,
-    OTRAPDOOR,
-
-    // dungeon items
-    OGOLDPILE,
-    OSCROLL,
-    OPOTION,
-    OBOOK,
-    OCHEST,
-    ODIAMOND,
-    ORUBY,
-    OEMERALD,
-    OSAPPHIRE,
-
-    // weapons
-    OSWORD,
-    O2SWORD,
-    OSPEAR,
-    ODAGGER,
-    OBELT,
-    OBATTLEAXE,
-    OLONGSWORD,
-    OFLAIL,
-    OLANCE,
-
-    // special weapons
-    OSWORDofSLASHING,
-    OHAMMER,
-    // ULARN
-    OVORPAL,
-    OSLAYER,
-
-    // armour
-    OLEATHER,
-    OSTUDLEATHER,
-    ORING,
-    OCHAIN,
-    OSPLINT,
-    OPLATE,
-    OPLATEARMOR,
-    OSSPLATE,
-    OSHIELD,
-    // ULARN
-    OELVENCHAIN,
-
-    // rings
-    ORINGOFEXTRA,
-    OREGENRING,
-    OPROTRING,
-    OENERGYRING,
-    ODEXRING,
-    OSTRRING,
-    OCLEVERRING,
-    ODAMRING,
-
-    // special objects
-    OLARNEYE,
-    OAMULET,
-    OORBOFDRAGON,
-    OSPIRITSCARAB,
-    OCUBEofUNDEAD,
-    ONOTHEFT,
-    OORB,
-    // ULARN
-    OBRASSLAMP,
-    OHANDofFEAR,
-    OSPHTALISMAN,
-    OWWAND,
-    OPSTAFF,
-    OLIFEPRESERVER,
-
-    // ULARN drugs
-    OSPEED,
-    OACID,
-    OHASH,
-    OSHROOMS,
-    OCOKE
-  ];
-
-  return candidateObjects.filter(
+  return itemlist.filter(
     (candidate) => (
       original_objects ? (ULARN ? candidate.ularnchar : candidate.char) : candidate.hackchar
     ) == key
@@ -562,30 +448,35 @@ function parseItemsBySymbol(key) {
 
 
 function parseTravelToItem(key) {
+  // TODO: how do we handle ULARN stairs? up and down are both %
+  // TODO: should we have separate { } commands for the stairs?
+  if (key === `<`) key = `&lt`;
+  if (key === `>`) key = `&gt`;
   if (key == ESC) {
     appendLog(` cancelled${period}`);
   } else {
     const items = parseItemsBySymbol(key);
+    echo(key);
     if (items.length > 0) {
       const explorer = Object.create(MazeExplorer);
       explorer.setupTravelToItem(items);
-      explorerCallback = travelToItemCallback.bind(null, explorer);
+      explorerCallback = travelToItemCallback.bind(null, explorer, key);
     } else {
-      updateLog(`I can't travel to that symbol!`);
+      updateLog(`  Unknown object${period}`);
     }
   }
-  return exitbuilding();
+  return 1;
 }
 
 
-async function travelToItemCallback(explorer) {
+async function travelToItemCallback(explorer, key) {
   const result = await explorer.explore();
   if (result.steps == 0 && !result.interrupted) {
     if (result.success) {
       // If the player is already at the destination, look at the tile to make this clearer
       lookforobject(true, false);
     } else {
-      updateLog(`  I see no safe path to that symbol!`);
+      updateLog(`  No path found${period}`);
     }
     paint();
   }

@@ -321,7 +321,7 @@ Monster.prototype = {
       case XVART:
       case INVISIBLESTALKER:
       case ICELIZARD:
-        // if (isHalfTime()) return;
+        if (isHalfTime()) return;
         return true;
     }
     return false;

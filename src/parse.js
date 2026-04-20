@@ -206,7 +206,7 @@ async function parse(e, key) {
       // This is a bit ugly, but it needs to be awaited, which can't be done from the blocking callback
       if (explorerCallback) {
         nomove = 1;
-        const tmpCallback = explorerCallback;
+        const tmpCallback = explorerCallback; // avoid re-entrancy bug
         explorerCallback = null;
         await tmpCallback();
         return;
@@ -592,6 +592,16 @@ async function parse(e, key) {
   }
 
   //
+  // 'G'o to the specified symbol
+  //
+  if (key == 'G') {
+    nomove = 1;
+    updateLog(`What symbol do you want to travel to? `);
+    setCharCallback(parseTravelToItem);
+    return;
+  }
+
+  //
   // list spells and scrolls
   //
   if (key == 'I') {
@@ -861,16 +871,6 @@ async function parse(e, key) {
     auto_pickup = !auto_pickup;
     localStorageSetObject(`auto_pickup`, auto_pickup);
     updateLog(`Auto-pickup: ${auto_pickup ? `on` : `off`}`);
-    return;
-  }
-
-  //
-  // 'G'o to the specified symbol
-  //
-  if (key == 'G') {
-    nomove = 1;
-    updateLog(`What symbol do you want to travel to? `);
-    setCharCallback(parseTravelToItem);
     return;
   }
 
