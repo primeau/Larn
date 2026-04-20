@@ -134,11 +134,10 @@ function initKeyBindings() {
   Mousetrap.bind('<', mousetrap); // go up
   Mousetrap.bind('>', mousetrap); // go down
   Mousetrap.bind('^', mousetrap); // identify traps
+  Mousetrap.bind(':', mousetrap); // examine
   Mousetrap.bind('!', mousetrap); // keyboard hints
   Mousetrap.bind('@', mousetrap); // auto-pickup
   // Mousetrap.bind('#', mousetrap); // inventory 
-  // Mousetrap.bind('{', mousetrap); // retro fonts
-  // Mousetrap.bind('}', mousetrap); // classic/hack/amiga 
   Mousetrap.bind('?', mousetrap); // help
   Mousetrap.bind('_', mousetrap); // password
   Mousetrap.bind('-', mousetrap); // disarm 
@@ -174,7 +173,9 @@ function initKeyBindings() {
   Mousetrap.bind('*', mousetrap);
   Mousetrap.bind(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], mousetrap);
 
-  Mousetrap.bind([':'], mousetrap);
+
+  // Item symbols for autotravel
+  Mousetrap.bind(['=', '$', '\\', '/', '%', '{', '|', '\'', '&', '[', ']', '~', '}', ';', '"'], mousetrap);
 }
 
 

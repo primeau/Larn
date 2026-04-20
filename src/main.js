@@ -544,7 +544,6 @@ function mainloop(e, key) {
   nomove = 0;
 
   parse(e, key);
-  console.log(`mainloop: gtime=${gtime} moves=${player.MOVESMADE} MOVED_WORLD=${MOVED_WORLD}`);
 
   if (nomove == 1) {
     paint();
@@ -576,6 +575,7 @@ function mainloop(e, key) {
     showcell(player.x, player.y);
 
   viewflag = 0;
+  exploreHitflag |= hitflag; // JS Larn: copy hitflag for use in explore code
   hitflag = 0;
 
   if (gtime >= 400 && gtime % 400 == 0) {
@@ -607,10 +607,10 @@ function mainloop(e, key) {
 
            Monster speed is determined by two independent axes:
              - Player speed:   regular (HASTESELF==0) or fast (HASTESELF!=0)
-             - Monster speed:  slow (isSlow(), checked via isHalfTime()), normal, or hasted (HASTEMONST!=0)
+             - Monster speed:  slow (isSlow()), normal, or hasted (HASTEMONST!=0)
 
-           "hasted monster" means HASTEMONST is active — all monsters get an extra movemonst call.
-           "slow monster"   means the individual monster's isSlow() flag — handled inside movemt() via isHalfTime().
+           "hasted monster" means HASTEMONST is active
+           "slow monster"   means the individual monster isSlow()
           
            State table (T1–T4 = player turns 1–4; each entry is net moves for a given monster):
              Player regular + monsters normal:        MOVE, MOVE, MOVE, MOVE   (1/turn)
@@ -619,8 +619,8 @@ function mainloop(e, key) {
              Player regular + monsters hasted+slow:   MOVE, MOVE, MOVE, MOVE   (1/turn)
              Player fast    + monsters normal:        MOVE, SKIP, MOVE, SKIP   (1/2 turns)
              Player fast    + monsters slow:          MOVE, SKIP, SKIP, SKIP   (1/4 turns)
-             Player fast    + monsters hasted:        MOVE, MOVE, MOVE, MOVE   (1/turn, haste cancels)
-             Player fast    + monsters hasted+slow:   MOVE, SKIP, MOVE, SKIP   (1/2 turns, matches regular+slow)
+             Player fast    + monsters hasted:        MOVE, MOVE, MOVE, MOVE   (1/turn)
+             Player fast    + monsters hasted+slow:   MOVE, SKIP, MOVE, SKIP   (1/2 turns)
 
            Toggles
              player.monsterTurnToggle — flipped each moveworld call when player is fast;
@@ -754,7 +754,6 @@ function waitUntilRecovered() {
     stop_reason = `Your spells are recovered${period}`;
   } else {
     stop_reason = `Your rest was interrupted!`;
-    console.log(`waitUntilRecovered: ${hitflag} ${recovered_hp} ${recovered_spells}`);
   }
   const s = turns_waited == 1 ? '' : 's';
   updateLog(`Rested for ${turns_waited} turn${s}${period}`);
