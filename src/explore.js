@@ -191,7 +191,7 @@ const MazeExplorer = {
       // figure out keypress to get there
       const dx = nextPos.x - player.x;
       const dy = nextPos.y - player.y;
-      let key = this.getKeyForDirection(dx, dy);
+      let key = getKeyForDirection(dx, dy);
 
       const currentlevel = level; // save in case of teleportation
 
@@ -305,19 +305,6 @@ const MazeExplorer = {
     return null;
   },
 
-  getKeyForDirection: function (dx, dy) {
-    let key = '.';
-    if (dx === 0 && dy === 1) key = 'down';
-    else if (dx === 1 && dy === 0) key = 'right';
-    else if (dx === 0 && dy === -1) key = 'up';
-    else if (dx === -1 && dy === 0) key = 'left';
-    else if (dx === 1 && dy === -1) key = 'pageup';
-    else if (dx === -1 && dy === -1) key = 'home';
-    else if (dx === 1 && dy === 1) key = 'pagedown';
-    else if (dx === -1 && dy === 1) key = 'end';
-    return key;
-  },
-
   /**
    * Explore until complete or interrupted.
    * Returns {success: bool, interrupted: bool, steps: number, path: [{x, y}, ...], discoveredCount: number}
@@ -350,6 +337,22 @@ const MazeExplorer = {
   },
 
   /**
+   * Is our hero prohibited from entering this tile while exploring?
+   */
+  isBlocked: function (x, y) {
+    if (!inBounds(x, y)) {
+      return true;
+    }
+    const item = itemAt(x, y);
+    return !this.isDestination(x, y) && (
+      (!player.WTW && this.matchesAny(item, [OWALL, OCLOSEDDOOR])) ||
+      (!this.allowPray && item.matches(OALTAR)) ||
+      item.matches(OHOMEENTRANCE) ||
+      item.isTrap()
+    );
+  },
+
+  /**
    * Set up MazeExplorer to automatically explore the current level
    */
   setupExplore: function () {
@@ -361,12 +364,6 @@ const MazeExplorer = {
     this.stopOnLowHP = true;
     this.monstersBlockDestination = false;
     this.isDestination = (x, y) => this.willDiscover(x, y);
-    this.isBlocked = (x, y) => (
-      !inBounds(x, y) ||
-      (!player.WTW && this.matchesAny(itemAt(x, y), [OWALL, OCLOSEDDOOR])) ||
-      this.matchesAny(itemAt(x, y), [OHOMEENTRANCE]) ||
-      itemAt(x, y).isTrap()
-    );
   },
 
   /**
@@ -374,15 +371,14 @@ const MazeExplorer = {
    */
   setupTravelToItem: function (items) {
     this.isDestination = (x, y) => this.matchesAny(itemAt(x, y), items);
-    this.isBlocked = (x, y) => (
-      !inBounds(x, y) || (
-        !this.isDestination(x, y) && (
-          (!player.WTW && this.matchesAny(itemAt(x, y), [OWALL, OCLOSEDDOOR])) ||
-          this.matchesAny(itemAt(x, y), [OHOMEENTRANCE, OALTAR]) ||
-          itemAt(x, y).isTrap()
-        )
-      )
-    );
+  },
+
+  /**
+   * Set up MazeExplorer to travel to the given coordinates
+   */
+  setupTravelToPoint: function (destX, destY) {
+    this.monstersBlockDestination = false;
+    this.isDestination = (x, y) => (x === destX && y === destY);
   },
 
   /**
@@ -434,6 +430,22 @@ const MazeExplorer = {
 
 
 
+function getKeyForDirection(dx, dy) {
+  let key = '.';
+  if (dx === 0 && dy === 1) key = 'down';
+  else if (dx === 1 && dy === 0) key = 'right';
+  else if (dx === 0 && dy === -1) key = 'up';
+  else if (dx === -1 && dy === 0) key = 'left';
+  else if (dx === 1 && dy === -1) key = 'pageup';
+  else if (dx === -1 && dy === -1) key = 'home';
+  else if (dx === 1 && dy === 1) key = 'pagedown';
+  else if (dx === -1 && dy === 1) key = 'end';
+  return key;
+}
+
+
+
+
 /**
  * Returns each item whose symbol matches the given key press.
  */
@@ -460,7 +472,7 @@ function parseTravelToItem(key) {
     if (items.length > 0) {
       const explorer = Object.create(MazeExplorer);
       explorer.setupTravelToItem(items);
-      explorerCallback = travelToItemCallback.bind(null, explorer, key);
+      explorerCallback = autotravelCallback.bind(null, explorer);
     } else {
       updateLog(`  Unknown object${period}`);
     }
@@ -469,7 +481,7 @@ function parseTravelToItem(key) {
 }
 
 
-async function travelToItemCallback(explorer, key) {
+async function autotravelCallback(explorer) {
   const result = await explorer.explore();
   if (result.steps == 0 && !result.interrupted) {
     if (result.success) {
