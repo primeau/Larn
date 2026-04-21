@@ -639,10 +639,10 @@ function moveworld(passtime = true) {
   */
   MOVED_WORLD = true;
 
+  /* regenerate hp and spells every move; if time is stopped, it wears off by one turn */
+  regen();
+
   if (player.TIMESTOP === 0) {
-
-    regen(); /* regenerate hp and spells every move unless time is stopped */
-
     const playerFast = player.HASTESELF !== 0;
     const monstFast  = player.HASTEMONST !== 0;
 
