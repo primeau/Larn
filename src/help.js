@@ -82,21 +82,21 @@ Endelford\n\
 helppages[1] =
 `                       <b>Help File for The Caverns of ${GAMENAME}</b>
 
-  move using             y k u                ↖ ↑ ↗
-  arrow keys             h   l       or       ←   →      .  rest one turn
-  shift+key to run       b j n                ↙ ↓ ↘      M  rest multiple turns
+  move using arrow keys     y k u            ↖ ↑ ↗
+                            h   l     or     ←   →       .  rest one turn
+  shift+key to run          b j n            ↙ ↓ ↘       M  rest multiple turns
 
                               A  desecrate an altar      <  go up stairs
   c  cast a spell             C  close a door            >  go down stairs
-  d  drop an item             D  drink at a fountain
-  e  eat something            E  enter a store, dungeon  :  look at object you
-  f  tidy up at a fountain       or volcanic shaft          are standing on
-  g  get present pack weight  G  go to item                              
-  i  inventory your pockets   I  list all known items    ^  identify a trap   
-  o  open a door or chest     O  options                  
-  p  pray at an altar         P  tax status, autopray       click on an object
-  q  quaff a potion           Q  quit the game              to identify it
-  r  read a scroll or book    R  remove gems from throne
+  d  drop an item             D  drink at a fountain     {  travel to up
+  e  eat something            E  enter a store, dungeon  }  travel to down 
+  f  tidy up at a fountain       or volcanic shaft       
+  g  get present pack weight  G  travel to item          :  look at object you                
+  i  inventory your pockets   I  list all known items       are standing on
+  o  open a door or chest     O  options                 ^  identify a trap    
+  p  pray at an altar         P  autopray    
+  q  quaff a potion           Q  quit the game           ↖  click to identify   
+  r  read a scroll or book    R  remove gems from throne    an object
   s  sit on a throne          S  save the game
   t  take an item             T  take off armor          !  toggle key hints
   v  print program version    V  view conducts           @  toggle auto-pickup

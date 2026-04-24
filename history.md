@@ -2,7 +2,16 @@ JS U/Larn 12.5.3
 ----------------
 1. [new] Added a weekly challenge option.
 
-1. [new] Added an 'autopray' key to speed up altar interactions.
+1. [new] Added a 'G' command to auto-travel to a selected item. '{' and '}'
+will auto-travel to the appropriate up or down destination for the level. Thanks
+to Aaron Friesen for adding this feature.
+   
+1. [new] Added a 'M' command to rest for multiple turns to renew health or 
+spells. Aaron added this feature also.
+
+1. [new] Removed the tax status option and added a 'P' command to 'autopray' 
+to speed up altar interactions.
+
 
 1. [new] Clicking on a tile will tell you what's there.
 
@@ -10,6 +19,10 @@ JS U/Larn 12.5.3
 
 1. [fix] Smart and scared monsters are now able to attack if our Hero is on the
 outer edge of the maze.
+
+1. [fix] Some combinations of haste self, haste monsters, and half-speed
+monsters have always resulted in incorrect monster movement. This is now
+fixed.
 
 
 JS U/Larn 12.5.2

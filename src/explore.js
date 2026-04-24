@@ -448,8 +448,6 @@ function parseItemsBySymbol(key) {
 
 
 function parseTravelToItem(key) {
-  // TODO: how do we handle ULARN stairs? up and down are both %
-  // TODO: should we have separate { } commands for the stairs?
   if (key === `<`) key = `&lt`;
   if (key === `>`) key = `&gt`;
   if (key == ESC) {
@@ -460,7 +458,7 @@ function parseTravelToItem(key) {
     if (items.length > 0) {
       const explorer = Object.create(MazeExplorer);
       explorer.setupTravelToItem(items);
-      explorerCallback = travelToItemCallback.bind(null, explorer, key);
+      explorerCallback = travelToItemCallback.bind(null, explorer);
     } else {
       updateLog(`  Unknown object${period}`);
     }
@@ -469,7 +467,7 @@ function parseTravelToItem(key) {
 }
 
 
-async function travelToItemCallback(explorer, key) {
+async function travelToItemCallback(explorer) {
   const result = await explorer.explore();
   if (result.steps == 0 && !result.interrupted) {
     if (result.success) {
