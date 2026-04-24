@@ -5,3 +5,5 @@
 Icon
 node_modules
 secrets.sh
+dist
+larn-temp

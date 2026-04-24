@@ -16,40 +16,6 @@ let text_input_event;
 
 
 
-
-// var BLOCKING = false;
-// var ASYNC_KEYBOARD_EVENT_LISTENER;
-
-// function waitForKeypress(KEY) {
-//   BLOCKING = true; // only need to do 1 
-//   //Mousetrap.reset(); // of these things
-//   KEYBOARD_INPUT = ``;
-//   debug(`waitforkeypress ` + KEY);
-//   return new Promise((resolve, reject) => {
-//     addEventListener('keydown', ASYNC_KEYBOARD_EVENT_LISTENER = function (event) {
-//       var key = event.key;
-//       if (event.which == 8) { // 8 == backspace
-//         // if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
-//         event.preventDefault();
-//         key = DEL;
-//         // }
-//       }
-//       var got = getTextInput(key);
-//       debug(`keylistener key=${key} got=${got} input=${KEYBOARD_INPUT}`);
-//       if (BLOCKING && (key == ENTER || key == KEY)) {
-//         removeEventListener('keydown', ASYNC_KEYBOARD_EVENT_LISTENER);
-//         BLOCKING = false; // also only need to do
-//         //initKeyBindings(); // one of these things
-//         resolve(KEYBOARD_INPUT);
-//         KEYBOARD_INPUT = ``;
-//         debug(`DONE`);
-//       }
-//     });
-//   });
-// }
-
-
-
 /* extra handling to allow running on keyboards with numpads */
 Mousetrap.prototype.handleKey = function (char, mod, evt) {
   // add extra argument to the keyboard event to signify if shift key is being held
@@ -592,7 +558,7 @@ async function parse(e, key) {
   }
 
   //
-  // 'G'o to the specified symbol
+  // v12.5.3: go to the specified symbol
   //
   if (key == 'G') {
     nomove = 1;
@@ -613,7 +579,7 @@ async function parse(e, key) {
 
 
   // 
-  // v12.5.4: wait 'M'ultiple turns until recovered or interrupted
+  // v12.5.3: wait multiple turns until recovered or interrupted
   //
   if (key == 'M') {
     nomove = 1;
@@ -632,7 +598,7 @@ async function parse(e, key) {
   }
 
   //
-  // outstanding taxes, or prayer shortcut
+  // auto-pray
   //
   if (key == 'P') {
     if (item.matches(OALTAR)) {
@@ -642,12 +608,7 @@ async function parse(e, key) {
         prayed = 1;
       }
     } else {
-      nomove = 1;
-      if (outstanding_taxes > 0) {
-        updateLog(`You presently owe ${outstanding_taxes} gold pieces in taxes${period}`);
-      } else {
-        updateLog(`You do not owe any taxes${period}`);
-      }
+      updateLog(`I see no altar to pray at here!`);
     }
     return;
   }
@@ -800,6 +761,34 @@ async function parse(e, key) {
   }
 
   //
+  // TRAVEL TO UP STAIRS
+  //
+  if (key == '{') {
+    nomove = 1;
+    updateLog(`Travelling to up stairs`);
+    const explorer = Object.create(MazeExplorer);
+    let upItem = OSTAIRSUP;
+    if (level === 1) upItem = OHOMEENTRANCE;
+    if (level === MAXLEVEL) upItem = OVOLUP; // ularn has stairs up and volcanic shaft up, do this to go to the right one
+    explorer.setupTravelToItem([upItem]);
+    await travelToItemCallback(explorer);
+    return;
+  }
+
+  //
+  // TRAVEL TO DOWN STAIRS
+  //
+  if (key == '}') {
+    nomove = 1;
+    updateLog(`Travelling to down stairs`);
+    const explorer = Object.create(MazeExplorer);
+    const downItem = level === 0 ? OENTRANCE : OSTAIRSDOWN;
+    explorer.setupTravelToItem([downItem]);
+    await travelToItemCallback(explorer);
+    return;
+  }
+
+  //
   // identify traps
   //
   if (key == '^') {
@@ -906,15 +895,6 @@ async function parse(e, key) {
     reportBug();
     return;
   }
-
-  // //
-  // // DISABLE BUTTONS
-  // //
-  // if (key == 'cmd+alt+#') {
-  //   nomove = 1;
-  //   disableMobile();
-  //   return;
-  // }
 
   // if we get here, it's an invalid key, and shouldn't take any time
   nomove = 1;

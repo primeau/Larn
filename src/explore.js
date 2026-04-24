@@ -460,8 +460,6 @@ function parseItemsBySymbol(key) {
 
 
 function parseTravelToItem(key) {
-  // TODO: how do we handle ULARN stairs? up and down are both %
-  // TODO: should we have separate { } commands for the stairs?
   if (key === `<`) key = `&lt`;
   if (key === `>`) key = `&gt`;
   if (key == ESC) {
