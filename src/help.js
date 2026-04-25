@@ -34,6 +34,20 @@ function print_help() {
 
 function initHelpPages() {
 
+let helpIDMouseImage = identify_button === MOUSE_LEFT_CLICK ? `↖` :
+                       identify_button === MOUSE_SHIFT_CLICK ? `↖` :
+                       identify_button === MOUSE_RIGHT_CLICK ? `↗` :
+                       identify_button === MOUSE_DOUBLE_CLICK ? `⇈` : ` `;
+let helpGoMouseImage = travel_button === MOUSE_LEFT_CLICK ? `↖` :
+                       travel_button === MOUSE_SHIFT_CLICK ? `↖` :
+                       travel_button === MOUSE_RIGHT_CLICK ? `↗` :
+                       travel_button === MOUSE_DOUBLE_CLICK ? `⇈` : ` `;
+
+let helpIDLabel1 = identify_button === MOUSE_NONE ? `` : `${mouseOptions[identify_button]} to`;
+let helpIDLabel2 = identify_button === MOUSE_NONE ? `` : `identify an object`;
+let helpGoLabel1 = travel_button === MOUSE_NONE ? `` : `${mouseOptions[travel_button]} to`;
+let helpGoLabel2 = travel_button === MOUSE_NONE ? `` : `go to a location`;
+
 helppages[0] = !GOTW ?
     `Welcome to the game of ${GAMENAME}. At this moment, you face a great problem.\n\
 Your daughter has contracted a strange disease, and none of your home remedies\n\
@@ -84,20 +98,20 @@ helppages[1] =
 
   move using arrow keys     y k u            ↖ ↑ ↗
                             h   l     or     ←   →       .  rest one turn
-  shift+key to run          b j n            ↙ ↓ ↘       M  rest multiple turns
+  shift+key to run          b j n            ↙ ↓ ↘       M  rest many turns
 
                               A  desecrate an altar      <  go up stairs
   c  cast a spell             C  close a door            >  go down stairs
   d  drop an item             D  drink at a fountain     {  travel to up
   e  eat something            E  enter a store, dungeon  }  travel to down 
   f  tidy up at a fountain       or volcanic shaft       
-  g  get present pack weight  G  travel to item          :  look at object you                
-  i  inventory your pockets   I  list all known items       are standing on
-  o  open a door or chest     O  options                 ^  identify a trap    
-  p  pray at an altar         P  autopray    
-  q  quaff a potion           Q  quit the game           ↖  click to identify   
-  r  read a scroll or book    R  remove gems from throne    an object
-  s  sit on a throne          S  save the game
+  g  get present pack weight  G  travel to item          ^  identify a trap
+  i  inventory your pockets   I  list all known items    :  look at object you
+  o  open a door or chest     O  options                    are standing on
+  p  pray at an altar         P  autopray                ${helpIDMouseImage}  ${helpIDLabel1}
+  q  quaff a potion           Q  quit the game              ${helpIDLabel2}
+  r  read a scroll or book    R  remove gems from throne ${helpGoMouseImage}  ${helpGoLabel1}
+  s  sit on a throne          S  save the game              ${helpGoLabel2}
   t  take an item             T  take off armor          !  toggle key hints
   v  print program version    V  view conducts           @  toggle auto-pickup
   w  wield a weapon           W  wear armor
@@ -112,8 +126,6 @@ helppages[1] =
   // X  view log history
   // /  identify objects in
   //    the game 
-  // {  travel to up stairs
-  // }  travel to down stairs
 
 
 helppages[2] =

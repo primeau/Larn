@@ -130,6 +130,8 @@ function loadState(state) {
   amiga_mode = state.amiga_mode;
   retro_mode = state.retro_mode;
   wall_char = state.wall_char;
+  identify_button = state.identify_button;
+  travel_button = state.travel_button;
   floor_char = state.floor_char;
   custom_monsters = state.custom_monsters;
   setWallChar(wall_char);

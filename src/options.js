@@ -3,6 +3,22 @@
 let LAST_KEY_PRESSED = ``;
 const MAX_TEXT_LENGTH = 699;
 
+const wallOptions = [`▒`, `#`, `Single Line ASCII`, `Single Line ASCII (modern)`, `Double Line ASCII`];
+//                         0    1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31   32 
+const blockWalls =        ['▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒', '▒'];
+const octalthorpeWalls =  ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'];
+const singleAsciiModern = ['○', '.', '╵', '.', '╶', '.', '╰', '.', '╷', '.', '│', '.', '╭', '.', '├', '.', '╴', '.', '╯', '.', '─', '.', '┴', '.', '╮', '.', '┤', '.', '┬', '.', '┼', '.', '.'];  
+const singleAsciiWalls =  ['│', '.', '│', '.', '─', '.', '└', '.', '│', '.', '│', '.', '┌', '.', '├', '.', '─', '.', '┘', '.', '─', '.', '┴', '.', '┐', '.', '┤', '.', '┬', '.', '┼', '.', '.'];  
+const doubleAsciiWalls =  ['║', '.', '║', '.', '═', '.', '╚', '.', '║', '.', '║', '.', '╔', '.', '╠', '.', '═', '.', '╝', '.', '═', '.', '╩', '.', '╗', '.', '╣', '.', '╦', '.', '╬', '.', '.'];  
+const WALLS = [blockWalls, octalthorpeWalls, singleAsciiWalls, singleAsciiModern, doubleAsciiWalls];
+
+const mouseOptions = [`left click`, `double click`, `shift-click`, `right click`, `none`];
+const MOUSE_LEFT_CLICK = 0;
+const MOUSE_DOUBLE_CLICK = 1;
+const MOUSE_SHIFT_CLICK = 2;
+const MOUSE_RIGHT_CLICK = 3;
+const MOUSE_NONE = 4;
+
 function print_options() {
   mazeMode = false;
   setCharCallback(parse_options);
@@ -25,8 +41,12 @@ function print_options() {
   if (!amiga_mode) lprcat(`(<b>F</b>)loor Character:  ${OEMPTY.char}\n`);
   if (!amiga_mode) lprcat(`(<b>W</b>)all Character:   ${wallOptions[wall_char]}\n\n`);
 
-  lprcat(`(<b>K</b>)eyboard Hints:   ${hintsLabel}\n`);
-  lprcat(`(<b>A</b>)uto Pickup:      ${pickupLabel}\n`);
+  lprcat(`(<b>K</b>)eyboard Hints:   ${hintsLabel}`);
+  cursor(35, cursory);
+  lprcat(`(<b>V</b>)iew Object:   ${mouseOptions[identify_button]}\n`);
+  lprcat(`(<b>A</b>)uto Pickup:      ${pickupLabel}`);
+  cursor(35, cursory);
+  lprcat(`(<b>G</b>)o to Object:  ${mouseOptions[travel_button]}\n`);
   lprcat(`(<b>I</b>)nventory:        ${inventoryLabel}\n`);
   if (!amiga_mode) lprcat(`(<b>O</b>)bject Color:     ${objectColorLabel}\n`);
   lprcat(`(<b>L</b>)og Color:        ${logColorLabel}\n`);
@@ -145,6 +165,22 @@ function parse_options(key) {
     no_intro = !no_intro;
     localStorageSetObject(`no_intro`, no_intro);
     print_options();
+    return 0;
+  }
+  if (key.toLowerCase() == `v`) {
+    identify_button += 1;
+    if (identify_button >= mouseOptions.length) identify_button = 0;
+    localStorageSetObject(`identify_button`, identify_button);
+    print_options();
+    initHelpPages();
+    return 0;
+  }
+  if (key.toLowerCase() == `g`) {
+    travel_button += 1;
+    if (travel_button >= mouseOptions.length) travel_button = 0;
+    localStorageSetObject(`travel_button`, travel_button);
+    print_options();
+    initHelpPages();
     return 0;
   }
   return 0;

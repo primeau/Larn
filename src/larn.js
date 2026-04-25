@@ -26,7 +26,10 @@ async function play() {
   console.log(`ismobile`, isMobile(), `isPhone`, isPhone(), `isLocal`, isLocal(), `isFile`, isFile());
   console.log(`cloudflare`, CF_BROADCAST_HOST);
 
-  document.getElementById('LARN').addEventListener('click', onMouseClick);
+  document.getElementById('LARN').addEventListener('click', onMouseClick); // left click
+  document.getElementById('LARN').addEventListener('dblclick', onMouseClick); // double click
+  document.getElementById('LARN').addEventListener('contextmenu', onMouseClick); // right click
+
   window.addEventListener('online', handleOnline);
   window.addEventListener('offline', handleOffline);
   window.addEventListener('resize', onResize);
@@ -61,6 +64,13 @@ async function play() {
   bold_objects = localStorageGetObject('bold_objects', true);
   retro_mode = localStorageGetObject('retro' /* NOT retro_mode */, true);
   wall_char = localStorageGetObject('wall_char', 0);
+  identify_button = localStorageGetObject('identify_button', MOUSE_LEFT_CLICK);
+  travel_button = localStorageGetObject('travel_button', MOUSE_DOUBLE_CLICK);
+  if (isMobile()) {
+    // overide defaults, yes do both on left click
+    identify_button = MOUSE_LEFT_CLICK;
+    travel_button = MOUSE_LEFT_CLICK;
+  }
   floor_char = localStorageGetObject('floor_char', OEMPTY_DEFAULT_CHAR);
   custom_monsters = localStorageGetObject('custom_monsters', []);
   
@@ -237,6 +247,8 @@ bold_objects:${bold_objects}
 amiga_mode:${amiga_mode}
 retro_mode:${retro_mode}
 wall_char:${wall_char}
+identify_button:${identify_button}
+travel_button:${travel_button}
 floor_char:${floor_char}
 custom_monsters:${custom_monsters}
 no_intro:${no_intro}

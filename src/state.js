@@ -33,6 +33,8 @@ var bold_objects = true;
 var amiga_mode = false;
 var retro_mode = false;
 var wall_char = 0; // index into WALLS
+var identify_button = MOUSE_LEFT_CLICK; // index into mouseOptions
+var travel_button = MOUSE_DOUBLE_CLICK; // index into mouseOptions
 var floor_char = OEMPTY_DEFAULT_CHAR;
 var custom_monsters = [];
 var no_intro = false;
@@ -122,6 +124,8 @@ function GameState(save) {
   this.amiga_mode = amiga_mode;
   this.retro_mode = retro_mode;
   this.wall_char = wall_char;
+  this.identify_button = identify_button;
+  this.travel_button = travel_button;
   this.floor_char = floor_char;
   this.custom_monsters = custom_monsters;
   

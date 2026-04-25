@@ -911,6 +911,21 @@ function deleteLog() {
 
 
 async function onMouseClick(event) {
+
+  let clickType = MOUSE_LEFT_CLICK;
+  if (event.button === 2) {
+    clickType = MOUSE_RIGHT_CLICK;
+    if (identify_button === MOUSE_RIGHT_CLICK || travel_button === MOUSE_RIGHT_CLICK) {
+      event.preventDefault(); // only stop browser menu if we are using right click
+    }
+  }
+  if (event.detail === 2) {
+    clickType = MOUSE_DOUBLE_CLICK;
+  }
+  if (event.shiftKey) {
+    clickType = MOUSE_SHIFT_CLICK;
+  }
+
   try {
 
     let x, y;
@@ -921,8 +936,8 @@ async function onMouseClick(event) {
     if (amiga_mode) {
       if (!event.target.attributes.id) return; // clicking outside the 80,24 window
       const xy = event.target.attributes.id.value.split(`,`);
-      x = xy[0];
-      y = xy[1];
+      x = parseInt(xy[0]);
+      y = parseInt(xy[1]);
     } else {
       const larnDiv = document.getElementById(`LARN`);
       const width = getElementWidth(`LARN`) / 80;
@@ -939,9 +954,10 @@ async function onMouseClick(event) {
 
     if (!inBounds(x, y)) return;
 
-    if (event.shiftKey) {
+    if (identify_button === clickType) {
       mouseLook(x, y);
-    } else {
+    }
+    if (travel_button === clickType) {
       await mouseMove(x, y);
     }
 

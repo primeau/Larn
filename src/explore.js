@@ -9,7 +9,6 @@ let playerInputCount = 0;
 // Async function to be run after autoexplore blocking callback
 let explorerCallback = null;
 
-
 /**
  * Maze Explorer - Frontier-based algorithm for discovering a maze with fog of war
  */
@@ -250,7 +249,6 @@ const MazeExplorer = {
     return false;
   },
 
-
   // Return seen monsters adjacent to the given coordinates
   monstersAdjacentTo: function (x, y) {
     const monsters = [];
@@ -314,7 +312,7 @@ const MazeExplorer = {
     exploreHitflag = false;
     playerInputCount = 0;
 
-    while (playerInputCount == 0 && await this.step()) {
+    while (playerInputCount == 0 && (await this.step())) {
       // Keep stepping until exploration is complete or interrupted
     }
 
@@ -333,7 +331,7 @@ const MazeExplorer = {
    * Does the given item match of the items in the given array?
    */
   matchesAny: function (item, items) {
-    return items.some((exact) => item.matches(exact))
+    return items.some((exact) => item.matches(exact));
   },
 
   /**
@@ -378,7 +376,7 @@ const MazeExplorer = {
    */
   setupTravelToPoint: function (destX, destY) {
     this.monstersBlockDestination = false;
-    this.isDestination = (x, y) => (x === destX && y === destY);
+    this.isDestination = (x, y) => x === destX && y === destY;
   },
 
   /**
@@ -428,8 +426,6 @@ const MazeExplorer = {
   },
 };
 
-
-
 function getKeyForDirection(dx, dy) {
   let key = '.';
   if (dx === 0 && dy === 1) key = 'down';
@@ -443,9 +439,6 @@ function getKeyForDirection(dx, dy) {
   return key;
 }
 
-
-
-
 /**
  * Returns each item whose symbol matches the given key press.
  */
@@ -456,8 +449,6 @@ function parseItemsBySymbol(key) {
     ) == key
   );
 }
-
-
 
 function parseTravelToItem(key) {
   if (key === `<`) key = `&lt`;
@@ -478,7 +469,6 @@ function parseTravelToItem(key) {
   return 1;
 }
 
-
 async function autotravelCallback(explorer) {
   const result = await explorer.explore();
   if (result.steps == 0 && !result.interrupted) {
@@ -491,8 +481,6 @@ async function autotravelCallback(explorer) {
     paint();
   }
 }
-
-
 
 // Export for use in Node.js or browser
 if (typeof module !== 'undefined' && module.exports) {

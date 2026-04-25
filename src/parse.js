@@ -765,13 +765,13 @@ async function parse(e, key) {
   //
   if (key == '{') {
     nomove = 1;
-    updateLog(`Travelling to up stairs`);
+    updateLog(`Travelling to stairs`);
     const explorer = Object.create(MazeExplorer);
     let upItem = OSTAIRSUP;
     if (level === 1) upItem = OHOMEENTRANCE;
     if (level === MAXLEVEL) upItem = OVOLUP; // ularn has stairs up and volcanic shaft up, do this to go to the right one
     explorer.setupTravelToItem([upItem]);
-    await travelToItemCallback(explorer);
+    await autotravelCallback(explorer);
     return;
   }
 
@@ -780,11 +780,11 @@ async function parse(e, key) {
   //
   if (key == '}') {
     nomove = 1;
-    updateLog(`Travelling to down stairs`);
+    updateLog(`Travelling to stairs`);
     const explorer = Object.create(MazeExplorer);
     const downItem = level === 0 ? OENTRANCE : OSTAIRSDOWN;
     explorer.setupTravelToItem([downItem]);
-    await travelToItemCallback(explorer);
+    await autotravelCallback(explorer);
     return;
   }
 
