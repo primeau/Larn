@@ -1,7 +1,7 @@
 'use strict';
 
-// Is auto-explore in progress?
-let exploring = false;
+// The MazeExplorer that is currently running.
+let activeExplorer = null;
 // Flag for if the player has been hit while exploring
 let exploreHitflag = 0;
 // Number of manual player inputs since the start of the last auto-explore
@@ -308,23 +308,27 @@ const MazeExplorer = {
    * Returns {success: bool, interrupted: bool, steps: number, path: [{x, y}, ...], discoveredCount: number}
    */
   explore: async function () {
-    exploring = true;
+    activeExplorer = this;
     exploreHitflag = false;
     playerInputCount = 0;
 
-    while (playerInputCount == 0 && (await this.step())) {
+    while (activeExplorer == this && playerInputCount == 0 && (await this.step())) {
       // Keep stepping until exploration is complete or interrupted
     }
 
-    exploring = false;
-
-    return {
+    const result = {
       success: this.isDestination(player.x, player.y),
-      interrupted: playerInputCount != 0,
+      interrupted: activeExplorer != this || playerInputCount != 0,
       steps: this.totalSteps,
       path: this.path,
       discoveredCount: this.getDiscoveredCount(),
     };
+
+    if (activeExplorer == this) {
+      activeExplorer = null;
+    }
+
+    return result;
   },
 
   /**
