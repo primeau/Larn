@@ -802,10 +802,7 @@ function contextButtons() {
   } else if (
     item.matches(OEMPTY) ||
     item.matches(OPIT) ||
-    item.matches(OIVDARTRAP) ||
-    item.matches(OIVTELETRAP) ||
-    item.matches(OIVTRAPDOOR) ||
-    item.matches(OTRAPARROWIV)) {
+    item.isInvisibleTrap()) {
     if (!pocketempty() || player.GOLD != 0) {
       setButton(CONTEXT, `BUTTON_DROP`, VARIABLE, `d`, `drop`);
       newButtonRow(CONTEXT);

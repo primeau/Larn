@@ -221,6 +221,12 @@ class Item {
 
 
 
+  isInvisibleTrap() {
+    return this.matches(OIVDARTRAP) || this.matches(OIVTELETRAP) || this.matches(OIVTRAPDOOR) ||this.matches(OTRAPARROWIV);
+  }
+
+
+
   canCarry() {
     return itemlist[this.id].carry;
   }

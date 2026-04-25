@@ -571,13 +571,10 @@ function drawmaze() {
         const blind = player.BLINDCOUNT > 0;
         if (monster && getKnow(i, j) & KNOWHERE) {
           if (blind)
-            lprc(item.getChar());
+            lprc(OEMPTY.getChar()); // monster is covering item
           else
-            lprc(monster.getChar());
+            lprc(monster.getChar()); // show monster
         } else {
-          // if (blind)
-          //   item.matches(OWALL) ? lprc(OWALL.getChar()) : lprc(item.getChar())
-          // else
           lprc(item.getChar());
         }
       } else {
@@ -727,9 +724,7 @@ function moveplayer(dir) {
   player.x = k;
   player.y = m;
 
-  if (!item.matches(OEMPTY) &&
-    !item.matches(OTRAPARROWIV) && !item.matches(OIVTELETRAP) &&
-    !item.matches(OIVDARTRAP) && !item.matches(OIVTRAPDOOR)) {
+  if (!item.matches(OEMPTY) && !item.isInvisibleTrap()) {
     return 0;
   } else {
     return 1;
@@ -969,44 +964,49 @@ async function onMouseClick(event) {
 
 
 function mouseLook(x, y) {
-  let monster = monsterAt(x, y);
-  let item = itemAt(x, y);
+  const monster = monsterAt(x, y);
+  const item = itemAt(x, y);
 
   if (!item) return;
 
   let description = ``;
-  let prefix = `It's `;
-  let sayEmpty = false;
+  let monsterDescription;
+  let itemDescription;
 
-  // console.log(event);
-  // console.log(x, y);
-  // updateLog(`${x}, ${y}`);
-
-  if (monster) {
-    // no help for invisible monsters or if you're blind
-    sayEmpty = !monster.isVisible() || player.BLINDCOUNT > 0;
+  if (item.isInvisibleTrap()) {
+    itemDescription = OEMPTY.getDescription();
+  } else {
+    itemDescription = item.getDescription();
   }
-
-  if (sayEmpty) monster = null; // what monster?
-
+  
+  if (monster) {
+    const firstChar = monster.desc.charAt(0);
+    const n = `aeiouAEIOU`.indexOf(firstChar) >= 0 ? `n` : ``;
+    monsterDescription = `a${n} `;
+    if (ULARN && monster.matches(MIMIC)) {
+      monsterDescription += monsterlist[monster.mimicarg].toString();
+    } else {
+      monsterDescription += monster.toString();
+    }
+  }
+    
   if (getKnow(x, y) === KNOWNOT) {
     description = `a mystery`;
   } else if (x == player.x && y == player.y) {
     description = `our Hero`;
-  } else if (monster) {
-    const firstChar = monster.desc.charAt(0);
-    const n = `aeiouAEIOU`.indexOf(firstChar) >= 0 ? `n` : ``;
-    prefix += `a${n} `;
-    description = monster.toString();
-    if (ULARN && monster.matches(MIMIC)) description = monsterlist[monster.mimicarg].toString();
-  } else if (sayEmpty || item.matches(OIVDARTRAP) || item.matches(OIVTELETRAP) || item.matches(OIVTRAPDOOR) || item.matches(OTRAPARROWIV)) {
-    description = OEMPTY.desc;
   } else {
-    description = item.getDescription();
+    if (monster) {
+      if (player.BLINDCOUNT > 0) {
+        description = OEMPTY.getDescription(); // monster was covering item, so don't reveal it
+      } else {
+        description = monster.isVisible() ? monsterDescription : OEMPTY.getDescription();
+      }
+    } else {
+      description = itemDescription;
+    }
   }
 
-  description = prefix + description;
-  updateLog(description);
+  updateLog(`It's ` + description + period);
   paint();
 }
 
