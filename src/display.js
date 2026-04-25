@@ -983,8 +983,8 @@ function mouseLook(x, y) {
   // updateLog(`${x}, ${y}`);
 
   if (monster) {
-    // no help for invisible monsters or if you're blind
-    sayEmpty = !monster.isVisible() || player.BLINDCOUNT > 0;
+    // no help for invisible monsters
+    sayEmpty = !monster.isVisible();
   }
 
   if (sayEmpty) monster = null; // what monster?
@@ -993,7 +993,7 @@ function mouseLook(x, y) {
     description = `a mystery`;
   } else if (x == player.x && y == player.y) {
     description = `our Hero`;
-  } else if (monster) {
+  } else if (monster && player.BLINDCOUNT == 0) {
     const firstChar = monster.desc.charAt(0);
     const n = `aeiouAEIOU`.indexOf(firstChar) >= 0 ? `n` : ``;
     prefix += `a${n} `;
