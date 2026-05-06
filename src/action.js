@@ -243,27 +243,29 @@ function act_eatcookie(index) {
 
 
 
-function act_rub_lamp() {
+async function act_rub_lamp() {
   cursors();
   // we can assume the player is over the lamp
   updateLog(`You rub the lamp${period}`);
 
-  /* angry genie! */
-  if (rnd(100) > 90) {
-    updateLog(`  The magic genie was very upset at being disturbed!`);
-    lastnum = DIED_GENIE;
-    player.losehp(player.HP / 2 + 1);
-    beep();
-    return;
-  }
+  // /* angry genie! */
+  // if (rnd(100) > 90) {
+  //   updateLog(`  The magic genie was very upset at being disturbed!`);
+  //   lastnum = DIED_GENIE;
+  //   player.losehp(player.HP / 2 + 1);
+  //   beep();
+  //   return;
+  // }
 
   /* higher level, better chance of spell */
-  else if ((rnd(100) + player.LEVEL / 2) > 80) {
+  // else if ((rnd(100) + player.LEVEL / 2) > 80) {
+  if (true) {
     updateLog(`  A magic genie appears!`);
     updateLog(`  What spell would you like? : `);
 
-    setCharCallback(wish); // capture spell keyboard input
-
+    initButtonEvent(BUTTON_RUB);
+    const spell = await getTextInputNEW(3);
+    makeWish(spell);
   } else {
     updateLog(`  nothing happened${period}`);
     /* bad luck */
@@ -277,19 +279,10 @@ function act_rub_lamp() {
 
 
 
-function wish(key) {
+function makeWish(spell) {
   nomove = 1;
 
-  // keep adding to newSpellCode until it's 3 letters
-  // this part is the same as cast(key) in spells.js
-  var codeCheck = getSpellCode(key, true);
-  if (codeCheck !== newSpellCode) {
-    return codeCheck;
-  }
-
-  var spellIndex = learnSpell(newSpellCode);
-  newSpellCode = null;
-
+  var spellIndex = learnSpell(spell);
   if (spellIndex >= 0) {
     updateLog(`Spell '<b>${spelcode[spellIndex]}</b>': ${spelname[spellIndex]}`);
     updateLog(`  ${speldescript[spellIndex]}${period}`);
@@ -298,5 +291,4 @@ function wish(key) {
   }
   updateLog(`The genie prefers not to be disturbed again${period}`);
   forget();
-  return 1;
 }

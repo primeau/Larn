@@ -34,6 +34,20 @@ let BUTTON_RUN = setButton(null, `BUTTON_RUN`, `verticalbutton`, null, `run`);
 let BUTTON_REST = setButton(null, `BUTTON_REST`, `verticalbutton`, null, `rest`);
 let BUTTON_RUN_INITIALIZED = false;
 
+// buttons that trigger async/await flows 
+let BUTTON_RUB = setButton(CONTEXT, `BUTTON_RUB`, VARIABLE, `R`, `rub`);
+
+
+let EVENT_ACTION = null;
+
+function initButtonEvent(action) {
+  EVENT_ACTION = action;
+}
+
+function cleanupButtonEvent() {
+  EVENT_ACTION = null;
+}
+
 // let currentsize = 0; // for debugging button cache
 
 //
@@ -82,9 +96,13 @@ function setButtons() {
       return;
     }
 
+    // 12.5.3 - this is a template for how to handle asyc/await for mobile that are triggered by 
+    //          promise-driven text input events like getTextInputNEW()
+    // It doensn't really work very well...
     // wish for spell after rubbing brass lamp
-    if (blocking_callback === wish) {
+    if (EVENT_ACTION === BUTTON_RUB) {
       spellListButtons(spelcode, true);
+      cleanupButtonEvent();
       return;
     }
 
@@ -842,7 +860,7 @@ function contextButtons() {
     setButton(CONTEXT, `BUTTON_EAT`, VARIABLE, `e`, `eat`);
     newButtonRow(CONTEXT);
   } else if (item.matches(OBRASSLAMP)) {
-    setButton(CONTEXT, `BUTTON_RUB`, VARIABLE, `R`, `rub`);
+    setButton(CONTEXT, `BUTTON_RUB`);
     newButtonRow(CONTEXT);
   } else if (item.isDrug()) {
     if (item.matches(OCOKE)) setButton(CONTEXT, `BUTTON_SNORT`, VARIABLE, `s`, `snort`);

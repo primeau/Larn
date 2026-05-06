@@ -276,7 +276,7 @@ function blinken(x, y, clearWidth) {
       cursor(xpos, y);
       BLINKEN = !BLINKEN;
       paint();
-    }, 250
+    }, 150
   );
 }
 
@@ -298,30 +298,77 @@ BEGIN
 */
 
 
-async function getTextInputNEW(maxLength = MAX_INPUT_LENGTH) {
+function blockDefaultKeys(e) {
+  document.addEventListener('keydown', function(event) {
+    const keysToPrevent = [' ', TAB, 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    if (keysToPrevent.includes(event.key)) {
+      event.preventDefault();
+    }
+  });
+}
+
+
+
+async function getTextInputNEW(maxLength = MAX_INPUT_LENGTH, allowed_in_length = 1) {
   return new Promise((resolve) => {
-    let input = '';
+    let input = ``;
+
+    function onKeyDown(e) {
+      const key = e.key;
+
+      if (key === 'Shift') {
+        console.log(`ignoring shift key`);  
+        return;
+      }
+
+      if (key === `Enter`) {
+        document.removeEventListener('keydown', onKeyDown);
+        TEXT_INPUT_HAPPENING = false;
+        KEYBOARD_INPUT = ``;
+        resolve(input);
+      } else if (key === `Escape`) {
+        document.removeEventListener('keydown', onKeyDown);
+        TEXT_INPUT_HAPPENING = false;
+        KEYBOARD_INPUT = ``;
+        resolve(ESC);
+      } else if (key === `Backspace`) {
+        input = input.slice(0, -1);
+        KEYBOARD_INPUT = input;
+        // echo(DEL);
+      } else if (key.length <= allowed_in_length && input.length < maxLength) {
+        input += key;
+        KEYBOARD_INPUT = input;
+        echo(key);
+      }
+
+      // give some time for the resolved code to happen before repainting
+      setTimeout(() => { paint(); }, 20); 
+
+    }
+
+    TEXT_INPUT_HAPPENING = true;
+    document.addEventListener('keydown', onKeyDown);
+  });
+}
+
+async function getCharInputNEW(filter) {
+  return new Promise((resolve) => {
 
     function onKeyDown(e) {
       const key = e.key;
 
       if (key === `Enter`) {
         document.removeEventListener('keydown', onKeyDown);
-        resolve(input);
-        KEYBOARD_INPUT = ``;
+        resolve(ENTER);
         return;
-      } else if (key === `Escape`) {
+      } 
+      if (filter(key)) {
         document.removeEventListener('keydown', onKeyDown);
-        resolve(ESC);
-        KEYBOARD_INPUT = ``;
+        resolve(key);
         return;
-      } else if (key === `Backspace`) {
-        input = input.slice(0, -1);
-      } else if (key.length === 1 && input.length < maxLength) {
-        input += key;
-      }
-      echo(key);
-      KEYBOARD_INPUT = input;
+      } 
+
+      // echo(key);
     }
 
     document.addEventListener('keydown', onKeyDown);
@@ -389,16 +436,6 @@ function timeleft() {
 function isalpha(str) {
   str = String(str);
   return str.length == 1 && str.match(/^[A-Za-z]+$/);
-
-  // //TODO this doesn't account for many other special keys (left, right, etc)
-  // var isSpecialChar = false;
-  // isSpecialChar |= (str === ESC);
-  // isSpecialChar |= (str === ENTER);
-  // isSpecialChar |= (str === SPACE);
-  // isSpecialChar |= (str === TAB);
-  // isSpecialChar |= (str === DEL);
-  // return !isSpecialChar && str.match(/^[A-Za-z]+$/);
-
 }
 
 

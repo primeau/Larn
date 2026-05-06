@@ -1,10 +1,10 @@
 'use strict';
 
-const ESC = 'escape';
-const ENTER = 'return';
-const SPACE = 'space';
-const TAB = 'tab';
-const DEL = `backspace`;
+const ESC = 'Escape'; // 'escape';
+const ENTER = 'Enter'; // 'return';
+const SPACE = ' '; // 'space';
+const TAB = 'Tab'; // 'tab';
+const DEL = 'Backspace'; // 'backspace';
 const CAPS = `CAPS`;
 var UPPERCASE = false;
 
@@ -92,7 +92,7 @@ function setNumberCallback(func, allowAsterisk, maxNumLength) {
 
 function shouldRun(e, key) {
   // var run = key.indexOf('shift+') >= 0 || key.match(/[YKUHLBJN]/);
-  return e ? e.shift : false || key.match(/[YKUHLBJN]/);
+  return e ? e.shift || e.shiftKey : false || key.length === 1 &&key.match(/[YKUHLBJN]/);
 }
 
 
@@ -100,6 +100,7 @@ function shouldRun(e, key) {
 //const diroffx = { 0,  0, 1,  0, -1,  1, -1, 1, -1 };
 //const diroffy = { 0,  1, 0, -1,  0, -1, -1, 1,  1 };
 function parseDirectionKeys(key) {
+  key = key.toLowerCase();
   var dir = 0;
   if (key == 7 || key == 'y' || key == 'Y' || key.indexOf('home') >= 0) { // UP,LEFT
     dir = 6;

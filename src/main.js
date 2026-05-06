@@ -3,52 +3,149 @@
 /* if (ULARN) This game is bad for you. It is evil. It will rot your brain. */
 
 /* create new game */
-function welcome() {
+async function welcome() {
   
+  player = new Player(); // gender and character class are set later on
+
+  await configure();
+
+  // start listening for keypresses 
+  document.addEventListener('keydown', function(e) {
+    playerInputCount++; // allow auto-travel interrupt
+
+    const key = e.key;
+      if (key === 'Shift') {
+        console.log(`ignoring shift key`);  
+      return;
+    }
+    mainloop(e); 
+  });
+
+  startgame();
+
+  paint();
+  //onResize();
+}
+
+
+
+async function configure() {
+  console.log(`configure: logname=${logname}`); 
+  logname = localStorageGetObject('logname', logname);
+  HARDGAME = Number(localStorageGetObject('difficulty') || 0);
+  player.char_picked = localStorageGetObject('character_class') || 'Adventurer';
+  player.gender = localStorageGetObject('gender') || 'Male';
+
+  if (no_intro) {
+    setname(logname);
+    setdiff(HARDGAME);
+    setclass(player.char_picked);
+    setgender(player.gender);
+  } else {
+
+    drawNameScreen(logname);
+    const name = await getTextInputNEW(24);
+    setname(name);
+
+    if (winnerHardlev) { // player won last time around, force them to play at least one level harder
+      setdiff(winnerHardlev);
+    } else {
+      drawDiffScreen(HARDGAME);
+      const diff = await getTextInputNEW(3);
+      setdiff(diff);
+    }
+
+
+    if (ULARN) {
+      drawClassScreen(player.char_picked);
+      const character = await getCharInputNEW(classfilter);
+      setclass(character);
+
+      drawGenderScreen(player.gender);
+      const gender = await getCharInputNEW(genderfilter);
+      setgender(gender);
+      
+    } else {
+      setclass(`Adventurer`); /* default to Adventurer for regular Larn */
+      setgender(localStorageGetObject('gender', `Male`));
+    }
+
+  }
+  
+  clearBlinkingCursor();
+
+
+}
+
+
+
+
+
+
+function drawNameScreen(name) {
   lprcat(helppages[0]);
 
-  const nameString = `Welcome to ${GAMENAME}. Please enter your name [<b>${logname}</b>]: `;
-  const chastize = `* Please use only one name to leave room on the scoreboard for others`;
-  setDiv(`FOOTER`, chastize);
-  
+  const nameString = `Welcome to ${GAMENAME}. Please enter your name [<b>${name}</b>]: `;
   cursors();
   lprcat(nameString);
   blinken(nameString.length - 6, 24);
 
-  player = new Player(); // gender and character class are set later on
+  const chastize = `* Please use only one name to leave room on the scoreboard for others`;
+  setDiv(`FOOTER`, chastize);
+}
 
-  initKeyBindings(); // wait until last moment to set key bindings
+function drawDiffScreen(diff) {  
+  const difficultyString = `What difficulty would you like to play? [<b>${diff}</b>]: `;
+  cursors();
+  cltoeoln();
+  lprcat(difficultyString);
+  blinken(difficultyString.length - 6, 24);
 
-  if (no_intro) {
-    debug(`no_intro`);
-    setname(logname);
-  } else {
-    setTextCallback(setname, 24);
-  }
+  setDiv(`FOOTER`, ``);
+}
 
+function drawClassScreen(charpicked) {
+  clear();
+  lprcat(`The Addiction of Ularn\n\n`);
+  lprcat(`     Pick a character class...\n\n`);
+  lprcat(`     a)  Ogre          Exceptional strength, but thick as a brick\n`);
+  lprcat(`     b)  Wizard        Smart, good at magic, but very weak\n`);
+  lprcat(`     c)  Klingon       Strong and average IQ, but unwise & very ugly\n`);
+  lprcat(`     d)  Elf           OK at magic, but a mediocre fighter\n`);
+  lprcat(`     e)  Rogue         Nimble and smart, but only average strength\n`);
+  lprcat(`     f)  Adventurer    Jack of all trades, master of none\n`);
+  lprcat(`     g)  Dwarf         Strong and healthy, but not good at magic\n`);
+  lprcat(`     h)  Rambo         Bad at everything, but has a Lance of Death\n`);
+  
+  cursors();
+  lprcat(`So, what are ya? [<b>${charpicked}</b>]:`);
+  blinken(charpicked.length + 22, 24);
+}
 
-  paint();
-  // onResize();
+function drawGenderScreen(gender) {
+  clear();
+  lprcat(`The Addiction of Ularn\n\n`);
+  lprcat(`     Pick a gender...\n\n`);
+  lprcat(`     a)  Male\n`);
+  lprcat(`     b)  Female\n`);
+  lprcat(`     c)  I prefer to not be defined by traditional gender norms\n`);
+
+  cursors();
+
+  lprcat(`So, what are ya? [<b>${gender}</b>]:`);
+  blinken(gender.length + 22, 24);
 }
 
 
 
-function createLevelNames() {
-  LEVELNAMES.push(`H`);
-  for (let i = 1; i < MAXLEVEL; i++) {
-    LEVELNAMES.push(`${i}`);
-  }
-  for (let i = 0; i < MAXVLEVEL; i++) {
-    LEVELNAMES.push(`V${i + 1}`);
-  }
-}
+
+
+
 
 
 
 function setname(name) {
   debug(`setname(): ${name}`);
-
-  setDiv(`FOOTER`, ``);
 
   // Our Hero could have no name, but this is not Braavos
   name = name.trim();
@@ -61,9 +158,6 @@ function setname(name) {
     logname = name.substring(0, 24);
     localStorageSetObject('logname', logname);
   }
-
-  cursors();
-  cltoeoln();
 
   var saveddata = GOTW ? null : localStorageGetObject(logname);
   var checkpoint;
@@ -87,8 +181,6 @@ function setname(name) {
   // console.log(`savegame == ` + savegame);
   // console.log(`checkpoint == ` + (checkpoint != null));
 
-  var diff = Number(localStorageGetObject('difficulty') || 0);
-  setDifficulty(diff);
 
   if (no_intro && !saveddata) {
     setclass(localStorageGetObject('character_class', `Adventurer`));
@@ -107,29 +199,27 @@ function setname(name) {
       loadSavedGame(checkpoint, true);
     }
     clearBlinkingCursor(); // clear after setting name and loading savegame
-    setGameDifficulty(getDifficulty());
-
+    setGameDifficulty(getDifficulty()); // TODO
     return 1;
-  } else {
-    var difficultyString = `What difficulty would you like to play? [<b>${getDifficulty()}</b>]: `;
-    lprcat(difficultyString);
-    blinken(difficultyString.length - 6, 24);
-
-    setNumberCallback(setdiff, false, 3);
+  
   }
-  return 0;
 }
 
 
 
-function setGameDifficulty(hard) {
-  if (hard == null || hard == `` || isNaN(Number(hard))) {
-    // console.log(`hard == ${hard}, setting to ${getDifficulty()}`);
-    hard = getDifficulty(); // use the default we set in setname
+
+
+
+
+function setdiff(hard) {
+  debug(`setdiff(): ${hard}`);
+
+  if (hard == ESC || hard == '') {
+    hard = HARDGAME;
   }
 
-  sethard(hard); /* set up the desired difficulty */
-
+  setDifficulty(hard);
+  sethard(getDifficulty()); /* set up the desired difficulty */
   localStorageSetObject('difficulty', getDifficulty());
 }
 
@@ -140,44 +230,32 @@ function setGameDifficulty(hard) {
     enter with hard= -1 for default hardness, else any desired hardness
  */
 function sethard(hard) {
-
-  hard = Number(hard);
-  if (isNaN(hard)) {
-    console.log(`error setting difficulty, defaulting to 0`);
-    hard = 0;
-  }
-  setDifficulty(Math.max(0, hard));
-  setDifficulty(Math.min(128, hard));
-
   // console.log(`setting difficulty: ` + getDifficulty());
-
-  var i;
-  var k = getDifficulty();
-  if (getDifficulty() > 0)
-    for (var j = 0; j < monsterlist.length; j++) {
-      var monster = monsterlist[j];
+  if (hard > 0)
+    for (var monst = 0; monst < monsterlist.length; monst++) {
+      var monster = monsterlist[monst];
 
       /* JRP we don't need to worry about blowing int boundaries
          so we can keep making things harder as difficulty goes up */
-      i = ((6 + k) * monster.hitpoints + 1) / 6;
-      if (!ULARN) monster.hitpoints = Math.min(32767, Math.round(i));
-      monster.hitpoints = Math.round(i);
+      const mhp = ((6 + hard) * monster.hitpoints + 1) / 6;
+      if (!ULARN) monster.hitpoints = Math.min(32767, Math.round(mhp));
+      monster.hitpoints = Math.round(mhp);
 
-      i = ((6 + k) * monster.damage + 1) / 5;
-      if (!ULARN) monster.damage = Math.min(127, Math.round(i));
-      monster.damage = Math.round(i);
+      const mdmg = ((6 + hard) * monster.damage + 1) / 5;
+      if (!ULARN) monster.damage = Math.min(127, Math.round(mdmg));
+      monster.damage = Math.round(mdmg);
 
-      i = (10 * monster.gold) / (10 + k);
-      monster.gold = Math.min(32767, Math.round(i));
-      monster.gold = Math.round(i);
+      const mgold = (10 * monster.gold) / (10 + hard);
+      monster.gold = Math.min(32767, Math.round(mgold));
+      monster.gold = Math.round(mgold);
 
-      i = monster.armorclass - k;
-      monster.armorclass = Math.max(-127, Math.round(i));
-      monster.armorclass = Math.round(i);
+      const mac = monster.armorclass - hard;
+      monster.armorclass = Math.max(-127, Math.round(mac));
+      monster.armorclass = Math.round(mac);
 
-      i = (7 * monster.experience) / (7 + k) + 1;
-      monster.experience = Math.max(1, Math.round(i));
-      monster.experience = Math.round(i);
+      const mexp = (7 * monster.experience) / (7 + hard) + 1;
+      monster.experience = Math.max(1, Math.round(mexp));
+      monster.experience = Math.round(mexp);
 
       //console.log(`${monster.char}: hp:${monster.hitpoints}, d:${monster.damage}, g:${monster.gold}, ac:${monster.armorclass}, x:${monster.experience}`);
     }
@@ -185,144 +263,11 @@ function sethard(hard) {
 
 
 
-/*
-makeplayer()
 
-subroutine to create the player and the players attributes
-this is called at the beginning of a game and at no other time
-*/
-function makeplayer(x, y) {
 
-  /* much of this work has been moved elsewhere */
-  // player = new Player();
-
-  /* always know cure dianthroritis */
-  learnPotion(createObject(OPOTION, 21));
-
-  player.x = x || rnd(MAXX - 2);
-  player.y = y || rnd(MAXY - 2);
-
-  recalc();
-  changedWC = 0; // don't highlight AC & WC on game start
-  changedAC = 0;
+function classfilter(input) {
+  return ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', ENTER].includes(input);
 }
-
-
-
-function initFS() {
-  try {
-    const gameNum = localStorageGetObject('gameNum', 0) + 1;
-    localStorageSetObject('gameNum', gameNum);
-    if (gameNum <= 5 || GOTW || isMobile() || rnd(100) < 3) {
-      dofs = true;
-      fsfunc();
-      var userVars = {
-        'displayName': logname,
-        'playerID_str': playerID,
-        'gameID_str': gameID,
-        'gameNum_int': gameNum,
-      };
-      console.log(`fs`, userVars);
-      FS.identify(playerID, userVars);
-    }
-  } catch (e) {
-    console.error(`caught: ${e}`);
-  }
-}
-
-
-
-function initRB() {
-  try {
-    if (Rollbar) Rollbar.configure({
-      enabled: !isLocal() && !isFile(),
-      payload: {
-        code_version: `${BUILD}`,
-        client: {
-          javascript: {
-            code_version: `${BUILD}`,
-          }
-        }
-      }
-    });
-  } catch (error) {
-    console.error(`initRB caught: ${error}`);
-  }
-}
-
-
-
-function updateRB() {
-  try {
-    if (Rollbar) Rollbar.configure({
-      payload: {
-        person: {
-          id: logname
-        },
-        custom: {
-          playerID: playerID,
-          gameID: gameID
-        }
-      }
-    });
-  } catch (error) {
-    console.error(`updateRB caught: ${error}`);
-  }
-}
-
-
-let gotIP = false;
-function setIP(ip) {
-  if (gotIP) return;
-  // console.log(`ip:`, ip);
-  playerIP = ip;
-  gotIP = true;
-}
-
-
-
-function setdiff(hard) {
-  debug(`setdiff(): ${hard}`);
-
-  // clear the blinking cursor after setting difficulty
-  clearBlinkingCursor();
-
-  /* force difficulty to be one harder */
-  if (winnerHardlev) {
-    /* these are very ambiguous method names -- sorry. */
-    setDifficulty(winnerHardlev);
-    setGameDifficulty(getDifficulty());
-  } else {
-    setGameDifficulty(hard);
-  }
-
-  if (ULARN && !no_intro) {
-    clear();
-    lprcat(`The Addiction of Ularn\n\n`);
-    lprcat(`     Pick a character class...\n\n`);
-    lprcat(`     a)  Ogre          Exceptional strength, but thick as a brick\n`);
-    lprcat(`     b)  Wizard        Smart, good at magic, but very weak\n`);
-    lprcat(`     c)  Klingon       Strong and average IQ, but unwise & very ugly\n`);
-    lprcat(`     d)  Elf           OK at magic, but a mediocre fighter\n`);
-    lprcat(`     e)  Rogue         Nimble and smart, but only average strength\n`);
-    lprcat(`     f)  Adventurer    Jack of all trades, master of none\n`);
-    lprcat(`     g)  Dwarf         Strong and healthy, but not good at magic\n`);
-    lprcat(`     h)  Rambo         Bad at everything, but has a Lance of Death\n`);
-    cursors();
-
-    player.char_picked = localStorageGetObject('character_class') || 'Adventurer';
-
-    lprcat(`So, what are ya? [<b>${player.char_picked}</b>]:`);
-    blinken(player.char_picked.length + 22, 24);
-    setCharCallback(setclass);
-  } else {
-    setclass(`Adventurer`); /* default to Adventurer for regular Larn */
-    return true;
-  }
-
-}
-
-
 
 function setclass(classpick) {
   debug(`setclass(): ${classpick}`);
@@ -351,35 +296,19 @@ function setclass(classpick) {
 
   if (characterClass) {
     player.setCharacterClass(characterClass);
-    recalc();
-    changedWC = 0; // don't highlight AC & WC on game start
-    changedAC = 0;
-
-    if (ULARN && !no_intro) {
-      localStorageSetObject('character_class', characterClass);
-      clear();
-      lprcat(`The Addiction of Ularn\n\n`);
-      lprcat(`     Pick a gender...\n\n`);
-      lprcat(`     a)  Male\n`);
-      lprcat(`     b)  Female\n`);
-      lprcat(`     c)  I prefer to not be defined by traditional gender norms\n`);
-      cursors();
-
-      player.gender = localStorageGetObject('gender') || 'Male';
-
-      lprcat(`So, what are ya? [<b>${player.gender}</b>]:`);
-      blinken(player.gender.length + 22, 24);
-      setCharCallback(setgender);
-    } else {
-      setgender(localStorageGetObject('gender', `Male`));
-      return true;
-    }
+    localStorageSetObject('character_class', characterClass);
   } else {
-    return false;
+    console.error(`setclass(): invalid character class: ${classpick}`);
   }
 }
 
 
+
+
+
+function genderfilter(input) {
+  return ['a', 'b', 'c', ENTER].includes(input);
+}
 
 function setgender(genderpick) {
   debug(`setgender(): ${genderpick}`);
@@ -401,13 +330,9 @@ function setgender(genderpick) {
     if (ULARN) {
       localStorageSetObject('gender', gender);
     }
-    startgame();
-    clearBlinkingCursor();
-    return true;
   } else {
-    return false;
+    console.error(`setgender(): invalid gender: ${genderpick}`);
   }
-
 }
 
 
@@ -445,7 +370,7 @@ async function startgame() {
       player.ELEVUP = gotwData.player.ELEVUP;
       player.ELEVDOWN = gotwData.player.ELEVDOWN;
 
-      extraMessage = `You have ${timeLeft()} to finish this game`;
+      extraMessage = `You have ${GOTWtimeLeft()} to finish this game`;
     } else {    
       GOTW = false;
       if (gotwData.status === 451) {
@@ -493,7 +418,67 @@ async function startgame() {
   return 1;
 }
 
-function timeLeft() {
+
+
+function initFS() {
+  try {
+    const gameNum = localStorageGetObject('gameNum', 0) + 1;
+    localStorageSetObject('gameNum', gameNum);
+    if (gameNum <= 5 || GOTW || isMobile() || rnd(100) < 3) {
+      dofs = true;
+      fsfunc();
+      var userVars = {
+        'displayName': logname,
+        'playerID_str': playerID,
+        'gameID_str': gameID,
+        'gameNum_int': gameNum,
+      };
+      console.log(`fs`, userVars);
+      FS.identify(playerID, userVars);
+    }
+  } catch (e) {
+    console.error(`caught: ${e}`);
+  }
+}
+
+
+
+
+/*
+makeplayer()
+
+subroutine to create the player and the players attributes
+this is called at the beginning of a game and at no other time
+*/
+function makeplayer(x, y) {
+
+  /* much of this work has been moved elsewhere */
+  // player = new Player();
+
+  /* always know cure dianthroritis */
+  learnPotion(createObject(OPOTION, 21));
+
+  player.x = x || rnd(MAXX - 2);
+  player.y = y || rnd(MAXY - 2);
+
+  recalc();
+  changedWC = 0; // don't highlight AC & WC on game start
+  changedAC = 0;
+}
+
+
+
+let gotIP = false;
+function setIP(ip) {
+  if (gotIP) return;
+  // console.log(`ip:`, ip);
+  playerIP = ip;
+  gotIP = true;
+}
+
+
+
+function GOTWtimeLeft() {
   const now = new Date();
   const nextSunday = new Date();
   
@@ -514,7 +499,8 @@ function timeLeft() {
 
 
 let GLOBAL_TIMEOUT; // used for setTimeouts that can be interrupted by the main loop
-let MOVED_WORLD = false;
+let TEXT_INPUT_HAPPENING = false; // used by new async/away text input functions 
+let MOVED_WORLD = false; // prevent multiple moveworld calls in a single turn
 
 
 
@@ -523,12 +509,21 @@ let MOVED_WORLD = false;
   since we're running in a event-driven system we need to
   turn the original main loop a little bit inside-out
 */
-function mainloop(e, key) {
+function mainloop(e, key = e.key) {
+
+  console.log(`mainloop: e=${e} key=${key} (${player ? `` : 'no player'}), ${GAMEOVER}, ${nomove}, ${game_started}, ${mazeMode}, ${napping}, ${level}, ${gtime}`);
 
   if (STARTED_LEVEL_CREATION) {
     doRollbar(ROLLBAR_DEBUG, `mainloop: started level creation`, `e=${e} key=${key} (${player.x},${player.y}), ${GAMEOVER}, ${game_started}, ${mazeMode}, ${napping}, ${level}, ${gtime}`);
     // we should return here, but just gather info for now
   };
+
+
+  if (TEXT_INPUT_HAPPENING) {
+    debug(`mainloop: text input happening, key=${key}`);
+    // paint();
+    return;
+  }
 
   if (napping) {
     debug(`napping`);

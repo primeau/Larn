@@ -20,6 +20,8 @@ var dofs = false; /* use fullstory */
 
 async function play() {
 
+  blockDefaultKeys();
+
   initRB();
 
   console.log(`gameID ${gameID}`);
@@ -52,7 +54,7 @@ async function play() {
   playerID = localStorageGetObject('playerID', tmpID);
   localStorageSetObject('playerID', playerID);
   
-  logname = localStorageGetObject('logname', logname);
+  // logname = localStorageGetObject('logname', logname);
 
   showConfigButtons = localStorageGetObject(`showConfigButtons`, true);
   original_objects = localStorageGetObject('original_objects', true);
@@ -97,9 +99,51 @@ async function play() {
 
   // do_fail_now();
   
-  if (document.getElementById('FAIL')) 
+  if (document.getElementById('FAIL')) {
     document.getElementById('FAIL').classList.remove('failed');
+  }
   document.getElementById('LARN').classList.add('loaded');
+
+}
+
+
+
+function initRB() {
+  try {
+    if (Rollbar) Rollbar.configure({
+      enabled: !isLocal() && !isFile(),
+      payload: {
+        code_version: `${BUILD}`,
+        client: {
+          javascript: {
+            code_version: `${BUILD}`,
+          }
+        }
+      }
+    });
+  } catch (error) {
+    console.error(`initRB caught: ${error}`);
+  }
+}
+
+
+
+function updateRB() {
+  try {
+    if (Rollbar) Rollbar.configure({
+      payload: {
+        person: {
+          id: logname
+        },
+        custom: {
+          playerID: playerID,
+          gameID: gameID
+        }
+      }
+    });
+  } catch (error) {
+    console.error(`updateRB caught: ${error}`);
+  }
 }
 
 
@@ -136,7 +180,7 @@ function confirmExit() {
 // }
 
 
-
+/*
 function initKeyBindings() {
   Mousetrap.bind('.', mousetrap); // stay here
   Mousetrap.bind(',', mousetrap); // take
@@ -187,6 +231,7 @@ function initKeyBindings() {
   // Item symbols for autotravel
   Mousetrap.bind(['=', '$', '\\', '/', '%', '{', '|', '\'', '&', '[', ']', '~', '}', ';', '"'], mousetrap);
 }
+*/
 
 
 
