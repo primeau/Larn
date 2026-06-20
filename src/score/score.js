@@ -85,6 +85,9 @@ function updateYearDropdown() {
 
 updateYearDropdown();
 
+splev = ULARN ? ULARN_splev : LARN_splev;
+spelweird = ULARN ? ULARN_spelweird : LARN_spelweird;
+
 document.querySelectorAll('input[type="radio"]').forEach((radio) => {
   radio.addEventListener('change', () => {
     ULARN = ularnRadio && ularnRadio.checked;
@@ -213,6 +216,7 @@ function renderScores(scores) {
   }
   let tableHTML = '';
   const diff = isUlarn() ? `Diff` : `Difficulty`;
+  const showMoves = Boolean(visitorsRadio && visitorsRadio.checked && yearSelect && yearSelect.value.startsWith('gotw_'));
   if (isWinner()) {
     tableHTML = `
       <table style="border-collapse:separate;border-spacing:0 0;">
@@ -249,6 +253,7 @@ function renderScores(scores) {
           <tr style="font-weight:bold;">
             <th style="text-align:right;padding-right:2ch;padding-left:5ch;">Score</th>
             <th style="text-align:right;padding-right:2ch;">${diff}</th>
+            ${showMoves ? '<th style="text-align:right;padding-right:2ch;">Moves</th>' : ''}
             <th style="text-align:left;padding-right:19ch;">Visitor</th>
             ${isUlarn() ? '<th style="text-align:left;padding-right:7ch;">Class</th>' : ''}
             <th style="text-align:left;padding-right">Fate</th>
@@ -261,6 +266,7 @@ function renderScores(scores) {
             <tr class="score-item" data-gameID="${score.gameID}" style="cursor:pointer;">
               <td style="text-align:right;padding-right:2ch;">${formatNumber(score.score)}</td>
               <td style="text-align:right;padding-right:2ch;">${score.hardlev}</td>
+              ${showMoves ? `<td style="text-align:right;padding-right:2ch;">${formatNumber(score.moves)}</td>` : ''}
               <td style="padding-right:2ch;">${score.who}</td>
               ${isUlarn() ? `<td style="text-align:left;padding-right:2ch;">${score.character || ''}</td>` : ''}
               <td>${score.what} on ${score.level}</td>
