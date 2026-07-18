@@ -246,18 +246,22 @@ function dnditem(i) {
     lprcat(' '.repeat(40));
     return;
   }
+  
+  const char = getCharFromIndex(i % 26);
 
-  lprcat(`${getCharFromIndex(i % 26)}) `);
-  
   const item = createObject(dnd_item[i].itemId, dnd_item[i].arg);
-  if (item.matches(OPOTION)) lprcat(item.toString(true).substring(8).padEnd(28));
-  else if (item.matches(OSCROLL)) lprcat(item.toString(true).substring(8).padEnd(28));
-  else lprcat(item.toString(true).padEnd(28));
-  
+  let itemStr = item.toString(true);
+  if (item.matches(OPOTION) || item.matches(OSCROLL)) itemStr = itemStr.substring(8);
+  itemStr = itemStr.padEnd(28);
+
   const price = dnd_item[i].price;
-  const markup_start = player.GOLD < price ? START_DIM : ``;
-  const markup_end = player.GOLD < price ? END_DIM : ``;
-  lprcat(`${markup_start}${price.toString().padStart(6)}${markup_end}`);
+  const priceStr = price.toString().padStart(6);
+
+  const dim = player.GOLD < price;
+  const markup_start = dim ? START_DIM :``;
+  const markup_end = dim ? END_DIM : ``;
+
+  lprcat(`${char}) ${markup_start}${itemStr}${priceStr}${markup_end}`);
 }
 
 
