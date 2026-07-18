@@ -1,6 +1,7 @@
 .dropbox
 .DS_Store
 .vscode
+.zed
 .eslintrc.json
 Icon
 node_modules
