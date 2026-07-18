@@ -611,18 +611,22 @@ var Player = function Player() {
   // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
   this.getBottomLine = function(lev) {
     if (level < 0) return ``;
-    var templevel = LEVELNAMES[level];
+    let templevel = LEVELNAMES[level];
     if (lev) templevel = lev;
 
     if (level == 0) this.TELEFLAG = 0;
-    let hppad = this.HPMAX >= 100 ? 3 : 2;
-    var output =
+    const hppad = this.HPMAX >= 100 ? 3 : 2;
+    const hpColor = this.HP >= this.HPMAX ? 'lightgrey'
+      : this.HP >= Math.floor(this.HPMAX * 2/3) ? 'lime'
+      : this.HP >= Math.floor(this.HPMAX / 3) ? 'yellow'
+      : 'red';
+    const output =
       `Spells: ${pad(this.SPELLS,2,changedSpells)}(${pad(this.SPELLMAX,2,changedSpellsMax)})  \
 AC: ${pad(this.AC,-4,changedAC)} \
 WC: ${pad(this.WCLASS,-4,changedWC)} \
 Level ${pad(this.LEVEL,-2,changedLevel)} \
 Exp: ${pad(this.EXPERIENCE,-10,changedExp)}${pad(CLASSES[this.LEVEL - 1],16,changedLevel)}               \n\
-HP: ${pad(this.HP,hppad,changedHP)}(${pad(this.HPMAX, hppad,changedHPMax)}) \
+HP: <font color='${hpColor}'>${pad(this.HP,hppad,changedHP)}</font>(${pad(this.HPMAX, hppad,changedHPMax)}) \
 STR=${pad((this.STRENGTH + this.STREXTRA),-2,changedSTR)} \
 INT=${pad(this.INTELLIGENCE,-2,changedINT)} \
 WIS=${pad(this.WISDOM,-2, changedWIS)} \
