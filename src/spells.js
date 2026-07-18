@@ -16,17 +16,26 @@ function forgetSpell(spellnum) {
 
 
 var newSpellCode = null;
+var lastSpellCast = null;
+
+
+
+function checkHasSpells() {
+  const hasSpells = player.SPELLS > 0;
+  if (!hasSpells) {
+    updateLog(`You don't have any spells!`);
+  }
+  return hasSpells;
+}
 
 
 
 function pre_cast() {
   cursors();
   nomove = 1;
-  if (player.SPELLS > 0) {
+  if (checkHasSpells()) {
     updateLog(`Enter your spell: `);
-    setCharCallback(cast);
-  } else {
-    updateLog(`You don't have any spells!`);
+    setCharCallback(castCallback);
   }
 }
 
@@ -72,7 +81,7 @@ function getSpellCode(key, showAllSpells) {
 }
 
 
-function cast(key) {
+function castCallback(key) {
   nomove = 1;
 
   // keep adding to newSpellCode until it's 3 letters
@@ -81,17 +90,38 @@ function cast(key) {
   if (codeCheck !== newSpellCode) {
     return codeCheck;
   }
+  cast(newSpellCode);
+  lastSpellCast = newSpellCode.toLowerCase();
+  newSpellCode = null;
+  return 1;
+}
+
+
+function cast(code) {
   player.setSpells(player.SPELLS - 1);
   player.SPELLSCAST++;
-  var spellnum = player.knownSpells.indexOf(newSpellCode.toLowerCase());
+  var spellnum = player.knownSpells.indexOf(code.toLowerCase());
   if (spellnum >= 0) {
     speldamage(spellnum);
   } else {
     nomove = 0;
     updateLog(`  Nothing Happened${period}`);
   }
-  newSpellCode = null;
-  return 1;
+}
+
+
+
+function castLastSpell() {
+  cursors();
+  nomove = 1;
+  if (!lastSpellCast) {
+    updateLog(`You haven't cast any spells yet!`);
+    return;
+  }
+  if (checkHasSpells()) {
+    updateLog(`Casting last spell again: ${lastSpellCast}`);
+    cast(lastSpellCast);
+  }
 }
 
 
