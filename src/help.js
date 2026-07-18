@@ -115,7 +115,7 @@ helppages[1] =
                             h   l     or     ←   →       M  rest many turns
   shift+key to run          b j n            ↙ ↓ ↘       ${explorestarttag}X  auto-explore${exploreendtag}
 
-                             A  desecrate an altar       <  go up stairs
+  a  cast last spell again   A  desecrate an altar       <  go up stairs
   c  cast a spell            C  close a door             >  go down stairs
   d  drop an item            D  drink at a fountain      ${stairstarttag}{  travel to up${stairendtag}
   e  eat something           E  enter a store, dungeon   ${stairstarttag}}  travel to down${stairendtag}
@@ -133,7 +133,6 @@ helppages[1] =
   z  show scores             ${teleportstarttag}Z  teleport yourself${teleportendtag}        ?  this help screen`;
   
   // letters remaining:
-  // a  previously cast spell?
   // F
   // m  move without picking up an object
   // x  view log history
