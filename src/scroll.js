@@ -61,6 +61,24 @@ function act_read_something(index) {
 
 
 
+function isBadScroll(scroll) {
+  if (!scroll) return false;
+  if (scroll.matches(OSCROLL)) {
+    if (!isKnownScroll(scroll)) return false; // only bad if known
+    if (scroll.arg == 3 // blank paper 
+      || scroll.arg == 4 // create monster 
+      || scroll.arg == 6 // aggravate monsters 
+      || scroll.arg == 10 // haste monster
+      || scroll.arg == 11 // monster healing 
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+
 /*
  * function to read a scroll
  */
@@ -136,8 +154,7 @@ function read_scroll(scroll) {
 
     case 8:
       /* teleportation */
-      if (printMessage) updateLog(`  Your surroundings change${period}`);
-      oteleport(0);
+      oteleport(0, printMessage ? `  Your surroundings change${period}` : null);
       break;
 
     case 9:

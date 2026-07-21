@@ -80,9 +80,8 @@ function act_sit_throne(arg) {
     itemAt(player.x, player.y).arg = 1;
     setKnow(player.x, player.y, KNOWNOT);
   } else if (k < 35) {
-    updateLog(`  Zaaaappp!  You've been teleported!`);
     beep();
-    oteleport(0);
+    oteleport(0, `  Zaaaappp!  You've been teleported!`);
   } else {
     updateLog(`  Nothing happens${period}`);
   }
@@ -96,9 +95,8 @@ function act_sit_dead_throne(arg) {
     if (k < 5) {
       player.raiselevel();
     } else if (k < 25) {
-      updateLog(`  Zaaaappp!  You've been teleported!`);
       beep();
-      oteleport(0);
+      oteleport(0, `  Zaaaappp!  You've been teleported!`);
     } else {
       updateLog(`  Nothing happens${period}`);
     }
