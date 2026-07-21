@@ -374,13 +374,13 @@ function setMode(amiga, retro, original) {
     styleUploaded = uploadStyle(style);
   }
 
-  // skip font metric work when nothing has changed
-  const modeKey = `${amiga}|${retro}|${original}|${spriteWidth}`;
-  if (modeKey !== LAST_MODE) {
-    LAST_MODE = modeKey;
-  } else {
-    return;
-  }
+  // skip font metric work when nothing has changed -- works on desktop, not on mobile
+  // const modeKey = `${amiga}|${retro}|${original}|${spriteWidth}`;
+  // if (modeKey !== LAST_MODE) {
+  //   LAST_MODE = modeKey;
+  // } else {
+  //   return;
+  // }
 
   if (isMobile()) {
     retro = false; // force modern font for mobile devices because the retro font isn't great

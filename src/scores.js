@@ -218,6 +218,9 @@ function loadScores(newScore, showWinners, showLosers) {
 
 async function dbQueryHighScores(newScore, showWinners, showLosers) {
 
+  // use this to keep local players off the scoreboard
+  // if (!navigator.onLine || isLocal() || isFile()) {
+
   if (!navigator.onLine) {
     const msg = `Offline: showing local scoreboard`;
     showLocalScoreBoard(newScore, showWinners, showLosers, 0, msg);
@@ -363,7 +366,12 @@ function printScore(p) {
   }
 
   // console.log(`score.js`, dofs, gameID, p.gameID, isNewScore, `${p.gameID}${addplus}`);
-  lprcat(`<a href='javascript:dbQueryLoadGame("${p.gameID}", ${!navigator.onLine}, ${p.winner})'>${score}</a>${endcode}`);
+  
+  // use this to keep local players off the scoreboard
+  // const local = !navigator.onLine || isLocal() || isFile();
+
+  const local = !navigator.onLine;
+  lprcat(`<a href='javascript:dbQueryLoadGame("${p.gameID}", ${local}, ${p.winner})'>${score}</a>${endcode}`);
   if (!GAMEOVER) lprc(`\n`);
 }
 
@@ -683,7 +691,10 @@ async function writeScoreToDatabase(endGameScore) {
       return;
     }
 
-    try {
+    // use this to keep local players off the scoreboard
+    // if (!navigator.onLine || isLocal() || isFile()) {
+
+  try {
       await cloudflareWriteHighScore(endGameScore);
     } catch (error) {
       console.error(`cloudflareWriteHighScore():`, error);
@@ -692,6 +703,11 @@ async function writeScoreToDatabase(endGameScore) {
 
   try {
     const newScore = endGameScore;
+
+    if (isMobile()) {
+      doRollbar(ROLLBAR_INFO, isTablet() ? `tablet` : `phone`, `U=${newScore.ularn}, ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
+    }
+
     if (newScore.gotw) {
       doRollbar(ROLLBAR_INFO, `GOTW`, `gotw:${newScore.gotw}`, `U=${newScore.ularn}, ${newScore.who}, diff=${newScore.hardlev}, time=${newScore.timeused}, score=${newScore.score}, ${newScore.what} on ${newScore.level}, ${newScore.playerID}, ${newScore.gameID}`);
     } else {

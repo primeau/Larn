@@ -71,9 +71,10 @@ async function play() {
   document.title = GAMENAME;
 
   initHelpPages();
-  setMode(amiga_mode, getPref('retro_mode'), getPref('original_objects'));
-
+  
   await loadFonts();
+
+  setMode(amiga_mode, getPref('retro_mode'), getPref('original_objects'));
 
   welcome(); // show welcome screen, start the game
 
