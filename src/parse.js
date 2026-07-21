@@ -562,8 +562,13 @@ async function parse(e, key) {
   //
   if (key == 'G') {
     nomove = 1;
-    updateLog(`What symbol do you want to travel to? `);
-    setCharCallback(parseTravelToItem);
+    if (getPref('explore_object')) {
+      updateLog(`What object do you want to travel to? `);
+      setCharCallback(parseTravelToItem);
+    } else {
+      updateLog(`Travel to object is disabled -- it can be enabled in the (<b>O</b>)ptions menu${period}`);
+    }
+
     return;
   }
 
@@ -692,7 +697,24 @@ async function parse(e, key) {
     updateLog(`Conducts observed: ${player.getConductString(true)}`);
     return;
   }
-
+  
+  // 
+  //  MAZE EXPLORER
+  //
+  if (key === 'X') {
+    nomove = 1;
+    if (getPref('explore_toggle')) {
+      if (!activeExplorer) {
+        const explorer = Object.create(MazeExplorer);
+        updateLog(`Exploring...`);
+        explorer.setupExplore();
+        const result = await explorer.explore();
+      }
+    } else {
+      updateLog(`Auto explore is disabled -- it can be enabled in the (<b>O</b>)ptions menu${period}`);
+    }
+    return;
+  }
 
   //
   // TELEPORT
@@ -700,7 +722,7 @@ async function parse(e, key) {
   if (key == 'Z') {
     if (player.LEVEL > 9) {
       if (player.TIMESTOP == 0) {
-        oteleport(1);
+        oteleport(1, `Zaaaappp!`);
       }
       return;
     }
@@ -765,13 +787,17 @@ async function parse(e, key) {
   //
   if (key == '{') {
     nomove = 1;
-    updateLog(`Travelling to stairs`);
-    const explorer = Object.create(MazeExplorer);
-    let upItem = OSTAIRSUP;
-    if (level === 1) upItem = OHOMEENTRANCE;
-    if (level === MAXLEVEL) upItem = OVOLUP; // ularn has stairs up and volcanic shaft up, do this to go to the right one
-    explorer.setupTravelToItem([upItem]);
-    await autotravelCallback(explorer);
+    if (getPref('explore_stairs')) {
+      updateLog(`Travelling to stairs`);
+      const explorer = Object.create(MazeExplorer);
+      let upItem = OSTAIRSUP;
+      if (level === 1) upItem = OHOMEENTRANCE;
+      if (level === MAXLEVEL) upItem = OVOLUP; // ularn has stairs up and volcanic shaft up, do this to go to the right one
+      explorer.setupTravelToItem([upItem]);
+      await autotravelCallback(explorer);
+    } else {
+      updateLog(`Travel to stairs is disabled -- it can be enabled in the (<b>O</b>)ptions menu${period}`);
+    }
     return;
   }
 
@@ -780,11 +806,15 @@ async function parse(e, key) {
   //
   if (key == '}') {
     nomove = 1;
-    updateLog(`Travelling to stairs`);
-    const explorer = Object.create(MazeExplorer);
-    const downItem = level === 0 ? OENTRANCE : OSTAIRSDOWN;
-    explorer.setupTravelToItem([downItem]);
-    await autotravelCallback(explorer);
+    if (getPref('explore_stairs')) {
+      updateLog(`Travelling to stairs`);
+      const explorer = Object.create(MazeExplorer);
+      const downItem = level === 0 ? OENTRANCE : OSTAIRSDOWN;
+      explorer.setupTravelToItem([downItem]);
+      await autotravelCallback(explorer);
+    } else {
+      updateLog(`Travel to stairs is disabled -- it can be enabled in the (<b>O</b>)ptions menu${period}`);
+    }
     return;
   }
 
@@ -824,8 +854,7 @@ async function parse(e, key) {
   //
   if (key == '⚙️') {
     nomove = 1;
-    showConfigButtons = !showConfigButtons;
-    localStorageSetObject(`showConfigButtons`, showConfigButtons);
+    setPref('showConfigButtons', !getPref('showConfigButtons'));
     onResize();
     return;
   }
@@ -846,10 +875,9 @@ async function parse(e, key) {
   //
   if (key == '!') {
     nomove = 1;
-    keyboard_hints = !keyboard_hints;
-    localStorageSetObject(`keyboard_hints`, keyboard_hints);
-    updateLog(`Keyboard hints: ${keyboard_hints ? `on` : `off`}`);
-    if (keyboard_hints)
+    setPref('keyboard_hints', !getPref('keyboard_hints'));
+    updateLog(`Keyboard hints: ${getPref('keyboard_hints') ? `on` : `off`}`);
+    if (getPref('keyboard_hints'))
       lookforobject(true, false);
     return;
   }
@@ -857,9 +885,8 @@ async function parse(e, key) {
   // toggle auto pickup
   if (key == '@') {
     nomove = 1;
-    auto_pickup = !auto_pickup;
-    localStorageSetObject(`auto_pickup`, auto_pickup);
-    updateLog(`Auto-pickup: ${auto_pickup ? `on` : `off`}`);
+    setPref('auto_pickup', !getPref('auto_pickup'));
+    updateLog(`Auto-pickup: ${getPref('auto_pickup') ? `on` : `off`}`);
     return;
   }
 
@@ -873,19 +900,6 @@ async function parse(e, key) {
     return;
   }
 
-  // 
-  //  MAZE EXPLORER
-  //
-  if (debug_used && key === '±') {
-    nomove = 1;
-    if (!exploring) {
-      const explorer = Object.create(MazeExplorer);
-      explorer.setupExplore();
-      const result = await explorer.explore();
-      console.log(`Explored in ${result.steps} steps`);
-      return;
-    }
-  }
 
   //
   // REPORT BUG

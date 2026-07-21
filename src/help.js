@@ -34,20 +34,6 @@ function print_help() {
 
 function initHelpPages() {
 
-let helpIDMouseImage = identify_button === MOUSE_LEFT_CLICK ? `↖` :
-                       identify_button === MOUSE_SHIFT_CLICK ? `↖` :
-                       identify_button === MOUSE_RIGHT_CLICK ? `↗` :
-                       identify_button === MOUSE_DOUBLE_CLICK ? `⇈` : ` `;
-let helpGoMouseImage = travel_button === MOUSE_LEFT_CLICK ? `↖` :
-                       travel_button === MOUSE_SHIFT_CLICK ? `↖` :
-                       travel_button === MOUSE_RIGHT_CLICK ? `↗` :
-                       travel_button === MOUSE_DOUBLE_CLICK ? `⇈` : ` `;
-
-let helpIDLabel1 = identify_button === MOUSE_NONE ? `` : `${mouseOptions[identify_button]} to`;
-let helpIDLabel2 = identify_button === MOUSE_NONE ? `` : `identify an object`;
-let helpGoLabel1 = travel_button === MOUSE_NONE ? `` : `${mouseOptions[travel_button]} to`;
-let helpGoLabel2 = travel_button === MOUSE_NONE ? `` : `go to a location`;
-
 helppages[0] = !GOTW ?
     `Welcome to the game of ${GAMENAME}. At this moment, you face a great problem.\n\
 Your daughter has contracted a strange disease, and none of your home remedies\n\
@@ -93,39 +79,65 @@ With deepest contempt,\n\
 Endelford\n\
 `;
 
+const helpIDMouseImage = getPref('identify_button') === MOUSE_LEFT_CLICK ? `↖` :
+                         getPref('identify_button') === MOUSE_SHIFT_CLICK ? `↖` :
+                         getPref('identify_button') === MOUSE_RIGHT_CLICK ? `↗` :
+                         getPref('identify_button') === MOUSE_DOUBLE_CLICK ? `⇈` : ` `;
+const helpGoMouseImage = getPref('travel_button') === MOUSE_LEFT_CLICK ? `↖` :
+                         getPref('travel_button') === MOUSE_SHIFT_CLICK ? `↖` :
+                         getPref('travel_button') === MOUSE_RIGHT_CLICK ? `↗` :
+                         getPref('travel_button') === MOUSE_DOUBLE_CLICK ? `⇈` : ` `;
+
+const helpIDLabel1 = getPref('identify_button') === MOUSE_NONE ? `click to ` : `${mouseOptions[getPref('identify_button')]} to`;
+const helpIDLabel2 = `identify an object`;
+const helpGoLabel1 = getPref('travel_button') === MOUSE_NONE ? `click to ` : `${mouseOptions[getPref('travel_button')]} to`;
+const helpGoLabel2 = `go to a location`;
+
+const helpidstarttag = getPref('identify_button') === MOUSE_NONE ? `<dim>` : ``;
+const helpidendtag = getPref('identify_button') === MOUSE_NONE ? `</dim>` : ``;
+const helpgostarttag = getPref('travel_button') === MOUSE_NONE ? `<dim>` : ``;
+const helpgoendtag = getPref('travel_button') === MOUSE_NONE ? `</dim>` : ``;
+
+const objectstarttag = getPref('explore_object') ? `` : `<dim>`;
+const objectendtag = getPref('explore_object') ? `` : `</dim>`;
+const stairstarttag = getPref('explore_stairs') ? `` : `<dim>`;
+const stairendtag = getPref('explore_stairs') ? `` : `</dim>`;
+const explorestarttag = getPref('explore_toggle') ? `` : `<dim>`;
+const exploreendtag = getPref('explore_toggle') ? `` : `</dim>`;
+
+const teleportstarttag = player?.LEVEL >= 10 ? `` : `<dim>`;
+const teleportendtag = player?.LEVEL >= 10 ? `` : `</dim>`;
+
 helppages[1] =
 `                       <b>Help File for The Caverns of ${GAMENAME}</b>
 
-  move using arrow keys     y k u            ↖ ↑ ↗
-                            h   l     or     ←   →       .  rest one turn
-  shift+key to run          b j n            ↙ ↓ ↘       M  rest many turns
+  move using arrow keys     y k u            ↖ ↑ ↗       .  rest one turn
+                            h   l     or     ←   →       M  rest many turns
+  shift+key to run          b j n            ↙ ↓ ↘       ${explorestarttag}X  auto-explore${exploreendtag}
 
-                              A  desecrate an altar      <  go up stairs
-  c  cast a spell             C  close a door            >  go down stairs
-  d  drop an item             D  drink at a fountain     {  travel to up
-  e  eat something            E  enter a store, dungeon  }  travel to down 
-  f  tidy up at a fountain       or volcanic shaft       
-  g  get present pack weight  G  travel to item          ^  identify a trap
-  i  inventory your pockets   I  list all known items    :  look at object you
-  o  open a door or chest     O  options                    are standing on
-  p  pray at an altar         P  autopray                ${helpIDMouseImage}  ${helpIDLabel1}
-  q  quaff a potion           Q  quit the game              ${helpIDLabel2}
-  r  read a scroll or book    R  remove gems from throne ${helpGoMouseImage}  ${helpGoLabel1}
-  s  sit on a throne          S  save the game              ${helpGoLabel2}
-  t  take an item             T  take off armor          !  toggle key hints
-  v  print program version    V  view conducts           @  toggle auto-pickup
-  w  wield a weapon           W  wear armor
-  z  show scores              Z  teleport yourself       ?  this help screen`;
+                             A  desecrate an altar       <  go up stairs
+  c  cast a spell            C  close a door             >  go down stairs
+  d  drop an item            D  drink at a fountain      ${stairstarttag}{  travel to up${stairendtag}
+  e  eat something           E  enter a store, dungeon   ${stairstarttag}}  travel to down${stairendtag}
+  f  tidy up at a fountain      or volcanic shaft        
+  g  get pack weight         ${objectstarttag}G  travel to object         ${objectendtag}^  identify a trap
+  i  inventory your pockets  I  list all known items     :  look at object you
+  o  open a door or chest    O  options                     are standing on
+  p  pray at an altar        P  autopray                 ${helpIDMouseImage}  ${helpidstarttag}${helpIDLabel1}${helpidendtag}
+  q  quaff a potion          Q  quit the game               ${helpidstarttag}${helpIDLabel2}${helpidendtag}
+  r  read a scroll or book   R  remove gems from throne  ${helpGoMouseImage}  ${helpgostarttag}${helpGoLabel1}${helpgoendtag}
+  s  sit on a throne         S  save the game               ${helpgostarttag}${helpGoLabel2}${helpgoendtag}
+  t  take an item            T  take off armor           !  toggle key hints
+  v  print program version   V  view conducts            @  toggle auto-pickup
+  w  wield a weapon          W  wear armor 
+  z  show scores             ${teleportstarttag}Z  teleport yourself${teleportendtag}        ?  this help screen`;
   
   // letters remaining:
-  // a
+  // a  previously cast spell?
   // F
-  // m  move without picking 
-  //    up an object
-  // x
-  // X  view log history
-  // /  identify objects in
-  //    the game 
+  // m  move without picking up an object
+  // x  view log history
+  // /  identify objects in the game?
 
 
 helppages[2] =

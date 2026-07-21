@@ -13,25 +13,26 @@
 todo
 ====
 - General
-  - rest until full health or full spells
   - Show inventory slots in “i” mode
-  - move command ("m")
+  - move command ("m")?
   - add current date/time to bug report form
   - show other actions ("you have desecrated at the altar!" etc)
+  - fullscreen mode
+  - collapse config button by default
   - beep support
   - show 'play again' link after death
   - add play links or links back to larn.org in more places
   - record elapsed game time, total time, number of saves
   - cloud save via password
+  - scroll back to view older log messages, or command to show longer log
   - game start/end stats
   - config page
-    - colors on/off
-    - keyboard hints
-    - walls as block or joined ascii
-    - no-beep
-    - no-nap
-    - player tile
-    - monster tile / names
+    - show mobuls on inventory side tab
+    - prompt_mode option v2? (',' to consume from floor, usual letter to consume from inventory)
+    - player color
+    - player bold
+    - no-beep (not yet)
+    - no-nap (skip)
   - if error writing savegame due to space issues, delete all backup cookies
 - Ularn
   - check all 1.6.3 code
@@ -40,20 +41,23 @@ todo
   - if an invisible demon steps on a wall, should it show a dungeon floor tile, or a wall tile?
 - GOTW
   * REJECT SUBMITTED GAMES AFTER TIME CUTOFF
-  - show correct special items created list on score/index.html -> done: should be visible in mid feb
   - chests and books from statues are still random
-  - Add moves to gotw visitor scores?
 - LarnTV
    - add option to view completed games stats from larntv
    - Only limit scrubbing for non deflated amiga games
    - drop out of order frames - current fix in index.js doesn't seem to be working
+   - chat feature
+     - bi-directional?
+     - just allow watchers to make comments?
 - mobile
-  - Two columns for iPad inventory drop etc?
-  - nonap or 200ms max
+  - add options
+  - mobile=false flag for the url -> add override to isMobile() to allow keyboard/options on ipad
   - dim buttons in store for things you can't afford?
+  - clicking on score doesnt show info on win
 - scoreboard
   - save this week/last week etc instead of item value?
   - scoreboard visitors - use movesmade, not mobuls
+  - don't show scores with offensive names
 - website
   - new favicon? dragon? random monster?
   - new video to add: https://larn.org/beta/tv/?gameid=lysnwvbhx8 (diff 0 win with illiterate/thirsty conducts)
@@ -80,10 +84,10 @@ code/infrastructure todos
   x Load files for those gameids from s3 larn-movies to new bucket
   x Create fail through to pass gameid searches to larn-movies to new high-scores bucket
   x Set lifecycle to 1 year for larn-movies s3 bucket
-  - switch from movie_test to movie lambda for prod version
   - eventually something to clean highscores bucket?
   - with R1 can we just set lifecycle to keep all winning games?
-- async/await for keyboard input?
+- async/await for keyboard input
+  - started. way too much work to change everything
 - refactor inventory --> inventory.js
 - get rid of mazemode?
 - idea: use createElement for all rendering?
@@ -95,9 +99,6 @@ code/infrastructure todos
 - use fewer globals!
   - put all globals into globals.json with info about which files use it
   - put all player related functions/vars into player object
-- move hosting from netlify to:
-  - github actions: no -> can't have AWS keys in public github
-  - cloudflare pages?
 - javascript build versioning?
 - record build number in save game
 - auto-update build number somehow
@@ -127,6 +128,11 @@ extras
 - stainless shield ~5k gold +1|2 ac
 - ularn: widget of spine tingling: see monster moving outside view
 - ularn: lantern radiates light out from hero for x spaces?
+- potion of raise dexterity
+- idea from ularn 1.5.4 todo file: 
+  - blacksmith on top floor to fix negative-bonus weaponry (at some percentage
+    of cost of actual weapon. Mostly so I can beat up rust monsters with
+    the Flailing Hammer or Slayer and get it fixed afterward...)
 - conducts
   - needs extra code
     - pacifist: no wielded weapon / should be when lasthitmonst = null, not when numkilled = 0
@@ -144,23 +150,18 @@ extras
 
 bugs
 ====
-* fix interactions between haste self / haste monster / half-speed monsters (check 1.6.3 hastestep)
-  - HAS + PER bug slow monsters (H,x,r,etc) move every moves, or totally paralyzed?
-  * monster.isSlow, and different way to decide when to move
-  * half speed monster should move at full speed with haste monster on
-- iPad version crashes when network connection lost
+* iPad version crashes when network connection lost
+- blindness on E10/V3 will reveal the eye/potion if the level has been explored
 - Lockups on iPad in localhost mode. Maybe related to number of moves?
-- amiga tv replays seem really slow even on 8x speed
+- amiga tv replays seem really slow even on 8x speed (http://localhost:8001/alpha/tv/index.html?gameid=g12jtsftkj)
 - player hit themselves with own magic by moving into mle spell? [video: hitbymagic.mov]
-- player.level = null
-  - TypeError: player.level.know[l] is undefined (mmove())
-  - Cannot read properties of null (reading 'items') (itemAt())
-  - can't access property "items", player.level is null
--  offline
-   can't access property "frames", this.recording is undefined
-   can't access property "items", player.level is null
-   ... > input#Font: modern.variablebutton[type="button"][name="Font: modern"]
-- last hit monster still chases from a distance if dumb
+* last hit monster still chases from a distance if dumb
+* closing a door (from on top of the door) when a monster is in the spot you were
+  just in drops you back on the monsters spot. the monster reappears when you move.
+  --> original larn didn't allow closing from on top of door?
+* there are a bunch of 404's for the older source code in history.html
+  - add links to locally hosted copies
+- surroundings aren't explored after falling into a pit
 - fonts
   - retro font mode isn't properly monospaced in mac/safari
   - courier new tv games are a little too wide
@@ -168,17 +169,9 @@ bugs
 - clear() creates an extra empty frame (ie during show inventory)
   - same for cl_up() cl_down() and others?
   - instead paint from start, and clear to end of line, and then to end of screen
-* closing a door (from on top of the door) when a monster is in the spot you were
-  just in drops you back on the monsters spot. the monster reappears when you move.
-* there are a bunch of 404's for the older source code in history.html
-  - add links to locally hosted copies
-* blindness
-  - black tile when opening door when blind
-  - when blind, a monster from an unknown tile will reveal the tile its standing on during attack
-  - when blind, killing a monster shouldn't reveal gold dropped, or anything else?
-* monster movement isn't shown after falling asleep
-* casting sph twice in the same direction will always kill the player
-* While Haste Self is active, hitting a monster with a projectile causes said monster to move once at normal speed
+- when blind, killing a monster shouldn't reveal gold dropped, or anything else?
+- casting sph twice in the same direction will always kill the player
+- While Haste Self is active, hitting a monster with a projectile causes said monster to move once at normal speed
 - USED_MAZES should be saved to prevent canned levels from being reused
 - 1000x: The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally
 
@@ -217,15 +210,14 @@ RELEASE CHECKLIST
   - cf_local == false
   - cloudflare_read == false
   - cloudflare_write == TRUE
+* test returning from old save game
 - cf_config
   - cf_local == false
 - highscores
-  - writes to aws
   - writes to cf
   - read highscores during game
   - read at death
 - scores
-  - writes to aws
   - writes to cf
 - tv
   - live list

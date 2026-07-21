@@ -21,6 +21,24 @@ function learnPotion(item) {
 
 
 
+function isBadPotion(potion) {
+  if (!potion) return false;
+  if (potion.matches(OPOTION)) {
+    if (!isKnownPotion(potion)) return false; // only bad if known
+    if (potion.arg == 0 // sleep
+      || potion.arg == 7 // dizziness 
+      || potion.arg == 11 // forgetfulness 
+      || potion.arg == 12 // water 
+      || potion.arg == 13 // blindness 
+      || potion.arg == 14 // confusion
+      || potion.arg == 22 // poison
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 
 // TODO  quaffpotion, readscroll, eatcookie are all very similar
 function act_quaffpotion(index) {

@@ -1,16 +1,16 @@
 'use strict';
 
-async function doGOTWStuff() {
+async function uploadGOTW() {
   clear();
   blt();
 
-  const startYear = 2026;
-  const startWeek = 1;
-  const numWeeks = 52;
+  const startYear = 2027;
+  const startWeek = 24;
+  const numWeeks = 1;
   let date = new Date(startYear, 0, 1 + (startWeek - 1) * 7);
   for (let i = 0; i < numWeeks; i++) {
     lprint(`Uploading GOTW for week ${getGotwLabel(date)}...\n`);
-    await uploadGOTW(date);
+    await uploadGOTWforDate(date);
     date.setDate(date.getDate() + 7);
   }
 }
@@ -22,7 +22,7 @@ async function doGOTWStuff() {
 //
 //
 //
-async function uploadGOTW(dateIn) {
+async function uploadGOTWforDate(dateIn) {
   // clear out old game state
   player = new Player();
   LEVELS = new Array(MAXLEVEL + MAXVLEVEL);

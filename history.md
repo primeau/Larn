@@ -6,12 +6,13 @@ JS U/Larn 12.5.3
 will auto-travel to the appropriate up or down destination for the level. Thanks
 to Aaron Friesen for adding this feature.
    
-1. [new] Added a 'M' command to rest for multiple turns to renew health or 
+1. [new] Added an 'M' command to rest for multiple turns to renew health or 
 spells. Aaron added this feature also.
+
+1. [new] Added an 'X' command to auto-explore the dungeon.
 
 1. [new] Removed the tax status option and added a 'P' command to 'autopray' 
 to speed up altar interactions.
-
 
 1. [new] Clicking on a tile will tell you what's there.
 

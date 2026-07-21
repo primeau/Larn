@@ -78,42 +78,17 @@ function recalc() {
   var extra;
 
   if (armor) {
-    extra = armor.arg;
-    if (armor.matches(OSHIELD)) player.AC = 2 + extra;
-    if (armor.matches(OLEATHER)) player.AC = 2 + extra;
-    if (armor.matches(OSTUDLEATHER)) player.AC = 3 + extra;
-    if (armor.matches(ORING)) player.AC = 5 + extra;
-    if (armor.matches(OCHAIN)) player.AC = 6 + extra;
-    if (armor.matches(OSPLINT)) player.AC = 7 + extra;
-    if (armor.matches(OPLATE)) player.AC = 9 + extra;
-    if (armor.matches(OPLATEARMOR)) player.AC = 10 + extra;
-    if (armor.matches(OSSPLATE)) player.AC = 12 + extra;
-    if (armor.matches(OELVENCHAIN)) player.AC = 15 + extra;
+    player.AC = getAC(armor);
   }
 
   if (shield && shield.matches(OSHIELD)) {
-    player.AC += 2 + shield.arg;
+    player.AC += getAC(shield);
   }
 
   player.AC += player.MOREDEFENSES;
 
   if (weapon) {
-    extra = weapon.arg;
-    if (weapon.matches(ODAGGER)) player.WCLASS = 3 + extra;
-    if (weapon.matches(OBELT)) player.WCLASS = 7 + extra;
-    if (weapon.matches(OSHIELD)) player.WCLASS = 8 + extra;
-    if (weapon.matches(OPSTAFF)) player.WCLASS = 10 + extra;
-    if (weapon.matches(OSPEAR)) player.WCLASS = 10 + extra;
-    if (weapon.matches(OFLAIL)) player.WCLASS = 14 + extra;
-    if (weapon.matches(OBATTLEAXE)) player.WCLASS = 17 + extra;
-    if (weapon.matches(OLANCE)) player.WCLASS = (ULARN ? 20 : 19) + extra;
-    if (weapon.matches(OLONGSWORD)) player.WCLASS = 22 + extra;
-    if (weapon.matches(OVORPAL)) player.WCLASS = 22 + extra;
-    if (weapon.matches(O2SWORD)) player.WCLASS = 26 + extra;
-    if (weapon.matches(OSWORDofSLASHING)) player.WCLASS = 30 + extra;
-    if (weapon.matches(OSLAYER)) player.WCLASS = 30 + extra;
-    if (weapon.matches(OSWORD)) player.WCLASS = 32 + extra;
-    if (weapon.matches(OHAMMER)) player.WCLASS = 35 + extra;
+    player.WCLASS = getWC(weapon);
   }
   player.WCLASS += player.MOREDAM;
 
@@ -141,6 +116,51 @@ function recalc() {
 
   if (oldAC != player.AC) changedAC = millis();
   if (oldWC != player.WCLASS) changedWC = millis();
+}
+
+
+
+function getWC(weapon) {
+  if (!weapon) return 0;
+  if (!weapon.isWeapon()) return 0;
+  let wc = 0;
+  if (weapon.matches(ODAGGER)) wc = 3;
+  if (weapon.matches(OBELT)) wc = 7;
+  if (weapon.matches(OSHIELD)) wc = 8;
+  if (weapon.matches(OPSTAFF)) wc = 10;
+  if (weapon.matches(OSPEAR)) wc = 10;
+  if (weapon.matches(OFLAIL)) wc = 14;
+  if (weapon.matches(OBATTLEAXE)) wc = 17;
+  if (weapon.matches(OLANCE)) wc = (ULARN ? 20 : 19);
+  if (weapon.matches(OLONGSWORD)) wc = 22;
+  if (weapon.matches(OVORPAL)) wc = 22;
+  if (weapon.matches(O2SWORD)) wc = 26;
+  if (weapon.matches(OSWORDofSLASHING)) wc = 30;
+  if (weapon.matches(OSLAYER)) wc = 30;
+  if (weapon.matches(OSWORD)) wc = 32;
+  if (weapon.matches(OHAMMER)) wc = 35;
+  if (wc !== 0) wc += weapon.arg; // return 0 for non-weapons with args
+  return wc;
+}
+
+
+
+function getAC(armor) {
+  if (!armor) return 0;
+  if (!armor.isArmor()) return 0;
+  let ac = 0;
+  if (armor.matches(OSHIELD)) ac = 2;
+  if (armor.matches(OLEATHER)) ac = 2;
+  if (armor.matches(OSTUDLEATHER)) ac = 3;
+  if (armor.matches(ORING)) ac = 5;
+  if (armor.matches(OCHAIN)) ac = 6;
+  if (armor.matches(OSPLINT)) ac = 7;
+  if (armor.matches(OPLATE)) ac = 9;
+  if (armor.matches(OPLATEARMOR)) ac = 10;
+  if (armor.matches(OSSPLATE)) ac = 12;
+  if (armor.matches(OELVENCHAIN)) ac = 15;
+  if (ac !== 0) ac += armor.arg; // return 0 for non-armor with args
+  return ac;
 }
 
 
