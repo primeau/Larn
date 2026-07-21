@@ -665,22 +665,11 @@ function getTextWidth(text, font, bold) {
 
 
 function computeFontSize(fontFamily, spriteWidth, spacing) {
-  let fontSize = spriteWidth;
-  let font = `${fontSize}px ${fontFamily}`;
-
-  do {
-    fontSize += 0.1;
-    font = `${fontSize}px ${fontFamily}`;
-  }
-  while (getTextWidth(`X`, font, false) + spacing < spriteWidth);
-
-  fontSize *= 10; // for some cleaner numbers
-  fontSize = Math.floor(fontSize);
-  fontSize /= 10;
-
-  // console.log(`spritew`, spriteWidth, `fontsize`, fontSize);
-  // updateLog(`spritew` + ": " + spriteWidth + " " + `fontsize` + ": " + fontSize);
-  return fontSize;
+  const targetWidth = spriteWidth - spacing;
+  const sampleSize = 100;
+  const sampleWidth = getTextWidth(`X`, `${sampleSize}px ${fontFamily}`, false);
+  if (!sampleWidth) return spriteWidth;
+  return clamp((targetWidth * sampleSize) / sampleWidth, 4, 100);
 }
 
 
@@ -693,7 +682,17 @@ function getElementWidth(el) {
 
 function getElementHeight(el) {
   if (!el) return 0;
-  return (getComputedStyle(document.getElementById(el)).height.split(`px`)[0]);
+  return document.getElementById(el).getBoundingClientRect().height;
+}
+
+function getViewportWidth() {
+  const root = document.documentElement;
+  return root?.clientWidth || window.innerWidth || 0;
+}
+
+function getViewportHeight() {
+  const root = document.documentElement;
+  return root?.clientHeight || window.innerHeight || 0;
 }
 
 
@@ -712,7 +711,9 @@ function isTouch() {
 
 var mobileString = ``;
 function isMobile() {
-  // if (forceMobileDisabled) return false;
+
+  if (FORCE_DESKTOP) return false;
+  if (FORCE_MOBILE) return true;
 
   // user agent method
   // this doesn't detect iPads on firefox and safari
@@ -757,10 +758,20 @@ function isVertical() {
 }
 
 function isPhone() {
-  // window.screen flips in the emulator, but not on device, so i don't know what to trust for non-apple devices
   // reference: https://www.ios-resolution.com/
+  
   // heuristic: ipads are all 768x1024 or higher, phones are all 428x926 or lower
-  return isMobile() && window.screen.height < 1024 && window.screen.width < 1024;
+  // return isMobile() && window.screen.height < 1024 && window.screen.width < 1024;
+  if (isMobile() && getViewportWidth() < 1024 && getViewportHeight() < 1024) return true;
+
+  // new heuristic: iphones have > 2:1 aspect ratio
+  // const aspectRatio = window.screen.height / window.screen.width;
+  const ratio = 1.8;
+  // window.screen flips in the emulator, but not on device, so i don't know what to trust for non-apple devices
+  const aspectRatio = getViewportHeight() / getViewportWidth();
+  if (isMobile() && (aspectRatio > ratio || aspectRatio < 1 / ratio)) return true;
+  
+  return false;
 }
 
 function isTablet() {
@@ -794,6 +805,18 @@ function isLevelVisited(lev) {
     }
   }
   return false;
+}
+
+function isLevelFullyExplored(lev) {
+  if (!LEVELS[lev] || !LEVELS[lev].know) return false;
+  for (let y = 1; y < MAXY - 1; y++) { // start at 1 because we don't care about maze edge
+    for (let x = 1; x < MAXX - 1; x++) {
+      if (!LEVELS[lev].know[x][y]) { // null or KNOWNOT
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 // duplicated from cf_tools.mjs

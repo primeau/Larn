@@ -79,16 +79,12 @@ function setIP(ip) {
 
 
 function onResize() {
+  
+  setStyle(styleInfo);
 
   switch (TV_CHANNEL) {
 
     case TV_CHANNEL_LIST: {
-      let spriteWidth = computeSpriteWidth();
-      let widthMultiple = 1.66;
-      let fontSize = spriteWidth * widthMultiple;
-      let fontFamily = `Courier New`;
-      let font = `${fontSize}px ${fontFamily}`;
-      document.body.style.font = font;
       break;
     }
 
@@ -162,8 +158,10 @@ function bltFrame(frame) {
 
 
 // shares most code with setMode(amiga, retro, original)
-// todo: consolidate, probable with some sort of a "setFont()" option
+// todo: consolidate, probably with some sort of a "setFont()" option
 function setStyle(styleIn) {
+
+  styleInfo = styleIn;
   if (!styleIn) {
     // console.log(`setStyle(): no style data available`);
     styleIn = { fontFamily: `Courier New` };

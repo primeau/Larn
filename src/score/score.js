@@ -108,7 +108,7 @@ if (yearSelect) {
 function setScoreStorage() {
   const gameType = document.querySelector('input[name="gameType"]:checked')?.value || '';
   const scoreType = document.querySelector('input[name="scoreType"]:checked')?.value || '';
-  const yearValue = yearSelect?.value || '';
+  const yearValue = yearSelect?.options[yearSelect.selectedIndex]?.text || '';
   const storageValue = JSON.stringify({ gameType, scoreType, year: yearValue });
   localStorage.setItem('scoreSelections', storageValue);
 }
@@ -140,8 +140,9 @@ function setSelectionsFromStorage() {
   // Set yearSelect
   if (storage.year && yearSelect) {
     updateYearDropdown();
-    if ([...yearSelect.options].some((o) => o.value === storage.year)) {
-      yearSelect.value = storage.year;
+    const matchingOption = [...yearSelect.options].find((o) => o.text === storage.year);
+    if (matchingOption) {
+      yearSelect.value = matchingOption.value;
     }
   }
 }

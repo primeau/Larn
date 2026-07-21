@@ -1,14 +1,17 @@
 'use strict';
 
 const VERSION = '12.5.3';
-const BUILD = '579';
+const BUILD = '581';
 
-const ENABLE_DEVMODE = false; // this must be set to false for production releases
+// these must be set to false for production releases
+const ENABLE_DEVMODE = false; // see devmode.js
+const FORCE_DESKTOP = false; // force desktop layout
+const FORCE_MOBILE = false; // force mobile layout
+const CF_LOCAL = false; // use local cloudflare
 
-const CF_LOCAL = false;
-const CF_BROADCAST_HOST = CF_LOCAL ? `localhost:8787` : `broadcast.larn.workers.dev`;
+// cloudflare endpoints
 const CF_BROADCAST_PROTOCOL = CF_LOCAL ? `http://` : `https://`;
-
+const CF_BROADCAST_HOST = CF_LOCAL ? `localhost:8787` : `broadcast.larn.workers.dev`;
 const CF_SCORE_ENDPOINT = 'score';
 const CF_HIGHSCORE_ENDPOINT = 'highscore';
 const CF_ACTIVEGAME_ENDPOINT = 'active';
