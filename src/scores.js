@@ -201,8 +201,8 @@ let A, R, O; // saved state for exiting scoreboard
 function loadScores(newScore, showWinners, showLosers) {
 
   A = amiga_mode;
-  R = retro_mode;
-  O = original_objects;
+  R = getPref('retro_mode');
+  O = getPref('original_objects');
   mazeMode = false;
   amiga_mode = false;
   clear();
@@ -642,7 +642,7 @@ async function died(reason, slain) {
 
     processRecordedFrame(video?.createEmptyFrame()); // record fade to blank screen so we can easily refresh on reload
 
-    side_inventory = true;
+    overridePref('side_inventory', true);
     game_started = false;
     napping = true;
     mazeMode = false;
@@ -715,8 +715,8 @@ function endgame(key) {
 
   setCharCallback(dead);
   GAMEOVER = true;
-  if (!side_inventory) {
-    side_inventory = true;
+  if (!getPref('side_inventory')) {
+    overridePref('side_inventory', true);
     onResize();
   }
   game_started = false;

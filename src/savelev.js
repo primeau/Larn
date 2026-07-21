@@ -44,6 +44,7 @@ function saveGame(isCheckPoint) {
 
 function loadSavedGame(savedState, isCheckPoint) {
   if (!savedState) {
+    console.error(`savegame not found`);
     updateLog(`Sorry, your saved game can't be found!`);
     return;
   }
@@ -119,25 +120,33 @@ function loadState(state) {
   mazeMode = state.mazeMode;
   napping = state.napping;
 
-  showConfigButtons = state.showConfigButtons;
-  original_objects = state.original_objects;
-  keyboard_hints = state.keyboard_hints;
-  auto_pickup = state.auto_pickup;
-  side_inventory = state.side_inventory;
-  show_color = state.show_color;
-  log_color = state.log_color;
-  bold_objects = state.bold_objects;
-  amiga_mode = state.amiga_mode;
-  retro_mode = state.retro_mode;
-  wall_char = state.wall_char;
-  identify_button = state.identify_button;
-  travel_button = state.travel_button;
-  floor_char = state.floor_char;
-  custom_monsters = state.custom_monsters;
-  setWallChar(wall_char);
-  setFloorChar(floor_char);
-  updateCustomMonsters(custom_monsters);
-  setMode(amiga_mode, retro_mode, original_objects);
+  // player_char is set above in loadPlayer()
+
+  amiga_mode = state.amiga_mode; // not a PREFS entry
+  if (state.prefs) {
+    loadSavedPreferences(state.prefs);
+  } else {
+    // backwards compat: old save games stored prefs as individual top-level fields
+    console.log(`no prefs found in savegame, loading individual pref fields for backwards compatibility`);
+    loadSavedPreferences({
+      showConfigButtons: state.showConfigButtons,
+      original_objects:  state.original_objects,
+      keyboard_hints:    state.keyboard_hints,
+      auto_pickup:       state.auto_pickup,
+      side_inventory:    state.side_inventory,
+      show_color:        state.show_color,
+      log_color:         state.log_color,
+      bold_objects:      state.bold_objects,
+      retro_mode:        state.retro_mode ?? state.retro,
+      no_intro:          state.no_intro,
+      identify_button:   state.identify_button,
+      travel_button:     state.travel_button,
+      wall_char:         state.wall_char,
+      floor_char:        state.floor_char,
+      custom_monsters:   state.custom_monsters,
+    });
+  }
+  setMode(amiga_mode, getPref('retro_mode'), getPref('original_objects'));
 
   dnd_item = state.dnd_item;
   genocide = state.genocide; 

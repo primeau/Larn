@@ -19,7 +19,7 @@ function welcome() {
 
   initKeyBindings(); // wait until last moment to set key bindings
 
-  if (no_intro) {
+  if (getPref('no_intro')) {
     debug(`no_intro`);
     setname(logname);
   } else {
@@ -29,19 +29,6 @@ function welcome() {
 
   onResize(); // for mobile
   paint();
-  // onResize();
-}
-
-
-
-function createLevelNames() {
-  LEVELNAMES.push(`H`);
-  for (let i = 1; i < MAXLEVEL; i++) {
-    LEVELNAMES.push(`${i}`);
-  }
-  for (let i = 0; i < MAXVLEVEL; i++) {
-    LEVELNAMES.push(`V${i + 1}`);
-  }
 }
 
 
@@ -91,7 +78,7 @@ function setname(name) {
   var diff = Number(localStorageGetObject('difficulty') || 0);
   setDifficulty(diff);
 
-  if (no_intro && !saveddata) {
+  if (getPref('no_intro') && !saveddata) {
     setclass(localStorageGetObject('character_class', `Adventurer`));
     return 1;
   }
@@ -297,7 +284,7 @@ function setdiff(hard) {
     setGameDifficulty(hard);
   }
 
-  if (ULARN && !no_intro) {
+  if (ULARN && !getPref('no_intro')) {
     clear();
     lprcat(`The Addiction of Ularn\n\n`);
     lprcat(`     Pick a character class...\n\n`);
@@ -356,7 +343,7 @@ function setclass(classpick) {
     changedWC = 0; // don't highlight AC & WC on game start
     changedAC = 0;
 
-    if (ULARN && !no_intro) {
+    if (ULARN && !getPref('no_intro')) {
       localStorageSetObject('character_class', characterClass);
       clear();
       lprcat(`The Addiction of Ularn\n\n`);
@@ -417,7 +404,9 @@ async function startgame() {
   let startx, starty, extraMessage;
   if (GOTW) {
 
-    // doGOTWStuff(); return;
+    // uncomment to create new GOTW levels (see gotw.json)
+    // a special password is required to do this
+    // uploadGOTW(); return;
 
     let gotwData = await downloadGOTW();
     if (gotwData.status === 200) {
@@ -446,7 +435,7 @@ async function startgame() {
       player.ELEVUP = gotwData.player.ELEVUP;
       player.ELEVDOWN = gotwData.player.ELEVDOWN;
 
-      extraMessage = `You have ${timeLeft()} to finish this game`;
+      extraMessage = `You have ${GOTWtimeLeft()} to finish this game`;
     } else {    
       GOTW = false;
       if (gotwData.status === 451) {
@@ -494,7 +483,7 @@ async function startgame() {
   return 1;
 }
 
-function timeLeft() {
+function GOTWtimeLeft() {
   const now = new Date();
   const nextSunday = new Date();
   
@@ -505,7 +494,10 @@ function timeLeft() {
   const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-  return `${days} days, ${hours} hours, and ${minutes} minutes`;
+  const dayLabel = days === 1 ? `day` : `days`;
+  const hourLabel = hours === 1 ? `hour` : `hours`;
+  const minuteLabel = minutes === 1 ? `minute` : `minutes`;
+  return `${days} ${dayLabel}, ${hours} ${hourLabel}, and ${minutes} ${minuteLabel}`;
 }
 
 /*****************************************************************************/
@@ -551,6 +543,8 @@ function mainloop(e, key) {
 
   parse(e, key);
 
+  // if (isMobile()) setButtons(); // TODO: do this here?
+
   if (nomove == 1) {
     paint();
     return;
@@ -568,7 +562,7 @@ function mainloop(e, key) {
 
   /* see if there is an object here. */
   if (dropflag == 0) {
-    lookforobject(true, auto_pickup);
+    lookforobject(true, getPref('auto_pickup'));
   } else {
     dropflag = 0; /* don't show it just dropped an item */
   }

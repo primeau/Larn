@@ -41,25 +41,26 @@ function enableDevmode() {
 
     // player.raiseexperience(5000000);
 
-    // take(createObject(OPOTION, 2));
-    // take(createObject(OPOTION, 9));
-    // take(createObject(OPOTION, 11));
-    // take(createObject(OPOTION, 10));
+    // learnSpell(`cld`);
+
+    // take(createObject(OSCROLL, 0));
+    // take(createObject(OPOTION, 0));
     // take(createObject(OPOTION, 21));
-    // take(createObject(OPOTION, 23));
+    // take(createObject(OCOOKIE));
 
     // take(createObject(OSPHTALISMAN));
-    // take(createObject(OHANDofFEAR));
-    if (ULARN) take(createObject(OLARNEYE));
+    // take(createObject(OLIFEPRESERVER));
+    // take(createObject(OLARNEYE));
     // take(createObject(ONOTHEFT));
-    // take(createObject(OBRASSLAMP));
-    // gtime = 30001;
+    // gtime = 40001;
     player.GOLD = 250000;
 
     updateLog(`normal <i>italic</i> <s>strike</s> <b>bold</b> <dim>dim</dim> <mark>mark</mark> <u>underline</u> <a href='https://larn.org'>Link</a> <font color='red'>red</font> <font color='green'>green</font> <font color='blue'>blue</font>`);
 
     // newcavelevel(level + 1);
     // setItem(player.x, player.y, createObject(OTRAPDOOR));
+    // setItem(player.x, player.y, createObject(ODNDSTORE));
+    // setItem(player.x, player.y, createObject(OTRADEPOST));
 
     // createmonster(NYMPH);
     // for (let index = 1; index < monsterlist.length; index++) {

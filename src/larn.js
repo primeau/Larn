@@ -1,8 +1,8 @@
 'use strict';
 
-let ULARN = false; // are we playing LARN or ULARN?
-let GOTW = false; // game of the week
-let NONAP = false; 
+var ULARN = false; // are we playing LARN or ULARN?
+var GOTW = false; // game of the week
+var NONAP = false; 
 
 var DEBUG_STATS = false;
 var DEBUG_OUTPUT = false;
@@ -30,9 +30,13 @@ async function play() {
   document.getElementById('LARN').addEventListener('dblclick', onMouseClick); // double click
   document.getElementById('LARN').addEventListener('contextmenu', onMouseClick); // right click
 
+  document.addEventListener(`dblclick`, preventDoubleClick); // for buttons
+  document.addEventListener('onmouseup', larnmouseup);
+  document.addEventListener('touchend', larnmouseup);
+
   window.addEventListener('online', handleOnline);
   window.addEventListener('offline', handleOffline);
-  window.addEventListener('resize', onResize);
+  window.addEventListener('resize', () => { onResize(); paint(); });
 
   initWorkers();
 
@@ -54,44 +58,26 @@ async function play() {
   
   logname = localStorageGetObject('logname', logname);
 
-  showConfigButtons = localStorageGetObject(`showConfigButtons`, true);
-  original_objects = localStorageGetObject('original_objects', true);
-  keyboard_hints = localStorageGetObject('keyboard_hints', true);
-  auto_pickup = localStorageGetObject('auto_pickup', false);
-  side_inventory = localStorageGetObject('side_inventory', true);
-  show_color = localStorageGetObject('show_color', true);
-  log_color = localStorageGetObject('log_color', true);
-  bold_objects = localStorageGetObject('bold_objects', true);
-  retro_mode = localStorageGetObject('retro' /* NOT retro_mode */, true);
-  wall_char = localStorageGetObject('wall_char', 0);
-  identify_button = localStorageGetObject('identify_button', MOUSE_LEFT_CLICK);
-  travel_button = localStorageGetObject('travel_button', MOUSE_DOUBLE_CLICK);
+  loadPreferences();
   if (isMobile()) {
-    // overide defaults, yes do both on left click
-    identify_button = MOUSE_LEFT_CLICK;
-    travel_button = MOUSE_LEFT_CLICK;
+    // override defaults, yes do both on left click
+    overridePref('identify_button', MOUSE_LEFT_CLICK);
+    overridePref('travel_button', MOUSE_LEFT_CLICK);
   }
-  floor_char = localStorageGetObject('floor_char', OEMPTY_DEFAULT_CHAR);
-  custom_monsters = localStorageGetObject('custom_monsters', []);
-  
-  no_intro = !GOTW && localStorageGetObject('no_intro', false);
-  
+  if (GOTW) overridePref('no_intro', false); // game-of-the-week always shows intro
+
   setGameConfig();
 
   document.title = GAMENAME;
 
-  setWallChar(wall_char);
-  setFloorChar(floor_char);
-  updateCustomMonsters(custom_monsters);
-  createLevelNames();
   initHelpPages();
-  setMode(amiga_mode, retro_mode, original_objects);
+  setMode(amiga_mode, getPref('retro_mode'), getPref('original_objects'));
 
   await loadFonts();
 
   welcome(); // show welcome screen, start the game
 
-  setPlayerChar(localStorageGetObject('player_char', null)); // wait for player to be loaded first
+  loadPreference('player_char'); // player must exist before this is applied
 
   updateRB();
 
@@ -236,22 +222,22 @@ game_started:${game_started}
 mazeMode:${mazeMode}
 napping:${napping}
 
-showConfigButtons:${showConfigButtons}
-original_objects:${original_objects}
-keyboard_hints:${keyboard_hints}
-auto_pickup:${auto_pickup}
-side_inventory:${side_inventory}
-show_color:${show_color}
-log_color:${log_color}
-bold_objects:${bold_objects}
+showConfigButtons:${getPref('showConfigButtons')}
+original_objects:${getPref('original_objects')}
+keyboard_hints:${getPref('keyboard_hints')}
+auto_pickup:${getPref('auto_pickup')}
+side_inventory:${getPref('side_inventory')}
+show_color:${getPref('show_color')}
+log_color:${getPref('log_color')}
+bold_objects:${getPref('bold_objects')}
 amiga_mode:${amiga_mode}
-retro_mode:${retro_mode}
-wall_char:${wall_char}
-identify_button:${identify_button}
-travel_button:${travel_button}
-floor_char:${floor_char}
-custom_monsters:${custom_monsters}
-no_intro:${no_intro}
+retro_mode:${getPref('retro_mode')}
+wall_char:${getPref('wall_char')}
+identify_button:${getPref('identify_button')}
+travel_button:${getPref('travel_button')}
+floor_char:${getPref('floor_char')}
+custom_monsters:${getPref('custom_monsters')}
+no_intro:${getPref('no_intro')}
 
 dnd_item:${dnd_item}
 genocide:${genocide}
@@ -286,13 +272,6 @@ useragent:${navigator.userAgent}
   window.open(mailto_link, 'emailWindow');
 }
 
-
-
-// let forceMobileDisabled = false;
-// function disableMobile() {
-//   forceMobileDisabled = true;
-//   onResize();
-// }
 
 
 

@@ -40,6 +40,34 @@ class Item {
 
 
 
+  shortName() {
+    let name = this.toString();
+    // trim wield, wear, or both from end and continue
+    if (name.endsWith(`hand)`)) {
+      name = name.substring(0, name.length - 17);
+    }
+    if (name.endsWith(`worn)`)) {
+      name = name.substring(0, name.length - 13);
+    }
+
+    // then remove leading a/an/the and return
+    if (name.startsWith(`a magic `)) {
+      return name.substring(8);
+    }
+    if (name.startsWith(`an `)) {
+      return name.substring(3);
+    }
+    if (name.startsWith(`a `)) {
+      return name.substring(2);
+    }
+    if (name.toLowerCase().startsWith(`the `)) {
+      return name.substring(4);
+    }
+    return name;
+  }
+
+  
+
   toString(inStore, showAll, tempPlayer) {
     var description = this.getDescription();
     //
@@ -296,11 +324,10 @@ class DungeonObject extends Item {
       }
     }
     if (this.id == OWALL.id) {
-      if (!wall_char || wall_char < 0 || wall_char >= WALLS.length) wall_char = 0;
-      return WALLS[wall_char][arg];
+      return WALLS[getPref('wall_char')][arg];
     }
     let char = null;
-    if (original_objects) {
+    if (getPref('original_objects')) {
       if (ULARN) {
         char = this.ularnchar;
       } else {
@@ -309,10 +336,10 @@ class DungeonObject extends Item {
     } else {
       char = this.hackchar;
     }
-    if (show_color && this.color) {
+    if (getPref('show_color') && this.color) {
       char = `<font color='${this.color}'>${char}</font>`;
     }
-    if (bold_objects && this.bold) {
+    if (getPref('bold_objects') && this.bold) {
       char = `<b>${char}</b>`;
     }
     return char;
@@ -763,9 +790,8 @@ function lookforobject(do_ident, do_pickup) {
   }
   //
   else if (item.matches(OTELEPORTER)) {
-    updateLog(`Zaaaappp!  You've been teleported!`);
     //nap(2000);
-    oteleport(0);
+    oteleport(0, `Zaaaappp!  You've been teleported!`);
   }
   //
   else if (item.matches(OTRAPARROWIV)) {
@@ -1051,7 +1077,10 @@ function forget() {
 /*
  * subroutine to handle a teleport trap +/- 1 level maximum
  */
-function oteleport(teleportSelf) {
+function oteleport(teleportSelf, teleportMessage) {
+
+  if (teleportMessage) updateLog(teleportMessage);
+
   if (teleportSelf && level != 0) {
     if (rnd(151) < 3) {
 
@@ -1063,11 +1092,11 @@ function oteleport(teleportSelf) {
       This was also added in ularn 1.6.3
       */
       if (player.WTW == 0) {
-        updateLog(`You are trapped in solid rock!`)
+        updateLog(`  You are trapped in solid rock!`)
         died(DIED_SOLID_ROCK, false); /* trapped in solid rock */
         return;
       } else {
-        updateLog(`You feel lucky!`)
+        updateLog(`  You feel lucky!`)
       }
     }
   }
@@ -1108,8 +1137,6 @@ function oteleport(teleportSelf) {
   */
   lasthx = 0;
   lasthy = 0;
-
-  if (teleportSelf) updateLog(`Zaaaappp!`);
 
   if (level != newLevel) {
     newcavelevel(newLevel);

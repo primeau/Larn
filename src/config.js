@@ -14,6 +14,8 @@ function setGameConfig() {
     DBOTTOM = (MAXLEVEL - 1);
     VBOTTOM = (MAXLEVEL + MAXVLEVEL - 1);
 
+    createLevelNames();
+
     // MAZES
     LEVELS = new Array(MAXLEVEL + MAXVLEVEL);
     EXPLORED_LEVELS = new Array(MAXLEVEL + MAXVLEVEL).fill(false); // cache needed for GOTW games
@@ -123,4 +125,16 @@ function setGameConfig() {
     lt = amiga_mode ? `<` : `&lt`;
     gt = amiga_mode ? `>` : `&gt`;
 
+}
+
+
+
+function createLevelNames() {
+  LEVELNAMES.push(`H`);
+  for (let i = 1; i < MAXLEVEL; i++) {
+    LEVELNAMES.push(`${i}`);
+  }
+  for (let i = 0; i < MAXVLEVEL; i++) {
+    LEVELNAMES.push(`V${i + 1}`);
+  }
 }

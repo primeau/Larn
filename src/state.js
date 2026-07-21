@@ -22,22 +22,7 @@ var game_started = false;
 var mazeMode = false;
 var napping = false; /* prevent keyboard input while a nap event is happening */
 
-var showConfigButtons = true;
-var original_objects = true;
-var keyboard_hints = true;
-var auto_pickup = false;
-var side_inventory = true;
-var show_color = true;
-var log_color = true;
-var bold_objects = true;
 var amiga_mode = false;
-var retro_mode = false;
-var wall_char = 0; // index into WALLS
-var identify_button = MOUSE_LEFT_CLICK; // index into mouseOptions
-var travel_button = MOUSE_DOUBLE_CLICK; // index into mouseOptions
-var floor_char = OEMPTY_DEFAULT_CHAR;
-var custom_monsters = [];
-var no_intro = false;
 
 var dnd_item = null;
 var genocide = [];
@@ -55,19 +40,21 @@ var HARDGAME = 0; /* game difficulty */
 */
 function getDifficulty() {
   if (HARDGAME == null || HARDGAME === `` || isNaN(Number(HARDGAME))) {
-    console.log('get: invalid difficulty: ' + HARDGAME);
+    console.log('getDifficulty(): invalid difficulty: ' + HARDGAME);
     console.trace();
+    HARDGAME = 0;
   }
-  return Math.min(128, HARDGAME);
+  return clamp(HARDGAME, 0, 128);
 }
 
 function setDifficulty(diff) {
   if (diff == null || diff === `` || isNaN(Number(diff))) {
     console.log('set: invalid difficulty: ' + diff);
     console.trace();
+    diff = 0;
   }
   if (diff > 128) {
-    console.log(`capping difficulty at 128`);
+    console.log(`setDifficulty(): capping difficulty at 128`);
     diff = 128;
   }
   HARDGAME = diff;
@@ -113,21 +100,8 @@ function GameState(save) {
   this.mazeMode = mazeMode;
   this.napping = napping;
 
-  this.showConfigButtons = showConfigButtons;
-  this.original_objects = original_objects;
-  this.keyboard_hints = keyboard_hints;
-  this.auto_pickup = auto_pickup;
-  this.side_inventory = side_inventory;
-  this.show_color = show_color;
-  this.log_color = log_color;
-  this.bold_objects = bold_objects;
   this.amiga_mode = amiga_mode;
-  this.retro_mode = retro_mode;
-  this.wall_char = wall_char;
-  this.identify_button = identify_button;
-  this.travel_button = travel_button;
-  this.floor_char = floor_char;
-  this.custom_monsters = custom_monsters;
+  this.prefs = getPreferenceValues();
   
   this.dnd_item = dnd_item;
   this.genocide = genocide;

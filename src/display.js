@@ -30,16 +30,16 @@ function paint() {
 
 
 function blt() {
+  try {
+    onResize(); // TODO: this should be done somewhere else
+  } catch (error) {
+    console.error(`onResize() caught:`, error);
+  }
+
   if (amiga_mode) {
     // do nothing
   } else {
     bltDocument();
-  }
-
-  try {
-    onResize();
-  } catch (error) {
-    console.error(`onResize() caught:`, error);
   }
 
   // todo: is there a better place to do this?
@@ -206,9 +206,10 @@ function setImage(x, y, img) {
   if (div) {
     // OPTIMIZATION: don't set bg image if it's the same
     // this prevents things from being really slow in firefox
-    if (div.style.backgroundImage === img) {
+    if (div._img === img) {
       return;
     }
+    div._img = img;
     if (img) {
       div.style.backgroundImage = img;
     }
@@ -229,12 +230,28 @@ class Box {
   }
 }
 
-function setSize(element, box) {
-  // wacky way to allow mixed units
-  element.style.left = isNaN(box.left) ? box.left : box.left + `vw`;
-  element.style.top = isNaN(box.top) ? box.top : box.top + `vh`;
-  element.style.width = isNaN(box.width) ? box.width : box.width + `vw`;
-  element.style.height = isNaN(box.height) ? box.height : box.height + `vh`;
+
+
+function setSizePX(element, box) {
+  element.style.left = `${box.left}px`;
+  element.style.top = `${box.top}px`;
+  element.style.width = `${box.width}px`;
+  element.style.height = `${box.height}px`;
+}
+
+
+let spriteWidth = 4;
+
+function setSpriteWidthFromDimensions(screenw, screenh, margin) {
+  let baseWidth = (screenw - margin * 2) / (getPref('side_inventory') ? 120 : 80);
+  const wide = baseWidth * 24 * 2 + margin > screenh; // if screen is much wider than tall
+  if (wide) baseWidth = (screenh - margin) / 24 / 2;
+  if (amiga_mode) baseWidth = Math.floor(baseWidth); //  chrome needs whole numbers to have smooth amiga graphics
+  if (baseWidth < 4) baseWidth = 4;
+
+  spriteWidth = baseWidth;
+
+  return baseWidth;
 }
 
 
@@ -243,118 +260,135 @@ function onResize(event) {
 
   setButtons();
 
-  let emptyBox = new Box(0, 0, 0, 0);
-  let margin = 1;
+  const emptyBox = new Box(0, 0, 0, 0);
 
-  let larn = document.getElementById(`LARN`);
-  let directionButtons = document.getElementById(KEYPAD);
-  let inventoryButtons = document.getElementById(ACTIONS);
-  let contextButtons = document.getElementById(CONTEXT);
-  let runButton = document.getElementById(RUN);
-  let helpButtons = document.getElementById(HELP);
-  let chastize = document.getElementById(`FOOTER`);
-  let inventory = document.getElementById(`STATS`);
-  let keyboard = document.getElementById(KEYBOARD);
-
-  // desktop mode is default layout
-  let inventoryW = side_inventory ? 35 : 0;
-  let larnBox = new Box(margin, margin, 100 - margin * 2 - inventoryW, 94);
-  let inventoryBox = new Box(larnBox.left + larnBox.width, larnBox.top, 100 - larnBox.width - margin * 2, larnBox.height);
-  let chastizeBox = new Box(margin, 95, 100 - margin * 2, 4);
-  let helpBox = new Box(margin, 95, larnBox.width + inventoryW, 4);
+  const screenw = getViewportWidth();
+  const screenh = getViewportHeight();
+  const vw = screenw / 100;
+  const vh = screenh / 100;
+  const margin = Math.min(vw, vh);
+  const helph = clamp(margin * 3, 20, 40);
+  
+  const larn = document.getElementById(`LARN`);
+  const directionButtons = document.getElementById(KEYPAD);
+  const inventoryButtons = document.getElementById(ACTIONS);
+  const contextButtons = document.getElementById(CONTEXT);
+  const runButton = document.getElementById(RUN);
+  const helpButtons = document.getElementById(HELP);
+  const chastize = document.getElementById(`FOOTER`);
+  const inventory = document.getElementById(`STATS`);
+  const keyboard = document.getElementById(KEYBOARD);
+  
+  // 
+  // DESKTOP
+  //
+  setSpriteWidthFromDimensions(screenw, screenh - helph, margin);
+  let larnBox = new Box(margin, margin, spriteWidth * 80, spriteWidth * 24 * 2);
+  let inventoryBox = new Box(larnBox.left + larnBox.width, larnBox.top, spriteWidth * 40, larnBox.height);
+  let helpBox = new Box(margin, screenh - helph - 1, screenw, helph - 4);
+  let chastizeBox = new Box(larnBox.left, larnBox.top + larnBox.height, larnBox.width, helpBox.height);
   let runBox = emptyBox;
   let directionBox = emptyBox;
   let contextBox = emptyBox;
   let invButtonsBox = emptyBox;
   let keyboardBox = emptyBox;
+  
+  //
+  // MOBILE
+  //
+  // console.log(isPhone() ? 'phone' : '', isTablet() ? 'tablet' : '', isHorizontal() ? 'horizontal' : '', isVertical() ? 'vertical' : '');
+  if (isMobile()) {
+    overridePref('side_inventory', !isPhone() && isHorizontal()); // turn off inventory for phones and vertical layouts
 
+    // there is almost certainly a better way to do this, but I have wasted too much time already
+    const buttonw = Math.max(60, getButtonWidth(`BUTTON_CANCEL`), getButtonWidth(`BUTTON_EXIT`), getButtonWidth(`BUTTON_CONTINUE`), getButtonWidth(`BUTTON_NEXT`), getButtonWidth(`BUTTON_PREVIOUS`), getButtonWidth(`BUTTON_INVENTORY_VIEW`), getButtonWidth(`BUTTON_BUGS`), getButtonWidth(`BUTTON_ENDGAME`), getButtonWidth(`BUTTON_ENTER_ENDGAME`));
+    const buttonh = Math.max(20, getButtonHeight(`BUTTON_CANCEL`), getButtonHeight(`BUTTON_EXIT`), getButtonHeight(`BUTTON_CONTINUE`), getButtonHeight(`BUTTON_NEXT`), getButtonHeight(`BUTTON_PREVIOUS`), getButtonHeight(`BUTTON_INVENTORY_VIEW`), getButtonHeight(`BUTTON_BUGS`), getButtonHeight(`BUTTON_ENDGAME`), getButtonHeight(`BUTTON_ENTER_ENDGAME`));
+    
+    if (isTablet() || isVertical()) {
+      setSpriteWidthFromDimensions(screenw, screenh / 1.75, margin);
+      larnBox = new Box(margin, margin, spriteWidth * 80, spriteWidth * 24 * 2);
+      if (getPref('side_inventory')) {
+        inventoryBox = new Box(larnBox.left + larnBox.width, larnBox.top, spriteWidth * 40, larnBox.height);
+      } else {
+        inventoryBox = emptyBox;
+      }
+      
+      const directionH  = isTablet() ? (buttonh + 2 * margin) * 4 : 40 * vw;
+      directionBox = new Box(margin, larnBox.top + larnBox.height + margin * 2, directionH, directionH);
+      runBox = new Box(screenw - margin, directionBox.top, directionH, directionH / 3);
+      contextBox = new Box(directionBox.left + directionBox.width + margin, directionBox.top, directionBox.width, directionBox.height);
+      keyboardBox = new Box(margin, margin + larnBox.top + larnBox.height + vh * 5, screenw - margin * 2, directionH);
+      chastizeBox = new Box(larnBox.left, keyboardBox.top - margin * 6, larnBox.width, helpBox.height);
+      if (isPhone()) contextBox = new Box(margin, directionBox.top + directionBox.height + margin, directionH, 25 * vh);
+    } 
 
-  if (isTablet()) {
-    if (isHorizontal()) {
-      side_inventory = true;
-      inventoryW = 35;
-      inventoryBox = new Box(margin + 100 - inventoryW, margin, inventoryW - margin * 2, 50);
-      inventory.style.maxHeight = `30%`;
-    }
-    if (isVertical()) {
-      side_inventory = false;
-      inventoryW = 0;
-      inventoryBox = new Box(margin, 60, 100 - margin * 2, 0);
-    }
-    chastizeBox = new Box(margin, 93, 97, 4);
-    helpBox = new Box(margin, 93, 97, 4);
-    larnBox = new Box(margin, margin, 100 - margin * 2 - inventoryW, 50);
-    let directionH = isHorizontal() ? `25vw` : `25vw`;
-    runBox = new Box(100 - margin, larnBox.top + larnBox.height + margin * 2, directionH, 5);
-    directionBox = new Box(margin, runBox.top, directionH, directionH);
-    contextBox = new Box(`27vw`, runBox.top, 15, 0);
-    invButtonsBox = new Box(isHorizontal() ? `78vw` : `72vw`, runBox.top, contextBox.width, 0);
-    keyboardBox = new Box(isHorizontal() ? margin : 10, larnBox.height + margin + 5, 80, directionH);
-  }
-  else if (isPhone()) {
-    margin = `3px`;
-    side_inventory = false;
-    inventoryBox = emptyBox;
-    if (isHorizontal()) {
-      directionBox = new Box(margin, margin, `25vw`, `25vw`);
-      contextBox = new Box(margin, `27vw`, 15, 0);
-      larnBox = new Box(`27vw`, margin, 52, 66);
-      runBox = new Box(99, margin, `87vh`, 10);
-      invButtonsBox = new Box(79, margin, 15, 0);
-      keyboardBox = new Box(20, 67, 75, 25);
-      chastizeBox = new Box(margin, 91, 97, 4);
-      helpBox = new Box(margin, 91, 97, 4);
-    }
-    if (isVertical()) {
-      directionBox = new Box(margin, 31, 73, 25);
-      contextBox = new Box(margin, 58, 15, 0);
-      larnBox = new Box(margin, margin, 98, 30);
-      runBox = new Box(99, 31, `25vh`, 10);
-      invButtonsBox = new Box(68, 58, 15, 0);
-      keyboardBox = new Box(5, 62, 90, 25);
-      chastizeBox = new Box(margin, 97, 98, 4);
-      helpBox = new Box(margin, 97, 98, 4);
-    }
-  } else /* isDesktop() */ {
-  }
+    if (isPhone() && isHorizontal()) {
+      setSpriteWidthFromDimensions(58 * vw, 94 * vh, margin);
+      larnBox = new Box((screenw - spriteWidth * 80) / 2, margin, spriteWidth * 80, spriteWidth * 24 * 2);
+      inventoryBox = emptyBox;
+      directionBox = new Box(margin, margin, spriteWidth * 24, spriteWidth * 24);
+      runBox = new Box(99 * vw, margin, directionBox.height, 1 * vh);
+      contextBox = new Box(margin, directionBox.top + directionBox.height + margin, directionBox.width, 25 * vh);
+      keyboardBox = new Box(larnBox.left + larnBox.width + margin, margin + 10 + buttonh, screenw - larnBox.left - larnBox.width - margin * 2, screenh);
+      chastizeBox = new Box(larnBox.left, larnBox.top + larnBox.height, larnBox.width, 4);
+    } 
 
-  if (directionButtons && directionButtons.childElementCount == 0) directionBox = emptyBox;
-  if (contextButtons && contextButtons.childElementCount == 0) contextBox = emptyBox;
-  if (inventoryButtons && inventoryButtons.childElementCount == 0) invButtonsBox = emptyBox;
-  if (runButton && runButton.childElementCount == 0) runBox = emptyBox;
-  if (keyboard && keyboard.childElementCount == 0) keyboardBox = emptyBox;
-  if (chastize && chastize.innerHTML == ``) chastizeBox = emptyBox;
+    invButtonsBox = new Box(screenw - (buttonw + 20) * 2, directionBox.top, (buttonw + 20) * 2, spriteWidth * 24 * 2);
+
+  } 
+
+  if (directionButtons?.childElementCount === 0) directionBox = emptyBox;
+  if (contextButtons?.childElementCount === 0) contextBox = emptyBox;
+  if (inventoryButtons?.childElementCount === 0) invButtonsBox = emptyBox;
+  if (runButton?.childElementCount === 0) runBox = emptyBox;
+  if (keyboard?.childElementCount === 0) keyboardBox = emptyBox;
+  if (chastize?.innerHTML === ``) chastizeBox = emptyBox;
 
   // basic larn
-  setSize(larn, larnBox);
-  setSize(inventory, inventoryBox);
-  setSize(chastize, chastizeBox);
-  setSize(helpButtons, helpBox);
+  setSizePX(larn, larnBox);
+  setSizePX(inventory, inventoryBox);
+  setSizePX(chastize, chastizeBox);
+  setSizePX(helpButtons, helpBox);
   // mobile larn
-  setSize(keyboard, keyboardBox);
-  setSize(inventoryButtons, invButtonsBox);
-  setSize(contextButtons, contextBox);
-  setSize(directionButtons, directionBox);
-  setSize(runButton, runBox);
+  setSizePX(keyboard, keyboardBox);
+  setSizePX(inventoryButtons, invButtonsBox);
+  setSizePX(contextButtons, contextBox);
+  setSizePX(directionButtons, directionBox);
+  setSizePX(runButton, runBox);
 
-  setMode(amiga_mode, retro_mode, original_objects);
+  setButtons();
+
+  setMode(amiga_mode, getPref('retro_mode'), getPref('original_objects'));
 }
 
 
 
 const testtext = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
 let styleUploaded = false;
+let LAST_MODE = null;
 function setMode(amiga, retro, original) {
 
-  // console.log(amiga, retro, original);
+  // upload style information for larntv
+  if (game_started && !styleUploaded) {
+    let style = getStyleData();
+    styleUploaded = uploadStyle(style);
+  }
+
+  // skip font metric work when nothing has changed
+  const modeKey = `${amiga}|${retro}|${original}|${spriteWidth}`;
+  if (modeKey !== LAST_MODE) {
+    LAST_MODE = modeKey;
+  } else {
+    return;
+  }
 
   if (isMobile()) {
     retro = false; // force modern font for mobile devices because the retro font isn't great
   }
 
   amiga_mode = amiga;
-  retro_mode = retro;
-  original_objects = original;
+  overridePref('retro_mode', retro);
+  overridePref('original_objects', original);
 
   lt = amiga_mode ? `<` : `&lt`;
   gt = amiga_mode ? `>` : `&gt`;
@@ -372,7 +406,7 @@ function setMode(amiga, retro, original) {
   let spacing = 0;
 
   // retro mode settings
-  if (retro_mode) {
+  if (retro) {
     testfont = `12px dos437`;
     isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
     heightMultiple = 1.93; // was 1.9
@@ -385,14 +419,13 @@ function setMode(amiga, retro, original) {
   }
 
   // change to amiga font for amiga graphics
-  let spriteWidth = computeSpriteWidth();
   if (amiga_mode) {
     heightMultiple = 2;
-    fontFamily = retro_mode ? `amiga500` : `amiga1200`;
+    fontFamily = retro ? `amiga500` : `amiga1200`;
     textColour = `lightgrey`;
     letterSpacing = `normal`;
     spacing = 0;
-    original_objects = true;
+    overridePref('original_objects', true);
     let ele = document.getElementById('0,0');
     if (!ele) {
       /* first time */
@@ -427,38 +460,10 @@ function setMode(amiga, retro, original) {
   document.body.style.letterSpacing = letterSpacing;
   document.body.style.lineHeight = `${spriteWidth * heightMultiple}px`;;
 
-  // this is called every move, and messes up changing button font sized for inventory actions
+  // this is called every move: blt() -> onResize() -> setMode()
+  // and messes up changing button font size for inventory actions, casting
   setButtonFontSize(fontSize);
 
-  // upload style information for larntv
-  if (game_started && !styleUploaded) {
-    let style = getStyleData();
-    styleUploaded = uploadStyle(style);
-  }
-
-}
-
-
-
-function computeSpriteWidth() {
-  var larnWidth = getElementWidth(`LARN`);
-  var larnHeight = getElementHeight(`LARN`);
-
-  if (larnWidth === 0) {
-    larnWidth = window.innerWidth;
-    larnHeight = window.innerHeight;
-  }
-
-  // updateLog(`csw: browser=` + Math.floor(browserWidth) + `,` + Math.floor(browserHeight) +
-  // ` window=` + window.screen.width + `,` + window.screen.height);
-
-  let rawSpriteW = (larnWidth) / 80;
-  let rawSpriteH = (larnHeight) / 24;
-
-  let spriteWidth = Math.min(rawSpriteW, rawSpriteH / 2); // take height into account
-  if (amiga_mode) spriteWidth = Math.floor(spriteWidth); // chrome needs whole numbers to have smooth amiga graphics
-
-  return Math.max(4, spriteWidth);
 }
 
 
@@ -469,14 +474,14 @@ function printStats() {
   if (DEBUG_STATS) {
     stats = debug_stats();
   } else {
-    if (game_started && side_inventory) {
+    if (game_started && getPref('side_inventory')) {
       stats = game_stats(player);
       if (numWatchers > 0) {
         stats += `\n${GAMENAME} fans watching: ${numWatchers} <a href='https://larn.org/larn/tv/index.html' target='_blank'>  (?)</a>`;
       }
     }
   }
-  if (!side_inventory) stats = ``;
+  if (!getPref('side_inventory')) stats = ``;
   setDiv(`STATS`, stats);
 }
 
@@ -543,15 +548,11 @@ function drawmaze() {
     clear();
 
   /* When we show a spot of the dungeon, we have 4 cases:
-  squares we know nothing about
-  - know == KNOWNOT
-  squares we've been at and still know whats there
-  - know == KNOWALL (== KNOWHERE | HAVESEEN)
-  squares we've been at, but don't still recall because
-  something else happened there.
-  - know == HAVESEEN
-  squares we recall, but haven't been at (an error condition)
-  - know == KNOWHERE */
+  - know == KNOWNOT                          // squares we know nothing about
+  - know == KNOWALL (== KNOWHERE | HAVESEEN) // squares we've been at and still know whats there
+  - know == HAVESEEN                         // squares we've been at, but don't still recall because something else happened there.
+  - know == KNOWHERE                         // squares we recall, but haven't been at (an error condition)
+  */
 
 
   for (let j = 0; j < MAXY; j++) {
@@ -629,6 +630,12 @@ function showcell(x, y) {
     for (m = minx; m <= maxx; m++) {
       if ((getKnow(m, j) & KNOWHERE) == 0) {
         x = maxx;
+
+        // code review:
+        // The loop reuses x as a scratch variable, clobbering the caller's coordinate. 
+        // The commented-out updateWalls(x, y, range) directly below would silently 
+        // receive a wrong value. Rename the inner variable to e.g. scanx.
+
         while (getKnow(x, j) & KNOWHERE)
           --x;
         for (i = m; i <= x; i++) {
@@ -874,7 +881,7 @@ function updateLog(text, hint) {
     console.log(`LARN: ${text} ${hint ? hint : ``}`);
   }
   if (!LOG) return;
-  if (keyboard_hints && hint && !isMobile()) {
+  if (getPref('keyboard_hints') && hint && !isMobile()) {
     text = `${text} ${hint}`;
   }
   LOG.push(text);
@@ -910,7 +917,7 @@ async function onMouseClick(event) {
   let clickType = MOUSE_LEFT_CLICK;
   if (event.button === 2) {
     clickType = MOUSE_RIGHT_CLICK;
-    if (identify_button === MOUSE_RIGHT_CLICK || travel_button === MOUSE_RIGHT_CLICK) {
+    if (getPref('identify_button') === MOUSE_RIGHT_CLICK || getPref('travel_button') === MOUSE_RIGHT_CLICK) {
       event.preventDefault(); // only stop browser menu if we are using right click
     }
   }
@@ -949,10 +956,10 @@ async function onMouseClick(event) {
 
     if (!inBounds(x, y)) return;
 
-    if (identify_button === clickType) {
+    if (getPref('identify_button') === clickType) {
       mouseLook(x, y);
     }
-    if (travel_button === clickType) {
+    if (getPref('travel_button') === clickType) {
       await mouseMove(x, y);
     }
 

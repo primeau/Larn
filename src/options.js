@@ -19,171 +19,332 @@ const MOUSE_SHIFT_CLICK = 2;
 const MOUSE_RIGHT_CLICK = 3;
 const MOUSE_NONE = 4;
 
+const exploreFightOptions = [`Never attack`, `Simple monsters`, `All monsters`];
+const EXPLORE_FIGHT_NONE = 0;
+const EXPLORE_FIGHT_BASIC = 1;
+const EXPLORE_FIGHT_ALL = 2;
+
+const explorePickupOptions = [`None`, `Gold`, `Only good`, `All`];
+const EXPLORE_PICKUP_NONE = 0;
+const EXPLORE_PICKUP_GOLD = 1;
+const EXPLORE_PICKUP_GOOD = 2;
+const EXPLORE_PICKUP_ALL = 3;
+
+const exploreHPOptions = [`Stop when hit`, `100%`, `75%`, `50%`, `25%`, `Fight to the Death`];
+const EXPLORE_HP_ANY_HIT = 0;
+const EXPLORE_HP_100 = 1;
+const EXPLORE_HP_75 = 2;
+const EXPLORE_HP_50 = 3;
+const EXPLORE_HP_25 = 4;
+const EXPLORE_HP_TO_THE_DEATH = 5;
+
+// Preference Registry
+// Each entry declares:
+//   key          — localStorage key string
+//   hotkey       — the letter key used in parse_options() to activate this preference
+//   amiga_hidden — [optional] true if the option is hidden when amiga_mode is on
+//   context      — [optional] string[] of screen where this pref is shown (e.g. ['options'], ['explore']); shown everywhere if absent
+//   def          — default value (primitive; safe to use at options.js parse time)
+//   defFn        — [optional] () => default; for values not defined at parse time
+//   value        — live storage for the preference (owned by the entry, not a global)
+//   get()        — returns the current live value
+//   set(v)       — applies value + side effects; does NOT save
+//
+// Usage:
+//   getPref(name)         — return the current value of a preference
+//   setPref(name, value)  — apply a new value and persist to localStorage
+//   loadPreference(name)  — load + apply one preference from localStorage
+//   loadPreferences()     — load + apply all preferences (call at startup)
+
+const PREFS = {
+  // not shown on options screen
+  showConfigButtons:{ key: 'showConfigButtons', 
+                      def: true, value: true,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; } },
+  
+  // shown on options screen
+  player_char:      { key: 'player_char', amiga_hidden: true, context: ['options'],
+                      hotkey: 'P', label: 'Player Character', def: null, // NO VALUE: uses player.char
+                      get: () => player?.char ?? null,  
+                      set: v => { setPlayerChar(v); },
+                      display: () => player.getChar(),
+                      action: () => { document.addEventListener(`paste`, onOptionsPasteEvent); drawEditPlayerWindow(player.getChar()); return 1; } },
+  floor_char:       { key: 'floor_char', amiga_hidden: true, context: ['options'],
+                      hotkey: 'F', label: 'Floor Character', def: OEMPTY_DEFAULT_CHAR, value: OEMPTY_DEFAULT_CHAR,
+                      get() { return this.value; },
+                      set(v) {
+                        if (!v || !v.length) v = OEMPTY_DEFAULT_CHAR;
+                        this.value = v;
+                        setObjectChar(OEMPTY, v);
+                        setObjectChar(OIVDARTRAP, v);
+                        setObjectChar(OIVTELETRAP, v);
+                        setObjectChar(OTRAPARROWIV, v);
+                        setObjectChar(OIVTRAPDOOR, v);
+                      },
+                      display() { return OEMPTY.char; },
+                      action() { document.addEventListener(`paste`, onOptionsPasteEvent); drawEditFloorWindow(OEMPTY.char); return 1; } },
+  wall_char:        { key: 'wall_char', amiga_hidden: true, context: ['options'], 
+                      hotkey: 'W', label: 'Wall Character', def: 0, value: 0,
+                      get() { return this.value; },
+                      set(v) { if (v == null || v < 0 || v >= WALLS.length) v = 0; this.value = v; },
+                      display() { return wallOptions[this.value]; },
+                      action() { setPref('wall_char', (this.value + 1) % WALLS.length); print_options(); return 0; } },
+
+  keyboard_hints:   { key: 'keyboard_hints', context: ['options'],
+                      hotkey: 'K', label: 'Keyboard Hints', def: true, value: true,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `on` : `off`; },
+                      action() { setPref('keyboard_hints', !this.value); print_options(); return 0; } },
+  auto_pickup:      { key: 'auto_pickup', context: ['options'],
+                      hotkey: 'A', label: 'Auto Pickup', def: false, value: false,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `on` : `off`; },
+                      action() { setPref('auto_pickup', !this.value); print_options(); return 0; } },
+  side_inventory:   { key: 'side_inventory', context: ['options'],
+                      hotkey: 'I', label: 'Inventory', def: true, value: true,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `on` : `off`; },
+                      action() { setPref('side_inventory', !this.value); print_options(); return 0; } },
+  show_color:       { key: 'show_color', amiga_hidden: true, context: ['options'],
+                      hotkey: 'O', label: 'Object Color', def: true, value: true,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `on` : `off`; },
+                      action() { setPref('show_color', !this.value); print_options(); return 0; } },
+  log_color:        { key: 'log_color', context: ['options'],
+                      hotkey: 'L', label: 'Log Color', def: true, value: true,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `on` : `off`; },
+                      action() { setPref('log_color', !this.value); print_options(); return 0; } },
+  bold_objects:     { key: 'bold_objects', amiga_hidden: true, context: ['options'],
+                      hotkey: 'B', label: 'Bold Objects', def: true, value: true,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `on` : `off`; },
+                      action() { setPref('bold_objects', !this.value); print_options(); return 0; } },
+  original_objects: { key: 'original_objects', amiga_hidden: true, context: ['options'],
+                      hotkey: 'D', label: 'Dungeon Objects', def: true, value: true,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `Larn` : `Hack`; },
+                      action() { setPref('original_objects', !this.value); print_options(); return 0; } },
+  retro_mode:       { key: 'retro_mode', context: ['options'],
+                      hotkey: 'T', label: 'Text Font', def: true, value: true,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return amiga_mode ? (this.value ? `Amiga 500` : `Amiga 1200`) : (this.value ? `DOS` : `Modern`); },
+                      action() { setPref('retro_mode', !this.value); print_options(); return 0; } },
+  no_intro:         { key: 'no_intro', context: ['options'],
+                      hotkey: 'S', label: 'Skip Intro', def: false, value: false,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `on` : `off`; },
+                      action() { setPref('no_intro', !this.value); print_options(); return 0; } },
+  identify_button:  { key: 'identify_button', context: ['options'],
+                      hotkey: 'V', label: 'View Object', def: MOUSE_LEFT_CLICK, value: MOUSE_LEFT_CLICK,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return mouseOptions[this.value]; },
+                      action() { setPref('identify_button', (this.value + 1) % mouseOptions.length); print_options(); initHelpPages(); return 0; } },
+  travel_button:    { key: 'travel_button', context: ['options'],
+                      hotkey: 'G', label: 'Go to Object', def: MOUSE_DOUBLE_CLICK, value: MOUSE_DOUBLE_CLICK,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return mouseOptions[this.value]; },
+                      action() { setPref('travel_button', (this.value + 1) % mouseOptions.length); print_options(); initHelpPages(); return 0; } },
+
+  custom_monsters:  { key: 'custom_monsters', context: ['options'],
+                      hotkey: 'M', label: 'Monster Names', defFn: () => [], value: [],
+                      get() { return this.value; },
+                      set(v) { this.value = v ?? []; updateCustomMonsters(this.value); },
+                      action() { document.addEventListener(`paste`, onMonsterPasteEvent); drawEditMonstersWindow(this.value?.map((pair) => `${pair[0]}:${pair[1]}`).join(`, `)); return 1; } },
+ 
+  // not a preference, but used to trigger auto explore options window from main screen
+  explore_menu:  { key: 'explore_menu', context: ['options'], 
+                      hotkey: 'E', label: 'Explore / Travel Options Menu', def: false, value: false,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return `explore_menu`; },
+                      action() { drawExploreModeWindow(); return 1; } },
+  explore_toggle:   { key: 'explore_toggle', context: ['explore'], 
+                      hotkey: 'X', label: 'X Auto Explore', def: false, value: false,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `enabled` : `disabled`; },
+                      action() { setPref('explore_toggle', !this.value); initHelpPages(); drawExploreModeWindow(); return 0; } },
+  explore_object:   { key: 'explore_object', context: ['explore'], 
+                      hotkey: 'G', label: 'G Travel to Object', def: false, value: false,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `enabled` : `disabled`; },
+                      action() { setPref('explore_object', !this.value); initHelpPages(); drawExploreModeWindow(); return 0; } },
+  explore_stairs:   { key: 'explore_stairs', context: ['explore'], 
+                      hotkey: '{', label: '{ Travel to Stairs', def: false, value: false,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `enabled` : `disabled`; },
+                      action() { setPref('explore_stairs', !this.value); initHelpPages(); drawExploreModeWindow(); return 0; } },
+  explore_pray:     { key: 'explore_pray', context: ['explore'], 
+                      hotkey: 'A', label: 'Altars', def: false, value: false,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `Autopray` : `Avoid`; },
+                      action() { setPref('explore_pray', !this.value); drawExploreModeWindow(); return 0; } },
+  explore_pickup:   { key: 'explore_pickup', context: ['explore'], 
+                      hotkey: 'T', label: 'Take objects', def: EXPLORE_PICKUP_NONE, value: EXPLORE_PICKUP_NONE,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return explorePickupOptions[this.value]; },
+                      action() { setPref('explore_pickup', (this.value + 1) % explorePickupOptions.length); drawExploreModeWindow(); return 0; } },
+  explore_fight:    { key: 'explore_fight', context: ['explore'], 
+                      hotkey: 'F', label: 'Fight', def: EXPLORE_FIGHT_NONE, value: EXPLORE_FIGHT_NONE,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return exploreFightOptions[this.value]; },
+                      action() { setPref('explore_fight', (this.value + 1) % exploreFightOptions.length); drawExploreModeWindow(); return 0; } },
+  explore_hp_limit: { key: 'explore_hp_limit', context: ['explore'], 
+                      hotkey: 'L', label: 'Low HP Limit', def: EXPLORE_HP_ANY_HIT, value: EXPLORE_HP_ANY_HIT,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return exploreHPOptions[this.value]; },
+                      action() { setPref('explore_hp_limit', (this.value + 1) % exploreHPOptions.length); drawExploreModeWindow(); return 0; } },
+};
+
+function loadPreference(name) {
+  const pref = PREFS[name];
+  if (!pref) return;
+  const defaultValue = 'defFn' in pref ? pref.defFn() : pref.def;
+  pref.set(localStorageGetObject(pref.key, defaultValue));
+}
+
+function loadPreferences() {
+  for (const name of Object.keys(PREFS)) loadPreference(name);
+}
+
+function getPref(name) {
+  return PREFS[name]?.get();
+}
+
+function setPref(name, value) {
+  const pref = PREFS[name];
+  if (!pref) return;
+  pref.set(value);
+  localStorageSetObject(pref.key, pref.get());
+}
+
+function overridePref(name, value) {
+  PREFS[name]?.set(value);
+}
+
+function getPreferenceValues() {
+  const values = {};
+  for (const name in PREFS) {
+    if ('value' in PREFS[name]) {
+      // skip player_char which reads from player.char
+      values[name] = getPref(name);
+    }
+  }
+  return values;
+}
+
+function loadSavedPreferences(saved) {
+  if (!saved) return;
+  for (const name in saved) {
+    if (PREFS[name] && 'value' in PREFS[name] && saved[name] !== undefined) {
+      setPref(name, saved[name]);
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+// MAIN OPTIONS SCREEN                                            //
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 function print_options() {
   mazeMode = false;
   setCharCallback(parse_options);
 
-  let hintsLabel = keyboard_hints ? `on` : `off`;
-  let pickupLabel = auto_pickup ? `on` : `off`;
-  let inventoryLabel = side_inventory ? `on` : `off`;
-  let boldLabel = bold_objects ? `on` : `off`;
-  let objectColorLabel = show_color ? `on` : `off`;
-  let logColorLabel = log_color ? `on` : `off`;
-  let retroLabel = retro_mode ? `DOS` : `Modern`;
-  if (amiga_mode) retroLabel = retro_mode ? `Amiga 500` : `Amiga 1200`;
-  let dungeonLabel = original_objects ? `Larn` : `Hack`;
-  let skipLabel = no_intro ? `on` : `off`;
-
+  const leftCol = 1;
+  const rightCol = 35;
   clear();
   lprcat(`                                  <b>Game Options</b>\n\n`);
 
-  if (!amiga_mode) lprcat(`(<b>P</b>)layer Character: ${player.getChar()}\n`);
-  if (!amiga_mode) lprcat(`(<b>F</b>)loor Character:  ${OEMPTY.char}\n`);
-  if (!amiga_mode) lprcat(`(<b>W</b>)all Character:   ${wallOptions[wall_char]}\n\n`);
+  cursor(leftCol, cursory);
+  if (!amiga_mode) lprcat(`${prefLabel('player_char')}: ${PREFS.player_char.display()}\n`);
+  if (!amiga_mode) lprcat(`${prefLabel('floor_char')}:  ${PREFS.floor_char.display()}\n`);
+  if (!amiga_mode) lprcat(`${prefLabel('wall_char')}:   ${PREFS.wall_char.display()}\n\n`);
 
-  lprcat(`(<b>K</b>)eyboard Hints:   ${hintsLabel}`);
-  cursor(35, cursory);
-  lprcat(`(<b>V</b>)iew Object:   ${mouseOptions[identify_button]}\n`);
-  lprcat(`(<b>A</b>)uto Pickup:      ${pickupLabel}`);
-  cursor(35, cursory);
-  lprcat(`(<b>G</b>)o to Object:  ${mouseOptions[travel_button]}\n`);
-  lprcat(`(<b>I</b>)nventory:        ${inventoryLabel}\n`);
-  if (!amiga_mode) lprcat(`(<b>O</b>)bject Color:     ${objectColorLabel}\n`);
-  lprcat(`(<b>L</b>)og Color:        ${logColorLabel}\n`);
-  if (!amiga_mode) lprcat(`(<b>B</b>)old Objects:     ${boldLabel}\n`);
-  if (!amiga_mode) lprcat(`(<b>D</b>)ungeon Objects:  ${dungeonLabel}\n`);
-  lprcat(`(<b>T</b>)ext Font:        ${retroLabel}\n\n`);
-  lprcat(`(<b>S</b>)kip Intro:       ${skipLabel}\n\n`);
-  lprcat(`(<b>M</b>)onster Names:`);
+  const row2 = cursory;
+  cursor(leftCol, cursory);
+  lprcat(`${prefLabel('keyboard_hints')}:   ${PREFS.keyboard_hints.display()}\n`);
+  lprcat(`${prefLabel('auto_pickup')}:      ${PREFS.auto_pickup.display()}\n`);
+  lprcat(`${prefLabel('side_inventory')}:        ${PREFS.side_inventory.display()}\n`);
+  if (!amiga_mode) lprcat(`${prefLabel('show_color')}:     ${PREFS.show_color.display()}\n`);
+  lprcat(`${prefLabel('log_color')}:        ${PREFS.log_color.display()}\n`);
+  if (!amiga_mode) lprcat(`${prefLabel('bold_objects')}:     ${PREFS.bold_objects.display()}\n`);
+  if (!amiga_mode) lprcat(`${prefLabel('original_objects')}:  ${PREFS.original_objects.display()}\n`);
+  lprcat(`${prefLabel('retro_mode')}:        ${PREFS.retro_mode.display()}\n`);
+
+  lprcat(`\n`);
+  if (amiga_mode) lprcat(`\n`);
+  lprcat(`${prefLabel('custom_monsters')}:`);
 
   let monsterString = `no custom monsters`;
-  if (!custom_monsters) custom_monsters = [];
+  const custom_monsters = getPref('custom_monsters') ?? [];
   if (custom_monsters.length > 0) {
-    monsterString = custom_monsters
-      .map((name) => {
-        return name[1];
-      })
-      .join(`, `);
+    monsterString = custom_monsters.map((name) => name[1]).join(`, `);
   }
 
   let textindex = 0;
-  let textwidth = 44;
+  let textwidth = 55;
   let y = cursory;
   while (textindex < monsterString.length && y <= 22) {
     cursor(21, y++);
     lprcat(monsterString.substring(textindex, textindex + textwidth));
     textindex += textwidth;
   }
-  if (cursorx == 65 && cursory == 22) {
-    cursor(51, 22);
+  if (cursorx == textwidth + 21 && cursory == 22) {
+    cursor(textwidth + 7, 22);
     lprcat(` ... and more!`);
   }
 
+  cursor(rightCol, row2);
+  lprcat(`${prefLabel('explore_menu')}\n\n`);
+  cursor(rightCol, cursory);
+  lprcat(`${prefLabel('no_intro')}:     ${PREFS.no_intro.display()}\n\n`);
+  cursor(rightCol, cursory);
+  lprcat(`${prefLabel('identify_button')}:    ${PREFS.identify_button.display()}\n`);
+  cursor(rightCol, cursory);
+  lprcat(`${prefLabel('travel_button')}:   ${PREFS.travel_button.display()}\n`);
+
   cursors();
-  lprcat(`              ----  Press a letter to edit, <b>escape</b> to exit  ----`);
+  lprcat(`      Press a letter to edit | <b>backspace</b> restore defaults | <b>escape</b> to exit`);
   blt();
 }
 
 function parse_options(key) {
-  // console.log(`parse_options: key=${key}`);
   if (key == ESC) {
     nomove = 1;
     return exitbuilding();
   }
-  if (key.toLowerCase() == `p` && !amiga_mode) {
-    document.addEventListener(`paste`, onOptionsPasteEvent);
-    drawEditPlayerWindow(player.getChar());
-    return 1;
-  }
-  if (key.toLowerCase() == `f` && !amiga_mode) {
-    document.addEventListener(`paste`, onOptionsPasteEvent);
-    drawEditFloorWindow(OEMPTY.char);
-    return 1;
-  }
-  if (key.toLowerCase() == `m`) {
-    document.addEventListener(`paste`, onMonsterPasteEvent);
-    const monsterString = custom_monsters?.map((pair) => `${pair[0]}:${pair[1]}`).join(`, `);
-    drawEditMonstersWindow(monsterString);
-    return 1;
-  }
-  if (key.toLowerCase() == `w` && !amiga_mode) {
-    wall_char += 1;
-    if (wall_char >= WALLS.length) wall_char = 0;
-    setWallChar(wall_char);
-    print_options();
-    return 0;
-  }
-  if (key.toLowerCase() == `k`) {
-    keyboard_hints = !keyboard_hints;
-    localStorageSetObject(`keyboard_hints`, keyboard_hints);
-    print_options();
-    return 0;
-  }
-  if (key.toLowerCase() == `a`) {
-    auto_pickup = !auto_pickup;
-    localStorageSetObject(`auto_pickup`, auto_pickup);
-    print_options();
-    return 0;
-  }
-  if (key.toLowerCase() == `i`) {
-    side_inventory = !side_inventory;
-    localStorageSetObject(`side_inventory`, side_inventory);
-    print_options();
-    return 0;
-  }
-  if (key.toLowerCase() == `o` && !amiga_mode) {
-    show_color = !show_color;
-    localStorageSetObject(`show_color`, show_color);
-    print_options();
-    return 0;
-  }
-  if (key.toLowerCase() == `l`) {
-    log_color = !log_color;
-    localStorageSetObject(`log_color`, log_color);
-    print_options();
-    return 0;
-  }
-  if (key.toLowerCase() == `b` && !amiga_mode) {
-    bold_objects = !bold_objects;
-    localStorageSetObject(`bold_objects`, bold_objects);
-    print_options();
-    return 0;
-  }
-  if (key.toLowerCase() == `d` && !amiga_mode) {
-    original_objects = !original_objects;
-    localStorageSetObject(`original_objects`, original_objects);
-    print_options();
-    return 0;
-  }
-  if (key.toLowerCase() == `t`) {
-    retro_mode = !retro_mode;
-    localStorageSetObject(`retro` /* NOT retro_mode */, retro_mode);
-    print_options();
-    return 0;
-  }
-  if (key.toLowerCase() == `s`) {
-    no_intro = !no_intro;
-    localStorageSetObject(`no_intro`, no_intro);
-    print_options();
-    return 0;
-  }
-  if (key.toLowerCase() == `v`) {
-    identify_button += 1;
-    if (identify_button >= mouseOptions.length) identify_button = 0;
-    localStorageSetObject(`identify_button`, identify_button);
-    print_options();
+  if (key == DEL) {
+    for (const [name, pref] of Object.entries(PREFS)) {
+      if (pref.context?.includes('options')) {
+        const defaultValue = 'defFn' in pref ? pref.defFn() : pref.def;
+        setPref(name, defaultValue);
+      }
+    }
     initHelpPages();
-    return 0;
-  }
-  if (key.toLowerCase() == `g`) {
-    travel_button += 1;
-    if (travel_button >= mouseOptions.length) travel_button = 0;
-    localStorageSetObject(`travel_button`, travel_button);
     print_options();
-    initHelpPages();
     return 0;
   }
-  return 0;
+  return parseHotkey(key, 'options');
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -191,6 +352,26 @@ function parse_options(key) {
 // SUPPORT FUNCTIONS                                              //
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
+
+function parseHotkey(key, context) {
+  const lk = key.toUpperCase();
+  for (const pref of Object.values(PREFS)) {
+    if (!pref.hotkey || pref.hotkey !== lk) continue;
+    if (pref.amiga_hidden && amiga_mode) continue;
+    const ctx = pref.context ?? ['options'];
+    if (!ctx.includes(context)) continue;
+    return pref.action();
+  }
+  return 0;
+}
+
+// Wraps the first occurrence of the hotkey letter in the label with (<b>X</b>)
+function prefLabel(name) {
+  const p = PREFS[name];
+  const idx = p.label.toLowerCase().indexOf(p.hotkey.toLowerCase());
+  if (idx === -1) return `(<b>${p.hotkey}</b>) ${p.label}`;
+  return p.label.slice(0, idx) + `(<b>${p.hotkey}</b>)` + p.label.slice(idx + 1);
+}
 
 function drawEditObjectWindow(title, label, currentChar, parseCallback) {
   let top = 1;
@@ -208,20 +389,21 @@ function drawEditObjectWindow(title, label, currentChar, parseCallback) {
 }
 
 function drawBox(startx, starty, width, height) {
+  const wc = amiga_mode ? 2 : getPref('wall_char');
   cursor(startx, starty);
-  lprcat(`${WALLS[wall_char][12]}`);
-  lprcat(`${WALLS[wall_char][20]}`.repeat(width - 2));
-  lprcat(`${WALLS[wall_char][24]}`);
+  lprcat(`${WALLS[wc][12]}`);
+  lprcat(`${WALLS[wc][20]}`.repeat(width - 2));
+  lprcat(`${WALLS[wc][24]}`);
   for (let y = 1; y < height - 1; y++) {
     cursor(startx, starty + y);
-    lprcat(`${WALLS[wall_char][10]}`);
+    lprcat(`${WALLS[wc][10]}`);
     lprcat(` `.repeat(width - 2));
-    lprcat(`${WALLS[wall_char][10]}`);
+    lprcat(`${WALLS[wc][10]}`);
   }
   cursor(startx, starty + height - 1);
-  lprcat(`${WALLS[wall_char][6]}`);
-  lprcat(`${WALLS[wall_char][20]}`.repeat(width - 2));
-  lprcat(`${WALLS[wall_char][18]}`);
+  lprcat(`${WALLS[wc][6]}`);
+  lprcat(`${WALLS[wc][20]}`.repeat(width - 2));
+  lprcat(`${WALLS[wc][18]}`);
 }
 
 function backToOptions() {
@@ -250,7 +432,7 @@ function onOptionsPasteEvent(event) {
 
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
-// PLAYER CHAR                                                    //
+// EDIT PLAYER CHAR                                               //
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
@@ -263,7 +445,7 @@ function parse_player_char(key) {
     return backToOptions();
   }
   if (key == ENTER) {
-    setPlayerChar(LAST_KEY_PRESSED);
+    setPref('player_char', LAST_KEY_PRESSED);
     return backToOptions();
   }
   if (key == DEL) {
@@ -283,27 +465,12 @@ function parse_player_char(key) {
 function setPlayerChar(newChar) {
   if (player && (newChar === null || newChar.length === 1)) {
     player.char = newChar;
-    localStorageSetObject(`player_char`, player.char);
   }
 }
 
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
-// WALL CHAR                                                      //
-////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-
-function setWallChar(newChar) {
-  if (!newChar || newChar.length === 0) {
-    newChar = 0;
-  }
-  wall_char = newChar;
-  localStorageSetObject(`wall_char`, wall_char);
-}
-
-////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-// FLOOR CHAR                                                     //
+// EDIT FLOOR CHAR                                                //
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
@@ -316,7 +483,7 @@ function parse_floor_char(key) {
     return backToOptions();
   }
   if (key == ENTER) {
-    setFloorChar(LAST_KEY_PRESSED);
+    setPref('floor_char', LAST_KEY_PRESSED);
     return backToOptions();
   }
   if (key == DEL) {
@@ -330,22 +497,59 @@ function parse_floor_char(key) {
   return 0;
 }
 
-function setFloorChar(newChar) {
-  if (!newChar || newChar.length === 0) {
-    newChar = OEMPTY_DEFAULT_CHAR;
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+// EDIT AUTO EXPLORE                                              //
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+
+function drawExploreModeWindow() {
+  let top = 1;
+  setCharCallback(parse_explore_mode);
+  drawBox(10, top, 60, 14);
+  cursor(11, top + 1);
+  lprcat(`                   <b>Explore / Travel Options</b>`);
+  cursor(13, top + 3);
+  lprcat(`${prefLabel('explore_toggle')}:       ${PREFS.explore_toggle.display()}`);
+  cursor(13, top + 4);
+  lprcat(`${prefLabel('explore_stairs')}:   ${PREFS.explore_stairs.display()}`);
+  cursor(13, top + 5);
+  lprcat(`${prefLabel('explore_object')}:   ${PREFS.explore_object.display()}`);
+  cursor(13, top + 7);
+  lprcat(`${prefLabel('explore_pickup')}:         ${PREFS.explore_pickup.display()}`);
+  cursor(13, top + 8);
+  lprcat(`${prefLabel('explore_pray')}:               ${PREFS.explore_pray.display()}`);
+  cursor(13, top + 9);
+  lprcat(`${prefLabel('explore_fight')}:                ${PREFS.explore_fight.display()}`);
+  cursor(13, top + 10);
+  lprcat(`${prefLabel('explore_hp_limit')}:         ${PREFS.explore_hp_limit.display()}`);
+
+  cursor(17, top + 12);
+  lprcat(`<b>backspace</b> restore defaults | <b>escape</b> to go back`);
+  blt();
+}
+
+function parse_explore_mode(key) {
+  if (key == ESC) {
+    return backToOptions();
   }
-  floor_char = newChar;
-  setObjectChar(OEMPTY, newChar);
-  setObjectChar(OIVDARTRAP, newChar);
-  setObjectChar(OIVTELETRAP, newChar);
-  setObjectChar(OTRAPARROWIV, newChar);
-  setObjectChar(OIVTRAPDOOR, newChar);
-  localStorageSetObject(`floor_char`, floor_char);
+  if (key == DEL) {
+    for (const [name, pref] of Object.entries(PREFS)) {
+      if (pref.context?.includes('explore')) {
+        const defaultValue = 'defFn' in pref ? pref.defFn() : pref.def;
+        setPref(name, defaultValue);
+      }
+    }
+    initHelpPages();
+    drawExploreModeWindow();
+    return 0;
+  }
+  return parseHotkey(key, 'explore');
 }
 
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
-// CUSTOM MONSTERS                                                //
+// EDIT CUSTOM MONSTERS                                           //
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
@@ -403,7 +607,7 @@ function parse_monster_list(text, fromPaste) {
 }
 
 function filterMonsterInput(input) {
-  return input.replace(/[^a-zA-Z0-9,:,.?!^\- ]/g, ``);
+  return input.replace(/[^a-zA-Z0-9:,.?!^\- ]/g, ``);
 }
 
 function onMonsterPasteEvent(event) {
@@ -415,13 +619,10 @@ function onMonsterPasteEvent(event) {
 
 function setMonsterNames(monsterString) {
   // console.log(`setMonsterNames called with value:`, monsterString);
-  custom_monsters = [];
+  const monsters = [];
 
   const seenFirstLetters = new Set();
-  let tempCustom = monsterString?.split(`,`);
-  for (let i = 0; i < tempCustom?.length; i++) {
-    let pairString = tempCustom[i];
-    // console.log(pairString);
+  for (const pairString of monsterString?.split(`,`) ?? []) {
     let pair = pairString.split(`:`);
     if (pair.length !== 2) continue;
     let firstLetter = pair[0].trim().charAt(0);
@@ -430,13 +631,10 @@ function setMonsterNames(monsterString) {
     if (seenFirstLetters.has(firstLetter)) continue;
     seenFirstLetters.add(firstLetter);
 
-    custom_monsters.push([firstLetter, monsterName]);
+    monsters.push([firstLetter, monsterName]);
   }
 
-  updateCustomMonsters(custom_monsters);
-
-  localStorageSetObject(`custom_monsters`, custom_monsters);
-  // console.log(`Updated custom_monsters:`, custom_monsters);
+  setPref('custom_monsters', monsters);
 }
 
 function updateCustomMonsters(customList) {
@@ -463,38 +661,3 @@ function updateCustomMonsters(customList) {
     }
   }
 }
-
-// function editKeyboardHints(currentSetting) {
-//   editBooleanOption(`<b>Toggle Keyboard Hints</b>`, `Keyboard Hints`, currentSetting, parse_keyboard_hints);
-// }
-
-// function editBooleanOption(title, label, currentSetting, parseCallback) {
-//   setCharCallback(parseCallback);
-//   drawBox(10, 1, 60, 10);
-//   cursor(30, 2);
-//   lprcat(title);
-//   cursor(15, 4);
-//   let settingText = currentSetting ? `on` : `off`;
-//   lprcat(`${label}: ${settingText}`);
-//   blinken(cursorx, cursory);
-//   cursor(15, 9);
-//   lprcat(`<b>space</b> toggle | <b>enter</b> save | <b>escape</b> cancel`);
-//   blt();
-// }
-
-// function parse_keyboard_hints(key) {
-//   if (key == ESC) {
-//     return backToOptions();
-//   }
-//   if (key == ENTER) {
-//     keyboard_hints = LAST_KEY_PRESSED;
-//     localStorageSetObject(`keyboard_hints`, keyboard_hints);
-//     return backToOptions();
-//   }
-//   if (key == ` `) {
-//     keyboard_hints = !keyboard_hints;
-//     LAST_KEY_PRESSED = keyboard_hints;
-//     editKeyboardHints(keyboard_hints);
-//     return 0;
-//   }
-// }
