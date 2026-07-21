@@ -27,6 +27,7 @@ function welcome() {
   }
 
 
+  onResize(); // for mobile
   paint();
   // onResize();
 }
@@ -514,7 +515,12 @@ function timeLeft() {
 
 
 let GLOBAL_TIMEOUT; // used for setTimeouts that can be interrupted by the main loop
-let MOVED_WORLD = false;
+let MOVED_WORLD = false; // prevent multiple moveworld calls in a single turn
+
+function doGlobalTimeout(callback, duration, ...args) {
+  if (isMobile()) duration = Math.min(duration, 200);
+  GLOBAL_TIMEOUT = setTimeout(callback, duration, ...args);
+}
 
 
 

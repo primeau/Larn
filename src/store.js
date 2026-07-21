@@ -247,17 +247,24 @@ function dnditem(i) {
     return;
   }
 
-  lprcat(`${getCharFromIndex(i % 26)}) `);
-  
-  const item = createObject(dnd_item[i].itemId, dnd_item[i].arg);
-  if (item.matches(OPOTION)) lprcat(item.toString(true).substring(8).padEnd(28));
-  else if (item.matches(OSCROLL)) lprcat(item.toString(true).substring(8).padEnd(28));
-  else lprcat(item.toString(true).padEnd(28));
-  
   const price = dnd_item[i].price;
   const markup_start = player.GOLD < price ? START_DIM : ``;
   const markup_end = player.GOLD < price ? END_DIM : ``;
-  lprcat(`${markup_start}${price.toString().padStart(6)}${markup_end}`);
+
+  // index
+  const indexString = `${getCharFromIndex(i % 26)}) `;
+  
+  // description
+  const item = createObject(dnd_item[i].itemId, dnd_item[i].arg);
+  let itemString;
+  if (item.matches(OPOTION)) itemString = item.toString(true).substring(8).padEnd(28);
+  else if (item.matches(OSCROLL)) itemString = item.toString(true).substring(8).padEnd(28);
+  else itemString = item.toString(true).padEnd(28);
+  
+  // price
+  const priceString = price.toString().padStart(6);
+
+  lprcat(`${indexString}${markup_start}${itemString}${priceString}${markup_end}`);
 }
 
 
@@ -420,7 +427,7 @@ function bankmessage(str, duration) {
 
   if (duration && duration != 0) {
     napping = true;
-    GLOBAL_TIMEOUT = setTimeout(bankmessage, duration, ``, 0);
+    doGlobalTimeout(bankmessage, duration, ``, 0);
   }
 }
 
@@ -745,7 +752,7 @@ function parse_sellitem(key) {
     //nap(500);
 
     napping = true;
-    GLOBAL_TIMEOUT = setTimeout(storemessage, 700, ``);
+    doGlobalTimeout(storemessage, 700, ``);
     itemToSell = null;
     return 1;
   }
@@ -755,7 +762,7 @@ function parse_sellitem(key) {
     lprcat(`yes${period}`);
 
     napping = true;
-    GLOBAL_TIMEOUT = setTimeout(storemessage, 700, ``);
+    doGlobalTimeout(storemessage, 700, ``);
     player.setGold(player.GOLD + itemToSell[SELL_PRICE]);
     var index = player.inventory.indexOf(itemToSell[SELL_ITEM]);
     cleartradiven(index);
@@ -931,7 +938,7 @@ function parse_class(key) {
   blt();
 
   napping = true;
-  GLOBAL_TIMEOUT = setTimeout(oschool, naptime);
+  doGlobalTimeout(oschool, naptime);
   return 0;
 }
 
@@ -1190,7 +1197,7 @@ function storemessage(str, duration) {
   blt();
   if (duration && duration != 0) {
     napping = true;
-    GLOBAL_TIMEOUT = setTimeout(storemessage, duration, ``, 0);
+    doGlobalTimeout(storemessage, duration, ``, 0);
   }
 }
 
