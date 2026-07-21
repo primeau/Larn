@@ -10,7 +10,7 @@ function learnSpell(spell) {
 
 
 function forgetSpell(spellnum) {
-  player.knownSpells[spellnum] = null;
+  player.knownSpells[spellnum] = false;
 }
 
 
@@ -280,13 +280,17 @@ function speldamage(x) {
             }
           } else if (!ULARN && item.matches(OFOUNTAIN)) {
             create_guardian(WATERLORD, i, j);
-          } else if (monsterAt(i, j) && monsterAt(i, j).matches(XORN)) {
+          }
+
+          // kill Xorns and Trolls
+          if (monsterAt(i, j) && monsterAt(i, j).matches(XORN)) {
             ifblind(i, j);
             hitm(i, j, 200);
           } else if (ULARN && monsterAt(i, j) && monsterAt(i, j).matches(TROLL)) {
             ifblind(i, j);
             hitm(i, j, 200);
           }
+
           setKnow(i, j, KNOWALL);
         }
       }
