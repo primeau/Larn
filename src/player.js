@@ -12,7 +12,7 @@ var Player = function Player() {
 
   this.knownPotions = [];
   this.knownScrolls = [];
-  this.knownSpells = [];
+  this.knownSpells = new Array(spelcode.length).fill(false);
 
   this.x = 0;
   this.y = 0;
@@ -135,7 +135,7 @@ var Player = function Player() {
   this.getChar = function () {
     if (amiga_mode) return `${DIV_START}player${DIV_END}`;
     if (this.char) return this.char;
-    if (retro_mode) return `<b><font color='white'>@</font></b>`; 
+    if (getPref('retro_mode')) return `<b><font color='white'>@</font></b>`; 
     return `▓`;
   };
 
@@ -198,7 +198,7 @@ var Player = function Player() {
     changedSpells = millis();
     changedSpellsMax = millis();
     this.SPELLMAX += x;
-    player.SPELLS += x;
+    this.SPELLS += x;
   };
 
 
@@ -211,8 +211,8 @@ var Player = function Player() {
     if (x <= 0) return;
     changedSpells = millis();
     changedSpellsMax = millis();
-    player.SPELLMAX = Math.max(1, player.SPELLMAX - x);
-    player.SPELLS = Math.max(1, player.SPELLS - x);
+    this.SPELLMAX = Math.max(1, this.SPELLMAX - x);
+    this.SPELLS = Math.max(1, this.SPELLS - x);
   };
 
 
@@ -224,9 +224,9 @@ var Player = function Player() {
       uses c[EXPERIENCE]  c[LEVEL]
    */
   this.raiselevel = function () {
-    if (player.LEVEL < MAXPLEVEL) {
+    if (this.LEVEL < MAXPLEVEL) {
       changedLevel = millis();
-      player.raiseexperience(SKILL[player.LEVEL] - player.EXPERIENCE);
+      this.raiseexperience(SKILL[this.LEVEL] - this.EXPERIENCE);
     }
   };
 
@@ -237,9 +237,9 @@ var Player = function Player() {
       subroutine to lower the players character level by one
    */
   this.loselevel = function () {
-    if (player.LEVEL > 1) {
+    if (this.LEVEL > 1) {
       changedLevel = millis();
-      player.loseexperience((player.EXPERIENCE - SKILL[player.LEVEL - 1] + 1));
+      this.loseexperience((this.EXPERIENCE - SKILL[this.LEVEL - 1] + 1));
     }
   };
 
@@ -250,47 +250,50 @@ var Player = function Player() {
    */
   this.raiseexperience = function (x) {
     changedExp = millis();
-    var oldLevel = player.LEVEL;
-    player.EXPERIENCE += x;
-    while (player.EXPERIENCE >= SKILL[player.LEVEL] && (player.LEVEL < MAXPLEVEL)) {
-      var tmp = (player.CONSTITUTION - getDifficulty()) >> 1;
-      player.LEVEL++;
-      player.raisemhp((rnd(3) + rnd((tmp > 0) ? tmp : 1)));
-      player.raisemspells(rund(3));
-      if (player.LEVEL < 7 - getDifficulty()) {
-        player.raisemhp((player.CONSTITUTION >> 2));
+    var oldLevel = this.LEVEL;
+    this.EXPERIENCE += x;
+    while (this.EXPERIENCE >= SKILL[this.LEVEL] && (this.LEVEL < MAXPLEVEL)) {
+      var tmp = (this.CONSTITUTION - getDifficulty()) >> 1;
+      this.LEVEL++;
+      this.raisemhp((rnd(3) + rnd((tmp > 0) ? tmp : 1)));
+      this.raisemspells(rund(3));
+      if (this.LEVEL < 7 - getDifficulty()) {
+        this.raisemhp((this.CONSTITUTION >> 2));
       }
     }
-    if (player.LEVEL != oldLevel) {
+    if (this.LEVEL != oldLevel) {
+      if (oldLevel >= 10 && this.LEVEL < 10 || oldLevel < 10 && this.LEVEL >= 10) {
+      initHelpPages(); // dim/undim teleportation in help pages if player gains/loses teleportation ability
+      }
       beep();
       changedLevel = millis();
-      updateLog(`Welcome to level ${player.LEVEL}${period}`); /* if we changed levels */
+      updateLog(`Welcome to level ${this.LEVEL}${period}`); /* if we changed levels */
 
-      switch (player.LEVEL) {
+      switch (this.LEVEL) {
         case 94:
           /* earth guardian */
-          player.WTW = 99999;
+          this.WTW = 99999;
           break;
         case 95:
           /* air guardian */
-          player.INVISIBILITY = 99999;
+          this.INVISIBILITY = 99999;
           break;
         case 96:
           /* fire guardian */
-          player.FIRERESISTANCE = 99999;
+          this.FIRERESISTANCE = 99999;
           break;
         case 97:
           /* water guardian */
-          player.CANCELLATION = 99999;
+          this.CANCELLATION = 99999;
           break;
         case 98:
           /* time guardian */
-          player.HASTESELF = 99999;
+          this.HASTESELF = 99999;
           break;
         case 99:
           /* ethereal guardian */
-          player.STEALTH = 99999;
-          player.SPIRITPRO = 99999;
+          this.STEALTH = 99999;
+          this.SPIRITPRO = 99999;
           break;
         case 100:
           updateLog(`You are now The Creator!`);
@@ -310,24 +313,24 @@ var Player = function Player() {
    */
   this.loseexperience = function (x) {
     changedExp = millis();
-    var oldLevel = player.LEVEL;
-    player.EXPERIENCE = Math.max(0, player.EXPERIENCE - x);
-    while (player.EXPERIENCE < SKILL[player.LEVEL - 1]) {
-      if (--player.LEVEL <= 1) {
-        player.LEVEL = 1; /*  down one level      */
+    var oldLevel = this.LEVEL;
+    this.EXPERIENCE = Math.max(0, this.EXPERIENCE - x);
+    while (this.EXPERIENCE < SKILL[this.LEVEL - 1]) {
+      if (--this.LEVEL <= 1) {
+        this.LEVEL = 1; /*  down one level      */
       }
-      var tmp = (player.CONSTITUTION - getDifficulty()) >> 1; /* lose hpoints */
-      player.losemhp(rnd((tmp > 0) ? tmp : 1)); /* lose hpoints */
-      if (player.LEVEL < 7 - getDifficulty()) {
-        player.losemhp((player.CONSTITUTION >> 2));
+      var tmp = (this.CONSTITUTION - getDifficulty()) >> 1; /* lose hpoints */
+      this.losemhp(rnd((tmp > 0) ? tmp : 1)); /* lose hpoints */
+      if (this.LEVEL < 7 - getDifficulty()) {
+        this.losemhp((this.CONSTITUTION >> 2));
       }
-      player.losemspells(rund(3)); /*  lose spells     */
+      this.losemspells(rund(3)); /*  lose spells     */
     }
-    if (oldLevel != player.LEVEL) {
+    if (oldLevel != this.LEVEL) {
       cursors();
       beep();
       changedLevel = millis();
-      updateLog(`  You went down to level ${player.LEVEL}!`);
+      updateLog(`  You went down to level ${this.LEVEL}!`);
     }
   };
 
@@ -337,49 +340,49 @@ var Player = function Player() {
       that affects these characteristics
    */
   this.adjustcvalues = /* async */ function (item, pickup) {
-    var oldDex = player.DEXTERITY;
-    var oldStr = player.STREXTRA;
-    var oldInt = player.INTELLIGENCE;
+    var oldDex = this.DEXTERITY;
+    var oldStr = this.STREXTRA;
+    var oldInt = this.INTELLIGENCE;
 
     if (item.matches(ODEXRING))
-      player.setDexterity(player.DEXTERITY + (pickup ? item.arg + 1 : (item.arg + 1) * -1));
+      this.setDexterity(this.DEXTERITY + (pickup ? item.arg + 1 : (item.arg + 1) * -1));
     if (item.matches(OSTRRING))
-      player.setStrExtra(player.STREXTRA + (pickup ? item.arg + 1 : (item.arg + 1) * -1));
+      this.setStrExtra(this.STREXTRA + (pickup ? item.arg + 1 : (item.arg + 1) * -1));
     if (item.matches(OCLEVERRING))
-      player.setIntelligence(player.INTELLIGENCE + (pickup ? item.arg + 1 : (item.arg + 1) * -1));
+      this.setIntelligence(this.INTELLIGENCE + (pickup ? item.arg + 1 : (item.arg + 1) * -1));
     if (item.matches(OHAMMER)) {
-      player.setDexterity(player.DEXTERITY + (pickup ? 10 : -10));
-      player.setStrExtra(player.STREXTRA + (pickup ? 10 : -10));
-      var startIntel = player.INTELLIGENCE;
+      this.setDexterity(this.DEXTERITY + (pickup ? 10 : -10));
+      this.setStrExtra(this.STREXTRA + (pickup ? 10 : -10));
+      var startIntel = this.INTELLIGENCE;
       // our hero might lose < 10 intelligence when picking up the
       // hammer. we don't want them to get 10 back when dropping it.
       // this can still be gamed with rings of intelligence, but 
       // it's better than it was.
       if (pickup) {
-        player.setIntelligence(player.INTELLIGENCE - 10);
-        player.BESSMANNINTEL = startIntel - player.INTELLIGENCE;
+        this.setIntelligence(this.INTELLIGENCE - 10);
+        this.BESSMANNINTEL = startIntel - this.INTELLIGENCE;
       } else {
-        player.setIntelligence(player.INTELLIGENCE + player.BESSMANNINTEL);
+        this.setIntelligence(this.INTELLIGENCE + this.BESSMANNINTEL);
       }
     }
     if (item.matches(OSWORDofSLASHING)) {
-      player.setDexterity(player.DEXTERITY + (pickup ? 5 : -5));
+      this.setDexterity(this.DEXTERITY + (pickup ? 5 : -5));
     }
     if (item.matches(OSLAYER)) {
-      player.setIntelligence(player.INTELLIGENCE + (pickup ? 10 : -10));
+      this.setIntelligence(this.INTELLIGENCE + (pickup ? 10 : -10));
     }
     if (item.matches(OPSTAFF)) {
-      player.setWisdom(player.WISDOM + (pickup ? 10 : -10));
+      this.setWisdom(this.WISDOM + (pickup ? 10 : -10));
     }
     if (item.matches(OORB) && pickup) {
-      player.AWARENESS++;
+      this.AWARENESS++;
     }
 
-    if (oldDex != player.DEXTERITY) changedDEX = millis();
-    if (oldStr != player.STREXTRA) changedSTR = millis();
-    if (oldInt != player.INTELLIGENCE) changedINT = millis();
+    if (oldDex != this.DEXTERITY) changedDEX = millis();
+    if (oldStr != this.STREXTRA) changedSTR = millis();
+    if (oldInt != this.INTELLIGENCE) changedINT = millis();
 
-    if (ULARN && item.matches(OLARNEYE) && player.BLINDCOUNT == 0) {
+    if (ULARN && item.matches(OLARNEYE) && this.BLINDCOUNT == 0) {
       updateLog(`Your sight fades for a moment...`);
       // await nap(1000);
       if (pickup) {

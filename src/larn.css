@@ -200,6 +200,8 @@ keyboard {
 
 help {
     /* border: 1px solid violet; */
+    display: flex;
+    align-items: end;
 }
 
 stats {
@@ -217,7 +219,6 @@ contextbuttons {
 
 run {
     /* border: 1px solid red; */
-    /* background: white; */
     transform-origin: top left;
     rotate: 90deg;
 }

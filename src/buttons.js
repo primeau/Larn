@@ -9,29 +9,30 @@
 // test lineheight in tv
 
 
-let buttonCache = new Map();
+const buttonCache = new Map();
 
-let ACTIONS = `ACTIONS`;
-let KEYPAD = `KEYPAD`;
-let KEYBOARD = `KEYBOARD`;
-let CONTEXT = `CONTEXT`;
-let HELP = `HELP`;
-let RUN = `RUN`;
+const MIN_SELECTION_FONT_SIZE = isMobile() ? (isPhone() ? 12 : 17) : 12;
 
-let FIXED = `button`;
-let VARIABLE = `variablebutton`;
-let NARROW = `narrowbutton`;
+const ACTIONS = `ACTIONS`;
+const KEYPAD = `KEYPAD`;
+const KEYBOARD = `KEYBOARD`;
+const CONTEXT = `CONTEXT`;
+const HELP = `HELP`;
+const RUN = `RUN`;
+
+const FIXED = `button`;
+const VARIABLE = `variablebutton`;
+const NARROW = `narrowbutton`;
 
 // common buttons
-let BUTTON_OFFLINE = setButton(null, `BUTTON_OFFLINE`, VARIABLE, null, `offline`);
-let BUTTON_DEL = setButton(null, `BUTTON_DEL`, VARIABLE, DEL, `DEL`);
-let BUTTON_EXIT = setButton(null, `BUTTON_EXIT`, VARIABLE, ESC, `leave`);
-let BUTTON_CANCEL = setButton(null, `BUTTON_CANCEL`, VARIABLE, ESC, `cancel`);
-let BUTTON_CONTINUE = setButton(ACTIONS, `BUTTON_CONTINUE`, VARIABLE, SPACE, `continue`);
-let BUTTON_YES = setButton(null, `BUTTON_YES`, FIXED, `y`, `yes`);
-let BUTTON_NO = setButton(null, `BUTTON_NO`, FIXED, `n`, `no`);
-let BUTTON_RUN = setButton(null, `BUTTON_RUN`, `verticalbutton`, null, `run`);
-let BUTTON_REST = setButton(null, `BUTTON_REST`, `verticalbutton`, null, `rest`);
+const BUTTON_OFFLINE = setButton(null, `BUTTON_OFFLINE`, VARIABLE, null, `offline`);
+const BUTTON_DEL = setButton(null, `BUTTON_DEL`, VARIABLE, DEL, `DEL`);
+const BUTTON_EXIT = setButton(null, `BUTTON_EXIT`, VARIABLE, ESC, `leave`);
+const BUTTON_CANCEL = setButton(null, `BUTTON_CANCEL`, VARIABLE, ESC, `cancel`);
+const BUTTON_CONTINUE = setButton(ACTIONS, `BUTTON_CONTINUE`, VARIABLE, SPACE, `continue`);
+const BUTTON_YES = setButton(null, `BUTTON_YES`, FIXED, `y`, `yes`);
+const BUTTON_NO = setButton(null, `BUTTON_NO`, FIXED, `n`, `no`);
+const BUTTON_RUN = setButton(null, `BUTTON_RUN`, `verticalbutton`, null, `run`);
 let BUTTON_RUN_INITIALIZED = false;
 
 // let currentsize = 0; // for debugging button cache
@@ -78,13 +79,13 @@ function setButtons() {
 
     // casting a spell
     if (blocking_callback === cast) {
-      spellListButtons(spelcode);
+      spellListButtons(false);
       return;
     }
 
     // wish for spell after rubbing brass lamp
     if (blocking_callback === wish) {
-      spellListButtons(spelcode, true);
+      spellListButtons(true);
       return;
     }
 
@@ -112,12 +113,12 @@ function setButtons() {
 
     let inventoryAction = false;
 
-    inventoryAction |= inventoryActionButtons(drop_object, showall);
-    inventoryAction |= inventoryActionButtons(act_quaffpotion, showquaff);
-    inventoryAction |= inventoryActionButtons(act_read_something, showread);
-    inventoryAction |= inventoryActionButtons(act_eatcookie, showeat);
-    inventoryAction |= inventoryActionButtons(wear, showwear);
-    inventoryAction |= inventoryActionButtons(wield, showallwield);
+    inventoryAction ||= inventoryActionButtons(drop_object, showall);
+    inventoryAction ||= inventoryActionButtons(act_quaffpotion, showquaff);
+    inventoryAction ||= inventoryActionButtons(act_read_something, showread);
+    inventoryAction ||= inventoryActionButtons(act_eatcookie, showeat);
+    inventoryAction ||= inventoryActionButtons(wear, showwear);
+    inventoryAction ||= inventoryActionButtons(wield, showallwield);
     if (inventoryAction) {
       return;
     }
@@ -167,12 +168,29 @@ function setButtonFontSize(size) {
   else size = Math.max(12, size - 10);
   buttonCache.forEach(button => {
     if (button && button.style) {
-      button.style.fontSize = `${size}px`;
+      if (button.overRideFontSize) {
+        button.style.textAlign = `left`;
+        button.style.fontSize = `${Math.min(MIN_SELECTION_FONT_SIZE, size)}px`;
+      } else {
+        button.style.fontSize = `${size}px`;
+      }
       if (!mobileDevice) button.style.padding = `0px`; // see also: setButton()
       if (!mobileDevice) button.style.paddingLeft = `5px`; // see also: setButton()
       if (!mobileDevice) button.style.paddingRight = `5px`; // see also: setButton()
     }
   });
+}
+
+
+function getButtonWidth(cacheKey) {
+    const button = buttonCache.get(cacheKey);
+    if (!button) return 0;
+    return Number(getComputedStyle(button).width.split(`px`)[0]);
+}
+function getButtonHeight(cacheKey) {
+    const button = buttonCache.get(cacheKey);
+    if (!button) return 0;
+    return Number(getComputedStyle(button).height.split(`px`)[0]);
 }
 
 
@@ -210,10 +228,8 @@ function setButton(location, cacheKey, style, key, label, repeat, width, height,
     buttonCache.set(cacheKey, button);
   }
 
-  if (!key) key = button.key;
-  if (!label) label = button.value;
-  button.key = key;
-  button.value = label;
+  button.key = key || button.key;
+  button.value = label || button.value;
   button.disabled = false;
 
   if (document.body) {
@@ -221,12 +237,12 @@ function setButton(location, cacheKey, style, key, label, repeat, width, height,
     button.style.fontFamily = document.body.style.fontFamily;
   }
 
-  if (width) button.style.width = `${width}px`;
-  if (height) button.style.height = `${height}px`
+  if (width != null) button.style.width = `${width}px`;
+  if (height != null) button.style.height = `${height}px`;
 
-  if (location && document.getElementById(location)) {
-    document.getElementById(location).appendChild(button);
-  }
+  const target = location && document.getElementById(location);
+  if (target) target.appendChild(button);
+
   return button;
 }
 
@@ -243,27 +259,22 @@ function createButton(key, label, repeat, style) {
   button.setAttribute(`type`, `button`);
   button.key = key;
   button.id = label;
-  button.name = label;
   button.value = label;
   button.repeat = repeat;
 
-  button.className = style ? style : FIXED;
+  button.className = style ?? FIXED;
 
   if (repeat) {
     if (isTouch()) {
       button.addEventListener(`touchstart`, buttonClicked);
       button.addEventListener(`touchend`, larnmouseup);
-      document.ontouchend = larnmouseup;
     } else {
       button.addEventListener(`mousedown`, buttonClicked);
-      button.onmouseup = larnmouseup; // to prevent issues with dragging offscreen
-      document.onmouseup = larnmouseup; // to prevent issues with dragging offscreen
+      button.addEventListener(`mouseup`, larnmouseup); // to prevent issues with dragging offscreen
     }
   } else {
     button.addEventListener(`click`, buttonClicked);
   }
-
-  document.addEventListener(`dblclick`, preventDoubleClick);
 
   return button;
 }
@@ -283,23 +294,20 @@ let MAX_EVENTS = 80; // built in safety
 function buttonClicked(event) {
   event.preventDefault();
 
-  let keyPress = event.srcElement.key;
-  if (keyPress === null) { console.log(`null keypress`); return; }
+  const button = event.target;
 
-  if (event.srcElement.repeat) {
+  let keyPress = button.key;
+  if (keyPress == null) return;
+
+  if (button.repeat) {
     if (BUTTON_RUN.isRunning) {
-      // Interpret "run + wait" as "rest until recovered"
-      if (keyPress == `.`) {
-        keyPress = `M`;
-      } else {
         keyPress = keyPress.toUpperCase();
-      }
     }
     larnmousedown(keyPress);
   } else {
-    if (event.srcElement.keyboardOverride) {
-      KEYBOARD_INPUT = event.srcElement.keyboardOverride;
-      event.srcElement.keyboardOverride = null;
+    if (button.keyboardOverride) {
+      KEYBOARD_INPUT = button.keyboardOverride;
+      button.keyboardOverride = null;
     }
     mousetrap(null, keyPress);
   }
@@ -404,7 +412,7 @@ function nonMazeButtons() {
           if (obj.isGem() || obj.matches(OLARNEYE)) {
             let label = getCharFromIndex(i);
             setButton(KEYBOARD, `BUTTON_SELL_${label}`, NARROW, label, label);
-            if (++numbuttons % 9 === 0) newButtonRow(ACTIONS);
+            if (++numbuttons % 9 === 0) newButtonRow(KEYBOARD);
           }
         }
       }
@@ -432,10 +440,12 @@ function nonMazeButtons() {
       newButtonRow(KEYBOARD);
 
       keyboardButtons(KEYBOARD, false, false, false, false);
+
       for (let key = `a`, i = 0; i < 26; i++, key = key.nextChar()) {
-        let count = dnd_item[dndindex + i];
-        let outofstock = count ? count.qty === 0 : true;
-        getButton(`BUTTON_QWERTY_${key}`).disabled = outofstock;
+        let dnditem = dnd_item[dndindex + i];
+        let outofstock = dnditem ? dnditem?.qty === 0 : true;
+        let expensive = dnditem ? dnditem?.price > player.GOLD : true;
+         getButton(`BUTTON_QWERTY_${key}`).disabled = outofstock || expensive;
       }
 
     }
@@ -531,10 +541,9 @@ function numberKeyboard(location, label, showpercent, showfifty) {
 //
 function keyboardButtons(location, uppercase, usecaps, usespace, usedel) {
   let keyboard_keys = [`qwertyuiop`, `asdfghjkl`, `zxcvbnm`];
-
   let addgaps = true;
 
-  if (isPhone() && !isHorizontal()) {
+  if (isPhone()) {
     keyboard_keys = [`abcdefghijklmnopqrstuvwxyz`];
     addgaps = false;
   }
@@ -549,13 +558,16 @@ function keyboardButtons(location, uppercase, usecaps, usespace, usedel) {
     newButtonRow(location);
   }
 
-  let abutton = uppercase ? getButton(`BUTTON_QWERTY_A`) : getButton(`BUTTON_QWERTY_a`);
-  let zbutton = uppercase ? getButton(`BUTTON_QWERTY_Z`) : getButton(`BUTTON_QWERTY_z`);
-  let buttonw = Number(getComputedStyle(abutton).width.split(`px`)[0]) + 20;
+  const abutton = uppercase ? getButton(`BUTTON_QWERTY_A`) : getButton(`BUTTON_QWERTY_a`);
+  const zbutton = uppercase ? getButton(`BUTTON_QWERTY_Z`) : getButton(`BUTTON_QWERTY_z`);
+  const buttonw = getButtonWidth(uppercase ? `BUTTON_QWERTY_A` : `BUTTON_QWERTY_a`) + 20;
 
   if (addgaps) {
     abutton.style.marginLeft = buttonw / 2 + `px`;
     zbutton.style.marginLeft = buttonw + `px`;
+  } else {
+    abutton.style.marginLeft = `0px`;
+    zbutton.style.marginLeft = `0px`;
   }
 
   if (usecaps) {
@@ -672,7 +684,7 @@ function inventoryButtons() {
     setButton(ACTIONS, `BUTTON_WEAR`, VARIABLE, `W`, `wear`);
   }
   // eat
-  if (isCarryingCookie() & !item.matches(OCOOKIE)) {
+  if (isCarryingCookie() && !item.matches(OCOOKIE)) {
     newButtonRow(ACTIONS);
     setButton(ACTIONS, `BUTTON_EAT`, VARIABLE, `e`, `eat`);
   }
@@ -684,6 +696,9 @@ function inventoryActionButtons(callback, filter) {
 
   if (blocking_callback === callback) {
     setButton(ACTIONS, `BUTTON_CANCEL`);
+
+    const longest = `X`.repeat(ULARN ? 30 : 29);
+    const maxbuttonwidth_item = estimateButtonWidth(MIN_SELECTION_FONT_SIZE, longest, 10);
 
     if (callback === wear) {
       if (player.SHIELD) {
@@ -702,14 +717,15 @@ function inventoryActionButtons(callback, filter) {
 
     let inv = showinventory(false, null, filter, false, false, false);
 
-    for (let i = 0; i < inv.length; i++) {
-      let params = inv[i];
-      setButton(KEYBOARD, `BUTTON_${params[0]}${params[1]}`, VARIABLE, params[0], `${params[0]}) ${params[1]}`);
-      newButtonRow(KEYBOARD);
+    for (const [letter, item] of inv) {
+      const invButton = setButton(KEYBOARD, `BUTTON_${letter}${item.shortName()}`, FIXED, letter, `${letter}) ${item.shortName()}`, false, maxbuttonwidth_item, 30);
+      invButton.overRideFontSize = true;
     }
 
     if (callback === drop_object) {
-      setButton(KEYBOARD, `BUTTON_DROP_GOLD`, VARIABLE, `.`, `.) some gold`);
+      newButtonRow(KEYBOARD);
+      const goldbutton = setButton(KEYBOARD, `BUTTON_DROP_GOLD`, VARIABLE, `.`, `.) some gold`);
+      goldbutton.overRideFontSize = true;
     }
 
     return true;
@@ -728,19 +744,7 @@ function movementButtons() {
 
   let elw = Math.min(getElementWidth(KEYPAD), getElementHeight(KEYPAD));
   let buttongap = 3;
-  let buttonsize = (elw - buttongap * 3) / 3;
-
-  setButton(KEYPAD, `BUTTON_UP_LEFT`, FIXED, `y`, `↖`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x - 1, player.y - 1);
-  setButton(KEYPAD, `BUTTON_UP`, FIXED, `k`, `↑`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x, player.y - 1);
-  setButton(KEYPAD, `BUTTON_UP_RIGHT`, FIXED, `u`, `↗`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x + 1, player.y - 1);
-  newButtonRow(KEYPAD, buttongap);
-  setButton(KEYPAD, `BUTTON_LEFT`, FIXED, `h`, `←`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x - 1, player.y);
-  setButton(KEYPAD, `BUTTON_NOMOVE`, FIXED, `.`, `.`, true, buttonsize, buttonsize, buttongap);
-  setButton(KEYPAD, `BUTTON_RIGHT`, FIXED, `l`, `→`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x + 1, player.y);
-  newButtonRow(KEYPAD, buttongap);
-  setButton(KEYPAD, `BUTTON_DOWN_LEFT`, FIXED, `b`, `↙`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x - 1, player.y + 1);
-  setButton(KEYPAD, `BUTTON_DOWN`, FIXED, `j`, `↓`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x, player.y + 1);
-  setButton(KEYPAD, `BUTTON_DOWN_RIGHT`, FIXED, `n`, `↘`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x + 1, player.y + 1);
+  let buttonsize = (elw - buttongap * 4) / 3;
 
   if (!BUTTON_RUN_INITIALIZED) {
     BUTTON_RUN_INITIALIZED = true;
@@ -757,6 +761,21 @@ function movementButtons() {
     }
     endRun();
   }
+
+  const restString = BUTTON_RUN.isRunning ? `Rest` : `.`;
+  const restKey = BUTTON_RUN.isRunning ? `M` : `.`;
+  setButton(KEYPAD, `BUTTON_UP_LEFT`, FIXED, `y`, `↖`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x - 1, player.y - 1);
+  setButton(KEYPAD, `BUTTON_UP`, FIXED, `k`, `↑`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x, player.y - 1);
+  setButton(KEYPAD, `BUTTON_UP_RIGHT`, FIXED, `u`, `↗`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x + 1, player.y - 1);
+  newButtonRow(KEYPAD, buttongap);
+  setButton(KEYPAD, `BUTTON_LEFT`, FIXED, `h`, `←`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x - 1, player.y);
+  setButton(KEYPAD, `BUTTON_NOMOVE`, FIXED, restKey, restString, true, buttonsize, buttonsize, buttongap);
+  setButton(KEYPAD, `BUTTON_RIGHT`, FIXED, `l`, `→`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x + 1, player.y);
+  newButtonRow(KEYPAD, buttongap);
+  setButton(KEYPAD, `BUTTON_DOWN_LEFT`, FIXED, `b`, `↙`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x - 1, player.y + 1);
+  setButton(KEYPAD, `BUTTON_DOWN`, FIXED, `j`, `↓`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x, player.y + 1);
+  setButton(KEYPAD, `BUTTON_DOWN_RIGHT`, FIXED, `n`, `↘`, true, buttonsize, buttonsize, buttongap).disabled = !canMoveButton(player.x + 1, player.y + 1);
+
   setButton(RUN, `BUTTON_RUN`, `verticalbutton`, null, BUTTON_RUN.value, false, null, buttonsize);
 }
 
@@ -769,13 +788,21 @@ function canMoveButton(x, y) {
 function startRun() {
   BUTTON_RUN.isRunning = true;
   BUTTON_RUN.value = `Choose Direction`;
-  BUTTON_REST.value = `Rest`;
+  const nomovebutton = getButton(`BUTTON_NOMOVE`);
+  if (nomovebutton) {
+    nomovebutton.value = `Rest`;
+    nomovebutton.key = `M`;
+  }
 };
 
 function endRun() {
   BUTTON_RUN.isRunning = false;
   BUTTON_RUN.value = `Hold to Run`;
-  BUTTON_REST.value = `.`;
+  const nomovebutton = getButton(`BUTTON_NOMOVE`);
+  if (nomovebutton) {
+    nomovebutton.value = `.`;
+    nomovebutton.key = `.`;
+  }
 };
 
 function toggleRun() {
@@ -897,33 +924,35 @@ function contextButtons() {
 
 
 
-// 
 //
 //
 // SPELL LIST BUTTONS
 //
 //
-function spellListButtons(source, exclude) {
+function spellListButtons(excludeKnown) {
   setButton(ACTIONS, `BUTTON_CANCEL`);
-  let larnw = (getComputedStyle(document.getElementById(`LARN`)).width.split(`px`)[0]);
-  let cw = 0;
-  for (let spellIndex = 0; spellIndex < source.length; spellIndex++) {
-    let pass = player.knownSpells[spellIndex];
-    if (exclude) pass = !pass;
-    if (pass) {
-      let cacheKey = `BUTTON_${spelcode[spellIndex]}`;
-      // need to add the button before we can compute style
-      let button = setButton(KEYBOARD, cacheKey, VARIABLE, spelcode[spellIndex], spelname[spellIndex]);
-      let buttonw = Number(getComputedStyle(button).width.split(`px`)[0]) + 12;
-      cw += buttonw;
-      if (cw > larnw) {
-        document.getElementById(KEYBOARD).removeChild(button);
-        // newButtonRow(KEYBOARD);
-        setButton(KEYBOARD, cacheKey);
-        cw = buttonw;
-      }
-    }
+
+  const buttonfontsize = Number(getButton(`BUTTON_CANCEL`).style.fontSize.split(`px`)[0]);
+  const maxbuttonwidth_spell = estimateButtonWidth(buttonfontsize, "magic missile", 30);
+
+  for (let spellIndex = 0; spellIndex < spelcode.length; spellIndex++) {
+    let known = player.knownSpells[spellIndex] ?? false; // "|| false" is backward compatibility for undefined return by old save game
+    if (excludeKnown === known) continue;
+    let cacheKey = `BUTTON_${spelcode[spellIndex]}`;
+    setButton(KEYBOARD, cacheKey, FIXED, spelcode[spellIndex], spelname_short[spellIndex], false, maxbuttonwidth_spell, 30);
   }
+}
+
+
+let _buttonMeasureCanvas = null;
+function estimateButtonWidth(fontSize, text, border) {
+  if (!_buttonMeasureCanvas) {
+    _buttonMeasureCanvas = document.createElement(`canvas`);
+  }
+  let ctx = _buttonMeasureCanvas.getContext(`2d`);
+  let fontFamily = document.body.style.fontFamily || `sans-serif`;
+  ctx.font = `${fontSize}px ${fontFamily}`;
+  return Math.ceil(ctx.measureText(text).width) + border * 2;
 }
 
 
@@ -937,11 +966,11 @@ function helpButtons(location) {
   let mobileDevice = isMobile();
 
   setButton(location, `BUTTON_SHOW_CONFIG`, VARIABLE, `⚙️`, `⚙️`);
-  if (showConfigButtons) {
+  if (getPref('showConfigButtons')) {
     if (!mobileDevice) setButton(location, `BUTTON_HELP`, VARIABLE, `?`, `Help`);
     if (!mobileDevice) setButton(location, `BUTTON_OPTIONS`, VARIABLE, `O`, `Options`);
     if (mobileDevice) setButton(location, `BUTTON_SAVE`, VARIABLE, `S`, `Save`);
-    let pickupLabel = auto_pickup ? `on` : `off`;
+    let pickupLabel = getPref('auto_pickup') ? `on` : `off`;
     if (mobileDevice) setButton(location, `BUTTON_PICKUP`, VARIABLE, `@`, `Auto-pickup: ${pickupLabel}`);
     if (mobileDevice) setButton(location, `BUTTON_SCORES`, VARIABLE, `z`, `Scores`);
     if (mobileDevice) setButton(location, `BUTTON_QUIT`, VARIABLE, `Q`, `Quit`);

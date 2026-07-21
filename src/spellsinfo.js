@@ -42,9 +42,25 @@ const spelname = [
   `dehydration`,            `lightning`,        `drain life`,
   `invulnerability`,        `flood`,            `finger of death`,
   `scare monster`,          `hold monster`,     `time stop`,
-  `teleport away`,          `magic fire`,       `make a wall`,
+  `teleport away`,          `magic fire`,       `make wall`,
   `sphere of annihilation`, `genocide`,         `summon demon`,     
   `walk through walls`,     `alter reality`,    `permanence`,
+];
+
+const spelname_short = [
+  `protection`,     `magic missile`,    `dexterity`,
+  `sleep`,          `charm`,            `sonic spear`,
+  `web`,            `strength`,         `enlightenment`,
+  `healing`,        `cure blind`,       `create monst`,
+  `phant forces`,   `invisibility`,     `fireball`,
+  `cold`,           `polymorph`,        `cancellation`,
+  `haste self`,     `cloud kill`,       `vpr rock`,
+  `dehydration`,    `lightning`,        `drain life`,
+  `invulnerable`,   `flood`,            `fgr of death`,
+  `scare monst`,    `hold monster`,     `time stop`,
+  `tel away`,       `magic fire`,       `make wall`,
+  `annihilation`,   `genocide`,         `summon demon`,     
+  `wall walk`,      `alt reality`,      `permanence`,
 ];
 
 
