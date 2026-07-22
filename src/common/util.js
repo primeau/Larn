@@ -839,3 +839,9 @@ function getISOWeek(date) {
   const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
   return weekNo;
 }
+
+// some browsers don't support structuredClone
+function deepClone(obj) {
+  if (typeof structuredClone === 'function') return structuredClone(obj);
+  return JSON.parse(JSON.stringify(obj));
+}

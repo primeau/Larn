@@ -639,7 +639,7 @@ function setMonsterNames(monsterString) {
 
 function updateCustomMonsters(customList) {
   // clear any old custom settings
-  monsterlist = ULARN ? structuredClone(ULARN_monsterlist) : structuredClone(LARN_monsterlist);
+  monsterlist = ULARN ? deepClone(ULARN_monsterlist) : deepClone(LARN_monsterlist);
   // restore back to Monster objects
   for (const monster of monsterlist) {
     Object.setPrototypeOf(monster, Monster.prototype);

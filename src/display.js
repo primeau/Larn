@@ -244,8 +244,8 @@ let spriteWidth = 4;
 
 function setSpriteWidthFromDimensions(screenw, screenh, margin) {
   let baseWidth = (screenw - margin * 2) / (getPref('side_inventory') ? 120 : 80);
-  const wide = baseWidth * 24 * 2 + margin > screenh; // if screen is much wider than tall
-  if (wide) baseWidth = (screenh - margin) / 24 / 2;
+  const wide = baseWidth * 24 * 2 + margin * 2 > screenh; // if screen is much wider than tall
+  if (wide) baseWidth = (screenh - margin * 2) / 24 / 2;
   if (amiga_mode) baseWidth = Math.floor(baseWidth); //  chrome needs whole numbers to have smooth amiga graphics
   if (baseWidth < 4) baseWidth = 4;
 
@@ -284,9 +284,9 @@ function onResize(event) {
   //
   setSpriteWidthFromDimensions(screenw, screenh - helph, margin);
   let larnBox = new Box(margin, margin, spriteWidth * 80, spriteWidth * 24 * 2);
-  let inventoryBox = new Box(larnBox.left + larnBox.width, larnBox.top, spriteWidth * 40, larnBox.height);
-  let helpBox = new Box(margin, screenh - helph - 1, screenw - margin * 2, helph - 4);
-  let chastizeBox = new Box(larnBox.left, larnBox.top + larnBox.height, larnBox.width, helpBox.height);
+  let inventoryBox = getPref('side_inventory') ? new Box(larnBox.left + larnBox.width, larnBox.top, spriteWidth * 40, larnBox.height) : emptyBox;
+  let helpBox = game_started ? new Box(margin, screenh - helph - 1, larnBox.width + inventoryBox.width, helph - 4) : emptyBox;
+  let chastizeBox = game_started ? emptyBox : new Box(larnBox.left, larnBox.top + larnBox.height, larnBox.width, spriteWidth);
   let runBox = emptyBox;
   let directionBox = emptyBox;
   let contextBox = emptyBox;
@@ -307,18 +307,14 @@ function onResize(event) {
     if (isTablet() || isVertical()) {
       setSpriteWidthFromDimensions(screenw, screenh / 1.75, margin);
       larnBox = new Box(margin, margin, spriteWidth * 80, spriteWidth * 24 * 2);
-      if (getPref('side_inventory')) {
-        inventoryBox = new Box(larnBox.left + larnBox.width, larnBox.top, spriteWidth * 40, larnBox.height);
-      } else {
-        inventoryBox = emptyBox;
-      }
+      inventoryBox = getPref('side_inventory') ? new Box(larnBox.left + larnBox.width, larnBox.top, spriteWidth * 40, larnBox.height) : emptyBox;
       
       const directionH  = isTablet() ? (buttonh + 2 * margin) * 4 : 40 * vw;
       directionBox = new Box(margin, larnBox.top + larnBox.height + margin * 2, directionH, directionH);
       runBox = new Box(screenw - margin, directionBox.top, directionH, directionH / 3);
       contextBox = new Box(directionBox.left + directionBox.width + margin, directionBox.top, directionBox.width, directionBox.height);
       keyboardBox = new Box(margin, margin + larnBox.top + larnBox.height + vh * 5, screenw - margin * 2, directionH);
-      chastizeBox = new Box(larnBox.left, keyboardBox.top - margin * 6, larnBox.width, helpBox.height);
+      chastizeBox = game_started ? emptyBox : new Box(larnBox.left, keyboardBox.top - margin * 6, larnBox.width, helpBox.height);
       if (isPhone()) contextBox = new Box(margin, directionBox.top + directionBox.height + margin, directionH, 25 * vh);
     } 
 
@@ -329,8 +325,8 @@ function onResize(event) {
       directionBox = new Box(margin, margin, spriteWidth * 24, spriteWidth * 24);
       runBox = new Box(99 * vw, margin, directionBox.height, 1 * vh);
       contextBox = new Box(margin, directionBox.top + directionBox.height + margin, directionBox.width, 25 * vh);
-      keyboardBox = new Box(larnBox.left + larnBox.width + margin, margin + 10 + buttonh, screenw - larnBox.left - larnBox.width - margin * 2, screenh);
-      chastizeBox = new Box(larnBox.left, larnBox.top + larnBox.height, larnBox.width, 4);
+      keyboardBox = new Box(larnBox.left + larnBox.width + margin, margin + 10 + buttonh, screenw - larnBox.left - larnBox.width - margin * 2, screenh - margin - 10 - buttonh);
+      chastizeBox = game_started ? emptyBox : new Box(larnBox.left, larnBox.top + larnBox.height, larnBox.width, 4);
     } 
 
     invButtonsBox = new Box(screenw - (buttonw + 20) * 2, directionBox.top, (buttonw + 20) * 2, spriteWidth * 24 * 2);
