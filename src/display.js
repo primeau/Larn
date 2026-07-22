@@ -285,7 +285,7 @@ function onResize(event) {
   setSpriteWidthFromDimensions(screenw, screenh - helph, margin);
   let larnBox = new Box(margin, margin, spriteWidth * 80, spriteWidth * 24 * 2);
   let inventoryBox = new Box(larnBox.left + larnBox.width, larnBox.top, spriteWidth * 40, larnBox.height);
-  let helpBox = new Box(margin, screenh - helph - 1, screenw, helph - 4);
+  let helpBox = new Box(margin, screenh - helph - 1, screenw - margin * 2, helph - 4);
   let chastizeBox = new Box(larnBox.left, larnBox.top + larnBox.height, larnBox.width, helpBox.height);
   let runBox = emptyBox;
   let directionBox = emptyBox;
@@ -374,7 +374,7 @@ function setMode(amiga, retro, original) {
     styleUploaded = uploadStyle(style);
   }
 
-  // skip font metric work when nothing has changed -- works on desktop, not on mobile
+  // // skip font metric work when nothing has changed -- works on desktop, not on mobile
   // const modeKey = `${amiga}|${retro}|${original}|${spriteWidth}`;
   // if (modeKey !== LAST_MODE) {
   //   LAST_MODE = modeKey;
