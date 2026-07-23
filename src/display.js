@@ -157,6 +157,8 @@ function setDiv(id, data, markup) {
 
   clearDivStyle(div);
 
+  if (!markup) return;
+
   if (markup === START_BOLD) {
     div.style.fontWeight = 'bold';
     div.style.color = 'white';
@@ -168,15 +170,15 @@ function setDiv(id, data, markup) {
     div.style.textDecoration = 'underline';
   } else if (markup === START_ITALIC) {
     div.style.fontStyle = 'italic';
-  } else if (markup && markup.indexOf(START_FONT) != -1) {
+  } else if (markup.indexOf(START_FONT) != -1) {
     // i.e. <font color='red'>
     div.style.color = markup.split(`'`)[1];
-  } else if (markup && markup.indexOf(START_MARK) != -1) {
+  } else if (markup.indexOf(START_MARK) != -1) {
     // i.e. <mark style='background-color: red'>
     div.style.color = 'black';
     div.style.backgroundImage = 'none';
     div.style.backgroundColor = markup.split(`'`)[1].split(`:`)[1];
-  } else if (markup && markup.indexOf(START_HREF) != -1) {
+  } else if (markup.indexOf(START_HREF) != -1) {
     // i.e. <a href='link'>text</a> (must use ' not ")
     div.style.color = 'white';
     div.style.cursor = 'pointer';
