@@ -5,7 +5,7 @@ let cursory = 1;
 
 let display = initGrid(80, 24);
 
-const START_MARK = `<mark>`;
+const START_MARK = `<mark style='background-color:`;
 const END_MARK = `</mark>`;
 const START_BOLD = `<b>`;
 const END_BOLD = `</b>`;
@@ -50,7 +50,6 @@ function lprcat(str) {
     // check for opening/closing markup tags. tags must be handled because 
     // they will use up characters in display[][] even though they aren't visible
     if (str.indexOf(START_BOLD, i) === i) starttag = START_BOLD;
-    else if (str.indexOf(START_MARK, i) === i) starttag = START_MARK;
     else if (str.indexOf(START_DIM, i) === i) starttag = START_DIM;
     else if (str.indexOf(START_STRIKE, i) === i) starttag = START_STRIKE;
     else if (str.indexOf(START_ITALIC, i) === i) starttag = START_ITALIC;
@@ -61,6 +60,10 @@ function lprcat(str) {
     }
     else if (str.indexOf(START_FONT, i) === i) {
       // <font color='red'>
+      starttag = str.slice(i, str.indexOf('>', i) + 1);
+    }
+    else if (str.indexOf(START_MARK, i) === i) {
+      // <mark style='background-color: red'>
       starttag = str.slice(i, str.indexOf('>', i) + 1);
     }
 

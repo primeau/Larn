@@ -417,27 +417,36 @@ function isnum(str) {
 
 
 
-function pad(str, width, bold) {
-  return padString(`` + str, width, bold);
+function pad(str, width, bold, color=``) {
+  return padString(`` + str, width, bold, color);
 }
 
 
 
 const HIGHLIGHT_DELAY = 700; // left align with -width, otherwise right align
-function padString(str, width, lastHighlightTime) {
+function padString(str, width, lastHighlightTime, color=``) {
   if (!str) return Array(Math.abs(width)).join(` `);
   if (!width || width == 0) return str;
   var now = millis();
   var numspaces = Math.max(0, Math.abs(width) + 1 - str.length);
   var spaces = Array(numspaces).join(` `);
   var shouldHighlight = ((now - lastHighlightTime) < HIGHLIGHT_DELAY);
-  var highlightStart = shouldHighlight ? START_MARK : ``;
-  var highlightEnd = shouldHighlight ? END_MARK : ``;
+  if (shouldHighlight) {
+	  if (color === ``) color = `lightgrey`;
+	  var markupStart = `${START_MARK}${color}'>`;
+	  var markupEnd = END_MARK;
+  } else if (color !== ``) {
+	  var markupStart = `${START_FONT}'${color}'>`;
+	  var markupEnd = END_FONT;
+  } else {
+	  var markupStart = ``;
+	  var markupEnd = ``;
+  }
 
   if (width < 0) {
-    return `${highlightStart}${str}${highlightEnd}${spaces}`;
+    return `${markupStart}${str}${markupEnd}${spaces}`;
   } else {
-    return `${spaces}${highlightStart}${str}${highlightEnd}`;
+    return `${spaces}${markupStart}${str}${markupEnd}`;
   }
 }
 

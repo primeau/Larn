@@ -616,9 +616,9 @@ var Player = function Player() {
 
     if (level == 0) this.TELEFLAG = 0;
     const hppad = this.HPMAX >= 100 ? 3 : 2;
-    const hpColor = this.HP >= this.HPMAX ? 'lightgrey'
-      : this.HP >= Math.floor(this.HPMAX * 2/3) ? 'lime'
-      : this.HP >= Math.floor(this.HPMAX / 3) ? 'yellow'
+    const hpColor = this.HP >= this.HPMAX ? ''
+      : this.HP >= Math.ceil(this.HPMAX * 2.0 / 3.0) ? 'lime'
+      : this.HP >= Math.ceil(this.HPMAX * 1.0 / 3.0) ? 'yellow'
       : 'red';
     const output =
       `Spells: ${pad(this.SPELLS,2,changedSpells)}(${pad(this.SPELLMAX,2,changedSpellsMax)})  \
@@ -626,7 +626,7 @@ AC: ${pad(this.AC,-4,changedAC)} \
 WC: ${pad(this.WCLASS,-4,changedWC)} \
 Level ${pad(this.LEVEL,-2,changedLevel)} \
 Exp: ${pad(this.EXPERIENCE,-10,changedExp)}${pad(CLASSES[this.LEVEL - 1],16,changedLevel)}               \n\
-HP: <font color='${hpColor}'>${pad(this.HP,hppad,changedHP)}</font>(${pad(this.HPMAX, hppad,changedHPMax)}) \
+HP: ${pad(this.HP,hppad,changedHP,hpColor)}(${pad(this.HPMAX,hppad,changedHPMax)}) \
 STR=${pad((this.STRENGTH + this.STREXTRA),-2,changedSTR)} \
 INT=${pad(this.INTELLIGENCE,-2,changedINT)} \
 WIS=${pad(this.WISDOM,-2, changedWIS)} \
