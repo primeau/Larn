@@ -135,7 +135,7 @@ var Player = function Player() {
   this.getChar = function () {
     if (amiga_mode) return `${DIV_START}player${DIV_END}`;
     if (this.char) return this.char;
-    if (getPref('retro_mode')) return `<b><font color='white'>@</font></b>`; 
+    if (getPref('retro_mode')) return `${START_BOLD}${wrapFont('@', 'white')}${END_BOLD}`;
     return `▓`;
   };
 
@@ -611,18 +611,22 @@ var Player = function Player() {
   // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
   this.getBottomLine = function(lev) {
     if (level < 0) return ``;
-    var templevel = LEVELNAMES[level];
+    let templevel = LEVELNAMES[level];
     if (lev) templevel = lev;
 
     if (level == 0) this.TELEFLAG = 0;
-    let hppad = this.HPMAX >= 100 ? 3 : 2;
-    var output =
+    const hppad = this.HPMAX >= 100 ? 3 : 2;
+    const hpColor = this.HP >= this.HPMAX ? ''
+      : this.HP >= Math.ceil(this.HPMAX * 2.0 / 3.0) ? 'lime'
+      : this.HP >= Math.ceil(this.HPMAX * 1.0 / 3.0) ? 'yellow'
+      : 'red';
+    const output =
       `Spells: ${pad(this.SPELLS,2,changedSpells)}(${pad(this.SPELLMAX,2,changedSpellsMax)})  \
 AC: ${pad(this.AC,-4,changedAC)} \
 WC: ${pad(this.WCLASS,-4,changedWC)} \
 Level ${pad(this.LEVEL,-2,changedLevel)} \
 Exp: ${pad(this.EXPERIENCE,-10,changedExp)}${pad(CLASSES[this.LEVEL - 1],16,changedLevel)}               \n\
-HP: ${pad(this.HP,hppad,changedHP)}(${pad(this.HPMAX, hppad,changedHPMax)}) \
+HP: ${pad(this.HP,hppad,changedHP,hpColor)}(${pad(this.HPMAX,hppad,changedHPMax)}) \
 STR=${pad((this.STRENGTH + this.STREXTRA),-2,changedSTR)} \
 INT=${pad(this.INTELLIGENCE,-2,changedINT)} \
 WIS=${pad(this.WISDOM,-2, changedWIS)} \

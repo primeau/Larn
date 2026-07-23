@@ -146,7 +146,7 @@ Monster.prototype = {
   toString: function() {
     const monster = monsterlist[this.arg];
     if (player.BLINDCOUNT == 0) {
-      if (getPref('log_color') && monster.color) return `<font color='${monster.color}'>${monster.desc}</font>`;
+      if (getPref('log_color') && monster.color) return wrapFont(monster.desc, monster.color);
       else return monster.desc;
     }
     else {
@@ -179,7 +179,7 @@ Monster.prototype = {
         return OEMPTY.char;
       } else {
         if (getPref('show_color') && monsterlist[monster].color) {
-          return `<font color='${monsterlist[monster].color}'>${monsterlist[monster].char}</font>`;
+          return wrapFont(monsterlist[monster].char, monsterlist[monster].color);
         } else {
           return monsterlist[monster].char;
         }
