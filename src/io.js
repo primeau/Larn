@@ -86,22 +86,11 @@ function lprcat(str) {
 
     // check for opening/closing markup tags. tags must be handled because 
     // they will use up characters in display[][] even though they aren't visible
-    if (str.indexOf(START_BOLD, i) === i) starttag = START_BOLD;
-    else if (str.indexOf(START_DIM, i) === i) starttag = START_DIM;
-    else if (str.indexOf(START_STRIKE, i) === i) starttag = START_STRIKE;
-    else if (str.indexOf(START_ITALIC, i) === i) starttag = START_ITALIC;
-    else if (str.indexOf(START_UNDERLINE, i) === i) starttag = START_UNDERLINE;
-    else if (str.indexOf(START_HREF, i) === i) {
-      // <a href='link'>text</a> (must use ' not ")
-      starttag = str.slice(i, str.indexOf('>', i) + 1);
-    }
-    else if (str.indexOf(START_FONT, i) === i) {
-      // <font color='red'>
-      starttag = str.slice(i, str.indexOf('>', i) + 1);
-    }
-    else if (str.indexOf(START_MARK, i) === i) {
-      // <mark style='background-color: red'>
-      starttag = str.slice(i, str.indexOf('>', i) + 1);
+    for (const tag of [START_BOLD, START_DIM, START_STRIKE, START_ITALIC, START_UNDERLINE, START_HREF, START_FONT, START_MARK]) {
+      if (str.indexOf(tag, i) === i) {
+        starttag = str.slice(i, str.indexOf('>', i) + 1);
+        break;
+      }
     }
 
     if (starttag) {
@@ -115,14 +104,12 @@ function lprcat(str) {
       // debug(`lprcat(): ${starttag}:${c}`)
     }
     
-    if (str.indexOf(END_BOLD, i+1) === i+1) endtag = END_BOLD;
-    else if (str.indexOf(END_MARK, i+1) === i+1) endtag = END_MARK;
-    else if (str.indexOf(END_DIM, i+1) === i+1) endtag = END_DIM;
-    else if (str.indexOf(END_STRIKE, i+1) === i+1) endtag = END_STRIKE;
-    else if (str.indexOf(END_ITALIC, i+1) === i+1) endtag = END_ITALIC;
-    else if (str.indexOf(END_UNDERLINE, i+1) === i+1) endtag = END_UNDERLINE;
-    else if (str.indexOf(END_FONT, i+1) === i+1) endtag = END_FONT;
-    else if (str.indexOf(END_HREF, i+1) === i+1) endtag = END_HREF;
+    for (const tag of [END_BOLD, END_DIM, END_STRIKE, END_ITALIC, END_UNDERLINE, END_HREF, END_FONT, END_MARK]) {
+      if (str.indexOf(tag, i+1) === i+1) {
+        endtag = tag;
+        break;
+      }
+    }
     
     if (endtag) {
       if (amiga_mode) {
