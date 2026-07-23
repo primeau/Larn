@@ -55,7 +55,7 @@ function enableDevmode() {
     // gtime = 40001;
     player.GOLD = 250000;
 
-    updateLog(`normal <i>italic</i> <s>strike</s> <b>bold</b> <dim>dim</dim> <mark>mark</mark> <u>underline</u> <a href='https://larn.org'>Link</a> <font color='red'>red</font> <font color='green'>green</font> <font color='blue'>blue</font>`);
+    updateLog(`normal <i>italic</i> <s>strike</s> <b>bold</b> <dim>dim</dim> <mark style='color:lightgrey'>mark</mark> <u>underline</u> <a href='https://larn.org'>Link</a> <font color='red'>red</font> <font color='green'>green</font> <font color='blue'>blue</font>`);
 
     // newcavelevel(level + 1);
     // setItem(player.x, player.y, createObject(OTRAPDOOR));
