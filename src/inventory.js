@@ -23,7 +23,8 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
   if (show_gold) {
     if (p.GOLD) {
       if (printScreen) cltoeoln();
-      if (printScreen) lprcat(`.) ${OGOLDPILE.getChar()} ${Number(p.GOLD).toLocaleString()} gold pieces\n`);
+      const goldSymbol = amiga_mode ? `` : `${OGOLDPILE.getChar()} `;
+      if (printScreen) lprcat(`.) ${goldSymbol}${Number(p.GOLD).toLocaleString()} gold pieces\n`);
       srcount++;
     } else {
       show_gold = false;
@@ -41,15 +42,18 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
     let item = inventory[k];
     if (inv_filter(item)) {
       srcount++;
+      const itemSymbol = amiga_mode ? `` : `${item.getChar()} `;
+      const itemStr = `${itemSymbol}${item}`;
       if (srcount <= wrap) {
         if (printScreen) cltoeoln();
-        widest = Math.max(widest, item.toString().length + 7);
+        let itemWidth = itemStr.length + 5;
+        widest = Math.max(widest, itemWidth);
       } else {
         let extra = show_gold ? 1 : 0;
         if (printScreen) cursor(widest, srcount % wrap + extra);
       }
       let foo = p.inventory.indexOf(item);
-      if (printScreen) lprcat(`${getCharFromIndex(foo)}) ${item.getChar()} ${item}\n`);
+      if (printScreen) lprcat(`${getCharFromIndex(foo)}) ${itemStr}\n`);
       buttons.push([getCharFromIndex(foo), item]);
     }
   }
