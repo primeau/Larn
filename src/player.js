@@ -1087,13 +1087,15 @@ function game_stats(p, endgame) {
   var s = endgame ? `Inventory:\n` : ``;
 
   if (endgame) {
-    s += `.) ` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
+    let goldSymbol = amiga_mode ? `` : `${OGOLDPILE.getChar()} `;
+    s += `.) ${goldSymbol}` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
   }
   var inv = showinventory(false, null, showall, false, false, false, p); //HACK!
   for (var i = 0; i < inv.length; i++) {
     var item = inv[i][1];
     if (item) {
-      let itemString = inv[i][0] + `) ` + item.toString(false, endgame || DEBUG_STATS, p);
+      let itemSymbol = amiga_mode ? `` : `${item.getChar()} `;
+      let itemString = inv[i][0] + `) ${itemSymbol}` + item.toString(false, endgame || DEBUG_STATS, p);
       let itemParts = [itemString];
       if (itemString.length > 39)
         itemParts = itemString.split(`(`);
