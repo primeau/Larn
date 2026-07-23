@@ -273,6 +273,14 @@ async function parse(e, key) {
   }
 
   //
+  // CAST THE LAST SPELL AGAIN
+  //
+  if (key == 'a') {
+    castLastSpell();
+    return;
+  }
+
+  //
   // DROP
   //
   if (key == 'd') {
