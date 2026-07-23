@@ -135,7 +135,7 @@ var Player = function Player() {
   this.getChar = function () {
     if (amiga_mode) return `${DIV_START}player${DIV_END}`;
     if (this.char) return this.char;
-    if (getPref('retro_mode')) return `<b><font color='white'>@</font></b>`; 
+    if (getPref('retro_mode')) return `${START_BOLD}${wrapFont('@', 'white')}${END_BOLD}`;
     return `▓`;
   };
 

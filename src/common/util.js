@@ -432,21 +432,17 @@ function padString(str, width, lastHighlightTime, color=``) {
   var spaces = Array(numspaces).join(` `);
   var shouldHighlight = ((now - lastHighlightTime) < HIGHLIGHT_DELAY);
   if (shouldHighlight) {
-	  if (color === ``) color = `lightgrey`;
-	  var markupStart = `${START_MARK}${color}'>`;
-	  var markupEnd = END_MARK;
+    var markup = wrapMark(str, color);
   } else if (color !== ``) {
-	  var markupStart = `${START_FONT}'${color}'>`;
-	  var markupEnd = END_FONT;
+    var markup = wrapFont(str, color);
   } else {
-	  var markupStart = ``;
-	  var markupEnd = ``;
+    var markup = str;
   }
 
   if (width < 0) {
-    return `${markupStart}${str}${markupEnd}${spaces}`;
+    return `${markup}${spaces}`;
   } else {
-    return `${spaces}${markupStart}${str}${markupEnd}`;
+    return `${spaces}${markup}`;
   }
 }
 

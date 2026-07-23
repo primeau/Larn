@@ -24,6 +24,43 @@ const END_FONT = `</font>`;
 
 
 
+function startMark(color=``) {
+  if (color === ``) color = `lightgrey`;
+  return `${START_MARK}${color}'>`;
+}
+
+
+
+function wrapMark(str, color=``) {
+  return `${startMark(color)}${str}${END_MARK}`;
+}
+
+
+
+function startFont(color) {
+  return `${START_FONT}'${color}'>`;
+}
+
+
+
+function wrapFont(str, color) {
+  return `${startFont(color)}${str}${END_FONT}`;
+}
+
+
+
+function startHref(href) {
+  return `${START_HREF}'${href}'>`;
+}
+
+
+
+function wrapHref(str, href) {
+  return `${startHref(href)}${str}${END_HREF}`;
+}
+
+
+
 function lprint(str) {
   lprcat(str);
   blt();
