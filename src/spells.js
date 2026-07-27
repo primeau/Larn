@@ -31,7 +31,6 @@ function checkHasSpells() {
 
 
 function pre_cast() {
-  cursors();
   nomove = 1;
   if (checkHasSpells()) {
     updateLog(`Enter your spell: `);
@@ -112,14 +111,13 @@ function cast(code) {
 
 
 function castLastSpell() {
-  cursors();
   nomove = 1;
   if (!lastSpellCast) {
     updateLog(`You haven't cast any spells yet!`);
     return;
   }
   if (checkHasSpells()) {
-    updateLog(`Casting last spell again: ${lastSpellCast}`);
+    updateLog(`Casting last spell: ${lastSpellCast}`);
     cast(lastSpellCast);
   }
 }
@@ -748,7 +746,6 @@ function nospell(x, monst) {
   if (tmp == 0) {
     return (0);
   }
-  cursors();
   updateLog(spelmes[tmp](monst));
   return (1);
 }
@@ -882,7 +879,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
   /* if energy hits player */
   if (x == player.x && y == player.y) {
-    cursors();
     updateLog(`  You are hit by your own magic!`);
 
     lastnum = DIED_OWN_MAGIC;
@@ -921,7 +917,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       // lasthx = x;
       // lasthy = y;
 
-      cursors();
       updateLog(`  the ${monster} returns your puny missile!`);
     } else {
       if (nospell(spnum, monster)) {
@@ -931,7 +926,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
         return;
       }
 
-      cursors();
       updateLog(str(monster));
       dam -= hitm(x, y, dam);
       show1cell(x, y);
@@ -941,7 +935,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
       y -= dy;
     }
   } else if (item.matches(OWALL)) {
-    cursors();
     updateLog(str(`wall`));
     if ( /* enough damage? */
       dam >= 50 + getDifficulty() &&
@@ -957,7 +950,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     }
     dam = 0;
   } else if (item.matches(OCLOSEDDOOR)) {
-    cursors();
     updateLog(str(`door`));
     if (dam >= 40) {
       updateLog(`  The door is blasted apart${period}`);
@@ -965,7 +957,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     }
     dam = 0;
   } else if (item.matches(OSTATUE)) {
-    cursors();
     updateLog(str(`statue`));
     if (dam > 44) {
       var doCrumble = getDifficulty() < 3;
@@ -977,7 +968,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     }
     dam = 0;
   } else if (item.matches(OTHRONE)) {
-    cursors();
     updateLog(str(`throne`));
     var throneStrength = ULARN ? 39 : 33;
     if (dam > throneStrength && item.arg == 0) {
@@ -987,7 +977,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     }
     dam = 0;
   } else if (!ULARN && item.matches(OALTAR)) {
-    cursors();
     updateLog(str(`altar`));
     if (dam > 75 - (getDifficulty() >> 2)) {
       create_guardian(DEMONPRINCE, x, y);
@@ -995,7 +984,6 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
     }
     dam = 0;
   } else if (!ULARN && item.matches(OFOUNTAIN)) {
-    cursors();
     updateLog(str(`fountain`));
     if (dam > 55) {
       create_guardian(WATERLORD, x, y);
@@ -1065,7 +1053,6 @@ function omnidirect(spnum, dam, str) {
       if (monster) {
         if (nospell(spnum, monster) == 0) {
           ifblind(x, y);
-          cursors();
           updateLog(`  The ${monster} ${str}`);
           hitm(x, y, dam);
           //setKnow(x, y, KNOWALL); // HACK FIX FOR BLACK TILE IF KNOW = 0 in HITM()
