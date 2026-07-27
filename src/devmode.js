@@ -55,7 +55,7 @@ function enableDevmode() {
     // gtime = 40001;
     player.GOLD = 250000;
 
-    updateLog(`normal ${START_ITALIC}italic${END_ITALIC} ${START_STRIKE}strike${END_STRIKE} ${START_BOLD}bold${END_BOLD} ${START_DIM}dim${END_DIM} ${wrapMark('mark')} ${START_UNDERLINE}underline${END_UNDERLINE} ${wrapHref('Link', 'https://larn.org')} ${wrapFont('red', 'red')} ${wrapFont('green', 'green')} ${wrapFont('blue', 'blue')}`);
+    updateLog(`normal ${START_ITALIC}italic${END_ITALIC} ${START_STRIKE}strike${END_STRIKE} ${START_BOLD}bold${END_BOLD} ${START_DIM}dim${END_DIM} ${highlightText('mark')} ${START_UNDERLINE}underline${END_UNDERLINE} ${linkText('Link', 'https://larn.org')} ${colorText('red', 'red')} ${colorText('green', 'green')} ${colorText('blue', 'blue')}`);
 
     // newcavelevel(level + 1);
     // setItem(player.x, player.y, createObject(OTRAPDOOR));
