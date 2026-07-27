@@ -1,24 +1,42 @@
 'use strict';
 
 /* show character's inventory */
-// HACK this printScreen business is probably the most embarassing code i've
-// written for this project
-// TODO change this to getInventory() that returns an array of appropriate items
-// to separate filtering from viewing
-function showinventory(select_allowed, callback, inv_filter, show_gold, show_time, printScreen, p) {
+function drawInventory(filter, show_gold = false, show_time = false, show_empty = false, select_allowed = true) {
+  const items = player.getInventory(filter);
+  const starty = show_gold ? 2 : 1;
+  const maxrows = 24 - (show_time ? 1 : 0) - starty;
+  let row = starty;
+  let col = 1;
+  let column2 = 41;
+  let wrapped = false;
 
-  if (!p) p = player;
+  // clear screen and set up for inventory display
+  setMazeMode(false);
 
-  let buttons = [];
+  if (show_gold) {    
+    const goldSymbol = amiga_mode ? `` : `${OGOLDPILE.getChar()} `;
+    lprcat(`.) ${goldSymbol}${Number(player.GOLD).toLocaleString()} gold pieces\n`);
+  }
 
-  if (callback) nomove = 1; // HACK callback is null when called by game_stats()
+  // print inventory
+  for (let i = 0; i < items.length; i++) {
+    // figure out if we need to wrap to the next column
+    if (row >= starty + maxrows) {
+      row = starty;
+      col = column2;
+      wrapped = true;
+    }
 
-  if (printScreen) setMazeMode(false);
-  let srcount = 0;
+    cursor(col, row);
+    const item = items[i];
+    const itemIndex = player.inventory.indexOf(item);
+    const itemChar = getCharFromIndex(itemIndex);
+    const itemSymbol = amiga_mode ? `` : `${item.getChar()}`;
+    const itemString = `${itemChar}) ${itemSymbol}${item.toString()}`;
+    lprcat(`${itemString}\n`);
 
-  if (callback) setCharCallback(callback);
-
-  if (printScreen) cursor(1, 1);
+    // // if we want to compensate for extra wide items
+    // if (col === 1) column2 = Math.max(column2, itemString.length + 1);
 
   if (show_gold) {
     if (p.GOLD) {
@@ -58,47 +76,41 @@ function showinventory(select_allowed, callback, inv_filter, show_gold, show_tim
     }
   }
 
-  if (printScreen) cursor(1, Math.min(wrap + 1, ++srcount));
+  cursor(1, wrapped ? starty + maxrows : row);
 
   if (show_time) {
-    if (printScreen) cltoeoln();
-    if (printScreen) lprcat(`Elapsed time is ${elapsedtime()}. You have ${timeleft()} mobuls left\n`);
+    lprcat(`Elapsed time is <b>${elapsedtime()}</b>. You have <b>${timeleft()}</b> mobuls left\n`);
   }
 
-  if (printScreen) cltoeoln();
-  if (printScreen) more(select_allowed);
-  if (printScreen) blt();
+  more(select_allowed);
 
-  return buttons;
 }
 
-
-
-function showall(item) {
+function isItem(item) {
   return item != null;
 }
 
-function showwield(item) {
+function isWeapon(item) {
   return item && item.isWeapon();
 }
 
-function showallwield(item) {
+function canWield(item) {
   return item && item.canWield();
 }
 
-function showwear(item) {
+function canWear(item) {
   return item && item.isArmor();
 }
 
-function showeat(item) {
+function canEat(item) {
   return item && item.matches(OCOOKIE);
 }
 
-function showread(item) {
+function canRead(item) {
   return item && (item.matches(OSCROLL) || item.matches(OBOOK));
 }
 
-function showquaff(item) {
+function canQuaff(item) {
   return item && item.matches(OPOTION);
 }
 
@@ -232,79 +244,45 @@ function take(item) {
 
 
 
-/*
-    subroutine to drop an object  returns false if something there already else true
- */
-function drop_object(index) {
-  dropflag = 1; /* say dropped an item so wont ask to pick it up right away */
-  if (index == '*' || index == ' ' || index == 'I') {
-    if (mazeMode) {
-      showinventory(true, drop_object, showall, false, false, true);
-    } else {
-      setMazeMode(true);
-    }
+function act_drop(key) {
+  if (key == '.') {
     nomove = 1;
-    return 0;
-  }
-
-  if (index == '.') {
-    nomove = 1;
-    setMazeMode(true); // fix for when dropping gold when inventory is visible
+    setMazeMode(true);
     updateLog(`How much gold will you drop? `);
     setNumberCallback(drop_object_gold, true);
-    return 1;
+    return CALLBACK_COMPLETE;
   }
+  return handleInventoryAction(key, act_drop, isItem, isItem, dropItem, `  You can't drop that!`);
+}
 
-  const useindex = getIndexFromChar(index);
-  const inventoryItem = player.inventory[useindex];
-  const item = itemAt(player.x, player.y);
-  const pitflag = item.matches(OPIT);
 
-  if (!inventoryItem) {
-    if (useindex >= 0 && useindex < 26) {
-      updateLog(`  You don't have item ${index}!`);
-    }
-    if (useindex <= -1) {
-      appendLog(` cancelled${period}`);
-      nomove = 1;
-    }
-    setMazeMode(true);
-    return 1;
-  }
 
-  if (!pitflag && !item.matches(OEMPTY)) {
+function dropItem(item) {
+  const dungeonItem = itemAt(player.x, player.y);
+  const pitflag = dungeonItem.matches(OPIT);
+  if (!pitflag && !dungeonItem.matches(OEMPTY)) {
     beep();
     updateLog(`  There's something here already${period}`);
-    setMazeMode(true);
-    return 1;
+    return 1; // nomove = 1;
   }
-
-  // if (player.y == MAXY - 1 && player.x == 33) return (1); /* not in entrance */
-
+  
+  const index = player.inventory.indexOf(item);
+  if (!item || index < 0) {
+    updateLog(`  You aren't carrying that!`);
+    return 1; // nomove = 1;
+  }
+  const indexChar = getCharFromIndex(index);
   updateLog(`  You drop: `);
-  updateLog(`${getCharFromIndex(useindex)}) ${inventoryItem}`);
-  // show3(k); /* show what item you dropped*/
-
-  player.inventory[useindex] = null;
+  updateLog(`${indexChar}) ${item.toString(false)}`);
+  
   if (pitflag) {
     updateLog(`  It disappears down the pit${period}`);
   } else {
-    setItem(player.x, player.y, inventoryItem);
+    setItem(player.x, player.y, item);
   }
 
-  if (player.WIELD === inventoryItem) {
-    player.WIELD = null;
-  }
-  if (player.WEAR === inventoryItem) {
-    player.WEAR = null;
-  }
-  if (player.SHIELD === inventoryItem) {
-    player.SHIELD = null;
-  }
-  player.adjustcvalues(inventoryItem, false);
-
-  setMazeMode(true);
-  return 1;
+  destroyInventory(item);
+  return 0; // nomove = 0;
 }
 
 

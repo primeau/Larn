@@ -113,12 +113,12 @@ function setButtons() {
 
     let inventoryAction = false;
 
-    inventoryAction ||= inventoryActionButtons(drop_object, showall);
-    inventoryAction ||= inventoryActionButtons(act_quaffpotion, showquaff);
-    inventoryAction ||= inventoryActionButtons(act_read_something, showread);
-    inventoryAction ||= inventoryActionButtons(act_eatcookie, showeat);
-    inventoryAction ||= inventoryActionButtons(wear, showwear);
-    inventoryAction ||= inventoryActionButtons(wield, showallwield);
+    inventoryAction ||= inventoryActionButtons(act_drop, isItem);
+    inventoryAction ||= inventoryActionButtons(act_quaff, canQuaff);
+    inventoryAction ||= inventoryActionButtons(act_read, canRead);
+    inventoryAction ||= inventoryActionButtons(act_eat, canEat);
+    inventoryAction ||= inventoryActionButtons(act_wear, canWear);
+    inventoryAction ||= inventoryActionButtons(act_wield, canWield);
     if (inventoryAction) {
       return;
     }
@@ -700,7 +700,7 @@ function inventoryActionButtons(callback, filter) {
     const longest = `X`.repeat(ULARN ? 30 : 29);
     const maxbuttonwidth_item = estimateButtonWidth(MIN_SELECTION_FONT_SIZE, longest, 10);
 
-    if (callback === wear) {
+    if (callback === act_wear) {
       if (player.SHIELD) {
         setButton(KEYBOARD, `BUTTON_REMOVE_SHIELD`, VARIABLE, `-`, `remove shield`);
         newButtonRow(KEYBOARD);
@@ -708,21 +708,23 @@ function inventoryActionButtons(callback, filter) {
         setButton(KEYBOARD, `BUTTON_REMOVE_ARMOR`, VARIABLE, `-`, `remove armor`);
         newButtonRow(KEYBOARD);
       }
-    } else if (callback === wield) {
+    } else if (callback === act_wield) {
       if (player.WIELD) {
         setButton(KEYBOARD, `BUTTON_REMOVE_WEAPON`, VARIABLE, `-`, `unwield weapon`);
         newButtonRow(KEYBOARD);
       }
     }
 
-    let inv = showinventory(false, null, filter, false, false, false);
+    let inv = player.getInventory(filter);
 
-    for (const [letter, item] of inv) {
+    for (const item of inv) {
+      const index = player.inventory.indexOf(item);
+      const letter = getCharFromIndex(index);
       const invButton = setButton(KEYBOARD, `BUTTON_${letter}${item.shortName()}`, FIXED, letter, `${letter}) ${item.shortName()}`, false, maxbuttonwidth_item, 30);
       invButton.overRideFontSize = true;
     }
 
-    if (callback === drop_object) {
+    if (callback === act_drop) {
       newButtonRow(KEYBOARD);
       const goldbutton = setButton(KEYBOARD, `BUTTON_DROP_GOLD`, VARIABLE, `.`, `.) some gold`);
       goldbutton.overRideFontSize = true;

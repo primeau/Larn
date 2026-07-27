@@ -135,8 +135,14 @@ var Player = function Player() {
   this.getChar = function () {
     if (amiga_mode) return `${DIV_START}player${DIV_END}`;
     if (this.char) return this.char;
-    if (getPref('retro_mode')) return `<b><font color='white'>@</font></b>`; 
+    if (getPref('retro_mode')) return `${START_BOLD}${colorText('@', 'white')}${END_BOLD}`;
     return `▓`;
+  };
+
+  this.getInventory = function (filterFunc) {
+    const tmpInv = this.inventory.filter(item => filterFunc(item));
+    tmpInv.sort(inv_sort);
+    return tmpInv;
   };
 
   /*
@@ -611,26 +617,34 @@ var Player = function Player() {
   // HP: 10(10)   STR=12 INT=12 WIS=12 CON=12 DEX=12 CHA=12 LV: H  Gold: 0
   this.getBottomLine = function(lev) {
     if (level < 0) return ``;
-    var templevel = LEVELNAMES[level];
+    let templevel = LEVELNAMES[level];
     if (lev) templevel = lev;
 
     if (level == 0) this.TELEFLAG = 0;
-    let hppad = this.HPMAX >= 100 ? 3 : 2;
-    var output =
-      `Spells: ${pad(this.SPELLS,2,changedSpells)}(${pad(this.SPELLMAX,2,changedSpellsMax)})  \
-AC: ${pad(this.AC,-4,changedAC)} \
-WC: ${pad(this.WCLASS,-4,changedWC)} \
-Level ${pad(this.LEVEL,-2,changedLevel)} \
-Exp: ${pad(this.EXPERIENCE,-10,changedExp)}${pad(CLASSES[this.LEVEL - 1],16,changedLevel)}               \n\
-HP: ${pad(this.HP,hppad,changedHP)}(${pad(this.HPMAX, hppad,changedHPMax)}) \
-STR=${pad((this.STRENGTH + this.STREXTRA),-2,changedSTR)} \
-INT=${pad(this.INTELLIGENCE,-2,changedINT)} \
-WIS=${pad(this.WISDOM,-2, changedWIS)} \
-CON=${pad(this.CONSTITUTION,-2,changedCON)} \
-DEX=${pad(this.DEXTERITY,-2,changedDEX)} \
-CHA=${pad(this.CHARISMA,-2,changedCHA)} \
-LV: ${pad((this.TELEFLAG ? `?` : templevel),-2,changedDepth)} \
-Gold: ${pad(Number(this.GOLD).toLocaleString(),1,changedGold)}            `;
+    const hppad = this.HPMAX >= 100 ? 3 : 2;
+    const hpColor = (!getPref('log_color') || this.HP >= this.HPMAX) ? ''
+      : this.HP >= Math.ceil(this.HPMAX * 2.0 / 3.0) ? 'lime'
+      : this.HP >= Math.ceil(this.HPMAX * 1.0 / 3.0) ? 'yellow'
+      : 'red';
+    const spellColor = (!getPref('log_color') || this.SPELLS >= this.SPELLMAX) ? ''
+      : this.SPELLS >= Math.ceil(this.SPELLMAX * 2.0 / 3.0) ? 'lime'
+      : this.SPELLS >= Math.ceil(this.SPELLMAX * 1.0 / 3.0) ? 'yellow'
+      : 'red';
+    const output =
+      `Spells: ${pad(this.SPELLS, 2, changedSpells, spellColor)}(${pad(this.SPELLMAX, 2, changedSpellsMax)})  \
+AC: ${pad(this.AC, -4, changedAC)} \
+WC: ${pad(this.WCLASS, -4, changedWC)} \
+Level ${pad(this.LEVEL, -2, changedLevel)} \
+Exp: ${pad(this.EXPERIENCE, -10, changedExp)}${pad(CLASSES[this.LEVEL - 1], 16, changedLevel)}               \n\
+HP: ${pad(this.HP, hppad, changedHP, hpColor)}(${pad(this.HPMAX, hppad, changedHPMax)}) \
+STR=${pad((this.STRENGTH + this.STREXTRA), -2, changedSTR)} \
+INT=${pad(this.INTELLIGENCE, -2, changedINT)} \
+WIS=${pad(this.WISDOM, -2, changedWIS)} \
+CON=${pad(this.CONSTITUTION, -2, changedCON)} \
+DEX=${pad(this.DEXTERITY, -2, changedDEX)} \
+CHA=${pad(this.CHARISMA, -2, changedCHA)} \
+LV: ${pad((this.TELEFLAG ? `?` : templevel), -2, changedDepth)} \
+Gold: ${pad(Number(this.GOLD).toLocaleString(), 1, changedGold)}            `;
 
     return output;
   }; //
@@ -895,221 +909,142 @@ function ifblind(x, y) {
 
 
 
-/*
-    function to wield a weapon
- */
-function wield(index) {
-  var item = itemAt(player.x, player.y);
-
-  // player is over a weapon
-  if (item.isWeapon()) {
-    appendLog(` wield${period}`);
-    if (take(item)) {
-      forget(); // remove from board
-    } else {
-      setMazeMode(true);
-      return 1;
-    }
+function act_wield(key) {
+  if (key === `-`) {
+    setMazeMode(true);
+    nomove = unwieldWeapon();
+    return CALLBACK_COMPLETE;
   }
-  // wield from inventory
-  else {
-    if (index == '*' || index == ' ' || index == 'I') {
-      if (mazeMode) {
-        showinventory(true, wield, showwield, false, false, true);
-      } else {
-        setMazeMode(true);
-      }
-      nomove = 1;
-      return 0;
-    }
-    if (index == '-') {
-      if (player.WIELD) {
-        updateLog(`You unwield your weapon${period}`);
-        player.WIELD = null;
-      }
-      setMazeMode(true);
-      return 1;
-    }
+  return handleInventoryAction(key, act_wield, isWeapon, canWield, wieldWeapon,`  You can't wield that!`);
+}
 
-    var useindex = getIndexFromChar(index);
-    item = player.inventory[useindex];
 
-    if (!item) {
-      if (useindex >= 0 && useindex < 26) {
-        updateLog(`  You don't have item ${index}!`);
-      }
-      if (useindex <= -1) {
-        appendLog(` cancelled${period}`);
-        nomove = 1;
-      }
-      setMazeMode(true);
-      return 1;
-    }
 
-    if (!item.canWield()) {
-      updateLog(`  You can't wield that!`);
-      setMazeMode(true);
-      return 1;
-    }
-  }
-
-  // common cases for both
+function wieldWeapon(item) {
   if (player.SHIELD && item.matches(O2SWORD)) {
     updateLog(`  But one arm is busy with your shield!`);
-    setMazeMode(true);
-    return 1;
+    return 1; // nomove = 1;
   }
 
   /* can't wield and wear at the same time */
   if (ULARN) {
-    if (player.SHIELD == item || player.WEAR == item) {
-      let arm = item.matches(OSHIELD) ?  `shield` : `armor`;
+    if (player.SHIELD === item || player.WEAR === item) {
+      const arm = item.matches(OSHIELD) ?  `shield` : `armor`;
       updateLog(`  You can't wield your ${arm} while you're wearing it!`);
-      return 1;
+      return 1; // nomove = 1;
     }
   }
 
-  if (index === item) {
-    index = getCharFromIndex(player.inventory.indexOf(item));
-  }
+  const index = player.inventory.indexOf(item);
+  const indexChar = getCharFromIndex(index);
   updateLog(`  You wield:`);
-  updateLog(`${index}) ${item.toString(true)}`);
+  updateLog(`${indexChar}) ${item.toString(true)}`);
   player.WIELD = item;
-
-  setMazeMode(true);
-  return 1;
+  return 0; // nomove = 0;
 }
 
 
 
-/*
-    function to wear armor
- */
-function wear(index) {
-  var item = itemAt(player.x, player.y);
+function unwieldWeapon() {
+  if (player.WIELD) {
+    updateLog(`  You unwield your weapon${period}`);
+    player.WIELD = null;
+    return 0; // nomove = 0;
+  } else {
+    updateLog(`  You aren't wielding anything${period}`);
+    return 1; // nomove = 1;
+  }
+}
 
-  // player is over some armor
-  if (item.isArmor()) {
-    appendLog(` wear${period}`);
-    if (take(item)) {
-      forget(); // remove from board
-    } else {
-      setMazeMode(true);
-      return 1;
-    }
-  } // wear from inventory
-  else {
-    if (index == '*' || index == ' ' || index == 'I') {
-      if (mazeMode) {
-        showinventory(true, wear, showwear, false, false, true);
-      } else {
-        setMazeMode(true);
-      }
-      nomove = 1;
-      return 0;
-    }
 
-    if (index == '-') {
-      if (player.SHIELD) {
-        player.SHIELD = null;
-        updateLog(`Your shield is off${period}`);
-      } else if (player.WEAR) {
-        player.WEAR = null;
-        updateLog(`Your armor is off${period}`);
-      } else {
-        updateLog(`You aren't wearing anything${period}`);
-      }
-      setMazeMode(true);
-      return 1;
-    }
 
-    var useindex = getIndexFromChar(index);
-    item = player.inventory[useindex];
+function act_wear(key) {
+  if (key === `-`) {
+    setMazeMode(true);
+    nomove = removeArmor();
+    return CALLBACK_COMPLETE;
+  }
+  return handleInventoryAction(key, act_wear, canWear, canWear, wearArmor,`  You can't wear that!`);
+}
 
-    if (!item) {
-      if (useindex >= 0 && useindex < 26) {
-        updateLog(`  You don't have item ${index}!`);
-      }
-      if (useindex <= -1) {
-        appendLog(` cancelled${period}`);
-        nomove = 1;
-      }
-      setMazeMode(true);
-      return 1;
-    }
+
+
+function wearArmor(item) {
+  if (ULARN && player.WIELD === item) { /* can't wield and wear at the same time */
+    const arm = item.matches(OSHIELD) ?  `shield` : `armor`;
+    updateLog(`  You can't wear your ${arm} while you're wielding it!`);
+    return 1; // nomove = 1;
   }
 
-  // common cases for both
-
-  if (item.isArmor()) {
-    /* can't wield and wear at the same time */
-    if (ULARN) {
-      if (player.WIELD == item) {
-        let arm = item.matches(OSHIELD) ?  `shield` : `armor`;
-        updateLog(`  You can't wear your ${arm} while you're wielding it!`);  
-        return 1;
-      }
-    }
-    if (item.matches(OSHIELD)) {
-      if (player.WIELD && player.WIELD.matches(O2SWORD)) {
-        updateLog(`  Your hands are busy with the two handed sword!`);
-        setMazeMode(true);
-        return 1;
-      } else {
-        player.SHIELD = item;
-      }
+  if (item.matches(OSHIELD)) {
+    if (player.WIELD && player.WIELD.matches(O2SWORD)) {
+      updateLog(`  Your hands are busy with the two handed sword!`);
+      return 1; // nomove = 1;
     } else {
-      player.WEAR = item;
+      player.SHIELD = item;
     }
   } else {
-    updateLog(`  You can't wear that!`);
-    setMazeMode(true);
-    return 1;
+    player.WEAR = item;
   }
 
-  if (index === item) {
-    index = getCharFromIndex(player.inventory.indexOf(item));
-  }
-
+  const index = player.inventory.indexOf(item);
+  const indexChar = getCharFromIndex(index);
   updateLog(`  You wear:`);
-  updateLog(`${index}) ${item.toString(true)}`);
+  updateLog(`${indexChar}) ${item.toString(true)}`);
 
-  setMazeMode(true);
-  return 1;
+  return 0; // nomove = 0;
 }
 
 
 
-function game_stats(p, endgame) {
+function removeArmor() {
+  if (player.SHIELD) {
+    player.SHIELD = null;
+    updateLog(`  Your shield is off${period}`);
+    return 0; // nomove = 0;
+  } else if (player.WEAR) {
+    player.WEAR = null;
+    updateLog(`  Your armor is off${period}`);
+    return 0; // nomove = 0;
+  } else {
+    updateLog(`  You aren't wearing anything${period}`);
+    return 1; // nomove = 1;
+  }
+}
 
-  if (!p) p = player;
 
-  var s = endgame ? `Inventory:\n` : ``;
+
+function game_stats(p = player, endgame) {
+
+  let s = endgame ? `Inventory:\n` : ``;
 
   if (endgame) {
-    let goldSymbol = amiga_mode ? `` : `${OGOLDPILE.getChar()} `;
-    s += `.) ${goldSymbol}` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
+    const goldSymbol = amiga_mode ? `` : `${OGOLDPILE.getChar()} `;
+    s += `.) ${goldSymbol}${Number(p.GOLD).toLocaleString()} gold pieces\n`;
   }
-  var inv = showinventory(false, null, showall, false, false, false, p); //HACK!
-  for (var i = 0; i < inv.length; i++) {
-    var item = inv[i][1];
-    if (item) {
-      let itemSymbol = amiga_mode ? `` : `${item.getChar()} `;
-      let itemString = inv[i][0] + `) ${itemSymbol}` + item.toString(false, endgame || DEBUG_STATS, p);
-      let itemParts = [itemString];
-      if (itemString.length > 39)
-        itemParts = itemString.split(`(`);
-      itemString = padString(itemParts[0], -39);
-      if (itemParts.length >= 2) {
-        /* (being worn) */
-        itemString += `\n   (` + itemParts[1];
-      }
-      if (itemParts.length == 3) {
-        /* (being worn) (weapon in hand) */
-        itemString += `(` + itemParts[2];
-      }
-      s += itemString + `\n`;
+
+  const items = p.getInventory(isItem);
+  for (var i = 0; i < items.length; i++) {
+    const item = items[i];
+    if (!item) continue;
+
+    const itemSymbol = amiga_mode ? `` : `${item.getChar()}`;
+    const indexChar = getCharFromIndex(p.inventory.indexOf(item));
+    let itemDesc = item.toString(false, endgame || DEBUG_STATS, p);
+    let itemParts = [itemDesc];
+    if (itemDesc.length > 35) itemParts = itemDesc.split(`(`);
+    itemDesc = padString(itemParts[0], -39);
+
+    if (itemParts.length >= 2) {
+      /* (being worn) */
+      itemDesc += `\n     (` + itemParts[1];
     }
+    if (itemParts.length == 3) {
+      /* (being worn) (weapon in hand) */
+      itemDesc += `(` + itemParts[2];
+    }
+    const itemString = `${indexChar}) ${itemSymbol} ${itemDesc}`;
+    s += itemString + `\n`;
   }
 
   let gap = amiga_mode ? ` ` : ``;

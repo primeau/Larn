@@ -9,7 +9,8 @@ const CAPS = `CAPS`;
 var UPPERCASE = false;
 
 
-
+const CALLBACK_COMPLETE = 1;
+const CONTINUE_CALLBACK = 0;
 var blocking_callback;
 var keyboard_input_callback;
 let text_input_event;
@@ -194,7 +195,7 @@ async function parse(e, key) {
     return;
   }
 
-  var item = itemAt(player.x, player.y);
+  const item = itemAt(player.x, player.y);
 
   if (!item) {
     doRollbar(ROLLBAR_ERROR, `parse(): null item at player position`, `key=${key} (${player.x},${player.y}), ${GAMEOVER}, ${game_started}, ${mazeMode}, ${napping}, ${level}, ${gtime}`);
@@ -273,12 +274,20 @@ async function parse(e, key) {
   }
 
   //
+  // CAST THE LAST SPELL AGAIN
+  //
+  if (key == 'a') {
+    castLastSpell();
+    return;
+  }
+
+  //
   // DROP
   //
   if (key == 'd') {
     if (player.TIMESTOP == 0) {
       updateLog(`What do you want to drop [<b>space</b> to view] ? `);
-      setCharCallback(drop_object);
+      setCharCallback(act_drop);
     }
     return;
   }
@@ -292,21 +301,20 @@ async function parse(e, key) {
         enter();
         return;
       }
+
       if (item.matches(OCOOKIE)) {
+        appendLog(` eat${period}`);
         forget();
         outfortune();
-      }
-      else if (item.matches(OSHROOMS)) {
+      } else if (item.matches(OSHROOMS)) {
         forget();
         eatShrooms();
-      }
-      else if (item.matches(OACID)) {
+      } else if (item.matches(OACID)) {
         forget();
         dropAcid();
-      }
-      else {
+      } else {
         updateLog(`What do you want to eat [<b>space</b> to view] ? `);
-        setCharCallback(act_eatcookie);
+        setCharCallback(act_eat);
       }
     }
     return;
@@ -337,7 +345,8 @@ async function parse(e, key) {
   //
   if (key == 'i') {
     nomove = 1;
-    showinventory(false, parse_inventory, showall, true, true, true);
+    setCharCallback(parse_inventory);
+    drawInventory(isItem, true, true, true, false);
     return;
   }
 
@@ -390,11 +399,12 @@ async function parse(e, key) {
   if (key == 'q') {
     if (player.TIMESTOP == 0) {
       if (item.matches(OPOTION)) {
+        appendLog(` quaff${period}`);
         forget();
         quaffpotion(item, true);
       } else {
         updateLog(`What do you want to quaff [<b>space</b> to view] ? `);
-        setCharCallback(act_quaffpotion);
+        setCharCallback(act_quaff);
       }
     }
     return;
@@ -412,14 +422,16 @@ async function parse(e, key) {
     //
     else if (player.TIMESTOP == 0) {
       if (item.matches(OBOOK)) {
+        appendLog(` read${period}`);
         forget();
         readbook(item);
       } else if (item.matches(OSCROLL)) {
+        appendLog(` read${period}`);
         forget();
         read_scroll(item);
       } else {
         updateLog(`What do you want to read [<b>space</b> to view] ? `);
-        setCharCallback(act_read_something);
+        setCharCallback(act_read);
       }
     }
     return;
@@ -481,11 +493,15 @@ async function parse(e, key) {
   // WIELD
   //
   if (key == 'w') {
-    if (item.isWeapon()) {
-      wield(item);
+    if (item.isWeapon() && !pocketfull()) {
+      appendLog(` wield${period}`);
+      if (take(item)) {
+        forget(); // remove from board
+        wieldWeapon(item);
+      } 
     } else {
-      updateLog(`What do you want to wield (-) for nothing [<b>space</b> to view] ? `);
-      setCharCallback(wield);
+      updateLog(`What do you want to wield [<b>-</b> for nothing, <b>space</b> to view] ? `);
+      setCharCallback(act_wield);
     }
     return;
   }
@@ -680,15 +696,18 @@ async function parse(e, key) {
   // WEAR
   //
   if (key == 'W') {
-    if (item.isArmor()) {
-      wear(item);
+    if (item.isArmor() && !pocketfull()) {
+      appendLog(` wear${period}`);
+      if (take(item)) {
+        forget(); // remove from board
+        wearArmor(item);
+      } 
     } else {
-      updateLog(`What do you want to wear (-) for nothing [<b>space</b> to view] ? `);
-      setCharCallback(wear);
+      updateLog(`What do you want to wear [<b>-</b> for nothing, <b>space</b> to view] ? `);
+      setCharCallback(act_wear);
     }
     return;
   }
-
 
   //
   // VIEW CONDUCTS
@@ -825,9 +844,9 @@ async function parse(e, key) {
     let trapFound = false;
     for (let j = vy(player.y - 1); j <= vy(player.y + 1); j++) {
       for (let i = vx(player.x - 1); i <= vx(player.x + 1); i++) {
-        const item = itemAt(i, j);
-        if (item?.isTrap()) {
-          updateLog(`It's ${item}${period}`);
+        const potentialTrap = itemAt(i, j);
+        if (potentialTrap?.isTrap()) {
+          updateLog(`It's ${potentialTrap}${period}`);
           trapFound = true;
       }
       }

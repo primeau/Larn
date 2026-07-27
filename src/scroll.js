@@ -21,42 +21,15 @@ function learnScroll(item) {
 
 
 
-// TODO  quaffpotion, readscroll, eatcookie are all very similar
-function act_read_something(index) {
-  var useindex = getIndexFromChar(index);
-  var item = player.inventory[useindex];
-  if (item && item.matches(OSCROLL)) {
-    player.inventory[useindex] = null;
-    read_scroll(item);
-  } else if (item && item.matches(OBOOK)) {
-    player.inventory[useindex] = null;
-    readbook(item);
-  } else {
-    if (!item) {
+function readSomething(item) {
+  destroyInventory(item);
+  if (item.matches(OSCROLL)) read_scroll(item);
+  else readbook(item);
+  return 0; // nomove = 0;
+}
 
-      if (index == '*' || index == ' ' || index == 'I') {
-        if (mazeMode) {
-          showinventory(true, act_read_something, showread, false, false, true);
-        } else {
-          setMazeMode(true);
-        }
-        nomove = 1;
-        return 0;
-      }
-
-      if (useindex >= 0 && useindex < 26) {
-        updateLog(`  You don't have item ${index}!`);
-      }
-      if (useindex <= -1) {
-        appendLog(` cancelled${period}`);
-        nomove = 1;
-      }
-    } else {
-      updateLog(`  You can't read that!`);
-    }
-  }
-  setMazeMode(true);
-  return 1;
+function act_read(key) {
+  return handleInventoryAction(key, act_read, canRead, canRead, readSomething,`  You can't read that!`);
 }
 
 

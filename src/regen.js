@@ -111,8 +111,7 @@ function regen() {
       if (player.CLUMSINESS > 1)
         if (itemAt(player.x, player.y).matches(OEMPTY)) /* only if nothing there */
           if (rnd(100) < 33) {/* drop your weapon due to clumsiness */
-            var dropindex = getCharFromIndex(player.inventory.indexOf(player.WIELD));
-            drop_object(dropindex);
+            dropItem(player.WIELD);
           }
     if (--player.CLUMSINESS <= 0) {
       updateLog(`You now feel less awkward!`);
