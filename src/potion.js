@@ -40,39 +40,15 @@ function isBadPotion(potion) {
 }
 
 
-// TODO  quaffpotion, readscroll, eatcookie are all very similar
-function act_quaffpotion(index) {
-  var useindex = getIndexFromChar(index);
-  var item = player.inventory[useindex];
-  if (item && item.matches(OPOTION)) {
-    player.inventory[useindex] = null;
-    quaffpotion(item, true);
-  } else {
-    if (!item) {
-      //debug(useindex);
-      if (index == '*' || index == ' ' || index == 'I') {
-        if (mazeMode) {
-          showinventory(true, act_quaffpotion, showquaff, false, false, true);
-        } else {
-          setMazeMode(true);
-        }
-        nomove = 1;
-        return 0;
-      }
 
-      if (useindex >= 0 && useindex < 26) {
-        updateLog(`  You don't have item ${index}!`);
-      }
-      if (useindex <= -1) {
-        appendLog(` cancelled${period}`);
-        nomove = 1;
-      }
-    } else {
-      updateLog(`  You can't quaff that!`);
-    }
-  }
-  setMazeMode(true);
-  return 1;
+function quaffPotion(item) {
+  destroyInventory(item);
+  quaffpotion(item, true);
+  return 0; // nomove = 0;
+}
+
+function act_quaff(key) {
+  return handleInventoryAction(key, act_quaff, canQuaff, canQuaff, quaffPotion,`  You can't quaff that!`);
 }
 
 

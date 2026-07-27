@@ -330,7 +330,11 @@ function enchweapon(enchant_source) {
 
 
 function destroyInventory(item) {
-  var destroyindex = player.inventory.indexOf(item);
+  const destroyindex = player.inventory.indexOf(item);
+  if (!item || destroyindex < 0) {
+    debug(`destroyInventory: item not found in inventory: ${item}`);
+    return;
+  }
   if (item === player.WEAR) player.WEAR = null;
   if (item === player.SHIELD) player.SHIELD = null;
   if (item === player.WIELD) player.WIELD = null;
@@ -430,8 +434,7 @@ function stealsomething() {
     var item = player.inventory[i];
     if (item && item !== player.WIELD && item !== player.WEAR && item !== player.SHIELD) {
       updateLog(`  ${getCharFromIndex(i)}) ${item}`);
-      player.adjustcvalues(item, false);
-      player.inventory[i] = null;
+      destroyInventory(item);
       return item;
     }
     if (--j <= 0) return null;

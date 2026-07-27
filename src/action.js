@@ -203,42 +203,52 @@ function outfortune() {
 }
 
 
-// TODO  quaffpotion, readscroll, eatcookie are all very similar
-function act_eatcookie(index) {
-  var useindex = getIndexFromChar(index);
-  var item = player.inventory[useindex];
-  if (item && item.matches(OCOOKIE)) {
-    player.inventory[useindex] = null;
-    outfortune();
-  } else {
-    if (!item) {
-      //debug(useindex);
 
-      if (index == '*' || index == ' ' || index == 'I') {
-        if (mazeMode) {
-          showinventory(true, act_eatcookie, showeat, false, false, true);
-        } else {
-          setMazeMode(true);
-        }
-        nomove = 1;
-        return;
-      }
+function eatCookie(item) {
+  destroyInventory(item);
+  outfortune();
+  return 0; // nomove = 0;
+}
 
-      if (useindex >= 0 && useindex < 26) {
-        updateLog(`  You don't have item ${index}!`);
-        nomove = 1;
-      }
-      if (useindex <= -1) {
-        appendLog(` cancelled${period}`);
-        nomove = 1;
-      }
+
+
+function act_eat(key) {
+  return handleInventoryAction(key, act_eat, canEat, canEat, eatCookie, `  You can't eat that!`);
+}
+
+
+
+function handleInventoryAction(key, callback, inv_filter, act_filter, action, cantUseMsg) {
+  nomove = 1;
+  dropflag = 1;
+
+  if (key === '*' || key === ' ' || key === 'I') {
+    if (mazeMode) {
+      setMazeMode(false);
+      drawInventory(inv_filter);
+      setCharCallback(callback);
     } else {
-      updateLog(`  You can't eat that!`);
-      nomove = 1;
+      setMazeMode(true);
     }
+    return CONTINUE_CALLBACK;
   }
+
+  const useindex = getIndexFromChar(key);
+  const item = player.inventory[useindex];
+  if (item) {
+    if (act_filter(item)) {
+      nomove = action(item);
+    } else {
+      updateLog(cantUseMsg);
+    }
+  } else if (useindex < 0) {
+    appendLog(` cancelled${period}`);
+  } else {
+    updateLog(`  You don't have item ${key}!`);
+  }
+
   setMazeMode(true);
-  return 1;
+  return CALLBACK_COMPLETE;
 }
 
 

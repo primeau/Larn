@@ -139,6 +139,12 @@ var Player = function Player() {
     return `▓`;
   };
 
+  this.getInventory = function (filterFunc) {
+    const tmpInv = this.inventory.filter(item => filterFunc(item));
+    tmpInv.sort(inv_sort);
+    return tmpInv;
+  };
+
   /*
       losehp(x)
       losemhp(x)
@@ -895,219 +901,138 @@ function ifblind(x, y) {
 
 
 
-/*
-    function to wield a weapon
- */
-function wield(index) {
-  var item = itemAt(player.x, player.y);
-
-  // player is over a weapon
-  if (item.isWeapon()) {
-    appendLog(` wield${period}`);
-    if (take(item)) {
-      forget(); // remove from board
-    } else {
-      setMazeMode(true);
-      return 1;
-    }
+function act_wield(key) {
+  if (key === `-`) {
+    setMazeMode(true);
+    nomove = unwieldWeapon();
+    return CALLBACK_COMPLETE;
   }
-  // wield from inventory
-  else {
-    if (index == '*' || index == ' ' || index == 'I') {
-      if (mazeMode) {
-        showinventory(true, wield, showwield, false, false, true);
-      } else {
-        setMazeMode(true);
-      }
-      nomove = 1;
-      return 0;
-    }
-    if (index == '-') {
-      if (player.WIELD) {
-        updateLog(`You unwield your weapon${period}`);
-        player.WIELD = null;
-      }
-      setMazeMode(true);
-      return 1;
-    }
+  return handleInventoryAction(key, act_wield, isWeapon, canWield, wieldWeapon,`  You can't wield that!`);
+}
 
-    var useindex = getIndexFromChar(index);
-    item = player.inventory[useindex];
 
-    if (!item) {
-      if (useindex >= 0 && useindex < 26) {
-        updateLog(`  You don't have item ${index}!`);
-      }
-      if (useindex <= -1) {
-        appendLog(` cancelled${period}`);
-        nomove = 1;
-      }
-      setMazeMode(true);
-      return 1;
-    }
 
-    if (!item.canWield()) {
-      updateLog(`  You can't wield that!`);
-      setMazeMode(true);
-      return 1;
-    }
-  }
-
-  // common cases for both
+function wieldWeapon(item) {
   if (player.SHIELD && item.matches(O2SWORD)) {
     updateLog(`  But one arm is busy with your shield!`);
-    setMazeMode(true);
-    return 1;
+    return 1; // nomove = 1;
   }
 
   /* can't wield and wear at the same time */
   if (ULARN) {
-    if (player.SHIELD == item || player.WEAR == item) {
-      let arm = item.matches(OSHIELD) ?  `shield` : `armor`;
+    if (player.SHIELD === item || player.WEAR === item) {
+      const arm = item.matches(OSHIELD) ?  `shield` : `armor`;
       updateLog(`  You can't wield your ${arm} while you're wearing it!`);
-      return 1;
+      return 1; // nomove = 1;
     }
   }
 
-  if (index === item) {
-    index = getCharFromIndex(player.inventory.indexOf(item));
-  }
+  const index = player.inventory.indexOf(item);
+  const indexChar = getCharFromIndex(index);
   updateLog(`  You wield:`);
-  updateLog(`${index}) ${item.toString(true)}`);
+  updateLog(`${indexChar}) ${item.toString(true)}`);
   player.WIELD = item;
-
-  setMazeMode(true);
-  return 1;
+  return 0; // nomove = 0;
 }
 
 
 
-/*
-    function to wear armor
- */
-function wear(index) {
-  var item = itemAt(player.x, player.y);
+function unwieldWeapon() {
+  if (player.WIELD) {
+    updateLog(`  You unwield your weapon${period}`);
+    player.WIELD = null;
+    return 0; // nomove = 0;
+  } else {
+    updateLog(`  You aren't wielding anything${period}`);
+    return 1; // nomove = 1;
+  }
+}
 
-  // player is over some armor
-  if (item.isArmor()) {
-    appendLog(` wear${period}`);
-    if (take(item)) {
-      forget(); // remove from board
-    } else {
-      setMazeMode(true);
-      return 1;
-    }
-  } // wear from inventory
-  else {
-    if (index == '*' || index == ' ' || index == 'I') {
-      if (mazeMode) {
-        showinventory(true, wear, showwear, false, false, true);
-      } else {
-        setMazeMode(true);
-      }
-      nomove = 1;
-      return 0;
-    }
 
-    if (index == '-') {
-      if (player.SHIELD) {
-        player.SHIELD = null;
-        updateLog(`Your shield is off${period}`);
-      } else if (player.WEAR) {
-        player.WEAR = null;
-        updateLog(`Your armor is off${period}`);
-      } else {
-        updateLog(`You aren't wearing anything${period}`);
-      }
-      setMazeMode(true);
-      return 1;
-    }
 
-    var useindex = getIndexFromChar(index);
-    item = player.inventory[useindex];
+function act_wear(key) {
+  if (key === `-`) {
+    setMazeMode(true);
+    nomove = removeArmor();
+    return CALLBACK_COMPLETE;
+  }
+  return handleInventoryAction(key, act_wear, canWear, canWear, wearArmor,`  You can't wear that!`);
+}
 
-    if (!item) {
-      if (useindex >= 0 && useindex < 26) {
-        updateLog(`  You don't have item ${index}!`);
-      }
-      if (useindex <= -1) {
-        appendLog(` cancelled${period}`);
-        nomove = 1;
-      }
-      setMazeMode(true);
-      return 1;
-    }
+
+
+function wearArmor(item) {
+  if (ULARN && player.WIELD === item) { /* can't wield and wear at the same time */
+    const arm = item.matches(OSHIELD) ?  `shield` : `armor`;
+    updateLog(`  You can't wear your ${arm} while you're wielding it!`);
+    return 1; // nomove = 1;
   }
 
-  // common cases for both
-
-  if (item.isArmor()) {
-    /* can't wield and wear at the same time */
-    if (ULARN) {
-      if (player.WIELD == item) {
-        let arm = item.matches(OSHIELD) ?  `shield` : `armor`;
-        updateLog(`  You can't wear your ${arm} while you're wielding it!`);  
-        return 1;
-      }
-    }
-    if (item.matches(OSHIELD)) {
-      if (player.WIELD && player.WIELD.matches(O2SWORD)) {
-        updateLog(`  Your hands are busy with the two handed sword!`);
-        setMazeMode(true);
-        return 1;
-      } else {
-        player.SHIELD = item;
-      }
+  if (item.matches(OSHIELD)) {
+    if (player.WIELD && player.WIELD.matches(O2SWORD)) {
+      updateLog(`  Your hands are busy with the two handed sword!`);
+      return 1; // nomove = 1;
     } else {
-      player.WEAR = item;
+      player.SHIELD = item;
     }
   } else {
-    updateLog(`  You can't wear that!`);
-    setMazeMode(true);
-    return 1;
+    player.WEAR = item;
   }
 
-  if (index === item) {
-    index = getCharFromIndex(player.inventory.indexOf(item));
-  }
-
+  const index = player.inventory.indexOf(item);
+  const indexChar = getCharFromIndex(index);
   updateLog(`  You wear:`);
-  updateLog(`${index}) ${item.toString(true)}`);
+  updateLog(`${indexChar}) ${item.toString(true)}`);
 
-  setMazeMode(true);
-  return 1;
+  return 0; // nomove = 0;
 }
 
 
 
-function game_stats(p, endgame) {
+function removeArmor() {
+  if (player.SHIELD) {
+    player.SHIELD = null;
+    updateLog(`  Your shield is off${period}`);
+    return 0; // nomove = 0;
+  } else if (player.WEAR) {
+    player.WEAR = null;
+    updateLog(`  Your armor is off${period}`);
+    return 0; // nomove = 0;
+  } else {
+    updateLog(`  You aren't wearing anything${period}`);
+    return 1; // nomove = 1;
+  }
+}
 
-  if (!p) p = player;
 
-  var s = endgame ? `Inventory:\n` : ``;
+
+function game_stats(p = player, endgame) {
+
+  let s = endgame ? `Inventory:\n` : ``;
 
   if (endgame) {
     s += `.) ` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
   }
-  var inv = showinventory(false, null, showall, false, false, false, p); //HACK!
-  for (var i = 0; i < inv.length; i++) {
-    var item = inv[i][1];
-    if (item) {
-      let itemString = inv[i][0] + `) ` + item.toString(false, endgame || DEBUG_STATS, p);
-      let itemParts = [itemString];
-      if (itemString.length > 39)
-        itemParts = itemString.split(`(`);
-      itemString = padString(itemParts[0], -39);
-      if (itemParts.length >= 2) {
-        /* (being worn) */
-        itemString += `\n   (` + itemParts[1];
-      }
-      if (itemParts.length == 3) {
-        /* (being worn) (weapon in hand) */
-        itemString += `(` + itemParts[2];
-      }
-      s += itemString + `\n`;
+
+  const items = p.getInventory(isItem);
+  for (var i = 0; i < items.length; i++) {
+    const item = items[i];
+    if (!item) continue;
+    const indexChar = getCharFromIndex(p.inventory.indexOf(item));
+    const itemDesc = item.toString(false, endgame || DEBUG_STATS, p);
+    let itemString = `${indexChar}) ${itemDesc}`;
+    let itemParts = [itemString];
+    if (itemString.length > 39) itemParts = itemString.split(`(`);
+    itemString = padString(itemParts[0], -39);
+    if (itemParts.length >= 2) {
+      /* (being worn) */
+      itemString += `\n   (` + itemParts[1];
     }
+    if (itemParts.length == 3) {
+      /* (being worn) (weapon in hand) */
+      itemString += `(` + itemParts[2];
+    }
+    s += itemString + `\n`;
   }
 
   let gap = amiga_mode ? ` ` : ``;
