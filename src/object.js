@@ -337,7 +337,7 @@ class DungeonObject extends Item {
       char = this.hackchar;
     }
     if (getPref('show_color') && this.color) {
-      char = wrapFont(char, this.color);
+      char = colorText(char, this.color);
     }
     if (getPref('bold_objects') && this.bold) {
       char = `<b>${char}</b>`;

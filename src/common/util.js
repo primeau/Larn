@@ -417,14 +417,14 @@ function isnum(str) {
 
 
 
-function pad(str, width, bold, color=``) {
+function pad(str, width, bold, color) {
   return padString(`` + str, width, bold, color);
 }
 
 
 
 const HIGHLIGHT_DELAY = 700; // left align with -width, otherwise right align
-function padString(str, width, lastHighlightTime, color=``) {
+function padString(str, width, lastHighlightTime, color) {
   if (!str) return Array(Math.abs(width)).join(` `);
   if (!width || width == 0) return str;
   var now = millis();
@@ -432,9 +432,9 @@ function padString(str, width, lastHighlightTime, color=``) {
   var spaces = Array(numspaces).join(` `);
   var shouldHighlight = ((now - lastHighlightTime) < HIGHLIGHT_DELAY);
   if (shouldHighlight) {
-    var markup = wrapMark(str, color);
-  } else if (color !== ``) {
-    var markup = wrapFont(str, color);
+    var markup = highlightText(str, color);
+  } else if (color) {
+    var markup = colorText(str, color);
   } else {
     var markup = str;
   }
