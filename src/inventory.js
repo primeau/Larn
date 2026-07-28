@@ -14,7 +14,12 @@ function drawInventory(filter, show_gold = false, show_time = false, show_empty 
   setMazeMode(false);
 
   if (show_gold) {
-    lprcat(`.) ${Number(player.GOLD).toLocaleString()} gold pieces\n`);
+    lprcat(`.) `);
+    if (getPref(`inventory_pics`)) {
+      lprc(OGOLDPILE.getChar()); // lprc magic for amiga image --> see io.js:os_put_font()
+      lprc(` `);
+    }
+    lprcat(`${Number(player.GOLD).toLocaleString()} gold pieces\n`);
   }
 
   // print inventory
@@ -27,11 +32,17 @@ function drawInventory(filter, show_gold = false, show_time = false, show_empty 
     }
 
     cursor(col, row);
+    cltoeoln();
+
     const item = items[i];
     const itemIndex = player.inventory.indexOf(item);
     const itemChar = getCharFromIndex(itemIndex);
-    const itemString = `${itemChar}) ${item}`;
-    lprcat(`${itemString}\n`);
+    lprcat(`${itemChar}) `);
+    if (getPref(`inventory_pics`)) {
+      lprc(item.getChar()); // lprc magic for amiga image --> see io.js:os_put_font()
+      lprc(` `);
+    }
+    lprcat(`${item.shortName(false)}\n`);
 
     // // if we want to compensate for extra wide items
     // if (col === 1) column2 = Math.max(column2, itemString.length + 1);
@@ -53,6 +64,8 @@ function drawInventory(filter, show_gold = false, show_time = false, show_empty 
       }
 
       cursor(col, row);
+      cltoeoln();
+
       const gap = amiga_mode ? ` ` : ``;
       lprcat(`${getCharFromIndex(slot)}) -${gap}-${gap}-\n`);
 

@@ -109,6 +109,12 @@ const PREFS = {
                       set(v) { this.value = v; },
                       display() { return this.value ? `on` : `off`; },
                       action() { setPref('side_inventory', !this.value); print_options(); return 0; } },
+  inventory_pics:   { key: 'inventory_pics', context: ['options'],
+                      hotkey: 'J', label: 'JInventory Flair', def: true, value: true,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `on` : `off`; },
+                      action() { setPref('inventory_pics', !this.value); print_options(); return 0; } },
   show_color:       { key: 'show_color', amiga_hidden: true, context: ['options'],
                       hotkey: 'O', label: 'Object Color', def: true, value: true,
                       get() { return this.value; }, 
@@ -285,6 +291,7 @@ function print_options() {
   lprcat(`${prefLabel('keyboard_hints')}:   ${PREFS.keyboard_hints.display()}\n`);
   lprcat(`${prefLabel('auto_pickup')}:      ${PREFS.auto_pickup.display()}\n`);
   lprcat(`${prefLabel('side_inventory')}:        ${PREFS.side_inventory.display()}\n`);
+  lprcat(`${prefLabel('inventory_pics')}: ${PREFS.inventory_pics.display()}\n`);
   if (!amiga_mode) lprcat(`${prefLabel('show_color')}:     ${PREFS.show_color.display()}\n`);
   lprcat(`${prefLabel('log_color')}:        ${PREFS.log_color.display()}\n`);
   if (!amiga_mode) lprcat(`${prefLabel('bold_objects')}:     ${PREFS.bold_objects.display()}\n`);
@@ -552,6 +559,28 @@ function parse_explore_mode(key) {
 // EDIT CUSTOM MONSTERS                                           //
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
+
+/*
+
+monster names for testing:
+
+// simple
+m:max, L:Lewis, l:lawless, Z:Zoe,
+
+// simple with spaces
+a : aboleth , A:Acolyte, 
+
+// lots
+a : aboleth , A:Acolyte, b:baboon, B:Badger, c:camel, C:Cat, d:darkmantle, D:Death Dog, e:eagle, E:Earth Elemental, f:fire Elemental, F:Fire Giant, g:gargoyle, G:Ghast, h:half-Red Dragon Veteran, H:Harpy, i:ice Devil, I:Ice Mephit, j:jaculiii, J:Jackalantern, k:killer Whale, K:KOBOLDY, l:lamia, L:Lemure, m:mage, M:Magma Mephit, n:nalfeshnee, N:Night Hag, o:ochre Jelly, O:Octopus, p:panther, P:Pegasus, q:quasit, Q:Quipper, r:rakshasa, R:Rat, s:saber-Toothed Tiger, S:Sahuagin, t:tarrasque, T:Thug,   uU: Unicorn, U:Uvula, v:vampire Spawn, V:Veteran, w:warhorse, W:Warhorse Skeleton, x:xorny mczornerson, X:Xorny McZornerson, y:young Black Dragon, Y:Young Blue Dragon, z:zombie, Z:Ziller,
+
+// wacky
+l:<b>testing bold</b>
+l:<font color='red'>red monster</font>
+~
+!@#$%^&*()_+`-=[]\{}|;':",./<>?
+
+*/
+
 
 function redrawMonsterWindow(key) {
   drawEditMonstersWindow(KEYBOARD_INPUT);

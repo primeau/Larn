@@ -23,6 +23,16 @@ class Item {
 
 
 
+  getSymbol() {
+    if (amiga_mode) {
+      const link = this.getChar().split(`"`)[1];
+      return `<img src="${link}" alt="" style="height: ${spriteWidth * 2}px;"> `;
+    }
+    return `${this.getChar()} `;
+  }
+
+
+
   getDescription() {
     return itemlist[this.id].desc;
   }
@@ -40,14 +50,17 @@ class Item {
 
 
 
-  shortName() {
+  shortName(trimEquipped = true) {
     let name = this.toString();
-    // trim wield, wear, or both from end and continue
-    if (name.endsWith(`hand)`)) {
-      name = name.substring(0, name.length - 17);
-    }
-    if (name.endsWith(`worn)`)) {
-      name = name.substring(0, name.length - 13);
+
+    if (trimEquipped) {
+      // trim wield, wear, or both from end and continue
+      if (name.endsWith(`hand)`)) {
+        name = name.substring(0, name.length - 17);
+      }
+      if (name.endsWith(`worn)`)) {
+        name = name.substring(0, name.length - 13);
+      }
     }
 
     // then remove leading a/an/the and return

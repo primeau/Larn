@@ -140,7 +140,7 @@ var Player = function Player() {
   };
 
   this.getInventory = function (filterFunc) {
-    const tmpInv = this.inventory.filter(item => filterFunc(item));
+    const tmpInv = this.inventory.filter(item => item && filterFunc(item));
     tmpInv.sort(inv_sort);
     return tmpInv;
   };
@@ -1019,27 +1019,30 @@ function game_stats(p = player, endgame) {
   let s = endgame ? `Inventory:\n` : ``;
 
   if (endgame) {
-    s += `.) ` + Number(p.GOLD).toLocaleString() + ` gold pieces\n`;
+    const goldSymbol = getPref(`inventory_pics`) ? OGOLDPILE.getSymbol() : ``;
+    s += `.) ${goldSymbol}${Number(p.GOLD).toLocaleString()} gold pieces\n`;
   }
 
   const items = p.getInventory(isItem);
   for (var i = 0; i < items.length; i++) {
     const item = items[i];
     if (!item) continue;
+
     const indexChar = getCharFromIndex(p.inventory.indexOf(item));
-    const itemDesc = item.toString(false, endgame || DEBUG_STATS, p);
-    let itemString = `${indexChar}) ${itemDesc}`;
-    let itemParts = [itemString];
-    if (itemString.length > 39) itemParts = itemString.split(`(`);
-    itemString = padString(itemParts[0], -39);
+    let itemDesc = item.toString(false, endgame || DEBUG_STATS, p);
+    let itemParts = [itemDesc];
+    if (itemDesc.length > 35) itemParts = itemDesc.split(`(`);
+    itemDesc = padString(itemParts[0], -35);
     if (itemParts.length >= 2) {
       /* (being worn) */
-      itemString += `\n   (` + itemParts[1];
+      itemDesc += `\n     (` + itemParts[1];
     }
     if (itemParts.length == 3) {
       /* (being worn) (weapon in hand) */
-      itemString += `(` + itemParts[2];
+      itemDesc += `(` + itemParts[2];
     }
+    const itemSymbol = getPref(`inventory_pics`) ? item.getSymbol() : ``;
+    const itemString = `${indexChar}) ${itemSymbol}${itemDesc}`;
     s += itemString + `\n`;
   }
 

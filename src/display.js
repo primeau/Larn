@@ -115,8 +115,8 @@ function setMazeMode(mode) {
 
 
 
-function setChar(x, y, c, markup) {
-  setDiv(`${x},${y}`, c, markup);
+function setChar(x, y, c) {
+  setDiv(`${x},${y}`, c);
 }
 
 
@@ -131,7 +131,7 @@ function createDiv(x, y, w, h) {
 
 
 // changes in this function may be affected by io.js:lprcat()
-function setDiv(id, data, markup) {
+function setDiv(id, data) {
   var div = document.getElementById(id);
 
   if (!div) {
@@ -139,66 +139,15 @@ function setDiv(id, data, markup) {
     return;
   }
 
-  // not really needed, but keep things consistent if something is undefined
-  if (!markup) markup = null;
-  // div.markup is a custom property we add to track current markup states
-  if (!div.markup) div.markup = null;
-
   // optimization:
   // most of the time we're just repainting the same data into each div
-  // therefore, only repaint when the data is different, or there is new
-  // markup being applied
-  if (data === div.innerHTML && markup == div.markup) {
+  // therefore, only repaint when the data is different
+  if (data === div.innerHTML) {
     return;
   }
 
   div.innerHTML = data;
-  div.markup = markup;
 
-  clearDivStyle(div);
-
-  if (!markup) return;
-
-  if (markup === START_BOLD) {
-    div.style.fontWeight = 'bold';
-    div.style.color = 'white';
-  } else if (markup === START_DIM) {
-    div.style.color = 'grey';
-  } else if (markup === START_STRIKE) {
-    div.style.textDecoration = 'line-through';
-  } else if (markup === START_UNDERLINE) {
-    div.style.textDecoration = 'underline';
-  } else if (markup === START_ITALIC) {
-    div.style.fontStyle = 'italic';
-  } else if (markup.indexOf(START_FONT) != -1) {
-    // i.e. <font color='red'>
-    div.style.color = markup.split(`'`)[1];
-  } else if (markup.indexOf(START_MARK) != -1) {
-    // i.e. <mark style='background-color: red'>
-    div.style.color = 'black';
-    div.style.backgroundImage = 'none';
-    div.style.backgroundColor = markup.split(`'`)[1].split(`:`)[1];
-  } else if (markup.indexOf(START_HREF) != -1) {
-    // i.e. <a href='link'>text</a> (must use ' not ")
-    div.style.color = 'white';
-    div.style.cursor = 'pointer';
-    div.onclick = function() { window.open(markup.split(`'`)[1], '_blank'); };
-  }
-}
-
-
-
-function clearDivStyle(div) {
-  if (div) {
-    div.style.fontWeight = 'normal';
-    div.style.color = 'lightgrey';
-    div.style.backgroundImage = '';
-    div.style.backgroundColor = '';
-    div.style.textDecoration = 'none';
-    div.style.fontStyle = 'normal';
-    div.style.cursor = 'default';
-    div.onclick = null;
-  }
 }
 
 
@@ -864,7 +813,7 @@ function parse_see_spells(key) {
   nomove = 1;
   if (key == ESC || key == ' ') {
     PAGE_COUNT = 1;
-    setCharCallback(cast);
+    setCharCallback(castCallback);
     return exitbuilding();
   }
 }

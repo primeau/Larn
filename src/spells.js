@@ -62,7 +62,7 @@ function getSpellCode(key, showAllSpells) {
     return 0;
   }
   if (key == ESC) {
-    appendLog(`  aborted${period}`);
+    appendLog(`  cancelled${period}`);
     newSpellCode = null;
     return 1;
   }
@@ -94,6 +94,7 @@ function castCallback(key) {
   newSpellCode = null;
   return 1;
 }
+
 
 
 function cast(code) {
