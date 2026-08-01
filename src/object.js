@@ -290,8 +290,8 @@ class Item {
 
 
 
-const DIV_START = `url("img/`;
-const DIV_END = `.png")`;
+const IMAGE_START = `url("img/`;
+const IMAGE_END = `.png")`;
 const BOLD = true;
 const NO_BOLD = false;
 const NO_COLOR = null;
@@ -331,14 +331,16 @@ class DungeonObject extends Item {
     // flush when resetting mode/bold/color
     if (amiga_mode) {
       if (this.id == OWALL.id) {
-        return `${DIV_START}w${arg}${DIV_END}`;
+        return `${IMAGE_START}w${arg}${IMAGE_END}`;
       } else {
-        return `${DIV_START}o${this.id}${DIV_END}`;
+        return `${IMAGE_START}o${this.id}${IMAGE_END}`;
       }
     }
+
     if (this.id == OWALL.id) {
       return WALLS[getPref('wall_char')][arg];
     }
+
     let char = null;
     if (getPref('original_objects')) {
       if (ULARN) {
@@ -349,6 +351,7 @@ class DungeonObject extends Item {
     } else {
       char = this.hackchar;
     }
+
     if (getPref('show_color') && this.color) {
       char = colorText(char, this.color);
     }

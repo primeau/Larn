@@ -133,7 +133,7 @@ var Player = function Player() {
   this.hasPickedUpEye = false;
 
   this.getChar = function () {
-    if (amiga_mode) return `${DIV_START}player${DIV_END}`;
+    if (amiga_mode) return `${IMAGE_START}player${IMAGE_END}`;
     if (this.char) return this.char;
     if (getPref('retro_mode')) return `${START_BOLD}${colorText('@', 'white')}${END_BOLD}`;
     return `▓`;
@@ -1026,7 +1026,7 @@ function game_stats(p = player, endgame) {
   const items = p.getInventory(isItem);
   for (var i = 0; i < items.length; i++) {
     const item = items[i];
-    if (!item) continue;
+    if (!item) continue; // item should never be null, but just in case
 
     const indexChar = getCharFromIndex(p.inventory.indexOf(item));
     let itemDesc = item.toString(false, endgame || DEBUG_STATS, p);

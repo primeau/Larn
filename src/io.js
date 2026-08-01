@@ -134,19 +134,18 @@ function lprcatStandard(str) {
       continue;
     }
 
-    const matchedEnd = matchClosingTagAt(str, i);
+    const closingTag = matchClosingTagAt(str, i);
+    if (closingTag) {
+      appendClosingTagToRendered(rendered, closingTag);
 
-    if (matchedEnd) {
-      appendClosingTagToRendered(rendered, matchedEnd);
-
-      removeLastMatchingTag(tagStack, matchedEnd);
+      removeLastMatchingTag(tagStack, closingTag);
 
       // If an entire styled segment had no visible chars, clear stale prefixes.
       if (rendered.length === 0 && tagStack.length === 0) {
         pendingPrefix = ``;
       }
 
-      i += matchedEnd.length;
+      i += closingTag.length;
       continue;
     }
 
@@ -215,15 +214,15 @@ function closeRemainingRenderedTags(rendered, tagStack) {
 
 
 function matchOpeningTagAt(str, index) {
-  for (const def of tags) {
-    if (!str.startsWith(def.start, index)) continue;
+  for (const tag of tags) {
+    if (!str.startsWith(tag.start, index)) continue;
 
     const gt = str.indexOf('>', index);
     if (gt === -1) return null;
 
     return {
       fullStartTag: str.slice(index, gt + 1),
-      endTag: def.end,
+      endTag: tag.end,
       nextIndex: gt + 1,
     };
   }
@@ -233,8 +232,8 @@ function matchOpeningTagAt(str, index) {
 
 
 function matchClosingTagAt(str, index) {
-  for (const def of tags) {
-    if (str.startsWith(def.end, index)) return def.end;
+  for (const tag of tags) {
+    if (str.startsWith(tag.end, index)) return tag.end;
   }
   return null;
 }

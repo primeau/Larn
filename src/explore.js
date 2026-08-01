@@ -14,8 +14,8 @@ let explorerCallback = null;
  */
 
 const MazeExplorer = {
-  width: 67,
-  height: 17,
+  width: MAXX,
+  height: MAXY,
 
   monstersBlockDestination: true,
 
@@ -265,7 +265,8 @@ const MazeExplorer = {
     if (getPref('explore_fight') === EXPLORE_FIGHT_NONE) {
       return true;
     } else if (getPref('explore_fight') === EXPLORE_FIGHT_BASIC) {
-      return monster.attack > 0;
+      // simple means anything with a special attack, gelatinous cube, or ularn metamorph
+      return (monster.attack > 0 || monster.matches(CUBE) || ULARN && monster.matches(METAMORPH));
     } else if (getPref('explore_fight') === EXPLORE_FIGHT_ALL) {
       return false;
     } else {

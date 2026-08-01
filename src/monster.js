@@ -171,7 +171,7 @@ Monster.prototype = {
       } else if (ULARN && (monster == LEMMING || monster == BITBUG || monster == LAMANOBE)) {
         suffix = `u`;
       }
-      return `${DIV_START}${prefix}${monster}${suffix}${DIV_END}`;
+      return `${IMAGE_START}${prefix}${monster}${suffix}${IMAGE_END}`;
     } else {
       if (monster == INVISIBLESTALKER && player.SEEINVISIBLE == 0) {
         return OEMPTY.char;

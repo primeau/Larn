@@ -274,7 +274,7 @@ async function parse(e, key) {
   }
 
   //
-  // CAST THE LAST SPELL AGAIN
+  // v12.5.4 CAST THE LAST SPELL AGAIN
   //
   if (key == 'a') {
     castLastSpell();
@@ -393,7 +393,7 @@ async function parse(e, key) {
   }
 
   //
-  // quaff
+  // QUAFF POTION
   //
   if (key == 'q') {
     if (player.TIMESTOP == 0) {
@@ -410,7 +410,7 @@ async function parse(e, key) {
   }
 
   //
-  // read
+  // READ BOOK OR SCROLL
   //
   if (key == 'r') {
     if (player.BLINDCOUNT > 0) {
@@ -437,7 +437,7 @@ async function parse(e, key) {
   }
 
   //
-  // sit on throne
+  // SIT ON THRONE
   //
   if (key == 's') {
     if (player.TIMESTOP == 0) {
@@ -473,7 +473,7 @@ async function parse(e, key) {
   }
 
   //
-  // version
+  // PRINT VERSION
   //
   if (key == 'v') {
     nomove = 1;
@@ -506,7 +506,7 @@ async function parse(e, key) {
   }
 
   //
-  // show scores
+  // SHOW SCORES
   //
   if (key == 'z') {
     nomove = 1;
@@ -573,7 +573,7 @@ async function parse(e, key) {
   }
 
   //
-  // v12.5.3: go to the specified symbol
+  // v12.5.4: GO TO SYMBOL
   //
   if (key == 'G') {
     nomove = 1;
@@ -588,7 +588,7 @@ async function parse(e, key) {
   }
 
   //
-  // list spells and scrolls
+  // LIST KNOWN ITEMS
   //
   if (key == 'I') {
     nomove = 1;
@@ -599,7 +599,7 @@ async function parse(e, key) {
 
 
   // 
-  // v12.5.3: wait multiple turns until recovered or interrupted
+  // v12.5.3: WAIT MULTIPLE TURNS
   //
   if (key == 'M') {
     nomove = 1;
@@ -609,7 +609,7 @@ async function parse(e, key) {
   }
 
   //
-  // OPTIONS
+  // v12.5.4 OPTIONS
   //
   if (key == 'O') { 
     nomove = 1;
@@ -618,7 +618,7 @@ async function parse(e, key) {
   }
 
   //
-  // auto-pray
+  // v12.5.3 AUTO-PRAY
   //
   if (key == 'P') {
     if (item.matches(OALTAR)) {
@@ -634,7 +634,7 @@ async function parse(e, key) {
   }
 
   //
-  // Q - quit
+  // Q - QUIT
   //
   if (key == 'Q') {
     nomove = 1;
@@ -661,7 +661,7 @@ async function parse(e, key) {
 
 
   //
-  // S - save game
+  // S - SAVE GAME
   //
   if (key == 'S') {
     nomove = 1;
@@ -676,7 +676,7 @@ async function parse(e, key) {
   }
 
   //
-  // take off armor
+  // TAKE OFF ARMOR
   //
   if (key == 'T') {
     if (player.SHIELD) {
@@ -692,7 +692,7 @@ async function parse(e, key) {
   }
 
   //
-  // WEAR
+  // WEAR ARMOR
   //
   if (key == 'W') {
     if (item.isArmor() && !pocketfull()) {
@@ -709,7 +709,7 @@ async function parse(e, key) {
   }
 
   //
-  // VIEW CONDUCTS
+  // v12.5.? VIEW CONDUCTS
   //
   if (key == 'V') {
     updateLog(`Conducts observed: ${player.getConductString(true)}`);
@@ -717,7 +717,7 @@ async function parse(e, key) {
   }
   
   // 
-  //  MAZE EXPLORER
+  //  v12.5.4 MAZE EXPLORER
   //
   if (key === 'X') {
     nomove = 1;
@@ -801,9 +801,14 @@ async function parse(e, key) {
   }
 
   //
-  // TRAVEL TO UP STAIRS
+  // v12.5.4 TRAVEL TO UP STAIRS
   //
   if (key == '{') {
+    if (item.matches(OSTAIRSUP) || item.matches(OVOLUP)) {
+      up_stairs();
+      return;
+    }
+    
     nomove = 1;
     if (getPref('explore_stairs')) {
       updateLog(`Travelling to stairs`);
@@ -820,9 +825,14 @@ async function parse(e, key) {
   }
 
   //
-  // TRAVEL TO DOWN STAIRS
+  // v12.5.4 TRAVEL TO DOWN STAIRS
   //
   if (key == '}') {
+    if (item.matches(OSTAIRSDOWN) || item.matches(OENTRANCE)) {
+      down_stairs();
+      return;
+    }
+    
     nomove = 1;
     if (getPref('explore_stairs')) {
       updateLog(`Travelling to stairs`);
@@ -837,7 +847,7 @@ async function parse(e, key) {
   }
 
   //
-  // identify traps
+  // IDENTIFY TRAPS
   //
   if (key == '^') {
     let trapFound = false;
@@ -856,7 +866,7 @@ async function parse(e, key) {
   }
 
   //
-  // look at object
+  // LOOK AT OBJECT
   //
   if (key == ':') {
     nomove = 1; /* assumes look takes no time */
@@ -868,7 +878,7 @@ async function parse(e, key) {
 
 
   //
-  // hide/reveal config buttons
+  // v12.5.1 HIDE/REVEAL CONFIG BUTTONS
   //
   if (key == '⚙️') {
     nomove = 1;
@@ -878,7 +888,7 @@ async function parse(e, key) {
   }
 
   //
-  // help screen
+  // HELP SCREEN
   //
   if (key == '?') {
     nomove = 1;
@@ -889,7 +899,7 @@ async function parse(e, key) {
   }
 
   //
-  // toggle extra keyboard help mode
+  // v12.5.0 TOGGLE EXTRA KEYBOARD HELP MODE
   //
   if (key == '!') {
     nomove = 1;
@@ -900,7 +910,7 @@ async function parse(e, key) {
     return;
   }
 
-  // toggle auto pickup
+  // v12.5.0 TOGGLE AUTO PICKUP
   if (key == '@') {
     nomove = 1;
     setPref('auto_pickup', !getPref('auto_pickup'));
@@ -909,7 +919,7 @@ async function parse(e, key) {
   }
 
   //
-  // wizard mode
+  // WIZARD MODE
   //
   if (key == '_') {
     nomove = 1;
@@ -920,7 +930,7 @@ async function parse(e, key) {
 
 
   //
-  // REPORT BUG
+  // v12.5.0 REPORT BUG
   //
   if (key == '🐞') {
     nomove = 1;
