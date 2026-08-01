@@ -163,6 +163,12 @@ const PREFS = {
                       set(v) { this.value = v; },
                       display() { return mouseOptions[this.value]; },
                       action() { setPref('travel_button', (this.value + 1) % mouseOptions.length); print_options(); initHelpPages(); return 0; } },
+  time_remaining:   { key: 'time_remaining', context: ['options'],
+                      hotkey: 'R', label: 'Remaining Time', def: false, value: false,
+                      get() { return this.value; }, 
+                      set(v) { this.value = v; },
+                      display() { return this.value ? `on` : `off`; },
+                      action() { setPref('time_remaining', !this.value); print_options(); initHelpPages(); return 0; } },
 
   custom_monsters:  { key: 'custom_monsters', context: ['options'],
                       hotkey: 'M', label: 'Monster Names', defFn: () => [], value: [],
@@ -289,9 +295,9 @@ function print_options() {
   const row2 = cursory;
   cursor(leftCol, cursory);
   lprcat(`${prefLabel('keyboard_hints')}:   ${PREFS.keyboard_hints.display()}\n`);
-  lprcat(`${prefLabel('auto_pickup')}:      ${PREFS.auto_pickup.display()}\n`);
   lprcat(`${prefLabel('side_inventory')}:        ${PREFS.side_inventory.display()}\n`);
   lprcat(`${prefLabel('inventory_pics')}: ${PREFS.inventory_pics.display()}\n`);
+  lprcat(`${prefLabel('time_remaining')}:   ${PREFS.time_remaining.display()}\n`);
   if (!amiga_mode) lprcat(`${prefLabel('show_color')}:     ${PREFS.show_color.display()}\n`);
   lprcat(`${prefLabel('log_color')}:        ${PREFS.log_color.display()}\n`);
   if (!amiga_mode) lprcat(`${prefLabel('bold_objects')}:     ${PREFS.bold_objects.display()}\n`);
@@ -323,6 +329,8 @@ function print_options() {
 
   cursor(rightCol, row2);
   lprcat(`${prefLabel('explore_menu')}\n\n`);
+  cursor(rightCol, cursory);
+  lprcat(`${prefLabel('auto_pickup')}:    ${PREFS.auto_pickup.display()}\n`);
   cursor(rightCol, cursory);
   lprcat(`${prefLabel('no_intro')}:     ${PREFS.no_intro.display()}\n\n`);
   cursor(rightCol, cursory);
@@ -396,7 +404,7 @@ function drawEditObjectWindow(title, label, currentChar, parseCallback) {
 }
 
 function drawBox(startx, starty, width, height) {
-  const wc = amiga_mode ? 2 : getPref('wall_char');
+  const wc = amiga_mode ? 2 : getPref('wall_char'); // wc=2 is for singleAsciiWalls 
   cursor(startx, starty);
   lprcat(`${WALLS[wc][12]}`);
   lprcat(`${WALLS[wc][20]}`.repeat(width - 2));

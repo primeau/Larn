@@ -12,7 +12,6 @@ function enableDevmode() {
 
     ENABLE_RECORDING = false;
     ENABLE_RECORDING_REALTIME = false;
-    recording = null;
 
     enableDebug();
     eventToggleDebugWTW();
