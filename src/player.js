@@ -1053,6 +1053,8 @@ function game_stats(p = player, endgame) {
     }
   }
 
+  if (getPref(`time_remaining`)) s += `\nTime remaining: ${timeleft()} mobuls\n`;
+
   if (endgame || !pocketempty()) s += `\n`;
   s += `Known Spells:\n`;
   var count = 0;
