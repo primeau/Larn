@@ -304,8 +304,7 @@ async function parse(e, key) {
 
       if (item.matches(OCOOKIE)) {
         appendLog(` eat${period}`);
-        forget();
-        outfortune();
+        eatCookie(item, false);
       } else if (item.matches(OSHROOMS)) {
         forget();
         eatShrooms();

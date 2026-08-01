@@ -204,9 +204,14 @@ function outfortune() {
 
 
 
-function eatCookie(item) {
-  destroyInventory(item);
+function eatCookie(item, fromInventory = true) {
+  if (fromInventory) {
+    destroyInventory(item);
+  } else {
+    forget();
+  }
   outfortune();
+  player.raisehp(); /* 12.5.4 raise HP by 1 */
   return 0; // nomove = 0;
 }
 
