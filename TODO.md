@@ -13,7 +13,6 @@
 todo
 ====
 - General
-  - Show inventory slots in “i” mode
   - move command ("m")?
   - add current date/time to bug report form
   - show other actions ("you have desecrated at the altar!" etc)
@@ -27,7 +26,6 @@ todo
   - scroll back to view older log messages, or command to show longer log
   - game start/end stats
   - config page
-    - show mobuls on inventory side tab
     - prompt_mode option v2? (',' to consume from floor, usual letter to consume from inventory)
     - player color
     - player bold
@@ -52,11 +50,8 @@ todo
 - mobile
   - add options
   - mobile=false flag for the url -> add override to isMobile() to allow keyboard/options on ipad
-  - dim buttons in store for things you can't afford?
   - clicking on score doesnt show info on win
 - scoreboard
-  - save this week/last week etc instead of item value?
-  - scoreboard visitors - use movesmade, not mobuls
   - don't show scores with offensive names
 - website
   - new favicon? dragon? random monster?
@@ -88,7 +83,6 @@ code/infrastructure todos
   - with R1 can we just set lifecycle to keep all winning games?
 - async/await for keyboard input
   - started. way too much work to change everything
-- refactor inventory --> inventory.js
 - get rid of mazemode?
 - idea: use createElement for all rendering?
 - refactor: move everything out of data, put methods for the use of the thing in the object
@@ -151,7 +145,6 @@ extras
 bugs
 ====
 * iPad version crashes when network connection lost
-- blindness on E10/V3 will reveal the eye/potion if the level has been explored
 - Lockups on iPad in localhost mode. Maybe related to number of moves?
 - amiga tv replays seem really slow even on 8x speed (http://localhost:8001/alpha/tv/index.html?gameid=g12jtsftkj)
 - player hit themselves with own magic by moving into mle spell? [video: hitbymagic.mov]

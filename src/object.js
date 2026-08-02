@@ -25,8 +25,8 @@ class Item {
 
   getSymbol() {
     if (amiga_mode) {
-      const link = this.getChar().split(`"`)[1];
-      return `<img src="${link}" alt="" style="height: ${spriteWidth * 2}px;"> `;
+      const url = this.getChar().split(`"`)[1];
+      return `<img src="${url}" class="image"> `;
     }
     return `${this.getChar()} `;
   }

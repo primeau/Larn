@@ -72,9 +72,13 @@ div {
     white-space: pre;
 }
 
-div.image {
+.image {
     display: inline-block;
     background-image: url('../img/o94.png');
+    height: 1em;
+    width: 0.5em;
+    overflow: hidden;
+    vertical-align: text-bottom;
 }
 
 mark {

@@ -9,7 +9,7 @@ const EMPTY_LARN_FRAME = "                                                      
 class Video {
   constructor(gameID) {
     this.frameBuffer = [];
-    this.recording = ENABLE_RECORDING;
+    this.recording = ENABLE_RECORDING || ENABLE_RECORDING_REALTIME;
     this.gameID = gameID;
     this.currentFrameNum = -1;
     this.totalFrames; // total number of frames when replaying
@@ -198,7 +198,7 @@ function rollCompressionCallback(event) {
 
 
 function canRecord() {
-  if (!ENABLE_RECORDING) return false;
+if (!ENABLE_RECORDING && !ENABLE_RECORDING_REALTIME) return false;
   if (!navigator.onLine) return false;
   if (!video) video = new Video(gameID);
   return video.recording;
@@ -210,7 +210,7 @@ function canRecord() {
 let LAST_RECORDED_FRAME_ID = -1;
 
 function processRecordedFrame(frame) {
-  if (!ENABLE_RECORDING) return false;
+if (!ENABLE_RECORDING && !ENABLE_RECORDING_REALTIME) return false;
   if (!navigator.onLine) return false;
   if (!frame) return false;
 
@@ -245,7 +245,7 @@ const DELIMITER = '|';
 function deflate(htmlString) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, 'text/html');
-  const divs = doc.querySelectorAll('div.image');
+  const divs = doc.querySelectorAll('.image');
   
   const results = [];
   
@@ -305,7 +305,7 @@ function inflate(tokenString, width = 80) {
     }
     
     // Create the div HTML
-    const div = `<div id="${x},${y}" class="image" style="width: 13px; height: 26px; font-weight: normal; background-image: url(&quot;img/${imageName}.png&quot;);">${textContent}</div>`;
+    const div = `<div id="${x},${y}" class="image" style="background-image:url(img/${imageName}.png);">${textContent}</div>`;
     divs.push(div);
     
     // Update position (move to next column, wrap to next row at width)

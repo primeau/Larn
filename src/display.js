@@ -121,11 +121,8 @@ function setChar(x, y, c) {
 
 
 
-function createDiv(x, y, w, h) {
-  if (!w) w = 12;
-  if (!h) h = w * 2;
-  // TODO: this can be more efficient!
-  return `<div id='${x},${y}' class='image' style="width:${w}px; height:${h}px; "> </div>`;
+function createDiv(x, y) {
+  return `<div id='${x},${y}' class='image'> </div>`;
 }
 
 
@@ -304,9 +301,9 @@ function onResize(event) {
   setSizePX(directionButtons, directionBox);
   setSizePX(runButton, runBox);
 
-  setButtons();
-
   setMode(amiga_mode, getPref('retro_mode'), getPref('original_objects'));
+
+  setButtons();
 }
 
 
@@ -383,16 +380,6 @@ function setMode(amiga, retro, original) {
         }
       }
       bltDocument();
-    } else {
-      /* update divs if the size has changed */
-      if (`${spriteWidth}px` != ele.style.width) {
-        let divs = document.getElementsByClassName('image');
-        for (let index = 0; index < divs.length; index++) {
-          const div = divs[index];
-          div.style.width = `${spriteWidth}px`;
-          div.style.height = `${spriteWidth * 2}px`;
-        }
-      }
     }
     if (!images) {
       loadImages(`img/`);

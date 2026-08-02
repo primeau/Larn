@@ -122,6 +122,7 @@ function bltFrame(frame) {
   }
   
   let larnDivs = frame.divs.LARN;
+  let statsDivs = frame.divs.STATS.replace(/img\//g, `../img/`);
 
   if (frame.deflated) {
     larnDivs = inflate(larnDivs);
@@ -133,7 +134,7 @@ function bltFrame(frame) {
   if (frame.id > bltFrameCache) {
   // if (frame.ts > bltFrameCache) {
     setDiv(`TV_LARN`, larnDivs);
-    setDiv(`TV_STATS`, frame.divs.STATS);
+    setDiv(`TV_STATS`, statsDivs);
     // bltFrameCache = frame.id;
     //bltFrameCache = frame.ts;
 
@@ -144,15 +145,10 @@ function bltFrame(frame) {
     return;
   }
 
-  // for amiga mode
-  let sw = computeSpriteWidth();
-  document.querySelectorAll(`.image`).forEach((div) => {
-    // set new width and height
-    div.style.width = `${sw}px`;
-    div.style.height = `${sw * 2}px`;
-    // adjust background image location
+    // adjust background image locations for amiga mode
+    document.querySelectorAll(`.image`).forEach((div) => {
     div.style.backgroundImage = div.style.backgroundImage.replace(/img\//, `../img/`);
-  }); // this takes ~0.003 seconds on an m1 mac...
+  });
 }
 
 
