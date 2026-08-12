@@ -78,7 +78,7 @@ function setButtons() {
     }
 
     // casting a spell
-    if (blocking_callback === cast) {
+    if (blocking_callback === castCallback) {
       spellListButtons(false);
       return;
     }
