@@ -55,6 +55,7 @@ todo
   - don't show scores with offensive names
 - website
   - new favicon? dragon? random monster?
+  - update hero image
   - new video to add: https://larn.org/beta/tv/?gameid=lysnwvbhx8 (diff 0 win with illiterate/thirsty conducts)
 
 
@@ -93,9 +94,7 @@ code/infrastructure todos
 - use fewer globals!
   - put all globals into globals.json with info about which files use it
   - put all player related functions/vars into player object
-- javascript build versioning?
 - record build number in save game
-- auto-update build number somehow
 - delete google analytics account
 - use goatcounter campaigns to measure
   - debug/checkpoint/savegame
@@ -155,9 +154,6 @@ bugs
 * there are a bunch of 404's for the older source code in history.html
   - add links to locally hosted copies
 - surroundings aren't explored after falling into a pit
-- fonts
-  - retro font mode isn't properly monospaced in mac/safari
-  - courier new tv games are a little too wide
 - close dexterity loophole? ask rtwod about it
 - clear() creates an extra empty frame (ie during show inventory)
   - same for cl_up() cl_down() and others?

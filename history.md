@@ -15,8 +15,9 @@ the player will rest until fully healed. If health is full, the player will
 rest until available spells are full. Thanks to Aaron Friesen for adding this
 feature.
 
-1. [new] Pressing 'a' will re-cast the previously cast spell. Thanks to Aaron
-Friesen for adding this feature.
+1. [new] Pressing 'a' will re-cast the previously cast spell. Your previously
+cast spell will be highlighted. Thanks to Aaron Friesen for adding this 
+feature.
 
 1. [new] HP and spell totals will transition from gray (full) -> green ->
 yellow -> red as they diminish. This can be toggled via the Log Color

@@ -34,8 +34,8 @@ or MORIA, but with a different feel and winning criteria.
 # cd Larn
 # npm install
 # npm run build
-# python3 -m http.server 8000
-# http://localhost:8000/_dist/larn/larn.html
+# python3 -m http.server 8000 --directory ../larn-deploy/prod/larn
+# http://localhost:8000/larn.html
 ```
 
 ## History and Other Information
