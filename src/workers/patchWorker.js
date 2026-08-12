@@ -1,17 +1,11 @@
 'use strict';
 
-importScripts('../lib/diff_match_patch.js');
-
 try {
-  importScripts('../tv/common/patch.js'); // prod location
-  console.log(`patchWorker.js: prod load`);
+  importScripts('../lib/diff_match_patch.js');
+  importScripts('../common/patch.js');
+  console.log(`patchWorker.js: workers loaded`);
 } catch (error) {
-  try {
-    importScripts('../common/patch.js'); // local testing
-    console.log(`patchWorker.js: dev load`);
-  } catch (e) {
-    console.error(`patchWorker.js: failed to load`);
-  }
+  console.error(`patchWorker.js: failed to load`, error);
 }
 
 // WORKER STEP 2 - build patch

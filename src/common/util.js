@@ -641,12 +641,35 @@ function createImage(src) {
 
 
 
+function computeHeightAdjust(spriteWidth) {
+  // TODO this is a fudge factor to tune the line height
+  let heightAdjust = amiga_mode ? 0 : -1 - spriteWidth / 13;
+  return heightAdjust;
+}
+
+
+
 async function loadFonts() {
   // make sure fonts are loaded before rendering anything
-  // if we don't wait for this, the main screen will end up
-  // being a different font
-  await document.fonts.load(`12px dos437`);
-  await document.fonts.load(`12px modern`);
+  // or the main screen will end up being a different font
+  let fontPromises = [];
+  if (amiga_mode) {
+    if (typeof getPref === 'function' && getPref('retro_mode')) { // larntv doesn't have getPref()
+      fontPromises.push(document.fonts.load(`12px amiga500`));
+    } else {
+      fontPromises.push(document.fonts.load(`12px amiga1200`));
+    }
+  } else {
+    if (typeof getPref === 'function' && getPref('retro_mode')) { // larntv doesn't have getPref()
+      fontPromises.push(document.fonts.load(`12px dos437`));
+    } else {
+      fontPromises.push(document.fonts.load(`12px modern`));
+      fontPromises.push(document.fonts.load(`bold 12px modern`));
+    }
+  }
+  // console.log(`loadFonts: waiting for fonts to load...`);
+  const fontsLoaded = await Promise.all(fontPromises);
+  // console.log(`loadFonts: fonts loaded`, fontsLoaded);
 }
 
 
@@ -791,6 +814,14 @@ function isLocal() {
 
   return location.hostname === 'localhost'; 
   // return location.hostname === 'localhost' || location.hostname === ''; 
+}
+
+function isAlphaSite() {
+  return location.hostname === 'alpha.larn.org';
+}
+
+function isBetaSite() {
+  return location.hostname === 'beta.larn.org';
 }
 
 function isFile() {

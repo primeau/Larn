@@ -127,6 +127,20 @@ function createDiv(x, y) {
 
 
 
+function createDivGrid() {
+  const ele = document.getElementById('0,0');
+  if (ele) return;
+
+  for (let y = 0; y < 24; y++) {
+    for (let x = 0; x < 80; x++) {
+      display[x][y] = createDiv(x, y);
+    }
+  }
+  bltDocument();
+}
+
+
+
 // changes in this function may be affected by io.js:lprcat()
 function setDiv(id, data) {
   var div = document.getElementById(id);
@@ -195,7 +209,7 @@ function setSpriteWidthFromDimensions(screenw, screenh, margin) {
   let baseWidth = (screenw - margin * 2) / (getPref('side_inventory') ? 120 : 80);
   const wide = baseWidth * 24 * 2 + margin * 2 > screenh; // if screen is much wider than tall
   if (wide) baseWidth = (screenh - margin * 2) / 24 / 2;
-  if (amiga_mode) baseWidth = Math.floor(baseWidth); //  chrome needs whole numbers to have smooth amiga graphics
+  baseWidth = Math.floor(baseWidth); //  whole numbers
   if (baseWidth < 4) baseWidth = 4;
 
   spriteWidth = baseWidth;
@@ -308,15 +322,14 @@ function onResize(event) {
 
 
 
-const testtext = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
 let styleUploaded = false;
+let amigaLoaded = false;
 let LAST_MODE = null;
 function setMode(amiga, retro, original) {
 
   // upload style information for larntv
   if (game_started && !styleUploaded) {
-    let style = getStyleData();
-    styleUploaded = uploadStyle(style);
+    styleUploaded = uploadStyle(getStyleData());
   }
 
   // // skip font metric work when nothing has changed -- works on desktop, not on mobile
@@ -338,64 +351,36 @@ function setMode(amiga, retro, original) {
   lt = amiga_mode ? `<` : `&lt`;
   gt = amiga_mode ? `>` : `&gt`;
 
-  // bold fonts are wider than regular fonts on Safari and Firefox
-  // Courier New is OK, but many are not
-
-  // courier/modern font settings
-  let testfont = `12px modern`;
-  let isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
-  let heightMultiple = 1.88; // was 1.93
-  let fontFamily = isBoldWider ? `Courier New` : `modern`;
+  let fontFamily = retro ? `dos437` : `modern`;
   let textColour = `lightgrey`;
   let letterSpacing = `normal`;
-  let spacing = 0;
+  let heightMultiple = 2;
 
-  // retro mode settings
-  if (retro) {
-    testfont = `12px dos437`;
-    isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
-    heightMultiple = 1.93; // was 1.9
-    if (!isBoldWider) {
-      fontFamily = `dos437`;
-      textColour = `#ABABAB`;
-      letterSpacing = '-1px';
-      spacing = -1;
-    } // otherwise use the courier/modern settings from above
-  }
+  // TODO this is a fudge factor to tune the line height
+  let heightAdjust = computeHeightAdjust(spriteWidth);
 
   // change to amiga font for amiga graphics
   if (amiga_mode) {
-    heightMultiple = 2;
     fontFamily = retro ? `amiga500` : `amiga1200`;
-    textColour = `lightgrey`;
-    letterSpacing = `normal`;
-    spacing = 0;
     overridePref('original_objects', true);
-    let ele = document.getElementById('0,0');
-    if (!ele) {
-      /* first time */
-      for (var y = 0; y < 24; y++) {
-        for (var x = 0; x < 80; x++) {
-          display[x][y] = createDiv(x, y, spriteWidth, spriteWidth * 2);
-        }
+    if (!amigaLoaded) {
+        amigaLoaded = true;
+        createDivGrid();
+      if (!images) {
+        loadImages(`img/`);
       }
-      bltDocument();
-    }
-    if (!images) {
-      loadImages(`img/`);
     }
   }
 
-  let fontSize = amiga_mode ? spriteWidth * 2 : computeFontSize(fontFamily, spriteWidth, spacing);
-  let font = `${fontSize}px ${fontFamily}`;
+  const fontSize = amiga_mode ? spriteWidth * 2 : computeFontSize(fontFamily, spriteWidth, 0);
 
-  document.body.style.font = font;
+  document.body.style.font = `${fontSize}px ${fontFamily}`;
   document.body.style.fontFamily = fontFamily;
   document.body.style.color = textColour;
   document.body.style.letterSpacing = letterSpacing;
-  document.body.style.lineHeight = `${spriteWidth * heightMultiple}px`;;
+  document.body.style.lineHeight = `${spriteWidth * heightMultiple + heightAdjust}px`;
 
-  // this is called every move: blt() -> onResize() -> setMode()
+  // TODO this is called every move: blt() -> onResize() -> setMode()
   // and messes up changing button font size for inventory actions, casting
   setButtonFontSize(fontSize);
 
@@ -719,7 +704,8 @@ function seemagic(onlyspells, allspells) {
   var spellstring = `  The magic spells you have discovered thus far:`;
   if (allspells) spellstring = `Available spells are:`;
   var spellfunc = function (spell, buffer) {
-    return padString(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26);
+    const highlight = spell === lastSpellCast ? millis() : 0;
+    return padString(`${spell} ${spelname[spelcode.indexOf(spell)]}`, -26, highlight);
   }
   printknown(spellstring, spelldata, spellfunc, buffer, true);
 

@@ -1,22 +1,63 @@
+JS U/Larn 12.5.4
+----------------
+1. [new] Added an 'X' command to auto-explore the dungeon. This feature must
+be enabled in (O)ptions via the (E)xplore menu. Our Hero's actions can be
+configured to pick up items, pray at altars, handle damage, and fight monsters.
+Notably, the 'simple monsters' auto-fight option will avoid anything with a
+special attack, as well as gelatinous cubes, and metamorphs (in Ularn).
+
+1. [new] Added a 'G' command to auto-travel to a selected item. Pressing '{'
+or '}' will auto-travel to the appropriate up or down destination for the
+current level. Thanks to Aaron Friesen for adding this feature.
+
+1. [new] Added an 'M' command to rest for multiple turns. If health is low,
+the player will rest until fully healed. If health is full, the player will
+rest until available spells are full. Thanks to Aaron Friesen for adding this
+feature.
+
+1. [new] Pressing 'a' will re-cast the previously cast spell. Thanks to Aaron
+Friesen for adding this feature.
+
+1. [new] HP and spell totals will transition from gray (full) -> green ->
+yellow -> red as they diminish. This can be toggled via the Log Color
+configuration option. Thanks to Aaron Friesen for adding this feature.
+
+1. [new] Added an option to show the icon for an item in the inventory view.
+Thanks to Aaron Friesen for adding this feature.
+
+1. [new] Added an option to allow a player to toggle whether they want to see
+time remaining in the side inventory.
+
+1. [new] Clicking on a tile will tell you what is there. Double-clicking will
+travel to that tile. The desired click actions for each option are
+configurable.
+
+1. [new] As a small nod to the food-based roots of other roguelikes, eating
+a fortune cookie now restores 1 HP.
+
+1. [fix] Quaffing a potion of blindness on E10 | V3/5 would reveal the
+eye or potion if the level had been explored. Thanks to Andrew Harton for
+finding this one.
+
+1. [fix] Casting 'VPR' on a Xorn standing on a statue would vaporize the
+statue but not the Xorn.
+
+
 JS U/Larn 12.5.3
 ----------------
 1. [new] Added a weekly challenge option.
 
-1. [new] Added a 'G' command to auto-travel to a selected item. '{' and '}'
-will auto-travel to the appropriate up or down destination for the level. Thanks
-to Aaron Friesen for adding this feature.
-   
-1. [new] Added an 'M' command to rest for multiple turns to renew health or 
-spells. Aaron added this feature also.
+1. [new] Pressing 'O' will open an options menu to allow configuration of a
+number of appearance features and player actions.
 
-1. [new] Added an 'X' command to auto-explore the dungeon.
+1. [new] The default player, wall, and floor tiles can be configured.
 
-1. [new] Removed the tax status option and added a 'P' command to 'autopray' 
+1. [new] Monsters can be highlighted in color in the game log.
+
+1. [new] Removed the tax status option and added a 'P' command to 'autopray'
 to speed up altar interactions.
 
-1. [new] Clicking on a tile will tell you what's there.
-
-1. [new] Items our Hero can't afford to buy are dimmed out.
+1. [new] Items our Hero can't afford are dimmed out.
 
 1. [fix] Smart and scared monsters are now able to attack if our Hero is on the
 outer edge of the maze.
@@ -41,11 +82,11 @@ JS U/Larn 12.5.1
 
 JS U/Larn 12.5.0
 ----------------
-1. [new] Added Ularn functionality. Primarily follows the 1.5 codebase with 
-some inspiration from 1.6. Maintains the new/balance/fix items of version 
-12.4.5 where it seems to make sense.
+1. [new] Added Ularn functionality. Primarily based on the 1.5 codebase,
+with some inspiration from 1.6. It maintains the new, balance, and fix items
+of version 12.4.5 where it seems to make sense.
 
-1. [new] Ularn also playable with Amiga-style graphics thanks to the new 
+1. [new] Ularn is also playable with Amiga-style graphics, thanks to the new
 sprites created by Christopher Yewchuk and Jerome Lecomte.
 
 1. [new] Stolen items can be recovered if you can find the monster again.
@@ -59,11 +100,12 @@ sprites created by Christopher Yewchuk and Jerome Lecomte.
 1. [new] Toggle added for retro-style fonts and two different Amiga fonts.
 
 1. [balance] Selling items is blocked once the potion has been picked up to
-prevent inflated scores by selling epic items.   
+prevent inflated scores by selling epic items.
 
 1. [balance] Demons can no longer be teleported.
 
-1. [balance] The chest and book at the store decline in quality as difficulty goes up.
+1. [balance] The chest and book at the store decline in quality as difficulty 
+goes up.
 
 1. [fix]/[new] You can drop gold onto an existing pile of gold now, or into
 a pit.
@@ -77,7 +119,8 @@ of the dungeon.
 1. [fix] Jonathon Kocz fixed the potion of fire resistance, which has
 apparently never worked.
 
-1. [fix] Some missile spells could insta-kill demons when our Hero was wielding Slayer.
+1. [fix] Some missile spells could insta-kill demons when our Hero was wielding
+Slayer.
 
 1. [fix] Some spells could behead monsters when our Hero was wielding the 
 Vorpal Blade.
@@ -125,8 +168,8 @@ and higher.
 1. [fix] It's possible to fall into a pit again. This was broken in 12.4.
 
 1. [fix] The last hit monster would chase our Hero from across the maze after
-teleporting away. This bug could also cause other monsters to become 'possessed'
-and move very erratically in rare situations.
+teleporting away. This bug could also cause other monsters to become 
+'possessed' and move very erratically in rare situations.
 
 1. [fix] Leather and stainless plate armor could be dulled when used as a
 weapon against rusting monsters. Thanks to Will Oprisko for finding this one.
@@ -138,10 +181,10 @@ properly when our Hero was running.
 running. 
 
 1. [un-fix] The history lesson from the College of Larn says that the Eye
-of Larn is protected by a Platinum Dragon, which wasn't the case in the original
-version of Larn. I changed it to be true for a while, but it unbalanced the
-game too much. For anyone who died at the hands of a Platinum Dragon while
-questing for the Eye, I'm sorry.
+of Larn is protected by a Platinum Dragon, which wasn't the case in the
+original version of Larn. I changed it to be true for a while, but it
+unbalanced the game too much. For anyone who died at the hands of a Platinum
+Dragon while questing for the Eye, I'm sorry.
 
 
 Larn 12.4.4
@@ -153,7 +196,7 @@ Larn 12.4.3
 -----------
 Win32 only. Depends on PDCurses. Name entered at character creation is now used
 for scoreboard. Keypad + Shift run supported. All chars used for numerics in
-codebasw are now ints. Basic work converting to stdlib + curses instead of
+the codebase are now ints. Basic work converting to stdlib + curses instead of
 the awkward terminal hacks. Very much a work in progress.
 
 

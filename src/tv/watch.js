@@ -35,6 +35,8 @@ async function watchRecorded(gameID) {
   gameInfo = await downloadGameInfo(gameID);
   applyGameInfo(gameInfo);
   
+  onResize();
+  
   initPlayer();
   bltFrame(video.createInfoFrame(`Loading...`));
 

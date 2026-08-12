@@ -10,7 +10,11 @@ td.pr2ch {
 body {
   margin: 2em;
   color: #d3d3d3;
+  font-family: 'Courier New', 'Courier', 'ui-monospace', 'monospace';
   font-size: 18px;
+}
+div {
+  white-space: normal;
 }
 h1 {
   text-align: center;

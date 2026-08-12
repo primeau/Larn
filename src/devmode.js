@@ -61,6 +61,16 @@ function enableDevmode() {
     // setItem(player.x, player.y, createObject(ODNDSTORE));
     // setItem(player.x, player.y, createObject(OTRADEPOST));
 
+    if (false) {
+        for (let x = 11; x <= 17; x+=2) setItem(x, 6, OWALL); // squares
+        for (let x = 11; x <= 17; x++) setItem(x, 8, OWALL); // horiz line
+        for (let y = 10; y <= 13; y++) setItem(17, y, OWALL); // vert line
+        for (let y = 10; y <= 13; y++) {
+            for (let x = 11; x <= 14; x++) setItem(x, y, OWALL); // grid
+        }
+        updateWalls();
+    }
+
     // createmonster(NYMPH);
     // for (let index = 1; index < monsterlist.length; index++) {
     //     createmonster(index, 1+index, 2);

@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const CONFIG_PATH = path.join(__dirname, 'src/common/larn_config.js');
+const CONFIG_PATH = path.join(__dirname, '../../larn/src/common/larn_config.js');
 
 const EXPECTED = {
   ENABLE_DEVMODE: false,

@@ -26,7 +26,6 @@ function welcome() {
     setTextCallback(setname, 24);
   }
 
-
   onResize(); // for mobile
   paint();
 }

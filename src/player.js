@@ -136,7 +136,7 @@ var Player = function Player() {
     if (amiga_mode) return `${IMAGE_START}player${IMAGE_END}`;
     if (this.char) return this.char;
     if (getPref('retro_mode')) return `${START_BOLD}${colorText('@', 'white')}${END_BOLD}`;
-    return `▓`;
+    return `<ply>█</ply>`;
   };
 
   this.getInventory = function (filterFunc) {
@@ -1019,7 +1019,7 @@ function game_stats(p = player, endgame) {
   let s = endgame ? `Inventory:\n` : ``;
 
   if (endgame) {
-    const goldSymbol = getPref(`inventory_pics`) ? OGOLDPILE.getSymbol() : ``;
+    const goldSymbol =(endgame || getPref(`inventory_pics`)) ? OGOLDPILE.getSymbol() : ``;
     s += `.) ${goldSymbol}${Number(p.GOLD).toLocaleString()} gold pieces\n`;
   }
 
@@ -1041,7 +1041,7 @@ function game_stats(p = player, endgame) {
       /* (being worn) (weapon in hand) */
       itemDesc += `(` + itemParts[2];
     }
-    const itemSymbol = getPref(`inventory_pics`) ? item.getSymbol() : ``;
+    const itemSymbol = (endgame || getPref(`inventory_pics`)) ? item.getSymbol() : ``;
     const itemString = `${indexChar}) ${itemSymbol}${itemDesc}`;
     s += itemString + `\n`;
   }
@@ -1053,15 +1053,17 @@ function game_stats(p = player, endgame) {
     }
   }
 
-  if (getPref(`time_remaining`)) s += `\nTime remaining: ${timeleft()} mobuls\n`;
+  s+= `\n`;
 
-  if (endgame || !pocketempty()) s += `\n`;
+  if (!endgame && getPref(`time_remaining`)) s += `Time remaining: ${timeleft()} mobuls\n\n`;
+
   s += `Known Spells:\n`;
   var count = 0;
   var spellcolumns = 6;
   for (var spell = 0; spell < p.knownSpells.length; spell++) {
     var tmp = p.knownSpells[spell];
     if (tmp) {
+      if (typeof lastSpellCast !== `undefined` && tmp === lastSpellCast) tmp = highlightText(tmp);
       s += tmp + ` `;
       if (++count % spellcolumns == 0)
         s += `\n`;

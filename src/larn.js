@@ -41,7 +41,7 @@ async function play() {
   initWorkers();
 
   /* warn the player that closing their window will kill the game */
-  if (isLocal()) {
+  if (isLocal() || isAlphaSite()) {
     enableDebug();
   } else {
     window.onbeforeunload = confirmExit;

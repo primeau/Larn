@@ -1,21 +1,13 @@
 @font-face {
     font-family: modern;
-
-    /* experiments to try fixing too-wide fonts on non-chrome browsers https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Fundamentals */
-    /* for future font-noodling https://fonts.google.com/?category=Monospace&preview.text=a%E2%96%92%E2%96%92%E2%96%92%C2%B7@%C2%B7%E2%96%92%C2%B7%E2%96%92A!!0%3F&preview.text_type=custom */
-
-    /* works in firefox, not safari */
-    /* src: url('img/PTMono-Regular.ttf'); */
-
-    /* no firefox or safari */
     src: url('img/NotoSansMono-Regular.ttf');
-    /* src: url('img/NotoSansMono-Light.ttf'); */
     font-display: swap;
 }
 
 @font-face {
-    font-family: dos437;
-    src: url('img/dos437.ttf');
+    font-family: modern;
+    font-weight: bold;
+    src: url('img/NotoSansMono-Bold.ttf');
     font-display: swap;
 }
 
@@ -29,6 +21,75 @@
     font-family: amiga1200;
     src: url('img/TopazPlus_a1200_v1.0.ttf');
     font-display: swap;
+}
+
+@font-face {
+    font-family: dos437;
+    src: url('img/dos437.ttf');
+    font-display: swap;
+}
+
+/* dos437 has a limited number of glyphs, so add box drawing ╭ ╮ ╯ ╰ ╵ ╶ ╷ ╴ from NotoSansMono */
+@font-face {
+    font-family: dos437;
+    src: url('img/NotoSansMono-Regular.ttf');
+    unicode-range: U+2500, U+2502, U+250C, U+2510, U+2514, U+2518, U+251C, U+2524,
+                   U+252C, U+2534, U+253C, U+2550, U+2551, U+2554, U+2557, U+255A,
+                   U+255D, U+2560, U+2563, U+2566, U+2569, U+256C, U+2570, U+2574-2577, U+256D-256F,
+                   U+2592;
+    size-adjust: 93.75%;
+    font-display: swap;
+}
+
+/* some wall glyphs are too wide, this brings them back to the right size */
+wall,
+ply,
+w {
+    display: inline-block;
+    width: 1ch;
+    /* line-height: 1; */
+    /* text-align: left; */
+    text-align: center;
+}
+/* U+229E ⊞ (wall-plus) doesn't exist in NotoSansMono, so render as CSS fallback shapes instead */
+.w-f { /* wall-fallback */
+    display: inline-block;
+    width: 1ch;
+    height: 1ch;
+    transform: scale(0.9) translateY(-0.5ch);
+    vertical-align: bottom;
+    position: relative;
+    box-sizing: border-box;
+    border: 0.1em solid currentColor;
+    background: transparent;
+}
+
+.w-f::before,
+.w-f::after {
+    content: "";
+    position: absolute;
+    background: currentColor;
+}
+
+.w-p::before { /* wall-plus */
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 0.1em;
+    transform: translateX(-50%);
+}
+
+.w-p::after {
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 0.1em;
+    transform: translateY(-50%);
+}
+
+/* slight adjust for size & location of player block */
+ply {
+    transform: translateY(0.01em) scaleY(0.9);
 }
 
 #LARN {
@@ -84,7 +145,7 @@ dim {
 
 body {
     /* border: 1px solid orange; */
-    font-family: 'dos', 'Courier New', Courier, monospace;
+    font-family: 'dos437', 'Courier New', 'Courier', 'ui-monospace', 'monospace';
     margin: 0px;
     background-color: #000000;
     color: lightgray;
@@ -95,6 +156,7 @@ div {
     background-position: center center;
     background-size: 100% 100%;
     background-repeat: no-repeat;
+    white-space: pre;
 }
 
 .image {
@@ -114,8 +176,6 @@ mark {
 .narrowbutton,
 .variablebutton,
 .verticalbutton {
-    /* color: black;
-    background-color: #FFD700; */
     color: lightgrey;
     background-color: #0071e3;
     border: none;

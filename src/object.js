@@ -338,7 +338,9 @@ class DungeonObject extends Item {
     }
 
     if (this.id == OWALL.id) {
-      return WALLS[getPref('wall_char')][arg];
+      const wallGlyph = WALLS[getPref('wall_char')][arg];
+      if (wallGlyph === '⊞') return '<w class="w-f w-p"></w>'; // see larn.css
+      return `<wall>${wallGlyph}</wall>`;
     }
 
     let char = null;
@@ -516,7 +518,7 @@ const OSCROLL = new DungeonObject(41, `?`, `?`, `?`, `tan`, BOLD, `a magic scrol
 const OPOTION = new DungeonObject(42, `!`, `!`, `!`, `plum`, BOLD, `a magic potion`, CARRY);
 const OBOOK = new DungeonObject(43, `B`, `?`, `B`, `darkgoldenrod`, BOLD, `a book`, CARRY);
 const OCHEST = new DungeonObject(44, `C`, `&`, `C`, `khaki`, BOLD, `a chest`, CARRY);
-const ODIAMOND = new DungeonObject(50, `@`, `*`, `&lt`, `white`, BOLD, `a brilliant diamond`, CARRY);
+const ODIAMOND = new DungeonObject(50, `@`, `*`, `&lt`, `lightgray`, BOLD, `a brilliant diamond`, CARRY);
 const ORUBY = new DungeonObject(51, `@`, `*`, `&lt`, `crimson`, BOLD, `a ruby`, CARRY);
 const OEMERALD = new DungeonObject(52, `@`, `*`, `&lt`, `springgreen`, BOLD, `an enchanting emerald`, CARRY);
 const OSAPPHIRE = new DungeonObject(53, `@`, `*`, `&lt`, `dodgerblue`, BOLD, `a sparkling sapphire`, CARRY);

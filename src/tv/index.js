@@ -2,6 +2,7 @@
 
 let GAMENAME = `TV`;
 let ULARN = false; // this is a hack to get around localstoragegetobject issues
+let amiga_mode = false;
 
 const TV_CHANNEL_LIST = `list`;
 const TV_CHANNEL_RECORDED = `recorded`;
@@ -158,59 +159,32 @@ function bltFrame(frame) {
 function setStyle(styleIn) {
 
   styleInfo = styleIn;
-  if (!styleIn) {
-    // console.log(`setStyle(): no style data available`);
-    styleIn = { fontFamily: `Courier New` };
-    // return;
-  }
+  if (!styleIn) styleIn = { fontFamily: `Courier New` };
+  if (!styleIn.fontFamily) styleIn.fontFamily = `Courier New`;
 
   // defaults for courier new
-  let fontFamily = `Courier New`;
+  let fontFamily = styleIn.fontFamily;
   let textColour = `lightgrey`;
-  let heightMultiple = 1.88;
   let letterSpacing = `normal`;
-  let spacing = 0;
+  let heightMultiple = 2;
   let fontSize = 10;
 
   let spriteWidth = computeSpriteWidth();
 
-  if (styleIn.fontFamily.includes(`amiga`)) {
-    fontFamily = styleIn.fontFamily;
-    textColour = `lightgrey`;
-    heightMultiple = 2;
-    letterSpacing = `normal`;
-    spacing = 0;
+  // TODO this is a fudge factor to tune the line height
+  let heightAdjust = computeHeightAdjust(spriteWidth);
+
+  if (fontFamily.includes(`amiga`)) {
     fontSize = spriteWidth * 2;
-  }
-  else {
-    const testfont = `12px ${styleIn.fontFamily}`;
-    const testtext = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
-    const isBoldWider = getTextWidth(testtext, testfont, true) != getTextWidth(testtext, testfont, false);
-    fontFamily = isBoldWider ? `Courier New` : styleIn.fontFamily;
-
-    // console.log(testfont, isBoldWider, getTextWidth(testtext, testfont, true), getTextWidth(testtext, testfont, false));
-
-    if (fontFamily === `modern`) {
-      fontFamily = `modern`;
-      textColour = `lightgrey`;
-      heightMultiple = 1.88;
-      letterSpacing = `normal`;
-      spacing = 0;
-    } else if (fontFamily === `dos437`) {
-      fontFamily = `dos437`;
-      textColour = `#ABABAB`;
-      heightMultiple = 1.93;
-      letterSpacing = '-1px';
-      spacing = -1;
-    }
-    fontSize = computeFontSize(fontFamily, spriteWidth, spacing);
+  } else {
+    fontSize = computeFontSize(fontFamily, spriteWidth, 0);
   }
 
-  let font = `${fontSize}px ${fontFamily}`;
-  document.body.style.font = font;
+  document.body.style.font = `${fontSize}px ${fontFamily}`;
   document.body.style.fontFamily = fontFamily;
   document.body.style.color = textColour;
   document.body.style.letterSpacing = letterSpacing;
+  document.body.style.lineHeight = `${spriteWidth * heightMultiple + heightAdjust}px`;
 
   if (TV_CHANNEL_LIST) {
     let bar = document.getElementById('progressbar');
@@ -219,12 +193,8 @@ function setStyle(styleIn) {
     if (box) box.style.font = `${fontSize}px Courier New`;
     if (box && box.label) box.label.style.font = `${fontSize}px Courier New`;
   }
-  // console.log(font, fontFamily, textColour, letterSpacing, heightMultiple);
 
-  // do this last for some reason
-  document.body.style.lineHeight = `${spriteWidth * heightMultiple}px`;
 }
-
 
 
 function applyGameInfo(gameInfo) {
@@ -254,9 +224,9 @@ function computeSpriteWidth() {
   let rawSpriteH = (browserHeight) / (24 + 6);
 
   let spriteWidth = Math.min(rawSpriteW, rawSpriteH / 2);
-  spriteWidth *= 10;
-  spriteWidth = Math.floor(spriteWidth);
-  spriteWidth /= 10;
+  // spriteWidth *= 10;
+  // spriteWidth = Math.floor(spriteWidth);
+  // spriteWidth /= 10;
 
   return Math.max(4, spriteWidth);
 }

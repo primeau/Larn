@@ -1,4 +1,4 @@
-# JS LARN Version 12.5.3
+# JS LARN Version 12.5.4
 
 ## Introduction
 
@@ -35,7 +35,7 @@ or MORIA, but with a different feel and winning criteria.
 # npm install
 # npm run build
 # python3 -m http.server 8000
-# http://localhost:8000/dist/larn/larn.html
+# http://localhost:8000/_dist/larn/larn.html
 ```
 
 ## History and Other Information
@@ -65,7 +65,7 @@ and refactor by Julian Olds. Ularn is currently maintained by Josh Bressers.
 Other editions of Larn have been distributed by others, namely
 LARN13, dLarn, NLarn, ReLarn, and XLarn.
 
-JSLarn 12.5.3 is a JavaScript port of Larn and Ularn, by Jason Primeau. 
+JSLarn 12.5.4 is a JavaScript port of Larn and Ularn, by Jason Primeau. 
 It primarily references the Larn 12.4.4 and Ularn 1.5.4 codebases but takes 
 inspiration from other versions as well. It includes bug fixes, a global 
 scoreboard, watching live replays, a weekly challenge mode, mobile support 
