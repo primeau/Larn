@@ -211,7 +211,7 @@ function eatCookie(item, fromInventory = true) {
     forget();
   }
   outfortune();
-  player.raisehp(); /* 12.5.4 raise HP by 1 */
+  player.raisehp(1); /* 12.5.4 raise HP by 1 */
   return 0; // nomove = 0;
 }
 
