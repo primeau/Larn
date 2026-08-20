@@ -137,7 +137,7 @@ function getdirectioninput(key, code) {
   //debug(`getdirectioninput: ${key} ${code}`);
   if (key == ESC) {
     appendLog(` cancelled${period}`);
-    nomove = 1;
+    nomove = NOMOVE;
     keyboard_input_callback = null;
     return 1;
   }

@@ -42,8 +42,16 @@ function enableDevmode() {
 
     // learnSpell(`cld`);
 
-    // take(createObject(OSCROLL, 0));
-    // take(createObject(OPOTION, 0));
+    take(createObject(OSCROLL, 23));
+    take(createObject(OSCROLL, 22));
+    take(createObject(OSCROLL, 22));
+    take(createObject(OSCROLL, 22));
+    take(createObject(OSCROLL, 22));
+    take(createObject(OSCROLL, 22));
+    take(createObject(OPOTION, 18));
+    take(createObject(OPOTION, 18));
+    take(createObject(OPOTION, 18));
+    take(createObject(OPOTION, 18));
     // take(createObject(OPOTION, 21));
     // take(createObject(OCOOKIE));
 

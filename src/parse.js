@@ -67,7 +67,7 @@ function clearKeyPressEventListener() {
 
 function setCharCallback(func) {
   blocking_callback = func;
-  nomove = 1;
+  nomove = NOMOVE;
 }
 
 
@@ -143,7 +143,7 @@ async function parse(e, key) {
   // console.log(`parse: moves=`, player.MOVESMADE);
 
   if (key == CAPS) {
-    nomove = 1;
+    nomove = NOMOVE;
     UPPERCASE = !UPPERCASE;
     return;
   }
@@ -172,7 +172,7 @@ async function parse(e, key) {
       // Handle autotravel here
       // This is a bit ugly, but it needs to be awaited, which can't be done from the blocking callback
       if (explorerCallback) {
-        nomove = 1;
+        nomove = NOMOVE;
         const tmpCallback = explorerCallback; // avoid re-entrancy bug
         explorerCallback = null;
         await tmpCallback();
@@ -180,7 +180,7 @@ async function parse(e, key) {
       }
     }
     if (!done) {
-      nomove = 1;
+      nomove = NOMOVE;
     }
     return;
   }
@@ -199,7 +199,7 @@ async function parse(e, key) {
 
   if (!item) {
     doRollbar(ROLLBAR_ERROR, `parse(): null item at player position`, `key=${key} (${player.x},${player.y}), ${GAMEOVER}, ${game_started}, ${mazeMode}, ${napping}, ${level}, ${gtime}`);
-    nomove = 1;
+    nomove = NOMOVE;
     return;
   }
 
@@ -259,7 +259,7 @@ async function parse(e, key) {
     //   key = 't'; // take
     }
     else {
-      nomove = 1;
+      nomove = NOMOVE;
       return;
     }
   } 
@@ -334,7 +334,7 @@ async function parse(e, key) {
   // PACK WEIGHT
   //
   if (key == 'g') {
-    nomove = 1;
+    nomove = NOMOVE;
     updateLog(`The stuff you are carrying presently weighs ${Math.round(packweight())} pounds`);
     return;
   }
@@ -343,7 +343,7 @@ async function parse(e, key) {
   // INVENTORY
   //
   if (key == 'i') {
-    nomove = 1;
+    nomove = NOMOVE;
     setCharCallback(parse_inventory);
     drawInventory(isItem, true, true, true, false);
     return;
@@ -476,7 +476,7 @@ async function parse(e, key) {
   // PRINT VERSION
   //
   if (key == 'v') {
-    nomove = 1;
+    nomove = NOMOVE;
     var larnString = ULARN ? `The Addiction of JS Ularn` : `JS Larn`;
     updateLog(`${larnString}, Version ${VERSION} Build ${BUILD}`);
     updateLog(`  ${logname}`);
@@ -509,7 +509,7 @@ async function parse(e, key) {
   // SHOW SCORES
   //
   if (key == 'z') {
-    nomove = 1;
+    nomove = NOMOVE;
     loadScores(null, true, false);
   }
 
@@ -576,7 +576,7 @@ async function parse(e, key) {
   // v12.5.4: GO TO SYMBOL
   //
   if (key == 'G') {
-    nomove = 1;
+    nomove = NOMOVE;
     if (getPref('explore_object')) {
       updateLog(`What object do you want to travel to? `);
       setCharCallback(parseTravelToItem);
@@ -591,7 +591,7 @@ async function parse(e, key) {
   // LIST KNOWN ITEMS
   //
   if (key == 'I') {
-    nomove = 1;
+    nomove = NOMOVE;
     seemagic(false);
     setCharCallback(parse_see_all);
     return;
@@ -602,7 +602,7 @@ async function parse(e, key) {
   // v12.5.3: WAIT MULTIPLE TURNS
   //
   if (key == 'M') {
-    nomove = 1;
+    nomove = NOMOVE;
     viewflag = 1;
     waitUntilRecovered();
     return;
@@ -612,7 +612,7 @@ async function parse(e, key) {
   // v12.5.4 OPTIONS
   //
   if (key == 'O') { 
-    nomove = 1;
+    nomove = NOMOVE;
     print_options();
     return;
   }
@@ -637,7 +637,7 @@ async function parse(e, key) {
   // Q - QUIT
   //
   if (key == 'Q') {
-    nomove = 1;
+    nomove = NOMOVE;
     setCharCallback(parseQuit);
     updateLog(`Do you really want to quit (all progress will be lost) [<b>y</b>/<b>n</b>] ? `)
     return;
@@ -664,7 +664,7 @@ async function parse(e, key) {
   // S - SAVE GAME
   //
   if (key == 'S') {
-    nomove = 1;
+    nomove = NOMOVE;
 
     if (GOTW) {
       updateLog(`Nice try...`);
@@ -720,7 +720,7 @@ async function parse(e, key) {
   //  v12.5.4 MAZE EXPLORER
   //
   if (key === 'X') {
-    nomove = 1;
+    nomove = NOMOVE;
     if (getPref('explore_toggle')) {
       if (!activeExplorer) {
         const explorer = Object.create(MazeExplorer);
@@ -809,7 +809,7 @@ async function parse(e, key) {
       return;
     }
     
-    nomove = 1;
+    nomove = NOMOVE;
     if (getPref('explore_stairs')) {
       updateLog(`Travelling to stairs`);
       const explorer = Object.create(MazeExplorer);
@@ -833,7 +833,7 @@ async function parse(e, key) {
       return;
     }
     
-    nomove = 1;
+    nomove = NOMOVE;
     if (getPref('explore_stairs')) {
       updateLog(`Travelling to stairs`);
       const explorer = Object.create(MazeExplorer);
@@ -869,7 +869,7 @@ async function parse(e, key) {
   // LOOK AT OBJECT
   //
   if (key == ':') {
-    nomove = 1; /* assumes look takes no time */
+    nomove = NOMOVE; /* assumes look takes no time */
     /* identify, don't pick up or prompt for action */
     lookforobject(true, false);
     return;
@@ -881,7 +881,7 @@ async function parse(e, key) {
   // v12.5.1 HIDE/REVEAL CONFIG BUTTONS
   //
   if (key == '⚙️') {
-    nomove = 1;
+    nomove = NOMOVE;
     setPref('showConfigButtons', !getPref('showConfigButtons'));
     onResize();
     return;
@@ -891,7 +891,7 @@ async function parse(e, key) {
   // HELP SCREEN
   //
   if (key == '?') {
-    nomove = 1;
+    nomove = NOMOVE;
     currentpage = 0;
     setCharCallback(parse_help);
     print_help();
@@ -902,7 +902,7 @@ async function parse(e, key) {
   // v12.5.0 TOGGLE EXTRA KEYBOARD HELP MODE
   //
   if (key == '!') {
-    nomove = 1;
+    nomove = NOMOVE;
     setPref('keyboard_hints', !getPref('keyboard_hints'));
     updateLog(`Keyboard hints: ${getPref('keyboard_hints') ? `on` : `off`}`);
     if (getPref('keyboard_hints'))
@@ -912,7 +912,7 @@ async function parse(e, key) {
 
   // v12.5.0 TOGGLE AUTO PICKUP
   if (key == '@') {
-    nomove = 1;
+    nomove = NOMOVE;
     setPref('auto_pickup', !getPref('auto_pickup'));
     updateLog(`Auto-pickup: ${getPref('auto_pickup') ? `on` : `off`}`);
     return;
@@ -922,7 +922,7 @@ async function parse(e, key) {
   // WIZARD MODE
   //
   if (key == '_') {
-    nomove = 1;
+    nomove = NOMOVE;
     updateLog(`Enter Password: `);
     setTextCallback(wizardmode, 14);
     return;
@@ -933,19 +933,19 @@ async function parse(e, key) {
   // v12.5.0 REPORT BUG
   //
   if (key == '🐞') {
-    nomove = 1;
+    nomove = NOMOVE;
     reportBug();
     return;
   }
 
   // if we get here, it's an invalid key, and shouldn't take any time
-  nomove = 1;
+  nomove = NOMOVE;
 }
 
 
 
 function parseQuit(key) {
-  nomove = 1;
+  nomove = NOMOVE;
   if (key == ESC || key == 'n' || key == 'N') {
     appendLog(`no${period}`);
     return 1;

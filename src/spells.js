@@ -31,7 +31,7 @@ function checkHasSpells() {
 
 
 function pre_cast() {
-  nomove = 1;
+  nomove = NOMOVE;
   if (checkHasSpells()) {
     updateLog(`Enter your spell: `);
     setCharCallback(castCallback);
@@ -81,7 +81,7 @@ function getSpellCode(key, showAllSpells) {
 
 
 function castCallback(key) {
-  nomove = 1;
+  nomove = NOMOVE;
 
   // keep adding to newSpellCode until it's 3 letters
   // this part is the same as wish(key) in action.js
@@ -104,7 +104,7 @@ function cast(code) {
   if (spellnum >= 0) {
     speldamage(spellnum);
   } else {
-    nomove = 0;
+    nomove = MOVED;
     updateLog(`  Nothing Happened${period}`);
   }
 }
@@ -112,7 +112,7 @@ function cast(code) {
 
 
 function castLastSpell() {
-  nomove = 1;
+  nomove = NOMOVE;
   if (!lastSpellCast) {
     updateLog(`You haven't cast any spells yet!`);
     return;
@@ -144,17 +144,17 @@ function speldamage(x) {
 
   var playerLev = player.LEVEL;
   if ((rnd(23) == 7) || (rnd(18) > player.INTELLIGENCE)) {
-    nomove = 0;
+    nomove = MOVED;
     updateLog(`  It didn't work!`);
     return;
   }
   if (playerLev * 3 + 2 < x) {
-    nomove = 0;
+    nomove = MOVED;
     updateLog(`  Nothing happens.  You seem inexperienced at this${period}`);
     return;
   }
 
-  nomove = 0;
+  nomove = MOVED;
 
   switch (x) {
     /* ----- LEVEL 1 SPELLS ----- */
@@ -518,7 +518,7 @@ function speldamage(x) {
       return;
 
     default:
-      nomove = 0;
+      nomove = MOVED;
       appendLog(`  spell ${x} not available!`);
       beep();
       return;
@@ -839,7 +839,7 @@ function direct(spnum, direction, dam, arg) {
 
 function setup_godirect(delay, spnum, direction, damage, cshow, stroverride) {
   napping = true;
-  nomove = 1;
+  nomove = NOMOVE;
   setTimeout(godirect, delay, spnum, player.x, player.y, diroffx[direction], diroffy[direction], damage, delay, cshow, stroverride);
 }
 
@@ -1015,7 +1015,7 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
   dam -= 3 + (getDifficulty() >> 1);
 
   if (dam > 0) {
-    nomove = 1;
+    nomove = NOMOVE;
     blt(); // don't use paint() because it doesn't show missile trail
     setTimeout(godirect, delay, spnum, x, y, dx, dy, dam, delay, cshow, stroverride);
   } else {
@@ -1029,8 +1029,9 @@ function godirect(spnum, x, y, dx, dy, dam, delay, cshow, stroverride) {
 
 function exitspell() {
   napping = false;
-  nomove = 0;
+  nomove = MOVED;
   moveworld(); // monsters need a chance to attack
+  MOVED_WORLD = false;
   paint();
 }
 

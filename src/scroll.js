@@ -25,7 +25,10 @@ function readSomething(item) {
   destroyInventory(item);
   if (item.matches(OSCROLL)) read_scroll(item);
   else readbook(item);
-  return 0; // nomove = 0;
+
+  if (keyboard_input_callback) return NOMOVE; // handle pulverize direction event
+
+  return MOVED;
 }
 
 function act_read(key) {

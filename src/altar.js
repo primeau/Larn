@@ -21,7 +21,7 @@ function pray_at_altar() {
   } else {
     updateLog(`  How much do you donate? `);
     setNumberCallback(act_donation_pray, true);
-    nomove = 1;
+    nomove = NOMOVE;
   }
 }
 
@@ -34,7 +34,7 @@ function pray_at_altar() {
 function act_donation_pray(offering) {
   if (offering == ESC) {
     appendLog(` cancelled${period}`);
-    nomove = 1;
+    nomove = NOMOVE;
     prayed = 0;
     return 1;
   }

@@ -195,7 +195,7 @@ function inv_sort(a, b) {
 
 
 function parse_inventory(key) {
-  nomove = 1;
+  nomove = NOMOVE;
   if (key == ESC || key == ' ') {
     setMazeMode(true);
     return 1;
@@ -243,7 +243,7 @@ function take(item) {
 
 function act_drop(key) {
   if (key == '.') {
-    nomove = 1;
+    nomove = NOMOVE;
     setMazeMode(true);
     updateLog(`How much gold will you drop? `);
     setNumberCallback(drop_object_gold, true);
@@ -260,13 +260,13 @@ function dropItem(item) {
   if (!pitflag && !dungeonItem.matches(OEMPTY)) {
     beep();
     updateLog(`  There's something here already${period}`);
-    return 1; // nomove = 1;
+    return NOMOVE;
   }
   
   const index = player.inventory.indexOf(item);
   if (!item || index < 0) {
     updateLog(`  You aren't carrying that!`);
-    return 1; // nomove = 1;
+    return NOMOVE;
   }
   const indexChar = getCharFromIndex(index);
   updateLog(`  You drop: `);
@@ -279,7 +279,7 @@ function dropItem(item) {
   }
 
   destroyInventory(item);
-  return 0; // nomove = 0;
+  return MOVED;
 }
 
 
@@ -289,7 +289,7 @@ function drop_object_gold(amount) {
 
   if (amount == ESC) {
     appendLog(` cancelled${period}`);
-    nomove = 1;
+    nomove = NOMOVE;
     return 1;
   }
 

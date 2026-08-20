@@ -715,7 +715,7 @@ function lookforobject(do_ident, do_pickup) {
 
   if (item.matches(OEMPTY)) {
     // do nothing
-    nomove = 1;
+    nomove = NOMOVE;
     return;
   }
   else if (item.matches(OGOLDPILE)) {
@@ -977,7 +977,7 @@ function lookforobject(do_ident, do_pickup) {
     if (canTake(item) && take(item)) {
       forget(); // remove from board
     } else {
-      nomove = 1;
+      nomove = NOMOVE;
     }
   }
 

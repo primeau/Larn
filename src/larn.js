@@ -277,7 +277,7 @@ useragent:${navigator.userAgent}
 
 
 function eventToggleDebugStats() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   DEBUG_STATS = !DEBUG_STATS;
   updateLog(`DEBUG_STATS: ${DEBUG_STATS}`);
@@ -287,7 +287,7 @@ function eventToggleDebugStats() {
 
 
 function eventToggleDebugOutput() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   DEBUG_OUTPUT = !DEBUG_OUTPUT;
   updateLog(`DEBUG_OUTPUT: ${DEBUG_OUTPUT}`);
@@ -297,7 +297,7 @@ function eventToggleDebugOutput() {
 
 
 function eventToggleDebugWTW() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   player.updateWTW(player.WTW == 0 ? 100000 : -player.WTW);
   updateLog(`DEBUG_WALK_THROUGH_WALLS: ${(player.WTW > 0)}`);
@@ -307,7 +307,7 @@ function eventToggleDebugWTW() {
 
 
 function eventToggleDebugStairs() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   DEBUG_STAIRS_EVERYWHERE = !DEBUG_STAIRS_EVERYWHERE;
   updateLog(`DEBUG_STAIRS_EVERYWHERE: ${DEBUG_STAIRS_EVERYWHERE}`);
@@ -317,7 +317,7 @@ function eventToggleDebugStairs() {
 
 
 function eventToggleDebugKnowAll() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   DEBUG_KNOW_ALL = true;
   learnAll();
@@ -342,7 +342,7 @@ function learnAll() {
 
 
 function eventToggleDebugStealth() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   if (player.STEALTH <= 0) {
     player.updateHoldMonst(100000);
@@ -359,7 +359,7 @@ function eventToggleDebugStealth() {
 
 
 function eventToggleDebugAwareness() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   if (player.AWARENESS <= 0) {
     player.AWARENESS = 100000;
@@ -374,7 +374,7 @@ function eventToggleDebugAwareness() {
 
 
 function eventMagicMap() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   read_scroll(createObject(OSCROLL, 15));
   paint();
@@ -383,7 +383,7 @@ function eventMagicMap() {
 
 
 function eventEngolden() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   player.GOLD += 250000;
   paint();
@@ -392,7 +392,7 @@ function eventEngolden() {
 
 
 function eventToggleDebugImmortal() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   if (player.LIFEPROT <= 0) {
     player.LIFEPROT = 100000;
@@ -407,7 +407,7 @@ function eventToggleDebugImmortal() {
 
 
 function eventToggleDebugNoMonsters() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   DEBUG_NO_MONSTERS = !DEBUG_NO_MONSTERS;
   updateLog(`DEBUG: NO MONSTERS: ${DEBUG_NO_MONSTERS}`);
@@ -417,7 +417,7 @@ function eventToggleDebugNoMonsters() {
 
 
 function eventToggleDebugProximity() {
-  nomove = 1;
+  nomove = NOMOVE;
   debug_used = 1;
   DEBUG_PROXIMITY = !DEBUG_PROXIMITY;
   updateLog(`DEBUG: PROXIMITY: ${DEBUG_PROXIMITY}`);

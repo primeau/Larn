@@ -265,7 +265,7 @@ function exitscores(newScore, local, key) {
   if (key == ESC || key == ENTER) {
     scoreIndex = 0;
     setMode(A, R, O);
-    nomove = 1;
+    nomove = NOMOVE;
     return exitbuilding();
   }
   if (key == ' ') {
@@ -600,7 +600,7 @@ async function died(reason, slain) {
   }
 
   // paint(); // removed
-  nomove = 1;
+  nomove = NOMOVE;
   dropflag = 1;
 
   /* delete the checkpoint file */

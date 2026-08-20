@@ -79,6 +79,7 @@ function setname(name) {
 
   if (getPref('no_intro') && !saveddata) {
     setclass(localStorageGetObject('character_class', `Adventurer`));
+    setGameDifficulty(getDifficulty());
     return 1;
   }
 
@@ -538,13 +539,13 @@ function mainloop(e, key) {
     }
   }
 
-  nomove = 0;
+  nomove = MOVED;
 
   parse(e, key);
 
   // if (isMobile()) setButtons(); // TODO: do this here?
 
-  if (nomove == 1) {
+  if (nomove == NOMOVE) {
     paint();
     return;
   }

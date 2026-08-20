@@ -55,7 +55,7 @@ function enter() {
     return;
   }
 
-  nomove = 1;
+  nomove = NOMOVE;
   debug(`enter(): no building here`);
 
   updateLog(`There is no place to enter here!`);

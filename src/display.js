@@ -612,7 +612,7 @@ function moveplayer(dir) {
   const m = player.y + diroffy[dir];
 
   if (!inBounds(k, m)) {
-    nomove = 1;
+    nomove = NOMOVE;
     return 0;
   }
 
@@ -623,7 +623,7 @@ function moveplayer(dir) {
      in command mode, unless the character has Walk-Through-Walls.
    */
   if ((item.matches(OCLOSEDDOOR) || item.matches(OWALL)) && player.WTW == 0) {
-    nomove = 1;
+    nomove = NOMOVE;
     return 0;
   }
 
@@ -767,7 +767,7 @@ function printknown(firstline, itemlist, printfunc, buffer, extra) {
 
 
 function parse_see_all(key) {
-  nomove = 1;
+  nomove = NOMOVE;
   if (PAGE_COUNT == NO_MORE) key = ESC;
   if (key == ESC) {
     PAGE_COUNT = 1;
@@ -783,7 +783,7 @@ function parse_see_all(key) {
 
 
 function parse_see_spells(key) {
-  nomove = 1;
+  nomove = NOMOVE;
   if (key == ESC || key == ' ') {
     PAGE_COUNT = 1;
     setCharCallback(castCallback);
@@ -941,7 +941,7 @@ function mouseLook(x, y) {
 
 
 async function mouseMove(x, y) {
-  nomove = 1;
+  nomove = NOMOVE;
   if (Math.abs(x - player.x) <= 1 && Math.abs(y - player.y) <= 1) {
     simulateKeypress(getKeyForDirection(x - player.x, y - player.y));
   } else {

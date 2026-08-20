@@ -7,7 +7,7 @@ let currentpage = 0;
 
 
 function parse_help(key) {
-  nomove = 1;
+  nomove = NOMOVE;
   if (key == ESC) {
     return exitbuilding();
   } else if (key == ' ') {

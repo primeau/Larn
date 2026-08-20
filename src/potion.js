@@ -44,7 +44,7 @@ function isBadPotion(potion) {
 function quaffPotion(item) {
   destroyInventory(item);
   quaffpotion(item, true);
-  return 0; // nomove = 0;
+  return MOVED;
 }
 
 function act_quaff(key) {

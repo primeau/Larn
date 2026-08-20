@@ -77,7 +77,9 @@ var viewflag = 0; /* if viewflag then we have done a 99 stay here and don't show
 var lasttime = 0; /* last time in bank */
 var spheres = [];
 
-
+// for nomove
+const MOVED = 0;
+const NOMOVE = 1;
 
 function GameState(save) {
   this.LEVELS = LEVELS;

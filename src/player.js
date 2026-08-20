@@ -923,7 +923,7 @@ function act_wield(key) {
 function wieldWeapon(item) {
   if (player.SHIELD && item.matches(O2SWORD)) {
     updateLog(`  But one arm is busy with your shield!`);
-    return 1; // nomove = 1;
+    return NOMOVE;
   }
 
   /* can't wield and wear at the same time */
@@ -931,7 +931,7 @@ function wieldWeapon(item) {
     if (player.SHIELD === item || player.WEAR === item) {
       const arm = item.matches(OSHIELD) ?  `shield` : `armor`;
       updateLog(`  You can't wield your ${arm} while you're wearing it!`);
-      return 1; // nomove = 1;
+      return NOMOVE;
     }
   }
 
@@ -940,7 +940,7 @@ function wieldWeapon(item) {
   updateLog(`  You wield:`);
   updateLog(`${indexChar}) ${item.toString(true)}`);
   player.WIELD = item;
-  return 0; // nomove = 0;
+  return MOVED;
 }
 
 
@@ -949,10 +949,10 @@ function unwieldWeapon() {
   if (player.WIELD) {
     updateLog(`  You unwield your weapon${period}`);
     player.WIELD = null;
-    return 0; // nomove = 0;
+    return MOVED;
   } else {
     updateLog(`  You aren't wielding anything${period}`);
-    return 1; // nomove = 1;
+    return NOMOVE;
   }
 }
 
@@ -973,13 +973,13 @@ function wearArmor(item) {
   if (ULARN && player.WIELD === item) { /* can't wield and wear at the same time */
     const arm = item.matches(OSHIELD) ?  `shield` : `armor`;
     updateLog(`  You can't wear your ${arm} while you're wielding it!`);
-    return 1; // nomove = 1;
+    return NOMOVE;
   }
 
   if (item.matches(OSHIELD)) {
     if (player.WIELD && player.WIELD.matches(O2SWORD)) {
       updateLog(`  Your hands are busy with the two handed sword!`);
-      return 1; // nomove = 1;
+      return NOMOVE;
     } else {
       player.SHIELD = item;
     }
@@ -992,7 +992,7 @@ function wearArmor(item) {
   updateLog(`  You wear:`);
   updateLog(`${indexChar}) ${item.toString(true)}`);
 
-  return 0; // nomove = 0;
+  return MOVED;
 }
 
 
@@ -1001,14 +1001,14 @@ function removeArmor() {
   if (player.SHIELD) {
     player.SHIELD = null;
     updateLog(`  Your shield is off${period}`);
-    return 0; // nomove = 0;
+    return MOVED;
   } else if (player.WEAR) {
     player.WEAR = null;
     updateLog(`  Your armor is off${period}`);
-    return 0; // nomove = 0;
+    return MOVED;
   } else {
     updateLog(`  You aren't wearing anything${period}`);
-    return 1; // nomove = 1;
+    return NOMOVE;
   }
 }
 

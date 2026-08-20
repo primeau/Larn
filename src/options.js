@@ -345,7 +345,7 @@ function print_options() {
 
 function parse_options(key) {
   if (key == ESC) {
-    nomove = 1;
+    nomove = NOMOVE;
     return exitbuilding();
   }
   if (key == DEL) {

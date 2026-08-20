@@ -212,7 +212,7 @@ function eatCookie(item, fromInventory = true) {
   }
   outfortune();
   player.raisehp(1); /* 12.5.4 raise HP by 1 */
-  return 0; // nomove = 0;
+  return MOVED;
 }
 
 
@@ -224,7 +224,7 @@ function act_eat(key) {
 
 
 function handleInventoryAction(key, callback, inv_filter, act_filter, action, cantUseMsg) {
-  nomove = 1;
+  nomove = NOMOVE;
   dropflag = 1;
 
   if (key === '*' || key === ' ' || key === 'I') {
@@ -293,7 +293,7 @@ function act_rub_lamp() {
 
 
 function wish(key) {
-  nomove = 1;
+  nomove = NOMOVE;
 
   // keep adding to newSpellCode until it's 3 letters
   // this part is the same as cast(key) in spells.js
