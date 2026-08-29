@@ -630,7 +630,7 @@ function mainloop(e, key) {
                                         so slow monsters strictly alternate move/skip across
                                         successive movemonst calls regardless of which path fired.
  */
-function moveworld(passtime = true) {
+function moveworld() {
 
   /* 
     we are in an event-driven system, and every key press triggers mainloop() which
@@ -656,7 +656,7 @@ function moveworld(passtime = true) {
       /* Flip the slow-monster toggle BEFORE calling movemonst so that
          isHalfTime() sees the updated value for this round. */
       player.slowMonsterToggle = !player.slowMonsterToggle;
-      if (passtime) gtime++;
+      gtime++;
       /* JRP: larn12.4 start spheres 1 extra space away,
               uncomment the code below to prevent that */
       // if (!newsphereflag) {
@@ -689,7 +689,7 @@ function run(dir) {
   while (i == 1) {
     i = moveplayer(dir);
     if (i > 0) {
-      moveworld(false); // don't advance time when running
+      moveworld();
     }
     if (hitflag == 1) {
       i = 0;
